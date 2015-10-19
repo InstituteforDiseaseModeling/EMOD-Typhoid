@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libgeneric.dll to handle generic disease based on libgeneric_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libgenericdllSrcFiles = [ "../Eradication/LibGenericClasses.cpp",
+                          "../Eradication/SimulationGeneric.cpp"
+                          ]
+
+libgenericdllIncFiles = [  "Simulation.h" ]
+libgenericdllLocalInc = [  "stdafx.h" ]
+
+genericenv = env.Clone()
+
+genericenv.Append( CPPDEFINES=['_DLLS_'] )
+genericenv.Append(LIBS=['libgeneric_static'])
+genericenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+genericenv.Append(LIBS=['libvector_static'])
+genericenv.Append(LIBS=['libvector_static'])
+genericenv.Append(LIBS=['libmalaria_static'])
+genericenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libgenericDll = genericenv.SharedLibrary('libgeneric', libgenericdllSrcFiles + stdobj)
+print "building libgenericDll: " + str(libgenericDll)
+
+# take libgeneric.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libgenericDllTarget = libgenericDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = genericenv['BUILD_VARIANT'] + '|x64'
+    print str(libgenericDllTarget) + ": Generating MSVS" + genericenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    genericenv.MSVSProject(target = 'LibgenericScons' + genericenv['MSVSPROJECTSUFFIX'],
+                    srcs = libgenericdllSrcFiles,
+		    incs = libgenericdllIncFiles,
+		    localincs = libgenericdllLocalInc,
+ 		    buildtarget = libgenericDllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

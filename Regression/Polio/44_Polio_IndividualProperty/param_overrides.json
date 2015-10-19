@@ -1,0 +1,20 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "DEMOGRAPHICS": {
+            "Enable_Birth": 0, 
+            "Demographics_Filename": "Atlantis_nine_node_demographics.compiled.json;Atlantis_nine_node_overlay_demographics.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL", 
+                "Base_Individual_Sample_Rate": 1.0
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 180, 
+            "Config_Name": "44_Polio_IndividualProperty",  
+            "Enable_Property_Output": 1, 
+            "Geography": "Atlantis"
+        }
+    }
+}

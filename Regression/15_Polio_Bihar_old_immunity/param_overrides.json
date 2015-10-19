@@ -1,0 +1,14 @@
+{
+     "Default_Config_Path": "defaults/polio_default_config.json", 
+     "parameters": {
+          "DEMOGRAPHICS": {
+               "Demographics_Filename": "Bihar_single_node_demographics.compiled.json;Bihar_single_node_demographics_old_immunity.compiled.json", 
+               "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE",
+               "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_COMPLEX"
+          }, 
+          "PRIMARY": {
+               "Config_Name": "15_Polio_Bihar_old_immunity", 
+               "Geography": "Bihar-Like_1_Node"
+          }
+     }
+}

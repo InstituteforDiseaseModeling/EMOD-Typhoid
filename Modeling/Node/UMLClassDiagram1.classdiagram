@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="fcf32334-37e5-42c7-9ddb-4af7347e8300" name="UMLClassDiagram1" linkedPackageId="6ec9fabb-4134-4908-a429-2f6324b2c482" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="bda3a378-997d-467a-a331-c7eb4a4ed2cf">
+      <profileInstance Id="36b41eeb-8d2d-4c9c-9c94-ae62d8d88926" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="3469760a-a783-4a5c-9782-decefee51280">
+      <profileInstance Id="245555b7-5b87-44df-810c-0632accc47a5" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="f3ad8229-33d1-457b-81f9-9831e1410c59" name="Node" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="a15ad67e-f32f-4fa1-86bd-4d2e89f20676" />
+        <suppliersInternal>
+          <interfaceRealization Id="9c38c509-41fb-4089-96e8-2fe0424e6031">
+            <interfaceMoniker Id="b3bd188c-f02a-4d31-a209-b223cc756590" LastKnownName="INodeContext" />
+            <elementDefinition Id="0357c110-304c-4cb4-b6f2-933620a8eab9" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="231de7ea-09c5-44ba-bf37-e48d6e0e312c" isSubstitutable="false">
+            <classMoniker Id="eebd8540-0394-4fa8-9199-276e2f9e1714" LastKnownName="JsonConfigurable" />
+            <elementDefinition Id="d8006df8-c4ca-47d1-8c19-88a2861db6db" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association Id="42955d53-5146-422f-bcdc-ef6e2120982c" isDerived="false" sourceEndRoleName="individualHumans" targetEndRoleName="individual_human_list_t" isLeaf="false" isAbstract="false">
+            <classMoniker Id="4032e9b8-6715-42b4-8727-3d24d88c55cc" LastKnownName="IndividualHuman" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="3f67887e-8791-49b4-b5f7-cc7c55b74266" name="individualHumans" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="43aee751-caa1-44cf-8fcf-75fbdcbad3e7" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="4190fc4b-428c-44ef-9f72-7d5f19d0947d" name="individual_human_list_t" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <lowerValueInternal>
+                    <literalString Id="d6c59397-1256-43c8-8139-90778c9f8678" name="Lower" value="n">
+                      <elementDefinition Id="182c80c4-dc55-4209-8acb-9f698ccf58f3" />
+                    </literalString>
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString Id="b7ab58e7-dad5-4ca3-92bd-37ed282347dc" name="Upper" value="n">
+                      <elementDefinition Id="24158328-3a9b-4aaf-80a1-0c4d7b953078" />
+                    </literalString>
+                  </upperValueInternal>
+                  <elementDefinition Id="ca4507ff-fcc2-46a4-82c3-88a042f4a0e6" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="b34280c0-7e3e-4571-9b44-3f6815d3fb86" />
+          </association>
+          <association Id="99769814-d400-442d-aab5-0285c27af034" isDerived="false" sourceEndRoleName="localWeather" targetEndRoleName="Climate*" isLeaf="false" isAbstract="false">
+            <classMoniker Id="9a89a77a-b33a-4e86-a812-b531d9a3191a" LastKnownName="Climate" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="adfaf66d-d404-4b9b-809f-054d9d0faa44" name="localWeather" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="447a895f-31c1-48f3-8223-b89b2e74d320" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="31516dad-989d-449b-a8eb-1be5a5e035eb" name="Climate*" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="242165a5-94cd-4397-b5a7-759988c2216c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="09a6dd8b-7704-4dad-8ea0-9a2731fde6c3" />
+          </association>
+          <association Id="5062e73a-c33f-4b0b-a150-75b182a855bd" isDerived="false" sourceEndRoleName="migration_info" targetEndRoleName="MigrationInfo*" isLeaf="false" isAbstract="false">
+            <classMoniker Id="dcd5756f-f3ac-4481-ada9-bb3a82cb482b" LastKnownName="MigrationInfo" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="41c0ae25-f93b-4491-b04b-53f1e16d7e50" name="migration_info" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="18d66159-ac73-46f4-9bef-2b6170db6c31" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="914e5710-688d-4269-a05c-3d2d85552280" name="MigrationInfo*" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="2f5c61ca-1905-4ad4-b9c2-c8b570e86880" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="13569f33-f0d2-4034-ab0f-1a933ea144dd" />
+          </association>
+          <association Id="9e44134d-3e51-47a5-936b-191bb7835050" isDerived="false" sourceEndRoleName="demographics" targetEndRoleName="NodeDemographics" isLeaf="false" isAbstract="false">
+            <classMoniker Id="9118069a-0ac0-494b-a15f-92c2afe8b44a" LastKnownName="NodeDemographics" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="997ba2d5-5e96-4e67-a33f-50453914b8da" name="demographics" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b29badb9-f893-4192-8390-69b8318008e8" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="e8e07483-022c-43c0-95e3-f6b3e450804e" name="NodeDemographics" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="ad7ec173-a9a1-4e9a-911f-676d7316d0d1" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="5be6a9c1-2790-473d-b249-c6ad9f19159e" />
+          </association>
+          <association Id="662e7da4-5688-44a8-ac4e-8f27336286d1" isDerived="false" sourceEndRoleName="demographic_distributions" targetEndRoleName="map&lt;std::string, NodeDemographicsDistribution*&gt;" isLeaf="false" isAbstract="false">
+            <classMoniker Id="a8a8635c-8152-49d1-a5e1-e700525f8358" LastKnownName="NodeDemographicsDistribution" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="321b924d-7905-4f66-a2ed-f70641a61d52" name="demographic_distributions" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="0a269048-ac58-4109-bbf6-123175d025bf" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="292da3c8-2030-4439-9bb4-f394a7ed30c3" name="map&lt;std::string, NodeDemographicsDistribution*&gt;" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="e0ed636e-34f3-4e9f-8c38-484a02d3c9a8" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a9d49bc0-d18d-4207-9742-e3810c36fb48" />
+          </association>
+          <association Id="fec53860-d270-494d-8ab9-2d4b170a65a6" isDerived="false" sourceEndRoleName="event_context_host (friend)" targetEndRoleName="NodeEventContextHost*" isLeaf="false" isAbstract="false">
+            <classMoniker Id="2db0074b-3298-4ba9-b118-28c09fe9f81a" LastKnownName="NodeEventContextHost" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="529686c8-f535-4514-aca3-890fda7c78b2" name="event_context_host (friend)" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="4fe563bb-5cf6-4816-93b8-f5b143576c54" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a9981d0a-8e79-41f3-9ce0-709c32c2f194" name="NodeEventContextHost*" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="583f5ff5-e935-4885-bb8b-844957dbf78b" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="91832317-b380-44ee-8aa4-12229da27b83" />
+          </association>
+          <association Id="0bc8e622-4e46-453b-91f6-02cc22eb0e84" isDerived="false" sourceEndRoleName="parent" targetEndRoleName="ISimulationContext*" isLeaf="false" isAbstract="false">
+            <interfaceMoniker Id="4fd8a3f2-c322-408e-86ac-fbc6130d2631" LastKnownName="ISimulationContext" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8e15586c-951f-49c5-a8f5-56d34eee3fd0" name="parent" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Shared" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="c93ae19c-e44f-4d39-9de7-33e9630bc6f8" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="ce56719e-efe0-43bb-afad-6259bd1592d4" name="ISimulationContext*" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="c8995f76-e8b2-45ad-9f75-db15a4233e18" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="04242da8-72d2-472f-8691-47496364bb3b" />
+          </association>
+        </targetEnds>
+        <ownedAttributesInternal>
+          <property Id="dadb6480-0194-41a8-aebd-b9bebef05a42" name="suids::suid suid" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="cc050f24-f4e0-4cd4-835e-f8acccf20847" />
+          </property>
+          <property Id="70d7ba6d-5a2d-4702-a874-714c4645a442" name="latitude" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="6a6af0d5-b996-49c5-8aad-ef7fbd40fee0" />
+          </property>
+          <property Id="65b2fac1-58db-4239-a908-833c0549b875" name="longitude" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="b50d5c6b-b79a-4fde-866b-18e9ccc708c2" />
+          </property>
+          <property Id="4482c4ed-98dc-4513-9408-e1e1e5c38f3d" name="Ind_Sample_Rate" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="5b759eac-acfe-4e28-917b-18f21b5ccadf" />
+          </property>
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation Id="2f16b32d-33db-48fd-adcc-2dd666b7f103" name="Update" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="1cc3c0fd-1276-4e05-b01b-339d43ce5ec6" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="0c65a7f2-7ec1-4eb5-8b12-0597ee97c04c" name="float dt" direction="In" isUnique="false">
+                  <elementDefinition Id="5f2c084f-d66e-4167-bf79-3efb67ccfd4a" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="fbf60cdc-15b5-4347-9d08-74afbca141d5" name="processImmigratingIndividual" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="aa9ec20a-9060-4885-8bf9-cf3b907c1c7c" />
+          </operation>
+          <operation Id="d938cc41-d9db-431a-a100-0b8940da778f" name="PopulateFromDemographics" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="ed9bc08d-6ca2-441b-9ea9-9b1ea2c69dd2" />
+          </operation>
+          <operation Id="e6df3c9c-5b2b-4064-980c-064726c4bdbe" name="IsInPolygon" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="ba03f6b7-a62a-47d5-91ae-fe48eca493c8" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="013354dd-58f5-40ea-bbae-dc8fe7d3ed3e" name="float* vertex_coords" direction="In" isUnique="false">
+                  <elementDefinition Id="23e3a44c-fb1f-4960-b9f3-087e10041bef" />
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="ef14574d-d012-4b10-8209-122d73a79d5e" name="int numcoords" direction="In" isUnique="false">
+                  <elementDefinition Id="955e2c90-3ab2-4116-a4d2-e1247e4e418b" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="b3bd188c-f02a-4d31-a209-b223cc756590" name="INodeContext" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="fc426284-5205-4906-b6ff-587357dcbd38" />
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="4032e9b8-6715-42b4-8727-3d24d88c55cc" name="IndividualHuman" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="312e5402-07c6-4772-ba42-a76aaa70362a" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="9a89a77a-b33a-4e86-a812-b531d9a3191a" name="Climate" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="751b9b7a-692f-43b5-8ff4-006f44b12fe7" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="dcd5756f-f3ac-4481-ada9-bb3a82cb482b" name="MigrationInfo" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="87becdac-678c-424e-8f16-d91c61aa734c" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="9118069a-0ac0-494b-a15f-92c2afe8b44a" name="NodeDemographics" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="d3965df0-8157-4318-9c7b-231ddb4d3df7" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="a8a8635c-8152-49d1-a5e1-e700525f8358" name="NodeDemographicsDistribution" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="f822f543-3e54-4185-9700-b68dddf22b4e" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="2db0074b-3298-4ba9-b118-28c09fe9f81a" name="NodeEventContextHost" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="1a9e4528-ffc0-4af8-a45f-2082aa73f648" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="4fd8a3f2-c322-408e-86ac-fbc6130d2631" name="ISimulationContext" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="2478a7d5-44ab-4ded-b446-a858584f96a4" />
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="eebd8540-0394-4fa8-9199-276e2f9e1714" name="JsonConfigurable" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="2d0931d4-8e71-4669-bf25-2d910f62e0b1" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+  </packagedElements>
+  <package Id="6ec9fabb-4134-4908-a429-2f6324b2c482" name="ModelingProject1">
+    <elementDefinition Id="e05de58c-033e-48bc-97ec-42474fb718e2" />
+  </package>
+</logicalClassDesignerModel>

@@ -1,0 +1,72 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds main DTK core files and generate Eradication program
+
+Import('env')
+
+
+libgenericSrcFiles = [ "stdafx.cpp",
+                       "../Eradication/BaseChannelReport.cpp",
+                       "../Eradication/BinnedReport.cpp",
+                       "../Eradication/CampaignEvent.cpp",
+                       "../Eradication/Climate.cpp",
+                       "../Eradication/ClimateByData.cpp",
+                       "../Eradication/ClimateConstant.cpp",
+                       "../Eradication/ClimateKoppen.cpp",
+                       "../Eradication/ContagionPopulation.cpp",
+                       "../Eradication/DemographicsReport.cpp",
+                       "../Eradication/DllLoader.cpp",
+                       "../Eradication/Individual.cpp",
+                       "../Eradication/Infection.cpp",
+                       "../Eradication/InterventionsContainer.cpp",
+                       "../Eradication/Instrumentation.cpp",
+                       "../Eradication/Migration.cpp",
+                       "../Eradication/MultiRouteNodePools.cpp",
+                       "../Eradication/Node.cpp",
+                       "../Eradication/NodeDemographics.cpp",
+                       "../Eradication/NodeEventContext.cpp",
+                       "../Eradication/NodePoolsBase.cpp",
+                       "../Eradication/NodePoolsFactory.cpp",
+                       "../Eradication/NodeRankMap.cpp",
+                       "../Eradication/NodeSetAll.cpp",
+                       "../Eradication/NodeSetNodeList.cpp",
+                       "../Eradication/NodeSetPolygon.cpp",
+                       "../Eradication/Properties.cpp",
+                       "../Eradication/PropertyReport.cpp",
+                       "../Eradication/RANDOM.cpp",
+                       "../Eradication/Report.cpp",
+                       "../Eradication/SimpleEventCoordinator.cpp",
+                       "../Eradication/SimpleNodePools.cpp",
+                       "../Eradication/Simulation.cpp",
+                       "../Eradication/SimulationConfig.cpp",
+                       "../Eradication/SimulationEventContext.cpp",
+                       "../Eradication/SpatialReport.cpp",
+                       "../Eradication/StandardEventCoordinator.cpp",
+                       "../Eradication/StrainIdentity.cpp",
+                       "../Eradication/StrainAwareNodePools.cpp",
+                       "../Eradication/Susceptibility.cpp",
+                       "../Eradication/suids.cpp",
+                       "../Eradication/TriggeredEventCoordinator.cpp",
+                       "../Interventions/Drugs.cpp"
+                       ]
+
+libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]
+libgenericLocalInc = [  "stdafx.h" ]
+
+libgeneric_static = env.StaticLibrary('libgeneric_static', libgenericSrcFiles)
+print "building libgeneric_static: " + str(libgeneric_static)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libgeneric_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibgenericStaticScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libgenericSrcFiles,
+		    incs = libgenericIncFiles,
+		    localincs = libgenericLocalInc,
+ 		    buildtarget = libgeneric_static,
+                    auto_build_solution = 0,
+                    variant = bvar)

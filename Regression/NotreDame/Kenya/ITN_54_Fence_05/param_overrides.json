@@ -1,0 +1,7 @@
+{
+    "Default_Config_Path": "NotreDame\\Kenya\\baseline.json", 
+    "parameters": {
+        "Config_Name": "Kenya_ITN_54_Fence_05",
+        "Enable_Interventions": 1
+    }
+}

@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libbednetdllSrcFiles = [ "../interventions/Bednet.cpp",
+                         "../interventions/BednetEModule.cpp"
+                         ]
+
+libbednetdllIncFiles = [  "../interventions/bednet.h" ]
+libbednetdllLocalInc = [  "stdafx.h" ]
+
+bednetenv = env.Clone()
+bednetenv.Append(LIBS=['libgeneric_static'])
+bednetenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+bednetenv.Append(LIBS=['libvector_static'])
+bednetenv.Append(LIBS=['libmalaria_static'])
+bednetenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libbednetDll = bednetenv.SharedLibrary('libbednet', libbednetdllSrcFiles + stdobj)
+#print "building libbednetdll: " + str(libbednetdll)
+
+# take libbednet.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libbednetdllTarget = libbednetDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = bednetenv['BUILD_VARIANT'] + '|x64'
+    print str(libbednetdllTarget) + ": Generating MSVS" + bednetenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    bednetenv.MSVSProject(target = 'LibbednetdllScons' + bednetenv['MSVSPROJECTSUFFIX'],
+                    srcs = libbednetdllSrcFiles,
+		    incs = libbednetdllIncFiles,
+		    localincs = libbednetdllLocalInc,
+ 		    buildtarget = libbednetdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

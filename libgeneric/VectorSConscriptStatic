@@ -1,0 +1,54 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libvector.dll to handle vector disease based on libgeneric_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libvectorSrcFiles = [ 
+                          "../Eradication/IndividualVector.cpp",
+                          "../Eradication/InfectionVector.cpp",
+                          "../Eradication/NodeVector.cpp",
+                          "../Eradication/NodeVectorEventContext.cpp",
+                          "../Eradication/VectorNodePools.cpp",
+                          "../Eradication/ReportVector.cpp",
+                          "../Eradication/SpatialReportVector.cpp",
+                          "../Eradication/SimulationVector.cpp",
+                          "../Eradication/SusceptibilityVector.cpp",
+                          "../Eradication/VectorCohort.cpp",
+                          "../Eradication/VectorCohortAging.cpp",
+                          "../Eradication/VectorCohortIndividual.cpp",
+                          "../Eradication/VectorInterventionsContainer.cpp",
+                          "../Eradication/VectorPopulation.cpp",
+                          "../Eradication/VectorPopulationAging.cpp",
+                          "../Eradication/VectorPopulationIndividual.cpp",
+                          "../Eradication/VectorProbabilities.cpp",
+                          "../Eradication/VectorSpeciesParameters.cpp",
+                          "../Eradication/VectorMatingStructure.cpp",
+                          "../Eradication/VectorHabitat.cpp",
+                          "../Eradication/VectorCohortWithHabitat.cpp",
+                          "../Eradication/VectorSpeciesReport.cpp",
+                          "../Eradication/MosquitoRelease.cpp"]
+
+
+libvectorIncFiles = [  "VectorSpecies.h" ]
+libvectorLocalInc = [  "stdafx.h" ]
+
+libvector_static = env.StaticLibrary('libvector_static', libvectorSrcFiles+stdobj)
+print "building libvector_static: " + str(libvector_static)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libvector_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibvectorStaticScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libvectorSrcFiles,
+                    incs = libvectorIncFiles,
+                    localincs = libvectorLocalInc,
+                    buildtarget = libvector_static,
+                    auto_build_solution = 0,
+                    variant = bvar)

@@ -1,0 +1,40 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria_stataic.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libmalariaSrcFiles = [ "../Eradication/BinnedReportMalaria.cpp",
+                          "../Eradication/IndividualMalaria.cpp",
+                          "../Eradication/InfectionMalaria.cpp",
+                          "../Eradication/MalariaAntibody.cpp",
+                          "../Eradication/MalariaDrugTypeParameters.cpp",
+                          "../Eradication/MalariaInterventionsContainer.cpp",
+                          "../Eradication/NodeMalaria.cpp",
+                          "../Eradication/ReportMalaria.cpp",
+                          "../Eradication/SpatialReportMalaria.cpp",
+                          "../Eradication/NodeMalariaEventContext.cpp",
+                          "../Eradication/SusceptibilityMalaria.cpp"]
+
+libmalariaIncFiles = [  "SimulationMalaria.h" ]
+libmalariaLocalInc = [  "stdafx.h" ]
+
+libmalaria_static = env.StaticLibrary('libmalaria_static', libmalariaSrcFiles+stdobj)
+print "building libmalaria_static: " + str(libmalaria_static)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libmalaria_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibmalariaStaticScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libmalariaSrcFiles,
+                    incs = libmalariaIncFiles,
+                    localincs = libmalariaLocalInc,
+                    buildtarget = libmalaria_static,
+                    auto_build_solution = 0,
+                    variant = bvar)

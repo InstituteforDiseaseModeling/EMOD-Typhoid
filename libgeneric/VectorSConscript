@@ -1,0 +1,51 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libvector.dll to handle vector disease based on libgeneric_static.lib
+
+Import('env')
+
+if env['AllDlls'] or env['Disease'] == "Vector":
+
+    stdobj = env.Object("stdafx.cpp")
+
+    libvectordllSrcFiles = [ 
+                          "../Eradication/SimulationVectorExport.cpp"
+                          ]
+
+    libvectordllIncFiles = [  "SimulationVector.h" ]
+    libvectordllLocalInc = [  "stdafx.h" ]
+
+    vectorenv = env.Clone()
+    genobj = vectorenv.Object("libgenobj_vector","../Eradication/LibGenericClasses.cpp")
+
+
+    vectorenv.Append( CPPDEFINES=["_VECTOR_DLL"] )
+    vectorenv.Append(LIBS=['libgeneric_static'])
+    vectorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+    vectorenv.Append(LIBS=['libvector_static'])
+    vectorenv.Append(LIBS=['libvector_static'])
+    vectorenv.Append(LIBS=['libmalaria_static'])
+    vectorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+    libvectordll = vectorenv.SharedLibrary('libvector', libvectordllSrcFiles + stdobj + genobj)
+
+    #vectorenv.Depends(libvectordll, '$BUILD_DIR/libvector_static/libvector_static.lib')
+
+    # take libvectordll.dll (exclude .lib, .exp) out to be the building target
+    # to match the number of building variant
+    libvectordllTarget = libvectordll[0]
+
+    msvc = GetOption( "MSVC" )
+    if msvc is not None and msvc != False and msvc != "":
+
+        bvar = vectorenv['BUILD_VARIANT'] + '|x64'
+        print str(libvectordllTarget) + ": Generating MSVS" + vectorenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+        vectorenv.MSVSProject(target = 'LibvectordllScons' + vectorenv['MSVSPROJECTSUFFIX'],
+                        srcs = libvectordllSrcFiles,
+                        incs = libvectordllIncFiles,
+                        localincs = libvectordllLocalInc,
+                        buildtarget = libvectordllTarget,
+                        auto_build_solution = 0,
+                        variant = bvar)

@@ -1,0 +1,44 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libcalendar.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libcalendardllSrcFiles = [ "../interventions/CalendarIV.cpp",
+                           "../interventions/HealthSeekingBehavior.cpp",
+                           "../interventions/CalendarIVEModule.cpp"
+                           ]
+
+libcalendardllIncFiles = [  "../interventions/CalendarIV.h" ]
+libcalendardllLocalInc = [  "stdafx.h" ]
+
+calendarenv = env.Clone()
+calendarenv.Append(LIBS=['libgeneric_static'])
+calendarenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+calendarenv.Append(LIBS=['libvector_static'])
+calendarenv.Append(LIBS=['libmalaria_static'])
+calendarenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libcalendarDll = calendarenv.SharedLibrary('libcalendar', libcalendardllSrcFiles + stdobj)
+#print "building libcalendardll: " + str(libcalendardll)
+
+# take libcalendar.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libcalendardllTarget = libcalendarDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = calendarenv['BUILD_VARIANT'] + '|x64'
+    print str(libcalendardllTarget) + ": Generating MSVS" + calendarenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    calendarenv.MSVSProject(target = 'LibcalendardllScons' + calendarenv['MSVSPROJECTSUFFIX'],
+                    srcs = libcalendardllSrcFiles,
+		    incs = libcalendardllIncFiles,
+		    localincs = libcalendardllLocalInc,
+ 		    buildtarget = libcalendardllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

@@ -1,0 +1,24 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "DEMOGRAPHICS": {
+            "Enable_Birth": 0, 
+            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.medinitimmunity.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Base_Individual_Sample_Rate": 0.01
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 600, 
+            "Config_Name": "Polio_Initial_Immunity_Medium_All_Antigen_Outbreaks_Small_Pop", 
+            "Geography": "Bihar"
+        }, 
+        "FUDGE_FACTORS": {
+            "x_Population_Immunity": 0.5
+        }, 
+        "MIXING_POOLS": {
+            "Enable_Mixing_Pools": 1
+        }
+    }
+}

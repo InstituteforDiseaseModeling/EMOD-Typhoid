@@ -1,0 +1,99 @@
+Intellectual Ventures(R)/EMOD Disease Transmission Kernel 1.9.3683.0 Polio-v1.7 2014/03/26 17:01:30
+Using config file: Rate0p005_humoral4_WPV1\config_flat_0p005_humoral4_WPV1.json
+Using input path: .
+Using output path: Rate0p005_humoral4_WPV1\output
+using dll path: 
+Initializing environment...
+Initial working directory: c:\svn\Polio-v17\Regression\Polio\54_paralysis_tests_humoral4
+Log-levels:
+	Default -> 3
+00:00:00 [0] [I] [Eradication] Loaded Configuration...
+00:00:00 [0] [I] [Eradication] 258 parameters found.
+00:00:00 [0] [I] [Eradication] Initializing Controller...
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal()...
+00:00:00 [0] [I] [Simulation] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Simulation] Using PSEUDO_DES random number generator.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: 
+00:00:00 [0] [W] [Simulation] Failed to load reporter emodules for SimType: POLIO_SIM from path: /reporter_plugins
+00:00:00 [0] [I] [SimulationPolio] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal() populate simulation...
+00:00:00 [0] [I] [Simulation] Campaign file name identified as: c:\svn\Polio-v17\Regression\Polio\54_paralysis_tests_humoral4\campaign_WPV1.json
+00:00:00 [0] [I] [Simulation] Opening campaign file c:\svn\Polio-v17\Regression\Polio\54_paralysis_tests_humoral4\campaign_WPV1.json
+00:00:00 [0] [I] [Simulation] Opened campaign file successfully.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: 
+00:00:00 [0] [W] [Simulation] Failed to load intervention emodules for SimType: POLIO_SIM from path: /interventions
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [NodeDemographics] Opening demographics file: ..\polio_input\WPV_humoral_4_demographics.compiled.json
+00:00:00 [0] [I] [Climate] Initialize
+00:00:00 [0] [W] [NodeRankMap] Failed to open load-balancing file: .
+00:00:00 [0] [W] [Simulation] Failed to use legacy loadbalance file. Defaulting to checkerboard.
+00:00:01 [0] [I] [Simulation] populateFromDemographics() created 1 nodes
+00:00:01 [0] [I] [Simulation] populateFromDemographics() generated 1 nodes.
+00:00:01 [0] [I] [Simulation] Rank 0 contributes 1 nodes...
+00:00:01 [0] [I] [Simulation] Merging node rank maps...
+00:00:01 [0] [I] [Simulation] Merged rank 0 map now has 1 nodes.
+00:00:01 [0] [I] [Simulation] Rank 0 map contents:
+{ NodeRankMap:
+[1,0]
+}
+
+00:00:01 [0] [I] [Simulation] Initialized 'InsetChart.json' reporter
+00:00:02 [0] [I] [Simulation] Update(): Time: 1.0 Rank: 0 StatPop: 100000 Infected: 0
+00:00:02 [0] [I] [Simulation] Update(): Time: 2.0 Rank: 0 StatPop: 100000 Infected: 0
+00:00:02 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:02 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:04 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 100000 'OutbreakIndividual' interventions at node 1
+00:00:04 [0] [I] [Simulation] Update(): Time: 3.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:04 [0] [I] [Simulation] Update(): Time: 4.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:05 [0] [I] [Simulation] Update(): Time: 5.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:05 [0] [I] [Simulation] Update(): Time: 6.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:06 [0] [I] [Simulation] Update(): Time: 7.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:06 [0] [I] [Simulation] Update(): Time: 8.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:06 [0] [I] [Simulation] Update(): Time: 9.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:07 [0] [I] [Simulation] Update(): Time: 10.0 Rank: 0 StatPop: 100000 Infected: 100000
+00:00:07 [0] [I] [Simulation] Update(): Time: 11.0 Rank: 0 StatPop: 100000 Infected: 98727
+00:00:08 [0] [I] [Simulation] Update(): Time: 12.0 Rank: 0 StatPop: 100000 Infected: 97733
+00:00:08 [0] [I] [Simulation] Update(): Time: 13.0 Rank: 0 StatPop: 100000 Infected: 96291
+00:00:08 [0] [I] [Simulation] Update(): Time: 14.0 Rank: 0 StatPop: 100000 Infected: 94466
+00:00:09 [0] [I] [Simulation] Update(): Time: 15.0 Rank: 0 StatPop: 100000 Infected: 92216
+00:00:09 [0] [I] [Simulation] Update(): Time: 16.0 Rank: 0 StatPop: 100000 Infected: 89702
+00:00:10 [0] [I] [Simulation] Update(): Time: 17.0 Rank: 0 StatPop: 100000 Infected: 86794
+00:00:10 [0] [I] [Simulation] Update(): Time: 18.0 Rank: 0 StatPop: 100000 Infected: 83781
+00:00:10 [0] [I] [Simulation] Update(): Time: 19.0 Rank: 0 StatPop: 100000 Infected: 80730
+00:00:11 [0] [I] [Simulation] Update(): Time: 20.0 Rank: 0 StatPop: 100000 Infected: 77485
+00:00:11 [0] [I] [Simulation] Update(): Time: 21.0 Rank: 0 StatPop: 100000 Infected: 74350
+00:00:12 [0] [I] [Simulation] Update(): Time: 22.0 Rank: 0 StatPop: 100000 Infected: 71127
+00:00:12 [0] [I] [Simulation] Update(): Time: 23.0 Rank: 0 StatPop: 100000 Infected: 67763
+00:00:12 [0] [I] [Simulation] Update(): Time: 24.0 Rank: 0 StatPop: 100000 Infected: 63893
+00:00:13 [0] [I] [Simulation] Update(): Time: 25.0 Rank: 0 StatPop: 100000 Infected: 60857
+00:00:13 [0] [I] [Simulation] Update(): Time: 26.0 Rank: 0 StatPop: 100000 Infected: 57888
+00:00:14 [0] [I] [Simulation] Update(): Time: 27.0 Rank: 0 StatPop: 100000 Infected: 54970
+00:00:14 [0] [I] [Simulation] Update(): Time: 28.0 Rank: 0 StatPop: 100000 Infected: 52133
+00:00:14 [0] [I] [Simulation] Update(): Time: 29.0 Rank: 0 StatPop: 100000 Infected: 49382
+00:00:15 [0] [I] [Simulation] Update(): Time: 30.0 Rank: 0 StatPop: 100000 Infected: 46720
+00:00:15 [0] [I] [Simulation] Update(): Time: 31.0 Rank: 0 StatPop: 100000 Infected: 44215
+00:00:15 [0] [I] [Simulation] Update(): Time: 32.0 Rank: 0 StatPop: 100000 Infected: 41821
+00:00:16 [0] [I] [Simulation] Update(): Time: 33.0 Rank: 0 StatPop: 100000 Infected: 39529
+00:00:16 [0] [I] [Simulation] Update(): Time: 34.0 Rank: 0 StatPop: 100000 Infected: 37315
+00:00:16 [0] [I] [Simulation] Update(): Time: 35.0 Rank: 0 StatPop: 100000 Infected: 35179
+00:00:17 [0] [I] [Simulation] Update(): Time: 36.0 Rank: 0 StatPop: 100000 Infected: 33198
+00:00:17 [0] [I] [Simulation] Update(): Time: 37.0 Rank: 0 StatPop: 100000 Infected: 31292
+00:00:17 [0] [I] [Simulation] Update(): Time: 38.0 Rank: 0 StatPop: 100000 Infected: 29491
+00:00:18 [0] [I] [Simulation] Update(): Time: 39.0 Rank: 0 StatPop: 100000 Infected: 27826
+00:00:18 [0] [I] [Simulation] Update(): Time: 40.0 Rank: 0 StatPop: 100000 Infected: 26250
+00:00:18 [0] [I] [Simulation] Update(): Time: 41.0 Rank: 0 StatPop: 100000 Infected: 24746
+00:00:19 [0] [I] [Simulation] Update(): Time: 42.0 Rank: 0 StatPop: 100000 Infected: 23350
+00:00:19 [0] [I] [Simulation] Finalizing 'InsetChart.json' reporter.
+00:00:19 [0] [I] [Eradication] Controller executed successfully.

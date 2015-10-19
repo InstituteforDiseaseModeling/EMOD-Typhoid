@@ -1,0 +1,16 @@
+{
+    "tests": [
+        { "path" : "14_Polio_Bihar_Larger" },
+        { "path" : "17_Polio_Bihar_Simplest" },
+        { "path" : "42_Polio_Default_Geography" }
+    ],
+    "NotWorking" : [
+        { "path" : "2_Polio_Bihar_2x2_MixingPool" },
+        { "path" : "3_Polio_Bihar_MixingPool3" },
+        { "path" : "4_Polio_Bihar_MixingPool2" },
+        { "path" : "7_Polio_Bihar_MixingPool1" },
+        { "path" : "15_Polio_Bihar_old_immunity" },
+        { "path" : "16_Polio_Bihar_new_immunity" },
+        { "path" : "71_Polio_Default_Multicore" }
+    ]
+}

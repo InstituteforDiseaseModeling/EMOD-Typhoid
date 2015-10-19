@@ -1,0 +1,22 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "DEMOGRAPHICS": {
+            "Enable_Birth": 0, 
+            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.smallpop.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL", 
+                "Base_Individual_Sample_Rate": 1.0
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 180, 
+            "Config_Name": "63_Polio_Trivial", 
+            "Geography": "Bihar"
+        }, 
+        "MIXING_POOLS": {
+            "Enable_Mixing_Pools": 1
+        }
+    }
+}

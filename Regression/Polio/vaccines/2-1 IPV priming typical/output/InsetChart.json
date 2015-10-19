@@ -1,0 +1,612 @@
+{
+    "Header": {
+        "DateTime": "Thu Mar 27 10:16:23 2014",
+        "DTK_Version": "3683 Polio-v1.7 2014/03/26 17:01:30",
+        "Report_Version": "3",
+        "Timesteps": 10,
+        "Channels": 40,
+        "Report_Type": "InsetChart"
+    },
+    "Channels": {
+        "Age Of Infection": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Births": {
+            "Units": "Births",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Campaign Cost": {
+            "Units": "USD",
+            "Data": [
+                0,
+                0,
+                0,
+                100000,
+                100000,
+                100000,
+                100000,
+                100000,
+                100000,
+                100000
+            ]
+        },
+        "Cumulative Disease Susceptible Infections": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Infections": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Paralytic Cases": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Paralytic Cases VDPV1": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Paralytic Cases VDPV2": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Paralytic Cases VDPV3": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Paralytic Cases WPV1": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Paralytic Cases WPV2": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Paralytic Cases WPV3": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Cumulative Reported Infections": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Disease Deaths": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Genetic Entropy": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Human Infectious Reservoir": {
+            "Units": "Total Infectivity",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Infected": {
+            "Units": "Infected Fraction",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Log Prevalence": {
+            "Units": "Log Prevalence",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "Log Total Prevalence": {
+            "Units": "",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "Mean Immunity At New Infection": {
+            "Units": "",
+            "Data": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        "New Infections": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "New Reported Infections": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Probability of New Infection": {
+            "Units": "Infection Rate",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "Seroprevalence (P1)": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        "Seroprevalence (P2)": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        "Seroprevalence (P3)": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        "Statistical Population": {
+            "Units": "Population",
+            "Data": [
+                10000,
+                10000,
+                10000,
+                10000,
+                10000,
+                10000,
+                10000,
+                10000,
+                10000,
+                10000
+            ]
+        },
+        "Total Prevalence": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "VDPV1 Log Prevalence": {
+            "Units": "Log Prevalence",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "VDPV1 Prevalence": {
+            "Units": "Infected Fraction",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "VDPV2 Log Prevalence": {
+            "Units": "Log Prevalence",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "VDPV2 Prevalence": {
+            "Units": "Infected Fraction",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "VDPV3 Log Prevalence": {
+            "Units": "Log Prevalence",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "VDPV3 Prevalence": {
+            "Units": "Infected Fraction",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "WPV1 Log Prevalence": {
+            "Units": "Log Prevalence",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "WPV1 Prevalence": {
+            "Units": "Infected Fraction",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "WPV2 Log Prevalence": {
+            "Units": "Log Prevalence",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "WPV2 Prevalence": {
+            "Units": "Infected Fraction",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "WPV3 Log Prevalence": {
+            "Units": "Log Prevalence",
+            "Data": [
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10
+            ]
+        },
+        "WPV3 Prevalence": {
+            "Units": "Infected Fraction",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    }
+}

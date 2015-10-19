@@ -1,0 +1,66 @@
+{
+     "Use_Defaults": 1,
+     "Campaign_Name": "Campaign - Outbreak and Vaccines", 
+     "Events": [
+        {
+               "Event_Coordinator_Config": {
+                    "Intervention_Config": {
+                         "Antigen__SP1": 0,
+                         "Antigen": 0, 
+                         "Genome": 0, 
+                         "Outbreak_Source": "PrevalenceIncrease", 
+                         "class": "OutbreakIndividual"
+                    }, 
+                    "Demographic_Coverage": 1,
+                    "Target_Demographic": "Everyone", 
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Event_Name": "Outbreak", 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 0, 
+               "class": "CampaignEvent"
+          },
+          {
+               "Event_Coordinator_Config": {
+                    "Intervention_Config": {
+                         "Antigen__SP1": 1,
+                         "Antigen": 1, 
+                         "Genome": 0, 
+                         "Outbreak_Source": "PrevalenceIncrease", 
+                         "class": "OutbreakIndividual"
+                    }, 
+                    "Demographic_Coverage": 1,
+                    "Target_Demographic": "Everyone", 
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Event_Name": "Outbreak", 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 101, 
+               "class": "CampaignEvent"
+          },
+          {
+               "Event_Coordinator_Config": {
+                    "Intervention_Config": {
+                         "Antigen__SP1": 2,
+                         "Antigen": 2, 
+                         "Genome": 0, 
+                         "Outbreak_Source": "PrevalenceIncrease", 
+                         "class": "OutbreakIndividual"
+                    }, 
+                    "Demographic_Coverage": 1,
+                    "Target_Demographic": "Everyone", 
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Event_Name": "Outbreak", 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 201, 
+               "class": "CampaignEvent"
+          }
+	]
+}

@@ -1,0 +1,46 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Acquire_Rate_Default_Polio": 0.0001, 
+            "Waning_Humoral_Rate_Fast": 0, 
+            "Waning_Humoral_Fast_Fraction": 0, 
+            "Waning_Mucosal_Rate_Fast": 0, 
+            "SABIN_EVOLUTION": {
+                "Sabin3_Site_Reversion_Rates": "0.01 0.01 0.01", 
+                "Sabin1_Site_Reversion_Rates": "0.01 0.01 0.01 0.01 0.01", 
+                "Sabin2_Site_Reversion_Rates": "0.01 0.01"
+            }, 
+            "Waning_Mucosal_Fast_Fraction": 0
+        }, 
+        "DEMOGRAPHICS": {
+            "Enable_Immunity_Initialization_Distribution": 1, 
+            "Enable_Birth": 0, 
+            "Enable_Demographics_Reporting": 0, 
+            "Demographics_Filename": "..\\polio_input\\mucosalMemory_6_demographics.compiled.json", 
+            "MORTALITY": {
+                "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF"
+            }, 
+            "IMMUNITY": {
+                "Enable_Immune_Decay": 0
+            }, 
+            "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL", 
+                "Base_Individual_Sample_Rate": 1
+            }
+        }, 
+        "DISEASE": {
+            "INCUBATION": {
+                "Base_Incubation_Period": 1
+            }
+        }, 
+        "PRIMARY": {
+            "Run_Number": 34, 
+            "Simulation_Duration": 1096, 
+            "Config_Name": "56_WPV_doseresponse_tests", 
+            "Geography": "auto-generated"
+        }
+    }
+}

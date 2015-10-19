@@ -1,0 +1,8 @@
+{
+    "tests": [
+        { "path": "STI/45_STI_Cross_Report_Validation" }
+    ],
+    "disabled_tests": [
+        { "path": "disable_STI/44_STI_PFA_Report" }
+    ]
+}

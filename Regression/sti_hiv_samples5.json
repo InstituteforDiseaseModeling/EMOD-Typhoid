@@ -1,0 +1,31 @@
+{
+    "tests": [
+
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/1a_MaleCircumcision_at_2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/1b_MaleCircumcision_at_2020_AgeTargeted"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/1c_MaleCircumcision_Continuous"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/1d_MaleCircumcision_at_Age_18"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/1e_MaleCircumcision_After_Negative_HIV_Test_Post2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/1f_IncreasedTesting_and_MaleCircumcision_Starting_2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/2a_UniversalART"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/2b_UniversalART_Increased_LTFU_6mo_CD4_500"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/2c_UniversalART_Increased_LTFU_CD4_500"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/2d_UniversalART_for_F35_M40"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/3a_TestingDay_at_2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/3b_HCTExpansion_at_2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/3c_AnnualCommunityTest_Starting_2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/3d_AnnualCommunityTest_WithStaging_Starting_2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/3e_AnnualCommunityTest_WithStaging_DelayToPresentation_Starting_2020"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/4a_ARTRetention_Depends_on_Time_CD4_Demographics"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/4b_ImprovedRetention_To_BloodDraw"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/4c_ImprovedRetention_To_BloodDraw_TimeVarying"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/4d_ImprovedRetention_PreART_and_ART"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/5a_ImprovedRetention_OnART"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/5b_ImprovedReinitiation_FindPreviouslyLost"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/6a_ReduceDelays_Lossy"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/6b_ReduceDelays_Lossless"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/7a_HIVProphylaxis_Uniform_Lifelong_Protection_F_15to49"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/7b_HIVProphylaxis_Heterogeneous_Adherence_or_Efficacy_F_15to49"},
+        { "path": "Scenarios/STIAndHIV/05_Intervention_Examples/7c_HIVProphylaxis_LongActingInjectable_F_15to49"}
+    ]
+}

@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+svobj = env.Object("../interventions/SimpleVaccine.cpp")
+
+libsimplevaccinedllSrcFiles = [ "../interventions/SimpleVaccineEModule.cpp"
+                               ]
+
+libsimplevaccinedllIncFiles = [  "../Eradication/vaccine.h" ]
+libsimplevaccinedllLocalInc = [  "stdafx.h" ]
+
+simplevaccineenv = env.Clone()
+simplevaccineenv.Append(LIBS=['libgeneric_static'])
+simplevaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+simplevaccineenv.Append(LIBS=['libvector_static'])
+simplevaccineenv.Append(LIBS=['libmalaria_static'])
+simplevaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libsimplevaccineDll = simplevaccineenv.SharedLibrary('libsimplevaccine', libsimplevaccinedllSrcFiles + stdobj + svobj)
+#print "building libsimplevaccinedll: " + str(libsimplevaccinedll)
+
+# take libsimplevaccine.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libsimplevaccinedllTarget = libsimplevaccineDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = simplevaccineenv['BUILD_VARIANT'] + '|x64'
+    print str(libsimplevaccinedllTarget) + ": Generating MSVS" + simplevaccineenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    simplevaccineenv.MSVSProject(target = 'LibsimplevaccinedllScons' + simplevaccineenv['MSVSPROJECTSUFFIX'],
+                    srcs = libsimplevaccinedllSrcFiles,
+		    incs = libsimplevaccinedllIncFiles,
+		    localincs = libsimplevaccinedllLocalInc,
+ 		    buildtarget = libsimplevaccinedllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

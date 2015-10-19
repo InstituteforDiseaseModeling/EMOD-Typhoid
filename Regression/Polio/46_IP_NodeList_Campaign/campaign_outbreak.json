@@ -1,0 +1,31 @@
+{
+  "Use_Defaults":1,
+  "Campaign_Name":"Campaign - Outbreak and Vaccines",
+  "Events":[
+    {
+      "Event_Coordinator_Config":{
+        "Intervention_Config":{
+          "Antigen":0,
+          "Genome":0,
+          "Outbreak_Source":"PrevalenceIncrease",
+          "class":"OutbreakIndividual"
+        },
+        "Target_Demographic":"Everyone",
+        "Property_Restrictions_NOTUSED":[
+          "Place:Birds"
+        ],
+        "Demographic_Coverage":1.0,
+        "class":"StandardInterventionDistributionEventCoordinator"
+      },
+      "Event_Name":"Outbreak",
+      "Start_Day":10,
+      "class":"CampaignEvent",
+      "Nodeset_Config":{
+        "Node_List":[
+          2682463747
+        ],
+        "class":"NodeSetNodeList"
+      }
+    }
+  ]
+}

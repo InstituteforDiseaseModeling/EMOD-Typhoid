@@ -1,0 +1,92 @@
+{
+    "suite":"win_trunk_emodules.json",
+    "tests": [
+        {
+            "path" : "1_Generic_Seattle_MultiNode"
+        },
+        {
+            "path" : "11_Vector_Namawala_Larvicides"
+        },
+        {
+            "path" : "12_Malaria_Namawala_LargeVectorCampaign"
+        },
+        {
+            "path" : "13_Generic_Seattle_SingleCore"
+        },
+        {
+            "path" : "14_Polio_Bihar_Larger"
+        },
+        {
+            "path" : "16_Polio_Bihar_new_immunity"
+        },
+        {
+            "path" : "17_Polio_Bihar_Simplest"
+        },
+        {
+            "path" : "18_Vector_Namawala_Indoor_IRSOnly"
+        },
+        {
+            "path" : "19_Vector_Namawala_Indoor_4Interventions"
+        },
+        {
+            "path" : "20_Vector_Namawala_IRSOnly"
+        },
+        {
+            "path" : "21_Vector_Namawala_4Interventions"
+        },
+        {
+            "path" : "22_Malaria_Namawala_HousingModAt540"
+        },
+        {
+            "path" : "23_Generic_Namawala"
+        },
+        {
+            "path" : "26_Vector_Garki"
+        },
+        {
+            "path" : "27_Vector_Sandbox"
+        },
+        {
+            "path" : "28_Malaria_Sandbox"
+        },
+        {
+            "path" : "38_Malaria_Namawala_HousingModAt540_WithDeaths"
+        },
+        {
+            "path" : "39_Vector_Namawala_HostSeekingTrap"
+        },
+        {
+            "path" : "40_Malaria_Namawala_LargeVectorCampaign_StrainGenerator"
+        },
+        {
+            "path" : "41_Malaria_Default_Geography"
+        },
+        {
+            "path" : "42_Polio_Default_Geography"
+        },
+        {
+            "path" : "45_Vector_An_farauti_IRS"
+        },
+        {
+            "path" : "46_Vector_An_arabiensis_MultipleHabitats"
+        },
+        {
+            "path" : "48_Generic_Seattle_SingleCore_Zoonosis"
+        },
+        {
+            "path" : "100_OneMalariaIndividual_SingleAntigen"
+        },
+        {
+            "path" : "101_OneMalariaIndividual_MultipleAntigens"
+        },
+        {
+            "path" : "102_OneMalariaIndividual_MultipleSwitchingAntigens"
+        },
+        {
+            "path" : "103_OneMalariaIndividual_MultipleSwitchingAntigensSuperInfection"
+        },
+        {
+            "path" : "110_Namawala_Production_Burnin"
+        }
+    ]
+}

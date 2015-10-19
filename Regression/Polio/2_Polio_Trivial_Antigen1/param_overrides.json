@@ -1,0 +1,20 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Disease_Susceptible_Report_Poliovirus_Type": "WPV2"
+        }, 
+        "DEMOGRAPHICS": {
+            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.smallpop.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL"
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 180, 
+            "Config_Name": "2_Polio_Trivial_Antigen1_SmallPop", 
+            "Geography": "Bihar"
+        }
+    }
+}

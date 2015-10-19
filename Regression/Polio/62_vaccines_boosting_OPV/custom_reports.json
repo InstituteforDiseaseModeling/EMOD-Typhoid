@@ -1,0 +1,54 @@
+{
+    "Custom_Reports" : 
+    {
+        "PolioSurveyJSONAnalyzer" :
+        {
+            "Enabled" : 1,
+            "Reports" :
+            [
+                {
+                    "Start_Day": 32,
+                    "Duration_Days" : 10000,
+                    "Nodeset_Config": {
+                         "class": "NodeSetAll"
+                    }, 
+                    "Event_Trigger_List" :
+                    [
+                        "EveryUpdate"
+                    ],
+                    "Max_Number_Reports": 3,
+                    "Report_Description": "survey01",
+                    "Reporting_Interval": 1
+                },
+                {
+                    "Start_Day": 132,
+                    "Duration_Days" : 10000,
+                    "Nodeset_Config": {
+                         "class": "NodeSetAll"
+                    }, 
+                    "Event_Trigger_List" :
+                    [
+                        "EveryUpdate"
+                    ],
+                    "Max_Number_Reports": 3,
+                    "Report_Description": "survey11",
+                    "Reporting_Interval": 1
+                },
+                {
+                    "Start_Day": 232,
+                    "Duration_Days" : 10000,
+                    "Nodeset_Config": {
+                         "class": "NodeSetAll"
+                    }, 
+                    "Event_Trigger_List" :
+                    [
+                        "EveryUpdate"
+                    ],
+                    "Max_Number_Reports": 2,
+                    "Report_Description": "survey024",
+                    "Reporting_Interval": 1
+                }
+            ]
+        }
+    }
+}

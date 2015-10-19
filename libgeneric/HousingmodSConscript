@@ -1,0 +1,44 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhousingmoddllSrcFiles = [ "../interventions/HousingModification.cpp",
+                             "../interventions/HousingModificationEModule.cpp"
+                             ]
+
+libhousingmoddllIncFiles = [  "../interventions/HousingModification.h" ]
+libhousingmoddllLocalInc = [  "stdafx.h" ]
+
+housingmodenv = env.Clone()
+housingmodenv.Append(LIBS=['libgeneric_static'])
+housingmodenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+housingmodenv.Append(LIBS=['libvector_static'])
+housingmodenv.Append(LIBS=['libmalaria_static'])
+housingmodenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+#housingmodenv.Append( CPPDEFINES=["INTERVENTIONS_AS_DLLS"] )
+
+libhousingmodDll = housingmodenv.SharedLibrary('libhousingmod', libhousingmoddllSrcFiles + stdobj)
+#print "building libhousingmoddll: " + str(libhousingmoddll)
+
+# take libhousingmod.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhousingmoddllTarget = libhousingmodDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = housingmodenv['BUILD_VARIANT'] + '|x64'
+    print str(libhousingmoddllTarget) + ": Generating MSVS" + housingmodenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    housingmodenv.MSVSProject(target = 'LibhousingmoddllScons' + housingmodenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhousingmoddllSrcFiles,
+		    incs = libhousingmoddllIncFiles,
+		    localincs = libhousingmoddllLocalInc,
+ 		    buildtarget = libhousingmoddllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

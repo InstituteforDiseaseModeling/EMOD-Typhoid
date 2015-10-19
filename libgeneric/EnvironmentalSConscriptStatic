@@ -1,0 +1,36 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libenvironmental_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libenvironmentalSrcFiles = [ 
+                          "../Eradication/IndividualEnvironmental.cpp",
+                          "../Eradication/InfectionEnvironmental.cpp",
+                          "../Eradication/NodeEnvironmental.cpp",
+                          "../Eradication/ReportEnvironmental.cpp",
+                          "../Eradication/SimulationEnvironmental.cpp",
+                          "../Eradication/SusceptibilityEnvironmental.cpp"]
+
+libenvironmentalIncFiles = [  "NodeEnvironmental.h" ]
+libenvironmentalLocalInc = [  "stdafx.h" ]
+
+libenvironmental_static = env.StaticLibrary('libenvironmental_static', libenvironmentalSrcFiles+stdobj)
+print "building libenvironmental_static: " + str(libenvironmental_static)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libenvironmental_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibenvironmentalStaticScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libenvironmentalSrcFiles,
+                    incs = libenvironmentalIncFiles,
+                    localincs = libenvironmentalLocalInc,
+                    buildtarget = libenvironmental_static,
+                    auto_build_solution = 0,
+                    variant = bvar)

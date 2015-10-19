@@ -1,0 +1,11 @@
+Default case is tOPV.
+
+processpatient-OPV-interference.py output\PolioSurveyJSONAnalyzer_survey_1_13.json default
+
+processpatient-OPV-interference.py output_bOPV_default\PolioSurveyJSONAnalyzer_survey_012_1_13.json bOPV_default
+
+processpatient-OPV-interference.py output_bOPV_no_interference\PolioSurveyJSONAnalyzer_survey_012_1_13.json bOPV_no_interference
+
+python processpatient-OPV-interference.py output_OPV_different_day\PolioSurveyJSONAnalyzer_survey_012_1_13.json bOPV_no_interference
+
+python processpatient-OPV-interference.py output_OPV_same_day\PolioSurveyJSONAnalyzer_survey_012_1_13.json bOPV_default

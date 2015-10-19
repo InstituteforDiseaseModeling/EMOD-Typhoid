@@ -1,0 +1,321 @@
+
+{ 
+    "Metadata": 
+    { 
+        "DateCreated": "Wed Mar 12, 2014",
+        "Tool": "None",
+        "Author": "kmccarthy",
+        "IdReference": "Legacy",
+        "NodeCount": 1
+    },
+    "Defaults": 
+    { 
+        "NodeAttributes": 
+        { 
+            "Airport": 1,
+            "Region": 1,
+            "Seaport": 0,
+            "BirthRate": 7.2027397260273973e-05,
+            "Urban": 0,
+            "AbovePoverty": 0.5
+        },
+        "IndividualAttributes": 
+        { 
+            "AgeDistributionFlag": 1,
+            "AgeDistribution1": 0,
+            "AgeDistribution2": 21900,
+            "PrevalenceDistributionFlag": 0,
+            "PrevalenceDistribution1": 0,
+            "PrevalenceDistribution2": 0,
+            "ImmunityDistributionFlag": 0,
+            "ImmunityDistribution1": 0,
+            "ImmunityDistribution2": 0,
+            "RiskDistributionFlag": 0,
+            "RiskDistribution1": 1,
+            "RiskDistribution2": 0,
+            "MigrationHeterogeneityDistributionFlag": 0,
+            "MigrationHeterogeneityDistribution1": 1,
+            "MigrationHeterogeneityDistribution2": 0,
+            "FertilityDistribution": 
+            { 
+                "NumDistributionAxes": 2,
+                "AxisNames": [ "urban", "age" ],
+                "AxisUnits": [ "rural=0, urban=1", "years" ],
+                "AxisScaleFactors": [ 1, 365 ],
+                "NumPopulationGroups": [ 2, 9 ],
+                "PopulationGroups": 
+                [
+                    [ 0, 1 ], 
+                    [ 0, 15, 20, 25, 30, 35, 40, 45, 49 ]
+                ],
+                "ResultUnits": "annual births per 1000 individuals",
+                "ResultScaleFactor": 2.739726027397e-06,
+                "ResultValues": 
+                [
+                    [ 0, 28.399999999999999, 190.30000000000001, 222.40000000000001, 155.40000000000001, 68, 21.899999999999999, 3.6000000000000001, 0 ], 
+                    [ 0, 28.399999999999999, 190.30000000000001, 222.40000000000001, 155.40000000000001, 68, 21.899999999999999, 3.6000000000000001, 0 ]
+                ]
+            },
+            "MortalityDistribution": 
+            { 
+                "NumDistributionAxes": 2,
+                "AxisNames": [ "gender", "age" ],
+                "AxisUnits": [ "male=0,female=1", "years" ],
+                "AxisScaleFactors": [ 1, 365 ],
+                "NumPopulationGroups": [ 2, 21 ],
+                "PopulationGroups": 
+                [
+                    [ 0, 1 ], 
+                    [ 0, 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 ]
+                ],
+                "ResultUnits": "annual deaths per 1000 individuals",
+                "ResultScaleFactor": 2.739726027397e-06,
+                "ResultValues": 
+                [
+                    [ 56.005000000000003, 5.912941612, 6.3508677630000001, 4.4716442269999996, 3.6593785419999998, 5.6143001659999996, 8.5101375079999997, 12.743272360000001, 17.34396082, 26.94972903, 35.273778190000002, 51.310823220000003, 80.496415080000006, 137.2791162, 265.9068747, 298.95712630000003, 509.44450089999998, 568.3005723, 854.75051259999998, 1647.27955, 2713.1782950000002 ], 
+                    [ 56.005000000000003, 5.1138925049999999, 5.4772314189999998, 3.3993964679999999, 2.4660196989999998, 3.8419164380000002, 5.2835370419999999, 7.3798183430000002, 10.379780909999999, 15.23526725, 19.222267410000001, 26.00905796, 37.946298900000002, 61.978522490000003, 158.07700779999999, 160.05724979999999, 279.00502549999999, 385.74731969999999, 508.04988659999998, 973.48837209999999, 2093.889717 ]
+                ]
+            },
+            "AgeDistribution": 
+            { 
+                "NumDistributionAxes": 0,
+                "ResultUnits": "years",
+                "ResultScaleFactor": 365,
+                "AxisScaleFactors": 1,
+                "ResultValues": [ 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 ],
+                "DistributionValues": [ 0.126557473, 0.24741816799999999, 0.36994900600000002, 0.49178041300000003, 0.60458231299999998, 0.68582738399999998, 0.74519848099999997, 0.79774042099999998, 0.844955868, 0.89215590499999997, 0.92822930400000003, 0.95136722699999998, 0.96524739299999995, 0.97463599300000003, 0.98638253899999995, 0.99326679500000004, 0.99778598299999999, 0.99949363599999996, 0.99988369499999996, 1 ]
+            }
+        },
+        "mucosal_memory_distribution1": 
+        { 
+            "NumDistributionAxes": 1,
+            "AxisNames": [ "age" ],
+            "AxisUnits": [ "years" ],
+            "AxisScaleFactors": [ 365 ],
+            "NumPopulationGroups": [ 1 ],
+            "PopulationGroups": 
+            [
+                [ 0 ]
+            ],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 11 ],
+            "DistributionValues": 
+            [
+                [ 1 ]
+            ]
+        },
+        "mucosal_memory_distribution2": 
+        { 
+            "NumDistributionAxes": 1,
+            "AxisNames": [ "age" ],
+            "AxisUnits": [ "years" ],
+            "AxisScaleFactors": [ 365 ],
+            "NumPopulationGroups": [ 1 ],
+            "PopulationGroups": 
+            [
+                [ 0 ]
+            ],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 11 ],
+            "DistributionValues": 
+            [
+                [ 1 ]
+            ]
+        },
+        "mucosal_memory_distribution3": 
+        { 
+            "NumDistributionAxes": 1,
+            "AxisNames": [ "age" ],
+            "AxisUnits": [ "years" ],
+            "AxisScaleFactors": [ 365 ],
+            "NumPopulationGroups": [ 1 ],
+            "PopulationGroups": 
+            [
+                [ 0 ]
+            ],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 11 ],
+            "DistributionValues": 
+            [
+                [ 1 ]
+            ]
+        },
+        "humoral_memory_distribution1": 
+        { 
+            "NumDistributionAxes": 2,
+            "AxisNames": [ "age", "mucosal_memory" ],
+            "AxisUnits": [ "years", "log2NAb" ],
+            "AxisScaleFactors": [ 365, 1 ],
+            "NumPopulationGroups": [ 2, 4 ],
+            "PopulationGroups": 
+            [
+                [ 0, 5 ], 
+                [ 0, 3, 10, 12 ]
+            ],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 0, 3, 12 ],
+            "DistributionValues": 
+            [
+                
+                [
+                    [ 0, 0, 1 ], 
+                    [ 0, 1, 1 ], 
+                    [ 1, 1, 1 ], 
+                    [ 0.5, 1, 1 ]
+                ], 
+                
+                [
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ]
+                ]
+            ]
+        },
+        "humoral_memory_distribution2": 
+        { 
+            "NumDistributionAxes": 2,
+            "AxisNames": [ "age", "mucosal_memory" ],
+            "AxisUnits": [ "years", "log2NAb" ],
+            "AxisScaleFactors": [ 365, 1 ],
+            "NumPopulationGroups": [ 2, 4 ],
+            "PopulationGroups": 
+            [
+                [ 0, 5 ], 
+                [ 0, 1, 2, 12 ]
+            ],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 0, 3, 12 ],
+            "DistributionValues": 
+            [
+                
+                [
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ]
+                ], 
+                
+                [
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ]
+                ]
+            ]
+        },
+        "humoral_memory_distribution3": 
+        { 
+            "NumDistributionAxes": 2,
+            "AxisNames": [ "age", "mucosal_memory" ],
+            "AxisUnits": [ "years", "log2NAb" ],
+            "AxisScaleFactors": [ 365, 1 ],
+            "NumPopulationGroups": [ 2, 4 ],
+            "PopulationGroups": 
+            [
+                [ 0, 5 ], 
+                [ 0, 1, 2, 12 ]
+            ],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 0, 3, 12 ],
+            "DistributionValues": 
+            [
+                
+                [
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ]
+                ], 
+                
+                [
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ], 
+                    [ 0.20000000000000001, 0.5, 1 ]
+                ]
+            ]
+        },
+        "maternal_antibody_distribution1": 
+        { 
+            "NumDistributionAxes": 0,
+            "AxisNames": [],
+            "AxisUnits": [],
+            "AxisScaleFactors": [],
+            "NumPopulationGroups": [ 0 ],
+            "PopulationGroups": [],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 0 ],
+            "DistributionValues": [ 1 ]
+        },
+        "maternal_antibody_distribution2": 
+        { 
+            "NumDistributionAxes": 0,
+            "AxisNames": [],
+            "AxisUnits": [],
+            "AxisScaleFactors": [],
+            "NumPopulationGroups": [ 0 ],
+            "PopulationGroups": [],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 0 ],
+            "DistributionValues": [ 1 ]
+        },
+        "maternal_antibody_distribution3": 
+        { 
+            "NumDistributionAxes": 0,
+            "AxisNames": [],
+            "AxisUnits": [],
+            "AxisScaleFactors": [],
+            "NumPopulationGroups": [ 0 ],
+            "PopulationGroups": [],
+            "ResultUnits": "log2 antibody titer",
+            "ResultScaleFactor": 1,
+            "ResultValues": [ 0 ],
+            "DistributionValues": [ 1 ]
+        },
+        "fake_time_since_infection_distribution": 
+        { 
+            "NumDistributionAxes": 1,
+            "AxisNames": [ "age" ],
+            "AxisUnits": [ "years" ],
+            "AxisScaleFactors": [ 365 ],
+            "NumPopulationGroups": [ 4 ],
+            "PopulationGroups": 
+            [
+                [ 0, 1, 5, 10 ]
+            ],
+            "ResultUnits": "time in days",
+            "ResultScaleFactor": 365,
+            "ResultValues": 
+            [
+                [ 0 ]
+            ],
+            "DistributionValues": 
+            [
+                [ 1 ], 
+                [ 1 ], 
+                [ 1 ], 
+                [ 1 ]
+            ]
+        }
+    },
+    "Nodes": [ 
+        { 
+            "NodeID": 33295,
+            "NodeAttributes": 
+            { 
+                "Latitude": 38.244793940682527,
+                "Longitude": 68.61907343693882,
+                "InitialPopulation": 100,
+                "Altitude": 1081
+            }
+        } ]
+}

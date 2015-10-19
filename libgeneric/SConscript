@@ -1,0 +1,60 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds main DTK core files and generate Eradication program
+
+Import('env')
+
+libgenericdllSrcFiles = [ "../Eradication/BinnedReport.cpp",
+		      	  "../Eradication/CampaignEvent.cpp",
+                          "../Eradication/Climate.cpp",
+                          "../Eradication/ClimateByData.cpp",
+                          "../Eradication/ClimateConstant.cpp",
+                          "../Eradication/ClimateKoppen.cpp",
+                          "../Eradication/ContagionPopulation.cpp",
+			  "../Eradication/DemographicsReport.cpp",
+                          "../Eradication/Individual.cpp",
+                          "../Eradication/Infection.cpp",
+                          "../Eradication/InterventionsContainer.cpp",
+                          "../Eradication/Migration.cpp",
+                          "../Eradication/Node.cpp",
+                          "../Eradication/NodeDemographics.cpp",
+                          "../Eradication/NodeEventContext.cpp",
+                          "../Eradication/NodeRankMap.cpp",
+                          "../Eradication/NodeSetAll.cpp",
+                          "../Eradication/NodeSetNodeList.cpp",
+                          "../Eradication/NodeSetPolygon.cpp",
+                          "../Eradication/NodeTimestepSpatialReporter.cpp",
+                          "../Eradication/RANDOM.cpp",
+			  "../Eradication/Report.cpp",
+                          "../interventions/SimpleVaccine.cpp",
+                          "../Eradication/Simulation.cpp",
+                          "../Eradication/SimulationEventContext.cpp",
+                          "../Eradication/StandardEventCoordinator.cpp",
+                          "stdafx.cpp",
+                          "../Eradication/StrainIdentity.cpp",
+                          "../Eradication/Susceptibility.cpp"]
+
+libgenericdllIncFiles = [  "Report.h" ]
+libgenericdllLocalInc = [  "stdafx.h" ]
+
+libgenericDll = env.SharedLibrary('libgeneric', libgenericdllSrcFiles)
+#print "building libgenericDll: " + str(libgenericDll)
+
+# take libgeneric.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libgenericDllTarget = libgenericDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libgenericDllTarget) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibgenericScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libgenericdllSrcFiles,
+		    incs = libgenericdllIncFiles,
+		    localincs = libgenericdllLocalInc,
+ 		    buildtarget = libgenericDllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

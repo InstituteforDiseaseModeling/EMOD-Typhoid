@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libbirthtriggered.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libbirthtriggeredivdllSrcFiles = [ "../interventions/BirthTriggeredIV.cpp",
+                                   "../interventions/BirthTriggeredIVEModule.cpp"
+                                   ]
+
+libbirthtriggeredivdllIncFiles = [  "../interventions/BirthTriggeredIV.h" ]
+libbirthtriggeredivdllLocalInc = [  "stdafx.h" ]
+
+birthtriggeredivenv = env.Clone()
+birthtriggeredivenv.Append(LIBS=['libgeneric_static'])
+birthtriggeredivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+birthtriggeredivenv.Append(LIBS=['libvector_static'])
+birthtriggeredivenv.Append(LIBS=['libmalaria_static'])
+birthtriggeredivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libbirthtriggeredivDll = birthtriggeredivenv.SharedLibrary('libbirthtriggered', libbirthtriggeredivdllSrcFiles + stdobj)
+#print "building libbirthtriggereddll: " + str(libbirthtriggeredivdll)
+
+# take libbirthtriggerediv.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libbirthtriggeredivdllTarget = libbirthtriggeredivDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = birthtriggeredivenv['BUILD_VARIANT'] + '|x64'
+    print str(libbirthtriggeredivdllTarget) + ": Generating MSVS" + birthtriggeredivenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    birthtriggeredivenv.MSVSProject(target = 'LibbirthtriggeredivdllScons' + birthtriggeredivenv['MSVSPROJECTSUFFIX'],
+                    srcs = libbirthtriggeredivdllSrcFiles,
+		    incs = libbirthtriggeredivdllIncFiles,
+		    localincs = libbirthtriggeredivdllLocalInc,
+ 		    buildtarget = libbirthtriggeredivdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

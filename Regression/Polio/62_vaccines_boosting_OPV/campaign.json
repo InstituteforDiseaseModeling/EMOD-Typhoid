@@ -1,0 +1,72 @@
+{
+    "Campaign_Name": "Campaign - Vaccines",
+    "Events": [
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 1,
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10,
+                    "Durability_Profile": 1,
+                    "Time_Since_Vaccination": 0,
+                    "Vaccine_Type": "mOPV_1",
+                    "class": "PolioVaccine"
+                },
+                "Number_Repetitions": 3,
+                "Target_Demographic": "Everyone",
+                "Timesteps_Between_Repetitions": 100,
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Event_Name": "Vaccines",
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 2,
+            "class": "CampaignEvent"
+        },
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 1,
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10,
+                    "Durability_Profile": 1,
+                    "Time_Since_Vaccination": 0,
+                    "Vaccine_Type": "mOPV_2",
+                    "class": "PolioVaccine"
+                },
+                "Number_Repetitions": 3,
+                "Target_Demographic": "Everyone",
+                "Timesteps_Between_Repetitions": 100,
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Event_Name": "Vaccines",
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 12,
+            "class": "CampaignEvent"
+        },
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 1,
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10,
+                    "Durability_Profile": 1,
+                    "Time_Since_Vaccination": 0,
+                    "Vaccine_Type": "mOPV_3",
+                    "class": "PolioVaccine"
+                },
+                "Number_Repetitions": 3,
+                "Target_Demographic": "Everyone",
+                "Timesteps_Between_Repetitions": 100,
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Event_Name": "Vaccines",
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 22,
+            "class": "CampaignEvent"
+        }
+    ],
+    "Use_Defaults": 1
+}

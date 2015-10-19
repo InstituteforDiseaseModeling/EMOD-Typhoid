@@ -1,0 +1,50 @@
+{
+    "Campaign_Name": "Campaign - Polio CCS base Config",
+    "Events": [
+        {
+            "Event_Coordinator_Config": {
+                "Intervention_Config": {
+                    "Actual_IndividualIntervention_Config": {},
+					"Max_Number_Reports": 1,
+					"Reporting_Interval": 365,
+                    "Report_Description": "Annual",
+                    "Trigger_Condition": "EveryTimestep",
+                    "class": "PolioSurveyJSONAnalyzer"
+                },
+                "Number_Repetitions": 1,
+                "Target_Demographic": "Everyone",
+                "Timesteps_Between_Repetitions": 365,
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Event_Name": "Polio Survey",
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 2,
+            "class": "CampaignEvent"
+        }
+    ],
+    "Use_Defaults": 1,
+	"Non-events": [
+        {
+            "Event_Coordinator_Config": {
+                "Intervention_Config": {
+                    "Actual_IndividualIntervention_Config": {},
+                    "Report_Description": "Annual",
+                    "Trigger_Condition": "EveryTimestep",
+                    "class": "PolioSurveyJSONAnalyzer"
+                },
+                "Number_Repetitions": 9,
+                "Target_Demographic": "Everyone",
+                "Timesteps_Between_Repetitions": 365,
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Event_Name": "Polio Survey",
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 2,
+            "class": "CampaignEvent"
+        }
+    ]
+}

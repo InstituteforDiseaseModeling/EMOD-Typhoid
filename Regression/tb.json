@@ -1,0 +1,124 @@
+{
+    "tests": [
+        {
+			"path":"29_TB_Seattle_HTI_HSB_Drugs"
+		},
+		{
+			"path":"31_TB_Seattle_BirthTriggered_BCG_Calendar"
+		},
+		{
+			"path":"32_TB_Seattle_Diagnostic_Drugs"
+		},
+		{
+            "path": "TB_1_MDR_evolution"
+        },
+        {
+            "path": "TB_2_MDR_transmission_only"
+        },
+        {
+            "path": "TB_2b_MDR_transmission_mixed"
+        },
+        {
+            "path": "TB_2c_MDR_transmission_mixed_reducedfitness"
+        },
+        {
+            "path": "TB_3_Relapse_after_tx"
+        },
+        {
+            "path": "TB_4_PropertyChanger_Hospital2CDC"
+        },
+        {
+            "path": "TB_5a_CalendarIV_delayedTreatment"
+        },
+        {
+            "path": "TB_5b_BirthTriggeredIV_BCG"
+        },
+        {
+            "path": "TB_6_OutbreakIndividual"
+        },
+        {
+            "path": "TB_7b_Diagnostic_smearPositive"
+        },
+        {
+            "path": "TB_7c_Diagnostic_MDR"
+        },
+		{
+			"path":"TB_8_PropDependentDrug_Retxspecific"
+		},
+		{
+			"path":"TB_8b_PropDependentDrug_MDRspecific"
+		},
+		{
+			"path":"TB_10_LatentFast_Smearpos"
+		},
+		{
+			"path":"TB_11_LatentFast_SmearNeg"
+		},
+		{
+			"path":"TB_12_LatentFast_Extrapulm"
+		},
+		{
+			"path":"TB_13_LatentFast_ActivePresymptomatic"
+		},
+		{
+			"path":"TB_14_LatentSlow_SmearPos_Relapse"
+		},
+		{
+			"path":"TB_14b_LatentSlow_SmearPos_Relapse_NodeHTIPostRelapse"
+		},
+		{
+			"path":"TB_15_LatentSlow_SmearNeg_Inactivation"
+		},
+		{
+			"path":"TB_16_LatentSlow_Extrapulm_Clearance"
+		},
+		{
+			"path":"TB_17_LatentSlow_ActivePresymptomatic"
+		},
+		{
+			"path":"TB_18_LatentFast_NaturalCure"
+		},
+		{
+			"path":"TB_19_LatentFast_ActivePresymp_NaturalCure"
+		},
+		{
+			"path":"TB_20_LatentFast_ActiveSmearpos_NaturalCure"
+		},
+		{
+			"path":"TB_21_LatentFast_SmearPos_NaturalInactivation"
+		},
+		{
+			"path":"TB_22_LatentFast_SmearPos_DiseaseMortality"
+		},
+		{
+			"path":"TB_23_LatentFast_SmearPos_ImmuneLoss"
+		},
+		{
+			"path":"TB_27_nodeHTI_ActiveSymptomatic"
+		},
+		{
+			"path":"TB_28_nodeHTI_ActivePresymptomatic"
+		},
+		{
+			"path":"TB_29_nodeHTI_PendingRelapse"
+		},
+		{
+			"path":"TB_30_HSB"
+		},
+		{
+			"path":"TB_32_HSBUpdate"
+		},
+		{
+			"path":"TB_33_DiagnosticTreatNeg"
+		},
+		{
+			"path":"TB_34_GroupCoordinator"
+		},
+		{
+			"path":"TB_35_NodeHTIScaleUpSwitch_PhaseInOnly"
+		},
+		{
+			"path":"TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn"
+		}
+    ]
+}

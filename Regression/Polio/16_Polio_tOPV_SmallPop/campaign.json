@@ -1,0 +1,28 @@
+{
+     "Use_Defaults": 1,
+     "Campaign_Name": "Campaign - Outbreak and Vaccines", 
+     "Events": [
+          {
+               "Event_Coordinator_Config": {
+                    "Demographic_Coverage": 1.0, 
+                    "Intervention_Config": {
+                         "Cost_To_Consumer": 10.0, 
+                         "Durability_Profile": 1, 
+                         "Time_Since_Vaccination": 0, 
+                         "Vaccine_Type": "tOPV", 
+                         "class": "PolioVaccine"
+                    }, 
+                    "Target_Age_Max": 10, 
+                    "Target_Age_Min": 0, 
+                    "Target_Demographic": "ExplicitAgeRanges", 
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Event_Name": "Vaccines", 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 1, 
+               "class": "CampaignEvent"
+          }
+     ]
+}

@@ -229,3 +229,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Subversion
+.svn/
+
+# Simulation output
+time.txt
+status.txt
+Transitions.json

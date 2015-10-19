@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libantitbdrug.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libantitbdrugdllSrcFiles = [ "../interventions/AntiTBDrug.cpp",
+                             "../interventions/AntiTBDrugEModule.cpp"
+                             ]
+
+libantitbdrugdllIncFiles = [  "../interventions/Drugs.h" ]
+libantitbdrugdllLocalInc = [  "stdafx.h" ]
+
+antitbdrugenv = env.Clone()
+
+drugobj = antitbdrugenv.Object("drugobj_antitib","../interventions/Drugs.cpp")
+
+antitbdrugenv.Append( CPPDEFINES=["ENABLE_TB"] )
+
+libantitbdrugDll = antitbdrugenv.SharedLibrary('libantitbdrug', libantitbdrugdllSrcFiles + stdobj + drugobj)
+#print "building libantitbdrugdll: " + str(libantitbdrugdll)
+
+# take libantitbdrug.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libantitbdrugdllTarget = libantitbdrugDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = antitbdrugenv['BUILD_VARIANT'] + '|x64'
+    print str(libantitbdrugdllTarget) + ": Generating MSVS" + antitbdrugenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    antitbdrugenv.MSVSProject(target = 'LibantitbdrugdllScons' + antitbdrugenv['MSVSPROJECTSUFFIX'],
+                    srcs = libantitbdrugdllSrcFiles,
+		    incs = libantitbdrugdllIncFiles,
+		    localincs = libantitbdrugdllLocalInc,
+ 		    buildtarget = libantitbdrugdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

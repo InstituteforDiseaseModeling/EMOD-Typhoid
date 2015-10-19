@@ -1,0 +1,19 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "DEMOGRAPHICS": {
+            "Enable_Birth": 0, 
+            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.smallpop.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL"
+            }
+        }, 
+        "PRIMARY": {
+            "Run_Number": 1, 
+            "Simulation_Duration": 180, 
+            "Config_Name": "10_Polio_Validation_Single_Infection_Outbreak_Antigen0_Small_Population", 
+            "Geography": "Bihar"
+        }
+    }
+}

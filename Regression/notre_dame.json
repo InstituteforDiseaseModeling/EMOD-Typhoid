@@ -1,0 +1,15 @@
+{
+    "tests": [
+        { "path": "NotreDame/Kenya/Baseline_2pt5" },
+        { "path": "NotreDame/Kenya/Fence_05" },
+        { "path": "NotreDame/Kenya/Fence_10" },
+        { "path": "NotreDame/Kenya/Fence_15" },
+        { "path": "NotreDame/Kenya/ITN_54_Fence_05" },
+        { "path": "NotreDame/Kenya/ITN_54_Fence_10" },
+        { "path": "NotreDame/SolomonIslands/Baseline" },
+        { "path": "NotreDame/SolomonIslands/Insecticide_Impregnated_Barriers_01pct" },
+        { "path": "NotreDame/SolomonIslands/Insecticide_Impregnated_Barriers_05pct" },
+        { "path": "NotreDame/SolomonIslands/Insecticide_Impregnated_Barriers_10pct" },
+        { "path": "NotreDame/SolomonIslands/Insecticide_Impregnated_Barriers_15pct" }
+    ]
+}

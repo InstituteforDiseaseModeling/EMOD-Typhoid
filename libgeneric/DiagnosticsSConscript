@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libdiagnostics.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libdiagnosticsdllSrcFiles = [ "../interventions/Diagnostics.cpp",
+                              "../interventions/DiagnosticsEModule.cpp"
+                              ]
+
+libdiagnosticsdllIncFiles = [  "../interventions/Diagnostics.h" ]
+libdiagnosticsdllLocalInc = [  "stdafx.h" ]
+
+diagnosticsenv = env.Clone()
+
+hsbobj = diagnosticsenv.Object("hsbobj_diagnostics","../interventions/HealthSeekingBehavior.cpp")
+
+diagnosticsenv.Append(LIBS=['libgeneric_static'])
+diagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+diagnosticsenv.Append(LIBS=['libvector_static'])
+diagnosticsenv.Append(LIBS=['libmalaria_static'])
+diagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libdiagnosticsDll = diagnosticsenv.SharedLibrary('libdiagnostics', libdiagnosticsdllSrcFiles + stdobj + hsbobj)
+#print "building libdiagnosticsdll: " + str(libdiagnosticsdll)
+
+# take libdiagnostics.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libdiagnosticsdllTarget = libdiagnosticsDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = diagnosticsenv['BUILD_VARIANT'] + '|x64'
+    print str(libdiagnosticsdllTarget) + ": Generating MSVS" + diagnosticsenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    diagnosticsenv.MSVSProject(target = 'LibdiagnosticsdllScons' + diagnosticsenv['MSVSPROJECTSUFFIX'],
+                    srcs = libdiagnosticsdllSrcFiles,
+		    incs = libdiagnosticsdllIncFiles,
+		    localincs = libdiagnosticsdllLocalInc,
+ 		    buildtarget = libdiagnosticsdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

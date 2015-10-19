@@ -1,0 +1,249 @@
+Intellectual Ventures(R)/EMOD Disease Transmission Kernel 1.9.3683.0 Polio-v1.7 2014/03/26 17:01:30
+Using config file: config_flat.json
+Using input path: .
+Using output path: output
+using dll path: ..\..\..\..\reporters\x64\Release
+Initializing environment...
+Initial working directory: c:\svn\Polio-v17\Regression\Polio\vaccines\3 OPV boosting
+Log-levels:
+	Default -> 3
+00:00:00 [0] [I] [Eradication] Loaded Configuration...
+00:00:00 [0] [I] [Eradication] 259 parameters found.
+00:00:00 [0] [I] [Eradication] Initializing Controller...
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal()...
+00:00:00 [0] [I] [Simulation] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Simulation] Using PSEUDO_DES random number generator.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: ..\..\..\..\reporters\x64\Release
+00:00:00 [0] [W] [Simulation] Failed to load reporter emodules for SimType: POLIO_SIM from path: ..\..\..\..\reporters\x64\Release/reporter_plugins
+00:00:00 [0] [I] [SimulationPolio] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal() populate simulation...
+00:00:00 [0] [I] [Simulation] Campaign file name identified as: c:\svn\Polio-v17\Regression\Polio\vaccines\3 OPV boosting\campaign.json
+00:00:00 [0] [I] [Simulation] Opening campaign file c:\svn\Polio-v17\Regression\Polio\vaccines\3 OPV boosting\campaign.json
+00:00:00 [0] [I] [Simulation] Opened campaign file successfully.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: ..\..\..\..\reporters\x64\Release
+00:00:00 [0] [I] [DllLoader] Calling LoadLibrary on interventions emodule ..\..\..\..\reporters\x64\Release\interventions\libpoliosurveyJSON_analyzer_plugin.dll
+00:00:00 [0] [I] [DllLoader] Calling GetProcAddr for GetEModuleVersion
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] GetVersion called with ver=1.9.3647.0
+00:00:00 [0] [I] [DllLoader] The application has version 1.9.3683.0 while the emodule has version 1.9.3647.0
+00:00:00 [0] [W] [DllLoader] The version of EModule libpoliosurveyJSON_analyzer_plugin.dll is lower than current application!
+00:00:00 [0] [I] [DllLoader] Calling GetProcAddress for RegisterWithFactory...
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Target_Demographic" : "Everyone" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Target_Demographic" : "Everyone" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Target_Demographic" : "Everyone" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [NodeDemographics] Opening demographics file: ..\input\Sandbox_naive_demographics.compiled.json
+00:00:00 [0] [I] [Climate] Initialize
+00:00:00 [0] [W] [NodeRankMap] Failed to open load-balancing file: .
+00:00:00 [0] [W] [Simulation] Failed to use legacy loadbalance file. Defaulting to checkerboard.
+00:00:00 [0] [I] [Simulation] populateFromDemographics() created 1 nodes
+00:00:00 [0] [I] [Simulation] populateFromDemographics() generated 1 nodes.
+00:00:00 [0] [I] [Simulation] Rank 0 contributes 1 nodes...
+00:00:00 [0] [I] [Simulation] Merging node rank maps...
+00:00:00 [0] [I] [Simulation] Merged rank 0 map now has 1 nodes.
+00:00:00 [0] [I] [Simulation] Rank 0 map contents:
+{ NodeRankMap:
+[1,0]
+}
+
+00:00:00 [0] [I] [Simulation] Initialized 'InsetChart.json' reporter
+00:00:00 [0] [I] [Simulation] Update(): Time: 1.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:00 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [StandardEventCoordinator] UpdateNodes() distributed 'PolioSurveyJSONAnalyzer' intervention to node 1
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey01_-1_0.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 2.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:00 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:00 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10000 'PolioVaccine' interventions at node 1
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey01_1_1.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 3.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey01_1_2.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 4.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey01_1_3.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 5.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:00 [0] [I] [Simulation] Update(): Time: 6.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:01 [0] [I] [Simulation] Update(): Time: 7.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:01 [0] [I] [Simulation] Update(): Time: 8.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:01 [0] [I] [Simulation] Update(): Time: 9.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:01 [0] [I] [Simulation] Update(): Time: 10.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:01 [0] [I] [Simulation] Update(): Time: 11.0 Rank: 0 StatPop: 10000 Infected: 9130
+00:00:01 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:01 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:01 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:01 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:01 [0] [I] [StandardEventCoordinator] UpdateNodes() distributed 'PolioSurveyJSONAnalyzer' intervention to node 1
+00:00:01 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey11_-1_0.json
+00:00:01 [0] [I] [Simulation] Update(): Time: 12.0 Rank: 0 StatPop: 10000 Infected: 9019
+00:00:01 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:01 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:01 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10000 'PolioVaccine' interventions at node 1
+00:00:01 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey11_1_1.json
+00:00:01 [0] [I] [Simulation] Update(): Time: 13.0 Rank: 0 StatPop: 10000 Infected: 8907
+00:00:01 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey11_1_2.json
+00:00:01 [0] [I] [Simulation] Update(): Time: 14.0 Rank: 0 StatPop: 10000 Infected: 9980
+00:00:01 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey11_1_3.json
+00:00:02 [0] [I] [Simulation] Update(): Time: 15.0 Rank: 0 StatPop: 10000 Infected: 9980
+00:00:02 [0] [I] [Simulation] Update(): Time: 16.0 Rank: 0 StatPop: 10000 Infected: 9974
+00:00:02 [0] [I] [Simulation] Update(): Time: 17.0 Rank: 0 StatPop: 10000 Infected: 9971
+00:00:02 [0] [I] [Simulation] Update(): Time: 18.0 Rank: 0 StatPop: 10000 Infected: 9965
+00:00:02 [0] [I] [Simulation] Update(): Time: 19.0 Rank: 0 StatPop: 10000 Infected: 9957
+00:00:02 [0] [I] [Simulation] Update(): Time: 20.0 Rank: 0 StatPop: 10000 Infected: 9949
+00:00:02 [0] [I] [Simulation] Update(): Time: 21.0 Rank: 0 StatPop: 10000 Infected: 9945
+00:00:02 [0] [I] [Simulation] Update(): Time: 22.0 Rank: 0 StatPop: 10000 Infected: 9892
+00:00:02 [0] [I] [Simulation] Update(): Time: 23.0 Rank: 0 StatPop: 10000 Infected: 9836
+00:00:02 [0] [I] [Simulation] Update(): Time: 24.0 Rank: 0 StatPop: 10000 Infected: 9763
+00:00:02 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:02 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:02 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:02 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:02 [0] [I] [StandardEventCoordinator] UpdateNodes() distributed 'PolioSurveyJSONAnalyzer' intervention to node 1
+00:00:02 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey024_-1_0.json
+00:00:02 [0] [I] [Simulation] Update(): Time: 25.0 Rank: 0 StatPop: 10000 Infected: 9646
+00:00:02 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:02 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:02 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10000 'PolioVaccine' interventions at node 1
+00:00:02 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey024_1_1.json
+00:00:03 [0] [I] [Simulation] Update(): Time: 26.0 Rank: 0 StatPop: 10000 Infected: 9526
+00:00:03 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey024_1_2.json
+00:00:03 [0] [I] [Simulation] Update(): Time: 27.0 Rank: 0 StatPop: 10000 Infected: 9922
+00:00:03 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey024_1_3.json
+00:00:03 [0] [I] [Simulation] Update(): Time: 28.0 Rank: 0 StatPop: 10000 Infected: 9900
+00:00:03 [0] [I] [Simulation] Update(): Time: 29.0 Rank: 0 StatPop: 10000 Infected: 9877
+00:00:03 [0] [I] [Simulation] Update(): Time: 30.0 Rank: 0 StatPop: 10000 Infected: 9851
+00:00:03 [0] [I] [Simulation] Update(): Time: 31.0 Rank: 0 StatPop: 10000 Infected: 9804
+00:00:03 [0] [I] [Simulation] Update(): Time: 32.0 Rank: 0 StatPop: 10000 Infected: 9770
+00:00:03 [0] [I] [Simulation] Update(): Time: 33.0 Rank: 0 StatPop: 10000 Infected: 9730
+00:00:03 [0] [I] [Simulation] Update(): Time: 34.0 Rank: 0 StatPop: 10000 Infected: 9688
+00:00:03 [0] [I] [Simulation] Update(): Time: 35.0 Rank: 0 StatPop: 10000 Infected: 9608
+00:00:03 [0] [I] [Simulation] Update(): Time: 36.0 Rank: 0 StatPop: 10000 Infected: 9532
+00:00:03 [0] [I] [Simulation] Update(): Time: 37.0 Rank: 0 StatPop: 10000 Infected: 9442
+00:00:04 [0] [I] [Simulation] Update(): Time: 38.0 Rank: 0 StatPop: 10000 Infected: 9330
+00:00:04 [0] [I] [Simulation] Update(): Time: 39.0 Rank: 0 StatPop: 10000 Infected: 9188
+00:00:04 [0] [I] [Simulation] Update(): Time: 40.0 Rank: 0 StatPop: 10000 Infected: 9029
+00:00:04 [0] [I] [Simulation] Update(): Time: 41.0 Rank: 0 StatPop: 10000 Infected: 8873
+00:00:04 [0] [I] [Simulation] Update(): Time: 42.0 Rank: 0 StatPop: 10000 Infected: 8688
+00:00:04 [0] [I] [Simulation] Update(): Time: 43.0 Rank: 0 StatPop: 10000 Infected: 8498
+00:00:04 [0] [I] [Simulation] Update(): Time: 44.0 Rank: 0 StatPop: 10000 Infected: 8289
+00:00:04 [0] [I] [Simulation] Update(): Time: 45.0 Rank: 0 StatPop: 10000 Infected: 8051
+00:00:04 [0] [I] [Simulation] Update(): Time: 46.0 Rank: 0 StatPop: 10000 Infected: 7796
+00:00:04 [0] [I] [Simulation] Update(): Time: 47.0 Rank: 0 StatPop: 10000 Infected: 7543
+00:00:04 [0] [I] [Simulation] Update(): Time: 48.0 Rank: 0 StatPop: 10000 Infected: 7257
+00:00:04 [0] [I] [Simulation] Update(): Time: 49.0 Rank: 0 StatPop: 10000 Infected: 7004
+00:00:04 [0] [I] [Simulation] Update(): Time: 50.0 Rank: 0 StatPop: 10000 Infected: 6750
+00:00:04 [0] [I] [Simulation] Update(): Time: 51.0 Rank: 0 StatPop: 10000 Infected: 6482
+00:00:04 [0] [I] [Simulation] Update(): Time: 52.0 Rank: 0 StatPop: 10000 Infected: 6222
+00:00:04 [0] [I] [Simulation] Update(): Time: 53.0 Rank: 0 StatPop: 10000 Infected: 5974
+00:00:04 [0] [I] [Simulation] Update(): Time: 54.0 Rank: 0 StatPop: 10000 Infected: 5699
+00:00:04 [0] [I] [Simulation] Update(): Time: 55.0 Rank: 0 StatPop: 10000 Infected: 5448
+00:00:04 [0] [I] [Simulation] Update(): Time: 56.0 Rank: 0 StatPop: 10000 Infected: 5219
+00:00:05 [0] [I] [Simulation] Update(): Time: 57.0 Rank: 0 StatPop: 10000 Infected: 5007
+00:00:05 [0] [I] [Simulation] Update(): Time: 58.0 Rank: 0 StatPop: 10000 Infected: 4753
+00:00:05 [0] [I] [Simulation] Update(): Time: 59.0 Rank: 0 StatPop: 10000 Infected: 4529
+00:00:05 [0] [I] [Simulation] Update(): Time: 60.0 Rank: 0 StatPop: 10000 Infected: 4317
+00:00:05 [0] [I] [Simulation] Update(): Time: 61.0 Rank: 0 StatPop: 10000 Infected: 4145
+00:00:05 [0] [I] [Simulation] Update(): Time: 62.0 Rank: 0 StatPop: 10000 Infected: 3941
+00:00:05 [0] [I] [Simulation] Update(): Time: 63.0 Rank: 0 StatPop: 10000 Infected: 3749
+00:00:05 [0] [I] [Simulation] Update(): Time: 64.0 Rank: 0 StatPop: 10000 Infected: 3577
+00:00:05 [0] [I] [Simulation] Update(): Time: 65.0 Rank: 0 StatPop: 10000 Infected: 3401
+00:00:05 [0] [I] [Simulation] Update(): Time: 66.0 Rank: 0 StatPop: 10000 Infected: 3242
+00:00:05 [0] [I] [Simulation] Update(): Time: 67.0 Rank: 0 StatPop: 10000 Infected: 3064
+00:00:05 [0] [I] [Simulation] Update(): Time: 68.0 Rank: 0 StatPop: 10000 Infected: 2912
+00:00:05 [0] [I] [Simulation] Update(): Time: 69.0 Rank: 0 StatPop: 10000 Infected: 2755
+00:00:05 [0] [I] [Simulation] Update(): Time: 70.0 Rank: 0 StatPop: 10000 Infected: 2617
+00:00:05 [0] [I] [Simulation] Update(): Time: 71.0 Rank: 0 StatPop: 10000 Infected: 2492
+00:00:05 [0] [I] [Simulation] Update(): Time: 72.0 Rank: 0 StatPop: 10000 Infected: 2364
+00:00:05 [0] [I] [Simulation] Update(): Time: 73.0 Rank: 0 StatPop: 10000 Infected: 2251
+00:00:05 [0] [I] [Simulation] Update(): Time: 74.0 Rank: 0 StatPop: 10000 Infected: 2112
+00:00:05 [0] [I] [Simulation] Update(): Time: 75.0 Rank: 0 StatPop: 10000 Infected: 2016
+00:00:05 [0] [I] [Simulation] Update(): Time: 76.0 Rank: 0 StatPop: 10000 Infected: 1919
+00:00:05 [0] [I] [Simulation] Update(): Time: 77.0 Rank: 0 StatPop: 10000 Infected: 1815
+00:00:05 [0] [I] [Simulation] Update(): Time: 78.0 Rank: 0 StatPop: 10000 Infected: 1727
+00:00:05 [0] [I] [Simulation] Update(): Time: 79.0 Rank: 0 StatPop: 10000 Infected: 1648
+00:00:05 [0] [I] [Simulation] Update(): Time: 80.0 Rank: 0 StatPop: 10000 Infected: 1568
+00:00:05 [0] [I] [Simulation] Update(): Time: 81.0 Rank: 0 StatPop: 10000 Infected: 1492
+00:00:05 [0] [I] [Simulation] Update(): Time: 82.0 Rank: 0 StatPop: 10000 Infected: 1416
+00:00:05 [0] [I] [Simulation] Update(): Time: 83.0 Rank: 0 StatPop: 10000 Infected: 1341
+00:00:05 [0] [I] [Simulation] Update(): Time: 84.0 Rank: 0 StatPop: 10000 Infected: 1281
+00:00:05 [0] [I] [Simulation] Update(): Time: 85.0 Rank: 0 StatPop: 10000 Infected: 1019
+00:00:05 [0] [I] [Simulation] Update(): Time: 86.0 Rank: 0 StatPop: 10000 Infected: 966
+00:00:06 [0] [I] [Simulation] Update(): Time: 87.0 Rank: 0 StatPop: 10000 Infected: 920
+00:00:06 [0] [I] [Simulation] Update(): Time: 88.0 Rank: 0 StatPop: 10000 Infected: 885
+00:00:06 [0] [I] [Simulation] Update(): Time: 89.0 Rank: 0 StatPop: 10000 Infected: 841
+00:00:06 [0] [I] [Simulation] Update(): Time: 90.0 Rank: 0 StatPop: 10000 Infected: 807
+00:00:06 [0] [I] [Simulation] Update(): Time: 91.0 Rank: 0 StatPop: 10000 Infected: 768
+00:00:06 [0] [I] [Simulation] Update(): Time: 92.0 Rank: 0 StatPop: 10000 Infected: 728
+00:00:06 [0] [I] [Simulation] Update(): Time: 93.0 Rank: 0 StatPop: 10000 Infected: 697
+00:00:06 [0] [I] [Simulation] Update(): Time: 94.0 Rank: 0 StatPop: 10000 Infected: 665
+00:00:06 [0] [I] [Simulation] Update(): Time: 95.0 Rank: 0 StatPop: 10000 Infected: 393
+00:00:06 [0] [I] [Simulation] Update(): Time: 96.0 Rank: 0 StatPop: 10000 Infected: 367
+00:00:06 [0] [I] [Simulation] Update(): Time: 97.0 Rank: 0 StatPop: 10000 Infected: 353
+00:00:06 [0] [I] [Simulation] Update(): Time: 98.0 Rank: 0 StatPop: 10000 Infected: 332
+00:00:06 [0] [I] [Simulation] Update(): Time: 99.0 Rank: 0 StatPop: 10000 Infected: 323
+00:00:06 [0] [I] [Simulation] Update(): Time: 100.0 Rank: 0 StatPop: 10000 Infected: 305
+00:00:06 [0] [I] [Simulation] Update(): Time: 101.0 Rank: 0 StatPop: 10000 Infected: 294
+00:00:06 [0] [I] [Simulation] Update(): Time: 102.0 Rank: 0 StatPop: 10000 Infected: 283
+00:00:06 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10000 'PolioVaccine' interventions at node 1
+00:00:06 [0] [I] [Simulation] Update(): Time: 103.0 Rank: 0 StatPop: 10000 Infected: 268
+00:00:06 [0] [I] [Simulation] Update(): Time: 104.0 Rank: 0 StatPop: 10000 Infected: 2455
+00:00:06 [0] [I] [Simulation] Update(): Time: 105.0 Rank: 0 StatPop: 10000 Infected: 2451
+00:00:06 [0] [I] [Simulation] Update(): Time: 106.0 Rank: 0 StatPop: 10000 Infected: 2438
+00:00:06 [0] [I] [Simulation] Update(): Time: 107.0 Rank: 0 StatPop: 10000 Infected: 2409
+00:00:06 [0] [I] [Simulation] Update(): Time: 108.0 Rank: 0 StatPop: 10000 Infected: 2201
+00:00:06 [0] [I] [Simulation] Update(): Time: 109.0 Rank: 0 StatPop: 10000 Infected: 2134
+00:00:06 [0] [I] [Simulation] Update(): Time: 110.0 Rank: 0 StatPop: 10000 Infected: 2050
+00:00:06 [0] [I] [Simulation] Update(): Time: 111.0 Rank: 0 StatPop: 10000 Infected: 1970
+00:00:06 [0] [I] [Simulation] Update(): Time: 112.0 Rank: 0 StatPop: 10000 Infected: 1861
+00:00:07 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10000 'PolioVaccine' interventions at node 1
+00:00:07 [0] [E] [Eradication] OutOfRangeException: Exception in C:\svn\Polio-v17\utils\Types.h at 49 in RangedFloat::RangedFloat.  Variable value had value -0.00523882 which was inconsistent with range limit 0
+
+job aborted:
+[ranks] message
+
+[0] application aborted
+aborting MPI_COMM_WORLD, error -1, comm rank 0

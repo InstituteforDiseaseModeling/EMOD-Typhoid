@@ -1,0 +1,40 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libbcgvaccine.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+svobj = env.Object("../interventions/SimpleVaccine.cpp")
+
+libbcgvaccinedllSrcFiles = [ "../interventions/BCGVaccine.cpp",
+                             "../interventions/BCGVaccineEModule.cpp"
+                             ]
+
+libbcgvaccinedllIncFiles = [  "../interventions/bcgvaccine.h" ]
+libbcgvaccinedllLocalInc = [  "stdafx.h" ]
+
+bcgvaccineenv = env.Clone()
+bcgvaccineenv.Append( CPPDEFINES=["ENABLE_TB"] )
+
+libbcgvaccineDll = bcgvaccineenv.SharedLibrary('libbcgvaccine', libbcgvaccinedllSrcFiles + stdobj + svobj)
+#print "building libbcgvaccinedll: " + str(libbcgvaccinedll)
+
+# take libbcgvaccine.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libbcgvaccinedllTarget = libbcgvaccineDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = bcgvaccineenv['BUILD_VARIANT'] + '|x64'
+    print str(libbcgvaccinedllTarget) + ": Generating MSVS" + bcgvaccineenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    bcgvaccineenv.MSVSProject(target = 'LibbcgvaccinedllScons' + bcgvaccineenv['MSVSPROJECTSUFFIX'],
+                    srcs = libbcgvaccinedllSrcFiles,
+		    incs = libbcgvaccinedllIncFiles,
+		    localincs = libbcgvaccinedllLocalInc,
+ 		    buildtarget = libbcgvaccinedllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

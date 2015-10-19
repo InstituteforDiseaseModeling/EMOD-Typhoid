@@ -1,0 +1,57 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Disease_Susceptible_Report_Poliovirus_Type": "WPV2", 
+            "Acquire_Rate_Default_Polio": 0, 
+            "Waning_Humoral_Rate_Fast": 0.0, 
+            "Waning_Humoral_Fast_Fraction": 0.0, 
+            "Waning_Mucosal_Rate_Fast": 0.0, 
+            "SABIN_EVOLUTION": {
+                "Sabin3_Site_Reversion_Rates": "0.01 0.01 0.01", 
+                "Sabin1_Site_Reversion_Rates": "0.01 0.01 0.01 0.01 0.01", 
+                "Sabin2_Site_Reversion_Rates": "0.01 0.01"
+            }, 
+            "Node_Contagion_Decay_Rate": 0.5, 
+            "VDPV_Virulence_Model_Type": "POLIO_VDPV_PARALYSIS", 
+            "Waning_Mucosal_Fast_Fraction": 0.0, 
+            "PARALYSIS": {
+                "Paralysis_Base_Rate_WPV1": 1, 
+                "Paralysis_Base_Rate_WPV3": 0.1, 
+                "Paralysis_Base_Rate_Sabin1": 1, 
+                "Paralysis_Base_Rate_Sabin3": 0.1, 
+                "Paralysis_Base_Rate_Sabin2": 0.5, 
+                "Paralysis_Base_Rate_WPV2": 0.5
+            }
+        }, 
+        "DEMOGRAPHICS": {
+            "Enable_Immunity_Initialization_Distribution": 1, 
+            "Enable_Birth": 0, 
+            "Enable_Demographics_Reporting": 0, 
+            "Demographics_Filename": "../polio_input/WPV_time_to_paralysis_humoral_log2NAb_0_demographics.compiled.json", 
+            "MORTALITY": {
+                "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF"
+            }, 
+            "IMMUNITY": {
+                "Enable_Immune_Decay": 0
+            }, 
+            "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL", 
+                "Base_Individual_Sample_Rate": 1
+            }, 
+            "Base_Population_Scale_Factor": 10
+        }, 
+        "DISEASE": {
+            "INCUBATION": {
+                "Base_Incubation_Period": 1
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 300, 
+            "Config_Name": "58_time_to_paralysis", 
+            "Geography": "auto-generated"
+        }
+    }
+}

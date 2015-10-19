@@ -1,0 +1,78 @@
+{
+    "Metadata":
+    {
+        "DateCreated": "Sun Sep 25 23:19:55 2011", 
+        "Tool": "convertdemog.py", 
+        "Author": "jsteinkraus", 
+        "IdReference": "Gridded world grump2.5arcmin", 
+        "NodeCount": 1
+    }, 
+    "Nodes": [
+        {
+            "NodeID": 340461476, 
+            "IndividualAttributes": {
+                "HIVCoinfectionDistribution": {
+                    "NumDistributionAxes": 3,
+                    "AxisNames": [ "gender", "time", "age" ],
+                    "AxisUnits": [ "male=0, female=1","days", "years" ],
+                    "AxisScaleFactors": [1, 1, 365 ],
+                    "NumPopulationGroups": [2, 3, 8 ],
+                    "PopulationGroups": [
+                        [ 0, 1 ],
+                        [ 0, 1460, 1461 ],
+                        [ 0, 5, 5.01, 15, 15.01, 30, 30.01, 1000 ]
+                      
+                      
+                        
+                    ],
+                    "ResultUnits": "Probability of HIV infection per repetition of HIV Outbreak",
+                    "ResultScaleFactor": 1,
+                    "ResultValues": [
+                       [
+                        [ 0.1, 0.1, 0, 0, 0.2, 0.2, 0.1, 0.1 ],
+                        [ 0.1, 0.1, 0, 0, 0.2, 0.2, 0.1, 0.1 ],
+                        [ 1, 1, 1, 1, 1, 1, 1, 1 ] 
+                       ],
+                    
+                      [
+                        [ 0.1, 0.1, 0, 0, 0.2, 0.2, 0.1, 0.1 ],
+                        [ 0.1, 0.1, 0, 0, 0.2, 0.2, 0.1, 0.1 ],
+                        [ 1, 1, 1, 1, 1, 1, 1, 1 ] 
+                      ]
+                   ] 
+                    
+                },
+                 
+                 "HIVMortalityDistribution": {
+                    "NumDistributionAxes": 2,
+                    "AxisNames": [ "time", "age" ],
+                    "AxisUnits": [ "days", "years" ],
+                    "AxisScaleFactors": [ 1, 365 ],
+                    "NumPopulationGroups": [ 3, 8 ],
+                    "PopulationGroups": [
+                        [ 0, 2920, 2921 ],
+                        [ 0, 5, 5.01, 15, 15.01, 30, 30.01, 1000 ]
+                    ],
+                    "ResultUnits": "daily mortality of HIV",
+                    "ResultScaleFactor": 1,
+                    "ResultValues": [
+                        [
+                            [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+                            [ 0, 0, 0, 0, 0, 0, 0, 0],
+                            [ 0, 0, 0, 0, 0, 0, 0, 0 ] 
+                        ],
+
+                        [
+                            [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+                            [ 0, 0, 0, 0, 0, 0, 0, 0],
+                            [ 0, 0, 0, 0, 0, 0, 0, 0 ] 
+                        ]
+
+                  ]
+                        
+}   
+
+            }
+        }
+    ]
+}

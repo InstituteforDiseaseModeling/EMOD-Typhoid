@@ -1,0 +1,21 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Disease_Susceptible_Report_Poliovirus_Type": "VRPV1"
+        }, 
+        "DEMOGRAPHICS": {
+            "Enable_Birth": 0, 
+            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.smallpop.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL"
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 600, 
+            "Config_Name": "Polio_Validation_Outbreak0_Outbreak1_Small_Immune_Naive_Population", 
+            "Geography": "Bihar"
+        }
+    }
+}

@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{26324584-FC8C-41DF-B844-23718A62D44E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>libgeneric_static</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\jsonspirit;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;..\cajun\include;..\jsonspirit;..\campaign\;..\utils\;..\interventions\;..\rapidjson\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FloatingPointModel>Strict</FloatingPointModel>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Eradication\BaseChannelReport.cpp" />
+    <ClCompile Include="..\Eradication\BinnedReport.cpp" />
+    <ClCompile Include="..\Eradication\CampaignEvent.cpp" />
+    <ClCompile Include="..\Eradication\Climate.cpp" />
+    <ClCompile Include="..\Eradication\ClimateByData.cpp" />
+    <ClCompile Include="..\Eradication\ClimateConstant.cpp" />
+    <ClCompile Include="..\Eradication\ClimateKoppen.cpp" />
+    <ClCompile Include="..\Eradication\DemographicsReport.cpp" />
+    <ClCompile Include="..\Eradication\DllLoader.cpp" />
+    <ClCompile Include="..\Eradication\Individual.cpp" />
+    <ClCompile Include="..\Eradication\Infection.cpp" />
+    <ClCompile Include="..\Eradication\Instrumentation.cpp" />
+    <ClCompile Include="..\Eradication\InterventionsContainer.cpp" />
+    <ClCompile Include="..\Eradication\Migration.cpp" />
+    <ClCompile Include="..\Eradication\MultiRouteTransmissionGroups.cpp" />
+    <ClCompile Include="..\Eradication\Node.cpp" />
+    <ClCompile Include="..\Eradication\NodeDemographics.cpp" />
+    <ClCompile Include="..\Eradication\NodeEventContext.cpp" />
+    <ClCompile Include="..\Eradication\NodeRankMap.cpp" />
+    <ClCompile Include="..\Eradication\NodeSetAll.cpp" />
+    <ClCompile Include="..\Eradication\NodeSetNodeList.cpp" />
+    <ClCompile Include="..\Eradication\NodeSetPolygon.cpp" />
+    <ClCompile Include="..\Eradication\Properties.cpp" />
+    <ClCompile Include="..\Eradication\PropertyReport.cpp" />
+    <ClCompile Include="..\Eradication\Report.cpp" />
+    <ClCompile Include="..\Eradication\SimpleEventCoordinator.cpp" />
+    <ClCompile Include="..\Eradication\SimpleTransmissionGroups.cpp" />
+    <ClCompile Include="..\Eradication\Simulation.cpp" />
+    <ClCompile Include="..\Eradication\SimulationConfig.cpp" />
+    <ClCompile Include="..\Eradication\SimulationEventContext.cpp" />
+    <ClCompile Include="..\Eradication\SpatialReport.cpp" />
+    <ClCompile Include="..\Eradication\StandardEventCoordinator.cpp" />
+    <ClCompile Include="..\Eradication\StrainAwareTransmissionGroups.cpp" />
+    <ClCompile Include="..\Eradication\StrainIdentity.cpp" />
+    <ClCompile Include="..\Eradication\suids.cpp" />
+    <ClCompile Include="..\Eradication\Susceptibility.cpp" />
+    <ClCompile Include="..\Eradication\TransmissionGroupsBase.cpp" />
+    <ClCompile Include="..\Eradication\TransmissionGroupsFactory.cpp" />
+    <ClCompile Include="..\Eradication\TriggeredEventCoordinator.cpp" />
+    <ClCompile Include="..\Eradication\VectorTransmissionGroups.cpp" />
+    <ClCompile Include="..\interventions\Drugs.cpp" />
+    <ClCompile Include="..\interventions\PropertyChanger.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libgeneric_classes.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

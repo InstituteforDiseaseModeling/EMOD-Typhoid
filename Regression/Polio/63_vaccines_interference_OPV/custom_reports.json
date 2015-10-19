@@ -1,0 +1,26 @@
+{
+    "Custom_Reports" : 
+    {
+        "PolioSurveyJSONAnalyzer" :
+        {
+            "Enabled" : 1,
+            "Reports" :
+            [
+                {
+                    "Start_Day": 12,
+                    "Duration_Days" : 10000,
+                    "Nodeset_Config": {
+                         "class": "NodeSetAll"
+                    }, 
+                    "Event_Trigger_List" :
+                    [
+                        "EveryUpdate"
+                    ],
+                    "Max_Number_Reports": 1,
+                    "Report_Description": "survey",
+                    "Reporting_Interval": 1
+                }
+            ]
+        }
+    }
+}

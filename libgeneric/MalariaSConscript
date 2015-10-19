@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib and libmalaria_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libmalariadllSrcFiles = [ "../Eradication/SimulationMalaria.cpp"
+                          ]
+
+libmalariadllIncFiles = [  "SimulationMalaria.h" ]
+libmalariadllLocalInc = [  "stdafx.h" ]
+
+malariaenv = env.Clone()
+
+genobj = malariaenv.Object("libgenobj_malaria", "../Eradication/LibGenericClasses.cpp")
+
+malariaenv.Append( CPPDEFINES=["_MALARIA_DLL"] )
+malariaenv.Append(LIBS=['libgeneric_static'])
+malariaenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+malariaenv.Append(LIBS=['libvector_static'])
+malariaenv.Append(LIBS=['libmalaria_static'])
+malariaenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libmalariaDll = malariaenv.SharedLibrary('libmalaria', libmalariadllSrcFiles + stdobj + genobj)
+#print "building libmalariadll: " + str(libmalariadll)
+
+# take libmalaria.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libmalariadllTarget = libmalariaDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = malariaenv['BUILD_VARIANT'] + '|x64'
+    print str(libmalariadllTarget) + ": Generating MSVS" + malariaenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    malariaenv.MSVSProject(target = 'LibmalariadllScons' + malariaenv['MSVSPROJECTSUFFIX'],
+                    srcs = libmalariadllSrcFiles,
+		    incs = libmalariadllIncFiles,
+		    localincs = libmalariadllLocalInc,
+ 		    buildtarget = libmalariadllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

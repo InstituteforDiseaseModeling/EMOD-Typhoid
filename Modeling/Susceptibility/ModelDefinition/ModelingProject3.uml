@@ -1,0 +1,781 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="7db86996-3932-4872-b2f9-199f840d54da"
+  name="ModelingProject3" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <profileInstances>
+    <packageHasProfileInstances
+      Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
+      <profileInstance
+        Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791"
+        name="StandardProfileL2" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances
+      Id="29349502-908c-4fda-9054-c48619c59ed0">
+      <profileInstance
+        Id="532ea607-fb19-44b8-8502-3351b05452be"
+        name="StandardProfileL3" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="e9f37889-63d1-4676-bec3-e28553a12f56"
+        name="Susceptibility"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="cee6ce18-e304-4d26-a218-efcfe5f9300f">
+            <interfaceMoniker
+              Id="a7595c2f-dd9f-4975-bb64-f1f9fdd2cbf8"
+              LastKnownName="ISusceptibilityContext"
+              LastKnownLocation="ModelingProject3.uml" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="4ca73b13-258b-4bac-a939-3e72d6a22189"
+            isSubstitutable="false">
+            <classMoniker
+              Id="9b795b00-dbef-40b2-ace7-8eface8dde29"
+              LastKnownName="SusceptibilityConfig"
+              LastKnownLocation="ModelingProject3.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="34493de6-e056-4397-924a-9d386fb1b0b8"
+            isDerived="false"
+            sourceEndRoleName="parent"
+            targetEndRoleName="IIndividualHumanContext*"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="16c1d4df-b7c8-422b-b653-3ac66a6a4e9c"
+              LastKnownName="IIndividualHumanContext"
+              LastKnownLocation="ModelingProject3.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="35e10ca5-df2e-432f-a2c6-4cb61d80b9f7"
+                  name="parent"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="831b863e-79d9-4619-ba05-886fb1f70e64"
+                  name="IIndividualHumanContext*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="4ae33b9f-588e-488c-9d46-513b7077b547"
+            isDerived="false"
+            sourceEndRoleName="Susceptibility"
+            targetEndRoleName="SimulationConfig"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="cf3f20dd-998c-42b0-988b-2aa985393baa"
+              LastKnownName="SimulationConfig"
+              LastKnownLocation="ModelingProject3.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="be5e1bcc-4d03-4262-be46-c9eefd72a7ae"
+                  name="Susceptibility"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="1b19795b-f390-4b06-bd32-c751219fe7cf"
+                  name="SimulationConfig"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+        <ownedAttributesInternal>
+          <property
+            Id="777d7c8a-5aef-4157-b325-29fc29429e8f"
+            name="age"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="563509f7-5ffd-48f3-adff-a1a08815669f"
+            name="mod_acquire"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="128c61f0-f8ad-43b4-87fb-b3ddd5487ff7"
+            name="mod_transmit"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="dfbf6a44-afc4-4cb3-8eb5-0975f4623db2"
+            name="mod_mortality"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="07891161-1672-4d6b-b5be-e62d7e49fc76"
+            name="imm_mod_acquire"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="770805c2-4d12-40e2-bf27-d6e4b17e9ec6"
+            name="imm_mod_transmit"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="76292e5a-c38b-4f2e-9f65-bddc0454ee81"
+            name="imm_mod_mortality"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="fa343ce5-0467-4942-86d7-807aaf828b34"
+            name="reduced_migration"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="8d2aaa25-b95a-4c1d-9c55-c12ec3f3dcad"
+            name="Update"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="a3e39465-d33a-4a90-8aab-c95c767fe560"
+            name="getModAcquire"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="0ebf4907-d4df-43b7-913a-3c2015d388a0"
+            name="GetModTransmit"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="7bc8a219-4a7b-4458-adf4-02b3818aba5b"
+            name="getModMortality"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="a7595c2f-dd9f-4975-bb64-f1f9fdd2cbf8"
+        name="ISusceptibilityContext"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="9b795b00-dbef-40b2-ace7-8eface8dde29"
+        name="SusceptibilityConfig"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="16c1d4df-b7c8-422b-b653-3ac66a6a4e9c"
+        name="IIndividualHumanContext"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="cf3f20dd-998c-42b0-988b-2aa985393baa"
+        name="SimulationConfig"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="8185a075-b9dc-40f2-ba24-18f3a14ed177"
+        name="SusceptibilityMalaria"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="f5e80413-6c89-4306-9c9c-df776a7c0524">
+            <interfaceMoniker
+              Id="031a4af3-2ce1-4628-8740-bd3f92f62d62"
+              LastKnownName="IMalariaSusceptibilityContext"
+              LastKnownLocation="ModelingProject3.uml" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="7d8d4948-19a4-4428-9fe0-a74e1427c990"
+            isSubstitutable="false">
+            <classMoniker
+              Id="02faf40a-26cd-495c-a032-6988c468572c"
+              LastKnownName="SusceptibilityMalariaConfig"
+              LastKnownLocation="ModelingProject3.uml" />
+          </generalization>
+          <generalization
+            Id="51de8e2c-fc1b-4edb-bf74-2988090c72c0"
+            isSubstitutable="false">
+            <classMoniker
+              Id="6e79863c-f45c-4bc1-b7a5-45d6a79b09c4"
+              LastKnownName="SusceptibilityVector"
+              LastKnownLocation="ModelingProject3.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="020b3212-38ab-4456-afe6-ae9722bdedb1"
+            isDerived="false"
+            sourceEndRoleName="m_CSP_antibody"
+            targetEndRoleName="IMalariaAntibody*"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="a2af3a00-f050-4a20-81ba-33da0785d656"
+              LastKnownName="IMalariaAntibody"
+              LastKnownLocation="ModelingProject3.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="d9a4422e-0e09-426a-a1ae-66dbca48d3f8"
+                  name="m_CSP_antibody"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="3bbb77ff-5da4-4ed4-88d1-b15a745d936d"
+                  name="IMalariaAntibody*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="2bfcc3b5-d491-4155-b852-e2b8f7c35613"
+            isDerived="false"
+            sourceEndRoleName="m_active_MSP_antibodies"
+            targetEndRoleName="vector&lt;IMalariaAntibody*&gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="9b2bc13a-2c32-4bc7-bfb9-1894ce2808a6"
+              LastKnownName="IMalariaAntibody"
+              LastKnownLocation="ModelingProject3.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="019c1428-f2fa-4840-944e-0c425dec365d"
+                  name="m_active_MSP_antibodies"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c316389f-f3df-49e8-9fdb-82480d6d245a"
+                  name="vector&lt;IMalariaAntibody*&gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="1fd5394d-98ec-48c0-8b0a-aa171157c05e"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="28467cb8-f0e5-47ae-b8f7-25a380fbfb13"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="a172dd6b-749c-41d2-a927-d3b1306b2f72"
+            isDerived="false"
+            sourceEndRoleName="m_active_PfEMP1_minor_antibodies"
+            targetEndRoleName="vector&lt;IMalariaAntibody*&gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="6e32256a-a81d-4f6c-a9c7-b9550c2f7d51"
+              LastKnownName="IMalariaAntibody"
+              LastKnownLocation="ModelingProject3.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="06856463-0525-4a3b-85f6-58f9117bee46"
+                  name="m_active_PfEMP1_minor_antibodies"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6aacc4d2-fe31-4215-b9ad-50e3b92f33ca"
+                  name="vector&lt;IMalariaAntibody*&gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="43132956-1c31-41e9-b75d-c74e345551ae"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="b526e6f3-a785-4127-b452-f0ed314fbfec"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="35dc0e33-b5f0-4eab-b4ed-6a47172b7df9"
+            isDerived="false"
+            sourceEndRoleName="m_active_PfEMP1_major_antibodies"
+            targetEndRoleName="vector&lt;IMalariaAntibody*&gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="2fcf8bb7-6d13-4d9c-a5ff-16fa1b8ed7e9"
+              LastKnownName="IMalariaAntibody"
+              LastKnownLocation="ModelingProject3.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="0b54b5cd-462e-45be-94af-b2952ee09de1"
+                  name="m_active_PfEMP1_major_antibodies"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a2b75879-48b6-4d54-8049-14337f61f384"
+                  name="vector&lt;IMalariaAntibody*&gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="70de1cc8-a509-4900-b8f6-e11baa6df219"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="b622b5cb-289d-4e66-b41c-aec2f6dcee3c"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+        <ownedAttributesInternal>
+          <property
+            Id="788e9822-98c7-4975-b04b-efc0c3ade9d7"
+            name="m_RBC"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="43b2e805-4584-446d-9e8f-b14e0cef7194"
+            name="m_antigenic_flag"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="cee5eb4d-abc6-4357-8063-cc3b138018f4"
+            name="m_RBCcapacity"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="0fa41c7f-2889-4606-82cf-ebe05f39f7bd"
+            name="m_RBCproduction"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="540510da-c379-4983-ae9b-1fe510b3a660"
+            name="m_inv_microliters_blood"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="21655556-b6bd-4c4f-b89c-475058698ad5"
+            name="m_fever"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="44144b57-008e-4081-8914-20f72ff9373d"
+            name="m_parasite_density"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="a849646d-de10-44db-b110-221516f936c9"
+            name="m_antibodies_to_n_variations"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="c8ab965c-243b-42ab-97ff-91ebff49aa50"
+            name="Update"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="5afd3a74-4bae-4718-a1a9-c5ee034859b7"
+                  name="float dt"
+                  direction="In"
+                  isUnique="false" />
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="be93ef23-b16a-4fcf-ba43-b2c92b2f5f11"
+            name="UpdateInfectionCleared"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="8cf0255c-354c-41a9-be28-f754b76f08bd"
+            name="UpdateActiveAntibody"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="304e1c31-39ee-44c7-b1b5-47ec5fad8faa"
+            name="SetAntigenPresent"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="f42ec9df-9f23-49c2-99e6-baf6fbf911b4"
+            name="RegisterAntibody"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="5fb14fd3-d968-4a70-92e4-fcc84e9b0aca"
+            name="remove_RBCs"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="d077317d-e357-46f9-8ec6-2bec54f2b305"
+            name="get_RBC_count"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="7c904bc9-dbcf-45b3-a7b2-8ed9de7c7b29"
+            name="countAntibodyVariations"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="76110293-1ad1-4c26-bed1-22ae5e73f955"
+            name="decayAllAntibodies"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="2626e6c4-b571-4995-8ca2-734b8ea3c3ce"
+            name="recalculateBloodCapacity"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="6e79863c-f45c-4bc1-b7a5-45d6a79b09c4"
+        name="SusceptibilityVector"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="0bcaa0cf-3a67-4e11-9f43-f54d5a791b1f"
+            isSubstitutable="false">
+            <classMoniker
+              Id="e9f37889-63d1-4676-bec3-e28553a12f56"
+              LastKnownName="Susceptibility"
+              LastKnownLocation="ModelingProject3.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="031a4af3-2ce1-4628-8740-bd3f92f62d62"
+        name="IMalariaSusceptibilityContext"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="02faf40a-26cd-495c-a032-6988c468572c"
+        name="SusceptibilityMalariaConfig"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="a2af3a00-f050-4a20-81ba-33da0785d656"
+        name="IMalariaAntibody"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="9b2bc13a-2c32-4bc7-bfb9-1894ce2808a6"
+        name="IMalariaAntibody"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="6e32256a-a81d-4f6c-a9c7-b9550c2f7d51"
+        name="IMalariaAntibody"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="2fcf8bb7-6d13-4d9c-a5ff-16fa1b8ed7e9"
+        name="IMalariaAntibody"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+  </packagedElements>
+  <primitiveType
+    Id="220a3521-e091-4221-bae9-3ef9018e845c"
+    name="Integer"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
+    name="Boolean"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+    name="String"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
+    name="UnlimitedNatural"
+    isAbstract="false"
+    isLeaf="false" />
+</modelStoreModel>

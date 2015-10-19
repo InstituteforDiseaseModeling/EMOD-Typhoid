@@ -1,0 +1,273 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Eradication", "Eradication\Eradication.vcxproj", "{2954683A-4400-459B-A5AF-6B6B19CB7270}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D423EC17-4DDC-430C-A153-F1EB87CCDF31} = {D423EC17-4DDC-430C-A153-F1EB87CCDF31}
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+		{7F91BC71-562B-44AE-A246-010C632F9796} = {7F91BC71-562B-44AE-A246-010C632F9796}
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52} = {FAB434AD-C0FC-490D-8F18-E05C99B2FD52}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cajun", "cajun\cajun.vcxproj", "{7F91BC71-562B-44AE-A246-010C632F9796}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utils", "utils\utils.vcxproj", "{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7F91BC71-562B-44AE-A246-010C632F9796} = {7F91BC71-562B-44AE-A246-010C632F9796}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "campaign", "campaign\campaign.vcxproj", "{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbednet", "interventions\libbednet.vcxproj", "{4B06C010-6B77-4EBE-BAAF-F6765118E5E3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcalendar", "interventions\libcalendar.vcxproj", "{644E56A6-2AB3-46C7-A6A5-07D39E57EDD0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libdiagnostics", "interventions\libdiagnostics.vcxproj", "{1B72D499-B211-4FBA-A93E-C336A8EDC4BE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhousingmod", "interventions\libhousingmod.vcxproj", "{9949E5E5-5E63-4935-AB59-B2DA351B7808}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsimplevaccine", "interventions\libsimplevaccine.vcxproj", "{838A4AEB-0321-43CC-A2CC-3C6FF4218ACB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpoliovaccine", "interventions\libpoliovaccine.vcxproj", "{94A6A074-B663-4A3B-A931-53F0835F1D39}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libantimalarialdrug", "interventions\libantimalarialdrug.vcxproj", "{15E44A1E-B9FE-4A61-8B2C-04261BA2E4B9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libantitbdrug", "interventions\libantitbdrug.vcxproj", "{4C21FCDD-0610-4D84-A08F-C1E8F96A872A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbcgvaccine", "interventions\libbcgvaccine.vcxproj", "{12B72850-8CAD-4809-95B7-840FF342AFB3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbirthtriggered", "interventions\libbirthtriggered.vcxproj", "{F7E8834F-0932-4F2E-B98E-1862063C8856}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libimmunoglobulin", "interventions\libimmunoglobulin.vcxproj", "{88AC23AA-4395-490E-A8F3-24ABA0797BFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liboutbreak", "interventions\liboutbreak.vcxproj", "{CDB889A2-37CA-486D-8D96-BD76CF61BA0C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+		{26324584-FC8C-41DF-B844-23718A62D44E} = {26324584-FC8C-41DF-B844-23718A62D44E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvcnt", "interventions\libvcnt.vcxproj", "{1A5C2B16-AA9C-4D31-A0E2-85CF853D0D3F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhealthtriggered", "interventions\libhealthtriggered.vcxproj", "{B51E6ADF-0ACE-47DB-A371-FCF57E394A5E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+		{26324584-FC8C-41DF-B844-23718A62D44E} = {26324584-FC8C-41DF-B844-23718A62D44E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhealthseekingbehavior", "interventions\libhealthseekingbehavior.vcxproj", "{AB90F83F-A215-4FF9-B4E8-9437AACF15E4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgeneric", "libgeneric\libgeneric.vcxproj", "{07F8B71C-0AF2-4945-B646-530CADBDFF64}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+		{7F91BC71-562B-44AE-A246-010C632F9796} = {7F91BC71-562B-44AE-A246-010C632F9796}
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52} = {FAB434AD-C0FC-490D-8F18-E05C99B2FD52}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libenvironmental", "Eradication\libenvironmental.vcxproj", "{32D221D1-95F6-4319-B500-AC061869B081}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+		{7F91BC71-562B-44AE-A246-010C632F9796} = {7F91BC71-562B-44AE-A246-010C632F9796}
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52} = {FAB434AD-C0FC-490D-8F18-E05C99B2FD52}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpolio", "Eradication\libpolio.vcxproj", "{E3D512A1-8AD5-4999-A487-0BABD048574B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvector_static", "Eradication\libvector_static.vcxproj", "{92576476-D8ED-460E-9329-2FE8D4FB61DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libenvironmental_static", "Eradication\libenvironmental_static.vcxproj", "{9819A532-54E4-4668-822A-AD627629BC0A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
+		{7F91BC71-562B-44AE-A246-010C632F9796} = {7F91BC71-562B-44AE-A246-010C632F9796}
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52} = {FAB434AD-C0FC-490D-8F18-E05C99B2FD52}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvector", "Eradication\libvector.vcxproj", "{487E3E79-12AD-45CA-B344-E9D3303AF85B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgeneric_static", "libgeneric_static\libgeneric_static.vcxproj", "{26324584-FC8C-41DF-B844-23718A62D44E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmalaria", "Eradication\libmalaria.vcxproj", "{36AFCC2D-FFF0-4C31-A5B6-BE3E59CF109C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmalaria_static", "Eradication\libmalaria_static.vcxproj", "{48CDAA54-227E-4BDA-90AD-CB178710CDD5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhumanhostseekingtrap", "interventions\libhumanhostseekingtrap.vcxproj", "{A0A77C3A-68BB-43B6-BC8A-42BB1458978C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "intervention emodules", "intervention emodules", "{24F5E1B1-F61A-4DA4-995B-421A9E18F995}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "disease emodules", "disease emodules", "{0F1B34B4-6AD2-49A8-9759-200427297588}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rapidjson", "rapidjson", "{3CA6C23F-2BEE-4E03-AD7A-AD12E90C6043}"
+	ProjectSection(SolutionItems) = preProject
+		rapidjson\include\rapidjson\document.h = rapidjson\include\rapidjson\document.h
+		rapidjson\include\rapidjson\filestream.h = rapidjson\include\rapidjson\filestream.h
+		rapidjson\include\rapidjson\prettywriter.h = rapidjson\include\rapidjson\prettywriter.h
+		rapidjson\include\rapidjson\rapidjson.h = rapidjson\include\rapidjson\rapidjson.h
+		rapidjson\include\rapidjson\reader.h = rapidjson\include\rapidjson\reader.h
+		rapidjson\include\rapidjson\stringbuffer.h = rapidjson\include\rapidjson\stringbuffer.h
+		rapidjson\include\rapidjson\writer.h = rapidjson\include\rapidjson\writer.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "internal", "internal", "{640883B0-F6A0-433B-8255-9E307509D5C8}"
+	ProjectSection(SolutionItems) = preProject
+		rapidjson\include\rapidjson\internal\pow10.h = rapidjson\include\rapidjson\internal\pow10.h
+		rapidjson\include\rapidjson\internal\stack.h = rapidjson\include\rapidjson\internal\stack.h
+		rapidjson\include\rapidjson\internal\strfunc.h = rapidjson\include\rapidjson\internal\strfunc.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "snappy", "snappy\snappy.vcxproj", "{E672EB5A-934B-4B47-834B-ABDD133D6B63}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTestLib", "UnitTest++\UnitTestLib.vcxproj", "{64A4FEFE-0461-4E95-8CC1-91EF5F57DBC6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "componentTests", "ComponentTests\componentTests.vcxproj", "{44CE3ADB-43F0-49DB-84D5-C2DAD2F15A28}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2954683A-4400-459B-A5AF-6B6B19CB7270} = {2954683A-4400-459B-A5AF-6B6B19CB7270}
+		{7F91BC71-562B-44AE-A246-010C632F9796} = {7F91BC71-562B-44AE-A246-010C632F9796}
+		{64A4FEFE-0461-4E95-8CC1-91EF5F57DBC6} = {64A4FEFE-0461-4E95-8CC1-91EF5F57DBC6}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "baseReportLib", "baseReportLib\baseReportLib.vcxproj", "{D423EC17-4DDC-430C-A153-F1EB87CCDF31}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2954683A-4400-459B-A5AF-6B6B19CB7270}.Debug|x64.ActiveCfg = Debug|x64
+		{2954683A-4400-459B-A5AF-6B6B19CB7270}.Debug|x64.Build.0 = Debug|x64
+		{2954683A-4400-459B-A5AF-6B6B19CB7270}.Release|x64.ActiveCfg = Release|x64
+		{2954683A-4400-459B-A5AF-6B6B19CB7270}.Release|x64.Build.0 = Release|x64
+		{7F91BC71-562B-44AE-A246-010C632F9796}.Debug|x64.ActiveCfg = Debug|x64
+		{7F91BC71-562B-44AE-A246-010C632F9796}.Debug|x64.Build.0 = Debug|x64
+		{7F91BC71-562B-44AE-A246-010C632F9796}.Release|x64.ActiveCfg = Release|x64
+		{7F91BC71-562B-44AE-A246-010C632F9796}.Release|x64.Build.0 = Release|x64
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}.Debug|x64.ActiveCfg = Debug|x64
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}.Debug|x64.Build.0 = Debug|x64
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}.Release|x64.ActiveCfg = Release|x64
+		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}.Release|x64.Build.0 = Release|x64
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}.Debug|x64.ActiveCfg = Debug|x64
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}.Debug|x64.Build.0 = Debug|x64
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}.Release|x64.ActiveCfg = Release|x64
+		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}.Release|x64.Build.0 = Release|x64
+		{4B06C010-6B77-4EBE-BAAF-F6765118E5E3}.Debug|x64.ActiveCfg = Debug|x64
+		{4B06C010-6B77-4EBE-BAAF-F6765118E5E3}.Release|x64.ActiveCfg = Release|x64
+		{644E56A6-2AB3-46C7-A6A5-07D39E57EDD0}.Debug|x64.ActiveCfg = Debug|x64
+		{644E56A6-2AB3-46C7-A6A5-07D39E57EDD0}.Release|x64.ActiveCfg = Release|x64
+		{1B72D499-B211-4FBA-A93E-C336A8EDC4BE}.Debug|x64.ActiveCfg = Debug|x64
+		{1B72D499-B211-4FBA-A93E-C336A8EDC4BE}.Release|x64.ActiveCfg = Release|x64
+		{9949E5E5-5E63-4935-AB59-B2DA351B7808}.Debug|x64.ActiveCfg = Debug|x64
+		{9949E5E5-5E63-4935-AB59-B2DA351B7808}.Release|x64.ActiveCfg = Release|x64
+		{838A4AEB-0321-43CC-A2CC-3C6FF4218ACB}.Debug|x64.ActiveCfg = Debug|x64
+		{838A4AEB-0321-43CC-A2CC-3C6FF4218ACB}.Release|x64.ActiveCfg = Release|x64
+		{94A6A074-B663-4A3B-A931-53F0835F1D39}.Debug|x64.ActiveCfg = Debug|x64
+		{94A6A074-B663-4A3B-A931-53F0835F1D39}.Release|x64.ActiveCfg = Release|x64
+		{15E44A1E-B9FE-4A61-8B2C-04261BA2E4B9}.Debug|x64.ActiveCfg = Debug|x64
+		{15E44A1E-B9FE-4A61-8B2C-04261BA2E4B9}.Release|x64.ActiveCfg = Release|x64
+		{4C21FCDD-0610-4D84-A08F-C1E8F96A872A}.Debug|x64.ActiveCfg = Debug|x64
+		{4C21FCDD-0610-4D84-A08F-C1E8F96A872A}.Release|x64.ActiveCfg = Release|x64
+		{12B72850-8CAD-4809-95B7-840FF342AFB3}.Debug|x64.ActiveCfg = Debug|x64
+		{12B72850-8CAD-4809-95B7-840FF342AFB3}.Release|x64.ActiveCfg = Release|x64
+		{F7E8834F-0932-4F2E-B98E-1862063C8856}.Debug|x64.ActiveCfg = Debug|x64
+		{F7E8834F-0932-4F2E-B98E-1862063C8856}.Release|x64.ActiveCfg = Release|x64
+		{88AC23AA-4395-490E-A8F3-24ABA0797BFA}.Debug|x64.ActiveCfg = Debug|x64
+		{88AC23AA-4395-490E-A8F3-24ABA0797BFA}.Release|x64.ActiveCfg = Release|x64
+		{CDB889A2-37CA-486D-8D96-BD76CF61BA0C}.Debug|x64.ActiveCfg = Debug|x64
+		{CDB889A2-37CA-486D-8D96-BD76CF61BA0C}.Release|x64.ActiveCfg = Release|x64
+		{1A5C2B16-AA9C-4D31-A0E2-85CF853D0D3F}.Debug|x64.ActiveCfg = Debug|x64
+		{1A5C2B16-AA9C-4D31-A0E2-85CF853D0D3F}.Release|x64.ActiveCfg = Release|x64
+		{B51E6ADF-0ACE-47DB-A371-FCF57E394A5E}.Debug|x64.ActiveCfg = Debug|x64
+		{B51E6ADF-0ACE-47DB-A371-FCF57E394A5E}.Release|x64.ActiveCfg = Release|x64
+		{AB90F83F-A215-4FF9-B4E8-9437AACF15E4}.Debug|x64.ActiveCfg = Debug|x64
+		{AB90F83F-A215-4FF9-B4E8-9437AACF15E4}.Release|x64.ActiveCfg = Release|x64
+		{07F8B71C-0AF2-4945-B646-530CADBDFF64}.Debug|x64.ActiveCfg = Debug|x64
+		{07F8B71C-0AF2-4945-B646-530CADBDFF64}.Release|x64.ActiveCfg = Release|x64
+		{32D221D1-95F6-4319-B500-AC061869B081}.Debug|x64.ActiveCfg = Debug|x64
+		{32D221D1-95F6-4319-B500-AC061869B081}.Release|x64.ActiveCfg = Release|x64
+		{E3D512A1-8AD5-4999-A487-0BABD048574B}.Debug|x64.ActiveCfg = Debug|x64
+		{E3D512A1-8AD5-4999-A487-0BABD048574B}.Release|x64.ActiveCfg = Release|x64
+		{92576476-D8ED-460E-9329-2FE8D4FB61DB}.Debug|x64.ActiveCfg = Debug|x64
+		{92576476-D8ED-460E-9329-2FE8D4FB61DB}.Release|x64.ActiveCfg = Release|x64
+		{9819A532-54E4-4668-822A-AD627629BC0A}.Debug|x64.ActiveCfg = Debug|x64
+		{9819A532-54E4-4668-822A-AD627629BC0A}.Release|x64.ActiveCfg = Release|x64
+		{487E3E79-12AD-45CA-B344-E9D3303AF85B}.Debug|x64.ActiveCfg = Debug|x64
+		{487E3E79-12AD-45CA-B344-E9D3303AF85B}.Release|x64.ActiveCfg = Release|x64
+		{26324584-FC8C-41DF-B844-23718A62D44E}.Debug|x64.ActiveCfg = Debug|x64
+		{26324584-FC8C-41DF-B844-23718A62D44E}.Release|x64.ActiveCfg = Release|x64
+		{36AFCC2D-FFF0-4C31-A5B6-BE3E59CF109C}.Debug|x64.ActiveCfg = Debug|x64
+		{36AFCC2D-FFF0-4C31-A5B6-BE3E59CF109C}.Release|x64.ActiveCfg = Release|x64
+		{48CDAA54-227E-4BDA-90AD-CB178710CDD5}.Debug|x64.ActiveCfg = Debug|x64
+		{48CDAA54-227E-4BDA-90AD-CB178710CDD5}.Release|x64.ActiveCfg = Release|x64
+		{A0A77C3A-68BB-43B6-BC8A-42BB1458978C}.Debug|x64.ActiveCfg = Debug|x64
+		{A0A77C3A-68BB-43B6-BC8A-42BB1458978C}.Release|x64.ActiveCfg = Release|x64
+		{E672EB5A-934B-4B47-834B-ABDD133D6B63}.Debug|x64.ActiveCfg = Debug|x64
+		{E672EB5A-934B-4B47-834B-ABDD133D6B63}.Release|x64.ActiveCfg = Release|x64
+		{64A4FEFE-0461-4E95-8CC1-91EF5F57DBC6}.Debug|x64.ActiveCfg = Debug|x64
+		{64A4FEFE-0461-4E95-8CC1-91EF5F57DBC6}.Debug|x64.Build.0 = Debug|x64
+		{64A4FEFE-0461-4E95-8CC1-91EF5F57DBC6}.Release|x64.ActiveCfg = Release|x64
+		{64A4FEFE-0461-4E95-8CC1-91EF5F57DBC6}.Release|x64.Build.0 = Release|x64
+		{44CE3ADB-43F0-49DB-84D5-C2DAD2F15A28}.Debug|x64.ActiveCfg = Debug|x64
+		{44CE3ADB-43F0-49DB-84D5-C2DAD2F15A28}.Debug|x64.Build.0 = Debug|x64
+		{44CE3ADB-43F0-49DB-84D5-C2DAD2F15A28}.Release|x64.ActiveCfg = Release|x64
+		{44CE3ADB-43F0-49DB-84D5-C2DAD2F15A28}.Release|x64.Build.0 = Release|x64
+		{D423EC17-4DDC-430C-A153-F1EB87CCDF31}.Debug|x64.ActiveCfg = Debug|x64
+		{D423EC17-4DDC-430C-A153-F1EB87CCDF31}.Debug|x64.Build.0 = Debug|x64
+		{D423EC17-4DDC-430C-A153-F1EB87CCDF31}.Release|x64.ActiveCfg = Release|x64
+		{D423EC17-4DDC-430C-A153-F1EB87CCDF31}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{644E56A6-2AB3-46C7-A6A5-07D39E57EDD0} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{1B72D499-B211-4FBA-A93E-C336A8EDC4BE} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{9949E5E5-5E63-4935-AB59-B2DA351B7808} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{838A4AEB-0321-43CC-A2CC-3C6FF4218ACB} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{94A6A074-B663-4A3B-A931-53F0835F1D39} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{15E44A1E-B9FE-4A61-8B2C-04261BA2E4B9} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{4C21FCDD-0610-4D84-A08F-C1E8F96A872A} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{12B72850-8CAD-4809-95B7-840FF342AFB3} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{F7E8834F-0932-4F2E-B98E-1862063C8856} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{88AC23AA-4395-490E-A8F3-24ABA0797BFA} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{CDB889A2-37CA-486D-8D96-BD76CF61BA0C} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{1A5C2B16-AA9C-4D31-A0E2-85CF853D0D3F} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{B51E6ADF-0ACE-47DB-A371-FCF57E394A5E} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{AB90F83F-A215-4FF9-B4E8-9437AACF15E4} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{A0A77C3A-68BB-43B6-BC8A-42BB1458978C} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{4B06C010-6B77-4EBE-BAAF-F6765118E5E3} = {24F5E1B1-F61A-4DA4-995B-421A9E18F995}
+		{32D221D1-95F6-4319-B500-AC061869B081} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{E3D512A1-8AD5-4999-A487-0BABD048574B} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{92576476-D8ED-460E-9329-2FE8D4FB61DB} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{9819A532-54E4-4668-822A-AD627629BC0A} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{487E3E79-12AD-45CA-B344-E9D3303AF85B} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{26324584-FC8C-41DF-B844-23718A62D44E} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{36AFCC2D-FFF0-4C31-A5B6-BE3E59CF109C} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{48CDAA54-227E-4BDA-90AD-CB178710CDD5} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{07F8B71C-0AF2-4945-B646-530CADBDFF64} = {0F1B34B4-6AD2-49A8-9759-200427297588}
+		{640883B0-F6A0-433B-8255-9E307509D5C8} = {3CA6C23F-2BEE-4E03-AD7A-AD12E90C6043}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,150 @@
+{
+    "tests": [
+        {
+            "path" : "1_Generic_Seattle_MultiNode"
+        },
+        {
+            "path" : "5_Vector_Namawala_SugarTrap_EveryFeedFeed"
+        },
+        {
+            "path" : "8_Vector_Namawala_SugarTrap_EmergeFeed"
+        },
+        {
+            "path" : "9_Vector_Namawala_SugarTrap_NoFeed"
+        },
+        {
+            "path" : "10_Vector_Namawala_Oviposition"
+        },
+        {
+            "path" : "11_Vector_Namawala_Larvicides"
+        },
+        {
+            "path" : "12_Malaria_Namawala_LargeVectorCampaign"
+        },
+        {
+            "path" : "13_Generic_Seattle_SingleCore"
+        },
+        {
+            "path" : "14_Polio_Bihar_Larger"
+        },
+        {
+            "path" : "18_Vector_Namawala_Indoor_IRSOnly"
+        },
+        {
+            "path" : "19_Vector_Namawala_Indoor_4Interventions"
+        },
+        {
+            "path" : "20_Vector_Namawala_IRSOnly"
+        },
+        {
+            "path" : "21_Vector_Namawala_4Interventions"
+        },
+        {
+            "path" : "22_Malaria_Namawala_HousingModAt540"
+        },
+        {
+            "path" : "23_Generic_Namawala"
+        },
+        {
+            "path" : "24_Malaria_Garki"
+        },
+        {
+            "path" : "25_Vector_Madagascar"
+        },
+        {
+            "path" : "26_Vector_Garki"
+        },
+        {
+            "path" : "27_Vector_Sandbox"
+        },
+        {
+            "path" : "28_Malaria_Sandbox"
+        },
+        {
+            "path" : "34_Malaria_Namawala_Drugs"
+        },
+        {
+            "path" : "36_Vector_Release_Wolbachia_Females_Individual"
+        },
+        {
+            "path" : "37_Vector_Release_Sterile_Male_Cohort"
+        },
+        {
+            "path" : "38_Malaria_Namawala_HousingModAt540_WithDeaths"
+        },
+        {
+            "path" : "39_Vector_Namawala_HostSeekingTrap"
+        },
+        {
+            "path" : "40_Malaria_Namawala_LargeVectorCampaign_StrainGenerator"
+        },
+        {
+            "path" : "41_Malaria_Default_Geography"
+        },
+        {
+            "path" : "42_Polio_Default_Geography"
+        },
+        {
+            "path" : "43_Vector_Garki_MultiCore_VectorMigration"
+        }, 
+	    {
+            "path" : "45_Vector_An_farauti_IRS"
+        },
+        {
+            "path" : "46_Vector_An_arabiensis_MultipleHabitats"
+        },
+        {
+            "path" : "48_Generic_Seattle_SingleCore_Zoonosis"
+        },
+        {
+            "path" : "100_OneMalariaIndividual_SingleAntigen"
+        },
+        {
+            "path" : "101_OneMalariaIndividual_MultipleAntigens"
+        },
+        {
+            "path" : "102_OneMalariaIndividual_MultipleSwitchingAntigens"
+        },
+        {
+            "path" : "103_OneMalariaIndividual_MultipleSwitchingAntigensSuperInfection"
+        },
+        {
+            "path" : "110_Namawala_Production_Burnin"
+        }, 
+        {"path":"Scenarios/Generic/01_SIR"},
+        {"path":"Scenarios/Generic/02_SIR_Vaccinations/A_BaselineOutbreak"},
+        {"path":"Scenarios/Generic/02_SIR_Vaccinations/B_Vaccinations"},
+        {"path":"Scenarios/Generic/02_SIR_Vaccinations/C_TargetedVaccinations"},
+        {"path":"Scenarios/Generic/03_SEIR"},
+        {"path":"Scenarios/Generic/04_SEIR_VitalDynamics"},
+        {"path":"Scenarios/Generic/05_SIRS"},
+        {"path":"Scenarios/Generic/06_SEIRS"},
+        {"path":"Scenarios/Generic/07_SI"},
+        {"path":"Scenarios/Generic/08_SIS"},
+        {"path":"Scenarios/Generic/09_DensityScaling"},
+        {"path":"Scenarios/Generic/10_Zoonosis"},
+
+        {"path":"Scenarios/HINT/01_RiskGroups"},
+        {"path":"Scenarios/HINT/02_SchoolClosure"},
+        {"path":"Scenarios/HINT/03_AgeAndAccess/A_BaselineOutbreak"},
+        {"path":"Scenarios/HINT/03_AgeAndAccess/B_AgeTargetedVaccine"},
+        {"path":"Scenarios/HINT/03_AgeAndAccess/C_AccessTargetedVaccine"},
+        {"path":"Scenarios/HINT/04_WAPertussis/A_BaselineOutbreak"},
+        {"path":"Scenarios/HINT/04_WAPertussis/B_TargetVaccineRefusers"},
+        {"path":"Scenarios/HINT/05_SeattleCommuting"},
+
+        {"path":"Scenarios/VectorAndMalaria/01_A_Namawala3Vectors_lowEIR"},
+        {"path":"Scenarios/VectorAndMalaria/01_B_Namawala3Vectors_highEIR"},
+        {"path":"Scenarios/VectorAndMalaria/02_Namawala_Full_Malaria_Model"},
+        {"path":"Scenarios/VectorAndMalaria/03_A_Namawala_Vector"},
+        {"path":"Scenarios/VectorAndMalaria/03_B_Muheza_Vector"},
+        {"path":"Scenarios/VectorAndMalaria/03_C_Garki_single_node_Vector"},
+        {"path":"Scenarios/VectorAndMalaria/05_Namawala_Vector_ITNs"},
+        {"path":"Scenarios/VectorAndMalaria/06_Namawala_Vector_ITNsPEV"},
+        {"path":"Scenarios/VectorAndMalaria/07_Namawala_Vector_SSV"},
+        {"path":"Scenarios/VectorAndMalaria/08_Garki_IRSMDA"},
+        {"path":"Scenarios/VectorAndMalaria/09_Namawala_Vector_SugarBaitedTraps"},
+        {"path":"Scenarios/VectorAndMalaria/10_InsectKillingFence"},
+        {"path":"Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats"}
+    ]
+}

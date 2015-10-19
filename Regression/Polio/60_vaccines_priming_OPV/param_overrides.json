@@ -1,0 +1,55 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Disease_Susceptible_Report_Poliovirus_Type": "VRPV1", 
+            "Acquire_Rate_Default_Polio": 0, 
+            "Waning_Humoral_Rate_Fast": 0, 
+            "Waning_Humoral_Fast_Fraction": 0, 
+            "Waning_Mucosal_Rate_Fast": 0, 
+            "SABIN_EVOLUTION": {
+                "Sabin3_Site_Reversion_Rates": "0.01 0.01 0.01", 
+                "Sabin1_Site_Reversion_Rates": "0.01 0.01 0.01 0.01 0.01", 
+                "Sabin2_Site_Reversion_Rates": "0.01 0.01"
+            }, 
+            "VACCINES": {
+                "Vaccine_Titer_mOPV2": 1333521.432163324, 
+                "Vaccine_Titer_mOPV1": 1333521.432163324, 
+                "Vaccine_Titer_mOPV3": 1333521.432163324
+            }, 
+            "Waning_Mucosal_Fast_Fraction": 0, 
+            "PARALYSIS": {
+                "Paralytic_Immunity_Titer": 3
+            }
+        }, 
+        "DEMOGRAPHICS": {
+            "Enable_Immunity_Initialization_Distribution": 1, 
+            "Enable_Birth": 0, 
+            "Enable_Demographics_Reporting": 0, 
+            "Demographics_Filename": "..\\polio_input\\Sandbox_naive_demographics.compiled.json", 
+            "MORTALITY": {
+                "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF"
+            }, 
+            "IMMUNITY": {
+                "Enable_Immune_Decay": 0
+            }, 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL", 
+                "Base_Individual_Sample_Rate": 1
+            }
+        }, 
+        "DISEASE": {
+            "INCUBATION": {
+                "Base_Incubation_Period": 1
+            }
+        }, 
+        "PRIMARY": {
+            "Run_Number": 152, 
+            "Simulation_Duration": 610, 
+            "Config_Name": "mOPV1_DoseResponseTest", 
+            "Custom_Reports_Filename" : "custom_reports.json",
+            "Geography": "auto-generated"
+        }
+    }
+}

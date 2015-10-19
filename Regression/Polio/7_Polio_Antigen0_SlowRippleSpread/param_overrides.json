@@ -1,0 +1,26 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Specific_Infectivity_WPV1": 0.20000000000000001
+        }, 
+        "DEMOGRAPHICS": {
+            "Enable_Birth": 0, 
+            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.smallpop.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL"
+            }
+        }, 
+        "DISEASE": {
+            "INCUBATION": {
+                "Base_Incubation_Period": 10
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 250, 
+            "Config_Name": "6_Antigen0_SlowRippleSpread", 
+            "Geography": "Bihar"
+        }
+    }
+}

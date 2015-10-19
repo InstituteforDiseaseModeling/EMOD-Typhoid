@@ -1,0 +1,35 @@
+{
+     "Default_Config_Path": "defaults\\polio_default_config.json", 
+     "parameters": {
+          "DEMOGRAPHICS": {
+               "Demographics_Filename": "Bihar_2x2_sandbox_demographics.compiled.json;Bihar_2x2_sandbox_pool_overlay1.compiled.json", 
+               "SAMPLING": {
+                    "Base_Individual_Sample_Rate": 0.01
+               }
+          }, 
+          "MIGRATION": {
+               "LOCAL": {
+                    "Enable_Local_Migration": 1, 
+                    "Local_Migration_Filename": "Bihar_2x2_sandbox_local_migration.bin"
+               }, 
+               "Migration_Model": "FIXED_RATE_MIGRATION",
+               "Migration_Pattern": "WAYPOINTS_HOME", 
+               "Roundtrip_Waypoints": 5, 
+               "Enable_Migration_Heterogeneity": 0, 
+               "Enable_Air_Migration": 0,
+               "Enable_Regional_Migration": 0, 
+               "Enable_Sea_Migration": 0, 
+               "Air_Migration_Filename": "", 
+               "Regional_Migration_Filename": "", 
+               "Sea_Migration_Filename": "" 
+          }, 
+          "INTRANODE_TRANSMISSION": {
+               "Enable_Heterogeneous_Intranode_Transmission": 1
+          }, 
+          "PRIMARY": {
+               "Config_Name": "2_Polio_Bihar_2x2_MixingPool", 
+               "Geography": "Bihar-Like_2x2", 
+               "Run_Number": 1
+          }
+     }
+}

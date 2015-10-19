@@ -1,0 +1,59 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libpolio.dll to handle polio disease based on libgeneric_static.lib and libenvironmental_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+nodeobj = env.Object("../Eradication/NodeSetNodeList.cpp")
+svobj = env.Object("../interventions/SimpleVaccine.cpp")
+
+libpoliodllSrcFiles = [ "../Eradication/BinnedReportPolio.cpp",
+                        "../Eradication/IndividualPolio.cpp",
+                        "../Eradication/InfectionPolio.cpp",
+                        "../Eradication/NodePolio.cpp",
+                        "../Eradication/PolioInterventionsContainer.cpp",
+                        "../interventions/PolioVaccine.cpp",
+                        "../Eradication/ReportPolio.cpp",
+                        "../Eradication/SpatialReportPolio.cpp",
+                        "../Eradication/SimulationPolio.cpp",
+                        "../Eradication/SusceptibilityPolio.cpp"
+                        ]
+
+libpoliodllIncFiles = [  "SimulationPolio.h" ]
+libpoliodllLocalInc = [  "stdafx.h" ]
+
+polioenv = env.Clone()
+
+genobj = polioenv.Object("libgenobj_polio", "../Eradication/LibGenericClasses.cpp")
+
+polioenv.Append( CPPDEFINES=["_POLIO_DLL"] )
+polioenv.Append(LIBS=['libgeneric_static'])
+polioenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+polioenv.Append(LIBS=['libenvironmental_static'])
+polioenv.Append(LIBS=['libvector_static'])
+polioenv.Append(LIBS=['libmalaria_static'])
+polioenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libpolioDll = polioenv.SharedLibrary('libpolio', libpoliodllSrcFiles + stdobj + genobj + nodeobj + svobj)
+#print "building libpoliodll: " + str(libpoliodll)
+
+# take libpolio.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libpoliodllTarget = libpolioDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = polioenv['BUILD_VARIANT'] + '|x64'
+    print str(libpoliodllTarget) + ": Generating MSVS" + polioenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    polioenv.MSVSProject(target = 'LibpoliodllScons' + polioenv['MSVSPROJECTSUFFIX'],
+                    srcs = libpoliodllSrcFiles,
+		    incs = libpoliodllIncFiles,
+		    localincs = libpoliodllLocalInc,
+ 		    buildtarget = libpoliodllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

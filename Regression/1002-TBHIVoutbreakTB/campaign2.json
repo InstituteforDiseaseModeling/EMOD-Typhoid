@@ -1,0 +1,68 @@
+{
+     "Use_Defaults": 1,
+     "Campaign_Name": "Campaign - Outbreak, drug-seeking on TBActivation", 
+     "Events": [
+         
+          
+          {
+               "Event_Coordinator_Config": {
+                    "Intervention_Config": {
+                         "Antigen": 0, 
+                         "Genome": 0, 
+                         "Outbreak_Source": "PrevalenceIncrease", 
+                         "class": "OutbreakIndividualHIVorTB",
+                         "Infection_Type": "TB"
+                         
+                    }, 
+          "Number_Distributions": -1, 
+					"Number_Repetitions": 1000,
+					"Demographic_Coverage": 0.02,
+					"Timesteps_Between_Repetitions": 73, 					
+                    "Target_Group": "Everyone", 
+                    "Target_Gender": "Female",
+                    "Target_Age_Min": 15,
+                    "Target_Age_Max": 100,
+                    "Time_Offset": 0,
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Event_Name": "OutbreakIndividual", 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 10, 
+               "class": "CampaignEvent"
+          },
+          
+          {
+               "Event_Coordinator_Config": {
+                    "Intervention_Config": {
+                         "Actual_IndividualIntervention_Config": {
+                              "Actual_IndividualIntervention_Config": {
+                                   "Cost_To_Consumer": 90, 
+                                   "Drug_Type": "FirstLineCombo", 
+                                   "Durability_Profile": "FIXED_DURATION_CONSTANT_EFFECT", 
+                                   "Primary_Decay_Time_Constant": 180, 
+                                   "Remaining_Doses": 1, 
+                                   "TB_Drug_Clearance_Rate": 0.02, 
+                                   "TB_Drug_Inactivation_Rate": 0.3, 
+                                   "class": "AntiTBDrug"
+                              }, 
+                              "Tendency": 0.0015, 
+                              "class": "SimpleHealthSeekingBehaviour"
+                         }, 
+                         "Trigger_Condition": "TBActivation", 
+                         "class": "NodeLevelHealthTriggeredIV"
+                    }, 
+                    "Target_Demographic": "Everyone", 
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Event_Name": "Generic Node Configuration", 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 1000, 
+               "class": "CampaignEvent"
+          }
+		  
+     ]
+}

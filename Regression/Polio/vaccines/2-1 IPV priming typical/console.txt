@@ -1,0 +1,94 @@
+Intellectual Ventures(R)/EMOD Disease Transmission Kernel 1.9.3683.0 Polio-v1.7 2014/03/26 17:01:30
+Using config file: config_flat.json
+Using input path: .
+Using output path: output
+using dll path: ..\..\..\..\reporters\x64\Release
+Initializing environment...
+Initial working directory: c:\svn\Polio-v17\Regression\Polio\vaccines\2-1 IPV priming typical
+Log-levels:
+	Default -> 3
+00:00:00 [0] [I] [Eradication] Loaded Configuration...
+00:00:00 [0] [I] [Eradication] 259 parameters found.
+00:00:00 [0] [I] [Eradication] Initializing Controller...
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal()...
+00:00:00 [0] [I] [Simulation] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Simulation] Using PSEUDO_DES random number generator.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: ..\..\..\..\reporters\x64\Release
+00:00:00 [0] [W] [Simulation] Failed to load reporter emodules for SimType: POLIO_SIM from path: ..\..\..\..\reporters\x64\Release/reporter_plugins
+00:00:00 [0] [I] [SimulationPolio] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal() populate simulation...
+00:00:00 [0] [I] [Simulation] Campaign file name identified as: c:\svn\Polio-v17\Regression\Polio\vaccines\2-1 IPV priming typical\campaign.json
+00:00:00 [0] [I] [Simulation] Opening campaign file c:\svn\Polio-v17\Regression\Polio\vaccines\2-1 IPV priming typical\campaign.json
+00:00:00 [0] [I] [Simulation] Opened campaign file successfully.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: ..\..\..\..\reporters\x64\Release
+00:00:00 [0] [I] [DllLoader] Calling LoadLibrary on interventions emodule ..\..\..\..\reporters\x64\Release\interventions\libpoliosurveyJSON_analyzer_plugin.dll
+00:00:00 [0] [I] [DllLoader] Calling GetProcAddr for GetEModuleVersion
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] GetVersion called with ver=1.9.3647.0
+00:00:00 [0] [I] [DllLoader] The application has version 1.9.3683.0 while the emodule has version 1.9.3647.0
+00:00:00 [0] [W] [DllLoader] The version of EModule libpoliosurveyJSON_analyzer_plugin.dll is lower than current application!
+00:00:00 [0] [I] [DllLoader] Calling GetProcAddress for RegisterWithFactory...
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Target_Demographic" : "Everyone" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [NodeDemographics] Opening demographics file: ..\input\Sandbox_naive_demographics.compiled.json
+00:00:00 [0] [I] [Climate] Initialize
+00:00:00 [0] [W] [NodeRankMap] Failed to open load-balancing file: .
+00:00:00 [0] [W] [Simulation] Failed to use legacy loadbalance file. Defaulting to checkerboard.
+00:00:00 [0] [I] [Simulation] populateFromDemographics() created 1 nodes
+00:00:00 [0] [I] [Simulation] populateFromDemographics() generated 1 nodes.
+00:00:00 [0] [I] [Simulation] Rank 0 contributes 1 nodes...
+00:00:00 [0] [I] [Simulation] Merging node rank maps...
+00:00:00 [0] [I] [Simulation] Merged rank 0 map now has 1 nodes.
+00:00:00 [0] [I] [Simulation] Rank 0 map contents:
+{ NodeRankMap:
+[1,0]
+}
+
+00:00:00 [0] [I] [Simulation] Initialized 'InsetChart.json' reporter
+00:00:00 [0] [I] [Simulation] Update(): Time: 1.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [Simulation] Update(): Time: 2.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:00 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Demographic_Coverage" : "1.000000" ) for unspecified parameter.
+00:00:00 [0] [I] [StandardEventCoordinator] UpdateNodes() distributed 'PolioSurveyJSONAnalyzer' intervention to node 1
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_-1_0.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 3.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:00 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:00 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10000 'PolioVaccine' interventions at node 1
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_1_1.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 4.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_1_2.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 5.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_1_3.json
+00:00:00 [0] [I] [Simulation] Update(): Time: 6.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:00 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_1_4.json
+00:00:01 [0] [I] [Simulation] Update(): Time: 7.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:01 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_1_5.json
+00:00:01 [0] [I] [Simulation] Update(): Time: 8.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:01 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_1_6.json
+00:00:01 [0] [I] [Simulation] Update(): Time: 9.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:01 [0] [I] [PolioSurveyJSONAnalyzer] Writing file: PolioSurveyJSONAnalyzer_survey_1_7.json
+00:00:01 [0] [I] [Simulation] Update(): Time: 10.0 Rank: 0 StatPop: 10000 Infected: 0
+00:00:01 [0] [I] [Simulation] Finalizing 'InsetChart.json' reporter.
+00:00:01 [0] [I] [Eradication] Controller executed successfully.

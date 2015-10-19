@@ -1,0 +1,28 @@
+{
+     "Default_Config_Path": "defaults\\polio_default_config.json", 
+     "parameters": {
+          "DEMOGRAPHICS": {
+               "Demographics_Filename": "Bihar_single_node_demographics.compiled.json", 
+               "SAMPLING": {
+                    "Max_Node_Population_Samples": 100000, 
+                    "Sample_Rate_0_18mo": 1, 
+                    "Sample_Rate_10_14": 1, 
+                    "Sample_Rate_15_19": 1, 
+                    "Sample_Rate_18mo_4yr": 1, 
+                    "Sample_Rate_20_Plus": 1, 
+                    "Sample_Rate_5_9": 1, 
+                    "Sample_Rate_Birth": 1
+               }
+          }, 
+          "FUDGE_FACTORS": {
+               "x_Population_Immunity": 0
+          }, 
+          "POLIO": {
+               "Polio_Host_Factor": 0.8
+          }, 
+          "PRIMARY": {
+               "Config_Name": "14_Polio_Bihar_Larger", 
+               "Geography": "Bihar-Like_1_Node"
+          }
+     }
+}

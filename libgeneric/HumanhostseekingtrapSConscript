@@ -1,0 +1,44 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libhumanhostseekingtrap.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhumanhostseekingtrapdllSrcFiles = [ "../interventions/HumanHostSeekingTrap.cpp",
+                                       "../interventions/HumanHostSeekingTrapEModule.cpp"
+                                       ]
+
+libhumanhostseekingtrapdllIncFiles = [  "../interventions/HumanHostSeekingTrap.h" ]
+libhumanhostseekingtrapdllLocalInc = [  "stdafx.h" ]
+
+humanhostseekingtrapenv = env.Clone()
+
+humanhostseekingtrapenv.Append(LIBS=['libgeneric_static'])
+humanhostseekingtrapenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+humanhostseekingtrapenv.Append(LIBS=['libvector_static'])
+humanhostseekingtrapenv.Append(LIBS=['libmalaria_static'])
+humanhostseekingtrapenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhumanhostseekingtrapDll = humanhostseekingtrapenv.SharedLibrary('libhumanhostseekingtrap', libhumanhostseekingtrapdllSrcFiles + stdobj)
+#print "building libhumanhostseekingtrapdll: " + str(libhumanhostseekingtrapdll)
+
+# take libhumanhostseekingtrap.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhumanhostseekingtrapdllTarget = libhumanhostseekingtrapDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = humanhostseekingtrapenv['BUILD_VARIANT'] + '|x64'
+    print str(libhumanhostseekingtrapdllTarget) + ": Generating MSVS" + humanhostseekingtrapenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    humanhostseekingtrapenv.MSVSProject(target = 'LibhumanhostseekingtrapdllScons' + humanhostseekingtrapenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhumanhostseekingtrapdllSrcFiles,
+		    incs = libhumanhostseekingtrapdllIncFiles,
+		    localincs = libhumanhostseekingtrapdllLocalInc,
+ 		    buildtarget = libhumanhostseekingtrapdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

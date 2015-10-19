@@ -1,0 +1,23 @@
+{
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Acquire_Rate_Default_Polio": 0, 
+            "Maternal_log2NAb_mean": 0, 
+            "Maternal_log2NAb_std": 0
+        }, 
+        "DEMOGRAPHICS": {
+            "Enable_Birth": 0, 
+            "Demographics_Filename": "../polio_input/Sandbox_naive_demographics.compiled.json", 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Individual_Sampling_Type": "TRACK_ALL"
+            }
+        }, 
+        "PRIMARY": {
+            "Simulation_Duration": 180, 
+            "Config_Name": "69_waning_mucosal_rates", 
+            "Geography": "Bihar"
+        }
+    }
+}

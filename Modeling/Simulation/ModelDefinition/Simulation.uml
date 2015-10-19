@@ -1,0 +1,917 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="8079b4a9-3e92-4cf4-872d-a79a600e87e2"
+  name="Simulation" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <profileInstances>
+    <packageHasProfileInstances
+      Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
+      <profileInstance
+        Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791"
+        name="StandardProfileL2" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances
+      Id="29349502-908c-4fda-9054-c48619c59ed0">
+      <profileInstance
+        Id="532ea607-fb19-44b8-8502-3351b05452be"
+        name="StandardProfileL3" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="7dc62cbf-1fa8-4161-9fc7-431d8b6c8bd6"
+        name="Simulation"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="67dfdebf-6e6b-401a-ac09-559facb3f4b9">
+            <interfaceMoniker
+              Id="3c7415e5-c47a-4159-9b7d-6bafd3775687"
+              LastKnownName="ISimulation"
+              LastKnownLocation="Simulation.uml" />
+          </interfaceRealization>
+          <interfaceRealization
+            Id="a4f8f6da-2e0c-475e-b007-5bcf10742c07">
+            <interfaceMoniker
+              Id="ca5be1a4-7e06-4ba0-a078-a1b83aee8745"
+              LastKnownName="ISimulationContext"
+              LastKnownLocation="Simulation.uml" />
+          </interfaceRealization>
+          <interfaceRealization
+            Id="ed63352d-7b8d-401a-9b9b-8cf5e9bf14f7">
+            <interfaceMoniker
+              Id="22fa933e-8edf-460f-8379-e2e7e95cc9e4"
+              LastKnownName="JsonConfigurable"
+              LastKnownLocation="Simulation.uml" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="07d1a662-1b6c-448c-9751-0266bd58d6f2"
+            isSubstitutable="false">
+            <classMoniker
+              Id="c112502d-4ee0-4078-ac1f-909552f3e26b"
+              LastKnownName="JsonConfigurable"
+              LastKnownLocation="Simulation.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="52572b7c-da48-493f-8a04-3a6716731682"
+            isDerived="false"
+            sourceEndRoleName="nodes"
+            targetEndRoleName="NodeMap_t"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="2f186ddd-51d8-4d76-87cf-cff6c21ac830"
+              LastKnownName="Node"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="9a9e5be4-83eb-4585-943c-c9caa4a0ce80"
+                  name="nodes"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="fe83f12e-dc60-4c89-a6a4-1ace39f69cb0"
+                  name="NodeMap_t"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="c2fd9293-c89c-4ca6-ad23-899c3d75da23"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="b0eb5eff-59cf-4b78-a5d2-aaefa0ce205d"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="181785bf-8f1b-435b-bf1c-8fed87231d7b"
+            isDerived="false"
+            sourceEndRoleName="nodeRankMap"
+            targetEndRoleName="NodeRankMap"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="67409816-be78-4023-9345-89d2d8414e09"
+              LastKnownName="NodeRankMap"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="1d8b4093-86fe-43a6-826f-8c8282427b75"
+                  name="nodeRankMap"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b7891cb8-7d2e-4563-b730-6e440ebce924"
+                  name="NodeRankMap"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="7772ac9a-1255-428b-bb91-7f031e76f133"
+            isDerived="false"
+            sourceEndRoleName="m_simConfigObj"
+            targetEndRoleName="SimulationConfig*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="5b93d472-4a65-4af2-bc40-0a0e2e51edb8"
+              LastKnownName="SimulationConfig"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="db7d5abb-0617-4e33-a288-cb067c1b5a6a"
+                  name="m_simConfigObj"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="7412d96b-c49b-423b-8df6-af01624a0125"
+                  name="SimulationConfig*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="a3334512-6dac-45b1-aab2-816483837180"
+            isDerived="false"
+            sourceEndRoleName="rng"
+            targetEndRoleName="RANDOMBASE*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="0541d26c-97e6-4bc8-bd11-a60b8d8c0310"
+              LastKnownName="RANDOMBASE"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="495e8b98-def5-4141-970f-57a3ef8d873e"
+                  name="rng"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="e2676af5-0c67-4e3c-9d24-8984d35851bd"
+                  name="RANDOMBASE*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="8b23d04d-17cb-4843-bb93-f9d276ea7eaa"
+            isDerived="false"
+            sourceEndRoleName="reports"
+            targetEndRoleName="vector&lt;IReport*&gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="fadb5c73-f085-4aa6-8bc0-3bb517a3a440"
+              LastKnownName="IReport"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="e2a031ca-6526-4dd3-932a-a248a64b5b4e"
+                  name="reports"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="efdffb51-7cb8-4551-ba61-bb5a287de4a0"
+                  name="vector&lt;IReport*&gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="4d22829e-dab4-44bc-a1a6-32c39d381aa8"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="7f91d3f2-73b4-40b6-9e8c-7aa977574e4d"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="87885f5b-dbe2-4b98-af89-cebd579fdfcb"
+            isDerived="false"
+            sourceEndRoleName="campaign_events"
+            targetEndRoleName="list&lt;CampaignEvent*&gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="c715352a-140c-4bb9-ba47-777eb4f6788e"
+              LastKnownName="CampaignEvent"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c56ef98d-b34d-4ce6-9a1e-4d054f77791c"
+                  name="campaign_events"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="be1db586-0d3b-4773-805d-4176a415f2da"
+                  name="list&lt;CampaignEvent*&gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="d7dd0316-6470-44e6-b6a4-6927d6becbaf"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="9d1156b7-84df-4ac2-a6d6-9862b6f5f43e"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="459e11a3-30b2-48e5-803c-e952fd2847a9"
+            isDerived="false"
+            sourceEndRoleName="reports"
+            targetEndRoleName="vector&lt;IReport*&gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="ba936354-fa4a-4b66-86e5-d06de74d5b3b"
+              LastKnownName="IReport"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="17b12651-6a5b-471d-bf94-bfc5bfd3c1ca"
+                  name="reports"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a1b28ffa-ec60-4145-9a0c-7ad47db78bcf"
+                  name="vector&lt;IReport*&gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="0fb3dfc1-265f-4ab5-8f61-32e1f055dcf9"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="1d85130e-c15e-4f37-a59d-a2c29e7339b2"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="604e9dce-6f8d-4314-9934-2ef98d19396d"
+            isDerived="false"
+            sourceEndRoleName="event_coordinators"
+            targetEndRoleName="list&lt;IEventCoordinator*&gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="a4773df8-13f1-44cb-8cf1-73b4dc87c1c9"
+              LastKnownName="IEventCoordinator"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="121bd6ff-3c08-4e4f-91d7-2fc7926ff2a9"
+                  name="event_coordinators"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="f5b40e2a-519f-4673-bd24-6bf87071d4f9"
+                  name="list&lt;IEventCoordinator*&gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="b100d271-ed4e-4afa-88ac-ddafe03652cd"
+            isDerived="false"
+            sourceEndRoleName="migratingIndividualQueues"
+            targetEndRoleName="vector&lt; std::vector&lt; IMigrate* , boost::pool_allocator&lt;IMigrate* &gt; &gt; &gt;"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="e305e9fc-a102-4586-ac74-55edc8d64705"
+              LastKnownName="IMigrate"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a5e800e8-2efd-4aaf-8082-e41bf5e48636"
+                  name="migratingIndividualQueues"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6cdbcfdb-29f6-4e03-948c-9ead1b75c44d"
+                  name="vector&lt; std::vector&lt; IMigrate* , boost::pool_allocator&lt;IMigrate* &gt; &gt; &gt;"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="52ec1e91-0a00-45ba-9186-7f5e00e0b923"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="7a4e3985-1d8b-443e-a2dd-c06d640908f6"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="91aeff6a-6aea-4e6c-963a-66d1649dd560"
+            isDerived="false"
+            sourceEndRoleName="event_context_host"
+            targetEndRoleName="SimulationEventContextHost*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="959c22c1-e15f-4320-99a3-78c1db409d2c"
+              LastKnownName="SimulationEventContextHost"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="86766b2a-55df-45d1-956e-0c6c041e719d"
+                  name="event_context_host"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6911cfd1-ce6e-4fc7-b534-ae7e2a9a7aa5"
+                  name="SimulationEventContextHost*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="8c690051-1475-4e07-9161-8e66ce0b4181"
+            isDerived="false"
+            sourceEndRoleName="demographicsContext"
+            targetEndRoleName="DemographicsContext*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="080f9905-b8aa-4224-86ed-d9e1f855cbb1"
+              LastKnownName="DemographicsContext"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="4669de91-2479-4941-8228-b99a1fec7c25"
+                  name="demographicsContext"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="41511ea0-2fe0-49bb-86c5-15fd4f9d77bc"
+                  name="DemographicsContext*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="3ac5fd5d-ffe8-4bcb-8796-e2d90f99c7cc"
+            isDerived="false"
+            sourceEndRoleName="spatialDataReporter"
+            targetEndRoleName="NodeTimestepDataSpatialReporter"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="255e85df-47b2-4e32-9123-56612439b08c"
+              LastKnownName="NodeTimestepDataSpatialReporter"
+              LastKnownLocation="Simulation.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="5a843de1-4842-4e17-b03f-72fb47eecc3c"
+                  name="spatialDataReporter"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="3501483b-ddda-4520-ba5d-18ffc35c2089"
+                  name="NodeTimestepDataSpatialReporter"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+        <ownedAttributesInternal>
+          <property
+            Id="2f6356ab-6c4b-477c-b540-c45b60118d13"
+            name="sim_type"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="63ebd31a-d08c-4718-8e45-6a2399ff0d42"
+            name="random_type"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="92e503b5-b5ce-48e5-ba3f-731029461d24"
+            name="currentTime"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="b25b75cc-db65-4d99-aad3-e3a30aabe37a"
+            name="currentTimestep"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="8e37f37c-7e38-4cca-bd8d-5a6f73f083f9"
+            name="Run_Number"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="b2263dfc-e975-4030-8f9d-068da4b7786d"
+            name="campaign_filename"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="966c56e0-e942-48f8-a18b-10c578bfccc1"
+            name="loadbalance_filename"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="e7fb5f38-cb9a-4d8f-8ae4-23a0d8ae17ed"
+            name="PoolTypesFilename"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="66887ce3-af63-45e2-8bea-dd7852128a2f"
+            name="Update"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="5497c9ac-f0e3-4cfc-ad83-593f6f40f503"
+                  name="float dt"
+                  direction="In"
+                  isUnique="false" />
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="cee0fc2d-4af2-4f60-b59e-09812b8dc94a"
+            name="Populate"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="32b86e2b-8bf5-4982-b74e-0221925a7b6c"
+            name="WriteReportsData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="54c8b008-e536-4058-b552-b11737da3e22"
+            name="PostMigratingIndividualHuman"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="93434a00-0ad1-40ae-9254-07221d492be4"
+            name="ResetRng"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="7536bdc9-58cf-4735-a588-a84b981d6e51"
+                  name="const ::Configuration *config"
+                  direction="In"
+                  isUnique="false" />
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="d7794a40-3b0e-4dbc-8f5e-90a2983bc89b"
+            name="CreateReporter"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="879b7be0-dfad-42ad-8885-56094e01a980"
+            name="resolveMigration"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="8d06e21c-eb85-4e15-a7bc-6f3c235c2192"
+            name="populateFromDemographics"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="3c7415e5-c47a-4159-9b7d-6bafd3775687"
+        name="ISimulation"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="ca5be1a4-7e06-4ba0-a078-a1b83aee8745"
+        name="ISimulationContext"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="22fa933e-8edf-460f-8379-e2e7e95cc9e4"
+        name="JsonConfigurable"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="2f186ddd-51d8-4d76-87cf-cff6c21ac830"
+        name="Node"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="67409816-be78-4023-9345-89d2d8414e09"
+        name="NodeRankMap"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="5b93d472-4a65-4af2-bc40-0a0e2e51edb8"
+        name="SimulationConfig"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="0541d26c-97e6-4bc8-bd11-a60b8d8c0310"
+        name="RANDOMBASE"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="fadb5c73-f085-4aa6-8bc0-3bb517a3a440"
+        name="IReport"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="ba936354-fa4a-4b66-86e5-d06de74d5b3b"
+        name="IReport"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="a4773df8-13f1-44cb-8cf1-73b4dc87c1c9"
+        name="IEventCoordinator"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="e305e9fc-a102-4586-ac74-55edc8d64705"
+        name="IMigrate"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="c715352a-140c-4bb9-ba47-777eb4f6788e"
+        name="CampaignEvent"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="959c22c1-e15f-4320-99a3-78c1db409d2c"
+        name="SimulationEventContextHost"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="080f9905-b8aa-4224-86ed-d9e1f855cbb1"
+        name="DemographicsContext"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="255e85df-47b2-4e32-9123-56612439b08c"
+        name="NodeTimestepDataSpatialReporter"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="c112502d-4ee0-4078-ac1f-909552f3e26b"
+        name="JsonConfigurable"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+  </packagedElements>
+  <primitiveType
+    Id="220a3521-e091-4221-bae9-3ef9018e845c"
+    name="Integer"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
+    name="Boolean"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+    name="String"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
+    name="UnlimitedNatural"
+    isAbstract="false"
+    isLeaf="false" />
+</modelStoreModel>

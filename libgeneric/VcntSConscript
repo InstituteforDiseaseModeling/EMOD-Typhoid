@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libvcnt.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libvcntdllSrcFiles = [ "../interventions/VectorControlNodeTargeted.cpp",
+                       "../interventions/VectorControlNodeTargetedEModule.cpp"
+                       ]
+
+libvcntdllIncFiles = [  "../interventions/VectorControlNodeTargeted.h" ]
+libvcntdllLocalInc = [  "stdafx.h" ]
+
+vcntenv = env.Clone()
+vcntenv.Append(LIBS=['libgeneric_static'])
+vcntenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+vcntenv.Append(LIBS=['libvector_static'])
+vcntenv.Append(LIBS=['libmalaria_static'])
+vcntenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libvcntDll = vcntenv.SharedLibrary('libvcnt', libvcntdllSrcFiles + stdobj)
+#print "building libvcntdll: " + str(libvcntdll)
+
+# take libvcnt.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libvcntdllTarget = libvcntDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = vcntenv['BUILD_VARIANT'] + '|x64'
+    print str(libvcntdllTarget) + ": Generating MSVS" + vcntenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    vcntenv.MSVSProject(target = 'LibvcntdllScons' + vcntenv['MSVSPROJECTSUFFIX'],
+                    srcs = libvcntdllSrcFiles,
+		    incs = libvcntdllIncFiles,
+		    localincs = libvcntdllLocalInc,
+ 		    buildtarget = libvcntdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

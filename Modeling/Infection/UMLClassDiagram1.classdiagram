@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="73a837b1-6e5b-49f8-a530-511d643e00c8" name="UMLClassDiagram1" linkedPackageId="0b8ff83c-fbfd-4fde-b161-1dd2dca27a27" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="780fd1d5-ea7d-4aa6-aef9-25761c63e0c4">
+      <profileInstance Id="1c3b0105-5991-4bb2-9289-26450511c78a" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="c2d989c1-7128-432a-9be6-81c91bd6e6fb">
+      <profileInstance Id="b785a7f6-c900-4018-b409-5a7e124f2dc1" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="e41f4e72-5d87-4fd8-aedb-788da4d66e53" name="Infection" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="fa3c31ad-1b94-4243-bb18-bd0774abc1d6" />
+        <generalsInternal>
+          <generalization Id="14f208c2-9836-409a-a6fd-653158af845a" isSubstitutable="false">
+            <classMoniker Id="38cbe7e5-129b-4f09-a019-f93a8cbf93cc" LastKnownName="InfectionConfig" />
+            <elementDefinition Id="8b0e7fe5-ae46-4072-9b2d-ad94de226cdb" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association Id="e4d844c1-ead0-46e0-8f4d-a4a48ebdb681" isDerived="false" sourceEndRoleName="infection_strain" targetEndRoleName="StrainIdentity*" isLeaf="false" isAbstract="false">
+            <classMoniker Id="a9d8a57c-f610-4121-910b-bc60499da980" LastKnownName="StrainIdentity" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8c3f6bcd-1d40-4e36-8acc-65519f8958c0" name="infection_strain" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="bac41152-df2a-4595-8611-f6815a345e95" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="75244f0e-a44b-4c91-89d1-265642ffb5c7" name="StrainIdentity*" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="84686216-0f00-4e44-af42-4e562f4a8956" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="dabb2107-f2ff-4802-9544-d6d37eaa3170" />
+          </association>
+          <association Id="d0ea26a6-92d7-4a09-84a0-f62de49f295b" isDerived="false" sourceEndRoleName="parent" targetEndRoleName="IIndividualHumanContext" isLeaf="false" isAbstract="false">
+            <interfaceMoniker Id="1b774bd9-660c-4123-8f01-36129ffc2448" LastKnownName="IIndividualHumanContext" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a0cd451b-4f5b-4076-982b-476f9353c391" name="parent" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Shared" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="e159f199-5b46-444f-be48-01b4409b3098" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="58fc0cba-3965-415a-9e4a-8fc47eff72e9" name="IIndividualHumanContext" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="0d2dfeaa-d47e-41d2-bbe7-a84fbf0bc5bd" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="e489e1fa-4f15-4c5f-bf46-44bb7041d71f" />
+          </association>
+          <association Id="c0c92e75-5e94-4946-837b-37931dfbe7d6" isDerived="false" sourceEndRoleName="StateChange" targetEndRoleName="InfectionStateChange::_enum" isLeaf="false" isAbstract="false">
+            <classMoniker Id="223f135e-9f32-4509-bc24-c9c50fb7f76f" LastKnownName="InfectionStateChange" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="fe702bb8-78d3-409b-9275-781e46432565" name="StateChange" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="304acae0-60c7-42cc-8249-7b06a964eaaa" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="4f83b628-999a-4b9b-bc11-c6476a74ccfe" name="InfectionStateChange::_enum" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="226e473b-2026-4f30-bd8c-2371fb88e80e" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="37667768-bb95-4455-9e3a-c66fe209347d" />
+          </association>
+        </targetEnds>
+        <ownedAttributesInternal>
+          <property Id="6ca64964-6474-43cd-ae48-4ba35bf5d5c3" name="duration" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="08afda89-9b4b-4e44-a19f-c94c047e9133" />
+          </property>
+          <property Id="66ad52e8-e9d2-4046-acc5-97547e62de73" name="incubation_timer" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="742c8243-bb0f-4404-b3b2-2abc30824caa" />
+          </property>
+          <property Id="93ac4a7f-6d4c-48cd-8b21-abce888b324e" name="infectious_timer" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="cacb75b3-02a2-459f-9646-5dc4d7079358" />
+          </property>
+          <property Id="1cf22fde-0d57-4d67-b25f-9622fb3386bf" name="infectiousness" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="1eb0bc92-b53c-499b-a6b5-b55b9f8d1df4" />
+          </property>
+          <property Id="e0bec43c-4cbf-4398-91c8-9b42b20c8159" name="contact_shedding_fraction" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="2ce5f814-e029-4d1d-beca-1971dd4cac4b" />
+          </property>
+          <property Id="45b6cf85-fd3e-4226-8490-2efae69676f7" name="suids::suid suid" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="b2423d3e-35f3-4048-b5fe-1e5bc741469d" />
+          </property>
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation Id="a4ee0037-5c21-4da5-8f62-b1f79623bc4e" name="Update" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="7198b224-f971-4cab-a020-186860e1eda2" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="881f6539-253a-46f8-9bd8-af501fcc4383" name="float" direction="In" isUnique="false">
+                  <elementDefinition Id="863991f5-4968-4e56-a32b-43677aeaae07" />
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="7eb2cd08-276c-4a73-9956-6c5e42c7be9e" name="Susceptibility*" direction="In" isUnique="false">
+                  <elementDefinition Id="d6e701d1-ca04-46f1-af03-e38aac8a6e83" />
+                  <defaultValue>
+                    <literalString Id="c68f12c1-8672-44e3-893d-c53b2a8f30f6" name="DefaultValue" value="NULL">
+                      <elementDefinition Id="35be0ac3-0d3d-4611-85e3-9406955c0985" />
+                    </literalString>
+                  </defaultValue>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="3681c668-34ba-4d1c-97c2-a27fee16a8d1" name="GetInfectiousStrainID" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="ceafb3b8-b577-483b-bb72-5b9c7e1b8c5c" />
+          </operation>
+          <operation Id="e94076e5-8e76-486b-832f-41affbdf67b0" name="EvolveStrain" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="24abb272-a8a8-4529-923a-5cd5aba5d5de" />
+          </operation>
+          <operation Id="0fa49af3-3c7d-440a-8d83-26584def7c4e" name="SetParameters" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="a353cc1d-5113-4256-a404-d7e8b9c3b582" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="d40b2df0-d381-43a8-b839-cfba4d512854" name="StrainIdentity* infstrain" direction="In" isUnique="false">
+                  <elementDefinition Id="c9031f8e-5ba2-4b62-9c02-067712562652" />
+                  <defaultValue>
+                    <literalString Id="9a199698-31b6-47a0-a441-2ebe8f2f53c0" name="DefaultValue" value="NULL">
+                      <elementDefinition Id="b15fe34a-d062-4bc9-a90c-fa8522d7598d" />
+                    </literalString>
+                  </defaultValue>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="c4a16d60-4c52-4def-a8d1-14af798ac95e" name="int incubation_period_override" direction="In" isUnique="false">
+                  <elementDefinition Id="130e28e8-9abf-4dca-acd5-ead5a7b5e139" />
+                  <defaultValue>
+                    <literalString Id="6d973929-b03d-4b14-8cd7-c122ac31fb16" name="DefaultValue" value="-1">
+                      <elementDefinition Id="776cae6b-6418-4d34-b960-240077071bd6" />
+                    </literalString>
+                  </defaultValue>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="efb1f9b5-afcc-49ed-b960-82f105a39447" name="InitInfectionImmunology" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="9bcd576a-7e97-4306-804b-06be6b515e95" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="6e486c63-c8c3-4c4b-85f0-d44f171fea20" name="Susceptibility* _immunity" direction="In" isUnique="false">
+                  <elementDefinition Id="e9285f21-383f-49f1-8da0-c2587485a7cc" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="fb686b1f-c6f6-4840-bb80-d52f1f80a9ce" name="GetInfectiousness" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="c2abf537-ebb2-4bcf-a6d7-61ff4815a47f" />
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="38cbe7e5-129b-4f09-a019-f93a8cbf93cc" name="InfectionConfig" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="3797e65a-e5a6-4da2-95e0-3b1f1d1ace8e" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="a9d8a57c-f610-4121-910b-bc60499da980" name="StrainIdentity" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="329d5212-1e6b-4c40-b5ac-3d494e058fb7" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="1b774bd9-660c-4123-8f01-36129ffc2448" name="IIndividualHumanContext" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="533c3003-ef18-4571-8d38-e4462778dac2" />
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="223f135e-9f32-4509-bc24-c9c50fb7f76f" name="InfectionStateChange" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="60aefa78-fc88-4a63-890b-84189d5bd51b" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+  </packagedElements>
+  <package Id="0b8ff83c-fbfd-4fde-b161-1dd2dca27a27" name="ModelingProject2">
+    <elementDefinition Id="cbc042e1-62b8-458c-a59b-640fd78ee754" />
+  </package>
+</logicalClassDesignerModel>

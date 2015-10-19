@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libpoliovaccine.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+svobj = env.Object("../interventions/SimpleVaccine.cpp")
+
+libpoliovaccinedllSrcFiles = [ 
+                              "../interventions/PolioVaccineEModule.cpp"
+                              ]
+
+libpoliovaccinedllIncFiles = [  "../Eradication/Vaccine.h" ]
+libpoliovaccinedllLocalInc = [  "stdafx.h" ]
+
+poliovaccineenv = env.Clone()
+polioobj = poliovaccineenv.Object("poliovaccine_intervention", "../interventions/PolioVaccine.cpp")
+
+poliovaccineenv.Append(LIBS=['libgeneric_static'])
+poliovaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+poliovaccineenv.Append(LIBS=['libvector_static'])
+poliovaccineenv.Append(LIBS=['libmalaria_static'])
+poliovaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libpoliovaccineDll = poliovaccineenv.SharedLibrary('libpoliovaccine', libpoliovaccinedllSrcFiles + stdobj + svobj + polioobj)
+#print "building libpoliovaccinedll: " + str(libpoliovaccinedll)
+
+# take libpoliovaccine.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libpoliovaccinedllTarget = libpoliovaccineDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = poliovaccineenv['BUILD_VARIANT'] + '|x64'
+    print str(libpoliovaccinedllTarget) + ": Generating MSVS" + poliovaccineenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    poliovaccineenv.MSVSProject(target = 'LibpoliovaccinedllScons' + poliovaccineenv['MSVSPROJECTSUFFIX'],
+                    srcs = libpoliovaccinedllSrcFiles,
+		    incs = libpoliovaccinedllIncFiles,
+		    localincs = libpoliovaccinedllLocalInc,
+ 		    buildtarget = libpoliovaccinedllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

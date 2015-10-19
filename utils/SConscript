@@ -1,0 +1,82 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds utils static library
+import os
+
+#SVN_REV = os.popen("svn info | grep 'Last Changed Rev' | awk '{ print $4; }'").read()
+
+Import("env")
+if os.sys.platform != 'win32':
+    svn_url_define = "-DSVN_BRANCH_FROM_SCONS=\""
+    svn_url_define += env["SVN_BRANCH"]
+    svn_url_define += "'\""
+    #svn_url_define = svn_url_define.replace( "/", "&ampps" )
+    #svn_url_define = "-DSVN_URL="+env["SVN_URL"]
+    env.Append( CCFLAGS=[ svn_url_define ] )
+    #env.Append( CCFLAGS=[ "-save-temps" ] )
+
+
+utilsSrcFiles = [
+    "Configuration.cpp",
+    "Configure.cpp",
+    "Coredump.cpp",
+    "Environment.cpp",
+    "Exceptions.cpp",
+    "FileSystem.cpp",
+    "IdmDateTime.cpp",
+    "InterpolatedValueMap.cpp",
+    "ISupports.cpp",
+    "JsonObject.cpp",
+    "Log.cpp",
+    "MathFunctions.cpp",
+    "../rapidjson/modp/modp_numtoa.cpp",
+    "ProgramOptions.cpp",
+    "ProgVersion.cpp",
+    "RANDOM.cpp",
+    "RapidJsonImpl.cpp",
+    "Serializer.cpp",
+    "StatusReporter.cpp",
+    "stdafx.cpp",
+    "suids.cpp",
+    "ValidationLog.cpp"
+]
+
+utilsIncFiles = [
+    'BoostLibWrapper.h',
+    'Configuration.h',
+    'ConfigurationImpl.h',
+    'Configure.h',
+    'EnumSupport.h',
+    'Environment.h',
+    'FactorySupport.h',
+    "InterpolatedValueMap.h",
+    'ISupports.h',
+    'Log.h',
+    'MathFunctions.h',
+    'Profile.h',
+    'ProgVersion.h',
+    'SimpleTypemapRegistration.h',
+    "StatusReporter.h",
+    'Sugar.h',
+    'ValidationLog.h',
+    'version_info.h'
+]
+
+utilsLocalInc = ['stdafx.h']
+
+utilsLib = env.StaticLibrary('utils', utilsSrcFiles)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print "Utils: Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'UtilsScons' + env['MSVSPROJECTSUFFIX'],
+		srcs = utilsSrcFiles,
+		incs = utilsIncFiles,
+		localincs = utilsLocalInc,
+		buildtarget = utilsLib,
+                auto_build_solution = 0,
+                variant = bvar)

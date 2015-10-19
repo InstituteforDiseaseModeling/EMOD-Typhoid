@@ -1,0 +1,49 @@
+{
+    "Campaign_Name": "Campaign - Outbreak and Vaccines",
+    "Events": [
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 1,
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 1.0,
+                    "Durability_Profile": 1,
+                    "Time_Since_Vaccination": 0,
+                    "Vaccine_Type": "eIPV",
+                    "class": "PolioVaccine"
+                },
+                "Target_Demographic": "Everyone",
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Event_Name": "Vaccines",
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 3,
+            "class": "CampaignEvent"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Intervention_Config": {
+                    "Antigen": 0,
+                    "Genome": 0,
+                    "Outbreak_Source": "PrevalenceIncrease",
+                    "class": "OutbreakIndividual"
+                },
+                "Target_Age_Max": 10,
+                "Target_Age_Min": 0,
+                "Target_Demographic": "ExplicitAgeRanges",
+                "Property_Restrictions": [
+                    "Place:None"
+                ],
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Event_Name": "Outbreak",
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 50,
+            "class": "CampaignEvent"
+        }
+    ],
+    "Use_Defaults": 1
+}

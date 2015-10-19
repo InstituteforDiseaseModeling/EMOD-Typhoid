@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libhealthseekingbehavior.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhealthseekingbehaviordllSrcFiles = [
+                                         "../interventions/HealthseekingbehaviorEModule.cpp"
+                                         ]
+
+libhealthseekingbehaviordllIncFiles = [  "../interventions/Healthseekingbehavior.h" ]
+libhealthseekingbehaviordllLocalInc = [  "stdafx.h" ]
+
+healthseekingbehaviorenv = env.Clone()
+
+hsbobj = healthseekingbehaviorenv.Object("hsbobj_healthseek","../interventions/HealthSeekingBehavior.cpp")
+
+healthseekingbehaviorenv.Append(LIBS=['libgeneric_static'])
+healthseekingbehaviorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+healthseekingbehaviorenv.Append(LIBS=['libvector_static'])
+healthseekingbehaviorenv.Append(LIBS=['libmalaria_static'])
+healthseekingbehaviorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhealthseekingbehaviorDll = healthseekingbehaviorenv.SharedLibrary('libhealthseekingbehavior', libhealthseekingbehaviordllSrcFiles + stdobj + hsbobj)
+#print "building libhealthseekingbehaviordll: " + str(libhealthseekingbehaviordll)
+
+# take libhealthseekingbehavior.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhealthseekingbehaviordllTarget = libhealthseekingbehaviorDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = healthseekingbehaviorenv['BUILD_VARIANT'] + '|x64'
+    print str(libhealthseekingbehaviordllTarget) + ": Generating MSVS" + healthseekingbehaviorenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    healthseekingbehaviorenv.MSVSProject(target = 'LibhealthseekingbehaviordllScons' + healthseekingbehaviorenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhealthseekingbehaviordllSrcFiles,
+		    incs = libhealthseekingbehaviordllIncFiles,
+		    localincs = libhealthseekingbehaviordllLocalInc,
+ 		    buildtarget = libhealthseekingbehaviordllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

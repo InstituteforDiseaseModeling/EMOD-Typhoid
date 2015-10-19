@@ -1,0 +1,1 @@
+This scenario began as a copy of 47_Paralysis_Rates using config_flat_paralysis_noimmunity_justWPV1.json as the base config.

@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="0382cebe-8e48-44f1-91d3-14f5b1215870" name="UMLClassDiagram1" linkedPackageId="d0ebf829-adea-4c4b-9e32-e48dd78775d6" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="215c7144-0a9d-499b-8348-69ed9de06764">
+      <profileInstance Id="2217ce75-c23c-42db-8a99-555a2fb1e35e" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="4030eafc-1385-423e-a6e7-13f8ad59eeab">
+      <profileInstance Id="172e1d58-455a-4a9a-9401-0f45bb2bb178" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="0e5c0e34-c925-47ba-8844-1c1510b98706" name="StrainIdentity" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="a5a77491-ad00-48f3-8ba1-aea8d0df403f" />
+        <ownedAttributesInternal>
+          <property Id="1cf5cd23-538a-4c48-893d-99760b394b6a" name="antigenID" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="a2268171-7287-445e-84e6-6180dd4d845c" />
+          </property>
+          <property Id="6a27c8f8-685b-4196-951d-199ba8768658" name="geneticID" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="7e8f6e62-8b7e-4341-b396-0d5f5ee5a5bd" />
+          </property>
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation Id="a4c32007-4c80-4dc0-91b5-91564b3c248d" name="GetAntigenID" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="c4bedce9-f8a8-4a11-8d20-bc897fbadaf5" />
+          </operation>
+          <operation Id="71df23dd-55d7-44ed-9a8b-7cdcaabc596a" name="GetGeneticID" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="718eeec3-256b-4e67-91b6-b05ac236eecb" />
+          </operation>
+          <operation Id="ab5d04fd-68bb-4a20-8ee2-16631d3d8096" name="SetAntigenID" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="d58b3d21-10e0-4426-ab44-1c7d76be01bc" />
+          </operation>
+          <operation Id="36cab016-5d94-4b1e-be16-395279bf103c" name="SetGeneticID" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="7cfbb18d-c9ad-41ff-a36a-aeadbbee7734" />
+          </operation>
+          <operation Id="0c37eab8-61ef-42ee-874e-c18c3d999ffe" name="operator&lt;" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="79684e2b-504a-408b-98c8-68606504f0b5" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="ab454e1a-5bae-489d-8c58-8d4e09dca283" name="const StrainIdentity&amp; id" direction="In" isUnique="false">
+                  <elementDefinition Id="4dd4314d-07ba-4f8b-bd10-01bf49f0d641" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="a1619e4a-be03-4e5b-918f-1cc44e03750f" name="operator&gt;" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="f61f3506-80f0-4bc9-9004-05534daac529" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="e3566d4f-7821-46b1-8dcf-7ad0d110d407" name="const StrainIdentity&amp; id" direction="In" isUnique="false">
+                  <elementDefinition Id="756f9a8f-2c22-4ff0-aee5-5833217ce9f9" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="1a4b1c6a-16a1-4e22-9997-9097217cd87c" name="StrainIdentityMalaria" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="8d35c361-5c15-4205-a30a-8a22c7bc17e9" />
+        <generalsInternal>
+          <generalization Id="4cdf50de-c62f-40f9-9486-31a5d2317eb0" isSubstitutable="false">
+            <classMoniker Id="0e5c0e34-c925-47ba-8844-1c1510b98706" LastKnownName="StrainIdentity" />
+            <elementDefinition Id="eec835ea-7e11-4ccc-915c-cfda672a1429" />
+          </generalization>
+        </generalsInternal>
+        <ownedAttributesInternal>
+          <property Id="02b77366-2ac5-443d-9540-8a0458053e80" name="m_displayed_antigen_index" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="49003df4-71c0-482c-ad05-92e42aaf1f14" />
+          </property>
+          <property Id="e3c9a9a3-97d9-4fa7-b0d0-9cb0de42a41d" name="m_antigenicRepertoire" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <lowerValueInternal>
+              <literalString Id="e3809665-e0fb-434a-8453-8ef3f52cea3a" name="Lower" value="MAX_ANTIGEN_COUNT">
+                <elementDefinition Id="fc8f9f97-e6f5-4735-9d66-946cc8dd8b2a" />
+              </literalString>
+            </lowerValueInternal>
+            <upperValueInternal>
+              <literalString Id="daa59dba-1219-4a4e-a981-09dfe18b8e06" name="Upper" value="MAX_ANTIGEN_COUNT">
+                <elementDefinition Id="7176d299-0e4a-48c2-8b5a-2a5d6a642867" />
+              </literalString>
+            </upperValueInternal>
+            <elementDefinition Id="0f264a5a-32e6-43a5-a61b-713db2866108" />
+          </property>
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation Id="5ab6f7e3-464a-4ed6-a552-e6c195f6997e" name="Initialize" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="d88e6101-7c6e-448b-a595-e2e863c09957" />
+          </operation>
+          <operation Id="5c1ccfa1-d0f2-4246-8b71-69c0ddeea3d2" name="InitRepertoire" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="1ed8db8e-fd58-409d-93c8-067cb42e93d4" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="ddc70241-a7b6-4fdb-bf99-a40c2fa83d18" name="int * antigen_array" direction="In" isUnique="false">
+                  <elementDefinition Id="b4415b13-148b-48fb-ba2c-5be74524ef8d" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="c32d753d-1421-4567-88fd-b3e0bfa663a4" name="SwitchDisplayedAntigen" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="c2f72d17-2175-4d69-9935-e02b0db57820" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="778a89c8-03e2-4636-9bab-b24b9fdd397a" name="int new_antigen_index" direction="In" isUnique="false">
+                  <elementDefinition Id="ff3271dc-1c36-4a9a-ab83-7e9a3f109325" />
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+  </packagedElements>
+  <package Id="d0ebf829-adea-4c4b-9e32-e48dd78775d6" name="ModelingProject4">
+    <elementDefinition Id="deabcc53-56cd-487f-a9e6-3c7c6a3fac84" />
+  </package>
+</logicalClassDesignerModel>

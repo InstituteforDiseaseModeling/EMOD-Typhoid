@@ -1,0 +1,495 @@
+Intellectual Ventures(R)/EMOD Disease Transmission Kernel 1.9.3683.0 Polio-v1.7 2014/03/26 17:01:30
+Using config file: defaultacq1_mucosaltiter11\config_flat_defaultacq_1_mucosaltiter_11.json
+Using input path: .
+Using output path: defaultacq1_mucosaltiter11\output
+using dll path: 
+Initializing environment...
+Initial working directory: c:\svn\Polio-v17\Regression\Polio\55_WPV_doseresponse_tests
+Log-levels:
+	Default -> 3
+00:00:00 [0] [I] [Eradication] Loaded Configuration...
+00:00:00 [0] [I] [Eradication] 258 parameters found.
+00:00:00 [0] [I] [Eradication] Initializing Controller...
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal()...
+00:00:00 [0] [I] [Simulation] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Simulation] Using PSEUDO_DES random number generator.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: 
+00:00:00 [0] [W] [Simulation] Failed to load reporter emodules for SimType: POLIO_SIM from path: /reporter_plugins
+00:00:00 [0] [I] [SimulationPolio] Calling Configure on fakeHuman
+00:00:00 [0] [I] [Controller] DefaultController::execute_internal() populate simulation...
+00:00:00 [0] [I] [Simulation] Campaign file name identified as: c:\svn\Polio-v17\Regression\Polio\55_WPV_doseresponse_tests\campaign.json
+00:00:00 [0] [I] [Simulation] Opening campaign file c:\svn\Polio-v17\Regression\Polio\55_WPV_doseresponse_tests\campaign.json
+00:00:00 [0] [I] [Simulation] Opened campaign file successfully.
+00:00:00 [0] [I] [DllLoader] ReadEmodulesJson: no file, returning.
+00:00:00 [0] [I] [DllLoader] dllPath not passed in, getting from EnvPtr
+00:00:00 [0] [I] [DllLoader] Trying to copy from string to wstring.
+00:00:00 [0] [I] [DllLoader] DLL ws root path: 
+00:00:00 [0] [W] [Simulation] Failed to load intervention emodules for SimType: POLIO_SIM from path: /interventions
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Arrivals" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Include_Departures" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Distributions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Number_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Timesteps_Between_Repetitions" : "-1" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( "Travel_Linked" : "0" ) for unspecified parameter.
+00:00:00 [0] [I] [JsonConfigurable] Using the default value ( <empty string> ) for unspecified parameter.
+00:00:00 [0] [I] [NodeDemographics] Opening demographics file: ..\polio_input\mucosalMemory_11_demographics.compiled.json
+00:00:01 [0] [I] [Climate] Initialize
+00:00:01 [0] [W] [NodeRankMap] Failed to open load-balancing file: .
+00:00:01 [0] [W] [Simulation] Failed to use legacy loadbalance file. Defaulting to checkerboard.
+00:00:01 [0] [I] [Simulation] populateFromDemographics() created 1 nodes
+00:00:01 [0] [I] [Simulation] populateFromDemographics() generated 1 nodes.
+00:00:01 [0] [I] [Simulation] Rank 0 contributes 1 nodes...
+00:00:01 [0] [I] [Simulation] Merging node rank maps...
+00:00:01 [0] [I] [Simulation] Merged rank 0 map now has 1 nodes.
+00:00:01 [0] [I] [Simulation] Rank 0 map contents:
+{ NodeRankMap:
+[1,0]
+}
+
+00:00:01 [0] [I] [Simulation] Initialized 'InsetChart.json' reporter
+00:00:01 [0] [I] [Simulation] Update(): Time: 1.0 Rank: 0 StatPop: 100 Infected: 0
+00:00:01 [0] [I] [Simulation] Update(): Time: 2.0 Rank: 0 StatPop: 100 Infected: 0
+00:00:01 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:01 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:01 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10 'OutbreakIndividual' interventions at node 1
+00:00:01 [0] [I] [Simulation] Update(): Time: 3.0 Rank: 0 StatPop: 100 Infected: 10
+00:00:01 [0] [I] [Simulation] Update(): Time: 4.0 Rank: 0 StatPop: 100 Infected: 10
+00:00:01 [0] [I] [Simulation] Update(): Time: 5.0 Rank: 0 StatPop: 100 Infected: 14
+00:00:01 [0] [I] [Simulation] Update(): Time: 6.0 Rank: 0 StatPop: 100 Infected: 19
+00:00:01 [0] [I] [Simulation] Update(): Time: 7.0 Rank: 0 StatPop: 100 Infected: 18
+00:00:01 [0] [I] [Simulation] Update(): Time: 8.0 Rank: 0 StatPop: 100 Infected: 18
+00:00:01 [0] [I] [Simulation] Update(): Time: 9.0 Rank: 0 StatPop: 100 Infected: 19
+00:00:01 [0] [I] [Simulation] Update(): Time: 10.0 Rank: 0 StatPop: 100 Infected: 20
+00:00:01 [0] [I] [Simulation] Update(): Time: 11.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 12.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 13.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 14.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 15.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 16.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 17.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 18.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 19.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 20.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 21.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 22.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 23.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 24.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 25.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 26.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 27.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 28.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 29.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 30.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 31.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 32.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 33.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 34.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 35.0 Rank: 0 StatPop: 100 Infected: 20
+00:00:01 [0] [I] [Simulation] Update(): Time: 36.0 Rank: 0 StatPop: 100 Infected: 19
+00:00:01 [0] [I] [Simulation] Update(): Time: 37.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 38.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 39.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 40.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 41.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 42.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 43.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 44.0 Rank: 0 StatPop: 100 Infected: 20
+00:00:01 [0] [I] [Simulation] Update(): Time: 45.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 46.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 47.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 48.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 49.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 50.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 51.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 52.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 53.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 54.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 55.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 56.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 57.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 58.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 59.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 60.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 61.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 62.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 63.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 64.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 65.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 66.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 67.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 68.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 69.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 70.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 71.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 72.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 73.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 74.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 75.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 76.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 77.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 78.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 79.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 80.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 81.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 82.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 83.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 84.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 85.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 86.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 87.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 88.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 89.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 90.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 91.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 92.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 93.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 94.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 95.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 96.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 97.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 98.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 99.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 100.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 101.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 102.0 Rank: 0 StatPop: 100 Infected: 18
+00:00:01 [0] [I] [Simulation] Update(): Time: 103.0 Rank: 0 StatPop: 100 Infected: 20
+00:00:01 [0] [I] [Simulation] Update(): Time: 104.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 105.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 106.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 107.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 108.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 109.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 110.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 111.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 112.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 113.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 114.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 115.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 116.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 117.0 Rank: 0 StatPop: 100 Infected: 40
+00:00:01 [0] [I] [Simulation] Update(): Time: 118.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 119.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 120.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 121.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 122.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 123.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 124.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 125.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 126.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 127.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 128.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 129.0 Rank: 0 StatPop: 100 Infected: 20
+00:00:01 [0] [I] [Simulation] Update(): Time: 130.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 131.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 132.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 133.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 134.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 135.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 136.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 137.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 138.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 139.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 140.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 141.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 142.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 143.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 144.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 145.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 146.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 147.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 148.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 149.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 150.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 151.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 152.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 153.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 154.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 155.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 156.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 157.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 158.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 159.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 160.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 161.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 162.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 163.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 164.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 165.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 166.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 167.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 168.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 169.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 170.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 171.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 172.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 173.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 174.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 175.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 176.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 177.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 178.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 179.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 180.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 181.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 182.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 183.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 184.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 185.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 186.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 187.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 188.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 189.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 190.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 191.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 192.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 193.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 194.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 195.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 196.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 197.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 198.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 199.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 200.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 201.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 202.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 203.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 204.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 205.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 206.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 207.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 208.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 209.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 210.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 211.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 212.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 213.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 214.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 215.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 216.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 217.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 218.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 219.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 220.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 221.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 222.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 223.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 224.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 225.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 226.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 227.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 228.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 229.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 230.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 231.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 232.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 233.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 234.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 235.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 236.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 237.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 238.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 239.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 240.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 241.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 242.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 243.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 244.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 245.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 246.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 247.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 248.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 249.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 250.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 251.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 252.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 253.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 254.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 255.0 Rank: 0 StatPop: 100 Infected: 21
+00:00:01 [0] [I] [Simulation] Update(): Time: 256.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 257.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 258.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 259.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 260.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 261.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 262.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 263.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 264.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 265.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 266.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 267.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 268.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 269.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 270.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 271.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 272.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 273.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 274.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 275.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 276.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 277.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 278.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 279.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 280.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 281.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 282.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 283.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 284.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 285.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 286.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 287.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 288.0 Rank: 0 StatPop: 100 Infected: 40
+00:00:01 [0] [I] [Simulation] Update(): Time: 289.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 290.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 291.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 292.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 293.0 Rank: 0 StatPop: 100 Infected: 33
+00:00:01 [0] [I] [Simulation] Update(): Time: 294.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 295.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 296.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 297.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 298.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 299.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 300.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 301.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 302.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 303.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 304.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 305.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 306.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 307.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 308.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 309.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 310.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 311.0 Rank: 0 StatPop: 100 Infected: 27
+00:00:01 [0] [I] [Simulation] Update(): Time: 312.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 313.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 314.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 315.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 316.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 317.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 318.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 319.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 320.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 321.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 322.0 Rank: 0 StatPop: 100 Infected: 19
+00:00:01 [0] [I] [Simulation] Update(): Time: 323.0 Rank: 0 StatPop: 100 Infected: 19
+00:00:01 [0] [I] [Simulation] Update(): Time: 324.0 Rank: 0 StatPop: 100 Infected: 13
+00:00:01 [0] [I] [Simulation] Update(): Time: 325.0 Rank: 0 StatPop: 100 Infected: 14
+00:00:01 [0] [I] [Simulation] Update(): Time: 326.0 Rank: 0 StatPop: 100 Infected: 15
+00:00:01 [0] [I] [Simulation] Update(): Time: 327.0 Rank: 0 StatPop: 100 Infected: 17
+00:00:01 [0] [I] [Simulation] Update(): Time: 328.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 329.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 330.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 331.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 332.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 333.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 334.0 Rank: 0 StatPop: 100 Infected: 34
+00:00:01 [0] [I] [Simulation] Update(): Time: 335.0 Rank: 0 StatPop: 100 Infected: 32
+00:00:01 [0] [I] [Simulation] Update(): Time: 336.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 337.0 Rank: 0 StatPop: 100 Infected: 26
+00:00:01 [0] [I] [Simulation] Update(): Time: 338.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 339.0 Rank: 0 StatPop: 100 Infected: 23
+00:00:01 [0] [I] [Simulation] Update(): Time: 340.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 341.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 342.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 343.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 344.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 345.0 Rank: 0 StatPop: 100 Infected: 45
+00:00:01 [0] [I] [Simulation] Update(): Time: 346.0 Rank: 0 StatPop: 100 Infected: 45
+00:00:01 [0] [I] [Simulation] Update(): Time: 347.0 Rank: 0 StatPop: 100 Infected: 44
+00:00:01 [0] [I] [Simulation] Update(): Time: 348.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 349.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 350.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 351.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 352.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 353.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 354.0 Rank: 0 StatPop: 100 Infected: 22
+00:00:01 [0] [I] [Simulation] Update(): Time: 355.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 356.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 357.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 358.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 359.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 360.0 Rank: 0 StatPop: 100 Infected: 31
+00:00:01 [0] [I] [Simulation] Update(): Time: 361.0 Rank: 0 StatPop: 100 Infected: 30
+00:00:01 [0] [I] [Simulation] Update(): Time: 362.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 363.0 Rank: 0 StatPop: 100 Infected: 28
+00:00:01 [0] [I] [Simulation] Update(): Time: 364.0 Rank: 0 StatPop: 100 Infected: 29
+00:00:01 [0] [I] [Simulation] Update(): Time: 365.0 Rank: 0 StatPop: 100 Infected: 25
+00:00:01 [0] [I] [Simulation] Update(): Time: 366.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [Simulation] Update(): Time: 367.0 Rank: 0 StatPop: 100 Infected: 24
+00:00:01 [0] [I] [SimulationEventContext] Time for campaign event. Calling Dispatch...
+00:00:01 [0] [I] [SimulationEventContext] 1 node(s) visited.
+00:00:01 [0] [I] [StandardEventCoordinator] UpdateNodes() gave out 10 'OutbreakIndividual' interventions at node 1
+00:00:01 [0] [I] [Simulation] Update(): Time: 368.0 Rank: 0 StatPop: 100 Infected: 36
+00:00:01 [0] [I] [Simulation] Update(): Time: 369.0 Rank: 0 StatPop: 100 Infected: 35
+00:00:01 [0] [I] [Simulation] Update(): Time: 370.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 371.0 Rank: 0 StatPop: 100 Infected: 37
+00:00:01 [0] [I] [Simulation] Update(): Time: 372.0 Rank: 0 StatPop: 100 Infected: 39
+00:00:01 [0] [I] [Simulation] Update(): Time: 373.0 Rank: 0 StatPop: 100 Infected: 38
+00:00:01 [0] [I] [Simulation] Update(): Time: 374.0 Rank: 0 StatPop: 100 Infected: 41
+00:00:01 [0] [I] [Simulation] Update(): Time: 375.0 Rank: 0 StatPop: 100 Infected: 46
+00:00:01 [0] [I] [Simulation] Update(): Time: 376.0 Rank: 0 StatPop: 100 Infected: 43
+00:00:01 [0] [I] [Simulation] Update(): Time: 377.0 Rank: 0 StatPop: 100 Infected: 44
+00:00:01 [0] [I] [Simulation] Update(): Time: 378.0 Rank: 0 StatPop: 100 Infected: 46
+00:00:01 [0] [I] [Simulation] Update(): Time: 379.0 Rank: 0 StatPop: 100 Infected: 47
+00:00:01 [0] [I] [Simulation] Update(): Time: 380.0 Rank: 0 StatPop: 100 Infected: 53
+00:00:01 [0] [I] [Simulation] Update(): Time: 381.0 Rank: 0 StatPop: 100 Infected: 52
+00:00:01 [0] [I] [Simulation] Update(): Time: 382.0 Rank: 0 StatPop: 100 Infected: 50
+00:00:01 [0] [I] [Simulation] Update(): Time: 383.0 Rank: 0 StatPop: 100 Infected: 49
+00:00:01 [0] [I] [Simulation] Update(): Time: 384.0 Rank: 0 StatPop: 100 Infected: 50
+00:00:01 [0] [I] [Simulation] Update(): Time: 385.0 Rank: 0 StatPop: 100 Infected: 47
+00:00:01 [0] [I] [Simulation] Update(): Time: 386.0 Rank: 0 StatPop: 100 Infected: 53
+00:00:01 [0] [I] [Simulation] Update(): Time: 387.0 Rank: 0 StatPop: 100 Infected: 48
+00:00:01 [0] [I] [Simulation] Update(): Time: 388.0 Rank: 0 StatPop: 100 Infected: 47
+00:00:01 [0] [I] [Simulation] Update(): Time: 389.0 Rank: 0 StatPop: 100 Infected: 43
+00:00:01 [0] [I] [Simulation] Update(): Time: 390.0 Rank: 0 StatPop: 100 Infected: 43
+00:00:01 [0] [I] [Simulation] Update(): Time: 391.0 Rank: 0 StatPop: 100 Infected: 41
+00:00:01 [0] [I] [Simulation] Update(): Time: 392.0 Rank: 0 StatPop: 100 Infected: 44
+00:00:01 [0] [I] [Simulation] Update(): Time: 393.0 Rank: 0 StatPop: 100 Infected: 50
+00:00:01 [0] [I] [Simulation] Update(): Time: 394.0 Rank: 0 StatPop: 100 Infected: 48
+00:00:01 [0] [I] [Simulation] Update(): Time: 395.0 Rank: 0 StatPop: 100 Infected: 49
+00:00:01 [0] [I] [Simulation] Update(): Time: 396.0 Rank: 0 StatPop: 100 Infected: 47
+00:00:01 [0] [I] [Simulation] Update(): Time: 397.0 Rank: 0 StatPop: 100 Infected: 43
+00:00:01 [0] [I] [Simulation] Update(): Time: 398.0 Rank: 0 StatPop: 100 Infected: 44
+00:00:01 [0] [I] [Simulation] Update(): Time: 399.0 Rank: 0 StatPop: 100 Infected: 49
+00:00:01 [0] [I] [Simulation] Update(): Time: 400.0 Rank: 0 StatPop: 100 Infected: 46
+00:00:01 [0] [I] [Simulation] Update(): Time: 401.0 Rank: 0 StatPop: 100 Infected: 41
+00:00:01 [0] [I] [Simulation] Update(): Time: 402.0 Rank: 0 StatPop: 100 Infected: 43
+00:00:01 [0] [I] [Simulation] Update(): Time: 403.0 Rank: 0 StatPop: 100 Infected: 43
+00:00:01 [0] [I] [Simulation] Update(): Time: 404.0 Rank: 0 StatPop: 100 Infected: 48
+00:00:01 [0] [I] [Simulation] Update(): Time: 405.0 Rank: 0 StatPop: 100 Infected: 52
+00:00:01 [0] [I] [Simulation] Update(): Time: 406.0 Rank: 0 StatPop: 100 Infected: 53
+00:00:01 [0] [I] [Simulation] Update(): Time: 407.0 Rank: 0 StatPop: 100 Infected: 52
+00:00:01 [0] [I] [Simulation] Update(): Time: 408.0 Rank: 0 StatPop: 100 Infected: 49
+00:00:01 [0] [I] [Simulation] Update(): Time: 409.0 Rank: 0 StatPop: 100 Infected: 52
+00:00:01 [0] [I] [Simulation] Update(): Time: 410.0 Rank: 0 StatPop: 100 Infected: 48
+00:00:01 [0] [I] [Simulation] Update(): Time: 411.0 Rank: 0 StatPop: 100 Infected: 53
+00:00:01 [0] [I] [Simulation] Update(): Time: 412.0 Rank: 0 StatPop: 100 Infected: 58
+00:00:01 [0] [I] [Simulation] Update(): Time: 413.0 Rank: 0 StatPop: 100 Infected: 51
+00:00:01 [0] [I] [Simulation] Update(): Time: 414.0 Rank: 0 StatPop: 100 Infected: 46
+00:00:01 [0] [I] [Simulation] Update(): Time: 415.0 Rank: 0 StatPop: 100 Infected: 48
+00:00:01 [0] [I] [Simulation] Update(): Time: 416.0 Rank: 0 StatPop: 100 Infected: 47
+00:00:01 [0] [E] [Eradication] OutOfRangeException: Exception in C:\svn\Polio-v17\utils\Types.h at 49 in RangedFloat::RangedFloat.  Variable value had value -0.0155196 which was inconsistent with range limit 0
+
+job aborted:
+[ranks] message
+
+[0] application aborted
+aborting MPI_COMM_WORLD, error -1, comm rank 0

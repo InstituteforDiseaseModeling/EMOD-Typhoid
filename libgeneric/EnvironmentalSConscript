@@ -1,0 +1,48 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libenvironmental.dll to handle environmental disease based on libenvironmental_static.lib
+
+Import('env')
+
+if env['AllDlls'] or env['Disease'] == "Environmental":
+
+    stdobj = env.Object("stdafx.cpp")
+
+    libenvironmentaldllSrcFiles = [ 
+                          "../Eradication/SimulationEnvironmentalExport.cpp"
+                          ]
+
+    libenvironmentaldllIncFiles = [  "SimulationEnvironmental.h" ]
+    libenvironmentaldllLocalInc = [  "stdafx.h" ]
+
+    environmentalenv = env.Clone()
+
+    genobj = environmentalenv.Object("libgenobj_environmental", "../Eradication/LibGenericClasses.cpp")
+
+    environmentalenv.Append(LIBS=['libgeneric_static'])
+    environmentalenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+    environmentalenv.Append(LIBS=['libenvironmental_static'])
+    environmentalenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+    libenvironmentaldll = environmentalenv.SharedLibrary('libenvironmental', libenvironmentaldllSrcFiles + stdobj + genobj)
+
+    #environmentalenv.Depends(libenvironmentaldll, '$BUILD_DIR/libenvironmental_static/libenvironmental_static.lib')
+
+    # take libenvironmentaldll.dll (exclude .lib, .exp) out to be the building target
+    # to match the number of building variant
+    libenvironmentaldllTarget = libenvironmentaldll[0]
+
+    msvc = GetOption( "MSVC" )
+    if msvc is not None and msvc != False and msvc != "":
+
+        bvar = environmentalenv['BUILD_VARIANT'] + '|x64'
+        print str(libenvironmentaldllTarget) + ": Generating MSVS" + environmentalenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+        environmentalenv.MSVSProject(target = 'LibEnvironmentaldllScons' + environmentalenv['MSVSPROJECTSUFFIX'],
+                        srcs = libenvironmentaldllSrcFiles,
+                        incs = libenvironmentaldllIncFiles,
+                        localincs = libenvironmentaldllLocalInc,
+                        buildtarget = libenvironmentaldllTarget,
+                        auto_build_solution = 0,
+                        variant = bvar)

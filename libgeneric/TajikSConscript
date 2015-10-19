@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libtajikreporter.dll report eModule
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libtajikdllSrcFiles = [ 
+                        "../reporters/libtajikreporter/TajikReporter.cpp",
+                        "../reporters/libtajikreporter/tarball.cpp"
+                        ]
+
+libtajikdllIncFiles = [  "../reporters/libtajikreporter/TajikReporter.h" ]
+libtajikdllLocalInc = [  "stdafx.h" ]
+
+tajikenv = env.Clone()
+#rptobj = tajikenv.Object('Reporter_for_report',"../Eradication/Report.cpp")
+ 
+tajikenv.Append( EXTRACPPPATH=["#/reporters"] )
+tajikenv.Append( CPPDEFINES=["_REPORT_DLL"] )
+tajikenv.Append(LIBS=['libgeneric_static'])
+tajikenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+
+libtajikDll = tajikenv.SharedLibrary('libtajikreporter', libtajikdllSrcFiles + stdobj)
+#libtajikDll = tajikenv.SharedLibrary('libtajikreporter', libtajikdllSrcFiles + stdobj + rptobj)
+#print "building libtajikdll: " + str(libtajikdll)
+
+# take libtajik.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libtajikdllTarget = libtajikDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = tajikenv['BUILD_VARIANT'] + '|x64'
+    print str(libtajikdllTarget) + ": Generating MSVS" + tajikenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    tajikenv.MSVSProject(target = 'LibtajikdllScons' + tajikenv['MSVSPROJECTSUFFIX'],
+                    srcs = libtajikdllSrcFiles,
+		    incs = libtajikdllIncFiles,
+		    localincs = libtajikdllLocalInc,
+ 		    buildtarget = libtajikdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

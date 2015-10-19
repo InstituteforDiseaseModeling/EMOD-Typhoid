@@ -1,0 +1,57 @@
+/***************************************************************************************************
+
+Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+
+EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+***************************************************************************************************/
+
+#pragma once
+
+#include "SimulationEnvironmental.h"
+#include "IndividualPolio.h" // TODO: could eliminate need to include these headers if the TypedMigrationQueue template parameter was made a pointer type instead of a class type.  <ERAD-320>
+#include "NodePolio.h"
+#include "InfectionPolio.h"
+#include "SusceptibilityPolio.h"
+
+namespace Kernel
+{
+    class NodePolio;
+    class IndividualHumanPolio;
+
+    class SimulationPolio : public SimulationEnvironmental
+    {
+    public:
+        SimulationPolio();
+        static SimulationPolio *CreateSimulation();
+        static SimulationPolio *CreateSimulation(const ::Configuration *config);
+        virtual ~SimulationPolio(void) { }
+
+    protected:
+        static bool ValidateConfiguration(const ::Configuration *config);
+
+        void Initialize();
+        void Initialize(const ::Configuration *config);
+
+        // Allows correct type of community to be added by derived class Simulations
+        virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
+
+        virtual void InitializeFlags(const ::Configuration *config);
+        virtual void resolveMigration();
+
+    private:
+
+        friend class Kernel::SimulationFactory; // allow them to create us
+
+#if USE_BOOST_SERIALIZATION
+        template<class Archive>
+        friend void serialize(Archive & ar, SimulationPolio& sim, const unsigned int  file_version );
+#endif
+        TypedPrivateMigrationQueueStorage<IndividualHumanPolio> typed_migration_queue_storage;
+    };
+}
+
+#ifndef WIN32
+DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPolio)
+#endif

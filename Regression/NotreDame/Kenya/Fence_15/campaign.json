@@ -1,0 +1,25 @@
+{
+    "Events": [
+        {
+            "Event_Coordinator_Config": {
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 3.75, 
+                    "Durability_Time_Profile": "BOXDECAYDURABILITY", 
+                    "Killing": 0.15, 
+                    "Primary_Decay_Time_Constant": 847, 
+                    "Secondary_Decay_Time_Constant": 247, 
+                    "class": "InsectKillingFence"
+                }, 
+                "Number_Repetitions": 10, 
+                "Timesteps_Between_Repetitions": 1095, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Day": 5475, 
+            "class": "CampaignEvent"
+        }
+    ], 
+    "Use_Defaults": 1
+}

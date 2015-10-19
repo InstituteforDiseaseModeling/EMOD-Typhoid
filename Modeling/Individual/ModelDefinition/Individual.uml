@@ -1,0 +1,560 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="9379241c-13d0-4fc9-81d3-71e1174162e2"
+  name="Individual" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <profileInstances>
+    <packageHasProfileInstances
+      Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
+      <profileInstance
+        Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791"
+        name="StandardProfileL2" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances
+      Id="29349502-908c-4fda-9054-c48619c59ed0">
+      <profileInstance
+        Id="532ea607-fb19-44b8-8502-3351b05452be"
+        name="StandardProfileL3" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="8c369c06-b430-45f1-b4b3-0bee19283297"
+        name="IndividualHuman"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="5ae1b07a-85fa-4232-9664-672fea854438">
+            <interfaceMoniker
+              Id="86cf4a3c-38f4-4cdd-99a0-a45056e736a2"
+              LastKnownName="IMigrate"
+              LastKnownLocation="Individual.uml" />
+          </interfaceRealization>
+          <interfaceRealization
+            Id="43e7ed48-f2c3-432b-aa6b-a70cfbea00e5">
+            <interfaceMoniker
+              Id="c90e71e0-177b-4133-9228-58d7374d7621"
+              LastKnownName="IInfectable"
+              LastKnownLocation="Individual.uml" />
+          </interfaceRealization>
+          <interfaceRealization
+            Id="e5888de2-9c7c-4430-a2f1-c87f593fc811">
+            <interfaceMoniker
+              Id="903b580e-b5e6-405d-9e20-c1f1b80f6dca"
+              LastKnownName="IndividualHumanConfig"
+              LastKnownLocation="Individual.uml" />
+          </interfaceRealization>
+          <interfaceRealization
+            Id="63d3d372-3094-44cc-81f2-b0017317b76d">
+            <interfaceMoniker
+              Id="89568508-fe7b-4f64-b8c0-f03a88caf021"
+              LastKnownName="IIndividualHumanEventContext"
+              LastKnownLocation="Individual.uml" />
+          </interfaceRealization>
+          <interfaceRealization
+            Id="f4a9226f-ddcb-4586-812f-7a528e7edfd2">
+            <interfaceMoniker
+              Id="87432021-2e98-4e3c-88e6-c2a34621207c"
+              LastKnownName="IIndividualHumanContext"
+              LastKnownLocation="Individual.uml" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="0503995f-8881-4a20-9884-907dc7f44f61"
+            isSubstitutable="false">
+            <classMoniker
+              Id="7a32ed52-61ab-49aa-92e0-3fe0ccb25e2e"
+              LastKnownName="IndividualHumanConfig"
+              LastKnownLocation="Individual.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="7a3d4b85-6d41-4c50-a6ea-2e9e3b2b87ef"
+            isDerived="false"
+            sourceEndRoleName="infections"
+            targetEndRoleName="infection_list_t"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="944a4960-e71c-4cdc-80fc-bf6d9c20640f"
+              LastKnownName="Infection"
+              LastKnownLocation="Individual.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="71e69684-bf40-499c-8f5f-3bf5191563f1"
+                  name="infections"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="4c587155-997e-4cf9-ae67-caa39ade7fda"
+                  name="infection_list_t"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="923a159f-a9a6-4067-bccb-25f972ccd5c0"
+                      name="Lower"
+                      value="n" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="7ab3521e-b8c9-450f-b60e-eac48b5f1ab7"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="a772a841-9983-4cf9-978d-ea657f3550e5"
+            isDerived="false"
+            sourceEndRoleName="interventions"
+            targetEndRoleName="InterventionsContainer*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="9573aa2b-9ec5-4ed3-8022-e2fb2260415c"
+              LastKnownName="InterventionsContainer"
+              LastKnownLocation="Individual.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a3c5ea87-d392-4f6c-8235-5d115d961bbc"
+                  name="interventions"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="24616f54-7692-4160-960a-742aefed52bf"
+                  name="InterventionsContainer*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="77b38662-f759-4596-a582-c334a6904e28"
+            isDerived="false"
+            sourceEndRoleName="susceptibility"
+            targetEndRoleName="Susceptibility*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="6ff718ef-39db-4569-bee2-f25e24ffca5f"
+              LastKnownName="Susceptibility"
+              LastKnownLocation="Individual.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="337a2ff8-0e4f-4231-862e-4b3c77930406"
+                  name="susceptibility"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="1ebe516c-e587-4b03-97f5-09e3f6c37d7f"
+                  name="Susceptibility*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="0d6daec4-ace1-4f23-8c2c-e6d4b8670f25"
+            isDerived="false"
+            sourceEndRoleName="homePools"
+            targetEndRoleName="WeightedPoolCollection*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="ad58021a-c51e-46cc-afcd-c65ae536f82b"
+              LastKnownName="WeightedPoolCollection"
+              LastKnownLocation="Individual.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c3f6343b-6bda-4ccd-8210-0181a80240fa"
+                  name="homePools"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6389051f-61db-4873-92fd-f3576bc1d6b9"
+                  name="WeightedPoolCollection*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="237cbf4b-b849-48c7-8e0e-f9d987df3d0d"
+            isDerived="false"
+            sourceEndRoleName="visitingPools"
+            targetEndRoleName="WeightedPoolCollection*"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="f14fbbf1-8744-4ddc-851c-455e1a4385a8"
+              LastKnownName="WeightedPoolCollection"
+              LastKnownLocation="Individual.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a1602bde-5541-492c-b88d-4e4e9d1ab324"
+                  name="visitingPools"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6dff1353-ae44-4c98-a290-8ac747ed97c8"
+                  name="WeightedPoolCollection*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="4650529e-197e-439d-b371-bbbf1e35cfea"
+            isDerived="false"
+            sourceEndRoleName="parent"
+            targetEndRoleName="INodeContext*"
+            isLeaf="false"
+            isAbstract="false">
+            <interfaceMoniker
+              Id="a82ead9f-04b3-4b85-a242-82d0d65ca3b7"
+              LastKnownName="INodeContext"
+              LastKnownLocation="Individual.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="ee64faa9-1fab-4126-9429-48a3fa9fe80d"
+                  name="parent"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="704f6ec2-17f9-412b-aa78-0dd38ce9080b"
+                  name="INodeContext*"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+        <ownedAttributesInternal>
+          <property
+            Id="a88fbd60-122d-4185-8075-1b49dd358810"
+            name="suid"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="9d702606-5979-4eb4-88c4-e7ddf6c28027"
+            name="m_age"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="40ecb33f-d99e-4da4-81da-4a305d36ef4f"
+            name="infectiousness"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="e58a912a-9fed-409a-aa7a-ae31ba73e0e1"
+            name="cumulativeInfs"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+          <property
+            Id="17809cc8-6b35-4d87-8b5f-3620dad65b0c"
+            name="time_to_next_migration"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="38a5d50c-71c8-4c89-8f7f-b20f448f7893"
+            name="Update"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="3b090fdd-18a1-4928-9baf-763a8e7aedc2"
+                  name="float currenttime"
+                  direction="In"
+                  isUnique="false" />
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="01cd98a9-7df7-4793-ae4d-84025a2747fc"
+                  name="float dt"
+                  direction="In"
+                  isUnique="false" />
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="61cdadbb-8c55-4721-99bc-1e1d00a66f36"
+                  name="WeightedPoolCollection* soc_network"
+                  direction="In"
+                  isUnique="false" />
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="937647a1-6f73-4481-b62a-c0fb7a67fc62"
+            name="Die"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="d4772d08-aab0-46f0-a04c-2e5a8dfa80b6"
+            name="ImmigrateTo"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="4f5a5579-723f-4628-852a-93d4d40a02f6"
+            name="ExposeToInfectivity"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="dbb46f1f-0f18-489c-bfea-ca72d96e1ecd"
+            name="UpdateInfectiousness"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="944a4960-e71c-4cdc-80fc-bf6d9c20640f"
+        name="Infection"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="6ff718ef-39db-4569-bee2-f25e24ffca5f"
+        name="Susceptibility"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="9573aa2b-9ec5-4ed3-8022-e2fb2260415c"
+        name="InterventionsContainer"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="87432021-2e98-4e3c-88e6-c2a34621207c"
+        name="IIndividualHumanContext"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="89568508-fe7b-4f64-b8c0-f03a88caf021"
+        name="IIndividualHumanEventContext"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="c90e71e0-177b-4133-9228-58d7374d7621"
+        name="IInfectable"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="903b580e-b5e6-405d-9e20-c1f1b80f6dca"
+        name="IndividualHumanConfig"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="86cf4a3c-38f4-4cdd-99a0-a45056e736a2"
+        name="IMigrate"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="ad58021a-c51e-46cc-afcd-c65ae536f82b"
+        name="WeightedPoolCollection"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="f14fbbf1-8744-4ddc-851c-455e1a4385a8"
+        name="WeightedPoolCollection"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="a82ead9f-04b3-4b85-a242-82d0d65ca3b7"
+        name="INodeContext"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="7a32ed52-61ab-49aa-92e0-3fe0ccb25e2e"
+        name="IndividualHumanConfig"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+  </packagedElements>
+  <primitiveType
+    Id="220a3521-e091-4221-bae9-3ef9018e845c"
+    name="Integer"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
+    name="Boolean"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+    name="String"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
+    name="UnlimitedNatural"
+    isAbstract="false"
+    isLeaf="false" />
+</modelStoreModel>

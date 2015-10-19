@@ -1,0 +1,29 @@
+{
+     "Use_Defaults": 1,
+     "Events": [
+          {
+               "Event_Coordinator_Config": {
+                    "Coverage": 1.0, 
+                    "Demographic_Coverage": 1, 
+                    "Intervention_Config": {
+                         "Antigen": 0, 
+                         "Genome": 0, 
+                         "Outbreak_Source": "ImportCases", 
+                         "class": "Outbreak"
+                    }, 
+                    "Number_Distributions": 1000, 
+                    "Number_Repetitions": 1, 
+                    "Target_Demographic": "Everyone", 
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Nodeset_Config": {
+                    "Node_List": [
+                         1
+                    ], 
+                    "class": "NodeSetNodeList"
+               }, 
+               "Start_Day": 1, 
+               "class": "CampaignEvent"
+          }
+     ]
+}
