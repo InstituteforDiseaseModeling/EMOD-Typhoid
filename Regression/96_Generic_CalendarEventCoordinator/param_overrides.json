@@ -18,7 +18,7 @@
                "Demographics_Filename": "../00_Default/demographics.json", 
                "Geography": "", 
                "Run_Number": 1, 
-               "Simulation_Duration": 90
+               "Simulation_Duration": 1500
           }
      }
 }
