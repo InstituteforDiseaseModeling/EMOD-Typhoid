@@ -1,0 +1,41 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivpreartnotificationdllSrcFiles = [ "../../interventions/HIVPreARTNotification.cpp",
+                                         "../../interventions/HIVPreARTNotificationEModule.cpp"
+                                       ]
+
+libhivpreartnotificationdllIncFiles = [  "../../interventions/hivpreartnotification.h" ]
+libhivpreartnotificationdllLocalInc = [  "stdafx.h" ]
+
+hivpreartnotificationenv = env.Clone()
+hivpreartnotificationenv.Append(LIBS=['libgeneric_static'])
+hivpreartnotificationenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivpreartnotificationenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivpreartnotificationDll = hivpreartnotificationenv.SharedLibrary('libhivpreartnotification', libhivpreartnotificationdllSrcFiles + stdobj)
+#print "building libhivpreartnotificationdll: " + str(libhivpreartnotificationdll)
+
+# take libhivpreartnotification.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivpreartnotificationdllTarget = libhivpreartnotificationDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivpreartnotificationenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivpreartnotificationdllTarget) + ": Generating MSVS" + hivpreartnotificationenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivpreartnotificationenv.MSVSProject(target = 'LibhivpreartnotificationdllScons' + hivpreartnotificationenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivpreartnotificationdllSrcFiles,
+		    incs = libhivpreartnotificationdllIncFiles,
+		    localincs = libhivpreartnotificationdllLocalInc,
+ 		    buildtarget = libhivpreartnotificationdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

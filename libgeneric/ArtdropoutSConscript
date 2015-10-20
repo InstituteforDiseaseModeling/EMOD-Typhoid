@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libartdropoutdllSrcFiles = [ "../../interventions/ARTDropout.cpp",
+                         "../../interventions/ARTDropoutEModule.cpp"
+                         ]
+
+libartdropoutdllIncFiles = [  "../../interventions/artdropout.h" ]
+libartdropoutdllLocalInc = [  "stdafx.h" ]
+
+artdropoutenv = env.Clone()
+artdropoutenv.Append(LIBS=['libgeneric_static'])
+artdropoutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+artdropoutenv.Append(LIBS=['libvector_static'])
+#artdropoutenv.Append(LIBS=['libmalaria_static'])
+artdropoutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libartdropoutDll = artdropoutenv.SharedLibrary('libartdropout', libartdropoutdllSrcFiles + stdobj)
+#print "building libartdropoutdll: " + str(libartdropoutdll)
+
+# take libartdropout.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libartdropoutdllTarget = libartdropoutDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = artdropoutenv['BUILD_VARIANT'] + '|x64'
+    print str(libartdropoutdllTarget) + ": Generating MSVS" + artdropoutenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    artdropoutenv.MSVSProject(target = 'LibartdropoutdllScons' + artdropoutenv['MSVSPROJECTSUFFIX'],
+                    srcs = libartdropoutdllSrcFiles,
+		    incs = libartdropoutdllIncFiles,
+		    localincs = libartdropoutdllLocalInc,
+ 		    buildtarget = libartdropoutdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

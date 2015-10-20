@@ -34,10 +34,10 @@ namespace Kernel
         public ICircumcision
         , public BaseIntervention
     {
-    public:
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, MaleCircumcision, IDistributableIntervention)
 
+    public:
         MaleCircumcision();
         virtual ~MaleCircumcision() { }
 

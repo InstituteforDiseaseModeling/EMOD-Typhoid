@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libcd4diagnosticdllSrcFiles = [ "../../interventions/CD4Diagnostic.cpp",
+                   "../../interventions/CD4DiagnosticEModule.cpp"
+                 ]
+
+libcd4diagnosticdllIncFiles = [  "../../interventions/.h" ]
+libcd4diagnosticdllLocalInc = [  "stdafx.h" ]
+
+cd4diagnosticenv = env.Clone()
+sd_obj = cd4diagnosticenv.Object( "sd_cd4d", "../../interventions/Diagnostics.cpp" )
+
+env.Append(LIBS=['libgeneric_static'])
+env.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+env.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libcd4diagnosticdll = env.SharedLibrary('libcd4diagnostic', libcd4diagnosticdllSrcFiles + stdobj + sd_obj)
+#print "building libcd4diagnosticdll: " + str(libcd4diagnosticdll)
+
+# take lib.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libcd4diagnosticdllTarget = libcd4diagnosticdll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libcd4diagnosticdllTarget) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'libcd4diagnosticdllScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libcd4diagnosticdllSrcFiles,
+		    incs = libcd4diagnosticdllIncFiles,
+		    localincs = libcd4diagnosticdllLocalInc,
+ 		    buildtarget = libcd4diagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

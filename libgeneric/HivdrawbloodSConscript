@@ -1,0 +1,44 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivdrawblooddllSrcFiles = [ "../../interventions/HIVDrawBlood.cpp",
+                               "../../interventions/HIVDrawBloodEModule.cpp"
+                             ]
+
+libhivdrawblooddllIncFiles = [  "../../interventions/hivdrawblood.h" ]
+libhivdrawblooddllLocalInc = [  "stdafx.h" ]
+
+hivdrawbloodenv = env.Clone()
+hsd_obj = hivdrawbloodenv .Object( "hdb_hsd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj =  hivdrawbloodenv .Object( "hdb_sd",  "../../interventions/Diagnostics.cpp" )
+
+hivdrawbloodenv.Append(LIBS=['libgeneric_static'])
+hivdrawbloodenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivdrawbloodenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivdrawbloodDll = hivdrawbloodenv.SharedLibrary('libhivdrawblood', libhivdrawblooddllSrcFiles + stdobj + hsd_obj + sd_obj )
+#print "building libhivdrawblooddll: " + str(libhivdrawblooddll)
+
+# take libhivdrawblood.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivdrawblooddllTarget = libhivdrawbloodDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivdrawbloodenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivdrawblooddllTarget) + ": Generating MSVS" + hivdrawbloodenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivdrawbloodenv.MSVSProject(target = 'LibhivdrawblooddllScons' + hivdrawbloodenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivdrawblooddllSrcFiles,
+		    incs = libhivdrawblooddllIncFiles,
+		    localincs = libhivdrawblooddllLocalInc,
+ 		    buildtarget = libhivdrawblooddllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libartbasicdllSrcFiles = [ "../../interventions/ARTBasic.cpp",
+                         "../../interventions/ARTBasicEModule.cpp"
+                         ]
+
+libartbasicdllIncFiles = [  "../../interventions/artbasic.h" ]
+libartbasicdllLocalInc = [  "stdafx.h" ]
+
+artbasicenv = env.Clone()
+artbasicenv.Append(LIBS=['libgeneric_static'])
+artbasicenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+artbasicenv.Append(LIBS=['libvector_static'])
+#artbasicenv.Append(LIBS=['libmalaria_static'])
+artbasicenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libartbasicDll = artbasicenv.SharedLibrary('libartbasic', libartbasicdllSrcFiles + stdobj)
+#print "building libartbasicdll: " + str(libartbasicdll)
+
+# take libartbasic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libartbasicdllTarget = libartbasicDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = artbasicenv['BUILD_VARIANT'] + '|x64'
+    print str(libartbasicdllTarget) + ": Generating MSVS" + artbasicenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    artbasicenv.MSVSProject(target = 'LibartbasicdllScons' + artbasicenv['MSVSPROJECTSUFFIX'],
+                    srcs = libartbasicdllSrcFiles,
+		    incs = libartbasicdllIncFiles,
+		    localincs = libartbasicdllLocalInc,
+ 		    buildtarget = libartbasicdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

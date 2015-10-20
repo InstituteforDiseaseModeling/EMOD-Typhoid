@@ -39,17 +39,3 @@ namespace Kernel
 }
 
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::StiCoInfectionDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, StiCoInfectionDiagnostic& obj, const unsigned int v)
-    {
-
-        boost::serialization::void_cast_register<StiCoInfectionDiagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
-    }
-}
-#endif

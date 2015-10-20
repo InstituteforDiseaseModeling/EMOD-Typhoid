@@ -1,0 +1,45 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivsigmoidbyyearandsexdiagnosticdllSrcFiles = [
+                                                   "../../interventions/HIVSigmoidByYearAndSexDiagnostic.cpp",
+                                                   "../../interventions/HIVSigmoidByYearAndSexDiagnosticEModule.cpp"
+                                                 ]
+
+libhivsigmoidbyyearandsexdiagnosticdllIncFiles = [  "../../interventions/hivsigmoidbyyearandsexdiagnostic.h" ]
+libhivsigmoidbyyearandsexdiagnosticdllLocalInc = [  "stdafx.h" ]
+
+hivsigmoidbyyearandsexdiagnosticenv = env.Clone()
+hsd_obj = hivsigmoidbyyearandsexdiagnosticenv.Object( "hsd_hsbyasd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj =  hivsigmoidbyyearandsexdiagnosticenv.Object( "sd_hsbyasd", "../../interventions/Diagnostics.cpp" )
+hivsigmoidbyyearandsexdiagnosticenv.Append(LIBS=['libgeneric_static'])
+hivsigmoidbyyearandsexdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+
+hivsigmoidbyyearandsexdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivsigmoidbyyearandsexdiagnosticDll = hivsigmoidbyyearandsexdiagnosticenv.SharedLibrary('libhivsigmoidbyyearandsexdiagnostic', libhivsigmoidbyyearandsexdiagnosticdllSrcFiles + stdobj + hsd_obj + sd_obj )
+#print "building libhivsigmoidbyyearandsexdiagnosticdll: " + str(libhivsigmoidbyyearandsexdiagnosticdll)
+
+# take libhivsigmoidbyyearandsexdiagnostic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivsigmoidbyyearandsexdiagnosticdllTarget = libhivsigmoidbyyearandsexdiagnosticDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivsigmoidbyyearandsexdiagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivsigmoidbyyearandsexdiagnosticdllTarget) + ": Generating MSVS" + hivsigmoidbyyearandsexdiagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivsigmoidbyyearandsexdiagnosticenv.MSVSProject(target = 'LibhivsigmoidbyyearandsexdiagnosticdllScons' + hivsigmoidbyyearandsexdiagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivsigmoidbyyearandsexdiagnosticdllSrcFiles,
+		    incs = libhivsigmoidbyyearandsexdiagnosticdllIncFiles,
+		    localincs = libhivsigmoidbyyearandsexdiagnosticdllLocalInc,
+ 		    buildtarget = libhivsigmoidbyyearandsexdiagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

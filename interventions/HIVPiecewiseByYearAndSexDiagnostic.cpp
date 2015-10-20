@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "IndividualHIV.h"
+#include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
 #include "HIVInterventionsContainer.h"
 #include "SimulationEnums.h"

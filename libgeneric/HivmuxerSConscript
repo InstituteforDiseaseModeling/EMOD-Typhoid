@@ -1,0 +1,44 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivmuxerdllSrcFiles = [ "../../interventions/HIVMuxer.cpp",
+                         "../../interventions/HIVMuxerEModule.cpp"
+                         ]
+
+libhivmuxerdllIncFiles = [  "../../interventions/hivmuxer.h" ]
+libhivmuxerdllLocalInc = [  "stdafx.h" ]
+
+hivmuxerenv = env.Clone()
+di_obj =  hivmuxerenv.Object( "di_mux", "../../interventions/DelayedIntervention.cpp" )
+hdi_obj = hivmuxerenv.Object( "hdi_mux", "../../interventions/HIVDelayedIntervention.cpp" )
+
+hivmuxerenv.Append(LIBS=['libgeneric_static'])
+hivmuxerenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivmuxerenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivmuxerDll = hivmuxerenv.SharedLibrary('libhivmuxer', libhivmuxerdllSrcFiles + stdobj + hdi_obj + di_obj )
+#print "building libhivmuxerdll: " + str(libhivmuxerdll)
+
+# take libhivmuxer.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivmuxerdllTarget = libhivmuxerDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivmuxerenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivmuxerdllTarget) + ": Generating MSVS" + hivmuxerenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivmuxerenv.MSVSProject(target = 'LibhivmuxerdllScons' + hivmuxerenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivmuxerdllSrcFiles,
+		    incs = libhivmuxerdllIncFiles,
+		    localincs = libhivmuxerdllLocalInc,
+ 		    buildtarget = libhivmuxerdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

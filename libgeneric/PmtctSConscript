@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libpmtctdllSrcFiles = [ "../../interventions/PMTCT.cpp",
+                         "../../interventions/PMTCTEModule.cpp"
+                         ]
+
+libpmtctdllIncFiles = [  "../../interventions/pmtct.h" ]
+libpmtctdllLocalInc = [  "stdafx.h" ]
+
+pmtctenv = env.Clone()
+pmtctenv.Append(LIBS=['libgeneric_static'])
+pmtctenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+pmtctenv.Append(LIBS=['libvector_static'])
+#pmtctenv.Append(LIBS=['libmalaria_static'])
+pmtctenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libpmtctDll = pmtctenv.SharedLibrary('libpmtct', libpmtctdllSrcFiles + stdobj)
+#print "building libpmtctdll: " + str(libpmtctdll)
+
+# take libpmtct.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libpmtctdllTarget = libpmtctDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = pmtctenv['BUILD_VARIANT'] + '|x64'
+    print str(libpmtctdllTarget) + ": Generating MSVS" + pmtctenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    pmtctenv.MSVSProject(target = 'LibpmtctdllScons' + pmtctenv['MSVSPROJECTSUFFIX'],
+                    srcs = libpmtctdllSrcFiles,
+		    incs = libpmtctdllIncFiles,
+		    localincs = libpmtctdllLocalInc,
+ 		    buildtarget = libpmtctdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

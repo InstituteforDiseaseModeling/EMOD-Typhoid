@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivrandomchoicedllSrcFiles = [ "../../interventions/HIVRandomChoice.cpp",
+                         "../../interventions/HIVRandomChoiceEModule.cpp"
+                         ]
+
+libhivrandomchoicedllIncFiles = [  "../../interventions/hivrandomchoice.h" ]
+libhivrandomchoicedllLocalInc = [  "stdafx.h" ]
+
+hivrandomchoiceenv = env.Clone()
+hsd_obj =  hivrandomchoiceenv.Object( "hrc_hsd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj =   hivrandomchoiceenv.Object( "hrc_sd",  "../../interventions/Diagnostics.cpp" )
+
+hivrandomchoiceenv.Append(LIBS=['libgeneric_static'])
+hivrandomchoiceenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivrandomchoiceenv.Append(LIBS=['libvector_static'])
+#hivrandomchoiceenv.Append(LIBS=['libmalaria_static'])
+hivrandomchoiceenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivrandomchoiceDll = hivrandomchoiceenv.SharedLibrary('libhivrandomchoice', libhivrandomchoicedllSrcFiles + stdobj + hsd_obj + sd_obj )
+#print "building libhivrandomchoicedll: " + str(libhivrandomchoicedll)
+
+# take libhivrandomchoice.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivrandomchoicedllTarget = libhivrandomchoiceDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivrandomchoiceenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivrandomchoicedllTarget) + ": Generating MSVS" + hivrandomchoiceenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivrandomchoiceenv.MSVSProject(target = 'LibhivrandomchoicedllScons' + hivrandomchoiceenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivrandomchoicedllSrcFiles,
+		    incs = libhivrandomchoicedllIncFiles,
+		    localincs = libhivrandomchoicedllLocalInc,
+ 		    buildtarget = libhivrandomchoicedllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

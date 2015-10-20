@@ -1,0 +1,47 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivartstagingcd4agnosticdiagnosticdllSrcFiles = [
+                                                       "../../interventions/HIVARTStagingCD4AgnosticDiagnostic.cpp",
+                                                       "../../interventions/HIVARTStagingCD4AgnosticDiagnosticEModule.cpp"
+                                                   ]
+
+libhivartstagingcd4agnosticdiagnosticdllIncFiles = [  "../../interventions/hivartstagingcd4agnosticdiagnostic.h" ]
+libhivartstagingcd4agnosticdiagnosticdllLocalInc = [  "stdafx.h" ]
+
+hivartstagingcd4agnosticdiagnosticenv = env.Clone()
+abs_obj = hivartstagingcd4agnosticdiagnosticenv.Object( "hasbcad_base", "../../interventions/HIVARTStagingAbstract.cpp" )
+hsd_obj = hivartstagingcd4agnosticdiagnosticenv.Object( "hasbcad_hsd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj =  hivartstagingcd4agnosticdiagnosticenv.Object( "hasbcad_sd", "../../interventions/Diagnostics.cpp" )
+
+hivartstagingcd4agnosticdiagnosticenv.Append(LIBS=['libgeneric_static'])
+hivartstagingcd4agnosticdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivartstagingcd4agnosticdiagnosticenv.Append(LIBS=['libsti_static'])
+hivartstagingcd4agnosticdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivartstagingcd4agnosticdiagnosticDll = hivartstagingcd4agnosticdiagnosticenv.SharedLibrary('libhivartstagingcd4agnosticdiagnostic', libhivartstagingcd4agnosticdiagnosticdllSrcFiles + stdobj + abs_obj + hsd_obj + sd_obj )
+#print "building libhivartstagingcd4agnosticdiagnosticdll: " + str(libhivartstagingcd4agnosticdiagnosticdll)
+
+# take libhivartstagingcd4agnosticdiagnostic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivartstagingcd4agnosticdiagnosticdllTarget = libhivartstagingcd4agnosticdiagnosticDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivartstagingcd4agnosticdiagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivartstagingcd4agnosticdiagnosticdllTarget) + ": Generating MSVS" + hivartstagingcd4agnosticdiagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivartstagingcd4agnosticdiagnosticenv.MSVSProject(target = 'Libhivartstagingcd4agnosticdiagnosticdllScons' + hivartstagingcd4agnosticdiagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivartstagingcd4agnosticdiagnosticdllSrcFiles,
+		    incs = libhivartstagingcd4agnosticdiagnosticdllIncFiles,
+		    localincs = libhivartstagingcd4agnosticdiagnosticdllLocalInc,
+ 		    buildtarget = libhivartstagingcd4agnosticdiagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

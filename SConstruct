@@ -176,7 +176,8 @@ env = Environment( BUILD_DIR=buildDir,
                    MSVS_ARCH=msarch ,
                    TARGET_ARCH=msarch ,
                    PYSYSPLATFORM=pi,
-                   MSVSPROJECTSUFFIX='.vcxproj' 
+                   MSVSPROJECTSUFFIX='.vcxproj' ,
+                   MSVC_VERSION='11.0'
                    )
 
 if not(Dbg) and not(Rel):
@@ -318,29 +319,6 @@ elif "win32" == os.sys.platform:
     windows = True
 
     env['DIST_ARCHIVE_SUFFIX'] = '.zip'
-
-    winVCHome = "C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC"
-    if os.path.exists(os.path.join(winVCHome,'bin', 'cl.exe')):
-        vspath = os.path.join(winVCHome,'bin', 'cl.exe')
-        
-        vcpath = os.path.join(winVCHome,'bin')
-        print( "found visual studio at " + vspath + " and add the vc path to env var " + vcpath)
-        env.Append( PATH = [vcpath] )
-        msvs_ver = '12.0'
-        env.Append( tools = ['msvc'] )
-        env.Append( MSVC_VERSION = ['%(msvs_ver)s'] )
-
-    else:
-
-        print("env path " + env['ENV']['PATH'])
-        for pathdir in env['ENV']['PATH'].split(os.pathsep):
-            print("pathdir " + pathdir)
-            if os.path.exists(os.path.join(pathdir, 'cl.exe')):
-                print( "found visual studio at " + pathdir )
-                break
-            else:
-                #use current environment
-                env['ENV'] = dict(os.environ)
 
     env.Append( CPPDEFINES=[ "WIN32" ] )
     env.Append( CPPDEFINES=[ "_UNICODE" ] )

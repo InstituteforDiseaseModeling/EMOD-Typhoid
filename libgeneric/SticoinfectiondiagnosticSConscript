@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libsticoinfectiondiagnosticdllSrcFiles = [ "../../interventions/STICoinfectionDiagnostic.cpp",
+                                           "../../interventions/STICoinfectionDiagnosticEModule.cpp"
+                                         ]
+
+libsticoinfectiondiagnosticdllIncFiles = [ "../../interventions/sticoinfectiondiagnostic.h" ]
+libsticoinfectiondiagnosticdllLocalInc = [ "stdafx.h" ]
+
+sticoinfectiondiagnosticenv = env.Clone()
+sd_obj =  sticoinfectiondiagnosticenv.Object( "scod_sd",  "../../interventions/Diagnostics.cpp" )
+sticoinfectiondiagnosticenv.Append(LIBS=['libgeneric_static'])
+sticoinfectiondiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+sticoinfectiondiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libsticoinfectiondiagnosticDll = sticoinfectiondiagnosticenv.SharedLibrary('libsticoinfectiondiagnostic', libsticoinfectiondiagnosticdllSrcFiles + stdobj + sd_obj )
+#print "building libsticoinfectiondiagnosticdll: " + str(libsticoinfectiondiagnosticdll)
+
+# take libsticoinfectiondiagnostic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libsticoinfectiondiagnosticdllTarget = libsticoinfectiondiagnosticDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = sticoinfectiondiagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libsticoinfectiondiagnosticdllTarget) + ": Generating MSVS" + sticoinfectiondiagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    sticoinfectiondiagnosticenv.MSVSProject(target = 'LibsticoinfectiondiagnosticdllScons' + sticoinfectiondiagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libsticoinfectiondiagnosticdllSrcFiles,
+		    incs = libsticoinfectiondiagnosticdllIncFiles,
+		    localincs = libsticoinfectiondiagnosticdllLocalInc,
+ 		    buildtarget = libsticoinfectiondiagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

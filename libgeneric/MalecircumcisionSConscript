@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libmalecircumcisiondllSrcFiles = [ "../../interventions/MaleCircumcision.cpp",
+                         "../../interventions/MaleCircumcisionEModule.cpp"
+                         ]
+
+libmalecircumcisiondllIncFiles = [  "../../interventions/malecircumcision.h" ]
+libmalecircumcisiondllLocalInc = [  "stdafx.h" ]
+
+malecircumcisionenv = env.Clone()
+malecircumcisionenv.Append(LIBS=['libgeneric_static'])
+malecircumcisionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+malecircumcisionenv.Append(LIBS=['libvector_static'])
+#malecircumcisionenv.Append(LIBS=['libmalaria_static'])
+malecircumcisionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libmalecircumcisionDll = malecircumcisionenv.SharedLibrary('libmalecircumcision', libmalecircumcisiondllSrcFiles + stdobj)
+#print "building libmalecircumcisiondll: " + str(libmalecircumcisiondll)
+
+# take libmalecircumcision.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libmalecircumcisiondllTarget = libmalecircumcisionDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = malecircumcisionenv['BUILD_VARIANT'] + '|x64'
+    print str(libmalecircumcisiondllTarget) + ": Generating MSVS" + malecircumcisionenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    malecircumcisionenv.MSVSProject(target = 'LibmalecircumcisiondllScons' + malecircumcisionenv['MSVSPROJECTSUFFIX'],
+                    srcs = libmalecircumcisiondllSrcFiles,
+		    incs = libmalecircumcisiondllIncFiles,
+		    localincs = libmalecircumcisiondllLocalInc,
+ 		    buildtarget = libmalecircumcisiondllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

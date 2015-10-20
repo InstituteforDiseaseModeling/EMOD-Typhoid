@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivrapidhivdiagnosticdllSrcFiles = [ "../../interventions/HIVRapidHIVDiagnostic.cpp",
+                         "../../interventions/HIVRapidHIVDiagnosticEModule.cpp"
+                         ]
+
+libhivrapidhivdiagnosticdllIncFiles = [  "../../interventions/hivrapidhivdiagnostic.h" ]
+libhivrapidhivdiagnosticdllLocalInc = [  "stdafx.h" ]
+
+hivrapidhivdiagnosticenv = env.Clone()
+hsd_obj = hivrapidhivdiagnosticenv.Object( "hrhd_hsd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj  = hivrapidhivdiagnosticenv.Object( "hrhd_sd",  "../../interventions/Diagnostics.cpp" )
+
+hivrapidhivdiagnosticenv.Append(LIBS=['libgeneric_static'])
+hivrapidhivdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivrapidhivdiagnosticenv.Append(LIBS=['libvector_static'])
+#hivrapidhivdiagnosticenv.Append(LIBS=['libmalaria_static'])
+hivrapidhivdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivrapidhivdiagnosticDll = hivrapidhivdiagnosticenv.SharedLibrary('libhivrapidhivdiagnostic', libhivrapidhivdiagnosticdllSrcFiles + stdobj + sd_obj + hsd_obj )
+#print "building libhivrapidhivdiagnosticdll: " + str(libhivrapidhivdiagnosticdll)
+
+# take libhivrapidhivdiagnostic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivrapidhivdiagnosticdllTarget = libhivrapidhivdiagnosticDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivrapidhivdiagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivrapidhivdiagnosticdllTarget) + ": Generating MSVS" + hivrapidhivdiagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivrapidhivdiagnosticenv.MSVSProject(target = 'LibhivrapidhivdiagnosticdllScons' + hivrapidhivdiagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivrapidhivdiagnosticdllSrcFiles,
+		    incs = libhivrapidhivdiagnosticdllIncFiles,
+		    localincs = libhivrapidhivdiagnosticdllLocalInc,
+ 		    buildtarget = libhivrapidhivdiagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

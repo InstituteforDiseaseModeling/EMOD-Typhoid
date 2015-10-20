@@ -144,6 +144,28 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/StibarrierSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/StiispostdebutSConscript', variant_dir=dll_op_path )
 
+    if env['DiseaseDll'] == "HIV":
+        SConscript( 'libgeneric/ArtbasicSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/ArtdropoutSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/Cd4diagnosticSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/AgediagnosticSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/Hivartstagingbycd4diagnosticSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/Hivartstagingcd4agnosticdiagnosticSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivdelayedinterventionSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivdrawbloodSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivpiecewisebyyearandsexdiagnosticSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivpreartnotificationSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivrandomchoiceSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivrapidhivdiagnosticSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivsetcascadestateSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/HivsigmoidbyyearandsexdiagnosticSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/HivsimplediagnosticSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/HivmuxerSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/MalecircumcisionSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/ModifysticoinfectionstatusSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/SticoinfectiondiagnosticSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/PmtctSConscript', variant_dir=dll_op_path )
+
     # Polio
     # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )    SConscript( 'libgeneric/BirthtriggeredSConscript' )
     SConscript( 'libgeneric/CalendarSConscript', variant_dir=dll_op_path )

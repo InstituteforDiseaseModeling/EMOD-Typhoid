@@ -1,0 +1,47 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivartstagingbycd4diagnosticSConscriptdllSrcFiles = [
+                                                           "../../interventions/HIVArtStagingByCd4Diagnostic.cpp",
+                                                           "../../interventions/HIVArtStagingByCd4Diagnostic.cpp"
+                                                       ]
+
+libhivartstagingbycd4diagnosticSConscriptdllIncFiles = [  "../../interventions/hivartstagingbycd4diagnosticSConscript.h" ]
+libhivartstagingbycd4diagnosticSConscriptdllLocalInc = [  "stdafx.h" ]
+
+hivartstagingbycd4diagnosticSConscriptenv = env.Clone()
+abs_obj = hivartstagingbycd4diagnosticSConscriptenv.Object( "hasbcd_base", "../../interventions/HIVARTStagingAbstract.cpp" )
+hsd_obj = hivartstagingbycd4diagnosticSConscriptenv.Object( "hasbcd_hsd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj =  hivartstagingbycd4diagnosticSConscriptenv.Object( "hasbcd_sd", "../../interventions/Diagnostics.cpp" )
+
+hivartstagingbycd4diagnosticSConscriptenv.Append(LIBS=['libgeneric_static'])
+hivartstagingbycd4diagnosticSConscriptenv.Append(LIBS=['libsti_static'])
+hivartstagingbycd4diagnosticSConscriptenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivartstagingbycd4diagnosticSConscriptenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivartstagingbycd4diagnosticSConscriptDll = hivartstagingbycd4diagnosticSConscriptenv.SharedLibrary('libhivartstagingbycd4diagnosticSConscript', libhivartstagingbycd4diagnosticSConscriptdllSrcFiles + stdobj + abs_obj + hsd_obj + sd_obj )
+#print "building libhivartstagingbycd4diagnosticSConscriptdll: " + str(libhivartstagingbycd4diagnosticSConscriptdll)
+
+# take libhivartstagingbycd4diagnosticSConscript.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivartstagingbycd4diagnosticSConscriptdllTarget = libhivartstagingbycd4diagnosticSConscriptDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivartstagingbycd4diagnosticSConscriptenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivartstagingbycd4diagnosticSConscriptdllTarget) + ": Generating MSVS" + hivartstagingbycd4diagnosticSConscriptenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivartstagingbycd4diagnosticSConscriptenv.MSVSProject(target = 'Libhivartstagingbycd4diagnosticSConscriptdllScons' + hivartstagingbycd4diagnosticSConscriptenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivartstagingbycd4diagnosticSConscriptdllSrcFiles,
+		    incs = libhivartstagingbycd4diagnosticSConscriptdllIncFiles,
+		    localincs = libhivartstagingbycd4diagnosticSConscriptdllLocalInc,
+ 		    buildtarget = libhivartstagingbycd4diagnosticSConscriptdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

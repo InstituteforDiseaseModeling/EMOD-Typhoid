@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "RANDOM.h"
 #include "IHIVInterventionsContainer.h" // for access to campaign_semaphores
-#include "IndividualHIV.h"
+//#include "IndividualHIV.h"
 
 static const char * _module = "HIVMuxer";
 

@@ -1,0 +1,41 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libmodifysticoinfectionstatusdllSrcFiles = [ "../../interventions/ModifySTICoInfectionStatus.cpp",
+                         "../../interventions/ModifySTICoInfectionStatusEModule.cpp"
+                         ]
+
+libmodifysticoinfectionstatusdllIncFiles = [  "../../interventions/modifysticoinfectionstatus.h" ]
+libmodifysticoinfectionstatusdllLocalInc = [  "stdafx.h" ]
+
+modifysticoinfectionstatusenv = env.Clone()
+modifysticoinfectionstatusenv.Append(LIBS=['libgeneric_static'])
+modifysticoinfectionstatusenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+modifysticoinfectionstatusenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libmodifysticoinfectionstatusDll = modifysticoinfectionstatusenv.SharedLibrary('libmodifysticoinfectionstatus', libmodifysticoinfectionstatusdllSrcFiles + stdobj)
+#print "building libmodifysticoinfectionstatusdll: " + str(libmodifysticoinfectionstatusdll)
+
+# take libmodifysticoinfectionstatus.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libmodifysticoinfectionstatusdllTarget = libmodifysticoinfectionstatusDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = modifysticoinfectionstatusenv['BUILD_VARIANT'] + '|x64'
+    print str(libmodifysticoinfectionstatusdllTarget) + ": Generating MSVS" + modifysticoinfectionstatusenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    modifysticoinfectionstatusenv.MSVSProject(target = 'LibmodifysticoinfectionstatusdllScons' + modifysticoinfectionstatusenv['MSVSPROJECTSUFFIX'],
+                    srcs = libmodifysticoinfectionstatusdllSrcFiles,
+		    incs = libmodifysticoinfectionstatusdllIncFiles,
+		    localincs = libmodifysticoinfectionstatusdllLocalInc,
+ 		    buildtarget = libmodifysticoinfectionstatusdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

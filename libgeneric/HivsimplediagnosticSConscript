@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivsimplediagnosticdllSrcFiles = [ "../../interventions/HIVSimpleDiagnostic.cpp",
+                                     "../../interventions/HIVSimpleDiagnosticEModule.cpp"
+                                    ]
+
+libhivsimplediagnosticdllIncFiles = [  "../../interventions/hivsimplediagnostic.h" ]
+libhivsimplediagnosticdllLocalInc = [  "stdafx.h" ]
+
+hivsimplediagnosticenv = env.Clone()
+sd_obj = hivsimplediagnosticenv.Object( "sd_hivsd", "../../interventions/Diagnostics.cpp" )
+hivsimplediagnosticenv.Append(LIBS=['libgeneric_static'])
+hivsimplediagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivsimplediagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivsimplediagnosticDll = hivsimplediagnosticenv.SharedLibrary('libhivsimplediagnostic', libhivsimplediagnosticdllSrcFiles + stdobj + sd_obj )
+
+#print "building libhivsimplediagnosticdll: " + str(libhivsimplediagnosticdll)
+
+# take libhivsimplediagnostic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivsimplediagnosticdllTarget = libhivsimplediagnosticDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivsimplediagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivsimplediagnosticdllTarget) + ": Generating MSVS" + hivsimplediagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivsimplediagnosticenv.MSVSProject(target = 'LibhivsimplediagnosticdllScons' + hivsimplediagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivsimplediagnosticdllSrcFiles,
+		    incs = libhivsimplediagnosticdllIncFiles,
+		    localincs = libhivsimplediagnosticdllLocalInc,
+ 		    buildtarget = libhivsimplediagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

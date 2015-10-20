@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivdelayedinterventiondllSrcFiles = [ "../../interventions/HIVDelayedIntervention.cpp",
+                                         "../../interventions/HIVDelayedInterventionEModule.cpp"
+                                       ]
+
+libhivdelayedinterventiondllIncFiles = [  "../../interventions/hivdelayedintervention.h" ]
+libhivdelayedinterventiondllLocalInc = [  "stdafx.h" ]
+
+hivdelayedinterventionenv = env.Clone()
+di_obj = hivdelayedinterventionenv .Object( "di_hdi", "../../interventions/DelayedIntervention.cpp" )
+
+hivdelayedinterventionenv.Append(LIBS=['libgeneric_static'])
+hivdelayedinterventionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivdelayedinterventionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivdelayedinterventionDll = hivdelayedinterventionenv.SharedLibrary('libhivdelayedintervention', libhivdelayedinterventiondllSrcFiles + stdobj + di_obj )
+#print "building libhivdelayedinterventiondll: " + str(libhivdelayedinterventiondll)
+
+# take libhivdelayedintervention.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivdelayedinterventiondllTarget = libhivdelayedinterventionDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivdelayedinterventionenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivdelayedinterventiondllTarget) + ": Generating MSVS" + hivdelayedinterventionenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivdelayedinterventionenv.MSVSProject(target = 'LibhivdelayedinterventiondllScons' + hivdelayedinterventionenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivdelayedinterventiondllSrcFiles,
+		    incs = libhivdelayedinterventiondllIncFiles,
+		    localincs = libhivdelayedinterventiondllLocalInc,
+ 		    buildtarget = libhivdelayedinterventiondllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

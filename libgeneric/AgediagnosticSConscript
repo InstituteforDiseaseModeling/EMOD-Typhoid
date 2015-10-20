@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libagediagnosticdllSrcFiles = [ "../../interventions/AgeDiagnostic.cpp",
+                                "../../interventions/AgeDiagnosticEModule.cpp"
+                              ]
+
+libagediagnosticdllIncFiles = [  "../../interventions/AgeDiagnostic.h" ]
+libagediagnosticdllLocalInc = [  "stdafx.h" ]
+
+agediagnosticenv = env.Clone()
+sd_obj = agediagnosticenv.Object( "sd_ad", "../../interventions/Diagnostics.cpp" )
+
+agediagnosticenv.Append(LIBS=['libgeneric_static'])
+agediagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+agediagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libagediagnosticDll = agediagnosticenv.SharedLibrary('libagediagnostic', libagediagnosticdllSrcFiles + stdobj + sd_obj)
+#print "building libagediagnosticdll: " + str(libagediagnosticdll)
+
+# take libagediagnostic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libagediagnosticdllTarget = libagediagnosticDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = agediagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libagediagnosticdllTarget) + ": Generating MSVS" + agediagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    agediagnosticenv.MSVSProject(target = 'LibagediagnosticdllScons' + agediagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libagediagnosticdllSrcFiles,
+		    incs = libagediagnosticdllIncFiles,
+		    localincs = libagediagnosticdllLocalInc,
+ 		    buildtarget = libagediagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

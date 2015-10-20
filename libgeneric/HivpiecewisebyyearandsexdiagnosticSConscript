@@ -1,0 +1,45 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivpiecewisebyyearandsexdiagnosticdllSrcFiles = [ "../../interventions/HIVPiecewiseByYearAndSexDiagnostic.cpp",
+                         "../../interventions/HIVPiecewiseByYearAndSexDiagnosticEModule.cpp"
+                         ]
+
+libhivpiecewisebyyearandsexdiagnosticdllIncFiles = [  "../../interventions/hivpiecewisebyyearandsexdiagnostic.h" ]
+libhivpiecewisebyyearandsexdiagnosticdllLocalInc = [  "stdafx.h" ]
+
+hivpiecewisebyyearandsexdiagnosticenv = env.Clone()
+hsd_obj = hivpiecewisebyyearandsexdiagnosticenv.Object( "hsd_hpbyasd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj = hivpiecewisebyyearandsexdiagnosticenv.Object( "sd_hpbyasd", "../../interventions/Diagnostics.cpp" )
+hivpiecewisebyyearandsexdiagnosticenv.Append(LIBS=['libgeneric_static'])
+hivpiecewisebyyearandsexdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivpiecewisebyyearandsexdiagnosticenv.Append(LIBS=['libvector_static'])
+#hivpiecewisebyyearandsexdiagnosticenv.Append(LIBS=['libmalaria_static'])
+hivpiecewisebyyearandsexdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhivpiecewisebyyearandsexdiagnosticDll = hivpiecewisebyyearandsexdiagnosticenv.SharedLibrary('libhivpiecewisebyyearandsexdiagnostic', libhivpiecewisebyyearandsexdiagnosticdllSrcFiles + stdobj + hsd_obj + sd_obj )
+#print "building libhivpiecewisebyyearandsexdiagnosticdll: " + str(libhivpiecewisebyyearandsexdiagnosticdll)
+
+# take libhivpiecewisebyyearandsexdiagnostic.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhivpiecewisebyyearandsexdiagnosticdllTarget = libhivpiecewisebyyearandsexdiagnosticDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = hivpiecewisebyyearandsexdiagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivpiecewisebyyearandsexdiagnosticdllTarget) + ": Generating MSVS" + hivpiecewisebyyearandsexdiagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    hivpiecewisebyyearandsexdiagnosticenv.MSVSProject(target = 'LibhivpiecewisebyyearandsexdiagnosticdllScons' + hivpiecewisebyyearandsexdiagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivpiecewisebyyearandsexdiagnosticdllSrcFiles,
+		    incs = libhivpiecewisebyyearandsexdiagnosticdllIncFiles,
+		    localincs = libhivpiecewisebyyearandsexdiagnosticdllLocalInc,
+ 		    buildtarget = libhivpiecewisebyyearandsexdiagnosticdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)
