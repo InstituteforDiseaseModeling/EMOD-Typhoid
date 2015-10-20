@@ -7,41 +7,41 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libhivartstagingbycd4diagnosticSConscriptdllSrcFiles = [
-                                                           "../../interventions/HIVArtStagingByCd4Diagnostic.cpp",
-                                                           "../../interventions/HIVArtStagingByCd4Diagnostic.cpp"
-                                                       ]
+libhivartstagingbycd4diagnosticdllSrcFiles = [
+                                                       "../../interventions/HIVARTStagingByCD4Diagnostic.cpp",
+                                                       "../../interventions/HIVARTStagingByCD4DiagnosticEModule.cpp"
+                                                   ]
 
-libhivartstagingbycd4diagnosticSConscriptdllIncFiles = [  "../../interventions/hivartstagingbycd4diagnosticSConscript.h" ]
-libhivartstagingbycd4diagnosticSConscriptdllLocalInc = [  "stdafx.h" ]
+libhivartstagingbycd4diagnosticdllIncFiles = [  "../../interventions/hivartstagingbycd4diagnostic.h" ]
+libhivartstagingbycd4diagnosticdllLocalInc = [  "stdafx.h" ]
 
-hivartstagingbycd4diagnosticSConscriptenv = env.Clone()
-abs_obj = hivartstagingbycd4diagnosticSConscriptenv.Object( "hasbcd_base", "../../interventions/HIVARTStagingAbstract.cpp" )
-hsd_obj = hivartstagingbycd4diagnosticSConscriptenv.Object( "hasbcd_hsd", "../../interventions/HIVSimpleDiagnostic.cpp" )
-sd_obj =  hivartstagingbycd4diagnosticSConscriptenv.Object( "hasbcd_sd", "../../interventions/Diagnostics.cpp" )
+hivartstagingbycd4diagnosticenv = env.Clone()
+abs_obj = hivartstagingbycd4diagnosticenv.Object( "hasbcd_base", "../../interventions/HIVARTStagingAbstract.cpp" )
+hsd_obj = hivartstagingbycd4diagnosticenv.Object( "hasbcd_hsd", "../../interventions/HIVSimpleDiagnostic.cpp" )
+sd_obj =  hivartstagingbycd4diagnosticenv.Object( "hasbcd_sd", "../../interventions/Diagnostics.cpp" )
 
-hivartstagingbycd4diagnosticSConscriptenv.Append(LIBS=['libgeneric_static'])
-hivartstagingbycd4diagnosticSConscriptenv.Append(LIBS=['libsti_static'])
-hivartstagingbycd4diagnosticSConscriptenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-hivartstagingbycd4diagnosticSConscriptenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+hivartstagingbycd4diagnosticenv.Append(LIBS=['libgeneric_static'])
+hivartstagingbycd4diagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+hivartstagingbycd4diagnosticenv.Append(LIBS=['libsti_static'])
+hivartstagingbycd4diagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-libhivartstagingbycd4diagnosticSConscriptDll = hivartstagingbycd4diagnosticSConscriptenv.SharedLibrary('libhivartstagingbycd4diagnosticSConscript', libhivartstagingbycd4diagnosticSConscriptdllSrcFiles + stdobj + abs_obj + hsd_obj + sd_obj )
-#print "building libhivartstagingbycd4diagnosticSConscriptdll: " + str(libhivartstagingbycd4diagnosticSConscriptdll)
+libhivartstagingbycd4diagnosticDll = hivartstagingbycd4diagnosticenv.SharedLibrary('libhivartstagingbycd4diagnostic', libhivartstagingbycd4diagnosticdllSrcFiles + stdobj + abs_obj + hsd_obj + sd_obj )
+#print "building libhivartstagingbycd4diagnosticdll: " + str(libhivartstagingbycd4diagnosticdll)
 
-# take libhivartstagingbycd4diagnosticSConscript.dll (exclude .lib, .exp) out to be the building target
+# take libhivartstagingbycd4diagnostic.dll (exclude .lib, .exp) out to be the building target
 # to match the number of building variant
-libhivartstagingbycd4diagnosticSConscriptdllTarget = libhivartstagingbycd4diagnosticSConscriptDll[0]
+libhivartstagingbycd4diagnosticdllTarget = libhivartstagingbycd4diagnosticDll[0]
 
 msvc = GetOption( "MSVC" )
 if msvc is not None and msvc != False and msvc != "":
 
-    bvar = hivartstagingbycd4diagnosticSConscriptenv['BUILD_VARIANT'] + '|x64'
-    print str(libhivartstagingbycd4diagnosticSConscriptdllTarget) + ": Generating MSVS" + hivartstagingbycd4diagnosticSConscriptenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    bvar = hivartstagingbycd4diagnosticenv['BUILD_VARIANT'] + '|x64'
+    print str(libhivartstagingbycd4diagnosticdllTarget) + ": Generating MSVS" + hivartstagingbycd4diagnosticenv['MSVS_VERSION'] + " project files for '%s'" % bvar
     
-    hivartstagingbycd4diagnosticSConscriptenv.MSVSProject(target = 'Libhivartstagingbycd4diagnosticSConscriptdllScons' + hivartstagingbycd4diagnosticSConscriptenv['MSVSPROJECTSUFFIX'],
-                    srcs = libhivartstagingbycd4diagnosticSConscriptdllSrcFiles,
-		    incs = libhivartstagingbycd4diagnosticSConscriptdllIncFiles,
-		    localincs = libhivartstagingbycd4diagnosticSConscriptdllLocalInc,
- 		    buildtarget = libhivartstagingbycd4diagnosticSConscriptdllTarget,
+    hivartstagingbycd4diagnosticenv.MSVSProject(target = 'Libhivartstagingbycd4diagnosticdllScons' + hivartstagingbycd4diagnosticenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhivartstagingbycd4diagnosticdllSrcFiles,
+		    incs = libhivartstagingbycd4diagnosticdllIncFiles,
+		    localincs = libhivartstagingbycd4diagnosticdllLocalInc,
+ 		    buildtarget = libhivartstagingbycd4diagnosticdllTarget,
                     auto_build_solution = 0,
                     variant = bvar)
