@@ -17,8 +17,6 @@ libstibarrierdllLocalInc = [  "stdafx.h" ]
 stibarrierenv = env.Clone()
 stibarrierenv.Append(LIBS=['libgeneric_static'])
 stibarrierenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-stibarrierenv.Append(LIBS=['libvector_static'])
-#stibarrierenv.Append(LIBS=['libmalaria_static'])
 stibarrierenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libstibarrierDll = stibarrierenv.SharedLibrary('libstibarrier', libstibarrierdllSrcFiles + stdobj)

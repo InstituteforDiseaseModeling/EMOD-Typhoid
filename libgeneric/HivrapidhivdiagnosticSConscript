@@ -20,8 +20,6 @@ sd_obj  = hivrapidhivdiagnosticenv.Object( "hrhd_sd",  "../../interventions/Diag
 
 hivrapidhivdiagnosticenv.Append(LIBS=['libgeneric_static'])
 hivrapidhivdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-hivrapidhivdiagnosticenv.Append(LIBS=['libvector_static'])
-#hivrapidhivdiagnosticenv.Append(LIBS=['libmalaria_static'])
 hivrapidhivdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libhivrapidhivdiagnosticDll = hivrapidhivdiagnosticenv.SharedLibrary('libhivrapidhivdiagnostic', libhivrapidhivdiagnosticdllSrcFiles + stdobj + sd_obj + hsd_obj )

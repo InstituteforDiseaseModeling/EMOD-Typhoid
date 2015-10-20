@@ -17,8 +17,6 @@ libartdropoutdllLocalInc = [  "stdafx.h" ]
 artdropoutenv = env.Clone()
 artdropoutenv.Append(LIBS=['libgeneric_static'])
 artdropoutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-artdropoutenv.Append(LIBS=['libvector_static'])
-#artdropoutenv.Append(LIBS=['libmalaria_static'])
 artdropoutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libartdropoutDll = artdropoutenv.SharedLibrary('libartdropout', libartdropoutdllSrcFiles + stdobj)

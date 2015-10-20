@@ -33,8 +33,6 @@ polioenv.Append( CPPDEFINES=["_POLIO_DLL"] )
 polioenv.Append(LIBS=['libgeneric_static'])
 polioenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 polioenv.Append(LIBS=['libenvironmental_static'])
-polioenv.Append(LIBS=['libvector_static'])
-polioenv.Append(LIBS=['libmalaria_static'])
 polioenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libpolioDll = polioenv.SharedLibrary('libpolio', libpoliodllSrcFiles + stdobj + genobj + nodeobj + svobj)

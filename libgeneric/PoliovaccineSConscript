@@ -20,8 +20,6 @@ polioobj = poliovaccineenv.Object("poliovaccine_intervention", "../../interventi
 
 poliovaccineenv.Append(LIBS=['libgeneric_static'])
 poliovaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-poliovaccineenv.Append(LIBS=['libvector_static'])
-poliovaccineenv.Append(LIBS=['libmalaria_static'])
 poliovaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libpoliovaccineDll = poliovaccineenv.SharedLibrary('libpoliovaccine', libpoliovaccinedllSrcFiles + stdobj + svobj + polioobj)

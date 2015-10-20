@@ -17,8 +17,6 @@ libpmtctdllLocalInc = [  "stdafx.h" ]
 pmtctenv = env.Clone()
 pmtctenv.Append(LIBS=['libgeneric_static'])
 pmtctenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-pmtctenv.Append(LIBS=['libvector_static'])
-#pmtctenv.Append(LIBS=['libmalaria_static'])
 pmtctenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libpmtctDll = pmtctenv.SharedLibrary('libpmtct', libpmtctdllSrcFiles + stdobj)

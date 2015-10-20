@@ -20,8 +20,6 @@ sd_obj =   hivrandomchoiceenv.Object( "hrc_sd",  "../../interventions/Diagnostic
 
 hivrandomchoiceenv.Append(LIBS=['libgeneric_static'])
 hivrandomchoiceenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-hivrandomchoiceenv.Append(LIBS=['libvector_static'])
-#hivrandomchoiceenv.Append(LIBS=['libmalaria_static'])
 hivrandomchoiceenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libhivrandomchoiceDll = hivrandomchoiceenv.SharedLibrary('libhivrandomchoice', libhivrandomchoicedllSrcFiles + stdobj + hsd_obj + sd_obj )

@@ -17,8 +17,6 @@ libmalecircumcisiondllLocalInc = [  "stdafx.h" ]
 malecircumcisionenv = env.Clone()
 malecircumcisionenv.Append(LIBS=['libgeneric_static'])
 malecircumcisionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-malecircumcisionenv.Append(LIBS=['libvector_static'])
-#malecircumcisionenv.Append(LIBS=['libmalaria_static'])
 malecircumcisionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libmalecircumcisionDll = malecircumcisionenv.SharedLibrary('libmalecircumcision', libmalecircumcisiondllSrcFiles + stdobj)

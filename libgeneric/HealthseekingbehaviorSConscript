@@ -20,8 +20,6 @@ hsbobj = healthseekingbehaviorenv.Object("hsbobj_healthseek","../../intervention
 
 healthseekingbehaviorenv.Append(LIBS=['libgeneric_static'])
 healthseekingbehaviorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-#healthseekingbehaviorenv.Append(LIBS=['libvector_static'])
-#healthseekingbehaviorenv.Append(LIBS=['libmalaria_static'])
 healthseekingbehaviorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libhealthseekingbehaviorDll = healthseekingbehaviorenv.SharedLibrary('libhealthseekingbehavior', libhealthseekingbehaviordllSrcFiles + stdobj + hsbobj)

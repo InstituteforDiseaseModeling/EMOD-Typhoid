@@ -18,8 +18,6 @@ nlhtiv_obj = healthtriggeredenv.Object( "nlhiv", "../../interventions/NodeLevelH
 healthtriggeredenv.Append( CPPDEFINES=["ENABLE_TB"] )
 healthtriggeredenv.Append(LIBS=['libgeneric_static'])
 healthtriggeredenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-#healthtriggeredenv.Append(LIBS=['libvector_static'])
-#healthtriggeredenv.Append(LIBS=['libmalaria_static'])
 healthtriggeredenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libhealthtriggeredDll = healthtriggeredenv.SharedLibrary('libhealthtriggered', libhealthtriggereddllSrcFiles + stdobj + nlhtiv_obj )

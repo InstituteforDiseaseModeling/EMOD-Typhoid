@@ -19,8 +19,6 @@ hsd_obj = hivpiecewisebyyearandsexdiagnosticenv.Object( "hsd_hpbyasd", "../../in
 sd_obj = hivpiecewisebyyearandsexdiagnosticenv.Object( "sd_hpbyasd", "../../interventions/Diagnostics.cpp" )
 hivpiecewisebyyearandsexdiagnosticenv.Append(LIBS=['libgeneric_static'])
 hivpiecewisebyyearandsexdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-hivpiecewisebyyearandsexdiagnosticenv.Append(LIBS=['libvector_static'])
-#hivpiecewisebyyearandsexdiagnosticenv.Append(LIBS=['libmalaria_static'])
 hivpiecewisebyyearandsexdiagnosticenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libhivpiecewisebyyearandsexdiagnosticDll = hivpiecewisebyyearandsexdiagnosticenv.SharedLibrary('libhivpiecewisebyyearandsexdiagnostic', libhivpiecewisebyyearandsexdiagnosticdllSrcFiles + stdobj + hsd_obj + sd_obj )

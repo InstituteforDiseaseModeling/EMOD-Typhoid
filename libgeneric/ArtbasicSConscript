@@ -17,8 +17,6 @@ libartbasicdllLocalInc = [  "stdafx.h" ]
 artbasicenv = env.Clone()
 artbasicenv.Append(LIBS=['libgeneric_static'])
 artbasicenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-artbasicenv.Append(LIBS=['libvector_static'])
-#artbasicenv.Append(LIBS=['libmalaria_static'])
 artbasicenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libartbasicDll = artbasicenv.SharedLibrary('libartbasic', libartbasicdllSrcFiles + stdobj)

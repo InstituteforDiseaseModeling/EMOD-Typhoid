@@ -18,8 +18,6 @@ stiispostdebutenv = env.Clone()
 diag_obj = stiispostdebutenv .Object( "diag_sipd", "../../interventions/Diagnostics.cpp" )
 stiispostdebutenv.Append(LIBS=['libgeneric_static'])
 stiispostdebutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-stiispostdebutenv.Append(LIBS=['libvector_static'])
-#stiispostdebutenv.Append(LIBS=['libmalaria_static'])
 stiispostdebutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libstiispostdebutDll = stiispostdebutenv.SharedLibrary('libstiispostdebut', libstiispostdebutdllSrcFiles + stdobj + diag_obj )
