@@ -114,6 +114,9 @@ namespace Kernel
 
     void Node::VerifyPropertyDefinedInDemographics( const std::string& rKey, const std::string& rVal )
     {
+#if defined(_DLLS_)
+        return;
+#endif
         if( base_distribs.find( rKey ) != base_distribs.end() )
         {
             bool found = false;

@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libresistancediagnostics.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libresistancediagnosticsdllSrcFiles = [ "../../interventions/ResistanceDiagnostics.cpp",
+                                       "../../interventions/ResistanceDiagnosticsEModule.cpp"
+                                     ]
+
+libresistancediagnosticsdllLocalInc = [  "stdafx.h" ]
+
+resistancediagnosticsenv = env.Clone()
+diag_obj = resistancediagnosticsenv.Object( "diag_rd", "../../interventions/Diagnostics.cpp" )
+dtn_obj =  resistancediagnosticsenv.Object( "dtn_rd", "../../interventions/DiagnosticsTreatNeg.cpp" )
+resistancediagnosticsenv .Append( CPPDEFINES=["ENABLE_TB" ] )
+resistancediagnosticsenv.Append(LIBS=['libgeneric_static'])
+resistancediagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+resistancediagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libresistancediagnosticsDll = resistancediagnosticsenv.SharedLibrary('libresistancediagnostics', libresistancediagnosticsdllSrcFiles + stdobj + diag_obj + dtn_obj )
+#print "building libresistancediagnosticsdll: " + str(libresistancediagnosticsdll)
+
+# take libresistancediagnostics.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libresistancediagnosticsdllTarget = libresistancediagnosticsDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = resistancediagnosticsenv['BUILD_VARIANT'] + '|x64'
+    print str(libresistancediagnosticsdllTarget) + ": Generating MSVS" + resistancediagnosticsenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    resistancediagnosticsenv.MSVSProject(target = 'LibresistancediagnosticsdllScons' + resistancediagnosticsenv['MSVSPROJECTSUFFIX'],
+                    srcs = libresistancediagnosticsdllSrcFiles,
+		    incs = libresistancediagnosticsdllIncFiles,
+		    localincs = libresistancediagnosticsdllLocalInc,
+ 		    buildtarget = libresistancediagnosticsdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

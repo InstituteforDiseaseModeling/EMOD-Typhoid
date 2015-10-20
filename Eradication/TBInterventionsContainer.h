@@ -43,7 +43,7 @@ namespace Kernel
     struct ITBDrugEffects : public ISupports
     {
         virtual TBDrugEffectsMap_t GetDrugEffectsMap() = 0;
-        virtual TBDrugTypeParameters::tTBDTPMap& GetTBdtParams() = 0;
+        //virtual TBDrugTypeParameters::tTBDTPMap& GetTBdtParams() = 0;
         virtual ~ITBDrugEffects() { }
     };
 
@@ -94,8 +94,6 @@ namespace Kernel
         virtual void UpdateTreatmentStatus( IndividualEventTriggerType::Enum new_treatment_status );
         
         virtual void Update(float dt); // hook to update interventions if they need it
-
-        virtual TBDrugTypeParameters::tTBDTPMap& GetTBdtParams();
 
         //functions in the ITBInterventionsContainer
         virtual int GetNumTBDrugsActive(); //this function needs to be non-const so it can call GetInterventionsByType

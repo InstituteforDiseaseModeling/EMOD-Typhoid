@@ -16,8 +16,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char * _module = "TBDTP";
 
-std::map< std::string, const Kernel::TBDrugTypeParameters* > Kernel::TBDrugTypeParameters::_tbdtMap;
-
 namespace Kernel
 {
     TBDrugTypeParameters::TBDrugTypeParameters(
@@ -52,7 +50,6 @@ namespace Kernel
         {
             params->Configure( Configuration::CopyFromElement( (*EnvPtr->Config)["TB_Drug_Params"][tb_drug_name.c_str()] ) );
         }
-        _tbdtMap[ tb_drug_name ] = params;
         LOG_DEBUG( "END CreateTBDrugTypeParameters\n" );
         return params;
 

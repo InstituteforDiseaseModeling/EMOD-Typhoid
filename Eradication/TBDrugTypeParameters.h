@@ -24,8 +24,7 @@ namespace Kernel {
         virtual ~TBDrugTypeParameters();
         bool Configure( const ::Configuration *json );
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        typedef map< std::string, const TBDrugTypeParameters* > tTBDTPMap;
-        static tTBDTPMap _tbdtMap;
+        //typedef map< std::string, const TBDrugTypeParameters* > tTBDTPMap;
 
 
     protected:

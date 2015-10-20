@@ -63,6 +63,19 @@ namespace Kernel
         return positiveTest;
 
     }
-
-
 }
+
+#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+BOOST_CLASS_EXPORT(Kernel::ActiveDiagnostic)
+
+namespace Kernel {
+    template<class Archive>
+    void serialize(Archive &ar, ActiveDiagnostic& obj, const unsigned int v)
+    {
+
+        boost::serialization::void_cast_register<ActiveDiagnostic, IDistributableIntervention>();
+
+        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+    }
+}
+#endif

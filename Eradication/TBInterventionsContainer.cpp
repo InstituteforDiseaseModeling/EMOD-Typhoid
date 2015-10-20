@@ -255,12 +255,6 @@ namespace Kernel
     { 
         return TB_drug_effects; 
     }
-    
-    TBDrugTypeParameters::tTBDTPMap& TBInterventionsContainer::GetTBdtParams()    
-    { 
-        return TBDrugTypeParameters::_tbdtMap;   
-    }
-
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

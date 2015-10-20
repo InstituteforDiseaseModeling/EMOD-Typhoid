@@ -11,13 +11,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
-#include "SmearDiagnostics.h"
-#include "Drugs.h"
+#include "Diagnostics.h"
+#include "ActiveDiagnostics.h"
 #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
 
-static const char * _module = "SmearDiagnostic";
+static const char * _module = "ActiveDiagnostic";
+
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
 #endif
@@ -46,7 +47,7 @@ RegisterWithFactory(
         _module,
         []()
         {
-            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::SmearDiagnostic());
+            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::ActiveDiagnostic());
         }
     );
     return true;

@@ -134,12 +134,15 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
 
     # TB
     if env['DiseaseDll'] == "TB":
+        SConscript( 'libgeneric/ActivediagnosticsSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/AntitbdrugSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/AntitbpropdepdrugSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/BCGVaccineSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/DiagnosticstreatnegSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HealthSeekingBehaviorUpdateSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HealthSeekingBehaviorUpdateableSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/NodeLevelHealthTriggeredIVScaleUpSwitchSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/ResistancediagnosticsSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/SmearDiagnosticsSConscript', variant_dir=dll_op_path )
 
     if env['DiseaseDll'] == "STI":

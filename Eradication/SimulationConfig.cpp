@@ -375,7 +375,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         }
     }
 
-#if !defined(_DLLS_)
 #ifdef ENABLE_TB
     if( sim_type == SimType::TB_SIM )
     {
@@ -392,7 +391,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif
         }
     }
-#endif
 #endif
 
 #ifdef ENABLE_TB
@@ -524,7 +522,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     }
 
 #ifdef ENABLE_TB
-#if !defined(_DLLS_)
+//#if !defined(_DLLS_)
     //this section needs to be below the JsonConfigurable::Configure
     if( sim_type == SimType::TB_SIM )
     {    
@@ -533,14 +531,16 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             LOG_INFO("No custom drugs in config file!\n");
         }
 
+        LOG_DEBUG_F("Reading in drugs \n");
         for (const auto& tb_drug_name : tb_drug_names_for_this_sim)
         {
-            LOG_DEBUG_F("Reading in drugs \n");
             LOG_DEBUG_F("Reading in drug %s \n", tb_drug_name.c_str());
-            TBDrugTypeParameters::CreateTBDrugTypeParameters(tb_drug_name);
+            auto * tbdtp = TBDrugTypeParameters::CreateTBDrugTypeParameters(tb_drug_name);
+            release_assert( tbdtp  );
+            TBDrugMap[ tb_drug_name ] = tbdtp;
         }
     }
-#endif
+//#endif
 #endif
 
     if ( sim_type == SimType::MALARIA_SIM )

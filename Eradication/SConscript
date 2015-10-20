@@ -2,6 +2,7 @@
 # This Python script, SConscript, invoked by the SConscript in the upper directory,
 #
 # 1. builds main DTK core files and generate Eradication program
+import pdb
 
 Import('env')
 
@@ -19,15 +20,17 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
     #env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
     #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
     if env['DiseaseDll'] != "Vector" and env['DiseaseDll'] != "Malaria" and env['DiseaseDll'] != "Environmental":
-        eradenv.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        eradenv.Append( CPPDEFINES=["DISABLE_VECTOR"] )
     elif env['DiseaseDll'] != "Generic":
-        eradenv.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+        eradenv.Append( CPPDEFINES=["DISABLE_CLIMATE"] )
     if env['DiseaseDll'] != "Malaria":
-        eradenv.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+        eradenv.Append( CPPDEFINES=["DISABLE_MALARIA"] )
     if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":
-        eradenv.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+        eradenv.Append( CPPDEFINES=["ENABLE_POLIO"] )
     if env['DiseaseDll'] != "HIV":
-        eradenv.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        eradenv.Append( CPPDEFINES=["DISABLE_HIV"] )
+    if env['DiseaseDll'] == "TB":
+        eradenv.Append( CPPDEFINES=["ENABLE_TB"] )
 
     #eradenv.Append(LIBS=['libvector_static'])
     #eradenv.Append(LIBS=['libmalaria_static'])

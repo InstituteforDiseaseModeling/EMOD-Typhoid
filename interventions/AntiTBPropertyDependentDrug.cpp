@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEventContext.h"
 #include "TBContexts.h"
 #include "Debug.h"                        // for release-assert
-#include "TBInterventionsContainer.h"
+#include "SimulationConfig.h"
 
 static const char* _module = "AntiTBPropDepDrug";
 
@@ -97,12 +97,7 @@ namespace Kernel
         
         tProperties* pProp = ivc->GetParent()->GetEventContext()->GetProperties();
 
-        ITBDrugEffects * tbivc = NULL;
-        if( ivc->QueryInterface( GET_IID(ITBDrugEffects), (void**)&tbivc ) != s_OK )
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "ivc", "ITBDrugEffects", "IIndividualHumanInterventionsContext" );
-        };
-        auto tbdtMap = tbivc->GetTBdtParams();
+        auto tbdtMap = GET_CONFIGURABLE(SimulationConfig)->TBDrugMap;
         for (auto& pair : (*pProp))
         {
             const std::string& propkey = pair.first;
@@ -124,7 +119,6 @@ namespace Kernel
                 
                 current_reducedtransmit = 1.0;
 
-
                 std::string all_cond_drug_type = conditional_drug_type;
                 //Auto-adjust drug parameters ONLY at configure for MDR evolution OR for Retx (drug sensitive only), read in the configured params
                 if (enable_state_specific_tx == true)
@@ -145,8 +139,6 @@ namespace Kernel
                         }
                     }
                 }
-
-
 
                 LOG_DEBUG_F("Read in the tbdt map, the drug type is %s \n", all_cond_drug_type.c_str());
                 if (tbdtMap[all_cond_drug_type] == NULL)

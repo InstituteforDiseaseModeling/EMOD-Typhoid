@@ -1,0 +1,41 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libactivediagnostics.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libactivediagnosticsdllSrcFiles = [ "../../interventions/ActiveDiagnostics.cpp",
+                                       "../../interventions/ActiveDiagnosticsEModule.cpp"
+                                     ]
+
+libactivediagnosticsdllLocalInc = [  "stdafx.h" ]
+
+activediagnosticsenv = env.Clone()
+diag_obj = activediagnosticsenv.Object( "diag_ad", "../../interventions/Diagnostics.cpp" )
+activediagnosticsenv .Append( CPPDEFINES=["ENABLE_TB" ] )
+activediagnosticsenv.Append(LIBS=['libgeneric_static'])
+activediagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+activediagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libactivediagnosticsDll = activediagnosticsenv.SharedLibrary('libactivediagnostics', libactivediagnosticsdllSrcFiles + stdobj + diag_obj )
+
+# take libactivediagnostics.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libactivediagnosticsdllTarget = libactivediagnosticsDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = activediagnosticsenv['BUILD_VARIANT'] + '|x64'
+    print str(libactivediagnosticsdllTarget) + ": Generating MSVS" + activediagnosticsenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    activediagnosticsenv.MSVSProject(target = 'LibactivediagnosticsdllScons' + activediagnosticsenv['MSVSPROJECTSUFFIX'],
+                    srcs = libactivediagnosticsdllSrcFiles,
+		    incs = libactivediagnosticsdllIncFiles,
+		    localincs = libactivediagnosticsdllLocalInc,
+ 		    buildtarget = libactivediagnosticsdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

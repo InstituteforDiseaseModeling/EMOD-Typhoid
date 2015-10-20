@@ -54,6 +54,7 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/StandardEventCoordinator.cpp",
                        "../Eradication/CoverageByNodeEventCoordinator.cpp",
                        "../Eradication/CalendarEventCoordinator.cpp",
+                       "../Eradication/GroupEventCoordinator.cpp",
                        "../Eradication/StrainIdentity.cpp",
                        "../Eradication/StrainAwareTransmissionGroups.cpp",
                        "../Eradication/Susceptibility.cpp",
@@ -65,7 +66,8 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../interventions/WaningEffectFactory.cpp",
                        "../Eradication/VectorTransmissionGroups.cpp",
                        "../Eradication/VectorSpeciesParameters.cpp",
-                       "../Eradication/MalariaDrugTypeParameters.cpp"
+                       "../Eradication/MalariaDrugTypeParameters.cpp",
+                       "../Eradication/TBDrugTypeParameters.cpp"
                        ]
 
 libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]

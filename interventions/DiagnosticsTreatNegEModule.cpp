@@ -17,7 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma warning(disable : 4996)
 
-static const char * _module = "SimpleDiagnostic";
+static const char * _module = "DiagnosticTreatNeg";
 
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
@@ -47,7 +47,7 @@ RegisterWithFactory(
         _module,
         []()
         {
-            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::SimpleDiagnostic());
+            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::DiagnosticTreatNeg());
         }
     );
     return true;

@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libdiagnosticstreatneg.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libdiagnosticstreatnegdllSrcFiles = [ "../../interventions/DiagnosticsTreatNeg.cpp",
+                                      "../../interventions/DiagnosticsTreatNegEModule.cpp"
+                                    ]
+
+libdiagnosticstreatnegdllLocalInc = [  "stdafx.h" ]
+
+diagnosticstreatnegenv = env.Clone()
+diag_obj = diagnosticstreatnegenv.Object( "diag_dtn", "../../interventions/Diagnostics.cpp" )
+diagnosticstreatnegenv .Append( CPPDEFINES=["ENABLE_TB" ] )
+diagnosticstreatnegenv.Append(LIBS=['libgeneric_static'])
+diagnosticstreatnegenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+diagnosticstreatnegenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libdiagnosticstreatnegDll = diagnosticstreatnegenv.SharedLibrary('libdiagnosticstreatneg', libdiagnosticstreatnegdllSrcFiles + stdobj + diag_obj )
+#print "building libdiagnosticstreatnegdll: " + str(libdiagnosticstreatnegdll)
+
+# take libdiagnosticstreatneg.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libdiagnosticstreatnegdllTarget = libdiagnosticstreatnegDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = diagnosticstreatnegenv['BUILD_VARIANT'] + '|x64'
+    print str(libdiagnosticstreatnegdllTarget) + ": Generating MSVS" + diagnosticstreatnegenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    diagnosticstreatnegenv.MSVSProject(target = 'LibdiagnosticstreatnegdllScons' + diagnosticstreatnegenv['MSVSPROJECTSUFFIX'],
+                    srcs = libdiagnosticstreatnegdllSrcFiles,
+		    incs = libdiagnosticstreatnegdllIncFiles,
+		    localincs = libdiagnosticstreatnegdllLocalInc,
+ 		    buildtarget = libdiagnosticstreatnegdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)
