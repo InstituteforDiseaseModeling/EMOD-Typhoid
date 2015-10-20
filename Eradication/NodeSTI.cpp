@@ -133,7 +133,8 @@ namespace Kernel
 
     void NodeSTI::SetupIntranodeTransmission()
     {
-        RelationshipGroups * relNodePools = dynamic_cast<RelationshipGroups*>(TransmissionGroupsFactory::CreateNodeGroups(TransmissionGroupType::RelationshipGroups));
+        //RelationshipGroups * relNodePools = dynamic_cast<RelationshipGroups*>(TransmissionGroupsFactory::CreateNodeGroups(TransmissionGroupType::RelationshipGroups));
+        RelationshipGroups * relNodePools = _new_ RelationshipGroups;
         relNodePools->SetParent( this );
         transmissionGroups = relNodePools;
         RouteToContagionDecayMap_t decayMap;

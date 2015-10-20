@@ -1,0 +1,67 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libsti_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libstiSrcFiles = [ 
+                          "../Eradication/IndividualSTI.cpp",
+                          "../Eradication/InfectionSTI.cpp",
+                          "../Eradication/NodeSTI.cpp",
+                          "../Eradication/ReportSTI.cpp",
+                          "../Eradication/SimulationSTI.cpp",
+                          "../Eradication/SusceptibilitySTI.cpp",
+                           "../Eradication/Assortivity.cpp",
+                           "../Eradication/AssortivityHIV.cpp",
+                           "../Eradication/AssortivityFactory.cpp",
+                           "../Eradication/STIEventCoordinator.cpp",
+                           "../Eradication/STIInterventionsContainer.cpp",
+                           "../Eradication/SusceptibilitySTI.cpp",
+                           "../Eradication/SimulationSTI.cpp",
+                           "../Eradication/BehaviorPfa.cpp",
+                           "../Eradication/PairFormationParametersImpl.cpp",
+                           "../Eradication/PairFormationParamsFactory.cpp",
+                           "../Eradication/PairFormationStatsFactory.cpp",
+                           "../Eradication/PairFormationStatsImpl.cpp",
+                           "../Eradication/PfaFactory.cpp",
+                           "../Eradication/RateTableFactory.cpp",
+                           "../Eradication/RateTableImpl.cpp",
+                           "../Eradication/Relationship.cpp",
+                           "../Eradication/RelationshipGroups.cpp",
+                           "../Eradication/RelationshipManager.cpp",
+                           "../Eradication/RelationshipManagerFactory.cpp",
+                           "../Eradication/RelationshipReporting.cpp",
+                           "../Eradication/SocietyFactory.cpp",
+                           "../Eradication/SocietyImpl.cpp",
+                           "../Eradication/StiObjectFactory.cpp",
+                           "../Eradication/StiTransmissionReporter.cpp",
+                           "../Eradication/STINetworkParameters.cpp",
+                           "../Eradication/StiRelationshipEndReporter.cpp",
+                           "../Eradication/StiRelationshipStartReporter.cpp",
+                           "../Eradication/StiRelationshipConsummatedReporter.cpp",
+                           "../Eradication/FlowControllerFactory.cpp",
+                           "../Eradication/FlowControllerImpl.cpp"
+                    ]
+
+libstiIncFiles = [  "NodeSTI.h" ]
+libstiLocalInc = [  "stdafx.h" ]
+
+libsti_static = env.StaticLibrary('libsti_static', libstiSrcFiles+stdobj)
+print "building libsti_static: " + str(libsti_static)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libsti_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibstiStaticScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libstiSrcFiles,
+                    incs = libstiIncFiles,
+                    localincs = libstiLocalInc,
+                    buildtarget = libsti_static,
+                    auto_build_solution = 0,
+                    variant = bvar)

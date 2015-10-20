@@ -26,6 +26,7 @@ extern void howlong(
 
 namespace Kernel {
 
+#ifndef DISABLE_HIV
     //IContagionPopulation
     //IContagionProbabilities
     BEGIN_QUERY_INTERFACE_BODY(DiscreteContagionPopulation)
@@ -459,4 +460,5 @@ namespace Kernel {
             _tail %= GRP_LOG_COUNT;
         }
     }
+#endif
 }

@@ -36,14 +36,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>scons --jobs=1 --Debug --DllDisease=Generic --silent</NMakeBuildCommandLine>
-    <NMakeOutput>DTK_VS_SCons_Integrated.exe</NMakeOutput>
+    <NMakeBuildCommandLine>scons --jobs=4 --Debug --DllDisease=Generic --silent</NMakeBuildCommandLine>
+    <NMakeOutput>Eradication.exe</NMakeOutput>
     <NMakeCleanCommandLine>scons -c</NMakeCleanCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeBuildCommandLine>scons --jobs=4</NMakeBuildCommandLine>
-    <NMakeOutput>DTK_VS_SCons_Integrated.exe</NMakeOutput>
+    <NMakeBuildCommandLine>scons --jobs=4 --DllDisease=Generic --silent</NMakeBuildCommandLine>
+    <NMakeOutput>Eradication.exe</NMakeOutput>
     <NMakeCleanCommandLine>scons -c</NMakeCleanCommandLine>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>

@@ -87,18 +87,20 @@ elif env[ 'DiseaseDll' ] != "":
         SConscript( 'libgeneric/MalariaSConscript', variant_dir="Malaria/disease_plugins" )
     elif dtype == 'Environmental':
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
-        SConscript( 'libgeneric/EnvironmentalSConscript', variant_dir="Generic/disease_plugins" )
+        SConscript( 'libgeneric/EnvironmentalSConscript', variant_dir="Environmental/disease_plugins" )
     elif dtype == 'Polio':
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
-        SConscript( 'libgeneric/PolioSConscript', variant_dir="Generic/disease_plugins" )
+        SConscript( 'libgeneric/PolioSConscript', variant_dir="Polio/disease_plugins" )
     elif dtype == 'TB':
         SConscript( 'libgeneric/TBSConscriptStatic' )
-        SConscript( 'libgeneric/TBSConscript', variant_dir="Generic/disease_plugins" )
+        SConscript( 'libgeneric/TBSConscript', variant_dir="TB/disease_plugins" )
     elif dtype == 'STI':
-        SConscript( 'libgeneric/STISConscript', variant_dir="Generic/disease_plugins" )
+        SConscript( 'libgeneric/STISConscriptStatic' )
+        SConscript( 'libgeneric/STISConscript', variant_dir="STI/disease_plugins" )
     elif dtype == 'HIV':
         SConscript( 'libgeneric/STISConscriptStatic' )
-        SConscript( 'libgeneric/HIVSConscript', variant_dir="Generic/disease_plugins" )
+        SConscript( 'libgeneric/HIVSConscriptStatic' )
+        SConscript( 'libgeneric/HIVSConscript', variant_dir="HIV/disease_plugins" )
     else:
         print "Unspecified or unknown disease type: " + dtype
 

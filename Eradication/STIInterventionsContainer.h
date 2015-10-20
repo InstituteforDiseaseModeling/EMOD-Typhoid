@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISTIInterventionsContainer.h"
 #include "Interventions.h"
 #include "InterventionsContainer.h"
-#include "MaleCircumcision.h" // for ICircumcision interface
+//#include "MaleCircumcision.h" // for ICircumcision interface
 #include "SimpleTypemapRegistration.h"
 #include "IRelationship.h"
 

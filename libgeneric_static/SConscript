@@ -53,7 +53,6 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/StrainAwareTransmissionGroups.cpp",
                        "../Eradication/Susceptibility.cpp",
                        "../Interventions/Drugs.cpp",
-                       "../Eradication/VectorTransmissionGroups.cpp",
                        "../Eradication/VectorSpeciesParameters.cpp",
                        "../interventions/WaningEffectBox.cpp",
                        "../interventions/WaningEffectBoxExponential.cpp",
@@ -91,11 +90,15 @@ if msvc is not None and msvc != False and msvc != "":
 
     bvar = env['BUILD_VARIANT'] + '|x64'
     print str(libgeneric_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
-    
-    env.MSVSProject(target = 'LibgenericStaticScons' + env['MSVSPROJECTSUFFIX'],
-                    srcs = libgenericSrcFiles,
-		    incs = libgenericIncFiles,
-		    localincs = libgenericLocalInc,
- 		    buildtarget = libgeneric_static,
-                    auto_build_solution = 0,
-                    variant = bvar)
+   
+    env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
+    env['PDB']='${TARGET.base}.pdb'
+    env.MSVSProject(
+        target = 'LibgenericStaticScons' + env['MSVSPROJECTSUFFIX'],
+        srcs = libgenericSrcFiles,
+		incs = libgenericIncFiles,
+		localincs = libgenericLocalInc,
+ 		buildtarget = libgeneric_static,
+        auto_build_solution = 0,
+        variant = bvar
+    )

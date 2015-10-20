@@ -1,0 +1,48 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libsti.dll to handle sti disease based on libsti_static.lib
+
+Import('env')
+
+if env['AllDlls'] or env['DiseaseDll'] == "STI":
+
+    stdobj = env.Object("stdafx.cpp")
+
+    libstidllSrcFiles = [ 
+                          "../../Eradication/SimulationSTIExport.cpp"
+                          ]
+
+    libstidllIncFiles = [  "SimulationSTI.h" ]
+    libstidllLocalInc = [  "stdafx.h" ]
+
+    stienv = env.Clone()
+
+    genobj = stienv.Object("libgenobj_sti", "../../Eradication/LibGenericClasses.cpp")
+
+    stienv.Append(LIBS=['libgeneric_static'])
+    stienv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+    stienv.Append(LIBS=['libsti_static'])
+    stienv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+    libstidll = stienv.SharedLibrary('libsti', libstidllSrcFiles + stdobj + genobj)
+
+    #stienv.Depends(libstidll, '$BUILD_DIR/libsti_static/libsti_static.lib')
+
+    # take libstidll.dll (exclude .lib, .exp) out to be the building target
+    # to match the number of building variant
+    libstidllTarget = libstidll[0]
+
+    msvc = GetOption( "MSVC" )
+    if msvc is not None and msvc != False and msvc != "":
+
+        bvar = stienv['BUILD_VARIANT'] + '|x64'
+        print str(libstidllTarget) + ": Generating MSVS" + stienv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+        stienv.MSVSProject(target = 'LibSTIdllScons' + stienv['MSVSPROJECTSUFFIX'],
+                        srcs = libstidllSrcFiles,
+                        incs = libstidllIncFiles,
+                        localincs = libstidllLocalInc,
+                        buildtarget = libstidllTarget,
+                        auto_build_solution = 0,
+                        variant = bvar)

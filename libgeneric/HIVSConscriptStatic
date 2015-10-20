@@ -1,0 +1,50 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libhiv_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhivSrcFiles = [ 
+                          "../Eradication/IndividualHIV.cpp",
+                          "../Eradication/InfectionHIV.cpp",
+                          "../Eradication/NodeHIV.cpp",
+                          "../Eradication/ReportHIV.cpp",
+                          "../Eradication/SimulationHIV.cpp",
+                          "../Eradication/SusceptibilityHIV.cpp",
+                          "../Eradication/FerrandAgeDependentDistribution.cpp",
+                          "../Eradication/HIVInterventionsContainer.cpp",
+                          "../Eradication/HivObjectFactory.cpp",
+                          "../Eradication/HIVRelationshipStartReporter.cpp",
+                          "../Eradication/HIVReportEventRecorder.cpp",
+                          "../Eradication/HIVTransmissionReporter.cpp",
+                          "../Eradication/ReportHIVInfection.cpp",
+                          "../Eradication/ReportHIVByAgeAndGender.cpp",
+                          "../Eradication/ReportHIVMortalityEvents.cpp",
+                          "../Eradication/ReportHIVART.cpp",
+                          "../interventions/NodeLevelHealthTriggeredIV.cpp"
+                    ]
+
+nlhti_obj = env.Object("hivsim_nlhti", "../interventions/NodeLevelHealthTriggeredIV.cpp")
+
+libhivIncFiles = [  "NodeHIV.h" ]
+libhivLocalInc = [  "stdafx.h" ]
+
+libhiv_static = env.StaticLibrary('libhiv_static', libhivSrcFiles+stdobj+nlhti_obj )
+print "building libhiv_static: " + str(libhiv_static)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libhiv_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibhivStaticScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libhivSrcFiles,
+                    incs = libhivIncFiles,
+                    localincs = libhivLocalInc,
+                    buildtarget = libhiv_static,
+                    auto_build_solution = 0,
+                    variant = bvar)

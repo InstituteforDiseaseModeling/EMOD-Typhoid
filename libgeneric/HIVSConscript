@@ -1,0 +1,49 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libhiv.dll to handle hiv disease based on libhiv_static.lib
+
+Import('env')
+
+if env['AllDlls'] or env['DiseaseDll'] == "HIV":
+
+    stdobj = env.Object("stdafx.cpp")
+
+    libhivdllSrcFiles = [ 
+                          "../../Eradication/SimulationHIVExport.cpp"
+                          ]
+
+    libhivdllIncFiles = [  "SimulationHIV.h" ]
+    libhivdllLocalInc = [  "stdafx.h" ]
+
+    hivenv = env.Clone()
+
+    genobj = hivenv.Object("libgenobj_hiv", "../../Eradication/LibGenericClasses.cpp")
+
+    hivenv.Append(LIBS=['libgeneric_static'])
+    hivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+    hivenv.Append(LIBS=['libsti_static'])
+    hivenv.Append(LIBS=['libhiv_static'])
+    hivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+    libhivdll = hivenv.SharedLibrary('libhiv', libhivdllSrcFiles + stdobj + genobj)
+
+    #hivenv.Depends(libhivdll, '$BUILD_DIR/libhiv_static/libhiv_static.lib')
+
+    # take libhivdll.dll (exclude .lib, .exp) out to be the building target
+    # to match the number of building variant
+    libhivdllTarget = libhivdll[0]
+
+    msvc = GetOption( "MSVC" )
+    if msvc is not None and msvc != False and msvc != "":
+
+        bvar = hivenv['BUILD_VARIANT'] + '|x64'
+        print str(libhivdllTarget) + ": Generating MSVS" + hivenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+        hivenv.MSVSProject(target = 'LibHIVdllScons' + hivenv['MSVSPROJECTSUFFIX'],
+                        srcs = libhivdllSrcFiles,
+                        incs = libhivdllIncFiles,
+                        localincs = libhivdllLocalInc,
+                        buildtarget = libhivdllTarget,
+                        auto_build_solution = 0,
+                        variant = bvar)

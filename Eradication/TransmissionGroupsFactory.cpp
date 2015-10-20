@@ -39,9 +39,11 @@ namespace Kernel
             break;
 #endif
 #ifndef DISABLE_HIV
+#ifndef _DLLS_
         case TransmissionGroupType::RelationshipGroups:
             groups = (ITransmissionGroups*) _new_ RelationshipGroups;
             break;
+#endif
 #endif
         default:
             throw BadEnumInSwitchStatementException(__FILE__, __LINE__, __FUNCTION__, "Unknown transmission groups type.");
