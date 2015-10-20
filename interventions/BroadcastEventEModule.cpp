@@ -11,12 +11,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
-#include "HIVSigmoidByYearAndsexDiagnostic.h"
+#include "BroadcastEvent.h"
 #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
 
-static const char * _module = "HIVSigmoidByYearAndSexDiagnostic";
+static const char * _module = "BroadcastEvent";
 
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
@@ -46,7 +46,7 @@ RegisterWithFactory(
         _module,
         []()
         {
-            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::HIVSigmoidByYearAndSexDiagnostic());
+            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::BroadcastEvent());
         }
     );
 

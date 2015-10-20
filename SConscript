@@ -145,7 +145,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/ResistancediagnosticsSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/SmearDiagnosticsSConscript', variant_dir=dll_op_path )
 
-    if env['DiseaseDll'] == "STI":
+    if env['DiseaseDll'] == "STI" or env['DiseaseDll'] == "HIV":
         SConscript( 'libgeneric/StibarrierSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/StiispostdebutSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/ModifysticoinfectionstatusSConscript', variant_dir=dll_op_path ) 
@@ -154,6 +154,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
     if env['DiseaseDll'] == "HIV":
         SConscript( 'libgeneric/ArtbasicSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/ArtdropoutSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/BroadcasteventSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/Cd4diagnosticSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/AgediagnosticSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/Hivartstagingbycd4diagnosticSConscript', variant_dir=dll_op_path )

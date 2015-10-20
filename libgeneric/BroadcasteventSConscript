@@ -1,0 +1,41 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libbroadcasteventdllSrcFiles = [ "../../interventions/BroadcastEvent.cpp",
+                                 "../../interventions/BroadcastEventEModule.cpp"
+                               ]
+
+libbroadcasteventdllIncFiles = [  "../../interventions/broadcastevent.h" ]
+libbroadcasteventdllLocalInc = [  "stdafx.h" ]
+
+broadcasteventenv = env.Clone()
+broadcasteventenv.Append(LIBS=['libgeneric_static'])
+broadcasteventenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+broadcasteventenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libbroadcasteventDll = broadcasteventenv.SharedLibrary('libbroadcastevent', libbroadcasteventdllSrcFiles + stdobj)
+#print "building libbroadcasteventdll: " + str(libbroadcasteventdll)
+
+# take libbroadcastevent.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libbroadcasteventdllTarget = libbroadcasteventDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = broadcasteventenv['BUILD_VARIANT'] + '|x64'
+    print str(libbroadcasteventdllTarget) + ": Generating MSVS" + broadcasteventenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    broadcasteventenv.MSVSProject(target = 'LibbroadcasteventdllScons' + broadcasteventenv['MSVSPROJECTSUFFIX'],
+                    srcs = libbroadcasteventdllSrcFiles,
+		    incs = libbroadcasteventdllIncFiles,
+		    localincs = libbroadcasteventdllLocalInc,
+ 		    buildtarget = libbroadcasteventdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)
