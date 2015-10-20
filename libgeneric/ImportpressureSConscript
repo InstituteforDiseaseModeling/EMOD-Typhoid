@@ -7,7 +7,7 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libimportpressuredllSrcFiles = [ "../interventions/Outbreak.cpp",
+libimportpressuredllSrcFiles = [ 
                                  "../interventions/ImportPressure.cpp",
                                  "../interventions/ImportPressureEModule.cpp"
                                     ]
@@ -16,12 +16,13 @@ libimportpressuredllIncFiles = [  "../interventions/ImportPressure.h" ]
 libimportpressuredllLocalInc = [  "stdafx.h" ]
 
 importpressureenv = env.Clone()
+ob_ip = importpressureenv.Object( "ip_ob", "../interventions/Outbreak.cpp" )
 importpressureenv.Append( CPPDEFINES=["ENABLE_TB"] )
 importpressureenv.Append(LIBS=['libgeneric_static'])
 importpressureenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 importpressureenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-libimportpressureDll = importpressureenv.SharedLibrary('libimportpressure', libimportpressuredllSrcFiles + stdobj)
+libimportpressureDll = importpressureenv.SharedLibrary('libimportpressure', libimportpressuredllSrcFiles + stdobj + ob_ip)
 #print "building libimportpressuredll: " + str(libimportpressuredll)
 
 # take libimportpressure.dll (exclude .lib, .exp) out to be the building target

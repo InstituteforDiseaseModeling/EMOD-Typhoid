@@ -276,7 +276,6 @@ namespace Kernel {
         ar & (float&) obj.treatment_fraction;
         ar & (float&) obj.days_to_diagnosis;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
-        //ar & boost::serialization::base_object<Kernel::SimpleHealthSeekingBehavior>(obj);
     }
     template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::SimpleDiagnostic&, unsigned int);
 }

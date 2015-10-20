@@ -8,19 +8,19 @@ Import('env')
 stdobj = env.Object("stdafx.cpp")
 
 libsmeardiagnosticsdllSrcFiles = [ "../interventions/SmearDiagnostics.cpp",
-                             "../interventions/SmearDiagnosticsEModule.cpp"
-                           ]
+                                   "../interventions/SmearDiagnosticsEModule.cpp"
+                                 ]
 
-libsmeardiagnosticsdllIncFiles = [  "../interventions/Drugs.h" ]
 libsmeardiagnosticsdllLocalInc = [  "stdafx.h" ]
 
 smeardiagnosticsenv = env.Clone()
+diag_obj = smeardiagnosticsenv.Object( "diag_sd", "../interventions/Diagnostics.cpp" )
 smeardiagnosticsenv .Append( CPPDEFINES=["ENABLE_TB" ] )
 smeardiagnosticsenv.Append(LIBS=['libgeneric_static'])
 smeardiagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 smeardiagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-libsmeardiagnosticsDll = smeardiagnosticsenv.SharedLibrary('libsmeardiagnostics', libsmeardiagnosticsdllSrcFiles + stdobj)
+libsmeardiagnosticsDll = smeardiagnosticsenv.SharedLibrary('libsmeardiagnostics', libsmeardiagnosticsdllSrcFiles + stdobj + diag_obj )
 #print "building libsmeardiagnosticsdll: " + str(libsmeardiagnosticsdll)
 
 # take libsmeardiagnostics.dll (exclude .lib, .exp) out to be the building target

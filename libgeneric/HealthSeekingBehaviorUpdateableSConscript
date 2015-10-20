@@ -16,7 +16,7 @@ libhealthseekingbehaviorupdateabledllSrcFiles = [
 libhealthseekingbehaviorupdateabledllLocalInc = [  "stdafx.h" ]
 
 healthseekingbehaviorupdateableenv = env.Clone()
-hsbobj = healthseekingbehaviorupdateableenv .Object( "../interventions/HealthSeekingBehavior.cpp" )
+hsbobj = healthseekingbehaviorupdateableenv.Object( "hsb_hsbua", "../interventions/HealthSeekingBehavior.cpp" )
 
 healthseekingbehaviorupdateableenv .Append( CPPDEFINES=["ENABLE_TB" ] )
 healthseekingbehaviorupdateableenv.Append(LIBS=['libgeneric_static'])

@@ -18,7 +18,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configuration.h"
 #include "Configure.h"
 #include "Contexts.h"
-#include "HealthSeekingBehavior.h"
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "Interventions.h"

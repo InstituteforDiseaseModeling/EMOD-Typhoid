@@ -7,7 +7,7 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-liboutbreakdllSrcFiles = [ "../interventions/Outbreak.cpp",
+liboutbreakdllSrcFiles = [ 
                            "../interventions/OutbreakEModule.cpp"
                           ]
 
@@ -15,12 +15,13 @@ liboutbreakdllIncFiles = [  "../interventions/Outbreak.h" ]
 liboutbreakdllLocalInc = [  "stdafx.h" ]
 
 outbreakenv = env.Clone()
+ob_ob = outbreakenv.Object( "ob_ob", "../interventions/Outbreak.cpp" )
 outbreakenv.Append( CPPDEFINES=["ENABLE_TB"] )
 outbreakenv.Append(LIBS=['libgeneric_static'])
 outbreakenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 outbreakenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-liboutbreakDll = outbreakenv.SharedLibrary('liboutbreak', liboutbreakdllSrcFiles + stdobj)
+liboutbreakDll = outbreakenv.SharedLibrary('liboutbreak', liboutbreakdllSrcFiles + stdobj + ob_ob)
 #print "building liboutbreakdll: " + str(liboutbreakdll)
 
 # take liboutbreak.dll (exclude .lib, .exp) out to be the building target

@@ -15,7 +15,7 @@ libhealthseekingbehaviorupdatedllSrcFiles = [
 libhealthseekingbehaviorupdatedllLocalInc = [  "stdafx.h" ]
 
 healthseekingbehaviorupdateenv = env.Clone()
-#hsbobj = healthseekingbehaviorupdateenv .Object("../interventions/HealthSeekingBehavior.cpp")
+hsbobj = healthseekingbehaviorupdateenv.Object( "hsb_hsbu", "../interventions/HealthSeekingBehavior.cpp")
 
 healthseekingbehaviorupdateenv .Append( CPPDEFINES=["ENABLE_TB" ] )
 healthseekingbehaviorupdateenv.Append(LIBS=['libgeneric_static'])
@@ -23,7 +23,7 @@ healthseekingbehaviorupdateenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 #healthseekingbehaviorupdateenv.Append(LIBS=['libtb_static'])
 healthseekingbehaviorupdateenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-libhealthseekingbehaviorupdateDll = healthseekingbehaviorupdateenv.SharedLibrary('libhealthseekingbehaviorupdate', libhealthseekingbehaviorupdatedllSrcFiles + stdobj )
+libhealthseekingbehaviorupdateDll = healthseekingbehaviorupdateenv.SharedLibrary('libhealthseekingbehaviorupdate', libhealthseekingbehaviorupdatedllSrcFiles + stdobj + hsbobj )
 #print "building libhealthseekingbehaviorupdatedll: " + str(libhealthseekingbehaviorupdatedll)
 
 # take libhealthseekingbehaviorupdate.dll (exclude .lib, .exp) out to be the building target
