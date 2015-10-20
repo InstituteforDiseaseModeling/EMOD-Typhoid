@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalariachallenge.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libmalariachallengedllSrcFiles = [ "../interventions/MalariaChallenge.cpp",
+                                   "../interventions/MalariaChallengeEModule.cpp"
+                                 ]
+
+libmalariachallengedllLocalInc = [  "stdafx.h" ]
+
+malariachallengeenv = env.Clone()
+malariachallengeenv.Append(LIBS=['libgeneric_static'])
+malariachallengeenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+malariachallengeenv.Append(LIBS=['libvector_static'])
+malariachallengeenv.Append(LIBS=['libmalaria_static'])
+malariachallengeenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libmalariachallengeDll = malariachallengeenv.SharedLibrary('libmalariachallenge', libmalariachallengedllSrcFiles + stdobj)
+#print "building libmalariachallengedll: " + str(libmalariachallengedll)
+
+# take libmalariachallenge.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libmalariachallengedllTarget = libmalariachallengeDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = malariachallengeenv['BUILD_VARIANT'] + '|x64'
+    print str(libmalariachallengedllTarget) + ": Generating MSVS" + malariachallengeenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    malariachallengeenv.MSVSProject(target = 'LibmalariachallengedllScons' + malariachallengeenv['MSVSPROJECTSUFFIX'],
+                    srcs = libmalariachallengedllSrcFiles,
+		    incs = libmalariachallengedllIncFiles,
+		    localincs = libmalariachallengedllLocalInc,
+ 		    buildtarget = libmalariachallengedllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

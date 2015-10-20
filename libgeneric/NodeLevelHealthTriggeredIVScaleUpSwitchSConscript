@@ -1,0 +1,45 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libnodelevelhealthtriggeredivscaleupswitch.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libnodelevelhealthtriggeredivscaleupswitchdllSrcFiles = [
+                                                          "../interventions/NodeLevelHealthTriggeredIV.cpp",
+                                                          "../interventions/NodeLevelHealthTriggeredIVScaleUpSwitch.cpp",
+                                                          "../interventions/NodeLevelHealthTriggeredIVScaleUpSwitchEModule.cpp"
+                                                        ]
+
+libnodelevelhealthtriggeredivscaleupswitchdllIncFiles = [  "../interventions/Drugs.h" ]
+libnodelevelhealthtriggeredivscaleupswitchdllLocalInc = [  "stdafx.h" ]
+
+nodelevelhealthtriggeredivscaleupswitchenv = env.Clone()
+nodelevelhealthtriggeredivscaleupswitchenv .Append( CPPDEFINES=["ENABLE_TB" ] )
+nodelevelhealthtriggeredivscaleupswitchenv.Append(LIBS=['libgeneric_static'])
+nodelevelhealthtriggeredivscaleupswitchenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+#nodelevelhealthtriggeredivscaleupswitchenv.Append(LIBS=['libtb_static'])
+nodelevelhealthtriggeredivscaleupswitchenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libnodelevelhealthtriggeredivscaleupswitchDll = nodelevelhealthtriggeredivscaleupswitchenv.SharedLibrary('libnodelevelhealthtriggeredivscaleupswitch', libnodelevelhealthtriggeredivscaleupswitchdllSrcFiles + stdobj)
+#print "building libnodelevelhealthtriggeredivscaleupswitchdll: " + str(libnodelevelhealthtriggeredivscaleupswitchdll)
+
+# take libnodelevelhealthtriggeredivscaleupswitch.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libnodelevelhealthtriggeredivscaleupswitchdllTarget = libnodelevelhealthtriggeredivscaleupswitchDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = nodelevelhealthtriggeredivscaleupswitchenv['BUILD_VARIANT'] + '|x64'
+    print str(libnodelevelhealthtriggeredivscaleupswitchdllTarget) + ": Generating MSVS" + nodelevelhealthtriggeredivscaleupswitchenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    nodelevelhealthtriggeredivscaleupswitchenv.MSVSProject(target = 'LibnodelevelhealthtriggeredivscaleupswitchdllScons' + nodelevelhealthtriggeredivscaleupswitchenv['MSVSPROJECTSUFFIX'],
+                    srcs = libnodelevelhealthtriggeredivscaleupswitchdllSrcFiles,
+		    incs = libnodelevelhealthtriggeredivscaleupswitchdllIncFiles,
+		    localincs = libnodelevelhealthtriggeredivscaleupswitchdllLocalInc,
+ 		    buildtarget = libnodelevelhealthtriggeredivscaleupswitchdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)
