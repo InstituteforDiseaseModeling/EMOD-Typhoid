@@ -152,11 +152,6 @@ Rel = has_option( "Release" )
 
 
 # --- environment setup ---
-if not(Dbg) and not(Rel):
-    Rel = True
-
-print "Rel=" + str(Rel) + " Dbg=" + str(Dbg)
-
 
 #variantDir = get_variant_dir()
 
@@ -183,6 +178,16 @@ env = Environment( BUILD_DIR=buildDir,
                    PYSYSPLATFORM=pi,
                    MSVSPROJECTSUFFIX='.vcxproj' 
                    )
+
+if not(Dbg) and not(Rel):
+    Rel = True
+    env["Debug"] = False
+    env["Release"] = True
+else:
+    env["Debug"] = True
+    env["Release"] = False
+
+print "Rel=" + str(Rel) + " Dbg=" + str(Dbg)
 
 print "BUILD_DIR=" + env['BUILD_DIR'] + " pi=" + pi
 env['BUILD_VARIANT'] = bvar
@@ -486,8 +491,8 @@ def doConfigure(myenv):
 
 def setEnvAttrs(myenv):
 
-    diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'TB']
-    diseases = ['Generic', 'Vector', 'Malaria', 'Waterborne', 'Polio', 'Airborne', 'TB', 'STI', 'HIV']
+    diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'TB', "STI", "HIV" ]
+    #diseases = ['Generic', 'Vector', 'Malaria', 'Waterborne', 'Polio', 'Airborne', 'TB', 'STI', 'HIV']
     reportdlls = ['Spatial', 'Binned']
     campaigndlls = ['Bednet', 'IRSHousing']
 
