@@ -5,7 +5,7 @@
             "Demographics_Filename": "Namawala_single_node_demographics.json"
         },
         "PRIMARY": {
-            "Config_Name": "94_Generic_Intervention_SimpleDiagnostic",
+            "Config_Name": "107_Generic_Intervention_SimpleDiagnostic",
             "Geography": "Namawala",
             "Run_Number": 1,
             "Simulation_Duration": 180,

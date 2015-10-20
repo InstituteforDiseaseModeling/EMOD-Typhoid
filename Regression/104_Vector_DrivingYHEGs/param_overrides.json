@@ -44,7 +44,7 @@
         "Run_Number": 36, 
         "Simulation_Duration": 730, 
         "Simulation_Type": "VECTOR_SIM", 
-        "Config_Name": "96_Vector_Release_DrivingY_Male_Individual", 
+        "Config_Name": "104_Vector_DrivingYHEGs", 
         "Geography": "Namawala",
         "Enable_Demographics_Reporting": 0
     }, 

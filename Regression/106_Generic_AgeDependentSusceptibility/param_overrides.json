@@ -18,7 +18,7 @@
               "Enable_Immune_Decay": 0
           },
           "PRIMARY": {
-               "Config_Name": "93_Generic_AgeDependentSusceptibility", 
+               "Config_Name": "106_Generic_AgeDependentSusceptibility", 
                "Demographics_Filename": "../00_Default/demographics.json", 
                "Geography": "", 
                "Run_Number": 1, 
