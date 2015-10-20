@@ -17,8 +17,8 @@ libsimplevaccinedllLocalInc = [  "stdafx.h" ]
 simplevaccineenv = env.Clone()
 simplevaccineenv.Append(LIBS=['libgeneric_static'])
 simplevaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-simplevaccineenv.Append(LIBS=['libvector_static'])
-simplevaccineenv.Append(LIBS=['libmalaria_static'])
+#simplevaccineenv.Append(LIBS=['libvector_static'])
+#simplevaccineenv.Append(LIBS=['libmalaria_static'])
 simplevaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libsimplevaccineDll = simplevaccineenv.SharedLibrary('libsimplevaccine', libsimplevaccinedllSrcFiles + stdobj + svobj)

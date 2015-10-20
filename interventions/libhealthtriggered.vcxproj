@@ -89,8 +89,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HealthTriggeredIntervention.cpp" />
-    <ClCompile Include="HealthTriggeredInterventionEModule.cpp" />
+    <ClCompile Include="NodeLevelHealthTriggeredIntervention.cpp" />
+    <ClCompile Include="NodeLevelHealthTriggeredInterventionEModule.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

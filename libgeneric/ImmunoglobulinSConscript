@@ -18,8 +18,8 @@ libimmunoglobulindllLocalInc = [  "stdafx.h" ]
 immunoglobulinenv = env.Clone()
 immunoglobulinenv.Append(LIBS=['libgeneric_static'])
 immunoglobulinenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-immunoglobulinenv.Append(LIBS=['libvector_static'])
-immunoglobulinenv.Append(LIBS=['libmalaria_static'])
+#immunoglobulinenv.Append(LIBS=['libvector_static'])
+#immunoglobulinenv.Append(LIBS=['libmalaria_static'])
 immunoglobulinenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libimmunoglobulinDll = immunoglobulinenv.SharedLibrary('libimmunoglobulin', libimmunoglobulindllSrcFiles + stdobj + svobj)

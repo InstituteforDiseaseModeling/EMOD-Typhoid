@@ -12,7 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
 #include "Diagnostics.h"
-#include "ResistanceDiagnostics.h"
+//#include "ResistanceDiagnostics.h"
 #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)

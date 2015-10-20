@@ -17,8 +17,8 @@ libbirthtriggeredivdllLocalInc = [  "stdafx.h" ]
 birthtriggeredivenv = env.Clone()
 birthtriggeredivenv.Append(LIBS=['libgeneric_static'])
 birthtriggeredivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-birthtriggeredivenv.Append(LIBS=['libvector_static'])
-birthtriggeredivenv.Append(LIBS=['libmalaria_static'])
+#birthtriggeredivenv.Append(LIBS=['libvector_static'])
+#birthtriggeredivenv.Append(LIBS=['libmalaria_static'])
 birthtriggeredivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libbirthtriggeredivDll = birthtriggeredivenv.SharedLibrary('libbirthtriggered', libbirthtriggeredivdllSrcFiles + stdobj)

@@ -17,7 +17,7 @@ import shutil
 import stat
 import sys
 import types
-
+import pdb
 import platform
 
 
@@ -508,7 +508,7 @@ def setEnvAttrs(myenv):
 #        myenv.Append( CPPDEFINES=["_DLLS_" ] )
 
     if dlldisease:
-        myenv['DiseaseDll'] = get_option( 'DiseaseDll' )
+        myenv['DiseaseDll'] = get_option( 'DllDisease' ) # careful, tricky
         print "DiseaseDll=" + myenv['DiseaseDll']
         if myenv['DiseaseDll'] not in diseasedlls:
             print "Unknown disease (EMODule) type: " + myenv['DiseaseDll']
@@ -556,7 +556,6 @@ env = doConfigure( env )
 
 # set evn based on cmdline options
 setEnvAttrs( env )
-
 
 # Export the following symbols for them to be used in subordinate SConscript files.
 Export("env")

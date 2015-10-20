@@ -18,8 +18,8 @@ libcalendardllLocalInc = [  "stdafx.h" ]
 calendarenv = env.Clone()
 calendarenv.Append(LIBS=['libgeneric_static'])
 calendarenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-calendarenv.Append(LIBS=['libvector_static'])
-calendarenv.Append(LIBS=['libmalaria_static'])
+#calendarenv.Append(LIBS=['libvector_static'])
+#calendarenv.Append(LIBS=['libmalaria_static'])
 calendarenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libcalendarDll = calendarenv.SharedLibrary('libcalendar', libcalendardllSrcFiles + stdobj)
