@@ -18,7 +18,6 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
     #env.Append( CPPDEFINES=["ENABLE_TB" ] )
     #env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
     #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
-    eradenv.Append( CPPDEFINES=["DISABLE_HIV" ] )
     if env['DiseaseDll'] != "Vector" and env['DiseaseDll'] != "Malaria" and env['DiseaseDll'] != "Environmental":
         eradenv.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
     else:
@@ -27,6 +26,9 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
         eradenv.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
     if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":
         eradenv.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+    if env['DiseaseDll'] != "HIV":
+        eradenv.Append( CPPDEFINES=["DISABLE_HIV" ] )
+
     #eradenv.Append(LIBS=['libvector_static'])
     #eradenv.Append(LIBS=['libmalaria_static'])
 

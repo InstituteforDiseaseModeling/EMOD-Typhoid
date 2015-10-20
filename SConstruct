@@ -373,7 +373,8 @@ elif "win32" == os.sys.platform:
     # /Z7 debug info goes into each individual .obj file -- no .pdb created 
     env.Append( CCFLAGS= ["/errorReport:none"] )
 
-    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Zi"])
+    #env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Zi"])
+    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
 
     env.Append( CCFLAGS=["/DIDM_EXPORT"] )
 
