@@ -46,7 +46,7 @@ RegisterWithFactory(
         _module,
         []()
         {
-            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::NodeLevelHealthTriggeredIV());
+            return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::NodeLevelHealthTriggeredIV());
         }
     );
     return true;

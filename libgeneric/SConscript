@@ -48,7 +48,7 @@ libgenericdllLocalInc = [  "stdafx.h" ]
 # Testing
 env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
 env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
-env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+#env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
 
 libgenericDll = env.SharedLibrary('libgeneric', libgenericdllSrcFiles)
 print "building libgenericDll: " + str(libgenericDll)

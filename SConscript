@@ -167,7 +167,8 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/PmtctSConscript', variant_dir=dll_op_path )
 
     # Polio
-    # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )    SConscript( 'libgeneric/BirthtriggeredSConscript' )
+    # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )
+    SConscript( 'libgeneric/BirthtriggeredSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/CalendarSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/DelayedInterventionSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/DiagnosticsSConscript', variant_dir=dll_op_path )

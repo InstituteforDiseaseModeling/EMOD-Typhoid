@@ -2,6 +2,7 @@
 # This Python script, SConscript, invoked by the SConscript in the upper directory,
 #
 # 1. builds main DTK core files and generate Eradication program
+
 Import('env')
 
 libgenericSrcFiles = [ "stdafx.cpp",
@@ -42,13 +43,15 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/PropertyReport.cpp",
                        "../Eradication/Report.cpp",
                        "../Eradication/ReportEventRecorder.cpp",
-                       "../Eradication/SimpleEventCoordinator.cpp",
                        "../Eradication/SimpleTransmissionGroups.cpp",
                        "../Eradication/Simulation.cpp",
                        "../Eradication/SimulationConfig.cpp",
                        "../Eradication/SimulationEventContext.cpp",
                        "../Eradication/SpatialReport.cpp",
+                       "../Eradication/SimpleEventCoordinator.cpp",
                        "../Eradication/StandardEventCoordinator.cpp",
+                       "../Eradication/CoverageByNodeEventCoordinator.cpp",
+                       "../Eradication/CalendarEventCoordinator.cpp",
                        "../Eradication/StrainIdentity.cpp",
                        "../Eradication/StrainAwareTransmissionGroups.cpp",
                        "../Eradication/Susceptibility.cpp",
@@ -73,7 +76,8 @@ print "building libgeneric_static: " + str(libgeneric_static)
 env.Append( CPPDEFINES=["_DLLS_" ] )
 if env['DiseaseDll'] != "Vector" and env['DiseaseDll'] != "Malaria" and env['DiseaseDll'] != 'Environmental':
     env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
-    env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+    if env['DiseaseDll'] != "Generic":
+        env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
 if env['DiseaseDll'] != "Malaria":
     env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
 if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":

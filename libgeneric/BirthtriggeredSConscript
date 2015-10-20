@@ -1,28 +1,30 @@
 # -*- mode: python; -*-
 # This Python script, SConscript, invoked by the SConscript in the upper directory,
 #
-# 1. builds libbirthtriggered.dll
+# 1. builds libbirthtriggerediv.dll
 
 Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libbirthtriggeredivdllSrcFiles = [ "../../interventions/BirthTriggeredIV.cpp",
-                                   "../../interventions/BirthTriggeredIVEModule.cpp"
-                                   ]
+libbirthtriggeredivdllSrcFiles = [ "../../interventions/BirthTriggeredIVEModule.cpp",
+                                   "../../interventions/BirthTriggeredIV.cpp"
+                                 ]
 
-libbirthtriggeredivdllIncFiles = [  "../../interventions/BirthTriggeredIV.h" ]
+libbirthtriggeredivdllIncFiles = [  
+                                    "../../interventions/BirthTriggeredIV.h"
+                                 ]
+
 libbirthtriggeredivdllLocalInc = [  "stdafx.h" ]
 
 birthtriggeredivenv = env.Clone()
+
 birthtriggeredivenv.Append(LIBS=['libgeneric_static'])
 birthtriggeredivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-#birthtriggeredivenv.Append(LIBS=['libvector_static'])
-#birthtriggeredivenv.Append(LIBS=['libmalaria_static'])
 birthtriggeredivenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-libbirthtriggeredivDll = birthtriggeredivenv.SharedLibrary('libbirthtriggered', libbirthtriggeredivdllSrcFiles + stdobj)
-#print "building libbirthtriggereddll: " + str(libbirthtriggeredivdll)
+libbirthtriggeredivDll = birthtriggeredivenv.SharedLibrary('libbirthtriggerediv', libbirthtriggeredivdllSrcFiles + stdobj )
+#print "building libbirthtriggeredivdll: " + str(libbirthtriggeredivdll)
 
 # take libbirthtriggerediv.dll (exclude .lib, .exp) out to be the building target
 # to match the number of building variant
