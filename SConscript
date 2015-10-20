@@ -178,6 +178,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
     SConscript( 'libgeneric/DelayedInterventionSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/DiagnosticsSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/HealthseekingbehaviorSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/MultiinterventiondistributorSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/NodeLevelHealthtriggeredSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/ImmunoglobulinSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/ImportPressureSConscript', variant_dir=dll_op_path )

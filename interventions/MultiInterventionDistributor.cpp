@@ -8,6 +8,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
+#include "Contexts.h"
 #include "MultiInterventionDistributor.h"
 
 static const char * _module = "MultiInterventionDistributor";
@@ -56,6 +57,19 @@ namespace Kernel
 
     bool MultiInterventionDistributor::Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pICCO )
     {
+        // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
+        IGlobalContext *pGC = NULL;
+        const IInterventionFactory* ifobj = NULL;
+		release_assert(context->GetParent());
+        if (s_OK == context->GetParent()->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
+        {
+            ifobj = pGC->GetInterventionFactory();
+        }
+        if (!ifobj)
+        {
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to IInterventionFactory object is not valid (could be DLL specific)" );
+        } 
+
         try
         {
             // Parse intervention_list
@@ -69,7 +83,7 @@ namespace Kernel
 
                 // Instantiate and distribute interventions
                 LOG_DEBUG_F( "Attempting to instantiate intervention of class %s\n", std::string((*tmpConfig)["class"].As<json::String>()).c_str() );
-                IDistributableIntervention *di = InterventionFactory::getInstance()->CreateIntervention(tmpConfig);
+                IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig);
                 assert(di);
                 if (di)
                 {

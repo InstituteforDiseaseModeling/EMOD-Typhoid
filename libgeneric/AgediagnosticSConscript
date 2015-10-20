@@ -1,7 +1,7 @@
 # -*- mode: python; -*-
 # This Python script, SConscript, invoked by the SConscript in the upper directory,
 #
-# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
 
 Import('env')
 
