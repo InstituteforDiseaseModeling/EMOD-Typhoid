@@ -528,12 +528,6 @@ void NodeDemographicsFactory::Initialize(const ::Configuration* config)
 
                         throw NodeDemographicsFormatErrorException( __FILE__, __LINE__, __FUNCTION__, demo_filename.c_str(), msg.str().c_str());
                     }
-                    else
-                    {
-                        LOG_WARN_F("Demographics file \"%s\" doesn't share any nodes with the base demographics file!\n", demo_filename.c_str());
-                        demographics_filenames.erase( demographics_filenames.begin() + layer );
-                        layer--;
-                    }
                 }
             }
         }
@@ -623,9 +617,9 @@ bool NodeDemographicsFactory::ReadNodeData( bool isUnCompiled,
 
     // Extract the data for each node and put it into a map so that node creation
     // can access only the nodes it needs to.
+    std::map<uint32_t,JsonObjectDemog> nodeid_2_nodedata_map;
     if( layer_has_nodes )
     {
-        std::map<uint32_t,JsonObjectDemog> nodeid_2_nodedata_map;
 
         for( int i = 0 ; i < node_list_data.size() ; i++ )
         {
@@ -665,10 +659,10 @@ bool NodeDemographicsFactory::ReadNodeData( bool isUnCompiled,
             }
             nodeid_2_nodedata_map[ node_id ] = nodedata ;
         }
-
-        // each layer should have a map of nodeid to nodedata
-        nodedata_maps.push_back( nodeid_2_nodedata_map );
     }
+
+    // each layer should have a map of nodeid to nodedata
+    nodedata_maps.push_back( nodeid_2_nodedata_map );
 
     return layer_has_nodes ;
 }
@@ -900,18 +894,30 @@ NodeDemographics* NodeDemographicsFactory::CreateNodeDemographics(INodeContext *
     bool found_node = false ;
     for(int i = (int)(demographics_filenames.size() - 1); i >= 0; i--)
     {
-        JsonObjectDemog nodedata = nodedata_maps[i][nodeid] ;
-        found_node = !nodedata.IsNull() ;
+        JsonObjectDemog nodedata ;
+        if( nodedata_maps[i].count(nodeid) > 0 )
+        {
+            nodedata = nodedata_maps[i][nodeid] ;
+        }
 
-        if( found_node )
+        if( !nodedata.IsNull() )
         {
             TranslateNodeData(nodedata, i, finalnodedata);
+            found_node = true ;
+        }
 
-            if(!layer_defaults[i].IsNull())
-            {
-                LOG_DEBUG_F( "layer %d has defaults layer, translating now...\n", i );
-                TranslateNodeData(layer_defaults[i], i, finalnodedata);
-            }
+        // -----------------------------------------------------------------------------------
+        // --- We want to support the situation where the user defines Defaults in the overlay.
+        // --- If the user does NOT define any nodes in the overlay, then the Defaults applys to all nodes.
+        // --- If the user DOES define nodes in the overlay, then the Defaults in the overlay only apply to those nodes.
+        // -----------------------------------------------------------------------------------
+        bool apply_defaults =  !layer_defaults[i].IsNull()
+                            && ((i == 0) || found_node || (nodedata_maps[i].size() == 0));
+
+        if( apply_defaults )
+        {
+            LOG_DEBUG_F( "layer %d has defaults layer, translating now...\n", i );
+            TranslateNodeData(layer_defaults[i], i, finalnodedata);
         }
     }
     if( !found_node )

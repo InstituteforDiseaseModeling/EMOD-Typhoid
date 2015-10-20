@@ -54,6 +54,8 @@ namespace Kernel
         bool operator==( const JsonObjectDemog& rThat ) const ;
         bool operator!=( const JsonObjectDemog& rThat ) const ;
 
+        void WriteToFile( const char* filename );
+
         // ------------------------------------------------------
         // --- Methods for creating an object from a string and
         // --- for creating the string from the object
