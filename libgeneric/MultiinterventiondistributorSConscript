@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmultiInterventiondistributor.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libmultiInterventiondistributordllSrcFiles = [ "../interventions/MultiInterventionDistributor.cpp",
+                                      "../interventions/MultiInterventionDistributorEModule.cpp"
+                                    ]
+
+libmultiInterventiondistributordllIncFiles = [  "../interventions/MultiInterventionDistributor.h" ]
+libmultiInterventiondistributordllLocalInc = [  "stdafx.h" ]
+
+multiInterventiondistributorenv = env.Clone()
+multiInterventiondistributorenv.Append( CPPDEFINES=["ENABLE_TB"] )
+multiInterventiondistributorenv.Append(LIBS=['libgeneric_static'])
+multiInterventiondistributorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+multiInterventiondistributorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libmultiInterventiondistributorDll = multiInterventiondistributorenv.SharedLibrary('libmultiInterventiondistributor', libmultiInterventiondistributordllSrcFiles + stdobj)
+#print "building libmultiInterventiondistributordll: " + str(libmultiInterventiondistributordll)
+
+# take libmultiInterventiondistributor.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libmultiInterventiondistributordllTarget = libmultiInterventiondistributorDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = multiInterventiondistributorenv['BUILD_VARIANT'] + '|x64'
+    print str(libmultiInterventiondistributordllTarget) + ": Generating MSVS" + multiInterventiondistributorenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    multiInterventiondistributorenv.MSVSProject(target = 'LibmultiInterventiondistributordllScons' + multiInterventiondistributorenv['MSVSPROJECTSUFFIX'],
+            srcs = libmultiInterventiondistributordllSrcFiles,
+		    incs = libmultiInterventiondistributordllIncFiles,
+		    localincs = libmultiInterventiondistributordllLocalInc,
+ 		    buildtarget = libmultiInterventiondistributordllTarget,
+            auto_build_solution = 0,
+            variant = bvar)

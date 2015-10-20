@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libdelayedintervention.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libdelayedinterventiondllSrcFiles = [ "../interventions/DelayedIntervention.cpp",
+                                      "../interventions/DelayedInterventionEModule.cpp"
+                                    ]
+
+libdelayedinterventiondllIncFiles = [  "../interventions/DelayedIntervention.h" ]
+libdelayedinterventiondllLocalInc = [  "stdafx.h" ]
+
+delayedinterventionenv = env.Clone()
+delayedinterventionenv.Append( CPPDEFINES=["ENABLE_TB"] )
+delayedinterventionenv.Append(LIBS=['libgeneric_static'])
+delayedinterventionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+delayedinterventionenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libdelayedinterventionDll = delayedinterventionenv.SharedLibrary('libdelayedintervention', libdelayedinterventiondllSrcFiles + stdobj)
+#print "building libdelayedinterventiondll: " + str(libdelayedinterventiondll)
+
+# take libdelayedintervention.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libdelayedinterventiondllTarget = libdelayedinterventionDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = delayedinterventionenv['BUILD_VARIANT'] + '|x64'
+    print str(libdelayedinterventiondllTarget) + ": Generating MSVS" + delayedinterventionenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    delayedinterventionenv.MSVSProject(target = 'LibdelayedinterventiondllScons' + delayedinterventionenv['MSVSPROJECTSUFFIX'],
+            srcs = libdelayedinterventiondllSrcFiles,
+		    incs = libdelayedinterventiondllIncFiles,
+		    localincs = libdelayedinterventiondllLocalInc,
+ 		    buildtarget = libdelayedinterventiondllTarget,
+            auto_build_solution = 0,
+            variant = bvar)

@@ -1,0 +1,44 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libhealthtriggered.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhealthtriggereddllSrcFiles = [ "../interventions/NodeLevelHealthtriggeredIV.cpp",
+                                  "../interventions/NodeLevelHealthtriggeredIV.cpp"
+                                  ]
+
+libhealthtriggereddllIncFiles = [  "../interventions/NodeLevelHealthtriggeredIV.h" ]
+libhealthtriggereddllLocalInc = [  "stdafx.h" ]
+
+healthtriggeredenv = env.Clone()
+healthtriggeredenv.Append( CPPDEFINES=["ENABLE_TB"] )
+healthtriggeredenv.Append(LIBS=['libgeneric_static'])
+healthtriggeredenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+#healthtriggeredenv.Append(LIBS=['libvector_static'])
+#healthtriggeredenv.Append(LIBS=['libmalaria_static'])
+healthtriggeredenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhealthtriggeredDll = healthtriggeredenv.SharedLibrary('libhealthtriggered', libhealthtriggereddllSrcFiles + stdobj)
+#print "building libhealthtriggereddll: " + str(libhealthtriggereddll)
+
+# take libhealthtriggered.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhealthtriggereddllTarget = libhealthtriggeredDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = healthtriggeredenv['BUILD_VARIANT'] + '|x64'
+    print str(libhealthtriggereddllTarget) + ": Generating MSVS" + healthtriggeredenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    healthtriggeredenv.MSVSProject(target = 'LibhealthtriggereddllScons' + healthtriggeredenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhealthtriggereddllSrcFiles,
+		    incs = libhealthtriggereddllIncFiles,
+		    localincs = libhealthtriggereddllLocalInc,
+ 		    buildtarget = libhealthtriggereddllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

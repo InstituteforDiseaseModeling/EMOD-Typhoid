@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds liboutbreak.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+liboutbreakdllSrcFiles = [ "../interventions/OutbreakIndividual.cpp",
+                           "../interventions/OutbreakIndividualEModule.cpp"
+                          ]
+
+liboutbreakdllIncFiles = [  "../interventions/Outbreak.h" ]
+liboutbreakdllLocalInc = [  "stdafx.h" ]
+
+outbreakenv = env.Clone()
+outbreakenv.Append( CPPDEFINES=["ENABLE_TB"] )
+outbreakenv.Append(LIBS=['libgeneric_static'])
+outbreakenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+outbreakenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+liboutbreakDll = outbreakenv.SharedLibrary('liboutbreakindividual', liboutbreakdllSrcFiles + stdobj)
+#print "building liboutbreakdll: " + str(liboutbreakdll)
+
+# take liboutbreak.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+liboutbreakdllTarget = liboutbreakDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = outbreakenv['BUILD_VARIANT'] + '|x64'
+    print str(liboutbreakdllTarget) + ": Generating MSVS" + outbreakenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    outbreakenv.MSVSProject(target = 'LiboutbreakdllScons' + outbreakenv['MSVSPROJECTSUFFIX'],
+                    srcs = liboutbreakdllSrcFiles,
+		    incs = liboutbreakdllIncFiles,
+		    localincs = liboutbreakdllLocalInc,
+ 		    buildtarget = liboutbreakdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)
