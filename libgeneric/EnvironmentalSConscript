@@ -10,7 +10,7 @@ if env['AllDlls'] or env['DiseaseDll'] == "Environmental":
     stdobj = env.Object("stdafx.cpp")
 
     libenvironmentaldllSrcFiles = [ 
-                          "../Eradication/SimulationEnvironmentalExport.cpp"
+                          "../../Eradication/SimulationEnvironmentalExport.cpp"
                           ]
 
     libenvironmentaldllIncFiles = [  "SimulationEnvironmental.h" ]
@@ -18,7 +18,7 @@ if env['AllDlls'] or env['DiseaseDll'] == "Environmental":
 
     environmentalenv = env.Clone()
 
-    genobj = environmentalenv.Object("libgenobj_environmental", "../Eradication/LibGenericClasses.cpp")
+    genobj = environmentalenv.Object("libgenobj_environmental", "../../Eradication/LibGenericClasses.cpp")
 
     environmentalenv.Append(LIBS=['libgeneric_static'])
     environmentalenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])

@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libdelayedinterventiondllSrcFiles = [ "../interventions/DelayedIntervention.cpp",
-                                      "../interventions/DelayedInterventionEModule.cpp"
+libdelayedinterventiondllSrcFiles = [ "../../interventions/DelayedIntervention.cpp",
+                                      "../../interventions/DelayedInterventionEModule.cpp"
                                     ]
 
-libdelayedinterventiondllIncFiles = [  "../interventions/DelayedIntervention.h" ]
+libdelayedinterventiondllIncFiles = [  "../../interventions/DelayedIntervention.h" ]
 libdelayedinterventiondllLocalInc = [  "stdafx.h" ]
 
 delayedinterventionenv = env.Clone()

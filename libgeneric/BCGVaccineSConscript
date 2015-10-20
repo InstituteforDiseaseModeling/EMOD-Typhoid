@@ -6,13 +6,13 @@
 Import('env')
 
 stdobj = env.Object("stdafx.cpp")
-svobj = env.Object("../interventions/SimpleVaccine.cpp")
+svobj = env.Object("../../interventions/SimpleVaccine.cpp")
 
-libbcgvaccinedllSrcFiles = [ "../interventions/BCGVaccine.cpp",
-                             "../interventions/BCGVaccineEModule.cpp"
+libbcgvaccinedllSrcFiles = [ "../../interventions/BCGVaccine.cpp",
+                             "../../interventions/BCGVaccineEModule.cpp"
                              ]
 
-libbcgvaccinedllIncFiles = [  "../interventions/bcgvaccine.h" ]
+libbcgvaccinedllIncFiles = [  "../../interventions/bcgvaccine.h" ]
 libbcgvaccinedllLocalInc = [  "stdafx.h" ]
 
 bcgvaccineenv = env.Clone()

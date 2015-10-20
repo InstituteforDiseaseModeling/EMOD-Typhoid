@@ -7,7 +7,7 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libmalariadllSrcFiles = [ "../Eradication/SimulationMalaria.cpp"
+libmalariadllSrcFiles = [ "../../Eradication/SimulationMalaria.cpp"
                           ]
 
 libmalariadllIncFiles = [  "SimulationMalaria.h" ]
@@ -15,7 +15,7 @@ libmalariadllLocalInc = [  "stdafx.h" ]
 
 malariaenv = env.Clone()
 
-genobj = malariaenv.Object("libgenobj_malaria", "../Eradication/LibGenericClasses.cpp")
+genobj = malariaenv.Object("libgenobj_malaria", "../../Eradication/LibGenericClasses.cpp")
 
 malariaenv.Append( CPPDEFINES=["_MALARIA_DLL"] )
 malariaenv.Append(LIBS=['libgeneric_static'])

@@ -6,12 +6,13 @@
 Import('env')
 
 stdobj = env.Object("stdafx.cpp")
-svobj = env.Object("../interventions/SimpleVaccine.cpp")
+svobj = env.Object("../../interventions/SimpleVaccine.cpp")
 
-libsimplevaccinedllSrcFiles = [ "../interventions/SimpleVaccineEModule.cpp"
-                               ]
+libsimplevaccinedllSrcFiles = [
+                                 "../../interventions/SimpleVaccineEModule.cpp"
+                              ]
 
-libsimplevaccinedllIncFiles = [  "../Eradication/vaccine.h" ]
+libsimplevaccinedllIncFiles = [  "../../Eradication/vaccine.h" ]
 libsimplevaccinedllLocalInc = [  "stdafx.h" ]
 
 simplevaccineenv = env.Clone()

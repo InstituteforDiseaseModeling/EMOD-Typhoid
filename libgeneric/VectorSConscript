@@ -10,14 +10,14 @@ if env['AllDlls'] or env['DiseaseDll'] == "Vector":
     stdobj = env.Object("stdafx.cpp")
 
     libvectordllSrcFiles = [ 
-                          "../Eradication/SimulationVectorExport.cpp"
+                          "../../Eradication/SimulationVectorExport.cpp"
                           ]
 
     libvectordllIncFiles = [  "SimulationVector.h" ]
     libvectordllLocalInc = [  "stdafx.h" ]
 
     vectorenv = env.Clone()
-    genobj = vectorenv.Object("libgenobj_vector","../Eradication/LibGenericClasses.cpp")
+    genobj = vectorenv.Object("libgenobj_vector","../../Eradication/LibGenericClasses.cpp")
 
 
     vectorenv.Append( CPPDEFINES=["_VECTOR_DLL"] )

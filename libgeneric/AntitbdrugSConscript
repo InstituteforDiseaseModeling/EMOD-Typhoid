@@ -6,13 +6,13 @@
 Import('env')
 
 stdobj = env.Object("stdafx.cpp")
-atdobj = env.Object("../interventions/AntiTbDrug.cpp")
+atdobj = env.Object("../../interventions/AntiTbDrug.cpp")
 
 libantitbdrugdllSrcFiles = [ 
-                             "../interventions/AntitbDrugEModule.cpp"
+                             "../../interventions/AntitbDrugEModule.cpp"
                            ]
 
-libantitbdrugdllIncFiles = [  "../interventions/Drugs.h" ]
+libantitbdrugdllIncFiles = [  "../../interventions/Drugs.h" ]
 libantitbdrugdllLocalInc = [  "stdafx.h" ]
 
 antitbdrugenv = env.Clone()

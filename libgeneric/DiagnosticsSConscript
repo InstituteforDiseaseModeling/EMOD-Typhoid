@@ -7,16 +7,16 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libdiagnosticsdllSrcFiles = [ "../interventions/Diagnostics.cpp",
-                              "../interventions/DiagnosticsEModule.cpp"
+libdiagnosticsdllSrcFiles = [ "../../interventions/Diagnostics.cpp",
+                              "../../interventions/DiagnosticsEModule.cpp"
                               ]
 
-libdiagnosticsdllIncFiles = [  "../interventions/Diagnostics.h" ]
+libdiagnosticsdllIncFiles = [  "../../interventions/Diagnostics.h" ]
 libdiagnosticsdllLocalInc = [  "stdafx.h" ]
 
 diagnosticsenv = env.Clone()
 
-hsbobj = diagnosticsenv.Object("hsbobj_diagnostics","../interventions/HealthSeekingBehavior.cpp")
+hsbobj = diagnosticsenv.Object("hsbobj_diagnostics","../../interventions/HealthSeekingBehavior.cpp")
 
 diagnosticsenv.Append(LIBS=['libgeneric_static'])
 diagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])

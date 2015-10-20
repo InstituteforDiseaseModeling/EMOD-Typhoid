@@ -7,15 +7,15 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libscalelarvalhabitatdllSrcFiles = [ "../interventions/ScaleLarvalHabitat.cpp",
-                                      "../interventions/ScaleLarvalHabitatEModule.cpp",
+libscalelarvalhabitatdllSrcFiles = [ "../../interventions/ScaleLarvalHabitat.cpp",
+                                      "../../interventions/ScaleLarvalHabitatEModule.cpp",
                                     ]
 
-libscalelarvalhabitatdllIncFiles = [  "../interventions/ScaleLarvalHabitat.h" ]
+libscalelarvalhabitatdllIncFiles = [  "../../interventions/ScaleLarvalHabitat.h" ]
 libscalelarvalhabitatdllLocalInc = [  "stdafx.h" ]
 
 scalelarvalhabitatenv = env.Clone()
-vcnt_obj = scalelarvalhabitatenv.Object( "vcnt_slh", "../interventions/VectorControlNodeTargeted.cpp" )
+vcnt_obj = scalelarvalhabitatenv.Object( "vcnt_slh", "../../interventions/VectorControlNodeTargeted.cpp" )
 
 scalelarvalhabitatenv.Append( CPPDEFINES=["ENABLE_TB"] )
 scalelarvalhabitatenv.Append(LIBS=['libgeneric_static'])

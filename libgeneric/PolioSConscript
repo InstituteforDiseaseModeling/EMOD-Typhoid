@@ -8,14 +8,14 @@ Import('env')
 stdobj = env.Object("stdafx.cpp")
 
 nodeobj = env.Object("../Eradication/NodeSetNodeList.cpp")
-svobj = env.Object("../interventions/SimpleVaccine.cpp")
+svobj = env.Object("../../interventions/SimpleVaccine.cpp")
 
 libpoliodllSrcFiles = [ "../Eradication/BinnedReportPolio.cpp",
                         "../Eradication/IndividualPolio.cpp",
                         "../Eradication/InfectionPolio.cpp",
                         "../Eradication/NodePolio.cpp",
                         "../Eradication/PolioInterventionsContainer.cpp",
-                        "../interventions/PolioVaccine.cpp",
+                        "../../interventions/PolioVaccine.cpp",
                         "../Eradication/ReportPolio.cpp",
                         "../Eradication/SpatialReportPolio.cpp",
                         "../Eradication/SimulationPolio.cpp",

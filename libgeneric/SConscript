@@ -28,18 +28,18 @@ libgenericdllSrcFiles = [ "../Eradication/BinnedReport.cpp",
                           "../Eradication/NodeTimestepSpatialReporter.cpp",
                           "../Eradication/RANDOM.cpp",
                           "../Eradication/Report.cpp",
-                          "../interventions/SimpleVaccine.cpp",
+                          "../../interventions/SimpleVaccine.cpp",
                           "../Eradication/Simulation.cpp",
                           "../Eradication/SimulationEventContext.cpp",
                           "../Eradication/StandardEventCoordinator.cpp",
                           "stdafx.cpp",
                           "../Eradication/StrainIdentity.cpp",
                           "../Eradication/Susceptibility.cpp",
-                          "../interventions/WaningEffectBox.cpp",
-                          "../interventions/WaningEffectBoxExponential.cpp",
-                          "../interventions/WaningEffectConstant.cpp",
-                          "../interventions/WaningEffectExponential.cpp",
-                          "../interventions/WaningEffectFactory.cpp"
+                          "../../interventions/WaningEffectBox.cpp",
+                          "../../interventions/WaningEffectBoxExponential.cpp",
+                          "../../interventions/WaningEffectConstant.cpp",
+                          "../../interventions/WaningEffectExponential.cpp",
+                          "../../interventions/WaningEffectFactory.cpp"
                           ]
 
 libgenericdllIncFiles = [  "Report.h" ]

@@ -77,28 +77,28 @@ elif env[ 'DiseaseDll' ] != "":
     print( "Build specific disease dll." )
     dtype = env['DiseaseDll']
     if dtype == 'Generic':
-        SConscript( 'libgeneric/GenericSConscript' )
+        SConscript( 'libgeneric/GenericSConscript', variant_dir="Generic/disease_plugins" )
     elif dtype == 'Vector':
         SConscript( 'libgeneric/VectorSConscriptStatic' )
         #SConscript( 'libgeneric/VectorSConscript' )
     elif dtype == 'Malaria':
         SConscript( 'libgeneric/VectorSConscriptStatic' )
         SConscript( 'libgeneric/MalariaSConscriptStatic' )
-        SConscript( 'libgeneric/MalariaSConscript' )
+        SConscript( 'libgeneric/MalariaSConscript', variant_dir="Malaria/disease_plugins" )
     elif dtype == 'Environmental':
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
-        SConscript( 'libgeneric/EnvironmentalSConscript' )
+        SConscript( 'libgeneric/EnvironmentalSConscript', variant_dir="Generic/disease_plugins" )
     elif dtype == 'Polio':
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
-        SConscript( 'libgeneric/PolioSConscript' )
+        SConscript( 'libgeneric/PolioSConscript', variant_dir="Generic/disease_plugins" )
     elif dtype == 'TB':
         SConscript( 'libgeneric/TBSConscriptStatic' )
-        SConscript( 'libgeneric/TBSConscript' )
+        SConscript( 'libgeneric/TBSConscript', variant_dir="Generic/disease_plugins" )
     elif dtype == 'STI':
-        SConscript( 'libgeneric/STISConscript' )
+        SConscript( 'libgeneric/STISConscript', variant_dir="Generic/disease_plugins" )
     elif dtype == 'HIV':
         SConscript( 'libgeneric/STISConscriptStatic' )
-        SConscript( 'libgeneric/HIVSConscript' )
+        SConscript( 'libgeneric/HIVSConscript', variant_dir="Generic/disease_plugins" )
     else:
         print "Unspecified or unknown disease type: " + dtype
 
@@ -111,45 +111,47 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
     #SConscript( 'libgeneric/VectorSConscriptStatic' )
     #SConscript( 'libgeneric/MalariaSConscriptStatic' )
 
+    dll_op_path = env['DiseaseDll'] + "/interventions"
     # Vector
     if env['DiseaseDll'] == "Vector" or env['DiseaseDll'] == "Malaria":
-        SConscript( 'libgeneric/BednetSConscript' )
-        SConscript( 'libgeneric/HousingmodSConscript' )
-        SConscript( 'libgeneric/HumanhostseekingtrapSConscript' )
-        SConscript( 'libgeneric/ScalelarvalhabitatSConscript' )
-        SConscript( 'libgeneric/VcntSConscript' )
+        SConscript( 'libgeneric/BednetSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/HousingmodSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/HumanhostseekingtrapSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/ScalelarvalhabitatSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/VcntSConscript', variant_dir=dll_op_path )
 
     # Malaria
     if env['DiseaseDll'] == "Malaria":
-        SConscript( 'libgeneric/AntimalarialdrugSConscript' )
-        SConscript( 'libgeneric/InputEIRSConscript' )
-        SConscript( 'libgeneric/IvermectinSConscript' )
-        SConscript( 'libgeneric/MalariaChallengeSConscript' )
-        SConscript( 'libgeneric/RTSSVaccineSConscript' )
+        SConscript( 'libgeneric/AntimalarialdrugSConscript', variant_dir=dll_op_path  )
+        SConscript( 'libgeneric/InputEIRSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/IvermectinSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/MalariaChallengeSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/RTSSVaccineSConscript', variant_dir=dll_op_path )
 
     # TB
     if env['DiseaseDll'] == "TB":
-        SConscript( 'libgeneric/AntitbdrugSConscript' )
-        SConscript( 'libgeneric/AntitbpropdepdrugSConscript' )
-        SConscript( 'libgeneric/BCGVaccineSConscript' )
-        SConscript( 'libgeneric/HealthSeekingBehaviorUpdateSConscript' )
-        SConscript( 'libgeneric/HealthSeekingBehaviorUpdateableSConscript' )
-        SConscript( 'libgeneric/NodeLevelHealthTriggeredIVScaleUpSwitchSConscript' )
-        SConscript( 'libgeneric/SmearDiagnosticsSConscript' )
+        SConscript( 'libgeneric/AntitbdrugSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/AntitbpropdepdrugSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/BCGVaccineSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/HealthSeekingBehaviorUpdateSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/HealthSeekingBehaviorUpdateableSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/NodeLevelHealthTriggeredIVScaleUpSwitchSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/SmearDiagnosticsSConscript', variant_dir=dll_op_path )
 
     # Polio
     # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )    SConscript( 'libgeneric/BirthtriggeredSConscript' )
-    SConscript( 'libgeneric/CalendarSConscript' )
-    SConscript( 'libgeneric/DelayedInterventionSConscript' )
-    SConscript( 'libgeneric/DiagnosticsSConscript' )
-    SConscript( 'libgeneric/HealthseekingbehaviorSConscript' )
-    SConscript( 'libgeneric/NodeLevelHealthtriggeredSConscript' )
-    SConscript( 'libgeneric/ImmunoglobulinSConscript' )
-    SConscript( 'libgeneric/ImportPressureSConscript' )
-    SConscript( 'libgeneric/OutbreakSConscript' )
-    SConscript( 'libgeneric/OutbreakIndividualSConscript' )
-    SConscript( 'libgeneric/PropertyvaluechangerSConscript' )
-    SConscript( 'libgeneric/SimplevaccineSConscript' )
+    SConscript( 'libgeneric/CalendarSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/DelayedInterventionSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/DiagnosticsSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/HealthseekingbehaviorSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/NodeLevelHealthtriggeredSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/ImmunoglobulinSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/ImportPressureSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/OutbreakSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/OutbreakIndividualSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/PropertyvaluechangerSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/SimplevaccineSConscript', variant_dir=dll_op_path )
+
 # report dlls
 # NOT YET if env['AllDlls'] or env['Report'] != "":
 # NOT YET SConscript( 'libgeneric/TajikSConscript' )

@@ -7,8 +7,8 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libgenericdllSrcFiles = [ "../Eradication/LibGenericClasses.cpp",
-                          "../Eradication/SimulationGeneric.cpp"
+libgenericdllSrcFiles = [ "../../Eradication/LibGenericClasses.cpp",
+                          "../../Eradication/SimulationGeneric.cpp"
                           ]
 
 libgenericdllIncFiles = [  "Simulation.h" ]

@@ -8,14 +8,14 @@ Import('env')
 stdobj = env.Object("stdafx.cpp")
 
 liboutbreakdllSrcFiles = [ 
-                           "../interventions/OutbreakEModule.cpp"
+                           "../../interventions/OutbreakEModule.cpp"
                           ]
 
-liboutbreakdllIncFiles = [  "../interventions/Outbreak.h" ]
+liboutbreakdllIncFiles = [  "../../interventions/Outbreak.h" ]
 liboutbreakdllLocalInc = [  "stdafx.h" ]
 
 outbreakenv = env.Clone()
-ob_ob = outbreakenv.Object( "ob_ob", "../interventions/Outbreak.cpp" )
+ob_ob = outbreakenv.Object( "ob_ob", "../../interventions/Outbreak.cpp" )
 outbreakenv.Append( CPPDEFINES=["ENABLE_TB"] )
 outbreakenv.Append(LIBS=['libgeneric_static'])
 outbreakenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])

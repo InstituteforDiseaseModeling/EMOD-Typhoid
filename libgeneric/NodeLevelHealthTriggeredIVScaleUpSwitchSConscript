@@ -8,12 +8,12 @@ Import('env')
 stdobj = env.Object("stdafx.cpp")
 
 libnodelevelhealthtriggeredivscaleupswitchdllSrcFiles = [
-                                                          "../interventions/NodeLevelHealthTriggeredIV.cpp",
-                                                          "../interventions/NodeLevelHealthTriggeredIVScaleUpSwitch.cpp",
-                                                          "../interventions/NodeLevelHealthTriggeredIVScaleUpSwitchEModule.cpp"
+                                                          "../../interventions/NodeLevelHealthTriggeredIV.cpp",
+                                                          "../../interventions/NodeLevelHealthTriggeredIVScaleUpSwitch.cpp",
+                                                          "../../interventions/NodeLevelHealthTriggeredIVScaleUpSwitchEModule.cpp"
                                                         ]
 
-libnodelevelhealthtriggeredivscaleupswitchdllIncFiles = [  "../interventions/Drugs.h" ]
+libnodelevelhealthtriggeredivscaleupswitchdllIncFiles = [  "../../interventions/Drugs.h" ]
 libnodelevelhealthtriggeredivscaleupswitchdllLocalInc = [  "stdafx.h" ]
 
 nodelevelhealthtriggeredivscaleupswitchenv = env.Clone()

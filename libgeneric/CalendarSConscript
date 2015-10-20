@@ -7,12 +7,12 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libcalendardllSrcFiles = [ "../interventions/CalendarIV.cpp",
-                           "../interventions/HealthSeekingBehavior.cpp",
-                           "../interventions/CalendarIVEModule.cpp"
+libcalendardllSrcFiles = [ "../../interventions/CalendarIV.cpp",
+                           "../../interventions/HealthSeekingBehavior.cpp",
+                           "../../interventions/CalendarIVEModule.cpp"
                            ]
 
-libcalendardllIncFiles = [  "../interventions/CalendarIV.h" ]
+libcalendardllIncFiles = [  "../../interventions/CalendarIV.h" ]
 libcalendardllLocalInc = [  "stdafx.h" ]
 
 calendarenv = env.Clone()

@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libhousingmoddllSrcFiles = [ "../interventions/HousingModification.cpp",
-                             "../interventions/HousingModificationEModule.cpp"
+libhousingmoddllSrcFiles = [ "../../interventions/HousingModification.cpp",
+                             "../../interventions/HousingModificationEModule.cpp"
                              ]
 
-libhousingmoddllIncFiles = [  "../interventions/HousingModification.h" ]
+libhousingmoddllIncFiles = [  "../../interventions/HousingModification.h" ]
 libhousingmoddllLocalInc = [  "stdafx.h" ]
 
 housingmodenv = env.Clone()

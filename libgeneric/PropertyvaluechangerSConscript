@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libpropertyvaluechangerdllSrcFiles = [ "../interventions/PropertyValueChanger.cpp",
-                                      "../interventions/PropertyValueChangerEModule.cpp"
+libpropertyvaluechangerdllSrcFiles = [ "../../interventions/PropertyValueChanger.cpp",
+                                      "../../interventions/PropertyValueChangerEModule.cpp"
                                     ]
 
-libpropertyvaluechangerdllIncFiles = [  "../interventions/PropertyValueChanger.h" ]
+libpropertyvaluechangerdllIncFiles = [  "../../interventions/PropertyValueChanger.h" ]
 libpropertyvaluechangerdllLocalInc = [  "stdafx.h" ]
 
 propertyvaluechangerenv = env.Clone()

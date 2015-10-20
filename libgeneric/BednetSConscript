@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libbednetdllSrcFiles = [ "../interventions/Bednet.cpp",
-                         "../interventions/BednetEModule.cpp"
+libbednetdllSrcFiles = [ "../../interventions/Bednet.cpp",
+                         "../../interventions/BednetEModule.cpp"
                          ]
 
-libbednetdllIncFiles = [  "../interventions/bednet.h" ]
+libbednetdllIncFiles = [  "../../interventions/bednet.h" ]
 libbednetdllLocalInc = [  "stdafx.h" ]
 
 bednetenv = env.Clone()

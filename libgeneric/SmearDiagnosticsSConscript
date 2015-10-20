@@ -7,14 +7,14 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libsmeardiagnosticsdllSrcFiles = [ "../interventions/SmearDiagnostics.cpp",
-                                   "../interventions/SmearDiagnosticsEModule.cpp"
+libsmeardiagnosticsdllSrcFiles = [ "../../interventions/SmearDiagnostics.cpp",
+                                   "../../interventions/SmearDiagnosticsEModule.cpp"
                                  ]
 
 libsmeardiagnosticsdllLocalInc = [  "stdafx.h" ]
 
 smeardiagnosticsenv = env.Clone()
-diag_obj = smeardiagnosticsenv.Object( "diag_sd", "../interventions/Diagnostics.cpp" )
+diag_obj = smeardiagnosticsenv.Object( "diag_sd", "../../interventions/Diagnostics.cpp" )
 smeardiagnosticsenv .Append( CPPDEFINES=["ENABLE_TB" ] )
 smeardiagnosticsenv.Append(LIBS=['libgeneric_static'])
 smeardiagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])

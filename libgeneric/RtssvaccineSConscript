@@ -7,8 +7,8 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-librtssvaccinedllSrcFiles = [ "../interventions/RTSSVaccine.cpp",
-                              "../interventions/RTSSVaccineEModule.cpp"
+librtssvaccinedllSrcFiles = [ "../../interventions/RTSSVaccine.cpp",
+                              "../../interventions/RTSSVaccineEModule.cpp"
                             ]
 
 librtssvaccinedllLocalInc = [  "stdafx.h" ]

@@ -7,8 +7,8 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libinputeirdllSrcFiles = [ "../interventions/InputEIR.cpp",
-                           "../interventions/InputEIREModule.cpp"
+libinputeirdllSrcFiles = [ "../../interventions/InputEIR.cpp",
+                           "../../interventions/InputEIREModule.cpp"
                          ]
 
 libinputeirdllLocalInc = [  "stdafx.h" ]

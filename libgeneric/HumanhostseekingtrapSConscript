@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libhumanhostseekingtrapdllSrcFiles = [ "../interventions/HumanHostSeekingTrap.cpp",
-                                       "../interventions/HumanHostSeekingTrapEModule.cpp"
+libhumanhostseekingtrapdllSrcFiles = [ "../../interventions/HumanHostSeekingTrap.cpp",
+                                       "../../interventions/HumanHostSeekingTrapEModule.cpp"
                                        ]
 
-libhumanhostseekingtrapdllIncFiles = [  "../interventions/HumanHostSeekingTrap.h" ]
+libhumanhostseekingtrapdllIncFiles = [  "../../interventions/HumanHostSeekingTrap.h" ]
 libhumanhostseekingtrapdllLocalInc = [  "stdafx.h" ]
 
 humanhostseekingtrapenv = env.Clone()

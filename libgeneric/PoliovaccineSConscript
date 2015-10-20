@@ -6,17 +6,17 @@
 Import('env')
 
 stdobj = env.Object("stdafx.cpp")
-svobj = env.Object("../interventions/SimpleVaccine.cpp")
+svobj = env.Object("../../interventions/SimpleVaccine.cpp")
 
 libpoliovaccinedllSrcFiles = [ 
-                              "../interventions/PolioVaccineEModule.cpp"
+                              "../../interventions/PolioVaccineEModule.cpp"
                               ]
 
 libpoliovaccinedllIncFiles = [  "../Eradication/Vaccine.h" ]
 libpoliovaccinedllLocalInc = [  "stdafx.h" ]
 
 poliovaccineenv = env.Clone()
-polioobj = poliovaccineenv.Object("poliovaccine_intervention", "../interventions/PolioVaccine.cpp")
+polioobj = poliovaccineenv.Object("poliovaccine_intervention", "../../interventions/PolioVaccine.cpp")
 
 poliovaccineenv.Append(LIBS=['libgeneric_static'])
 poliovaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])

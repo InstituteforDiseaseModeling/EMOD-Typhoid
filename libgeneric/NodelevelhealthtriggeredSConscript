@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libhealthtriggereddllSrcFiles = [ "../interventions/NodeLevelHealthtriggeredIV.cpp",
-                                  "../interventions/NodeLevelHealthtriggeredIV.cpp"
+libhealthtriggereddllSrcFiles = [ "../../interventions/NodeLevelHealthtriggeredIV.cpp",
+                                  "../../interventions/NodeLevelHealthtriggeredIV.cpp"
                                   ]
 
-libhealthtriggereddllIncFiles = [  "../interventions/NodeLevelHealthtriggeredIV.h" ]
+libhealthtriggereddllIncFiles = [  "../../interventions/NodeLevelHealthtriggeredIV.h" ]
 libhealthtriggereddllLocalInc = [  "stdafx.h" ]
 
 healthtriggeredenv = env.Clone()

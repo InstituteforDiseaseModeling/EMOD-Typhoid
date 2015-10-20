@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libantimalarialdrugdllSrcFiles = [ "../interventions/AntimalarialDrug.cpp",
-                                   "../interventions/AntimalarialDrugEModule.cpp"
+libantimalarialdrugdllSrcFiles = [ "../../interventions/AntimalarialDrug.cpp",
+                                   "../../interventions/AntimalarialDrugEModule.cpp"
                                  ]
 
-libantimalarialdrugdllIncFiles = [  "../interventions/Drugs.h" ]
+libantimalarialdrugdllIncFiles = [  "../../interventions/Drugs.h" ]
 libantimalarialdrugdllLocalInc = [  "stdafx.h" ]
 
 antimalarialdrugenv = env.Clone()

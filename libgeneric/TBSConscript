@@ -10,14 +10,14 @@ if env['AllDlls'] or env['DiseaseDll'] == "TB":
     stdobj = env.Object("stdafx.cpp")
 
     libtbdllSrcFiles = [ 
-                          "../Eradication/SimulationTBExport.cpp"
+                          "../../Eradication/SimulationTBExport.cpp"
                           ]
 
     libtbdllIncFiles = [  "SimulationTB.h" ]
     libtbdllLocalInc = [  "stdafx.h" ]
 
     tbenv = env.Clone()
-    genobj = tbenv.Object("libgenobj_tb","../Eradication/LibGenericClasses.cpp")
+    genobj = tbenv.Object("libgenobj_tb","../../Eradication/LibGenericClasses.cpp")
 
     tbenv.Append( CPPDEFINES=["ENABLE_TB"] )
     tbenv.Append( CPPDEFINES=["_TB_DLL"] )

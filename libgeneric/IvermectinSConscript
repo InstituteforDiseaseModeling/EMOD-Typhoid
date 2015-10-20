@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libivermectindllSrcFiles = [ "../interventions/Ivermectin.cpp",
-                             "../interventions/IvermectinEModule.cpp"
+libivermectindllSrcFiles = [ "../../interventions/Ivermectin.cpp",
+                             "../../interventions/IvermectinEModule.cpp"
                            ]
 
-libivermectindllIncFiles = [  "../interventions/Drugs.h" ]
+libivermectindllIncFiles = [  "../../interventions/Drugs.h" ]
 libivermectindllLocalInc = [  "stdafx.h" ]
 
 ivermectinenv = env.Clone()

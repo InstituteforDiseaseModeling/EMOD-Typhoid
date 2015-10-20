@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libmultiInterventiondistributordllSrcFiles = [ "../interventions/MultiInterventionDistributor.cpp",
-                                      "../interventions/MultiInterventionDistributorEModule.cpp"
+libmultiInterventiondistributordllSrcFiles = [ "../../interventions/MultiInterventionDistributor.cpp",
+                                      "../../interventions/MultiInterventionDistributorEModule.cpp"
                                     ]
 
-libmultiInterventiondistributordllIncFiles = [  "../interventions/MultiInterventionDistributor.h" ]
+libmultiInterventiondistributordllIncFiles = [  "../../interventions/MultiInterventionDistributor.h" ]
 libmultiInterventiondistributordllLocalInc = [  "stdafx.h" ]
 
 multiInterventiondistributorenv = env.Clone()

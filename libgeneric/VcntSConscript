@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libvcntdllSrcFiles = [ "../interventions/VectorControlNodeTargeted.cpp",
-                       "../interventions/VectorControlNodeTargetedEModule.cpp"
+libvcntdllSrcFiles = [ "../../interventions/VectorControlNodeTargeted.cpp",
+                       "../../interventions/VectorControlNodeTargetedEModule.cpp"
                        ]
 
-libvcntdllIncFiles = [  "../interventions/VectorControlNodeTargeted.h" ]
+libvcntdllIncFiles = [  "../../interventions/VectorControlNodeTargeted.h" ]
 libvcntdllLocalInc = [  "stdafx.h" ]
 
 vcntenv = env.Clone()

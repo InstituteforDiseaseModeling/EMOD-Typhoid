@@ -7,11 +7,11 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-liboutbreakdllSrcFiles = [ "../interventions/OutbreakIndividual.cpp",
-                           "../interventions/OutbreakIndividualEModule.cpp"
+liboutbreakdllSrcFiles = [ "../../interventions/OutbreakIndividual.cpp",
+                           "../../interventions/OutbreakIndividualEModule.cpp"
                           ]
 
-liboutbreakdllIncFiles = [  "../interventions/Outbreak.h" ]
+liboutbreakdllIncFiles = [  "../../interventions/Outbreak.h" ]
 liboutbreakdllLocalInc = [  "stdafx.h" ]
 
 outbreakenv = env.Clone()

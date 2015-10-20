@@ -8,15 +8,15 @@ Import('env')
 stdobj = env.Object("stdafx.cpp")
 
 libhealthseekingbehaviordllSrcFiles = [
-                                         "../interventions/HealthseekingbehaviorEModule.cpp"
+                                         "../../interventions/HealthseekingbehaviorEModule.cpp"
                                          ]
 
-libhealthseekingbehaviordllIncFiles = [  "../interventions/Healthseekingbehavior.h" ]
+libhealthseekingbehaviordllIncFiles = [  "../../interventions/Healthseekingbehavior.h" ]
 libhealthseekingbehaviordllLocalInc = [  "stdafx.h" ]
 
 healthseekingbehaviorenv = env.Clone()
 
-hsbobj = healthseekingbehaviorenv.Object("hsbobj_healthseek","../interventions/HealthSeekingBehavior.cpp")
+hsbobj = healthseekingbehaviorenv.Object("hsbobj_healthseek","../../interventions/HealthSeekingBehavior.cpp")
 
 healthseekingbehaviorenv.Append(LIBS=['libgeneric_static'])
 healthseekingbehaviorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])

@@ -6,10 +6,10 @@
 Import('env')
 
 stdobj = env.Object("stdafx.cpp")
-svobj = env.Object("../interventions/SimpleVaccine.cpp")
+svobj = env.Object("../../interventions/SimpleVaccine.cpp")
 
-libimmunoglobulindllSrcFiles = [ "../interventions/SimpleImmunoglobulin.cpp",
-                              "../interventions/SimpleImmunoglobulinEModule.cpp"
+libimmunoglobulindllSrcFiles = [ "../../interventions/SimpleImmunoglobulin.cpp",
+                              "../../interventions/SimpleImmunoglobulinEModule.cpp"
                               ]
 
 libimmunoglobulindllIncFiles = [  "../Eradication/Vaccine.h" ]
