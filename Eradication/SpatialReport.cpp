@@ -115,7 +115,10 @@ SpatialReport::Initialize( unsigned int nrmSize )
     channelDataMap.IncreaseChannelLength( "NodeID", _nrmSize );
 
     if( !channelDataMap.HasChannel("Population") )
+    {
+        population_info.enabled = true ;
         channelDataMap.IncreaseChannelLength( "Population", _nrmSize );
+    }
 
     timesteps_to_store_in_memory = 1; // TODO: could read this from a config value instead...
     total_timesteps = 0;

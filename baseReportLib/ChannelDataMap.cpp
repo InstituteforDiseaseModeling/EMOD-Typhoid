@@ -338,6 +338,8 @@ void ChannelDataMap::normalizeChannel(
     const std::string &channel_name,
     const std::string &normalization_channel_name )
 {
+    // N.B. Using std::map.find() instead of operator[] on channelDataMap or else this channel will be 
+    //      inserted only on rank-0 of multi-core simulations resulting in an infinite wait on next Reduce()
     auto ci  = channel_data_map.find(channel_name);
     auto ci2 = channel_data_map.find(normalization_channel_name);
 
@@ -346,7 +348,7 @@ void ChannelDataMap::normalizeChannel(
         channel_data_t& channel_data          = (*ci).second;
         channel_data_t& normalization_channel = (*ci2).second;
 
-        if ((normalization_channel.size() != 0) && (channel_data.size() != 0))
+        if( normalization_channel.size() == channel_data.size() )
         {
             int timestep = 0;
             for (auto& value : channel_data)
@@ -363,10 +365,21 @@ void ChannelDataMap::normalizeChannel(
                 timestep++;
             }
         }
+        else
+        {
+            std::ostringstream ss ;
+            ss << "The channel to be normalized (" << channel_name <<") and the normalizing channel (" << normalization_channel_name << ") must have the same length.  "
+               << channel_name << "=" << channel_data.size() << ", " << normalization_channel_name << "=" << normalization_channel.size() ;
+            throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+        }
     }
     else
     {
-        LOG_DEBUG_F("Skipping normalization because one or both channels not enabled - %s, %d    %s, %d\n", channel_name.c_str(), ci != channel_data_map.end(), normalization_channel_name.c_str(), ci2 != channel_data_map.end());
+        std::ostringstream ss ;
+        ss << "There must be data for both channels if they are going to be normalized: " 
+           << channel_name << "_Has_Data=" << (ci != channel_data_map.end()) << " and " 
+           << normalization_channel_name << "_Has_Data=" << (ci2 != channel_data_map.end());
+        throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
     }
 }
 

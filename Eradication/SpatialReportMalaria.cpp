@@ -52,6 +52,18 @@ SpatialReportMalaria::SpatialReportMalaria()
 {
 }
 
+void SpatialReportMalaria::Initialize( unsigned int nrmSize )
+{
+    SpatialReportVector::Initialize( nrmSize );
+
+    if( mean_parasitemia_info.enabled && !parasite_prevalence_info.enabled )
+    {
+        LOG_WARN("Mean_Parasitemia requires that Parasite_Prevalence be enabled.  Enabling Parasite_Prevalence.");
+        parasite_prevalence_info.enabled = true ;
+        channelDataMap.IncreaseChannelLength( parasite_prevalence_info.name, _nrmSize );
+    }
+}
+
 void SpatialReportMalaria::populateChannelInfos(tChanInfoMap &channel_infos)
 {
     SpatialReportVector::populateChannelInfos(channel_infos);
@@ -105,20 +117,30 @@ SpatialReportMalaria::postProcessAccumulatedData()
     SpatialReportVector::postProcessAccumulatedData();
 
     // make sure to normalize Mean Parasitemia BEFORE Parasite Prevalence, then it is exponentiated
-    normalizeChannel(mean_parasitemia_info.name, parasite_prevalence_info.name);
-
-    // Only need to transform mean log-parasitemia to geometric-mean parasitemia if that channel is enabled.  
-    // N.B. Using std::map.find() instead of operator[] on channelDataMap or else this channel will be 
-    //      inserted only on rank-0 of multi-core simulations resulting in an infinite wait on next Reduce()
-    if( channelDataMap.HasChannel( mean_parasitemia_info.name ) )
+    if( mean_parasitemia_info.enabled && parasite_prevalence_info.enabled )
     {
-        channelDataMap.ExponentialValues( mean_parasitemia_info.name );
+        normalizeChannel(mean_parasitemia_info.name, parasite_prevalence_info.name);
+
+        // Only need to transform mean log-parasitemia to geometric-mean parasitemia if that channel is enabled.  
+        if( channelDataMap.HasChannel( mean_parasitemia_info.name ) )
+        {
+            channelDataMap.ExponentialValues( mean_parasitemia_info.name );
+        }
+    }
+    else if( mean_parasitemia_info.enabled && !parasite_prevalence_info.enabled )
+    {
+        throw GeneralConfigurationException(  __FILE__, __LINE__, __FUNCTION__, "If 'Mean_Parasitemia' is enabled, then 'Parasite_Prevalence' must be enabled.");
     }
 
     // now normalize rest of channels
-    normalizeChannel(parasite_prevalence_info.name, population_info.name);
-    normalizeChannel(new_diagnostic_prevalence_info.name, population_info.name);
-    normalizeChannel(fever_prevalence_info.name, population_info.name);
+    if( parasite_prevalence_info.enabled )
+        normalizeChannel(parasite_prevalence_info.name, population_info.name);
+
+    if( new_diagnostic_prevalence_info.enabled )
+        normalizeChannel(new_diagnostic_prevalence_info.name, population_info.name);
+
+    if( fever_prevalence_info.enabled )
+        normalizeChannel(fever_prevalence_info.name, population_info.name);
 }
 
 

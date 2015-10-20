@@ -28,6 +28,8 @@ public:
     static IReport* CreateReport();
     virtual ~SpatialReportMalaria() { }
 
+    virtual void Initialize( unsigned int nrmSize );
+
     virtual void LogNodeData( Kernel::INodeContext * pNC );
 
 protected:

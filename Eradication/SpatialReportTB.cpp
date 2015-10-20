@@ -185,11 +185,20 @@ SpatialReportTB::postProcessAccumulatedData()
     SpatialReport::postProcessAccumulatedData();
 
     // Normalize TB-specific summary data channels
-    normalizeChannel(active_tb_prevalence_info.name, population_info.name);
-    normalizeChannel(latent_tb_prevalence_info.name, population_info.name);
-    normalizeChannel(mdr_tb_prevalence_info.name, population_info.name);
-    normalizeChannel(active_mdr_tb_prevalence_info.name, population_info.name);
-    normalizeChannel(tb_immune_fraction_info.name, population_info.name);
+    if( active_tb_prevalence_info.enabled )
+        normalizeChannel(active_tb_prevalence_info.name, population_info.name);
+
+    if( latent_tb_prevalence_info.enabled )
+        normalizeChannel(latent_tb_prevalence_info.name, population_info.name);
+
+    if( mdr_tb_prevalence_info.enabled )
+        normalizeChannel(mdr_tb_prevalence_info.name, population_info.name);
+
+    if( active_mdr_tb_prevalence_info.enabled )
+        normalizeChannel(active_mdr_tb_prevalence_info.name, population_info.name);
+
+    if( tb_immune_fraction_info.enabled )
+        normalizeChannel(tb_immune_fraction_info.name, population_info.name);
 }
 
 #if USE_BOOST_SERIALIZATION

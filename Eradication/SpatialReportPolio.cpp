@@ -60,6 +60,18 @@ SpatialReportPolio::SpatialReportPolio()
     new_paralytic_cases = 0.0f;
 }
 
+void SpatialReportPolio::Initialize( unsigned int nrmSize )
+{
+    SpatialReport::Initialize( nrmSize );
+
+    if( age_infection_info.enabled && !total_prevalence_info.enabled )
+    {
+        LOG_WARN("Age_Infection requires that Total_Prevalence be enabled.  Enabling Total_Prevalence.");
+        total_prevalence_info.enabled = true ;
+        channelDataMap.IncreaseChannelLength( total_prevalence_info.name, _nrmSize );
+    }
+}
+
 void SpatialReportPolio::populateChannelInfos(tChanInfoMap &channel_infos)
 {
     SpatialReport::populateChannelInfos(channel_infos);
@@ -146,17 +158,33 @@ SpatialReportPolio::postProcessAccumulatedData()
 {
     SpatialReport::postProcessAccumulatedData();
 
-    // pass through normalization
-    // order matters, since we're changing channels in place (not like old way)
-    normalizeChannel(age_infection_info.name, total_prevalence_info.name);
+    if( age_infection_info.enabled && total_prevalence_info.enabled )
+    {
+        // pass through normalization
+        // order matters, since we're changing channels in place (not like old way)
+        normalizeChannel(age_infection_info.name, total_prevalence_info.name);
+    }
 
-    normalizeChannel(total_prevalence_info.name, population_info.name);
-    normalizeChannel(wpv1_prevalence_info.name, population_info.name);
-    normalizeChannel(wpv2_prevalence_info.name, population_info.name);
-    normalizeChannel(wpv3_prevalence_info.name, population_info.name);
-    normalizeChannel(vrpv1_prevalence_info.name, population_info.name);
-    normalizeChannel(vrpv2_prevalence_info.name, population_info.name);
-    normalizeChannel(vrpv3_prevalence_info.name, population_info.name);
+    if( total_prevalence_info.enabled )
+        normalizeChannel(total_prevalence_info.name, population_info.name);
+
+    if( wpv1_prevalence_info.enabled )
+        normalizeChannel(wpv1_prevalence_info.name, population_info.name);
+
+    if( wpv2_prevalence_info.enabled )
+        normalizeChannel(wpv2_prevalence_info.name, population_info.name);
+
+    if( wpv3_prevalence_info.enabled )
+        normalizeChannel(wpv3_prevalence_info.name, population_info.name);
+
+    if( vrpv1_prevalence_info.enabled )
+        normalizeChannel(vrpv1_prevalence_info.name, population_info.name);
+
+    if( vrpv2_prevalence_info.enabled )
+        normalizeChannel(vrpv2_prevalence_info.name, population_info.name);
+
+    if( vrpv3_prevalence_info.enabled )
+        normalizeChannel(vrpv3_prevalence_info.name, population_info.name);
 }
 
 #if USE_BOOST_SERIALIZATION

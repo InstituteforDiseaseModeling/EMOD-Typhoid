@@ -28,6 +28,7 @@ public:
     static IReport* CreateReport();
     virtual ~SpatialReportVector() { }
 
+    virtual void Initialize( unsigned int nrmSize );
     virtual void LogNodeData( Kernel::INodeContext * pNode );
 
 protected:

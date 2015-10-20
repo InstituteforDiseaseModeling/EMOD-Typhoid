@@ -50,6 +50,18 @@ SpatialReportVector::SpatialReportVector()
 {
 }
 
+void SpatialReportVector::Initialize( unsigned int nrmSize )
+{
+    SpatialReport::Initialize( nrmSize );
+
+    if( infectious_vectors_info.enabled && !adult_vectors_info.enabled )
+    {
+        LOG_WARN("Infectious_Vectors requires that Adult_Vectors be enabled.  Enabling Adult_Vectors.");
+        adult_vectors_info.enabled = true ;
+        channelDataMap.IncreaseChannelLength( adult_vectors_info.name, _nrmSize );
+    }
+}
+
 void SpatialReportVector::populateChannelInfos(tChanInfoMap &channel_infos)
 {
     SpatialReport::populateChannelInfos(channel_infos);
@@ -110,7 +122,10 @@ void SpatialReportVector::postProcessAccumulatedData()
 {
     SpatialReport::postProcessAccumulatedData();
 
-    normalizeChannel(infectious_vectors_info.name, adult_vectors_info.name);
+    if( infectious_vectors_info.enabled && adult_vectors_info.enabled )
+    {
+        normalizeChannel(infectious_vectors_info.name, adult_vectors_info.name);
+    }
 }
 
 #if USE_BOOST_SERIALIZATION
