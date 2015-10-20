@@ -12,7 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "NodeVectorEventContext.h"
 
-#include "MosquitoRelease.h" // for IMosquitoRelease only
 #include "NodeVector.h"
 #include "SimulationEventContext.h"
 #include "Debug.h"
@@ -281,23 +280,20 @@ namespace Kernel
         return pOutdoorRestKilling;
     }
 
-    void NodeVectorEventContextHost::ReleaseMosquitoes(IMosquitoRelease* release)
+    void NodeVectorEventContextHost::ReleaseMosquitoes(
+        NonNegativeFloat cost,
+        const std::string& species,
+        const VectorMatingStructure& genetics,
+        NaturalNumber number
+    )
     {
-        IBaseIntervention * pBaseIV = NULL;
-        if( release->QueryInterface( GET_IID(IBaseIntervention), (void**)&pBaseIV ) == s_OK ) 
-        {
-            IncrementCampaignCost( pBaseIV->GetCostPerUnit() );
-        }
-        else
-        {
-            LOG_WARN("Unsuccessful in querying for IBaseIntervention from INodeDistributableIntervention for passing Campaign_Cost back to Node.\n");
-        }
+        IncrementCampaignCost( cost );
         INodeVector * pNV = NULL;
         if( node->QueryInterface( GET_IID( INodeVector ), (void**)&pNV ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "node", "Node", "INodeVector" );
         }
-        pNV->AddVectors( release->GetSpecies(), release->GetVectorGenetics(), release->GetNumber() );
+        pNV->AddVectors( species, genetics, number );
         return;
     }
 

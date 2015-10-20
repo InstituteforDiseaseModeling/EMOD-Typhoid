@@ -37,15 +37,7 @@ namespace Kernel
             VectorAllele::Enum HEG;
     };
 
-    struct IMosquitoRelease : public ISupports
-    {
-        virtual std::string GetSpecies() const = 0;
-        virtual VectorMatingStructure GetVectorGenetics() const = 0;
-        virtual int GetNumber() const = 0;
-        virtual ~IMosquitoRelease() { }; // needed for cleanup via interface pointer
-    };
-
-    class MosquitoRelease : public IMosquitoRelease, public BaseNodeIntervention
+    class MosquitoRelease : public BaseNodeIntervention
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_CONFIGURED(MosquitoRelease)
@@ -61,10 +53,10 @@ namespace Kernel
         virtual void SetContextTo(INodeEventContext *context) { } // not needed for this intervention
         virtual void Update(float dt);
 
-        // IMosquitoRelease
-        virtual std::string GetSpecies() const;
-        virtual VectorMatingStructure GetVectorGenetics() const;
-        virtual int GetNumber() const;
+    protected:
+        virtual std::string getSpecies() const;
+        virtual VectorMatingStructure getVectorGenetics() const;
+        virtual int getNumber() const;
 
     protected:
         JsonConfigurable::ConstrainedString releasedSpecies;

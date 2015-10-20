@@ -22,6 +22,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "NodeEventContextHost.h"
 #include "VectorEnums.h"
+#include "VectorMatingStructure.h"
+#include "Types.h"
 
 namespace Kernel
 {
@@ -44,12 +46,10 @@ namespace Kernel
         virtual void UpdateOutdoorRestKilling(float) = 0;
     };
 
-    struct IMosquitoRelease;
-
     class IMosquitoReleaseConsumer : public ISupports
     {
     public:
-        virtual void ReleaseMosquitoes(IMosquitoRelease *release) = 0;
+        virtual void ReleaseMosquitoes( NonNegativeFloat cost, const std::string& species, const VectorMatingStructure& genetics, NaturalNumber number ) = 0;
     };
 
     class NodeVectorEventContextHost :
@@ -99,7 +99,7 @@ namespace Kernel
         VectorHabitatType::Enum ovitrap_killing_target;
 
         // IMosquitoReleaseConsumer
-        virtual void ReleaseMosquitoes(IMosquitoRelease* release);
+        virtual void ReleaseMosquitoes( NonNegativeFloat cost, const std::string& species, const VectorMatingStructure& genetics, NaturalNumber number );
 
     protected: 
         float pLarvalKilling;

@@ -53,7 +53,7 @@ namespace Kernel
         //HANDLE_INTERFACE(IDistributableIntervention)
         HANDLE_INTERFACE(IBaseIntervention)
         HANDLE_INTERFACE(INodeDistributableIntervention)
-        HANDLE_INTERFACE(IMosquitoRelease)
+        //HANDLE_INTERFACE(IMosquitoRelease)
         HANDLE_ISUPPORTS_VIA(INodeDistributableIntervention)
     END_QUERY_INTERFACE_BODY(MosquitoRelease)
 
@@ -124,7 +124,7 @@ namespace Kernel
         {
             if(releasedNumber > 0)
             {
-                imrc->ReleaseMosquitoes(this);
+                imrc->ReleaseMosquitoes( cost_per_unit, getSpecies(), getVectorGenetics(), getNumber() );
                 wasDistributed = true;
             }
         }
@@ -142,17 +142,17 @@ namespace Kernel
         // Distribute() doesn't call GiveIntervention() for this intervention, so it isn't added to the NodeEventContext's list of NDI
     }
 
-    std::string MosquitoRelease::GetSpecies() const
+    std::string MosquitoRelease::getSpecies() const
     {
         return releasedSpecies;
     }
 
-    VectorMatingStructure MosquitoRelease::GetVectorGenetics() const
+    VectorMatingStructure MosquitoRelease::getVectorGenetics() const
     {
         return vector_genetics;
     }
 
-    int MosquitoRelease::GetNumber() const
+    int MosquitoRelease::getNumber() const
     {
         return releasedNumber;
     }
