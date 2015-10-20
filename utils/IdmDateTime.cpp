@@ -13,5 +13,4 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel {
     static const char * _module = "IdmDateTime";
-    NonNegativeFloat IdmDateTime::_base_year = 0;
 }

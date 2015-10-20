@@ -9,7 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "SimulationSTI.h"
-#include "IndividualHIV.h"
 #include "Sugar.h" // for DECLARE_VIRTUAL_BASE
 #include "InterventionValidator.h"
 #include "ChannelDataMap.h"
@@ -17,6 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 namespace Kernel
 {
     struct IHIVCascadeStateIntervention ;
+    class IndividualHumanHIV;
 
     class SimulationHIV : public SimulationSTI, 
                           public IDiseaseSpecificValidator, 
@@ -43,6 +43,8 @@ namespace Kernel
 
         // IChannelDataMapOutputAugmentor
         virtual void AddDataToHeader( IJsonObjectAdapter* pIJsonObj );
+
+        static float base_year;
 
     protected:
         virtual void Initialize();

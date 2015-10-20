@@ -514,7 +514,7 @@ namespace Kernel
 
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(1) << "Update(): Time: " << (float)currentTime.time;
-        if( currentTime._base_year > 0 )
+        if( currentTime.getBaseYear() > 0 )
         {
             oss << std::fixed << " Year: " << currentTime.Year();
         }

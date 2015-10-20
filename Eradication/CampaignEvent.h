@@ -102,30 +102,4 @@ namespace Kernel
 #endif
     };
 
-    class CampaignEventByYear : public CampaignEvent
-    {
-        DECLARE_FACTORY_REGISTERED(CampaignEventFactory, CampaignEventByYear, IConfigurable)
-
-    public:
-        friend class CampaignEventFactory;
-        DECLARE_CONFIGURED(CampaignEventByYear)
-        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
-        DECLARE_QUERY_INTERFACE()
-
-        CampaignEventByYear();
-        virtual ~CampaignEventByYear();
-
-    protected:
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive &ar, CampaignEvent& event, const unsigned int v);
-#endif
-    };
 }

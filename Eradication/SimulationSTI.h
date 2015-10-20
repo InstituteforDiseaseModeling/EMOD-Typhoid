@@ -9,11 +9,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "Simulation.h"
-#include "IndividualSTI.h"
 #include "Sugar.h" // for DECLARE_VIRTUAL_BASE
 
 namespace Kernel
 {
+    class IndividualHumanSTI;
+    struct IRelationship;
     class SimulationSTI : public Simulation
     {
         GET_SCHEMA_STATIC_WRAPPER(SimulationSTI)

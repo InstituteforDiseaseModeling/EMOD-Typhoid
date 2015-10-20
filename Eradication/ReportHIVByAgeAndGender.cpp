@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HIVInterventionsContainer.h"
 #include "NodeLevelHealthTriggeredIV.h"
 #include "ISimulation.h"
+#include "SimulationHIV.h" // for base_year
 
 static const char* _module = "ReportHIVByAgeAndGender";
 
@@ -58,9 +59,9 @@ namespace Kernel
 
         if( ret )
         {
-            if( startYear < IdmDateTime::_base_year )
+            if( startYear < SimulationHIV::base_year )
             {
-                startYear = IdmDateTime::_base_year ;
+                startYear = SimulationHIV::base_year ;
             }
             if( startYear >= stopYear )
             {
@@ -93,11 +94,12 @@ namespace Kernel
             // --- into the simulation that we think we should be.  It ignores issues with
             // --- the size of dt not ending exactly on integer years.  We subtract the
             // --- dt/2 to deal with rounding errors.  For example, if the half period was 182.5,
-            // --- start_year == _base_year, and dt = 30, then next_report_time = 167.5 and
+            // --- start_year == base_year, and dt = 30, then next_report_time = 167.5 and
             // --- data would be collected at 180.  However, for the next update
             // --- next_report_time would be 350 and the update would occur at 360.
             // ------------------------------------------------------------------------
-            next_report_time = DAYSPERYEAR*(startYear - IdmDateTime::_base_year) + report_hiv_half_period - dt / 2.0f ;
+            next_report_time = DAYSPERYEAR*(startYear - SimulationHIV::base_year) + report_hiv_half_period - dt / 2.0f ;
+
         }
         else if( is_collecting_data && (_parent->GetSimulationTime().Year() >= stopYear) )
         {

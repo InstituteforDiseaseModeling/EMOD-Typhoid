@@ -309,6 +309,7 @@ else:
 
     # HIV
     hivSrcFiles = stiSrcFiles + [
+                            "CampaignEventByYear.cpp",
                             "IndividualHIV.cpp",
                             "InfectionHIV.cpp",
                             "FerrandAgeDependentDistribution.cpp",

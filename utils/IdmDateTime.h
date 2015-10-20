@@ -93,10 +93,21 @@ namespace Kernel {
             return timestep;
         }
 
+        void setBaseYear( NonNegativeFloat base_year_in )
+        {
+            _base_year = base_year_in;
+        }
+
+        NonNegativeFloat getBaseYear() const
+        {
+            return _base_year;
+        }
+
         NaturalNumber timestep;
         NonNegativeFloat time;
 
         private:
-        static NonNegativeFloat _base_year;
+        NonNegativeFloat _base_year;
+
     };
 }

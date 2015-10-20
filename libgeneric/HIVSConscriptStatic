@@ -14,6 +14,7 @@ libhivSrcFiles = [
                           "../Eradication/ReportHIV.cpp",
                           "../Eradication/SimulationHIV.cpp",
                           "../Eradication/SusceptibilityHIV.cpp",
+                          "../Eradication/CampaignEventByYear.cpp",
                           "../Eradication/FerrandAgeDependentDistribution.cpp",
                           "../Eradication/HIVInterventionsContainer.cpp",
                           "../Eradication/HivObjectFactory.cpp",

@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HivObjectFactory.h"
 #include "IHIVCascadeStateIntervention.h"
 #include "HIVReportEventRecorder.h"
+#include "CampaignEventByYear.h"
 
 static const float DEFAULT_BASE_YEAR = 2015.0f ;
 
@@ -26,6 +27,8 @@ static const char * _module = "SimulationHIV";
 
 namespace Kernel
 {
+    float SimulationHIV::base_year = 0.0f;
+
     GET_SCHEMA_STATIC_WRAPPER_IMPL(SimulationHIV,SimulationHIV)
     BEGIN_QUERY_INTERFACE_BODY(SimulationHIV)
         HANDLE_INTERFACE(IGlobalContext)
@@ -117,13 +120,12 @@ namespace Kernel
     )
     {
         // Set base_year
-        float base_year = DEFAULT_BASE_YEAR ;
         initConfigTypeMap( "Base_Year",  &base_year, Base_Year_DESC_TEXT, 1800.0, 2100.0, DEFAULT_BASE_YEAR );
 
         bool ret = SimulationSTI::Configure( inputJson );
 
         LOG_INFO_F("Setting Base_Year to %f\n", base_year );
-        Simulation::currentTime._base_year =  base_year;
+        currentTime.setBaseYear( base_year );
 
         return ret;
     }
@@ -254,7 +256,7 @@ namespace Kernel
     void SimulationHIV::AddDataToHeader( IJsonObjectAdapter* pIJsonObj )
     {
         // This class is a friend of IdmDateTime so allowed to access private member.
-        float base_year = IdmDateTime::_base_year;
+
         pIJsonObj->Insert("Base_Year", base_year);
     }
 }
