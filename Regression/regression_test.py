@@ -29,7 +29,7 @@ import pdb
 params = None
 MAX_ACTIVE_JOBS=20
 
-class RuntimeParameters():
+class RuntimeParameters:
     def __init__(self, args):
         print( "os = " + os.name )
         self.args = args
@@ -187,6 +187,19 @@ class RuntimeParameters():
     @property
     def dts(self):
         return self.args.disable_schema_test
+        
+    @property
+    def sec(self):
+        return self.args.skip_emodule_check
+
+    @property
+    def constraints_dict(self):
+        constraints_list = self.args.config_constraints
+        constraints_dict = {}
+        for raw_nvp in constraints_list:
+            nvp = raw_nvp.split(":")
+            constraints_dict[ nvp[0] ] = nvp[1]
+        return constraints_dict
         
 class Monitor(threading.Thread):
     def __init__(self, sim_id, config_id, report, config_json=None, compare_results_to_baseline=True):
@@ -1071,12 +1084,14 @@ def copyEModulesOver( params ):
                 target_dir = os.path.join( params.dll_root, dll_subdir )
                 target_dir = os.path.join( target_dir, dll_hash )
 
-                if not (os.path.isdir( target_dir ) ):
+                if params.sec:
+                    print( dll + " will be used without checking 'new-ness'." )
+                elif not (os.path.isdir( target_dir ) ):
                     print( dll + ": copying to cluster" )
                 else:
                     print( dll + ": Already on cluster" )
 
-                if not (os.path.isdir( target_dir ) ):
+                if not (os.path.isdir( target_dir ) ) and params.sec == False: # sec = command-line option to skip this
                     os.makedirs( target_dir )
                     shutil.copy( dll, os.path.join( target_dir, os.path.basename( dll ) ) )
 
@@ -1146,6 +1161,20 @@ def main():
             if configjson is None:
                 print("Error flattening config.  Skipping " + simcfg["path"])
                 final_warnings += "Error flattening config.  Skipped " + simcfg["path"] + "\n"
+                continue
+
+            constraints_satisfied = True
+            if len(params.constraints_dict) != 0:
+                real_params = configjson["parameters"]
+                cons = params.constraints_dict
+                for key in cons:
+                    val = cons[key]
+                    if key not in real_params.keys() or str(real_params[ key ]) != val:
+                        print( "Scenario configuration did not satisfy constraint: {0} == {1} but must == {2}.".format( key, str(real_params[ key ]), val ) )
+                        constraints_satisfied = False
+                        continue
+
+            if constraints_satisfied == False:
                 continue
 
             if campjson is None:
@@ -1280,6 +1309,8 @@ def setup():
     parser.add_argument("--use-dlls", action="store_true", default=False, help="Use emodules/DLLs when running tests")
     parser.add_argument("--all-outputs", action="store_true", default=False, help="Use all output .json files for validation, not just InsetChart.json")
     parser.add_argument("--dll-path", help="Path to the root directory of the DLLs to use (e.g. contains reporter_plugins)")
+    parser.add_argument("--skip-emodule-check", action="store_true", default=False, help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
+    parser.add_argument("--config-constraints", default=[], action="append", help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
     args = parser.parse_args()
     global params
     params = RuntimeParameters(args)
