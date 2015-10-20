@@ -44,35 +44,42 @@ RegisterWithFactory(
 {
     LOG_DEBUG_F("RegisterWithFactory called for %s\n", _module);
     pInterventionFactory->Register(
-        _module,
+        "SimpleHousingModification",
+        []()
+        {
+            return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::SimpleHousingModification());
+        }
+    );
+    pInterventionFactory->Register(
+        "IRSHousingModification",
         []()
         {
             return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::IRSHousingModification());
         }
     );
     pInterventionFactory->Register(
-        _module,
+        "ScreeningHousingModification",
         []()
         {
             return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::ScreeningHousingModification());
         }
     );
     pInterventionFactory->Register(
-        _module,
+        "SpatialRepellentHousingModification",
         []()
         {
             return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::SpatialRepellentHousingModification());
         }
     );
     pInterventionFactory->Register(
-        _module,
+        "ArtificialDietHousingModification",
         []()
         {
             return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::ArtificialDietHousingModification());
         }
     );
     pInterventionFactory->Register(
-        _module,
+        "InsectKillingFenceHousingModification",
         []()
         {
             return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::InsectKillingFenceHousingModification());

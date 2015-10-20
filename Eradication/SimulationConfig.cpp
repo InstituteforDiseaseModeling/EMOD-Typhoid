@@ -44,7 +44,7 @@ static const char* _module = "SimulationConfig";
 namespace Kernel
 {
 
-ISimulationConfigFactory * SimulationConfigFactory::_instance = NULL;
+ISimulationConfigFactory * SimulationConfigFactory::_instance = nullptr;
 static const char* tb_drug_placeholder_string = "<tb_drug_name_goes_here>";
 static const char* malaria_drug_placeholder_string = "<malaria_drug_name_goes_here>";
 
@@ -406,7 +406,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif // TB
 
 #ifndef DISABLE_MALARIA
-#if !defined(_DLLS_)
     if( sim_type == SimType::MALARIA_SIM )
     {
         // for schema?
@@ -418,7 +417,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             MalariaDrugMap[ drug_name ] = mdtp;
         }
     }
-#endif
 #endif
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -548,7 +546,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     if ( sim_type == SimType::MALARIA_SIM )
     {
 #ifndef DISABLE_MALARIA
-#if !defined(_DLLS_)
         // for each key in Malaria_Drug_Params, create/configure MalariaDrugTypeParameters object and add to static map
         try
         {
@@ -556,7 +553,10 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             json::Object::const_iterator itMdp;
             for (itMdp = mdp.Begin(); itMdp != mdp.End(); itMdp++)
             {
-                MalariaDrugTypeParameters::CreateMalariaDrugTypeParameters(itMdp->name);
+                std::string drug_name( itMdp->name );
+                auto * mdtp = MalariaDrugTypeParameters::CreateMalariaDrugTypeParameters( drug_name );
+                release_assert( mdtp );
+                MalariaDrugMap[ drug_name ] = mdtp;
             }
         }
         catch(json::Exception &e)
@@ -564,7 +564,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             // Exception casting Malaria_Drug_Params to json::Object
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); 
         }
-#endif
 #endif
     }
 

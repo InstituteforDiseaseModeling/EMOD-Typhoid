@@ -143,25 +143,20 @@ namespace Kernel
 
     void AntimalarialDrug::ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc )
     {
-        // TBD: QI from ivc to MalariaInterventionsContainer, and then ask it for the MalariaDrugTypeParameters object.
-        IMalariaDrugEffects * mivc = NULL;
-        if( ivc->QueryInterface( GET_IID(IMalariaDrugEffects), (void**)&mivc ) != s_OK )
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "ivc", "IMalariaDrugEffects", "IIndividualHumanInterventionsContext" );
-        };
-        auto mdtMap = mivc->GetMdtParams();
-
+        auto mdtMap = GET_CONFIGURABLE(SimulationConfig)->MalariaDrugMap;
         if( mdtMap.find( drug_type ) == mdtMap.end() )
         {
             throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "mdtMap", drug_type.c_str() );
         }
+
+        auto drug_params = mdtMap.at( drug_type );
 
         if(dosing_type == (DrugUsageType::FullTreatmentCourse) ||
            dosing_type == (DrugUsageType::FullTreatmentNewDetectionTech) ||
            dosing_type == (DrugUsageType::FullTreatmentParasiteDetect) ||
            dosing_type == (DrugUsageType::FullTreatmentWhenSymptom))
         {
-            remaining_doses = mdtMap[drug_type]->drug_fulltreatment_doses;
+            remaining_doses = drug_params->drug_fulltreatment_doses;
         }
         else if(dosing_type == (DrugUsageType::SingleDose) ||
                 dosing_type == (DrugUsageType::SingleDoseNewDetectionTech) ||
@@ -175,12 +170,12 @@ namespace Kernel
             remaining_doses = 1000; //hack for prophylaxis--person keeps taking 1000 doses, because this lasts for several years.  This will be replaced with a different usage pattern when we reintroduce compliance
         }
 
-        time_between_doses = mdtMap[drug_type]->drug_dose_interval;
-        Cmax = mdtMap[drug_type]->drug_Cmax;
+        time_between_doses = drug_params->drug_dose_interval;
+        Cmax = drug_params->drug_Cmax;
 
         // Optional age-dependent dosing
-        float bodyweight_exponent = mdtMap[drug_type]->bodyweight_exponent;
-        DoseMap::dose_map_t fractional_dose_by_upper_age = mdtMap[drug_type]->dose_map.fractional_dose_by_upper_age;
+        float bodyweight_exponent = drug_params->bodyweight_exponent;
+        DoseMap::dose_map_t fractional_dose_by_upper_age = drug_params->dose_map.fractional_dose_by_upper_age;
         if ( bodyweight_exponent > 0 || !fractional_dose_by_upper_age.empty() )
         {
             float age_in_days = ivc->GetParent()->GetEventContext()->GetAge();
@@ -198,13 +193,13 @@ namespace Kernel
             Cmax *= Cmax_multiplier;
         }
 
-        Vd = mdtMap[drug_type]->drug_Vd;
-        drug_c50 = mdtMap[drug_type]->drug_pkpd_c50;
-        drug_IRBC_killrate = mdtMap[drug_type]->max_drug_IRBC_kill;
-        drug_gametocyte02  = mdtMap[drug_type]->drug_gametocyte02_killrate;
-        drug_gametocyte34  = mdtMap[drug_type]->drug_gametocyte34_killrate;
-        drug_gametocyteM   = mdtMap[drug_type]->drug_gametocyteM_killrate;
-        drug_hepatocyte    = mdtMap[drug_type]->drug_hepatocyte_killrate;
+        Vd = drug_params->drug_Vd;
+        drug_c50 = drug_params->drug_pkpd_c50;
+        drug_IRBC_killrate = drug_params->max_drug_IRBC_kill;
+        drug_gametocyte02  = drug_params->drug_gametocyte02_killrate;
+        drug_gametocyte34  = drug_params->drug_gametocyte34_killrate;
+        drug_gametocyteM   = drug_params->drug_gametocyteM_killrate;
+        drug_hepatocyte    = drug_params->drug_hepatocyte_killrate;
 
         IGlobalContext *pGC = NULL;
         const SimulationConfig* simConfigObj = NULL;
@@ -218,8 +213,8 @@ namespace Kernel
         }
 
         durability_time_profile = simConfigObj->PKPD_model;
-        fast_decay_time_constant = mdtMap[drug_type]->drug_decay_T1;
-        slow_decay_time_constant = mdtMap[drug_type]->drug_decay_T2;
+        fast_decay_time_constant = drug_params->drug_decay_T1;
+        slow_decay_time_constant = drug_params->drug_decay_T2;
 
         PkPdParameterValidation();
     }

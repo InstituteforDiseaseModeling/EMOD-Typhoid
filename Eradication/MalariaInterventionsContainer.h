@@ -18,7 +18,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorInterventionsContainer.h"
 #include "SimpleTypemapRegistration.h"
 #include "MalariaContexts.h"
-#include "MalariaDrugTypeParameters.h"
 
 namespace Kernel
 {
@@ -26,7 +25,6 @@ namespace Kernel
     // it needs to implement consumer interfaces for all the relevant intervention types
     struct IMalariaDrugEffects : public ISupports
     {
-        virtual MalariaDrugTypeParameters::tMDTPMap& GetMdtParams() = 0;
         virtual float get_drug_IRBC_killrate() = 0;
         virtual float get_drug_hepatocyte() = 0;
         virtual float get_drug_gametocyte02() = 0;
@@ -75,7 +73,6 @@ namespace Kernel
         virtual void ApplyDrugGametocyteMEffect( float rate );
 
         //IMalariaDrugEffects(Get): TODO move impl to cpp.
-        virtual MalariaDrugTypeParameters::tMDTPMap& GetMdtParams();
         virtual float get_drug_IRBC_killrate();
         virtual float get_drug_hepatocyte();
         virtual float get_drug_gametocyte02();

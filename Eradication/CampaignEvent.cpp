@@ -31,6 +31,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 // Note: These includes appear to be necessary for EMODule build to be aware
 // of thse ECs. Need to move away from prior knowledge of specific ECs.
+#include "MultiInterventionEventCoordinator.h"
 #include "NodeEventCoordinator.h"
 #include "StandardEventCoordinator.h"
 #include "SimpleEventCoordinator.h"

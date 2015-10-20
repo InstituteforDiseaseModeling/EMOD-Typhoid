@@ -471,7 +471,7 @@ pythonOnExitHook()
     auto pFunc = IdmPyInit( "dtk_post_process", "application" );
     if( pFunc )
     {
-        PyObject * vars = NULL;
+        PyObject * vars = nullptr;
         PyObject_CallObject( pFunc, vars );
         PyErr_Print();
     }

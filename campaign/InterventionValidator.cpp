@@ -44,6 +44,11 @@ namespace Kernel
             return ;
         }
 
+#if defined(_DLLS_)
+        // For now just skip this test during dll builds: need to develop non-static solution.
+        return;
+#endif
+
         std::string class_name = std::string(json::QuickInterpreter(rElement)["class"].As<json::String>()) ;
         LOG_DEBUG_F( "Attempting to instantiate intervention of class %s\n", class_name.c_str() );
 

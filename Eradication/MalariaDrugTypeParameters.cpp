@@ -10,15 +10,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "MalariaDrugTypeParameters.h"
 
+#include "Debug.h"
 #include "Common.h"
 #include "Exceptions.h"
 #include <algorithm> // for transform
 #include <cctype> // for tolower
 
 static const char * _module = "DTP";
-
-Kernel::MalariaDrugTypeParameters::tMDTPMap Kernel::MalariaDrugTypeParameters::_mdtMap;
-
+#if !defined( DISABLE_MALARIA )
 namespace Kernel
 {
     void
@@ -100,44 +99,36 @@ namespace Kernel
         // at which point we would probably just make those configurable properties of AntimalarialDrug itself,
         // there is no need to keep leaking memory here.
 
-        MalariaDrugTypeParameters* params = NULL;
-        tMDTPMap::const_iterator itMap = _mdtMap.find(drugType);
-
-        if ( itMap == _mdtMap.end() )
+        // There used to be code to check for and retrieve the existing instance for a given drugType from the map
+        // but there was no use case for that and function name suggests creation.
+        auto * params = _new_ MalariaDrugTypeParameters( drugType );
+        release_assert( params );
+        params->Initialize(drugType);
+        if( !JsonConfigurable::_dryrun )
         {
-            params = _new_ MalariaDrugTypeParameters( drugType );
-            params->Initialize(drugType);
-            if( !JsonConfigurable::_dryrun )
+            try
             {
-                try
-                {
-                    Configuration* drug_config = Configuration::CopyFromElement( (*EnvPtr->Config)["Malaria_Drug_Params"][drugType] );
-                    params->Configure( drug_config );
+                Configuration* drug_config = Configuration::CopyFromElement( (*EnvPtr->Config)["Malaria_Drug_Params"][drugType] );
+                params->Configure( drug_config );
 
-                    // Check validity of dosing regimen
-                    float sim_tstep = (*EnvPtr->Config)["Simulation_Timestep"].As<Number>();
-                    float updates_per_tstep = (*EnvPtr->Config)["Infection_Updates_Per_Timestep"].As<Number>();
-                    if ( params->drug_dose_interval < sim_tstep/updates_per_tstep )
-                    {
-                        std::ostringstream oss;
-                        oss << "time_between_doses (" << params->drug_dose_interval << ") is less than dt (" << sim_tstep/updates_per_tstep << ")" << std::endl;
-                        throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, oss.str().c_str() );
-                    }
-
-                }
-                catch(json::Exception &e)
+                // Check validity of dosing regimen
+                float sim_tstep = (*EnvPtr->Config)["Simulation_Timestep"].As<Number>();
+                float updates_per_tstep = (*EnvPtr->Config)["Infection_Updates_Per_Timestep"].As<Number>();
+                if ( params->drug_dose_interval < sim_tstep/updates_per_tstep )
                 {
-                    // Exception getting parameter block for drug of type "drugType" from config.json
-                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); 
+                    std::ostringstream oss;
+                    oss << "time_between_doses (" << params->drug_dose_interval << ") is less than dt (" << sim_tstep/updates_per_tstep << ")" << std::endl;
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, oss.str().c_str() );
                 }
+
             }
-            _mdtMap[ drugType ] = params;
-            return params;
+            catch(json::Exception &e)
+            {
+                // Exception getting parameter block for drug of type "drugType" from config.json
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); 
+            }
         }
-        else
-        {
-            return itMap->second;
-        }
+        return params;
     }
 
     bool
@@ -178,4 +169,4 @@ namespace Kernel
     }
 
 }
-
+#endif

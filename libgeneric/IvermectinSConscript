@@ -18,7 +18,6 @@ ivermectinenv = env.Clone()
 ivermectinenv.Append(LIBS=['libgeneric_static'])
 ivermectinenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 ivermectinenv.Append(LIBS=['libvector_static'])
-ivermectinenv.Append(LIBS=['libmalaria_static'])
 ivermectinenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libivermectinDll = ivermectinenv.SharedLibrary('libivermectin', libivermectindllSrcFiles + stdobj)

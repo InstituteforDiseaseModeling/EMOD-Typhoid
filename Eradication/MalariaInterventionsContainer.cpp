@@ -182,10 +182,7 @@ namespace Kernel
     float MalariaInterventionsContainer::get_drug_gametocyte02()  { return drug_gametocyte02;  }
     float MalariaInterventionsContainer::get_drug_gametocyte34()  { return drug_gametocyte34;  }
     float MalariaInterventionsContainer::get_drug_gametocyteM()   { return drug_gametocyteM;   }
-    MalariaDrugTypeParameters::tMDTPMap& MalariaInterventionsContainer::GetMdtParams()
-    {
-        return MalariaDrugTypeParameters::_mdtMap;
-    }
+
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

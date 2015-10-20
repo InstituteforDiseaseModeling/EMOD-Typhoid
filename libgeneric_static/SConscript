@@ -48,6 +48,7 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/SimulationConfig.cpp",
                        "../Eradication/SimulationEventContext.cpp",
                        "../Eradication/SpatialReport.cpp",
+                       "../Eradication/MultiInterventionEventCoordinator.cpp",
                        "../Eradication/NodeEventCoordinator.cpp",
                        "../Eradication/SimpleEventCoordinator.cpp",
                        "../Eradication/StandardEventCoordinator.cpp",
@@ -57,13 +58,14 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/StrainAwareTransmissionGroups.cpp",
                        "../Eradication/Susceptibility.cpp",
                        "../Interventions/Drugs.cpp",
-                       "../Eradication/VectorSpeciesParameters.cpp",
                        "../interventions/WaningEffectBox.cpp",
                        "../interventions/WaningEffectBoxExponential.cpp",
                        "../interventions/WaningEffectConstant.cpp",
                        "../interventions/WaningEffectExponential.cpp",
                        "../interventions/WaningEffectFactory.cpp",
-                       "../Eradication/VectorTransmissionGroups.cpp"
+                       "../Eradication/VectorTransmissionGroups.cpp",
+                       "../Eradication/VectorSpeciesParameters.cpp",
+                       "../Eradication/MalariaDrugTypeParameters.cpp"
                        ]
 
 libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]

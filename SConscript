@@ -119,6 +119,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/BednetSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HousingmodSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HumanhostseekingtrapSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/IndividualrepellentSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/IvermectinSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/MosquitoreleaseSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/ScalelarvalhabitatSConscript', variant_dir=dll_op_path )

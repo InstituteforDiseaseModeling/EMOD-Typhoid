@@ -44,7 +44,6 @@ namespace Kernel {
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
 
         typedef map< std::string, MalariaDrugTypeParameters* > tMDTPMap;
-        static tMDTPMap _mdtMap;
 
     protected:
         void Initialize(const std::string& drugType);

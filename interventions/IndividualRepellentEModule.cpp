@@ -10,8 +10,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "FactorySupport.h"
+#include "IndividualRepellent.h"
 #include "InterventionFactory.h"
-#include "Vaccine.h"
 #include "ProgVersion.h"
 
 static const char * _module = "SimpleIndividualRepellent";
