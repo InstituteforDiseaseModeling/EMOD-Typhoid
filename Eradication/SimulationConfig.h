@@ -289,9 +289,9 @@ namespace Kernel
         float prob_super_spreader;
         bool  enable_coital_dilution;
 
-
+#ifndef DISABLE_HIV
         std::map< RelationshipType::Enum, float > coital_act_rate;
-
+#endif
         float coital_dilution_2_partners;
         float coital_dilution_3_partners;
         float coital_dilution_4_plus_partners;

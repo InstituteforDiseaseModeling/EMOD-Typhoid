@@ -465,11 +465,11 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         initConfigTypeMap( "Coital_Dilution_Factor_2_Partners", &coital_dilution_2_partners, Coital_Dilution_Factor_2_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
         initConfigTypeMap( "Coital_Dilution_Factor_3_Partners", &coital_dilution_3_partners, Coital_Dilution_Factor_3_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f);
         initConfigTypeMap( "Coital_Dilution_Factor_4_Plus_Partners", &coital_dilution_4_plus_partners, Coital_Dilution_Factor_4_Plus_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
-    
+#ifndef DISABLE_HIV 
         initConfigTypeMap( "Coital_Act_Rate_Transitory", &coital_act_rate[RelationshipType::TRANSITORY], Coital_Act_Rate_Transitory_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
         initConfigTypeMap( "Coital_Act_Rate_Informal", &coital_act_rate[RelationshipType::INFORMAL], Coital_Act_Rate_Informal_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
         initConfigTypeMap( "Coital_Act_Rate_Marital", &coital_act_rate[RelationshipType::MARITAL], Coital_Act_Rate_Marital_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
-    
+#endif    
         initConfigTypeMap( "Relationships_Transitory_Weibull_Heterogeneity", &transitoryRel_inv_kappa, Relationships_Transitory_Weibull_Heterogeneity_DESC_TEXT, 0.0f, 100.0f, 1.0f );
         initConfigTypeMap( "Relationships_Transitory_Weibull_Scale", &transitoryRel_lambda, Relationships_Transitory_Weibull_Scale_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
 
@@ -857,7 +857,9 @@ SimulationConfig::SimulationConfig()
     //, shortTermRelationshipLength(10.0f)
     , prob_super_spreader(0.0f)
     , enable_coital_dilution(true)
+#ifndef DISABLE_HIV 
     , coital_act_rate( )
+#endif
     , coital_dilution_2_partners(1)
     , coital_dilution_3_partners(1)
     , coital_dilution_4_plus_partners(1)

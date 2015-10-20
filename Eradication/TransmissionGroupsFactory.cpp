@@ -38,11 +38,11 @@ namespace Kernel
             groups = (ITransmissionGroups*) _new_ VectorTransmissionGroups;
             break;
 #endif
-//#ifndef DISABLE_STI
+#ifndef DISABLE_HIV
         case TransmissionGroupType::RelationshipGroups:
             groups = (ITransmissionGroups*) _new_ RelationshipGroups;
             break;
-//#endif
+#endif
         default:
             throw BadEnumInSwitchStatementException(__FILE__, __LINE__, __FUNCTION__, "Unknown transmission groups type.");
         }
