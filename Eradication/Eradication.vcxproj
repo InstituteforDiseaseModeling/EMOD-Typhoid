@@ -261,6 +261,7 @@
     <ClCompile Include="Properties.cpp" />
     <ClCompile Include="PropertyReport.cpp" />
     <ClCompile Include="CampaignEvent.cpp" />
+    <ClCompile Include="CampaignEventByYear.cpp" />
     <ClCompile Include="Climate.cpp" />
     <ClCompile Include="ClimateByData.cpp" />
     <ClCompile Include="ClimateConstant.cpp" />
@@ -563,6 +564,7 @@
     <ClInclude Include="BinnedReportMalaria.h" />
     <ClInclude Include="BinnedReportPolio.h" />
     <ClInclude Include="CampaignEvent.h" />
+    <ClInclude Include="CampaignEventByYear.h" />
     <ClInclude Include="Climate.h" />
     <ClInclude Include="ClimateByData.h" />
     <ClInclude Include="ClimateConstant.h" />
