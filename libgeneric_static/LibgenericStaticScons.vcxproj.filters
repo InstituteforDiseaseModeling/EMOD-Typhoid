@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Header Files">
+			<UniqueIdentifier>{7b42d31d-d53c-4868-8b92-ca2bc9fc052f}</UniqueIdentifier>
+			<Extensions>h;hpp;hxx;hm;inl</Extensions>
+		</Filter>
+		<Filter Include="Local Headers">
+			<UniqueIdentifier>{7b42d31d-d53c-4868-8b92-ca2bc9fc052f}</UniqueIdentifier>
+			<Extensions>h;hpp;hxx;hm;inl</Extensions>
+		</Filter>
+		<Filter Include="Source Files">
+			<UniqueIdentifier>{7b42d31d-d53c-4868-8b92-ca2bc9fc052f}</UniqueIdentifier>
+			<Extensions>cpp;c;cxx;l;y;def;odl;idl;hpj;bat</Extensions>
+		</Filter>
+		<Filter Include="Source Files\..">
+			<UniqueIdentifier>{9F03E09C-1C24-EEAA-F79D-41B389D7E629}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Source Files\..\baseReportLib">
+			<UniqueIdentifier>{16BE70E0-DE13-549E-868A-9FF7176BD92D}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Source Files\..\campaign">
+			<UniqueIdentifier>{4D4F47CB-C8DC-9199-6D5A-0FDB7E6BC5DB}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Source Files\..\Eradication">
+			<UniqueIdentifier>{3F54BB02-E7BF-11FC-9CE7-5006B5CB705C}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Source Files\..\interventions">
+			<UniqueIdentifier>{8E31DAA9-F471-97C6-053F-2C523A835B85}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Source Files\..\Interventions">
+			<UniqueIdentifier>{309E12F7-1DF9-17BD-29CD-F3CD6D040346}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="libgeneric_classes.h">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="Report.h">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="stdafx.h">
+			<Filter>Local Headers</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\baseReportLib\BaseChannelReport.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\BaseEventReport.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\BaseEventReportIntervalOutput.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\BaseTextReport.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\BaseTextReportEvents.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\BinnedReport.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\ChannelDataMap.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\ReportUtilities.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\baseReportLib\stdafx.cpp">
+			<Filter>Source Files\..\baseReportLib</Filter>
+		</ClCompile>
+		<ClCompile Include="..\campaign\NodeSetAll.cpp">
+			<Filter>Source Files\..\campaign</Filter>
+		</ClCompile>
+		<ClCompile Include="..\campaign\NodeSetNodeList.cpp">
+			<Filter>Source Files\..\campaign</Filter>
+		</ClCompile>
+		<ClCompile Include="..\campaign\NodeSetPolygon.cpp">
+			<Filter>Source Files\..\campaign</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\CalendarEventCoordinator.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\CampaignEvent.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Climate.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\ClimateByData.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\ClimateConstant.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\ClimateKoppen.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\CoverageByNodeEventCoordinator.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\DemographicsReport.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\DllLoader.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\GroupEventCoordinator.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Individual.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Infection.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Instrumentation.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\InterventionsContainer.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\JsonObjectDemog.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\MalariaDrugTypeParameters.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Migration.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\MultiInterventionEventCoordinator.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\MultiRouteTransmissionGroups.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Node.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\NodeDemographics.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\NodeEventContext.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\NodeEventCoordinator.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\NodeRankMap.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Properties.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\PropertyReport.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Report.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\ReportEventRecorder.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\SimpleEventCoordinator.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\SimpleTransmissionGroups.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Simulation.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\SimulationConfig.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\SimulationEventContext.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\SpatialReport.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\StandardEventCoordinator.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\StrainAwareTransmissionGroups.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\StrainIdentity.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\Susceptibility.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\TBDrugTypeParameters.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\TransmissionGroupsBase.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\TransmissionGroupsFactory.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\VectorSpeciesParameters.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Eradication\VectorTransmissionGroups.cpp">
+			<Filter>Source Files\..\Eradication</Filter>
+		</ClCompile>
+		<ClCompile Include="..\interventions\WaningEffectBox.cpp">
+			<Filter>Source Files\..\interventions</Filter>
+		</ClCompile>
+		<ClCompile Include="..\interventions\WaningEffectBoxExponential.cpp">
+			<Filter>Source Files\..\interventions</Filter>
+		</ClCompile>
+		<ClCompile Include="..\interventions\WaningEffectConstant.cpp">
+			<Filter>Source Files\..\interventions</Filter>
+		</ClCompile>
+		<ClCompile Include="..\interventions\WaningEffectExponential.cpp">
+			<Filter>Source Files\..\interventions</Filter>
+		</ClCompile>
+		<ClCompile Include="..\interventions\WaningEffectFactory.cpp">
+			<Filter>Source Files\..\interventions</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Interventions\Drugs.cpp">
+			<Filter>Source Files\..\Interventions</Filter>
+		</ClCompile>
+		<ClCompile Include="stdafx.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Release|x64">
+			<Configuration>Release</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Label="Globals">
+		<ProjectGuid>{A6C90E29-DA3F-4904-C910-3E4E100BC8B4}</ProjectGuid>
+		<RootNamespace>LibgenericStaticScons</RootNamespace>
+		<Keyword>MakeFileProj</Keyword>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+		<ConfigurationType>Makefile</ConfigurationType>
+		<UseOfMfc>false</UseOfMfc>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+	<ImportGroup Label="ExtensionSettings">
+	</ImportGroup>
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<PropertyGroup Label="UserMacros" />
+	<PropertyGroup>
+        <PlatformToolset>v110</PlatformToolset>
+		<NMakeBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo Starting SCons &amp;&amp; &quot;C:\Python27-32\python.exe&quot; -c &quot;from os.path import join; import sys; sys.path = [ join(sys.prefix, &apos;Lib&apos;, &apos;site-packages&apos;, &apos;scons-2.3.0&apos;), join(sys.prefix, &apos;scons-2.3.0&apos;), join(sys.prefix, &apos;Lib&apos;, &apos;site-packages&apos;, &apos;scons&apos;), join(sys.prefix, &apos;scons&apos;) ] + sys.path; import SCons.Script; SCons.Script.main()&quot; -C &quot;C:\EMOD3\trunk&quot; -f SConstruct &quot;C:\EMOD3\trunk\build\win32\Release\libgeneric_static\libgeneric_static.lib&quot;</NMakeBuildCommandLine>
+		<NMakeReBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo Starting SCons &amp;&amp; &quot;C:\Python27-32\python.exe&quot; -c &quot;from os.path import join; import sys; sys.path = [ join(sys.prefix, &apos;Lib&apos;, &apos;site-packages&apos;, &apos;scons-2.3.0&apos;), join(sys.prefix, &apos;scons-2.3.0&apos;), join(sys.prefix, &apos;Lib&apos;, &apos;site-packages&apos;, &apos;scons&apos;), join(sys.prefix, &apos;scons&apos;) ] + sys.path; import SCons.Script; SCons.Script.main()&quot; -C &quot;C:\EMOD3\trunk&quot; -f SConstruct &quot;C:\EMOD3\trunk\build\win32\Release\libgeneric_static\libgeneric_static.lib&quot;</NMakeReBuildCommandLine>
+		<NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo Starting SCons &amp;&amp; &quot;C:\Python27-32\python.exe&quot; -c &quot;from os.path import join; import sys; sys.path = [ join(sys.prefix, &apos;Lib&apos;, &apos;site-packages&apos;, &apos;scons-2.3.0&apos;), join(sys.prefix, &apos;scons-2.3.0&apos;), join(sys.prefix, &apos;Lib&apos;, &apos;site-packages&apos;, &apos;scons&apos;), join(sys.prefix, &apos;scons&apos;) ] + sys.path; import SCons.Script; SCons.Script.main()&quot; -C &quot;C:\EMOD3\trunk&quot; -f SConstruct -c &quot;C:\EMOD3\trunk\build\win32\Release\libgeneric_static\libgeneric_static.lib&quot;</NMakeCleanCommandLine>
+		<NMakeOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\EMOD3\trunk\build\win32\Release\libgeneric_static\libgeneric_static.lib</NMakeOutput>
+		<NMakePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WIN32;_UNICODE;UNICODE;_CONSOLE;NDEBUG;_DLLS_;DISABLE_VECTOR;DISABLE_MALARIA;DISABLE_HIV</NMakePreprocessorDefinitions>
+		<NMakeIncludeSearchPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/boost/boost_1_51_0;#/C:/Python27/Include;#/Dependencies/ComputeClusterPack/Include;#/cajun/include;#/Eradication;#/campaign;#/interventions;#/utils;#/baseReportLib;#/libgeneric_static;#/rapidjson/include;#/rapidjson/modp;#/unittest/UnitTest++/src;C:/Program Files (x86)/Windows Kits/8.0//Include/um</NMakeIncludeSearchPath>
+		<NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
+		<NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
+		<NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
+	</PropertyGroup>
+	<ItemGroup>
+		<ClInclude Include="libgeneric_classes.h" />
+		<ClInclude Include="Report.h" />
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="stdafx.h" />
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\baseReportLib\BaseChannelReport.cpp" />
+		<ClCompile Include="..\baseReportLib\BaseEventReport.cpp" />
+		<ClCompile Include="..\baseReportLib\BaseEventReportIntervalOutput.cpp" />
+		<ClCompile Include="..\baseReportLib\BaseTextReport.cpp" />
+		<ClCompile Include="..\baseReportLib\BaseTextReportEvents.cpp" />
+		<ClCompile Include="..\baseReportLib\BinnedReport.cpp" />
+		<ClCompile Include="..\baseReportLib\ChannelDataMap.cpp" />
+		<ClCompile Include="..\baseReportLib\ReportUtilities.cpp" />
+		<ClCompile Include="..\baseReportLib\stdafx.cpp" />
+		<ClCompile Include="..\campaign\NodeSetAll.cpp" />
+		<ClCompile Include="..\campaign\NodeSetNodeList.cpp" />
+		<ClCompile Include="..\campaign\NodeSetPolygon.cpp" />
+		<ClCompile Include="..\Eradication\CalendarEventCoordinator.cpp" />
+		<ClCompile Include="..\Eradication\CampaignEvent.cpp" />
+		<ClCompile Include="..\Eradication\Climate.cpp" />
+		<ClCompile Include="..\Eradication\ClimateByData.cpp" />
+		<ClCompile Include="..\Eradication\ClimateConstant.cpp" />
+		<ClCompile Include="..\Eradication\ClimateKoppen.cpp" />
+		<ClCompile Include="..\Eradication\CoverageByNodeEventCoordinator.cpp" />
+		<ClCompile Include="..\Eradication\DemographicsReport.cpp" />
+		<ClCompile Include="..\Eradication\DllLoader.cpp" />
+		<ClCompile Include="..\Eradication\GroupEventCoordinator.cpp" />
+		<ClCompile Include="..\Eradication\Individual.cpp" />
+		<ClCompile Include="..\Eradication\Infection.cpp" />
+		<ClCompile Include="..\Eradication\Instrumentation.cpp" />
+		<ClCompile Include="..\Eradication\InterventionsContainer.cpp" />
+		<ClCompile Include="..\Eradication\JsonObjectDemog.cpp" />
+		<ClCompile Include="..\Eradication\MalariaDrugTypeParameters.cpp" />
+		<ClCompile Include="..\Eradication\Migration.cpp" />
+		<ClCompile Include="..\Eradication\MultiInterventionEventCoordinator.cpp" />
+		<ClCompile Include="..\Eradication\MultiRouteTransmissionGroups.cpp" />
+		<ClCompile Include="..\Eradication\Node.cpp" />
+		<ClCompile Include="..\Eradication\NodeDemographics.cpp" />
+		<ClCompile Include="..\Eradication\NodeEventContext.cpp" />
+		<ClCompile Include="..\Eradication\NodeEventCoordinator.cpp" />
+		<ClCompile Include="..\Eradication\NodeRankMap.cpp" />
+		<ClCompile Include="..\Eradication\Properties.cpp" />
+		<ClCompile Include="..\Eradication\PropertyReport.cpp" />
+		<ClCompile Include="..\Eradication\Report.cpp" />
+		<ClCompile Include="..\Eradication\ReportEventRecorder.cpp" />
+		<ClCompile Include="..\Eradication\SimpleEventCoordinator.cpp" />
+		<ClCompile Include="..\Eradication\SimpleTransmissionGroups.cpp" />
+		<ClCompile Include="..\Eradication\Simulation.cpp" />
+		<ClCompile Include="..\Eradication\SimulationConfig.cpp" />
+		<ClCompile Include="..\Eradication\SimulationEventContext.cpp" />
+		<ClCompile Include="..\Eradication\SpatialReport.cpp" />
+		<ClCompile Include="..\Eradication\StandardEventCoordinator.cpp" />
+		<ClCompile Include="..\Eradication\StrainAwareTransmissionGroups.cpp" />
+		<ClCompile Include="..\Eradication\StrainIdentity.cpp" />
+		<ClCompile Include="..\Eradication\Susceptibility.cpp" />
+		<ClCompile Include="..\Eradication\TBDrugTypeParameters.cpp" />
+		<ClCompile Include="..\Eradication\TransmissionGroupsBase.cpp" />
+		<ClCompile Include="..\Eradication\TransmissionGroupsFactory.cpp" />
+		<ClCompile Include="..\Eradication\VectorSpeciesParameters.cpp" />
+		<ClCompile Include="..\Eradication\VectorTransmissionGroups.cpp" />
+		<ClCompile Include="..\interventions\WaningEffectBox.cpp" />
+		<ClCompile Include="..\interventions\WaningEffectBoxExponential.cpp" />
+		<ClCompile Include="..\interventions\WaningEffectConstant.cpp" />
+		<ClCompile Include="..\interventions\WaningEffectExponential.cpp" />
+		<ClCompile Include="..\interventions\WaningEffectFactory.cpp" />
+		<ClCompile Include="..\Interventions\Drugs.cpp" />
+		<ClCompile Include="stdafx.cpp" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="SConstruct" />
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+	<ImportGroup Label="ExtensionTargets">
+	</ImportGroup>
+</Project>
+<!-- SCons Data:
+fXEBVQtSZWxlYXNlfHg2NHECY2NvcHlfcmVnCl9yZWNvbnN0cnVjdG9yCnEDKGNTQ29ucy5Ub29s
+Lm1zdnMKQ29uZmlnCnEEY19fYnVpbHRpbl9fCm9iamVjdApxBU50UnEGfXEHKFUHdmFyaWFudHEI
+VQdSZWxlYXNlcQlVB2NtZGFyZ3NxClUAVQhwbGF0Zm9ybXELVQN4NjRxDFUHcnVuZmlsZXENVUpD
+OlxFTU9EM1x0cnVua1xidWlsZFx3aW4zMlxSZWxlYXNlXGxpYmdlbmVyaWNfc3RhdGljXGxpYmdl
+bmVyaWNfc3RhdGljLmxpYnEOVQtidWlsZHRhcmdldHEPaA5VBm91dGRpcnEQVQB1YnMu
+
+fXEBKFULT3RoZXIgRmlsZXNxAl1VDUxvY2FsIEhlYWRlcnNxA11xBFUIc3RkYWZ4LmhxBWFVDEhl
+YWRlciBGaWxlc3EGXXEHKFUUbGliZ2VuZXJpY19jbGFzc2VzLmhxCFUIUmVwb3J0LmhxCWVVDFNv
+dXJjZSBGaWxlc3EKXXELKFUmLi4vYmFzZVJlcG9ydExpYi9CYXNlQ2hhbm5lbFJlcG9ydC5jcHBx
+DFUkLi4vYmFzZVJlcG9ydExpYi9CYXNlRXZlbnRSZXBvcnQuY3BwcQ1VMi4uL2Jhc2VSZXBvcnRM
+aWIvQmFzZUV2ZW50UmVwb3J0SW50ZXJ2YWxPdXRwdXQuY3BwcQ5VIy4uL2Jhc2VSZXBvcnRMaWIv
+QmFzZVRleHRSZXBvcnQuY3BwcQ9VKS4uL2Jhc2VSZXBvcnRMaWIvQmFzZVRleHRSZXBvcnRFdmVu
+dHMuY3BwcRBVIS4uL2Jhc2VSZXBvcnRMaWIvQmlubmVkUmVwb3J0LmNwcHERVSMuLi9iYXNlUmVw
+b3J0TGliL0NoYW5uZWxEYXRhTWFwLmNwcHESVSQuLi9iYXNlUmVwb3J0TGliL1JlcG9ydFV0aWxp
+dGllcy5jcHBxE1UbLi4vYmFzZVJlcG9ydExpYi9zdGRhZnguY3BwcRRVGi4uL2NhbXBhaWduL05v
+ZGVTZXRBbGwuY3BwcRVVHy4uL2NhbXBhaWduL05vZGVTZXROb2RlTGlzdC5jcHBxFlUeLi4vY2Ft
+cGFpZ24vTm9kZVNldFBvbHlnb24uY3BwcRdVKy4uL0VyYWRpY2F0aW9uL0NhbGVuZGFyRXZlbnRD
+b29yZGluYXRvci5jcHBxGFUgLi4vRXJhZGljYXRpb24vQ2FtcGFpZ25FdmVudC5jcHBxGVUaLi4v
+RXJhZGljYXRpb24vQ2xpbWF0ZS5jcHBxGlUgLi4vRXJhZGljYXRpb24vQ2xpbWF0ZUJ5RGF0YS5j
+cHBxG1UiLi4vRXJhZGljYXRpb24vQ2xpbWF0ZUNvbnN0YW50LmNwcHEcVSAuLi9FcmFkaWNhdGlv
+bi9DbGltYXRlS29wcGVuLmNwcHEdVTEuLi9FcmFkaWNhdGlvbi9Db3ZlcmFnZUJ5Tm9kZUV2ZW50
+Q29vcmRpbmF0b3IuY3BwcR5VJS4uL0VyYWRpY2F0aW9uL0RlbW9ncmFwaGljc1JlcG9ydC5jcHBx
+H1UcLi4vRXJhZGljYXRpb24vRGxsTG9hZGVyLmNwcHEgVSguLi9FcmFkaWNhdGlvbi9Hcm91cEV2
+ZW50Q29vcmRpbmF0b3IuY3BwcSFVHS4uL0VyYWRpY2F0aW9uL0luZGl2aWR1YWwuY3BwcSJVHC4u
+L0VyYWRpY2F0aW9uL0luZmVjdGlvbi5jcHBxI1UiLi4vRXJhZGljYXRpb24vSW5zdHJ1bWVudGF0
+aW9uLmNwcHEkVSkuLi9FcmFkaWNhdGlvbi9JbnRlcnZlbnRpb25zQ29udGFpbmVyLmNwcHElVSIu
+Li9FcmFkaWNhdGlvbi9Kc29uT2JqZWN0RGVtb2cuY3BwcSZVLC4uL0VyYWRpY2F0aW9uL01hbGFy
+aWFEcnVnVHlwZVBhcmFtZXRlcnMuY3BwcSdVHC4uL0VyYWRpY2F0aW9uL01pZ3JhdGlvbi5jcHBx
+KFU0Li4vRXJhZGljYXRpb24vTXVsdGlJbnRlcnZlbnRpb25FdmVudENvb3JkaW5hdG9yLmNwcHEp
+VS8uLi9FcmFkaWNhdGlvbi9NdWx0aVJvdXRlVHJhbnNtaXNzaW9uR3JvdXBzLmNwcHEqVRcuLi9F
+cmFkaWNhdGlvbi9Ob2RlLmNwcHErVSMuLi9FcmFkaWNhdGlvbi9Ob2RlRGVtb2dyYXBoaWNzLmNw
+cHEsVSMuLi9FcmFkaWNhdGlvbi9Ob2RlRXZlbnRDb250ZXh0LmNwcHEtVScuLi9FcmFkaWNhdGlv
+bi9Ob2RlRXZlbnRDb29yZGluYXRvci5jcHBxLlUeLi4vRXJhZGljYXRpb24vTm9kZVJhbmtNYXAu
+Y3BwcS9VHS4uL0VyYWRpY2F0aW9uL1Byb3BlcnRpZXMuY3BwcTBVIS4uL0VyYWRpY2F0aW9uL1By
+b3BlcnR5UmVwb3J0LmNwcHExVRkuLi9FcmFkaWNhdGlvbi9SZXBvcnQuY3BwcTJVJi4uL0VyYWRp
+Y2F0aW9uL1JlcG9ydEV2ZW50UmVjb3JkZXIuY3BwcTNVKS4uL0VyYWRpY2F0aW9uL1NpbXBsZUV2
+ZW50Q29vcmRpbmF0b3IuY3BwcTRVKy4uL0VyYWRpY2F0aW9uL1NpbXBsZVRyYW5zbWlzc2lvbkdy
+b3Vwcy5jcHBxNVUdLi4vRXJhZGljYXRpb24vU2ltdWxhdGlvbi5jcHBxNlUjLi4vRXJhZGljYXRp
+b24vU2ltdWxhdGlvbkNvbmZpZy5jcHBxN1UpLi4vRXJhZGljYXRpb24vU2ltdWxhdGlvbkV2ZW50
+Q29udGV4dC5jcHBxOFUgLi4vRXJhZGljYXRpb24vU3BhdGlhbFJlcG9ydC5jcHBxOVUrLi4vRXJh
+ZGljYXRpb24vU3RhbmRhcmRFdmVudENvb3JkaW5hdG9yLmNwcHE6VTAuLi9FcmFkaWNhdGlvbi9T
+dHJhaW5Bd2FyZVRyYW5zbWlzc2lvbkdyb3Vwcy5jcHBxO1UhLi4vRXJhZGljYXRpb24vU3RyYWlu
+SWRlbnRpdHkuY3BwcTxVIS4uL0VyYWRpY2F0aW9uL1N1c2NlcHRpYmlsaXR5LmNwcHE9VScuLi9F
+cmFkaWNhdGlvbi9UQkRydWdUeXBlUGFyYW1ldGVycy5jcHBxPlUpLi4vRXJhZGljYXRpb24vVHJh
+bnNtaXNzaW9uR3JvdXBzQmFzZS5jcHBxP1UsLi4vRXJhZGljYXRpb24vVHJhbnNtaXNzaW9uR3Jv
+dXBzRmFjdG9yeS5jcHBxQFUqLi4vRXJhZGljYXRpb24vVmVjdG9yU3BlY2llc1BhcmFtZXRlcnMu
+Y3BwcUFVKy4uL0VyYWRpY2F0aW9uL1ZlY3RvclRyYW5zbWlzc2lvbkdyb3Vwcy5jcHBxQlUaLi4v
+SW50ZXJ2ZW50aW9ucy9EcnVncy5jcHBxQ1UkLi4vaW50ZXJ2ZW50aW9ucy9XYW5pbmdFZmZlY3RC
+b3guY3BwcURVLy4uL2ludGVydmVudGlvbnMvV2FuaW5nRWZmZWN0Qm94RXhwb25lbnRpYWwuY3Bw
+cUVVKS4uL2ludGVydmVudGlvbnMvV2FuaW5nRWZmZWN0Q29uc3RhbnQuY3BwcUZVLC4uL2ludGVy
+dmVudGlvbnMvV2FuaW5nRWZmZWN0RXhwb25lbnRpYWwuY3BwcUdVKC4uL2ludGVydmVudGlvbnMv
+V2FuaW5nRWZmZWN0RmFjdG9yeS5jcHBxSFUKc3RkYWZ4LmNwcHFJZVUOUmVzb3VyY2UgRmlsZXNx
+Sl11Lg==
+-->

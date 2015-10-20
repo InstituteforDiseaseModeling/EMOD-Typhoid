@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{ED2CF3FC-666D-07FE-5C40-C096ED288263}</ProjectGuid>
+    <RootNamespace>LibsimplevaccinedllScons</RootNamespace>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <PlatformToolset>v110</PlatformToolset>
+    <NMakeBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo Starting SCons &amp;&amp; "C:\Python27-32\python.exe" -c "from os.path import join; import sys; sys.path = [ join(sys.prefix, 'Lib', 'site-packages', 'scons-2.3.0'), join(sys.prefix, 'scons-2.3.0'), join(sys.prefix, 'Lib', 'site-packages', 'scons'), join(sys.prefix, 'scons') ] + sys.path; import SCons.Script; SCons.Script.main()" -C "C:\EMOD3\trunk" -f SConstruct "C:\EMOD3\trunk\build\win32\Release\Generic\interventions\libsimplevaccine.dll"</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo Starting SCons &amp;&amp; "C:\Python27-32\python.exe" -c "from os.path import join; import sys; sys.path = [ join(sys.prefix, 'Lib', 'site-packages', 'scons-2.3.0'), join(sys.prefix, 'scons-2.3.0'), join(sys.prefix, 'Lib', 'site-packages', 'scons'), join(sys.prefix, 'scons') ] + sys.path; import SCons.Script; SCons.Script.main()" -C "C:\EMOD3\trunk" -f SConstruct "C:\EMOD3\trunk\build\win32\Release\Generic\interventions\libsimplevaccine.dll"</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo Starting SCons &amp;&amp; "C:\Python27-32\python.exe" -c "from os.path import join; import sys; sys.path = [ join(sys.prefix, 'Lib', 'site-packages', 'scons-2.3.0'), join(sys.prefix, 'scons-2.3.0'), join(sys.prefix, 'Lib', 'site-packages', 'scons'), join(sys.prefix, 'scons') ] + sys.path; import SCons.Script; SCons.Script.main()" -C "C:\EMOD3\trunk" -f SConstruct -c "C:\EMOD3\trunk\build\win32\Release\Generic\interventions\libsimplevaccine.dll"</NMakeCleanCommandLine>
+    <NMakeOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\EMOD3\trunk\build\win32\Release\Generic\interventions\libsimplevaccine.dll</NMakeOutput>
+    <NMakePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WIN32;_UNICODE;UNICODE;_CONSOLE;NDEBUG;_DLLS_;DISABLE_VECTOR;DISABLE_MALARIA;DISABLE_HIV</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/boost/boost_1_51_0;#/C:/Python27/Include;#/Dependencies/ComputeClusterPack/Include;#/cajun/include;#/Eradication;#/campaign;#/interventions;#/utils;#/baseReportLib;#/libgeneric_static;#/rapidjson/include;#/rapidjson/modp;#/unittest/UnitTest++/src;C:/Program Files (x86)/Windows Kits/8.0//Include/um</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
+    <NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Eradication\vaccine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\interventions\SimpleVaccineEModule.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SConstruct" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
+<!-- SCons Data:
+fXEBVQtSZWxlYXNlfHg2NHECY2NvcHlfcmVnCl9yZWNvbnN0cnVjdG9yCnEDKGNTQ29ucy5Ub29s
+Lm1zdnMKQ29uZmlnCnEEY19fYnVpbHRpbl9fCm9iamVjdApxBU50UnEGfXEHKFUHdmFyaWFudHEI
+VQdSZWxlYXNlcQlVB2NtZGFyZ3NxClUAVQhwbGF0Zm9ybXELVQN4NjRxDFUHcnVuZmlsZXENVU1D
+OlxFTU9EM1x0cnVua1xidWlsZFx3aW4zMlxSZWxlYXNlXEdlbmVyaWNcaW50ZXJ2ZW50aW9uc1xs
+aWJzaW1wbGV2YWNjaW5lLmRsbHEOVQtidWlsZHRhcmdldHEPaA5VBm91dGRpcnEQVQB1YnMu
+
+fXEBKFULT3RoZXIgRmlsZXNxAl1VDUxvY2FsIEhlYWRlcnNxA11xBFUIc3RkYWZ4LmhxBWFVDEhl
+YWRlciBGaWxlc3EGXXEHVRsuLi8uLi9FcmFkaWNhdGlvbi92YWNjaW5lLmhxCGFVDFNvdXJjZSBG
+aWxlc3EJXXEKVSwuLi8uLi9pbnRlcnZlbnRpb25zL1NpbXBsZVZhY2NpbmVFTW9kdWxlLmNwcHEL
+YVUOUmVzb3VyY2UgRmlsZXNxDF11Lg==
+-->

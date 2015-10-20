@@ -1,0 +1,52 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CajunScons", "cajun\CajunScons.vcxproj", "{097B1ED2-A5F8-27A7-F731-67152356B8A0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CampaignScons", "campaign\CampaignScons.vcxproj", "{AC20518A-9196-C280-5432-DD14A8681280}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UtilsScons", "utils\UtilsScons.vcxproj", "{E40C180C-27FC-7EC2-94C6-C47E894CD9C0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibgenericStaticScons", "libgeneric_static\LibgenericStaticScons.vcxproj", "{A6C90E29-DA3F-4904-C910-3E4E100BC8B4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EradicationScons", "eradication\EradicationScons.vcxproj", "{42A8C9AC-18EA-CFC0-7345-A66046BFC3AA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibgenericScons", "libgeneric\LibgenericScons.vcxproj", "{707A900A-16C1-01F1-3FB4-CD09D874B896}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibcalendardllScons", "interventions\LibcalendardllScons.vcxproj", "{5797E4A4-6802-0C70-67DE-5654C1D320BC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiboutbreakdllScons", "interventions\LiboutbreakdllScons.vcxproj", "{813BDB05-5E60-78AC-B9FB-B8452DA1B99E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiboutbreakindividualdllScons", "interventions\LiboutbreakindividualdllScons.vcxproj", "{EEE0B156-4475-5637-273D-0F0D1DCD2286}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibsimplevaccinedllScons", "interventions\LibsimplevaccinedllScons.vcxproj", "{ED2CF3FC-666D-07FE-5C40-C096ED288263}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{097B1ED2-A5F8-27A7-F731-67152356B8A0}.Release|x64.ActiveCfg = Release|x64
+		{097B1ED2-A5F8-27A7-F731-67152356B8A0}.Release|x64.Build.0 = Release|x64
+		{AC20518A-9196-C280-5432-DD14A8681280}.Release|x64.ActiveCfg = Release|x64
+		{AC20518A-9196-C280-5432-DD14A8681280}.Release|x64.Build.0 = Release|x64
+		{E40C180C-27FC-7EC2-94C6-C47E894CD9C0}.Release|x64.ActiveCfg = Release|x64
+		{E40C180C-27FC-7EC2-94C6-C47E894CD9C0}.Release|x64.Build.0 = Release|x64
+		{A6C90E29-DA3F-4904-C910-3E4E100BC8B4}.Release|x64.ActiveCfg = Release|x64
+		{A6C90E29-DA3F-4904-C910-3E4E100BC8B4}.Release|x64.Build.0 = Release|x64
+		{42A8C9AC-18EA-CFC0-7345-A66046BFC3AA}.Release|x64.ActiveCfg = Release|x64
+		{42A8C9AC-18EA-CFC0-7345-A66046BFC3AA}.Release|x64.Build.0 = Release|x64
+		{707A900A-16C1-01F1-3FB4-CD09D874B896}.Release|x64.ActiveCfg = Release|x64
+		{707A900A-16C1-01F1-3FB4-CD09D874B896}.Release|x64.Build.0 = Release|x64
+		{5797E4A4-6802-0C70-67DE-5654C1D320BC}.Release|x64.ActiveCfg = Release|x64
+		{5797E4A4-6802-0C70-67DE-5654C1D320BC}.Release|x64.Build.0 = Release|x64
+		{813BDB05-5E60-78AC-B9FB-B8452DA1B99E}.Release|x64.ActiveCfg = Release|x64
+		{813BDB05-5E60-78AC-B9FB-B8452DA1B99E}.Release|x64.Build.0 = Release|x64
+		{EEE0B156-4475-5637-273D-0F0D1DCD2286}.Release|x64.ActiveCfg = Release|x64
+		{EEE0B156-4475-5637-273D-0F0D1DCD2286}.Release|x64.Build.0 = Release|x64
+		{ED2CF3FC-666D-07FE-5C40-C096ED288263}.Release|x64.ActiveCfg = Release|x64
+		{ED2CF3FC-666D-07FE-5C40-C096ED288263}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

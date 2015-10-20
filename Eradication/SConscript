@@ -355,13 +355,6 @@ else:
     eradicationSrcFiles.extend( tbSrcFiles )
     eradicationSrcFiles.extend( tbhivSrcFiles )
 
-    if 'Disease' in env:
-        if env['Disease'] == "STI":
-            eradicationSrcFiles += stiSrcFiles
-        elif env['Disease'] == "HIV":
-            eradicationSrcFiles += hivSrcFiles
-        print( "Building these source files: " + str(eradicationSrcFiles) )
-    
     # Monolithic
     eradicationExe = env.Program('Eradication', eradicationSrcFiles)
 
