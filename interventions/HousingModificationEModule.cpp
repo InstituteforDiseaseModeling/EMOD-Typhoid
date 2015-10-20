@@ -50,6 +50,35 @@ RegisterWithFactory(
             return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::IRSHousingModification());
         }
     );
+    pInterventionFactory->Register(
+        _module,
+        []()
+        {
+            return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::ScreeningHousingModification());
+        }
+    );
+    pInterventionFactory->Register(
+        _module,
+        []()
+        {
+            return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::SpatialRepellentHousingModification());
+        }
+    );
+    pInterventionFactory->Register(
+        _module,
+        []()
+        {
+            return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::ArtificialDietHousingModification());
+        }
+    );
+    pInterventionFactory->Register(
+        _module,
+        []()
+        {
+            return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::InsectKillingFenceHousingModification());
+        }
+    );
+
     return true;
 }
 
@@ -57,3 +86,4 @@ RegisterWithFactory(
 }
 #endif
 
+//SimpleHousingModification

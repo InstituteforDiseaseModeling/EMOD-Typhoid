@@ -119,6 +119,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/BednetSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HousingmodSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HumanhostseekingtrapSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/IvermectinSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/MosquitoreleaseSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/ScalelarvalhabitatSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/VcntSConscript', variant_dir=dll_op_path )
@@ -127,7 +128,6 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
     if env['DiseaseDll'] == "Malaria":
         SConscript( 'libgeneric/AntimalarialdrugSConscript', variant_dir=dll_op_path  )
         SConscript( 'libgeneric/InputEIRSConscript', variant_dir=dll_op_path )
-        SConscript( 'libgeneric/IvermectinSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/MalariaChallengeSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/RTSSVaccineSConscript', variant_dir=dll_op_path )
 

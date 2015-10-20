@@ -44,9 +44,10 @@ RegisterWithFactory(
         _module,
         []()
         {
-            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::MosquitoRelease());
+            return (Kernel::ISupports*)(Kernel::INodeDistributableIntervention*)(_new_ Kernel::MosquitoRelease());
         }
     );
+    return true;
 }
 
 #ifdef __cplusplus

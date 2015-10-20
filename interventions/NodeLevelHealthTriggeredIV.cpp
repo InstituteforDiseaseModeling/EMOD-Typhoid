@@ -130,7 +130,7 @@ namespace Kernel
         // 2) TriggerList (of strings). Read directly into m_trigger_conditions as string list.
         // 3) TriggerString. Read directly into trigger_condition_string and then push into m_trigger_conditions as single string.
         // Either way, we end up with m_trigger_conditions contains 1 or more strings. That's what we use.
-        JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
+
         IndividualEventTriggerType::Enum trigger_condition = IndividualEventTriggerType::NoTrigger;
         ConstrainedString trigger_condition_string = NO_TRIGGER_STR;
         initConfig( "Trigger_Condition", trigger_condition, inputJson, MetadataDescriptor::Enum("Trigger_Condition", HTI_Trigger_Condition_DESC_TEXT, MDD_ENUM_ARGS(IndividualEventTriggerType)) );
@@ -165,8 +165,6 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
-
         bool retValue = ConfigureTriggers( inputJson );
 
         //this section copied from standardevent coordinator
@@ -174,7 +172,6 @@ namespace Kernel
         {
             InterventionValidator::ValidateIntervention( actual_intervention_config._json );
         }
-        JsonConfigurable::_useDefaults = false;
         return retValue;    
     }
 
