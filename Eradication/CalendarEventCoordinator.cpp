@@ -155,6 +155,7 @@ namespace Kernel
             {
                 LOG_DEBUG_F("Signaling for disposal of CalendarEventCoordinator\n");
                 distribution_complete = true; // we're done, signal disposal ok
+                break;
             }
         }
         return;
