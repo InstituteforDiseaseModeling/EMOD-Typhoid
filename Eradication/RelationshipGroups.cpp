@@ -52,8 +52,6 @@ namespace Kernel {
     )
     {
         LOG_DEBUG_F( "%s: propertyName = %s\n", __FUNCTION__, propertyName.c_str() );
-        static int func_counter = 0;
-        func_counter++;
         clock_t apv = clock();
 
         ValueToIndexMap_t &valueToIndexMap = propertyValueToIndexMap[propertyName] ;

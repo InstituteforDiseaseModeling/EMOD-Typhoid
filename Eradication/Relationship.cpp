@@ -40,7 +40,7 @@ howlong(
 
 namespace Kernel {
 
-    unsigned long int Relationship::counter = 1;
+    unsigned long int Relationship::counter = 0;
 
     // static
     bool alreadyInRelationship(
@@ -78,8 +78,24 @@ namespace Kernel {
         , scheduled_end_time(0)
         , using_condom(false)
     {
+        // ------------------------------------------------
+        // ---make sure each relationship has a unique id
+        // ------------------------------------------------
+        int num_tasks = 1 ;
+        int rank = 0 ;
+        if( EnvPtr != nullptr )
+        {
+            num_tasks = EnvPtr->MPI.NumTasks ;
+            rank = EnvPtr->MPI.Rank ;
+        }
+        if( counter == 0 )
+        {
+            counter = rank + 1 ;
+        }
+        _id = counter ;
+        counter += num_tasks ;
+
         original_node_id = dynamic_cast<IIndividualHuman*>(male_partner)->GetParent()->GetSuid();
-        _id = counter++;
         LOG_DEBUG_F( "%s: Creating relationship %d between %d and %d\n", __FUNCTION__, _id, MALE_PARTNER_ID().data, FEMALE_PARTNER_ID().data );
         //LogRelationship( _id, MALE_PARTNER_ID(), FEMALE_PARTNER_ID(), relationship_type );
     }
