@@ -491,6 +491,14 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     LOG_DEBUG( "Calling main Configure...\n" );
     bool ret = JsonConfigurable::Configure( inputJson );
 
+#ifndef DISABLE_VECTOR
+        for (const auto& vector_species_name : vector_species_names)
+        {
+            // vspMap only in SimConfig now. No more static map in VSP.
+            vspMap[ vector_species_name ] = VectorSpeciesParameters::CreateVectorSpeciesParameters(vector_species_name);
+        }
+#endif
+
 
 //LOG_DEBUG_F( "base_year initialized to %d\n", base_year );
 
@@ -515,16 +523,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             LOG_WARN("The simulation is being run without any mosquitoes!  Unless this was intentional, please specify the name of one or more vector species in the 'Vector_Species_Names' array and their associated vector species parameters.\n\n                     ,-.\n         `._        /  |        ,\n            `--._  ,   '    _,-'\n     _       __  `.|  / ,--'\n      `-._,-'  `-. \\ : /\n           ,--.-.-`'.'.-.,_-\n         _ `--'-'-;.'.'-'`--\n     _,-' `-.__,-' / : \\\n                _,'|  \\ `--._\n           _,--'   '   .     `-.\n         ,'         \\  |        `\n                     `-'\n\n");
         }
 
-#ifndef DISABLE_VECTOR
-#if !defined(_DLLS_)
-        for (const auto& vector_species_name : vector_species_names)
-        {
-            // going to do this a different way
-            // both these lines are still necessary. Arg... 
-            VectorSpeciesParameters::CreateVectorSpeciesParameters(vector_species_name);
-        }
-#endif
-#endif
     }
 
 #ifdef ENABLE_TB

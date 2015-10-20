@@ -77,7 +77,7 @@ namespace Kernel
 
         species_ID = species_name;
         LOG_DEBUG_F( "Creating VectorSpeciesParameters for %s and suid=%d\n", species_name.c_str(), context->GetSuid().data);
-        m_species_params = VectorSpeciesParameters::_vspMap[ species_name ];
+        m_species_params = GET_CONFIGURABLE(SimulationConfig)->vspMap.at( species_name );
 
         // Query for vector node context
         IVectorNodeContext* ivnc = NULL;
@@ -120,6 +120,7 @@ namespace Kernel
     VectorPopulation *VectorPopulation::CreatePopulation(INodeContext *context, std::string species_name, unsigned int adults, unsigned int infectious)
     {
         VectorPopulation *newpopulation = _new_ VectorPopulation();
+        release_assert( newpopulation );
         newpopulation->Initialize(context, species_name, adults, infectious);
         return newpopulation;
     }

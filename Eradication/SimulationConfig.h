@@ -362,9 +362,9 @@ namespace Kernel
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-    protected:
         std::map< std::string, VectorSpeciesParameters * > vspMap;
         std::map< std::string, MalariaDrugTypeParameters * > MalariaDrugMap;
+    protected:
 #pragma warning( pop )
 
     private: // for serialization to work

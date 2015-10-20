@@ -26,7 +26,7 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
     if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":
         eradenv.Append( CPPDEFINES=["ENABLE_POLIO" ] )
     #eradenv.Append(LIBS=['libvector_static'])
-    #eradenv.Append(LIBS=['libmalaria_static'])
+    eradenv.Append(LIBS=['libmalaria_static'])
 
     eradenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
