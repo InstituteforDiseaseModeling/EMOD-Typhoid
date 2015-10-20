@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorSpeciesParameters.h"
 
 #include "NodeVector.h"  // just for the NodeFlags :(
+#include "SimulationConfig.h"  // just for vspMap (to avoid static)
 #include "Vector.h"
 #include "Exceptions.h"
 #include <algorithm> // for transform
@@ -18,7 +19,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char * _module = "VectorSpeciesParameters";
 
-std::map< std::string, const Kernel::VectorSpeciesParameters* > Kernel::VectorSpeciesParameters::_vspMap;
 
 namespace Kernel
 {
@@ -58,8 +58,6 @@ namespace Kernel
         {
             params->Configure( Configuration::CopyFromElement( (*EnvPtr->Config)["Vector_Species_Params"][vector_species_name.c_str()] ) );
         }
-
-        _vspMap[ vector_species_name ] = params;
         LOG_DEBUG( "END CreateVectorSpeciesParameters\n" );
         return params;
     }

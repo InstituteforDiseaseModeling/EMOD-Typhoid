@@ -22,8 +22,6 @@ using namespace Kernel;
 
 static const char * _module = "SimulationEnvironmental";
 
-#ifdef LIBENVIRONMENTAL_EXPORTS
-
 // Note: _diseaseType has to match the Simulation_Type name in config.json
 static std::string _diseaseType = "ENVIRONMENTAL_SIM";
 
@@ -68,5 +66,4 @@ GetEModuleVersion(char* sVer, const Environment * pEnv)
 }
 #endif
 
-#endif
 

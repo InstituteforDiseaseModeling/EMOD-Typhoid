@@ -12,7 +12,7 @@ libvectorSrcFiles = [
                           "../Eradication/InfectionVector.cpp",
                           "../Eradication/NodeVector.cpp",
                           "../Eradication/NodeVectorEventContext.cpp",
-                          "../Eradication/VectorNodePools.cpp",
+                          #"../Eradication/VectorTransmissionGroups.cpp",
                           "../Eradication/ReportVector.cpp",
                           "../Eradication/SpatialReportVector.cpp",
                           "../Eradication/SimulationVector.cpp",
@@ -29,8 +29,7 @@ libvectorSrcFiles = [
                           "../Eradication/VectorMatingStructure.cpp",
                           "../Eradication/VectorHabitat.cpp",
                           "../Eradication/VectorCohortWithHabitat.cpp",
-                          "../Eradication/VectorSpeciesReport.cpp",
-                          "../Eradication/MosquitoRelease.cpp"]
+                          "../Eradication/VectorSpeciesReport.cpp"]
 
 
 libvectorIncFiles = [  "VectorSpecies.h" ]

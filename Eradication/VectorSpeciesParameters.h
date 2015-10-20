@@ -23,7 +23,6 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     public:
-        static std::map< std::string, const VectorSpeciesParameters* > _vspMap;
         static VectorSpeciesParameters* CreateVectorSpeciesParameters(const std::string& vector_species_name);
         virtual ~VectorSpeciesParameters();
         bool Configure( const ::Configuration *json );

@@ -18,7 +18,7 @@ bednetenv = env.Clone()
 bednetenv.Append(LIBS=['libgeneric_static'])
 bednetenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 bednetenv.Append(LIBS=['libvector_static'])
-bednetenv.Append(LIBS=['libmalaria_static'])
+#bednetenv.Append(LIBS=['libmalaria_static'])
 bednetenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libbednetDll = bednetenv.SharedLibrary('libbednet', libbednetdllSrcFiles + stdobj)

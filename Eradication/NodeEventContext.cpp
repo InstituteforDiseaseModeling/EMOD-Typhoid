@@ -20,9 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Individual.h"
 //#include "IndividualCoinfection.h" // TBD: No disease-specific includes here.
 
-#ifdef ENABLE_POLIO
-#include "PolioVaccine.h" // TODO: Gotta go! Was for reporting.
-#endif
 #include "Drugs.h"
 
 #include "Log.h"
@@ -174,133 +171,9 @@ namespace Kernel
         /*const*/ IIndividualHumanContext * pDistributeeIndividual
     )
     {
-#if 0
-        if( pDistributor )
         {
-            float expenseIncurred = -1;
-            IBaseIntervention * pBaseIV = NULL;
-            if( pDistributedIntervention->QueryInterface( GET_IID(IBaseIntervention), (void**)&pBaseIV ) == s_OK ) // not on win
-            {
-                expenseIncurred = pBaseIV->GetCostPerUnit();
-                LOG_DEBUG_F("Intervention cost = %f\n", expenseIncurred);
-                IncrementCampaignCost( expenseIncurred * (float)pDistributeeIndividual->GetEventContext()->GetMonteCarloWeight() ); // not on win
-            }
-            else
-            {
-                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pDistributedIntervention", "IBaseIntervention", "ISupports" );
-            }
-        }
-#endif 
-        // I could imagine code here which attempts a series of QI's on pIntervention 
-        // and for each successful one, logs a message saying at time (now) an intervention
-        // of type (whatever) was distributed to an individual with certain attributes.
-        // There could be logging/reporting conditions based on config.json parameters,
-        // e.g., if( flags()->report_drugs ).
-        // time and node
-        if(Environment::getInstance()->Log->CheckLogLevel(Logger::DEBUG, "EEL"))
-        {
-            std::ostringstream msg;
-            msg << "t="
-                << node->GetTime().time
-                << ",n="
-                << node->GetSuid().data;
-
-            if( !pDistributor )
-            {
-                // This is our clue that this is an intervention-expired event
-                msg << ",ev=EXPIRED";
-            }
-
-            // intervention itself
-            msg << ",iv=";
-            std::string ivMangledName = typeid( *pDistributedIntervention ).name();
-            if( ivMangledName.find( "IVCalendar" ) != std::string::npos )
-            {
-                msg << "Calendar";
-            }
-            else if( ivMangledName.find( "PolioVaccine" ) != std::string::npos )
-            {
-                msg << "PolioVaccine";
-            }
-            else if( ivMangledName.find( "SimpleVaccine" ) != std::string::npos )
-            {
-                msg << "SimpleVaccine";
-            }
-            else if( ivMangledName.find( "AntiTBDrug" ) != std::string::npos )
-            {
-                msg << "AntiTBDrug";
-                // Do QI for IDrug so we can call GetDrugType and log that.
-                IDrug * pDrug = NULL;
-                if( pDistributedIntervention->QueryInterface( GET_IID(IDrug), (void**)&pDrug ) == s_OK ) // not on win
-                {
-                    msg << ",dt=" << pDrug->GetDrugType();
-                }
-            }
-            else if( ivMangledName.find( "Drug" ) != std::string::npos )
-            {
-                msg << "GenericDrug";
-            }
-            else if( ivMangledName.find( "HealthSeekingB" ) != std::string::npos )
-            {
-                msg << "HSB";
-            }
-            else if( ivMangledName.find( "HealthTriggered" ) != std::string::npos )
-            {
-                msg << "HTI";
-            }
-            else
-            {
-                msg << ivMangledName;
-            }
-
-#ifdef ENABLE_POLIO
-            // intervention detail
-            // TODO: This has got to go: NEC should not have to know about PolioVaccines.
-            IPolioVaccine * pVacc = NULL;
-            std::string subtypeName = "UNK";
-            if( pDistributedIntervention->QueryInterface( GET_IID(IPolioVaccine), (void**)&pVacc ) == s_OK )
-            {
-                // NOTE: GlobalVaccineType is a hack right now. Next change will fix this all up. Several changes
-                // necessary to get working properly. 
-                PolioVaccineType::Enum vaccineSubType = pVacc->GetVaccineType();
-                subtypeName = Kernel::PolioVaccineType::pairs::lookup_key(vaccineSubType);
-                // intervention distribut-ED info
-                msg << ",subtype="
-                    << subtypeName;
-            }
-#endif
-
-            // intervention source
-            if( pDistributor )
-            {
-                std::string dtorMangledNameDtor = typeid( *pDistributor ).name();
-                if( dtorMangledNameDtor.find( "EventCoordinator" ) != std::string::npos )
-                {
-                    msg << ",s=EC";
-                }
-                else if( dtorMangledNameDtor.find( "IVCalendar" ) != std::string::npos )
-                {
-                    msg << ",s=CAL";
-                }
-                else if( dtorMangledNameDtor.find( "HealthSeeking" ) != std::string::npos )
-                {
-                    msg << ",s=HSB";
-                }
-                else if( dtorMangledNameDtor.find( "HealthTriggered" ) != std::string::npos )
-                {
-                    msg << ",s=HTI";
-                }
-                else if( dtorMangledNameDtor.find( "Diagnostic" ) != std::string::npos )
-                {
-                    msg << ",s=DIA";
-                }
-                else
-                {
-                    msg << ",s=UNK";
-                }
-            }
-
             // intervention recipient
+            std::stringstream msg;
             float recipientAge = (float) pDistributeeIndividual->GetEventContext()->GetAge();
             msg << ",hum_id="
                 << pDistributeeIndividual->GetSuid().data

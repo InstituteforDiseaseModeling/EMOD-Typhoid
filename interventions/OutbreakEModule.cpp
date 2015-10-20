@@ -11,12 +11,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
-#include "OutbreakIndividual.h"
+#include "Outbreak.h"
 #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
 
-static const char * _module = "OutbreakIndividual";
+static const char * _module = "Outbreak";
 
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
@@ -46,7 +46,7 @@ RegisterWithFactory(
         _module,
         []()
         {
-            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::OutbreakIndividual());
+            return (Kernel::ISupports*)(Kernel::IDistributableIntervention*)(_new_ Kernel::Outbreak());
         }
     );
     return true;

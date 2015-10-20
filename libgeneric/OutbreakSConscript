@@ -7,7 +7,7 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-liboutbreakdllSrcFiles = [ "../interventions/OutbreakIndividual.cpp",
+liboutbreakdllSrcFiles = [ "../interventions/Outbreak.cpp",
                            "../interventions/OutbreakEModule.cpp"
                           ]
 

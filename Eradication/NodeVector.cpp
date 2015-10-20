@@ -406,6 +406,7 @@ namespace Kernel
             for (auto& vector_species_name : params()->vector_species_names)
             {
                 VectorPopulation *vectorpopulation = VectorPopulationAging::CreatePopulation(getContextPointer(), vector_species_name);
+                release_assert( vectorpopulation );
                 InitializeVectorPopulation(vectorpopulation);
             }
         }
@@ -416,6 +417,7 @@ namespace Kernel
             for (auto& vector_species_name : params()->vector_species_names)
             {
                 VectorPopulation *vectorpopulation = VectorPopulation::CreatePopulation(getContextPointer(), vector_species_name);
+                release_assert( vectorpopulation );
                 InitializeVectorPopulation(vectorpopulation);
             }
         }

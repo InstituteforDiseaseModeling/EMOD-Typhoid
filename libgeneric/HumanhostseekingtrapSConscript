@@ -19,7 +19,7 @@ humanhostseekingtrapenv = env.Clone()
 humanhostseekingtrapenv.Append(LIBS=['libgeneric_static'])
 humanhostseekingtrapenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 humanhostseekingtrapenv.Append(LIBS=['libvector_static'])
-humanhostseekingtrapenv.Append(LIBS=['libmalaria_static'])
+#humanhostseekingtrapenv.Append(LIBS=['libmalaria_static'])
 humanhostseekingtrapenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libhumanhostseekingtrapDll = humanhostseekingtrapenv.SharedLibrary('libhumanhostseekingtrap', libhumanhostseekingtrapdllSrcFiles + stdobj)

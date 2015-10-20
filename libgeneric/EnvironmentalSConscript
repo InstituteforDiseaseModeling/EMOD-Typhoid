@@ -5,7 +5,7 @@
 
 Import('env')
 
-if env['AllDlls'] or env['Disease'] == "Environmental":
+if env['AllDlls'] or env['DiseaseDll'] == "Environmental":
 
     stdobj = env.Object("stdafx.cpp")
 

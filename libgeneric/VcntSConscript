@@ -18,7 +18,7 @@ vcntenv = env.Clone()
 vcntenv.Append(LIBS=['libgeneric_static'])
 vcntenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 vcntenv.Append(LIBS=['libvector_static'])
-vcntenv.Append(LIBS=['libmalaria_static'])
+#vcntenv.Append(LIBS=['libmalaria_static'])
 vcntenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libvcntDll = vcntenv.SharedLibrary('libvcnt', libvcntdllSrcFiles + stdobj)

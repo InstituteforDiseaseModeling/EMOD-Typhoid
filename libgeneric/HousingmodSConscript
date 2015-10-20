@@ -18,7 +18,7 @@ housingmodenv = env.Clone()
 housingmodenv.Append(LIBS=['libgeneric_static'])
 housingmodenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 housingmodenv.Append(LIBS=['libvector_static'])
-housingmodenv.Append(LIBS=['libmalaria_static'])
+#housingmodenv.Append(LIBS=['libmalaria_static'])
 housingmodenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 #housingmodenv.Append( CPPDEFINES=["INTERVENTIONS_AS_DLLS"] )
 

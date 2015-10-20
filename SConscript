@@ -28,9 +28,6 @@ def InstallEmodules(src, dst):
                 full_fn = os.path.join(root,file);
                 print "copying: " + full_fn;
                 shutil.copy2(full_fn, dst);
-
-
-        
     
 # if --install is on, just copy the dlls (assumed there already) and finish
 dst_path = env['Install']
@@ -57,22 +54,20 @@ SConscript( [ 'cajun/SConscript',
 # to be used by other dlls
 
 # not sure yet exactly right set of conditions for this
-if env['AllDlls'] or env['AllInterventions'] or ( 'DllDisease' in env and env[ 'DllDisease' ] !="" ) or env[ 'Report' ] != "" or env[ 'Campaign' ] != "":
+if env['AllDlls'] or env['AllInterventions'] or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or env[ 'Report' ] != "" or env[ 'Campaign' ] != "":
     print "Build libgeneric_static.lib for dll...."
     SConscript( 'libgeneric_static/SConscript' )
 
 # Then build dlls
-
 if env['AllDlls']:
-
     print "Build all dlls..."
     SConscript( 'libgeneric/VectorSConscriptStatic' )
-    SConscript( 'libgeneric/MalariaSConscriptStatic' )
-    # NOT YET SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
+    #SConscript( 'libgeneric/MalariaSConscriptStatic' )
+    SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
     SConscript( 'libgeneric/GenericSConscript' )
     SConscript( 'libgeneric/VectorSConscript' )
     SConscript( 'libgeneric/MalariaSConscript' )
-    # NOT YET SConscript( 'libgeneric/EnvironmentalSConscript' )
+    SConscript( 'libgeneric/EnvironmentalSConscript' )
     #SConscript( 'libgeneric/PolioSConscript' )
 elif env[ 'DiseaseDll' ] != "":
     print( "Build specific disease dll." )
@@ -81,10 +76,10 @@ elif env[ 'DiseaseDll' ] != "":
         SConscript( 'libgeneric/GenericSConscript' )
     elif dtype == 'Vector':
         SConscript( 'libgeneric/VectorSConscriptStatic' )
-        SConscript( 'libgeneric/VectorSConscript' )
+        #SConscript( 'libgeneric/VectorSConscript' )
     elif dtype == 'Malaria':
         SConscript( 'libgeneric/VectorSConscriptStatic' )
-        SConscript( 'libgeneric/MalariaSConscriptStatic' )
+        #SConscript( 'libgeneric/MalariaSConscriptStatic' )
         SConscript( 'libgeneric/MalariaSConscript' )
     elif dtype == 'Environmental':
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
@@ -92,44 +87,56 @@ elif env[ 'DiseaseDll' ] != "":
     elif dtype == 'Polio':
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
         SConscript( 'libgeneric/PolioSConscript' )
+    elif dtype == 'TB':
+        SConscript( 'libgeneric/TBSConscript' )
+    elif dtype == 'STI':
+        SConscript( 'libgeneric/STISConscript' )
+    elif dtype == 'HIV':
+        SConscript( 'libgeneric/STISConscriptStatic' )
+        SConscript( 'libgeneric/HIVSConscript' )
     else:
         print "Unspecified or unknown disease type: " + dtype
 
 # intervention dlls
-if env['AllDlls'] or env['AllInterventions'] or env[ 'Disease' ] != "" or env[ 'Report' ]:
+if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env[ 'Report' ]:
+    print( "Building dlls." )
 
     # this vector and malaria static is needed for MalariaDrugTypeParameters 
     # should be cleared out once it is done correctly
     #SConscript( 'libgeneric/VectorSConscriptStatic' )
     #SConscript( 'libgeneric/MalariaSConscriptStatic' )
 
-
     # Vector
-    #SConscript( 'libgeneric/BednetSConscript' )
-    #SConscript( 'libgeneric/HousingmodSConscript' )
-    #SConscript( 'libgeneric/HumanhostseekingtrapSConscript' )
-    #SConscript( 'libgeneric/VcntSConscript' )
+    if env['DiseaseDll'] == "Vector" or env['DiseaseDll'] == "Malaria":
+        SConscript( 'libgeneric/BednetSConscript' )
+        SConscript( 'libgeneric/HousingmodSConscript' )
+        SConscript( 'libgeneric/HumanhostseekingtrapSConscript' )
+        SConscript( 'libgeneric/VcntSConscript' )
 
     # Malaria
-    #SConscript( 'libgeneric/AntimalarialdrugSConscript' )
+    if env['DiseaseDll'] == "Malaria":
+        SConscript( 'libgeneric/AntimalarialdrugSConscript' )
 
     # TB
-    #SConscript( 'libgeneric/AntitbdrugSConscript' )
-    #SConscript( 'libgeneric/BCGVaccineSConscript' )
+    if env['DiseaseDll'] == "TB":
+        SConscript( 'libgeneric/AntitbdrugSConscript' )
+        SConscript( 'libgeneric/BCGVaccineSConscript' )
 
     # Polio
     # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )    SConscript( 'libgeneric/BirthtriggeredSConscript' )
     SConscript( 'libgeneric/CalendarSConscript' )
+    SConscript( 'libgeneric/DelayedInterventionSConscript' )
     SConscript( 'libgeneric/DiagnosticsSConscript' )
     SConscript( 'libgeneric/HealthseekingbehaviorSConscript' )
     SConscript( 'libgeneric/NodeLevelHealthtriggeredSConscript' )
     SConscript( 'libgeneric/ImmunoglobulinSConscript' )
+    SConscript( 'libgeneric/ImportPressureSConscript' )
     SConscript( 'libgeneric/OutbreakSConscript' )
+    SConscript( 'libgeneric/OutbreakIndividualSConscript' )
     SConscript( 'libgeneric/SimplevaccineSConscript' )
-
 # report dlls
 # NOT YET if env['AllDlls'] or env['Report'] != "":
 # NOT YET SConscript( 'libgeneric/TajikSConscript' )
-    
+
 # Finally executable
 SConscript('Eradication/SConscript')
