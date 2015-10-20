@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.0.5619.0",
+		"DTK_Version" : "2.0.5655.0",
 		"DTK_Branch" : "trunk",
-		"DTK_Build_Date" : "2015/09/15 08:02:23"
+		"DTK_Build_Date" : "2015/10/05 16:45:06"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -7666,7 +7666,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -7815,7 +7815,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -7958,7 +7958,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
