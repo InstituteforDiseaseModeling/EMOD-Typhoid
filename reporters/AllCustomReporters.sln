@@ -85,6 +85,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcustomreport_HIV_WHO2015
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libstirelationshipqueuereporter", "libstirelationshipqueuereporter\libstirelationshipqueuereporter.vcxproj", "{FEB89E46-5D49-44FF-8B35-513108CA29D8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportAgeAtInfection_plugin", "libReportAgeAtInfection_plugin\libReportAgeAtInfection_plugin.vcxproj", "{A169B223-FB46-4EAF-A198-F43FED354AF3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportAgeAtInfectionHistogram_plugin", "libReportAgeAtInfectionHistogram_plugin\libReportAgeAtInfectionHistogram_plugin.vcxproj", "{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -155,6 +159,14 @@ Global
 		{FEB89E46-5D49-44FF-8B35-513108CA29D8}.Debug|x64.Build.0 = Debug|x64
 		{FEB89E46-5D49-44FF-8B35-513108CA29D8}.Release|x64.ActiveCfg = Release|x64
 		{FEB89E46-5D49-44FF-8B35-513108CA29D8}.Release|x64.Build.0 = Release|x64
+		{A169B223-FB46-4EAF-A198-F43FED354AF3}.Debug|x64.ActiveCfg = Debug|x64
+		{A169B223-FB46-4EAF-A198-F43FED354AF3}.Debug|x64.Build.0 = Debug|x64
+		{A169B223-FB46-4EAF-A198-F43FED354AF3}.Release|x64.ActiveCfg = Release|x64
+		{A169B223-FB46-4EAF-A198-F43FED354AF3}.Release|x64.Build.0 = Release|x64
+		{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}.Debug|x64.ActiveCfg = Debug|x64
+		{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}.Debug|x64.Build.0 = Debug|x64
+		{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}.Release|x64.ActiveCfg = Release|x64
+		{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

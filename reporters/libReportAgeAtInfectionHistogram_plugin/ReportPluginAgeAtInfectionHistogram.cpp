@@ -10,17 +10,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "ReportPluginAgeAtInfectionHistogram.h"
-#include <functional>
-#include <map>
-#include "BoostLibWrapper.h"
-// not in boost wrapper???
-#include <boost/math/special_functions/fpclassify.hpp>
-#include <boost/filesystem.hpp>
-#include "Report.h"
-#include "Sugar.h"
 #include "Environment.h"
-#include "Node.h"
 #include "Individual.h"
+#include "FileSystem.h"
 
 #include "DllInterfaceHelper.h"
 #include "DllDefs.h"
@@ -245,7 +237,7 @@ ReportPluginAgeAtInfectionHistogram::Finalize()
     Writer::Write(elementRoot, oss);
 
     ofstream inset_chart_json;
-    inset_chart_json.open((boost::filesystem::path(EnvPtr->OutputPath) / report_name).string().c_str());
+    inset_chart_json.open( FileSystem::Concat( EnvPtr->OutputPath, report_name ).c_str() );
 
     if (inset_chart_json.is_open())
     {
