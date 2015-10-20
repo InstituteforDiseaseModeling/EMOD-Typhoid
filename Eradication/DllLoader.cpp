@@ -524,7 +524,7 @@ bool DllLoader::LoadInterventionDlls(const char* dllName)
                     }
                     else
                     {
-                        LOG_WARN("GetProcAddr failed for RegisterWithFactory.\n");
+                        LOG_WARN_F("GetProcAddr failed for RegisterWithFactory for filename %s.\n", ffd.cFileName);
                     }
                 }
             }

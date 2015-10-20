@@ -107,7 +107,7 @@ namespace Kernel
             outbreakIndividual_strainID = _new_ StrainIdentity(antigen, genome);
             LOG_DEBUG_F("random genome generation... antigen: %d\t genome: %d\n", antigen, genome);
         }
-        else if (genome >= 0 && genome < simConfigObj->number_substrains )
+        else if (genome >= 0 && genome <= simConfigObj->number_substrains )
         {
             outbreakIndividual_strainID = _new_ StrainIdentity(antigen, genome);
         }

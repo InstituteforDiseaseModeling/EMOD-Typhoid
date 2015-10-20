@@ -6,8 +6,9 @@
 Import('env')
 
 stdobj = env.Object("stdafx.cpp")
+atdobj = env.Object("../interventions/AntiTbDrug.cpp")
 
-libantitbdrugdllSrcFiles = [ "../interventions/AntitbDrug.cpp",
+libantitbdrugdllSrcFiles = [ 
                              "../interventions/AntitbDrugEModule.cpp"
                            ]
 
@@ -21,7 +22,7 @@ antitbdrugenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
 #antitbdrugenv.Append(LIBS=['libtb_static'])
 antitbdrugenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-libantitbdrugDll = antitbdrugenv.SharedLibrary('libantitbdrug', libantitbdrugdllSrcFiles + stdobj)
+libantitbdrugDll = antitbdrugenv.SharedLibrary('libantitbdrug', libantitbdrugdllSrcFiles + stdobj + atdobj )
 #print "building libantitbdrugdll: " + str(libantitbdrugdll)
 
 # take libantitbdrug.dll (exclude .lib, .exp) out to be the building target

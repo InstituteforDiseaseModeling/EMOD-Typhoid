@@ -1,0 +1,45 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libhealthseekingbehaviorupdate.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libhealthseekingbehaviorupdatedllSrcFiles = [ 
+                                              "../interventions/HealthSeekingBehaviorUpdate.cpp",
+                                              "../interventions/HealthSeekingBehaviorUpdateEModule.cpp"
+                                            ]
+
+libhealthseekingbehaviorupdatedllLocalInc = [  "stdafx.h" ]
+
+healthseekingbehaviorupdateenv = env.Clone()
+#hsbobj = healthseekingbehaviorupdateenv .Object("../interventions/HealthSeekingBehavior.cpp")
+
+healthseekingbehaviorupdateenv .Append( CPPDEFINES=["ENABLE_TB" ] )
+healthseekingbehaviorupdateenv.Append(LIBS=['libgeneric_static'])
+healthseekingbehaviorupdateenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+#healthseekingbehaviorupdateenv.Append(LIBS=['libtb_static'])
+healthseekingbehaviorupdateenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhealthseekingbehaviorupdateDll = healthseekingbehaviorupdateenv.SharedLibrary('libhealthseekingbehaviorupdate', libhealthseekingbehaviorupdatedllSrcFiles + stdobj )
+#print "building libhealthseekingbehaviorupdatedll: " + str(libhealthseekingbehaviorupdatedll)
+
+# take libhealthseekingbehaviorupdate.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhealthseekingbehaviorupdatedllTarget = libhealthseekingbehaviorupdateDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = healthseekingbehaviorupdateenv['BUILD_VARIANT'] + '|x64'
+    print str(libhealthseekingbehaviorupdatedllTarget) + ": Generating MSVS" + healthseekingbehaviorupdateenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    healthseekingbehaviorupdateenv.MSVSProject(target = 'LibhealthseekingbehaviorupdatedllScons' + healthseekingbehaviorupdateenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhealthseekingbehaviorupdatedllSrcFiles,
+		    incs = libhealthseekingbehaviorupdatedllIncFiles,
+		    localincs = libhealthseekingbehaviorupdatedllLocalInc,
+ 		    buildtarget = libhealthseekingbehaviorupdatedllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

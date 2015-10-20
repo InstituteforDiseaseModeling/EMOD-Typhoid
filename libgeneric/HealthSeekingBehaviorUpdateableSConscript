@@ -1,0 +1,46 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libhealthseekingbehaviorupdateable.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+
+libhealthseekingbehaviorupdateabledllSrcFiles = [ 
+                                                  "../interventions/HealthSeekingBehaviorUpdateable.cpp",
+                                                  "../interventions/HealthSeekingBehaviorUpdateableEModule.cpp"
+                                                ]
+
+libhealthseekingbehaviorupdateabledllLocalInc = [  "stdafx.h" ]
+
+healthseekingbehaviorupdateableenv = env.Clone()
+hsbobj = healthseekingbehaviorupdateableenv .Object( "../interventions/HealthSeekingBehavior.cpp" )
+
+healthseekingbehaviorupdateableenv .Append( CPPDEFINES=["ENABLE_TB" ] )
+healthseekingbehaviorupdateableenv.Append(LIBS=['libgeneric_static'])
+healthseekingbehaviorupdateableenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+#healthseekingbehaviorupdateableenv.Append(LIBS=['libtb_static'])
+healthseekingbehaviorupdateableenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libhealthseekingbehaviorupdateableDll = healthseekingbehaviorupdateableenv.SharedLibrary('libhealthseekingbehaviorupdateable', libhealthseekingbehaviorupdateabledllSrcFiles + stdobj + hsbobj )
+#print "building libhealthseekingbehaviorupdateabledll: " + str(libhealthseekingbehaviorupdateabledll)
+
+# take libhealthseekingbehaviorupdateable.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libhealthseekingbehaviorupdateabledllTarget = libhealthseekingbehaviorupdateableDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = healthseekingbehaviorupdateableenv['BUILD_VARIANT'] + '|x64'
+    print str(libhealthseekingbehaviorupdateabledllTarget) + ": Generating MSVS" + healthseekingbehaviorupdateableenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    healthseekingbehaviorupdateableenv.MSVSProject(target = 'LibhealthseekingbehaviorupdateabledllScons' + healthseekingbehaviorupdateableenv['MSVSPROJECTSUFFIX'],
+                    srcs = libhealthseekingbehaviorupdateabledllSrcFiles,
+		    incs = libhealthseekingbehaviorupdateabledllIncFiles,
+		    localincs = libhealthseekingbehaviorupdateabledllLocalInc,
+ 		    buildtarget = libhealthseekingbehaviorupdateabledllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)
