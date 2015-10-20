@@ -17,7 +17,7 @@ public:
     ReportPluginAgeAtInfectionHistogram();
     virtual ~ReportPluginAgeAtInfectionHistogram() { }
     virtual void BeginTimestep();
-    virtual void EndTimestep( );
+    virtual void EndTimestep( float currentTime, float dt );
     virtual void LogNodeData( Kernel::INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
     virtual void LogIndividualData( Kernel::IndividualHuman * individual );
@@ -25,6 +25,7 @@ public:
     virtual void Finalize();
 
 protected:
+    virtual bool Configure( const Configuration* config);
     virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
     virtual void postProcessAccumulatedData();
     int  GetAgeBin(double age);

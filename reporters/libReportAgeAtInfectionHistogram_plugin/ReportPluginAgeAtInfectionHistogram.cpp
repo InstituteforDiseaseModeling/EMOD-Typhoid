@@ -10,9 +10,17 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "ReportPluginAgeAtInfectionHistogram.h"
+#include <functional>
+#include <map>
+#include "BoostLibWrapper.h"
+// not in boost wrapper???
+#include <boost/math/special_functions/fpclassify.hpp>
+#include <boost/filesystem.hpp>
+#include "Report.h"
+#include "Sugar.h"
 #include "Environment.h"
+#include "Node.h"
 #include "Individual.h"
-#include "FileSystem.h"
 
 #include "DllInterfaceHelper.h"
 #include "DllDefs.h"
@@ -99,17 +107,8 @@ ReportPluginAgeAtInfectionHistogram::ReportPluginAgeAtInfectionHistogram()
 {
     LOG_INFO( "ReportPluginAgeAtInfectionHistogram ctor\n" );
     report_name = _report_name;
-    
-    reporting_interval_in_years = 1;
     time_since_last_report = 0;
-    int nbins = 10;
-    for (int curr_bin = 0; curr_bin < nbins-1; curr_bin++)
-    {
-        age_bin_upper_edges_in_years.push_back((float)curr_bin/2.0f + 0.5);  //Initialize here however you like
-        temp_binned_accumulated_counts.push_back(0.0f);
-    }
-    age_bin_upper_edges_in_years.push_back(10000); //put a catchall bin at the end
-    temp_binned_accumulated_counts.push_back(0.0f);
+
 
 
 
@@ -124,9 +123,9 @@ ReportPluginAgeAtInfectionHistogram::BeginTimestep()
 }
 
 void
-ReportPluginAgeAtInfectionHistogram::EndTimestep( )
+ReportPluginAgeAtInfectionHistogram::EndTimestep( float currentTime, float dt)
 {
-    time_since_last_report++;
+    time_since_last_report += dt;
     if (time_since_last_report >= (reporting_interval_in_years*DAYSPERYEAR))
     {
         LOG_DEBUG_F("Reporting Interval Reached\n");
@@ -138,6 +137,33 @@ ReportPluginAgeAtInfectionHistogram::EndTimestep( )
         std::fill(temp_binned_accumulated_counts.begin(), temp_binned_accumulated_counts.end(), 0.0f);
         time_since_last_report = 0;
     }
+}
+
+bool ReportPluginAgeAtInfectionHistogram::Configure(const Configuration* config)
+{
+
+    initConfigTypeMap( "Age_At_Infection_Histogram_Report_Reporting_Interval_In_Years", &reporting_interval_in_years, Age_At_Infection_Histogram_Report_Reporting_Interval_In_Years_DESC_TEXT, 0.0f, FLT_MAX, 1.0f);
+
+    if(config->Exist( "Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years" ) )
+    {
+        initConfigTypeMap( "Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years", &age_bin_upper_edges_in_years, Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years_DESC_TEXT);
+    }
+    else
+    {
+        int nbins = 10;
+        for (int curr_bin = 0; curr_bin < nbins-1; curr_bin++)
+        {
+            age_bin_upper_edges_in_years.push_back((float)curr_bin/2.0f + 0.5);  //Initialize here however you like
+        }
+    }
+    bool retValue = JsonConfigurable::Configure( config );
+    age_bin_upper_edges_in_years.push_back(10000); //put a catchall bin at the end
+
+    temp_binned_accumulated_counts.resize( age_bin_upper_edges_in_years.size()) ;
+    std::fill(temp_binned_accumulated_counts.begin(), temp_binned_accumulated_counts.end(), 0.0f);
+    
+    return retValue;
+
 }
 
 void
@@ -176,6 +202,13 @@ int ReportPluginAgeAtInfectionHistogram::GetAgeBin(double age)
 void
 ReportPluginAgeAtInfectionHistogram::Finalize()
 {
+
+    // Do one last writeout in case we don't end on a reporting interval
+    if (time_since_last_report !=0)
+    {
+        time_since_last_report += (reporting_interval_in_years*DAYSPERYEAR);
+        EndTimestep(0.0f, 0.0f);
+    }
     LOG_INFO( "WriteData\n" );
     postProcessAccumulatedData();
 
@@ -237,7 +270,7 @@ ReportPluginAgeAtInfectionHistogram::Finalize()
     Writer::Write(elementRoot, oss);
 
     ofstream inset_chart_json;
-    inset_chart_json.open( FileSystem::Concat( EnvPtr->OutputPath, report_name ).c_str() );
+    inset_chart_json.open((boost::filesystem::path(EnvPtr->OutputPath) / report_name).string().c_str());
 
     if (inset_chart_json.is_open())
     {
