@@ -42,8 +42,7 @@ AD_OutsideVillage"
 #define DRUG_Durability_Profile_DESC_TEXT "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows: \
  \
 Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000 \
- \
-Crug_Vd - Volume of distribution for the drug is 0 to 10000 \
+ \Drug_Vd - Volume of distribution for the drug is 0 to 10000 \
  \
 Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 \
 "
@@ -266,7 +265,7 @@ BOXDECAYDURABILITY - The primary and secondary decay time constants work togethe
 #define DRUG_Drug_CMax_DESC_TEXT "Drug maximum concentration for a dosing."
 #define DRUG_Drug_Vd_DESC_TEXT "Volume of distribution for the drug."
 #define DRUG_Drug_PKPD_C50_DESC_TEXT "Drug PKPD c50 for killing effects."
-#define DRUG_Fraction_Defaulters_DESC_TEXT "fraction defaulters"
+#define DRUG_Fraction_Defaulters_DESC_TEXT "The fraction of individuals who will not finish their drug treatment."
 
 #define PV_Cost_To_Consumer_DESC_TEXT "Cost of each polio vaccine."
 #define PV_Time_Since_Vaccination_DESC_TEXT "Time since vaccination."
@@ -320,7 +319,7 @@ GAUSSIAN_DURATION \
 EXPONENTIAL_DURATION"
 #define DI_Coverage_DESC_TEXT "Fraction of individuals receiving delayed distribution of configured interventions."
 #define DI_Actual_IndividualIntervention_Configs_DESC_TEXT "Array of nested interventions to be distributed at end of delay period to covered fraction."
-#define DI_Delay_Period_DESC_TEXT "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specifiy the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days)."
+#define DI_Delay_Period_DESC_TEXT "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days)."
 #define DI_Delay_Period_Min_DESC_TEXT "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Min to directly specify the minimum time delay (in number of days)."
 #define DI_Delay_Period_Max_DESC_TEXT "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Max to directly specify the maximum time delay (in number of days)."
 #define DI_Delay_Period_Mean_DESC_TEXT "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Mean to directly specify the mean time delay (in number of days)."
