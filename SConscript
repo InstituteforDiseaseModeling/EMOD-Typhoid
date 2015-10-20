@@ -80,7 +80,7 @@ elif env[ 'DiseaseDll' ] != "":
         SConscript( 'libgeneric/GenericSConscript', variant_dir="Generic/disease_plugins" )
     elif dtype == 'Vector':
         SConscript( 'libgeneric/VectorSConscriptStatic' )
-        #SConscript( 'libgeneric/VectorSConscript' )
+        SConscript( 'libgeneric/VectorSConscript', variant_dir="Vector/disease_plugins" )
     elif dtype == 'Malaria':
         SConscript( 'libgeneric/VectorSConscriptStatic' )
         SConscript( 'libgeneric/MalariaSConscriptStatic' )
@@ -119,6 +119,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/BednetSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HousingmodSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HumanhostseekingtrapSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/MosquitoreleaseSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/ScalelarvalhabitatSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/VcntSConscript', variant_dir=dll_op_path )
 

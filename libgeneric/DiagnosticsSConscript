@@ -20,8 +20,6 @@ hsbobj = diagnosticsenv.Object("hsbobj_diagnostics","../../interventions/HealthS
 
 diagnosticsenv.Append(LIBS=['libgeneric_static'])
 diagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-#diagnosticsenv.Append(LIBS=['libvector_static'])
-#diagnosticsenv.Append(LIBS=['libmalaria_static'])
 diagnosticsenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 libdiagnosticsDll = diagnosticsenv.SharedLibrary('libdiagnostics', libdiagnosticsdllSrcFiles + stdobj + hsbobj)

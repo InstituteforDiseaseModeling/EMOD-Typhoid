@@ -10,8 +10,8 @@ if env['AllDlls'] or env['DiseaseDll'] == "Vector":
     stdobj = env.Object("stdafx.cpp")
 
     libvectordllSrcFiles = [ 
-                          "../../Eradication/SimulationVectorExport.cpp"
-                          ]
+                              "../../Eradication/SimulationVectorExport.cpp"
+                           ]
 
     libvectordllIncFiles = [  "SimulationVector.h" ]
     libvectordllLocalInc = [  "stdafx.h" ]
@@ -24,7 +24,6 @@ if env['AllDlls'] or env['DiseaseDll'] == "Vector":
     vectorenv.Append(LIBS=['libgeneric_static'])
     vectorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
     vectorenv.Append(LIBS=['libvector_static'])
-    #vectorenv.Append(LIBS=['libmalaria_static'])
     vectorenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
     libvectordll = vectorenv.SharedLibrary('libvector', libvectordllSrcFiles + stdobj + genobj)

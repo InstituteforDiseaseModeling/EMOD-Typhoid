@@ -48,6 +48,7 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/SimulationConfig.cpp",
                        "../Eradication/SimulationEventContext.cpp",
                        "../Eradication/SpatialReport.cpp",
+                       "../Eradication/NodeEventCoordinator.cpp",
                        "../Eradication/SimpleEventCoordinator.cpp",
                        "../Eradication/StandardEventCoordinator.cpp",
                        "../Eradication/CoverageByNodeEventCoordinator.cpp",
@@ -61,7 +62,8 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../interventions/WaningEffectBoxExponential.cpp",
                        "../interventions/WaningEffectConstant.cpp",
                        "../interventions/WaningEffectExponential.cpp",
-                       "../interventions/WaningEffectFactory.cpp"
+                       "../interventions/WaningEffectFactory.cpp",
+                       "../Eradication/VectorTransmissionGroups.cpp"
                        ]
 
 libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]
@@ -78,6 +80,9 @@ if env['DiseaseDll'] != "Vector" and env['DiseaseDll'] != "Malaria" and env['Dis
     env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
     if env['DiseaseDll'] != "Generic":
         env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+#else:
+#    libgenericSrcFiles.append( "../Eradication/VectorTransmissionGroups.cpp" )
+
 if env['DiseaseDll'] != "Malaria":
     env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
 if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":

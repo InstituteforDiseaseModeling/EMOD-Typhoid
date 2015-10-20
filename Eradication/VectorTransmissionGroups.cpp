@@ -16,12 +16,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IInfectable.h"
 #include "IContagionPopulation.h"
 
+
 // These includes are required to bring in randgen
 #include "Environment.h"
 #include "Contexts.h"
 #include "RANDOM.h"
 
 static const char* _module = "VectorNodeTransmissionGroups";
+
 
 namespace Kernel
 {
@@ -31,6 +33,7 @@ namespace Kernel
 
     void VectorTransmissionGroups::ExposeToContagion( IInfectable* candidate, const TransmissionGroupMembership_t* transmissionGroupMembership, float deltaTee ) const
     {
+#ifndef DISABLE_VECTOR
         for (int iAntigen = 0; iAntigen < antigenCount; iAntigen++)
         {
             const vector<TransmissionGroupsBase::ContagionAccumulator_t>& forceOfInfectionForRouteGroup = forceOfInfectionByAntigenRouteGroup[iAntigen];
@@ -66,5 +69,6 @@ namespace Kernel
                 }
             }
         }
+#endif
     }
 }

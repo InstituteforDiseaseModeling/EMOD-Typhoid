@@ -11,7 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
-#include "HousingModification.h"
+#include "MosquitoRelease.h"
 #include "ProgVersion.h"
 
 static const char * _module = "MosquitoRelease";
