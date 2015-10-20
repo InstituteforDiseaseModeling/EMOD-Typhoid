@@ -5,8 +5,6 @@
         { "path": "13_Generic_Seattle_SingleCore" },
         { "path": "23_Generic_Namawala" },
         { "path": "48_Generic_Seattle_SingleCore_Zoonosis" },
-        { "path": "49_Environmental_Namawala" },
-        { "path": "50_Airborne_Namawala" },
         { "path": "59_Generic_Individual_Properties" },
         { "path": "65_Generic_Seattle_CoverageByNode" },
         { "path": "72_DistributionOverlay" },
