@@ -148,6 +148,8 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
     if env['DiseaseDll'] == "STI":
         SConscript( 'libgeneric/StibarrierSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/StiispostdebutSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/ModifysticoinfectionstatusSConscript', variant_dir=dll_op_path ) 
+        SConscript( 'libgeneric/SticoinfectiondiagnosticSConscript', variant_dir=dll_op_path )
 
     if env['DiseaseDll'] == "HIV":
         SConscript( 'libgeneric/ArtbasicSConscript', variant_dir=dll_op_path )
@@ -167,8 +169,6 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/HivsimplediagnosticSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HivmuxerSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/MalecircumcisionSConscript', variant_dir=dll_op_path )
-        SConscript( 'libgeneric/ModifysticoinfectionstatusSConscript', variant_dir=dll_op_path ) 
-        SConscript( 'libgeneric/SticoinfectiondiagnosticSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/PmtctSConscript', variant_dir=dll_op_path )
 
     # Polio
