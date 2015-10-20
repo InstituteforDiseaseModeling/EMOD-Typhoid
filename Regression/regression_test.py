@@ -310,6 +310,12 @@ class Monitor(threading.Thread):
 
         for chan_title in (ref_channels & test_channels):
             #print( "Looking at channel {0}".format( chan_title ) )
+            num_steps_ref  = len(ref_json["Channels"][chan_title]["Data"])
+            num_steps_test = len(test_json["Channels"][chan_title]["Data"])
+            if( (min_tstep_ind > num_steps_ref) or (min_tstep_ind > num_steps_test) ):
+                failures.append("Reference has "+str(num_steps_ref) + " steps and test has "+str(num_steps_test)+" steps, but the header says the min Timesteps is "+str(min_tstep_ind))
+                print("!!!! Reference has "+str(num_steps_ref) + " steps and test has "+str(num_steps_test)+" steps, but the header says the min Timesteps is "+str(min_tstep_ind))
+                return
             for tstep_idx in range( 0, min_tstep_ind ):
                 if test_json["Channels"][chan_title]["Data"][tstep_idx] != ref_json["Channels"][chan_title]["Data"][tstep_idx]:
                     failures.append(chan_title + " " + str(tstep_idx) + " " + str( ref_json["Channels"][chan_title]["Data"][tstep_idx] ) + " " + str( test_json["Channels"][chan_title]["Data"][tstep_idx] ) + "\n")
