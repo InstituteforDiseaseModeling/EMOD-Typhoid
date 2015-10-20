@@ -108,7 +108,7 @@ ReportPluginAgeAtInfection::ReportPluginAgeAtInfection()
 // steady-state methods
 /////////////////////////
 void
-ReportPluginAgeAtInfection::EndTimestep()
+ReportPluginAgeAtInfection::EndTimestep(float currentTime, float dt)
 {
     time_age_map.emplace((unsigned int)time_age_map.size()+1u, ages);
     ages.clear();
