@@ -1,0 +1,44 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libmalaria.dll to handle malaria disease based on libgeneric_static.lib and libvector_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libstiispostdebutdllSrcFiles = [ "../../interventions/STIIsPostDebut.cpp",
+                         "../../interventions/STIIsPostDebutEModule.cpp"
+                         ]
+
+libstiispostdebutdllIncFiles = [  "../../interventions/stiispostdebut.h" ]
+libstiispostdebutdllLocalInc = [  "stdafx.h" ]
+
+stiispostdebutenv = env.Clone()
+diag_obj = stiispostdebutenv .Object( "diag_sipd", "../../interventions/Diagnostics.cpp" )
+stiispostdebutenv.Append(LIBS=['libgeneric_static'])
+stiispostdebutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+stiispostdebutenv.Append(LIBS=['libvector_static'])
+#stiispostdebutenv.Append(LIBS=['libmalaria_static'])
+stiispostdebutenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libstiispostdebutDll = stiispostdebutenv.SharedLibrary('libstiispostdebut', libstiispostdebutdllSrcFiles + stdobj + diag_obj )
+#print "building libstiispostdebutdll: " + str(libstiispostdebutdll)
+
+# take libstiispostdebut.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libstiispostdebutdllTarget = libstiispostdebutDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = stiispostdebutenv['BUILD_VARIANT'] + '|x64'
+    print str(libstiispostdebutdllTarget) + ": Generating MSVS" + stiispostdebutenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    stiispostdebutenv.MSVSProject(target = 'LibstiispostdebutdllScons' + stiispostdebutenv['MSVSPROJECTSUFFIX'],
+                    srcs = libstiispostdebutdllSrcFiles,
+		    incs = libstiispostdebutdllIncFiles,
+		    localincs = libstiispostdebutdllLocalInc,
+ 		    buildtarget = libstiispostdebutdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

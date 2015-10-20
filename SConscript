@@ -140,6 +140,10 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/NodeLevelHealthTriggeredIVScaleUpSwitchSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/SmearDiagnosticsSConscript', variant_dir=dll_op_path )
 
+    if env['DiseaseDll'] == "STI":
+        SConscript( 'libgeneric/StibarrierSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/StiispostdebutSConscript', variant_dir=dll_op_path )
+
     # Polio
     # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )    SConscript( 'libgeneric/BirthtriggeredSConscript' )
     SConscript( 'libgeneric/CalendarSConscript', variant_dir=dll_op_path )
