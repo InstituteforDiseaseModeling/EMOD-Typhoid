@@ -116,7 +116,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/BednetSConscript' )
         SConscript( 'libgeneric/HousingmodSConscript' )
         SConscript( 'libgeneric/HumanhostseekingtrapSConscript' )
-        #SConscript( 'libgeneric/ScalelarvalhabitatSConscript' )
+        SConscript( 'libgeneric/ScalelarvalhabitatSConscript' )
         SConscript( 'libgeneric/VcntSConscript' )
 
     # Malaria
