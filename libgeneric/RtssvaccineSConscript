@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds librtssvaccine.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+librtssvaccinedllSrcFiles = [ "../interventions/RTSSVaccine.cpp",
+                              "../interventions/RTSSVaccineEModule.cpp"
+                            ]
+
+librtssvaccinedllLocalInc = [  "stdafx.h" ]
+
+rtssvaccineenv = env.Clone()
+rtssvaccineenv.Append(LIBS=['libgeneric_static'])
+rtssvaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+rtssvaccineenv.Append(LIBS=['libvector_static'])
+rtssvaccineenv.Append(LIBS=['libmalaria_static'])
+rtssvaccineenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+librtssvaccineDll = rtssvaccineenv.SharedLibrary('librtssvaccine', librtssvaccinedllSrcFiles + stdobj)
+#print "building librtssvaccinedll: " + str(librtssvaccinedll)
+
+# take librtssvaccine.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+librtssvaccinedllTarget = librtssvaccineDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = rtssvaccineenv['BUILD_VARIANT'] + '|x64'
+    print str(librtssvaccinedllTarget) + ": Generating MSVS" + rtssvaccineenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    rtssvaccineenv.MSVSProject(target = 'LibrtssvaccinedllScons' + rtssvaccineenv['MSVSPROJECTSUFFIX'],
+                    srcs = librtssvaccinedllSrcFiles,
+		    incs = librtssvaccinedllIncFiles,
+		    localincs = librtssvaccinedllLocalInc,
+ 		    buildtarget = librtssvaccinedllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

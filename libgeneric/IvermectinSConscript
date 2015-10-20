@@ -1,0 +1,43 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libivermectin.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libivermectindllSrcFiles = [ "../interventions/Ivermectin.cpp",
+                             "../interventions/IvermectinEModule.cpp"
+                           ]
+
+libivermectindllIncFiles = [  "../interventions/Drugs.h" ]
+libivermectindllLocalInc = [  "stdafx.h" ]
+
+ivermectinenv = env.Clone()
+ivermectinenv.Append(LIBS=['libgeneric_static'])
+ivermectinenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+ivermectinenv.Append(LIBS=['libvector_static'])
+ivermectinenv.Append(LIBS=['libmalaria_static'])
+ivermectinenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libivermectinDll = ivermectinenv.SharedLibrary('libivermectin', libivermectindllSrcFiles + stdobj)
+#print "building libivermectindll: " + str(libivermectindll)
+
+# take libivermectin.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libivermectindllTarget = libivermectinDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = ivermectinenv['BUILD_VARIANT'] + '|x64'
+    print str(libivermectindllTarget) + ": Generating MSVS" + ivermectinenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    ivermectinenv.MSVSProject(target = 'LibivermectindllScons' + ivermectinenv['MSVSPROJECTSUFFIX'],
+                    srcs = libivermectindllSrcFiles,
+		    incs = libivermectindllIncFiles,
+		    localincs = libivermectindllLocalInc,
+ 		    buildtarget = libivermectindllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)

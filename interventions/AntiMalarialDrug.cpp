@@ -112,6 +112,8 @@ namespace Kernel
         IIndividualHumanContext *context
     )
     {
+        release_assert( context );
+        release_assert( context->GetInterventionsContext() );
         if (s_OK != context->GetInterventionsContext()->QueryInterface(GET_IID(IMalariaDrugEffectsApply), (void**)&imda) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "IMalariaDrugEffectsApply", "IIndividualHumanInterventionsContext" );
@@ -121,18 +123,21 @@ namespace Kernel
         const SimulationConfig* simConfigObj = NULL;
         if (s_OK == context->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
+            release_assert( pGC );
             simConfigObj = pGC->GetSimulationConfigObj();
         }
         if (!simConfigObj)
         {
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to SimulationConfig object is not valid (could be DLL specific)" );
         }
-        const Configuration* jsonConfig = simConfigObj->GetJsonConfigObj();
+        release_assert( simConfigObj );
+        /*const Configuration* jsonConfig = simConfigObj->GetJsonConfigObj();
         if (!jsonConfig)
         {
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to Configuration object is not valid (could be DLL specific)" );
-        }
+        }*/
 
+        LOG_DEBUG( "Calling base class SetContextTo.\n" );
         return GenericDrug::SetContextTo( context );
     }
 

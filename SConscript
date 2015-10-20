@@ -18,7 +18,7 @@ def InstallEmodules(src, dst):
         return;
 
     if os.path.exists(dst) != True:
-        print "Creating " + dst;
+        print "Creating " + dst + " in " + os.getcwd();
         os.mkdir(dst)
 
     srcfiles = os.path.join(src,'*.dll')
@@ -70,6 +70,8 @@ if env['AllDlls']:
     SConscript( 'libgeneric/EnvironmentalSConscript' )
     SConscript( 'libgeneric/TBSConscriptStatic' )
     SConscript( 'libgeneric/TBSConscript' )
+    SConscript( 'libgeneric/STISConscriptStatic' )
+    SConscript( 'libgeneric/HIVSConscript' )
     #SConscript( 'libgeneric/PolioSConscript' )
 elif env[ 'DiseaseDll' ] != "":
     print( "Build specific disease dll." )
@@ -114,17 +116,26 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/BednetSConscript' )
         SConscript( 'libgeneric/HousingmodSConscript' )
         SConscript( 'libgeneric/HumanhostseekingtrapSConscript' )
-        SConscript( 'libgeneric/ScalelarvalhabitatSConscript' )
+        #SConscript( 'libgeneric/ScalelarvalhabitatSConscript' )
         SConscript( 'libgeneric/VcntSConscript' )
 
     # Malaria
     if env['DiseaseDll'] == "Malaria":
         SConscript( 'libgeneric/AntimalarialdrugSConscript' )
+        SConscript( 'libgeneric/InputEIRSConscript' )
+        SConscript( 'libgeneric/IvermectinSConscript' )
+        SConscript( 'libgeneric/MalariaChallengeSConscript' )
+        SConscript( 'libgeneric/RTSSVaccineSConscript' )
 
     # TB
     if env['DiseaseDll'] == "TB":
         SConscript( 'libgeneric/AntitbdrugSConscript' )
+        SConscript( 'libgeneric/AntitbpropdepdrugSConscript' )
         SConscript( 'libgeneric/BCGVaccineSConscript' )
+        SConscript( 'libgeneric/HealthSeekingBehaviorUpdateSConscript' )
+        SConscript( 'libgeneric/HealthSeekingBehaviorUpdateableSConscript' )
+        SConscript( 'libgeneric/NodeLevelHealthTriggeredIVScaleUpSwitchSConscript' )
+        SConscript( 'libgeneric/SmearDiagnosticsSConscript' )
 
     # Polio
     # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )    SConscript( 'libgeneric/BirthtriggeredSConscript' )

@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libinputeir.dll 
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libinputeirdllSrcFiles = [ "../interventions/InputEIR.cpp",
+                           "../interventions/InputEIREModule.cpp"
+                         ]
+
+libinputeirdllLocalInc = [  "stdafx.h" ]
+
+inputeirenv = env.Clone()
+inputeirenv.Append(LIBS=['libgeneric_static'])
+inputeirenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+inputeirenv.Append(LIBS=['libvector_static'])
+inputeirenv.Append(LIBS=['libmalaria_static'])
+inputeirenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libinputeirDll = inputeirenv.SharedLibrary('libinputeir', libinputeirdllSrcFiles + stdobj)
+#print "building libinputeirdll: " + str(libinputeirdll)
+
+# take libinputeir.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libinputeirdllTarget = libinputeirDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = inputeirenv['BUILD_VARIANT'] + '|x64'
+    print str(libinputeirdllTarget) + ": Generating MSVS" + inputeirenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    inputeirenv.MSVSProject(target = 'LibinputeirdllScons' + inputeirenv['MSVSPROJECTSUFFIX'],
+                    srcs = libinputeirdllSrcFiles,
+		    incs = libinputeirdllIncFiles,
+		    localincs = libinputeirdllLocalInc,
+ 		    buildtarget = libinputeirdllTarget,
+                    auto_build_solution = 0,
+                    variant = bvar)
