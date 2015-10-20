@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma warning(disable : 4996)
 
-static const char * _module = "StiCoInfectionDiagnosticEModule";
+static const char * _module = "StiCoInfectionDiagnostic";
 
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
