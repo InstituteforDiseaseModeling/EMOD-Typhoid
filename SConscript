@@ -62,12 +62,14 @@ if env['AllDlls'] or env['AllInterventions'] or ( 'DiseaseDll' in env and env[ '
 if env['AllDlls']:
     print "Build all dlls..."
     SConscript( 'libgeneric/VectorSConscriptStatic' )
-    #SConscript( 'libgeneric/MalariaSConscriptStatic' )
+    SConscript( 'libgeneric/MalariaSConscriptStatic' )
     SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
     SConscript( 'libgeneric/GenericSConscript' )
     SConscript( 'libgeneric/VectorSConscript' )
     SConscript( 'libgeneric/MalariaSConscript' )
     SConscript( 'libgeneric/EnvironmentalSConscript' )
+    SConscript( 'libgeneric/TBSConscriptStatic' )
+    SConscript( 'libgeneric/TBSConscript' )
     #SConscript( 'libgeneric/PolioSConscript' )
 elif env[ 'DiseaseDll' ] != "":
     print( "Build specific disease dll." )
@@ -79,7 +81,7 @@ elif env[ 'DiseaseDll' ] != "":
         #SConscript( 'libgeneric/VectorSConscript' )
     elif dtype == 'Malaria':
         SConscript( 'libgeneric/VectorSConscriptStatic' )
-        #SConscript( 'libgeneric/MalariaSConscriptStatic' )
+        SConscript( 'libgeneric/MalariaSConscriptStatic' )
         SConscript( 'libgeneric/MalariaSConscript' )
     elif dtype == 'Environmental':
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
@@ -88,6 +90,7 @@ elif env[ 'DiseaseDll' ] != "":
         SConscript( 'libgeneric/EnvironmentalSConscriptStatic' )
         SConscript( 'libgeneric/PolioSConscript' )
     elif dtype == 'TB':
+        SConscript( 'libgeneric/TBSConscriptStatic' )
         SConscript( 'libgeneric/TBSConscript' )
     elif dtype == 'STI':
         SConscript( 'libgeneric/STISConscript' )
@@ -111,6 +114,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/BednetSConscript' )
         SConscript( 'libgeneric/HousingmodSConscript' )
         SConscript( 'libgeneric/HumanhostseekingtrapSConscript' )
+        SConscript( 'libgeneric/ScalelarvalhabitatSConscript' )
         SConscript( 'libgeneric/VcntSConscript' )
 
     # Malaria
@@ -133,6 +137,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
     SConscript( 'libgeneric/ImportPressureSConscript' )
     SConscript( 'libgeneric/OutbreakSConscript' )
     SConscript( 'libgeneric/OutbreakIndividualSConscript' )
+    SConscript( 'libgeneric/PropertyvaluechangerSConscript' )
     SConscript( 'libgeneric/SimplevaccineSConscript' )
 # report dlls
 # NOT YET if env['AllDlls'] or env['Report'] != "":

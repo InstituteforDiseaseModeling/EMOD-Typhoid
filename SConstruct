@@ -486,7 +486,7 @@ def doConfigure(myenv):
 
 def setEnvAttrs(myenv):
 
-    diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'Polio']
+    diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'TB']
     diseases = ['Generic', 'Vector', 'Malaria', 'Waterborne', 'Polio', 'Airborne', 'TB', 'STI', 'HIV']
     reportdlls = ['Spatial', 'Binned']
     campaigndlls = ['Bednet', 'IRSHousing']

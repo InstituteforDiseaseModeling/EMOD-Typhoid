@@ -1,0 +1,50 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libtb.dll to handle tb disease based on libgeneric_static.lib
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+env.Append( CPPDEFINES=["ENABLE_TB"] )
+
+libtbSrcFiles = [ 
+                          "../Eradication/IndividualTB.cpp",
+                          "../Eradication/InfectionTB.cpp",
+                          "../Eradication/NodeTB.cpp",
+                          "../Eradication/BinnedReportTB.cpp",
+                          "../Eradication/ReportTB.cpp",
+                          "../Eradication/PropertyReportTB.cpp",
+                          "../Eradication/SpatialReportTB.cpp",
+                          "../Eradication/SimulationTB.cpp",
+                          "../Eradication/SusceptibilityTB.cpp",
+                          "../Eradication/TBInterventionsContainer.cpp",
+                          "../Eradication/TBDrugTypeParameters.cpp",
+                          "../Eradication/IndividualAirborne.cpp",
+                          "../Eradication/InfectionAirborne.cpp",
+                          "../Eradication/NodeAirborne.cpp",
+                          "../Eradication/ReportAirborne.cpp",
+                          "../Eradication/SimulationAirborne.cpp",
+                          "../Eradication/SusceptibilityAirborne.cpp"
+                      ]
+
+
+libtbLocalInc = [  "stdafx.h" ]
+
+libtb_static = env.StaticLibrary('libtb_static', libtbSrcFiles+stdobj)
+print "building libtb_static: " + str(libtb_static)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print str(libtb_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'LibtbStaticScons' + env['MSVSPROJECTSUFFIX'],
+                    srcs = libtbSrcFiles,
+                    incs = libtbIncFiles,
+                    localincs = libtbLocalInc,
+                    buildtarget = libtb_static,
+                    auto_build_solution = 0,
+                    variant = bvar)

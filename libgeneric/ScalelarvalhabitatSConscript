@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libscalelarvalhabitat.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libscalelarvalhabitatdllSrcFiles = [ "../interventions/ScaleLarvalHabitat.cpp",
+                                      "../interventions/ScaleLarvalHabitatEModule.cpp"
+                                    ]
+
+libscalelarvalhabitatdllIncFiles = [  "../interventions/ScaleLarvalHabitat.h" ]
+libscalelarvalhabitatdllLocalInc = [  "stdafx.h" ]
+
+scalelarvalhabitatenv = env.Clone()
+scalelarvalhabitatenv.Append( CPPDEFINES=["ENABLE_TB"] )
+scalelarvalhabitatenv.Append(LIBS=['libgeneric_static'])
+scalelarvalhabitatenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+scalelarvalhabitatenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libscalelarvalhabitatDll = scalelarvalhabitatenv.SharedLibrary('libscalelarvalhabitat', libscalelarvalhabitatdllSrcFiles + stdobj)
+#print "building libscalelarvalhabitatdll: " + str(libscalelarvalhabitatdll)
+
+# take libscalelarvalhabitat.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libscalelarvalhabitatdllTarget = libscalelarvalhabitatDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = scalelarvalhabitatenv['BUILD_VARIANT'] + '|x64'
+    print str(libscalelarvalhabitatdllTarget) + ": Generating MSVS" + scalelarvalhabitatenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    scalelarvalhabitatenv.MSVSProject(target = 'LibscalelarvalhabitatdllScons' + scalelarvalhabitatenv['MSVSPROJECTSUFFIX'],
+            srcs = libscalelarvalhabitatdllSrcFiles,
+		    incs = libscalelarvalhabitatdllIncFiles,
+		    localincs = libscalelarvalhabitatdllLocalInc,
+ 		    buildtarget = libscalelarvalhabitatdllTarget,
+            auto_build_solution = 0,
+            variant = bvar)

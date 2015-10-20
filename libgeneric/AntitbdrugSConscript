@@ -7,20 +7,21 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-libantitbdrugdllSrcFiles = [ "../interventions/AntiTBDrug.cpp",
-                             "../interventions/AntiTBDrugEModule.cpp"
-                             ]
+libantitbdrugdllSrcFiles = [ "../interventions/AntitbDrug.cpp",
+                             "../interventions/AntitbDrugEModule.cpp"
+                           ]
 
 libantitbdrugdllIncFiles = [  "../interventions/Drugs.h" ]
 libantitbdrugdllLocalInc = [  "stdafx.h" ]
 
 antitbdrugenv = env.Clone()
+antitbdrugenv .Append( CPPDEFINES=["ENABLE_TB" ] )
+antitbdrugenv.Append(LIBS=['libgeneric_static'])
+antitbdrugenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+#antitbdrugenv.Append(LIBS=['libtb_static'])
+antitbdrugenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
-drugobj = antitbdrugenv.Object("drugobj_antitib","../interventions/Drugs.cpp")
-
-antitbdrugenv.Append( CPPDEFINES=["ENABLE_TB"] )
-
-libantitbdrugDll = antitbdrugenv.SharedLibrary('libantitbdrug', libantitbdrugdllSrcFiles + stdobj + drugobj)
+libantitbdrugDll = antitbdrugenv.SharedLibrary('libantitbdrug', libantitbdrugdllSrcFiles + stdobj)
 #print "building libantitbdrugdll: " + str(libantitbdrugdll)
 
 # take libantitbdrug.dll (exclude .lib, .exp) out to be the building target

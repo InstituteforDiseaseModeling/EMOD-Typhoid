@@ -1,0 +1,42 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libpropertyvaluechanger.dll
+
+Import('env')
+
+stdobj = env.Object("stdafx.cpp")
+
+libpropertyvaluechangerdllSrcFiles = [ "../interventions/PropertyValueChanger.cpp",
+                                      "../interventions/PropertyValueChangerEModule.cpp"
+                                    ]
+
+libpropertyvaluechangerdllIncFiles = [  "../interventions/PropertyValueChanger.h" ]
+libpropertyvaluechangerdllLocalInc = [  "stdafx.h" ]
+
+propertyvaluechangerenv = env.Clone()
+propertyvaluechangerenv.Append( CPPDEFINES=["ENABLE_TB"] )
+propertyvaluechangerenv.Append(LIBS=['libgeneric_static'])
+propertyvaluechangerenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+propertyvaluechangerenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+libpropertyvaluechangerDll = propertyvaluechangerenv.SharedLibrary('libpropertyvaluechanger', libpropertyvaluechangerdllSrcFiles + stdobj)
+#print "building libpropertyvaluechangerdll: " + str(libpropertyvaluechangerdll)
+
+# take libpropertyvaluechanger.dll (exclude .lib, .exp) out to be the building target
+# to match the number of building variant
+libpropertyvaluechangerdllTarget = libpropertyvaluechangerDll[0]
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = propertyvaluechangerenv['BUILD_VARIANT'] + '|x64'
+    print str(libpropertyvaluechangerdllTarget) + ": Generating MSVS" + propertyvaluechangerenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    propertyvaluechangerenv.MSVSProject(target = 'LibpropertyvaluechangerdllScons' + propertyvaluechangerenv['MSVSPROJECTSUFFIX'],
+            srcs = libpropertyvaluechangerdllSrcFiles,
+		    incs = libpropertyvaluechangerdllIncFiles,
+		    localincs = libpropertyvaluechangerdllLocalInc,
+ 		    buildtarget = libpropertyvaluechangerdllTarget,
+            auto_build_solution = 0,
+            variant = bvar)

@@ -1,0 +1,50 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds libtb.dll to handle tb disease based on libgeneric_static.lib
+
+Import('env')
+
+if env['AllDlls'] or env['DiseaseDll'] == "TB":
+
+    stdobj = env.Object("stdafx.cpp")
+
+    libtbdllSrcFiles = [ 
+                          "../Eradication/SimulationTBExport.cpp"
+                          ]
+
+    libtbdllIncFiles = [  "SimulationTB.h" ]
+    libtbdllLocalInc = [  "stdafx.h" ]
+
+    tbenv = env.Clone()
+    genobj = tbenv.Object("libgenobj_tb","../Eradication/LibGenericClasses.cpp")
+
+    tbenv.Append( CPPDEFINES=["ENABLE_TB"] )
+    tbenv.Append( CPPDEFINES=["_TB_DLL"] )
+    tbenv.Append(LIBS=['libgeneric_static'])
+    tbenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
+    tbenv.Append(LIBS=['libtb_static'])
+    #tbenv.Append(LIBS=['libmalaria_static'])
+    tbenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
+
+    libtbdll = tbenv.SharedLibrary('libtb', libtbdllSrcFiles + stdobj + genobj)
+
+    #tbenv.Depends(libtbdll, '$BUILD_DIR/libtb_static/libtb_static.lib')
+
+    # take libtbdll.dll (exclude .lib, .exp) out to be the building target
+    # to match the number of building variant
+    libtbdllTarget = libtbdll[0]
+
+    msvc = GetOption( "MSVC" )
+    if msvc is not None and msvc != False and msvc != "":
+
+        bvar = tbenv['BUILD_VARIANT'] + '|x64'
+        print str(libtbdllTarget) + ": Generating MSVS" + tbenv['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+        tbenv.MSVSProject(target = 'LibtbdllScons' + tbenv['MSVSPROJECTSUFFIX'],
+                        srcs = libtbdllSrcFiles,
+                        incs = libtbdllIncFiles,
+                        localincs = libtbdllLocalInc,
+                        buildtarget = libtbdllTarget,
+                        auto_build_solution = 0,
+                        variant = bvar)
