@@ -8,8 +8,8 @@ Import('env')
 stdobj = env.Object("stdafx.cpp")
 
 libantimalarialdrugdllSrcFiles = [ "../interventions/AntimalarialDrug.cpp",
-                                  "../interventions/AntimalarialDrugEModule.cpp"
-                                  ]
+                                   "../interventions/AntimalarialDrugEModule.cpp"
+                                 ]
 
 libantimalarialdrugdllIncFiles = [  "../interventions/Drugs.h" ]
 libantimalarialdrugdllLocalInc = [  "stdafx.h" ]

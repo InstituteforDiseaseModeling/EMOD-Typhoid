@@ -24,7 +24,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "PolioVaccine.h" // TODO: Gotta go! Was for reporting.
 #endif
 #include "Drugs.h"
-#include "PropertyValueChanger.h"
 
 #include "Log.h"
 #include "Exceptions.h"
@@ -248,16 +247,6 @@ namespace Kernel
             else if( ivMangledName.find( "HealthTriggered" ) != std::string::npos )
             {
                 msg << "HTI";
-            }
-            else if( ivMangledName.find( "PropertyValueChanger" ) != std::string::npos )
-            {
-                msg << "PropsCh";
-                //Do QI for IPropertyValueChanger so we can log the new property
-                IPropertyValueChanger * pPropsCh = NULL;
-                if( pDistributedIntervention->QueryInterface( GET_IID(IPropertyValueChanger), (void**)&pPropsCh ) == s_OK ) 
-                {
-                    msg << ",Props=" << pPropsCh->GetTargetPropertyValue();
-                }
             }
             else
             {

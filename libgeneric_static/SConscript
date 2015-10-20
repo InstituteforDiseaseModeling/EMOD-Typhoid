@@ -7,48 +7,58 @@ Import('env')
 
 
 libgenericSrcFiles = [ "stdafx.cpp",
-                       "../Eradication/BaseChannelReport.cpp",
-                       "../Eradication/BinnedReport.cpp",
+                       "../baseReportLib/BaseChannelReport.cpp",
+                       "../baseReportLib/BaseEventReport.cpp",
+                       "../baseReportLib/BaseEventReportIntervalOutput.cpp",
+                       "../baseReportLib/BaseTextReport.cpp",
+                       "../baseReportLib/BaseTextReportEvents.cpp",
+                       "../baseReportLib/BinnedReport.cpp",
+                       "../baseReportLib/ChannelDataMap.cpp",
+                       "../baseReportLib/ReportUtilities.cpp",
+                       "../baseReportLib/stdafx.cpp",
                        "../Eradication/CampaignEvent.cpp",
                        "../Eradication/Climate.cpp",
                        "../Eradication/ClimateByData.cpp",
                        "../Eradication/ClimateConstant.cpp",
                        "../Eradication/ClimateKoppen.cpp",
-                       "../Eradication/ContagionPopulation.cpp",
+                       #"../Eradication/ContagionPopulation.cpp",
                        "../Eradication/DemographicsReport.cpp",
                        "../Eradication/DllLoader.cpp",
                        "../Eradication/Individual.cpp",
                        "../Eradication/Infection.cpp",
                        "../Eradication/InterventionsContainer.cpp",
                        "../Eradication/Instrumentation.cpp",
+                       "../Eradication/JsonObjectDemog.cpp",
                        "../Eradication/Migration.cpp",
-                       "../Eradication/MultiRouteNodePools.cpp",
+                       "../Eradication/MultiRouteTransmissionGroups.cpp",
                        "../Eradication/Node.cpp",
                        "../Eradication/NodeDemographics.cpp",
                        "../Eradication/NodeEventContext.cpp",
-                       "../Eradication/NodePoolsBase.cpp",
-                       "../Eradication/NodePoolsFactory.cpp",
+                       "../Eradication/TransmissionGroupsBase.cpp",
+                       "../Eradication/TransmissionGroupsFactory.cpp",
                        "../Eradication/NodeRankMap.cpp",
-                       "../Eradication/NodeSetAll.cpp",
-                       "../Eradication/NodeSetNodeList.cpp",
-                       "../Eradication/NodeSetPolygon.cpp",
+                       "../campaign/NodeSetAll.cpp",
+                       "../campaign/NodeSetNodeList.cpp",
+                       "../campaign/NodeSetPolygon.cpp",
                        "../Eradication/Properties.cpp",
                        "../Eradication/PropertyReport.cpp",
-                       "../Eradication/RANDOM.cpp",
                        "../Eradication/Report.cpp",
                        "../Eradication/SimpleEventCoordinator.cpp",
-                       "../Eradication/SimpleNodePools.cpp",
+                       "../Eradication/SimpleTransmissionGroups.cpp",
                        "../Eradication/Simulation.cpp",
                        "../Eradication/SimulationConfig.cpp",
                        "../Eradication/SimulationEventContext.cpp",
                        "../Eradication/SpatialReport.cpp",
                        "../Eradication/StandardEventCoordinator.cpp",
                        "../Eradication/StrainIdentity.cpp",
-                       "../Eradication/StrainAwareNodePools.cpp",
+                       "../Eradication/StrainAwareTransmissionGroups.cpp",
                        "../Eradication/Susceptibility.cpp",
-                       "../Eradication/suids.cpp",
-                       "../Eradication/TriggeredEventCoordinator.cpp",
-                       "../Interventions/Drugs.cpp"
+                       "../Interventions/Drugs.cpp",
+                       "../interventions/WaningEffectBox.cpp",
+                       "../interventions/WaningEffectBoxExponential.cpp",
+                       "../interventions/WaningEffectConstant.cpp",
+                       "../interventions/WaningEffectExponential.cpp",
+                       "../interventions/WaningEffectFactory.cpp"
                        ]
 
 libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]
@@ -56,6 +66,15 @@ libgenericLocalInc = [  "stdafx.h" ]
 
 libgeneric_static = env.StaticLibrary('libgeneric_static', libgenericSrcFiles)
 print "building libgeneric_static: " + str(libgeneric_static)
+
+#env.Append( CPPDEFINES=["ENABLE_TB" ] )
+#env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
+#env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+#eradenv.Append(LIBS=['libvector_static'])
 
 msvc = GetOption( "MSVC" )
 if msvc is not None and msvc != False and msvc != "":

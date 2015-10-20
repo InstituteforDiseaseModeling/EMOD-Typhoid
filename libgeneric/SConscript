@@ -6,16 +6,17 @@
 Import('env')
 
 libgenericdllSrcFiles = [ "../Eradication/BinnedReport.cpp",
-		      	  "../Eradication/CampaignEvent.cpp",
+                          "../Eradication/CampaignEvent.cpp",
                           "../Eradication/Climate.cpp",
                           "../Eradication/ClimateByData.cpp",
                           "../Eradication/ClimateConstant.cpp",
                           "../Eradication/ClimateKoppen.cpp",
                           "../Eradication/ContagionPopulation.cpp",
-			  "../Eradication/DemographicsReport.cpp",
+                          "../Eradication/DemographicsReport.cpp",
                           "../Eradication/Individual.cpp",
                           "../Eradication/Infection.cpp",
                           "../Eradication/InterventionsContainer.cpp",
+                          "../Eradication/JsonObjectDemog.cpp.cpp",
                           "../Eradication/Migration.cpp",
                           "../Eradication/Node.cpp",
                           "../Eradication/NodeDemographics.cpp",
@@ -26,20 +27,31 @@ libgenericdllSrcFiles = [ "../Eradication/BinnedReport.cpp",
                           "../Eradication/NodeSetPolygon.cpp",
                           "../Eradication/NodeTimestepSpatialReporter.cpp",
                           "../Eradication/RANDOM.cpp",
-			  "../Eradication/Report.cpp",
+                          "../Eradication/Report.cpp",
                           "../interventions/SimpleVaccine.cpp",
                           "../Eradication/Simulation.cpp",
                           "../Eradication/SimulationEventContext.cpp",
                           "../Eradication/StandardEventCoordinator.cpp",
                           "stdafx.cpp",
                           "../Eradication/StrainIdentity.cpp",
-                          "../Eradication/Susceptibility.cpp"]
+                          "../Eradication/Susceptibility.cpp",
+                          "../interventions/WaningEffectBox.cpp",
+                          "../interventions/WaningEffectBoxExponential.cpp",
+                          "../interventions/WaningEffectConstant.cpp",
+                          "../interventions/WaningEffectExponential.cpp",
+                          "../interventions/WaningEffectFactory.cpp"
+                          ]
 
 libgenericdllIncFiles = [  "Report.h" ]
 libgenericdllLocalInc = [  "stdafx.h" ]
 
+# Testing
+env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
 libgenericDll = env.SharedLibrary('libgeneric', libgenericdllSrcFiles)
-#print "building libgenericDll: " + str(libgenericDll)
+print "building libgenericDll: " + str(libgenericDll)
 
 # take libgeneric.dll (exclude .lib, .exp) out to be the building target
 # to match the number of building variant

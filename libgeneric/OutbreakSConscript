@@ -7,7 +7,7 @@ Import('env')
 
 stdobj = env.Object("stdafx.cpp")
 
-liboutbreakdllSrcFiles = [ "../interventions/Outbreak.cpp",
+liboutbreakdllSrcFiles = [ "../interventions/OutbreakIndividual.cpp",
                            "../interventions/OutbreakEModule.cpp"
                           ]
 
@@ -18,8 +18,6 @@ outbreakenv = env.Clone()
 outbreakenv.Append( CPPDEFINES=["ENABLE_TB"] )
 outbreakenv.Append(LIBS=['libgeneric_static'])
 outbreakenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-outbreakenv.Append(LIBS=['libvector_static'])
-outbreakenv.Append(LIBS=['libmalaria_static'])
 outbreakenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
 liboutbreakDll = outbreakenv.SharedLibrary('liboutbreak', liboutbreakdllSrcFiles + stdobj)

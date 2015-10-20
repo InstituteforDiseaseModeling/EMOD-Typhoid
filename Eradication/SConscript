@@ -6,13 +6,22 @@
 Import('env')
 
 if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'DllDisease' in env and env[ 'DllDisease' ] !="" ):
+    print( "We are doing an EMODule build of Eradication, not a monolithic. Just compile a few files and link to libgeneric_static (and all other libs)." )
 
     eradenv = env.Clone()
     eradenv.Append( CPPDEFINES=["_DLLS_" ] )
     eradenv.Append(LIBS=['libgeneric_static'])
     eradenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-    eradenv.Append(LIBS=['libvector_static'])
-    eradenv.Append(LIBS=['libmalaria_static'])
+    eradenv.Append( CPPDEFINES=["ENABLE_PYTHON" ] )
+    #env.Append( CPPDEFINES=["ENABLE_TB" ] )
+    #env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
+    #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+    eradenv.Append( CPPDEFINES=["DISABLE_HIV" ] )
+    eradenv.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+    eradenv.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+    eradenv.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+    #eradenv.Append(LIBS=['libvector_static'])
+    #eradenv.Append(LIBS=['libmalaria_static'])
 
     eradenv.Append(LIBPATH=['$BUILD_DIR/libgeneric'])
 
