@@ -27,7 +27,7 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
         eradenv.Append( CPPDEFINES=["DISABLE_MALARIA"] )
     if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":
         eradenv.Append( CPPDEFINES=["ENABLE_POLIO"] )
-    if env['DiseaseDll'] != "HIV":
+    if env['DiseaseDll'] != "HIV" and env['DiseaseDll'] != "STI":
         eradenv.Append( CPPDEFINES=["DISABLE_HIV"] )
     if env['DiseaseDll'] == "TB":
         eradenv.Append( CPPDEFINES=["ENABLE_TB"] )
