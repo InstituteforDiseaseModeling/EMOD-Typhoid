@@ -69,6 +69,7 @@ namespace Kernel
         virtual void  RegisterNewNodeObserver(void* id, Kernel::ISimulation::callback_t observer);
         virtual void  UnregisterNewNodeObserver(void* id);
         virtual void  WriteReportsData();
+        virtual void  LoadCampaignFile();
 
         virtual const DemographicsContext* GetDemographicsContext() const;
 
