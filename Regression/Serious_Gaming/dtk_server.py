@@ -3,6 +3,7 @@
 import SocketServer
 import socket
 import os
+import sys
 import time
 import json
 import shutil
@@ -15,6 +16,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
     running = False
     state = "STOPPED"
     timestep = 0
+    game_port = -1
 
     """
     The RequestHandler class for our server.
@@ -67,8 +69,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
     def run_dtk(self):
         shutil.copy( "campaign_master.json", "campaign.json" )
-        game_port = 7886
-        os.putenv( "GAME_PORT", str(game_port) )
+        os.putenv( "GAME_PORT", str(self.game_port) )
         #exec_string = "../../build/Eradication_game --config config.json -I . -O testing &"
         #exec_string = "/home2/jbloedow/trunk/build/Eradication_game --config config.json -I . -O testing &"
         exec_string = "/home2/jbloedow/trunk/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
@@ -76,7 +77,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         time.sleep(2)
         self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.dtk_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.dtk_socket.connect(("localhost", game_port))
+        self.dtk_socket.connect(("localhost", self.game_port))
         status_report = json.loads( "{}" )
         status_report["status"] = "running"
         self.state = "RUNNING"
@@ -236,6 +237,14 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
 if __name__ == "__main__":
     HOST, PORT = "10.129.110.137", 7777
+
+    if len( sys.argv ) > 1:
+        PORT = int(sys.argv[1])
+        print( "Using " + str(PORT) + " as python server port." )
+        MyTCPHandler.game_port = PORT + 100
+    if len( sys.argv ) > 2:
+        HOST = sys.argv[2]
+        print( "Using " + HOST + " as python server host IP." )
 
     # Create the server, binding to localhost on port 9999
     SocketServer.TCPServer.allow_reuse_address = True
