@@ -22,8 +22,8 @@ namespace Kernel
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, HIVDelayedIntervention, IDistributableIntervention)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
-    
-    public: 
+
+    public:
         HIVDelayedIntervention();
         HIVDelayedIntervention( const HIVDelayedIntervention& );
 
@@ -37,7 +37,7 @@ namespace Kernel
 
         // IHIVCascadeStateIntervention
         virtual const std::string& GetCascadeState();
-        virtual const JsonConfigurable::tDynamicStringSet& GetAbortStates();
+        virtual const jsonConfigurable::tDynamicStringSet& GetAbortStates();
 
     protected:
         virtual void CalculateDelay();
@@ -51,13 +51,13 @@ namespace Kernel
         bool qualifiesToGetIntervention( IIndividualHumanContext* pIndivid );
 
         InterpolatedValueMap year2DelayMap;
-        JsonConfigurable::tDynamicStringSet abortStates;
+        jsonConfigurable::tDynamicStringSet abortStates;
         std::string cascadeState;
         float days_remaining;
         bool firstUpdate;
 
-        ConstrainedString broadcast_event;
-        ConstrainedString broadcast_on_expiration_event;
+        jsonConfigurable::ConstrainedString broadcast_event;
+        jsonConfigurable::ConstrainedString broadcast_on_expiration_event;
 
     private:
         // Serialization

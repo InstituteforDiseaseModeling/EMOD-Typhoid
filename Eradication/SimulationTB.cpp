@@ -44,7 +44,7 @@ namespace Kernel
 
     SimulationTB *SimulationTB::CreateSimulation(const ::Configuration *config)
     {
-        SimulationTB *newsimulation = NULL;
+        SimulationTB *newsimulation = nullptr;
         newsimulation = _new_ SimulationTB();
         if (newsimulation)
         {
@@ -54,7 +54,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -85,10 +85,10 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationTB::resolveMigration()
-    {
-        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
-    }
+// clorton    void SimulationTB::resolveMigration()
+// clorton    {
+// clorton        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
+// clorton    }
 }
 
 #if USE_BOOST_SERIALIZATION

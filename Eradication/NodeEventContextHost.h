@@ -117,13 +117,6 @@ namespace Kernel
         virtual void PropagateContextToDependents(); // pass context to interventions if they need it
         void IncrementCampaignCost(float cost);
 
-#if USE_JSON_SERIALIZATION
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
 #if USE_BOOST_SERIALIZATION
     private:
         friend class boost::serialization::access;

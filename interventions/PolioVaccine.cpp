@@ -131,6 +131,17 @@ namespace Kernel
         *ppinstance = foundInterface;
         return status;
     }
+
+    REGISTER_SERIALIZABLE(PolioVaccine, IDistributableIntervention);
+
+    void PolioVaccine::serialize(IArchive& ar, IDistributableIntervention* obj)
+    {
+        PolioVaccine& vaccine = *dynamic_cast<PolioVaccine*>(obj);
+        ar.startElement();
+        ar.labelElement("vaccine_type") & (uint32_t&)vaccine.vaccine_type;
+        ar.labelElement("time_since_vaccination") & vaccine.time_since_vaccination;
+        ar.endElement();
+    }
 }
 
 // TODO: Consolidate with main serialization block

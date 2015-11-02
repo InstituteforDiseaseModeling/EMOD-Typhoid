@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<testsuite errors="0" failures="3" name="mc_testing regression suite" tests="8" time="596.892">
+	<properties>
+		<property name="Version string" value="2.0.5677.0 trunk"/>
+		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
+		<property name="HPC Nodegroup" value="ComputeNodes"/>
+	</properties>
+	<testcase name="71_Polio_Default_Multicore" time="-1">
+		<failure message="71_Polio_Default_Multicore failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_29_17_39_01_039000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="70_TB_Seattle_Multicore" time="32.0"/>
+	<testcase name="48_Generic_Seattle_SingleCore_Zoonosis" time="-1">
+		<failure message="48_Generic_Seattle_SingleCore_Zoonosis failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_29_17_39_00_888000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="1_Generic_Seattle_MultiNode" time="66.0"/>
+	<testcase name="43_Vector_Garki_MultiCore_VectorMigration" time="129.0"/>
+	<testcase name="24_Malaria_Garki" time="271.0"/>
+	<testcase name="25_Vector_Madagascar" time="506.0"/>
+	<testcase name="26_Vector_Garki" time="-1">
+		<failure message="26_Vector_Garki failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_29_17_39_00_547000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+</testsuite>

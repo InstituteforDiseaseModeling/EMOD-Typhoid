@@ -37,7 +37,7 @@ namespace Kernel
         // Allows correct type of Node to be added by classes derived from Simulation
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
 
-        virtual void resolveMigration();
+// clorton        virtual void resolveMigration();
 
         suids::distributed_generator<IRelationship> relationshipSuidGenerator;
 
@@ -51,7 +51,7 @@ namespace Kernel
         template<class Archive>
         friend void serialize(Archive & ar, SimulationSTI &sim, const unsigned int  file_version );
 #endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanSTI> typed_migration_queue_storage;
+// clorton        TypedPrivateMigrationQueueStorage<IndividualHumanSTI> typed_migration_queue_storage;
     };
 }
 

@@ -107,7 +107,7 @@ namespace Kernel
         IndividualHuman* individual
     )
     {
-        IIndividualHumanHIV* hiv_individual = NULL;
+        IIndividualHumanHIV* hiv_individual = nullptr;
         if( individual->QueryInterface( GET_IID( IIndividualHumanHIV ), (void**)&hiv_individual ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualHIV", "IndividualHuman" );
@@ -118,13 +118,13 @@ namespace Kernel
         if( !isInfected )
             return;
 
-        IIndividualHumanSTI* sti_individual = NULL;
+        IIndividualHumanSTI* sti_individual = nullptr;
         if( individual->QueryInterface( GET_IID( IIndividualHumanSTI ), (void**)&sti_individual ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualSTI", "IndividualHuman" );
         }
 
-        IDrugVaccineInterventionEffects *idvie = NULL;
+        IDrugVaccineInterventionEffects *idvie = nullptr;
         if( s_OK != individual->GetInterventionsContext()->QueryInterface( GET_IID(IDrugVaccineInterventionEffects), (void**)&idvie ) ) {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
                                            "individual->GetInterventionsContext()", 

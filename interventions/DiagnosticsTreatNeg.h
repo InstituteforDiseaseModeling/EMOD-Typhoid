@@ -17,13 +17,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class DiagnosticTreatNeg : public SimpleDiagnostic 
+    class DiagnosticTreatNeg : public SimpleDiagnostic
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, DiagnosticTreatNeg, IDistributableIntervention)
 
-    public: 
+    public:
         DiagnosticTreatNeg();
         virtual bool Configure( const Configuration* pConfig );
         virtual ~DiagnosticTreatNeg();// { }
@@ -44,10 +44,10 @@ namespace Kernel
         IndividualInterventionConfig negative_diagnosis_config;
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        ConstrainedString negative_diagnosis_event;
+        jsonConfigurable::ConstrainedString negative_diagnosis_event;
 
         IndividualInterventionConfig defaulters_config;
-        ConstrainedString defaulters_event;
+        jsonConfigurable::ConstrainedString defaulters_event;
 #pragma warning( pop )
 
     private:

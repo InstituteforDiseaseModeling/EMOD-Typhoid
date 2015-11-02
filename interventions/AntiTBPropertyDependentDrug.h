@@ -38,7 +38,7 @@ namespace Kernel
         virtual ~AntiTBPropDepDrug();
 
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void  ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc = NULL );
+        virtual void  ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc = nullptr );
 
     protected:
         DrugTypeByProperty drug_type_by_property;

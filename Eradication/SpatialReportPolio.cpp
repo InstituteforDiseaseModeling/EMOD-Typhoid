@@ -135,7 +135,7 @@ SpatialReportPolio::LogNodeData(
 
     int nodeid = pNC->GetExternalID();
 
-    const Kernel::INodePolio * pPolioNode = NULL;
+    const Kernel::INodePolio * pPolioNode = nullptr;
     if( pNC->QueryInterface( GET_IID( Kernel::INodePolio), (void**) &pPolioNode ) != Kernel::s_OK )
     {
         throw Kernel::QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePolio", "INodeContext" );

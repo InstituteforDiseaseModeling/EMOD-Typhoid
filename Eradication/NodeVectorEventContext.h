@@ -116,7 +116,7 @@ namespace Kernel
         float pOutdoorRestKilling;
 
     private:
-        NodeVectorEventContextHost() : NodeEventContextHost(NULL) { }
+        NodeVectorEventContextHost() : NodeEventContextHost(nullptr) { }
 
 #if USE_BOOST_SERIALIZATION
         friend class ::boost::serialization::access;

@@ -127,7 +127,7 @@ namespace Kernel
 
     SimulationPolio *SimulationPolio::CreateSimulation(const ::Configuration *config)
     {
-        SimulationPolio *newsimulation = NULL;
+        SimulationPolio *newsimulation = nullptr;
 
        
        newsimulation = _new_ SimulationPolio();
@@ -139,7 +139,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
        }
 
@@ -162,13 +162,6 @@ namespace Kernel
     void SimulationPolio::InitializeFlags( const ::Configuration *config )
     {
     }
-
-
-    void SimulationPolio::resolveMigration()
-    {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-    }
-
 }
 
 #if USE_BOOST_SERIALIZATION

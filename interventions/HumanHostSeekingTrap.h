@@ -23,7 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IVectorInterventionEffectsSetter; 
+    struct IVectorInterventionEffectsSetter;
 
     /* Keep around as an identity solution??? */
     struct IHumanHostSeekingTrap : public ISupports
@@ -58,6 +58,6 @@ namespace Kernel
         friend class ::boost::serialization::access;
         template<typename Archive>
         friend void serialize( Archive &ar, HumanHostSeekingTrap& obj, unsigned int version );
-#endif    
+#endif
     };
 }

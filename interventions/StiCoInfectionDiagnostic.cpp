@@ -49,7 +49,7 @@ namespace Kernel
     {
         LOG_DEBUG("Positive test Result function\n");
 
-        IIndividualHumanSTI* sti_ind = NULL;
+        IIndividualHumanSTI* sti_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanSTI ), (void**)&sti_ind ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanSTI", "IIndividualHuman" );

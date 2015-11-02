@@ -17,8 +17,8 @@ namespace Kernel
     class DelayedIntervention: public BaseIntervention
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, DelayedIntervention, IDistributableIntervention)
-    
-    public: 
+
+    public:
         DelayedIntervention();
         DelayedIntervention( const DelayedIntervention& );
         virtual ~DelayedIntervention();

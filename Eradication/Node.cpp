@@ -13,10 +13,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <iostream>
 #include <algorithm>
-#include <cfloat>
 #include <numeric>
 
-#include "CajunIncludes.h" // for IsInPolygon (2)
+// clorton #include "CajunIncludes.h" // for IsInPolygon (2)
 #include "Debug.h" // for release_assert
 #include "MathFunctions.h" // for fromDistribution
 #include "Common.h"
@@ -342,8 +341,8 @@ namespace Kernel
         _latitude(FLT_MAX),
         _longitude(FLT_MAX),
         individualHumans(),
-        parent(NULL),
-        transmissionGroups(NULL),
+        parent(nullptr),
+        transmissionGroups(nullptr),
         ind_sampling_type( IndSamplingType::TRACK_ALL ),
         suid(_suid),
         Ind_Sample_Rate(1.0f),
@@ -358,9 +357,9 @@ namespace Kernel
         infectionrate(0.0f),
         susceptibility_dynamic_scaling(1.0f),
         mInfectivity(0.0f),
-        localWeather(NULL),
-        migration_info(NULL),
-        event_context_host(NULL),
+        localWeather(nullptr),
+        migration_info(nullptr),
+        event_context_host(nullptr),
         max_sampling_cell_pop(0.0f),
         new_infections(0.0f),           // counters starting with this one were only used for old spatial reporting and can probably now be removed
         new_reportedinfections(0.0f),
@@ -391,9 +390,9 @@ namespace Kernel
           _latitude(FLT_MAX)
         , _longitude(FLT_MAX)
         , ind_sampling_type( IndSamplingType::TRACK_ALL )
-        , parent(NULL)
-        , transmissionGroups(NULL)
-        , event_context_host(NULL)
+        , parent(nullptr)
+        , transmissionGroups(nullptr)
+        , event_context_host(nullptr)
     {
 
     }
@@ -402,23 +401,23 @@ namespace Kernel
     {
         if (suid.data % 10 == 0) LOG_INFO_F("Freeing Node %d \n", suid.data);
 
-        for (auto individual : individualHumans)
-        {
-            delete individual;
-        }
+// clorton        for (auto individual : individualHumans)
+// clorton        {
+// clorton            delete individual;
+// clorton        }
 
         individualHumans.clear();
 
-        if (transmissionGroups) delete transmissionGroups;
-        if (localWeather)       delete localWeather;
-        if (migration_info)     delete migration_info;
+// clorton        if (transmissionGroups) delete transmissionGroups;
+// clorton        if (localWeather)       delete localWeather;
+// clorton        if (migration_info)     delete migration_info;
 
         delete event_context_host;
 
-        for (auto& ndd_pair : demographic_distributions)
-        {
-            delete ndd_pair.second;
-        }
+// clorton        for (auto& ndd_pair : demographic_distributions)
+// clorton        {
+// clorton            delete ndd_pair.second;
+// clorton        }
 
         demographic_distributions.clear();
     }
@@ -1221,7 +1220,7 @@ namespace Kernel
 
                 RemoveHuman( iHuman );
                 delete individual;
-                individual = NULL;
+                individual = nullptr;
             }
             else if (individual->IsMigrating())
             {
@@ -1567,7 +1566,7 @@ namespace Kernel
         const double default_age  = 20 * DAYSPERYEAR; // age to use by default if age_initialization_distribution_type config parameter is off.
 
         float temp_sampling_rate  = (ind_sampling_type == IndSamplingType::TRACK_ALL) ? 1.0F : (float) Ind_Sample_Rate; // default sampling rate from config if we're doing sampling at all.  modified in case of adapted sampling.
-        IndividualHuman* tempind = NULL;      // pointer to newly-created individuals for any necessary manipulation
+        IndividualHuman* tempind = nullptr;      // pointer to newly-created individuals for any necessary manipulation
 
         // Cache pointers to the initial age distribution with the node, so it doesn't have to be created for each individual.
         // After the demographic initialization is complete, it can be removed from the map and deleted
@@ -1627,7 +1626,7 @@ namespace Kernel
             
             if(tempind->GetAge() == 0)
             {
-                tempind->setupMaternalAntibodies(NULL, this);
+                tempind->setupMaternalAntibodies(nullptr, this);
             }
 
             // For now, do it unconditionally and see if it can catch all the memory failures cases with minimum cost
@@ -1741,7 +1740,7 @@ namespace Kernel
 
             // Configure and/or add new individual (EAW: there doesn't appear to be any significant difference between the two cases below)
             auto prob_maternal_transmission = GET_CONFIGURABLE(SimulationConfig)->prob_maternal_transmission;
-            child = NULL;
+            child = nullptr;
             if (demographics_birth)
             {
                 child = configureAndAddNewIndividual(1.0F / temp_sampling_rate, 0, (float)temp_prevalence * prob_maternal_transmission, (float)female_ratio); // N.B. temp_prevalence=0 without maternal_transmission flag
@@ -1757,7 +1756,7 @@ namespace Kernel
                     temp_infections, 1.0F, 1.0F, 1.0F, 1.0F * (randgen->e() < Above_Poverty));
             }
 
-            child->setupMaternalAntibodies(NULL, this);
+            child->setupMaternalAntibodies(nullptr, this);
             Births += 1.0f / temp_sampling_rate;
         }
     }
@@ -1896,7 +1895,7 @@ namespace Kernel
         float temp_immunity  = 1.0;
         float temp_risk      = 1.0;
         float temp_migration = 1.0;
-        IndividualHuman* tempind = NULL;
+        IndividualHuman* tempind = nullptr;
 
         // gender distribution exists regardless of gender demographics, but is ignored unless vital_birth_dependence is 2 or 3
         if (randgen->e() < comm_female_ratio)
@@ -1961,7 +1960,7 @@ namespace Kernel
 
         event_context_host->TriggerNodeEventObservers( new_individual->GetEventContext(), IndividualEventTriggerType::Births ); // EAW: this is not just births!!  this will also trigger on e.g. AddImportCases
 
-        if( new_individual->GetParent() == NULL )
+        if( new_individual->GetParent() == nullptr )
         {
             LOG_INFO( "In addNewIndividual, indiv had no context, setting (migration hack path)\n" );
             new_individual->SetContextTo( this );
@@ -1992,7 +1991,7 @@ namespace Kernel
 #if 0
         event_context_host->TriggerIndividualEventObservers( new_individual->GetEventContext(), IndividualEventTriggerType::Births ); // EAW: this is not just births!!  this will also trigger on e.g. AddImportCases
 
-        if( new_individual->GetParent() == NULL )
+        if( new_individual->GetParent() == nullptr )
         {
             LOG_INFO( "In addNewIndividual, indiv had no context, setting (migration hack path)\n" );
             new_individual->SetContextTo( this );
@@ -2114,7 +2113,7 @@ namespace Kernel
         // hack for now: legacy components of departure code
         resolveEmigration(individual);
 
-        individual->SetContextTo(NULL);
+        individual->SetContextTo(nullptr);
         postIndividualMigration(individual);
     }
 
@@ -2362,7 +2361,7 @@ namespace Kernel
     ::RANDOMBASE* Node::GetRng()
     {
         release_assert(parent);
-        if( parent == NULL )
+        if( parent == nullptr )
         {
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "parent", "ISimulationContext*" );
         }
@@ -2583,110 +2582,6 @@ namespace Kernel
             // TODO throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "HINT Configuration: No transmission matrices were found in the demographics file(s).");
         }
     }
-
-#if USE_JSON_SERIALIZATION
-    void Node::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("suid");
-        suid.JSerialize(root, helper);
-        root->Insert("latitude", _latitude);
-        root->Insert("longitude",_longitude);
-        root->Insert("urban", urban);
-        root->Insert("birthrate", birthrate);
-        root->Insert("above_poverty", Above_Poverty);
-
-        root->Insert("population");
-        root->BeginArray();
-        for (auto human : individualHumans)
-        {
-            human->JSerialize(root, helper);
-        }
-        root->EndArray();
-
-        root->Insert("Ind_Sample_Rate",Ind_Sample_Rate);
-
-/* TODO
-        root->Insert("transmissionGroups");
-        transmissionGroups->JSerialize(root, helper);
-*/
-
-        root->Insert("susceptibility_dynamic_scaling", susceptibility_dynamic_scaling);
-
-        root->Insert("localWeather");
-        localWeather->JSerialize(root, helper);
-
-        root->Insert("migration_info");
-        migration_info->JSerialize(root, helper);
-
-        root->Insert("demographics");
-        demographics.JSerialize(root, helper);
-
-        root->Insert("demographic_distributions");
-        root->BeginArray();
-        for (auto& ndd_pair : demographic_distributions)
-        {
-            root->BeginArray();
-            root->Add(ndd_pair.first.c_str());
-            ndd_pair.second->JSerialize(root, helper);
-            root->EndArray();
-        }
-        root->EndArray();
-
-        root->Insert("event_context_host");
-        event_context_host->JSerialize(root, helper);
-
-        root->Insert("statPop", statPop);
-        root->Insert("Infected", Infected);
-        root->Insert("Births", Births);
-        root->Insert("Disease_Deaths", Disease_Deaths);
-        root->Insert("new_infections", new_infections);
-        root->Insert("new_reportedinfections", new_reportedinfections);
-        root->Insert("Cumulative_Infections", Cumulative_Infections);
-        root->Insert("Cumulative_Reported_Infections", Cumulative_Reported_Infections);
-        root->Insert("Campaign_Cost", Campaign_Cost);
-        root->Insert("Possible_Mothers", Possible_Mothers);
-
-        root->Insert("infectionrate", infectionrate);
-        root->Insert("mInfectivity", mInfectivity);
-
-        root->Insert("demographics_birth", demographics_birth);
-        root->Insert("demographics_gender", demographics_gender);
-        root->Insert("demographics_other", demographics_other);
-
-        root->Insert("max_sampling_cell_pop", max_sampling_cell_pop);
-        root->Insert("sample_rate_birth", sample_rate_birth);
-        root->Insert("sample_rate_0_18mo", sample_rate_0_18mo);
-        root->Insert("sample_rate_18mo_4yr", sample_rate_18mo_4yr);
-        root->Insert("sample_rate_5_9", sample_rate_5_9);
-        root->Insert("sample_rate_10_14", sample_rate_10_14);
-        root->Insert("sample_rate_15_19", sample_rate_15_19);
-        root->Insert("sample_rate_20_plus", sample_rate_20_plus);
-        root->Insert("population_density_c50", population_density_c50);
-        root->Insert("population_scaling_factor", population_scaling_factor);
-        root->Insert("maternal_transmission", maternal_transmission);
-        root->Insert("vital_birth", vital_birth);
-        root->Insert("x_birth", x_birth);
-
-        root->Insert("animal_reservoir_type", (int)animal_reservoir_type);
-        root->Insert("zoonosis_rate", zoonosis_rate);
-
-        root->Insert("transmission_routes");
-        helper->JSerialize(routes, root);
-
-        root->Insert("whitelist_enabled", whitelist_enabled);
-        root->Insert("ipkeys_whitelist");
-        helper->JSerialize(ipkeys_whitelist, root);
-
-        root->EndObject();
-    }
-
-    void Node::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
-
 }
 
 #if USE_BOOST_SERIALIZATION

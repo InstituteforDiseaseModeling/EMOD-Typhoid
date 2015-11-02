@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BaseTextReport.h"
 #include "Interventions.h"
 
-
 namespace Kernel 
 {
     struct INodeEventContext;
@@ -34,23 +33,13 @@ namespace Kernel
         // ------------
         virtual void UpdateEventRegistration( float currentTime, 
                                               float dt, 
-                                              std::vector<INodeEventContext*>& rNodeEventContextList ) ;
-        virtual void Reduce();
-
-        // -----------------------------
-        // --- IIndividualEventObserver
-        // -----------------------------
-
-#if USE_JSON_SERIALIZATION
-        // For JSON serialization
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const ;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper ) ;
-#endif
+                                              std::vector<INodeEventContext*>& rNodeEventContextList ) override;
+        virtual void Reduce() override;
 
         // --------------
         // --- ISupports
         // --------------
-        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) { return Kernel::e_NOINTERFACE; }
+        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) override { return Kernel::e_NOINTERFACE; }
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     protected:
@@ -64,6 +53,4 @@ namespace Kernel
         std::vector< INodeTriggeredInterventionConsumer* > ntic_list ;
         bool is_registered ;
     };
-
 }
-

@@ -16,6 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "VectorInterventionsContainer.h"  // for IHousingModificationConsumer methods
+#include "Log.h"
 
 static const char* _module = "SimpleHousingModification";
 
@@ -27,6 +28,26 @@ namespace Kernel
     IMPLEMENT_FACTORY_REGISTERED(SpatialRepellentHousingModification)
     IMPLEMENT_FACTORY_REGISTERED(ArtificialDietHousingModification)
     IMPLEMENT_FACTORY_REGISTERED(InsectKillingFenceHousingModification)
+
+    void SimpleHousingModification::serialize(IArchive& ar, IDistributableIntervention* obj)
+    {
+        SimpleHousingModification& mod = *dynamic_cast<SimpleHousingModification*>(obj);
+        ar.startElement();
+        ar.labelElement("durability_time_profile") & (uint32_t&)mod.durability_time_profile;
+        ar.labelElement("current_blockingrate") & mod.current_blockingrate;
+        ar.labelElement("current_killingrate") & mod.current_killingrate;
+        ar.labelElement("primary_decay_time_constant") & mod.primary_decay_time_constant;
+        ar.labelElement("secondary_decay_time_constant") & mod.secondary_decay_time_constant;
+        ar.endElement();
+    }
+
+    REGISTER_SERIALIZABLE(IRSHousingModification, IDistributableIntervention);
+
+    void IRSHousingModification::serialize(IArchive& ar, IDistributableIntervention* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
 
     bool
     SimpleHousingModification::Configure(
@@ -148,11 +169,11 @@ namespace Kernel
 
         ISupports* foundInterface;
 
-        if ( iid == GET_IID(IHousingModification)) 
+        if ( iid == GET_IID(IHousingModification))
             foundInterface = static_cast<IHousingModification*>(this);
-        // -->> add support for other I*Consumer interfaces here <<--      
-      
-        else if ( iid == GET_IID(ISupports)) 
+        // -->> add support for other I*Consumer interfaces here <<--
+
+        else if ( iid == GET_IID(ISupports))
             foundInterface = static_cast<ISupports*>(static_cast<IHousingModification*>(this));
         else
             foundInterface = 0;
@@ -188,19 +209,25 @@ namespace Kernel {
         static const char * _module = "SimpleHousingModification";
         LOG_DEBUG("(De)serializing SimpleHousingModification\n");
 
+        boost::serialization::void_cast_register<SimpleHousingModification, IDistributableIntervention>();
+        ar & boost::serialization::base_object<BaseIntervention>(hm);
         ar & hm.durability_time_profile;
         ar & hm.current_blockingrate;
         ar & hm.current_killingrate;
         ar & hm.primary_decay_time_constant;
         ar & hm.secondary_decay_time_constant;
-        ar & boost::serialization::base_object<BaseIntervention>(hm);
     }
 
     template<class Archive>
     void serialize(Archive &ar, IRSHousingModification& hm, const unsigned int v)
     {
+      static const char * _module = "IRSHousingModification";
+      LOG_DEBUG("(De)serializing IRSHousingModification\n");
+
         boost::serialization::void_cast_register<IRSHousingModification, IDistributableIntervention>();
         ar & boost::serialization::base_object<SimpleHousingModification>(hm);
+
+        LOG_DEBUG("Done\n");
     }
 
     template<class Archive>
@@ -232,4 +259,3 @@ namespace Kernel {
     }
 }
 #endif
-

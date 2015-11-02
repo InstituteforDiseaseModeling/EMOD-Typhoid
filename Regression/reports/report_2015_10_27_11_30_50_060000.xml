@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<testsuite errors="6" failures="3" name="vector regression suite" tests="56" time="512.047">
+	<properties>
+		<property name="Version string" value="2.0.5633.0 trunk"/>
+		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
+		<property name="HPC Nodegroup" value="ComputeNodes"/>
+	</properties>
+	<testcase name="11_Vector_Namawala_Larvicides" time="3.0"/>
+	<testcase name="18_Vector_Namawala_Indoor_IRSOnly" time="3.0"/>
+	<testcase name="20_Vector_Namawala_IRSOnly" time="2.0"/>
+	<testcase name="19_Vector_Namawala_Indoor_4Interventions" time="2.0"/>
+	<testcase name="21_Vector_Namawala_4Interventions" time="2.0"/>
+	<testcase name="37_Vector_Release_Sterile_Male_Cohort" time="2.0"/>
+	<testcase name="45_Vector_An_farauti_IRS" time="3.0"/>
+	<testcase name="46_Vector_An_arabiensis_MultipleHabitats" time="3.0"/>
+	<testcase name="27_Vector_Sandbox" time="5.0"/>
+	<testcase name="5_Vector_Namawala_SugarTrap_EveryFeedFeed" time="13.0"/>
+	<testcase name="6_Vector_Namawala_SugarTrap_EveryDayFeed" time="13.0"/>
+	<testcase name="8_Vector_Namawala_SugarTrap_EmergeFeed" time="14.0"/>
+	<testcase name="9_Vector_Namawala_SugarTrap_NoFeed" time="14.0"/>
+	<testcase name="10_Vector_Namawala_Oviposition" time="10.0"/>
+	<testcase name="39_Vector_Namawala_HostSeekingTrap" time="-1">
+		<error message="39_Vector_Namawala_HostSeekingTrap exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_54_826000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="52_Vector_Namawala_Cohort_WeatherDependentFeed" time="3.0"/>
+	<testcase name="44_Custom_Reporter_Demo" time="-1">
+		<error message="44_Custom_Reporter_Demo exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_55_095000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="53_Vector_Release_HEGs" time="3.0"/>
+	<testcase name="36_Vector_Release_Wolbachia_Females_Individual" time="14.0"/>
+	<testcase name="54_Vector_Release_Wolbachia" time="3.0"/>
+	<testcase name="58_Vector_Release_HEGs_multipuddle" time="3.0"/>
+	<testcase name="56_Vector_InsectKillingFence" time="8.0"/>
+	<testcase name="69_Vector_IRS_Ivermectin" time="4.0"/>
+	<testcase name="64_Vector_ScaleLarvalHabitat" time="4.0"/>
+	<testcase name="73_Vector_AnimalFeedKill" time="1.0"/>
+	<testcase name="74_Vector_ArtificialDiet" time="2.0"/>
+	<testcase name="75_Vector_ArtificialDietHousingModification" time="2.0"/>
+	<testcase name="77_Vector_IRSHousingModification" time="1.0"/>
+	<testcase name="78_Vector_InsectKillingFenceHousingModification" time="1.0"/>
+	<testcase name="51_Vector_Namawala_SugarTrap_WeatherDependentFeed" time="11.0"/>
+	<testcase name="79_Vector_Ivermectin" time="2.0"/>
+	<testcase name="80_Vector_Larvicides" time="5.0"/>
+	<testcase name="81_Vector_OutdoorRestKill" time="1.0"/>
+	<testcase name="85_Vector_SpaceSpraying" time="1.0"/>
+	<testcase name="86_Vector_SimpleIndividualRepellent" time="-1">
+		<error message="86_Vector_SimpleIndividualRepellent exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_56_373000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="84_Vector_SimpleHousingModification" time="-1">
+		<error message="84_Vector_SimpleHousingModification exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_56_277000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="82_Vector_OvipositionTrap" time="8.0"/>
+	<testcase name="87_Vector_SpatialRepellent" time="1.0"/>
+	<testcase name="47_Vector_An_arabiensis_MultipleHabitats_Oviposition" time="25.0"/>
+	<testcase name="83_Vector_ScreeningHousingModification" time="-1">
+		<error message="83_Vector_ScreeningHousingModification exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_56_229000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="88_Vector_SpatialRepellentHousingModification" time="-1">
+		<error message="88_Vector_SpatialRepellentHousingModification exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_56_463000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="104_Vector_DrivingYHEGs" time="6.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/01_A_Namawala3Vectors_lowEIR" time="8.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/01_B_Namawala3Vectors_highEIR" time="9.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/03_A_Namawala_Vector" time="10.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/03_B_Muheza_Vector" time="10.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/10_InsectKillingFence" time="11.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/05_Namawala_Vector_ITNs" time="10.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/03_C_Garki_single_node_Vector" time="13.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/06_Namawala_Vector_ITNsPEV" time="10.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/07_Namawala_Vector_SSV" time="15.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats" time="31.0"/>
+	<testcase name="Scenarios/VectorAndMalaria/09_Namawala_Vector_SugarBaitedTraps" time="46.0"/>
+	<testcase name="43_Vector_Garki_MultiCore_VectorMigration" time="-1">
+		<failure message="43_Vector_Garki_MultiCore_VectorMigration failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_54_886000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="26_Vector_Garki" time="-1">
+		<failure message="26_Vector_Garki failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_54_427000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="25_Vector_Madagascar" time="-1">
+		<failure message="25_Vector_Madagascar failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_27_11_30_50_670000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+</testsuite>

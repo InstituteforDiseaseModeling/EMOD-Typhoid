@@ -53,7 +53,7 @@ namespace Kernel
     IndividualHumanPolio::IndividualHumanPolio(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
         IndividualHumanEnvironmental(_suid, monte_carlo_weight, initial_age, gender, initial_poverty),
         age_most_recent_infection(0),
-        polio_susceptibility(NULL)
+        polio_susceptibility(nullptr)
     {
     }
 
@@ -72,7 +72,7 @@ namespace Kernel
         IndividualHuman::PropagateContextToDependents();
 
 #if 0
-        //if( polio_susceptibility == NULL && susceptibility != NULL)
+        //if( polio_susceptibility == nullptr && susceptibility != nullptr)
         {
             if ( s_OK != susceptibility->QueryInterface(GET_IID(ISusceptibilityPolio), (void**)&polio_susceptibility) )
             {
@@ -98,6 +98,18 @@ namespace Kernel
     void IndividualHumanPolio::setupInterventionsContainer()
     {
         interventions = _new_ PolioInterventionsContainer();
+    }
+
+    REGISTER_SERIALIZABLE(IndividualHumanPolio, IIndividualHuman);
+
+    void IndividualHumanPolio::serialize(IArchive& ar, IIndividualHuman* obj)
+    {
+        IndividualHumanEnvironmental::serialize(ar, obj);
+        IndividualHumanPolio& individual = *dynamic_cast<IndividualHumanPolio*>(obj);
+        ar.startElement();
+            ar.labelElement("age_most_recent_infection") & individual.age_most_recent_infection;
+            ar.labelElement("paralysisVirusTypeMask") & individual.paralysisVirusTypeMask;
+        ar.endElement();
     }
 }
 
@@ -143,7 +155,7 @@ const Kernel::infection_polio_reportable_list_t *Kernel::IndividualHumanPolio::G
     // Loop over infections, find new ones - push on new_reportable_infections
     for (auto infection : infections)
     {
-        IInfectionPolioReportable *ipr = NULL;
+        IInfectionPolioReportable *ipr = nullptr;
         if( infection->QueryInterface( GET_IID( IInfectionPolioReportable ), (void**)&ipr ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "Infection", "IInfectionPolio", "*it" );
@@ -335,24 +347,6 @@ namespace Kernel
     }
 }
 
-#endif
-
-#if 0
-template<class Archive>
-void Kernel::IndividualHumanPolio::serialize( Archive & ar, const unsigned int file_version )
-{
-    ar.template register_type<InfectionPolio>();
-    ar.template register_type<SusceptibilityPolio>();
-    ar.template register_type<Kernel::PolioInterventionsContainer>();
-
-    ar & boost::serialization::base_object<IndividualHumanEnvironmental>(*this);
-    typemap.serialize(this, ar, file_version);
-}
-
-INSTANTIATE_BOOST_SERIALIZATION_HACKS(Kernel::IndividualHumanPolio);
-
-INSTANTIATE_SERIALIZER(Kernel::IndividualHumanPolio, boost::mpi::packed_iarchive)
-INSTANTIATE_SERIALIZER(Kernel::IndividualHumanPolio, boost::mpi::packed_oarchive)
 #endif
 
 #endif // ENABLE_POLIO

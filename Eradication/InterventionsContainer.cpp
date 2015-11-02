@@ -18,13 +18,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Individual.h"                // for implementation of IIndividualHumanContext functions e.g. GetEventContext()
 #include <typeinfo>
 #include "NodeEventContext.h"
+#include "InterventionFactory.h"
+#include "INodeContext.h"
 
-// TBD: currently included for JDeserialize only. Once we figure out how to wrap the deserialize 
+// TBD: currently included for JDeserialize only. Once we figure out how to wrap the deserialize
 // into rapidjsonimpl class, then this is not needed
 #include "RapidJsonImpl.h"
 
 static const char* _module = "InterventionsContainer";
-    
+
 namespace Kernel
 {
     QueryResult
@@ -50,7 +52,7 @@ namespace Kernel
         else if (iid == GET_IID(IPropertyValueChangerEffects))
             foundInterface = static_cast<IPropertyValueChangerEffects*>(this);
         else
-            foundInterface = 0;
+            foundInterface = nullptr;
 
         QueryResult status;
         if ( !foundInterface )
@@ -72,7 +74,7 @@ namespace Kernel
     {
         for (auto intervention : interventions)
         {
-            delete intervention;
+            delete intervention; // clorton intervention->Recycle();
         }
     }
 
@@ -123,7 +125,7 @@ namespace Kernel
             }
         }
     }
- 
+
     void InterventionsContainer::Update(float dt)
     {
         drugVaccineReducedAcquire   = 1.0;
@@ -159,11 +161,11 @@ namespace Kernel
         }
     }
 
-    InterventionsContainer::InterventionsContainer() :
-        parent(NULL),
-        drugVaccineReducedAcquire(1.0f), 
-        drugVaccineReducedTransmit(1.0f),
-        drugVaccineReducedMortality(1.0f)
+    InterventionsContainer::InterventionsContainer()
+        : drugVaccineReducedAcquire(1.0f)
+        , drugVaccineReducedTransmit(1.0f)
+        , drugVaccineReducedMortality(1.0f)
+        , parent(nullptr)
     {
     }
 
@@ -202,7 +204,7 @@ namespace Kernel
     {
         drugVaccineReducedMortality *= (1.0f-mort);
     }
-    
+
     void InterventionsContainer::ChangeProperty(
         const char * property,
         const char * new_value
@@ -229,7 +231,7 @@ namespace Kernel
             throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "properties", property );
         }
 
-        INodeContext* pNode = NULL;
+        INodeContext* pNode = nullptr;
         if ( s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeContext), (void**)&pNode) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeContext", "INodeEventContext" );
@@ -270,10 +272,26 @@ namespace Kernel
     }
 
     float InterventionsContainer::GetInterventionReducedAcquire()   const { return drugVaccineReducedAcquire; }
-    float InterventionsContainer::GetInterventionReducedTransmit()  const { 
+    float InterventionsContainer::GetInterventionReducedTransmit()  const {
         return drugVaccineReducedTransmit;
     }
     float InterventionsContainer::GetInterventionReducedMortality() const { return drugVaccineReducedMortality; }
+
+    IMPLEMENT_SERIALIZATION_REGISTRAR(IIndividualHumanInterventionsContext);
+
+    REGISTER_SERIALIZABLE(InterventionsContainer, IIndividualHumanInterventionsContext);
+
+    void InterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    {
+        InterventionsContainer& container = *static_cast<InterventionsContainer*>(obj);
+        ar.startElement();
+            ar.labelElement("drugVaccineReducedAcquire") & container.drugVaccineReducedAcquire;
+            ar.labelElement("drugVaccineReducedTransmit") & container.drugVaccineReducedTransmit;
+            ar.labelElement("drugVaccineReducedMortality") & container.drugVaccineReducedMortality;
+            ar.labelElement("interventions");
+                Kernel::serialize(ar, container.interventions);
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
@@ -301,62 +319,4 @@ template void serialize(boost::mpi::packed_oarchive&, InterventionsContainer&, u
 template void serialize(boost::mpi::packed_iarchive&, InterventionsContainer&, unsigned int);
 
 }
-#endif
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-namespace Kernel {
-
-    // IJsonSerializable Interfaces
-    void InterventionsContainer::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("drugVaccineReducedAcquire", drugVaccineReducedAcquire);
-        root->Insert("drugVaccineReducedTransmit", drugVaccineReducedTransmit);
-        root->Insert("drugVaccineReducedMortality", drugVaccineReducedMortality);
-
-        root->Insert("interventions");
-        root->BeginArray();
-        for (auto intervention : interventions)
-        {
-            static_cast<BaseIntervention*>(intervention)->JSerialize(root, helper);
-        }
-        root->EndArray();
-        root->EndObject();
-    }
-
-    void InterventionsContainer::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-        rapidjson::Document * doc = (rapidjson::Document*) root; // total hack to get around build path issues with rapid json and abstraction
-
-        drugVaccineReducedAcquire   = (*doc)["drugVaccineReducedAcquire"].GetDouble();
-        drugVaccineReducedTransmit  = (*doc)["drugVaccineReducedTransmit"].GetDouble();
-        drugVaccineReducedMortality = (*doc)["drugVaccineReducedMortality"].GetDouble();
-
-        // interventions is a list, so get the size first
-        unsigned int intervention_count = (*doc)["interventions"].Size();
-
-        if (intervention_count > 0)
-            LOG_INFO_F( "num_interventions = %d, %f, %f, %f\n", intervention_count, drugVaccineReducedAcquire, drugVaccineReducedTransmit, drugVaccineReducedTransmit);
-
-        for (unsigned int iid = 0; iid < intervention_count; iid++ )
-        {
-            std::string class_name = (*doc)["interventions"][iid]["class"].GetString();
-
-            LOG_INFO_F( "Deserializating intenventions container iid=%d class_name=%s.\n",iid, class_name.c_str() );
-           
-            // Create the intervention and push it into the list
-            json::Object tmpJson;
-            tmpJson["class"] = json::String(class_name);
-            Configuration * tmpConfig = Configuration::CopyFromElement( tmpJson );
-
-            // TBD: Handle Node-targeted interventions (CreateNDIIntervention)
-            IDistributableIntervention* newintven = InterventionFactory::getInstance()->CreateIntervention((const Configuration*)tmpConfig);
-            delete tmpConfig;
-            interventions.push_back(newintven);
-            dynamic_cast<BaseIntervention *>(newintven)->JDeserialize((IJsonObjectAdapter*)&(*doc)["interventions"][iid],helper);
-        }
-    }
-} // namespace Kernel
-
 #endif

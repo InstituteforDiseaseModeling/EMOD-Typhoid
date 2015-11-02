@@ -11,17 +11,49 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorSpeciesParameters.h"
 
 #include "NodeVector.h"  // just for the NodeFlags :(
-#include "SimulationConfig.h"  // just for vspMap (to avoid static)
+// clorton #include "SimulationConfig.h"  // just for vspMap (to avoid static)
 #include "Vector.h"
 #include "Exceptions.h"
-#include <algorithm> // for transform
-#include <cctype> // for tolower
+// clorton #include <algorithm> // for transform
+// clorton #include <cctype> // for tolower
 
 static const char * _module = "VectorSpeciesParameters";
 
-
 namespace Kernel
 {
+    void VectorSpeciesParameters::serialize(IArchive& ar, VectorSpeciesParameters*& parameters)
+    {
+        if (!ar.IsWriter())
+        {
+            parameters = new VectorSpeciesParameters();
+        }
+
+        ar.startElement();
+        ar.labelElement("habitat_param") & parameters->habitat_param;
+        ar.labelElement("habitat_type") & (std::vector<uint32_t>&)parameters->habitat_type;
+        ar.labelElement("aquaticarrhenius1") & parameters->aquaticarrhenius1;
+        ar.labelElement("aquaticarrhenius2") & parameters->aquaticarrhenius2;
+        ar.labelElement("infectedarrhenius1") & parameters->infectedarrhenius1;
+        ar.labelElement("infectedarrhenius2") & parameters->infectedarrhenius2;
+        ar.labelElement("immatureduration") & parameters->immatureduration;
+        ar.labelElement("daysbetweenfeeds") & parameters->daysbetweenfeeds;
+        ar.labelElement("anthropophily") & parameters->anthropophily;
+        ar.labelElement("eggbatchsize") & parameters->eggbatchsize;
+        ar.labelElement("infectedeggbatchmod") & parameters->infectedeggbatchmod;
+        ar.labelElement("infectiousmortalitymod") & parameters->infectiousmortalitymod;
+        ar.labelElement("aquaticmortalityrate") & parameters->aquaticmortalityrate;
+        ar.labelElement("adultlifeexpectancy") & parameters->adultlifeexpectancy;
+        ar.labelElement("transmissionmod") & parameters->transmissionmod;
+        ar.labelElement("acquiremod") & parameters->acquiremod;
+        ar.labelElement("infectioushfmortmod") & parameters->infectioushfmortmod;
+        ar.labelElement("indoor_feeding") & parameters->indoor_feeding;
+
+        ar.labelElement("feedingrate") & parameters->feedingrate;
+        ar.labelElement("adultmortality") & parameters->adultmortality;
+        ar.labelElement("immaturerate") & parameters->immaturerate;
+        ar.endElement();
+    }
+
     VectorSpeciesParameters::VectorSpeciesParameters() :
         aquaticarrhenius1(DEFAULT_AQUATIC_ARRHENIUS1),
         aquaticarrhenius2(DEFAULT_AQUATIC_ARRHENIUS2),

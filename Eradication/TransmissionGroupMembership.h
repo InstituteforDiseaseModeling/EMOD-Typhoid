@@ -27,12 +27,5 @@ namespace Kernel
         template<class Archive>
         friend void serialize(Archive& archive, TransmissionGroupMembership_t& human, const unsigned int file_version) {}
 #endif
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper )  const {}
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )      {}
-#endif
     };
 }

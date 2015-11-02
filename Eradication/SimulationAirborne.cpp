@@ -35,7 +35,7 @@ namespace Kernel
 
     SimulationAirborne *SimulationAirborne::CreateSimulation(const ::Configuration *config)
     {
-        SimulationAirborne *newsimulation = NULL;
+        SimulationAirborne *newsimulation = nullptr;
 
         newsimulation = _new_ SimulationAirborne();
         if (newsimulation)
@@ -46,7 +46,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -70,11 +70,10 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationAirborne::resolveMigration()
-    {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-    }
-
+// clorton    void SimulationAirborne::resolveMigration()
+// clorton    {
+// clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
+// clorton    }
 }
 
 #if USE_BOOST_SERIALIZATION

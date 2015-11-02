@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 template<class DerivedT, class BaseT>
 struct StaticVoidCastRegistrar
 {
-    StaticVoidCastRegistrar() { boost::serialization::void_cast_register<DerivedT, BaseT>(static_cast<DerivedT*>(NULL), static_cast<BaseT*>(NULL)); }
+    StaticVoidCastRegistrar() { boost::serialization::void_cast_register<DerivedT, BaseT>(static_cast<DerivedT*>(nullptr), static_cast<BaseT*>(nullptr)); }
 };
 
 #define REGISTER_SERIALIZATION_VOID_CAST(classname, interfacename) \

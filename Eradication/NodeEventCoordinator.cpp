@@ -44,10 +44,10 @@ namespace Kernel
         intervention_name << std::string( json::QuickInterpreter(intervention_config._json)["class"].As<json::String>() );
 
         // Simplest NDI distribution without repetition
-        INodeDistributableIntervention *ndi = NULL;
+        INodeDistributableIntervention *ndi = nullptr;
         for(auto *nec : cached_nodes)
         {
-			ndi = InterventionFactory::getInstance()->CreateNDIIntervention(Configuration::CopyFromElement(intervention_config._json));
+            ndi = InterventionFactory::getInstance()->CreateNDIIntervention(Configuration::CopyFromElement(intervention_config._json));
             if(ndi)
             {
                 if (!ndi->Distribute( nec, this ) )

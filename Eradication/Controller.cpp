@@ -84,7 +84,7 @@ bool call_templated_functor_with_sim_type_hack(ControllerExecuteFunctorT &cef)
         throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, note.c_str() );
     }
 
-    Simulation * newsim = NULL;
+    Simulation * newsim = nullptr;
     switch (sim_type)
     {
         case SimType::GENERIC_SIM:       return cef.template call<Simulation>(); break;
@@ -232,7 +232,7 @@ bool DefaultController::execute_internal()
 #else
     MassivelyHackedLeakyPointer<SimulationT> sim(dynamic_cast<SimulationT*>(SimulationFactory::CreateSimulation())); 
 
-    if (NULL == sim.get())
+    if (nullptr == sim.get())
     {
         throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "sim.get() returned NULL after call to CreateSimulation." );
     }
@@ -341,7 +341,7 @@ bool DefaultController::execute_internal()
 
     boost::scoped_ptr<ISimulation> sim((SimulationFactory::CreateSimulation()));
 
-    if (NULL == sim.get())
+    if (nullptr == sim.get())
     {
         throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "sim.get() returned NULL after call to CreateSimulation.\n" );
     }
@@ -479,7 +479,7 @@ bool BurnInCacheTestController::execute_internal()
     {
         boost::scoped_ptr<SimulationT> sim((SimulationT*)SimulationFactory::CreateSimulation());
 
-        if (NULL == sim)
+        if (nullptr == sim)
             return false;
 
         if (EnvPtr->MPI.Rank==0) { ostringstream oss; oss << "Beginning Simulation..."; EnvPtr->getStatusReporter()->ReportStatus(oss.str()); }
@@ -530,7 +530,7 @@ bool BurnInCacheTestController::execute_internal()
     else if (burnin_cache_mode=="read")
     {
         // load simulation and then run it for remaining steps specified (Sim_Duration - burnin_period)
-        boost::scoped_ptr<SimulationT> sim(NULL);
+        boost::scoped_ptr<SimulationT> sim(nullptr);
 
         if (EnvPtr->MPI.Rank==0) { ostringstream oss; oss << "Beginning Simulation..."; EnvPtr->getStatusReporter()->ReportStatus(oss.str()); }
 
@@ -540,7 +540,7 @@ bool BurnInCacheTestController::execute_internal()
             sim.reset((SimulationT*)load_sim<boost::archive::binary_iarchive, SimulationT>(
                 (FileSystem::Concat( EnvPtr->StatePath, state_filename ).c_str())));
 
-        if (sim == NULL)
+        if (sim == nullptr)
         {
             //ERROR: ("Failed to load saved state.\n");
             throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Loading" );
@@ -622,7 +622,7 @@ bool SimpleBranchController::execute_internal()
         }
         END_REPORT_TIME(false,"LoadState")
 
-        if (sim == NULL)
+        if (sim == nullptr)
         {
             // ERROR ("Failed to load saved state.\n");
             throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Loading" );
@@ -864,7 +864,7 @@ ISimulation* load_sim(const char * filename)
     {
         // ERROR: ("load_sim() failed to open file %s for reading.\n", filename);
         throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Loading" );
-        return NULL;
+        return nullptr;
     }
 
     IArchiveT ia(ifs);
@@ -872,7 +872,7 @@ ISimulation* load_sim(const char * filename)
 
     // restore the schedule from the archive
 #ifdef _DLLS_
-    return NULL; // just testing
+    return nullptr; // just testing
 #else
     return SimulationFactory::CreateSimulationFromArchive<IArchiveT, SimulationT>(ia);
 #endif

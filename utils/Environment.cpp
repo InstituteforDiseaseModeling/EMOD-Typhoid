@@ -27,17 +27,17 @@ static const char * _module = "Environment";
 
 #pragma warning(disable: 4996) // for suppressing strcpy caused security warnings
 
-Environment* Environment::localEnv = NULL;
+Environment* Environment::localEnv = nullptr;
 
 Environment::Environment()
-: Config(NULL)
-, SimConfig(NULL)
+: Config(nullptr)
+, SimConfig(nullptr)
 , InputPath()
 , OutputPath()
 , StatePath()
 , DllPath()
 {
-    Report.Validation = NULL;
+    Report.Validation = nullptr;
 }
 
 bool Environment::Initialize(
@@ -103,7 +103,7 @@ bool Environment::Initialize(
     if (!config) 
     {
         delete localEnv;
-        localEnv = NULL;
+        localEnv = nullptr;
         throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, configFileName.c_str() );
     }
 

@@ -266,7 +266,7 @@ public:
     virtual bool IsCircumcised()                   const { throw std::exception("The method or operation is not implemented."); }
     virtual float GetCoInfectiveFactor()           const { throw std::exception("The method or operation is not implemented."); }
     
-    virtual void UpdateSTINetworkParams(const char *prop = NULL, const char* new_value = NULL) {throw std::exception("The method or operation is not implemented.");}
+    virtual void UpdateSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) {throw std::exception("The method or operation is not implemented.");}
 
     virtual void UpdateInfectiousnessSTI(std::vector<act_prob_t> &act_prob_vec, unsigned int rel_id) { throw std::exception("The method or operation is not implemented."); }
 

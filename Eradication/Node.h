@@ -82,16 +82,16 @@ namespace Kernel
         virtual void Update(float dt);
 
         // INodeContext
-        virtual suids::suid   GetSuid() const;
-        virtual suids::suid   GetNextInfectionSuid();
-        virtual ::RANDOMBASE* GetRng();
-        virtual const INodeContext::tDistrib& GetIndividualPropertyDistributions() const;
+        virtual suids::suid   GetSuid() const override;
+        virtual suids::suid   GetNextInfectionSuid() override;
+        virtual ::RANDOMBASE* GetRng() override;
+        virtual const INodeContext::tDistrib& GetIndividualPropertyDistributions() const override;
 
-        virtual const MigrationInfo*    GetMigrationInfo() const;
-        virtual const NodeDemographics* GetDemographics()  const;
-        virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string key) const;
+        virtual const MigrationInfo*    GetMigrationInfo() const override;
+        virtual const NodeDemographics* GetDemographics()  const override;
+        virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string key) const override;
 
-        virtual INodeEventContext* GetEventContext();
+        virtual INodeEventContext* GetEventContext() override;
 
         // Migration
         void SetupMigration(MigrationInfoFactory * migration_factory);
@@ -111,41 +111,41 @@ namespace Kernel
 
         // Reporting to higher levels (intermediate form)
         // Possible TODO: refactor into common interfaces if there is demand
-        virtual IdmDateTime GetTime()                  const;
-        virtual float GetInfected()              const;
-        virtual float GetStatPop()               const;
-        virtual float GetBirths()                const;
-        virtual float GetCampaignCost()          const;
-        virtual float GetInfectivity()           const;
-        virtual float GetInfectionRate()         const;
-        virtual float GetSusceptDynamicScaling() const;
-        virtual const Climate* GetLocalWeather() const;
-        virtual long int GetPossibleMothers()    const;
+        virtual IdmDateTime GetTime()            const override;
+        virtual float GetInfected()              const override;
+        virtual float GetStatPop()               const override;
+        virtual float GetBirths()                const override;
+        virtual float GetCampaignCost()          const override;
+        virtual float GetInfectivity()           const override;
+        virtual float GetInfectionRate()         const override;
+        virtual float GetSusceptDynamicScaling() const override;
+        virtual const Climate* GetLocalWeather() const override;
+        virtual long int GetPossibleMothers()    const override;
 
-        virtual float GetMeanAgeInfection()      const;
-        virtual void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer);
-        virtual void UnregisterNewInfectionObserver(void* id);
+        virtual float GetMeanAgeInfection()      const override;
+        virtual void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer) override;
+        virtual void UnregisterNewInfectionObserver(void* id) override;
 
         // This method will ONLY be used for spatial reporting by input node ID, don't use it elsewhere!
-        virtual int GetExternalID() const;
+        virtual int GetExternalID() const override;
 
         // Heterogeneous intra-node transmission
-        virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt);
-        virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual);
-        virtual void GetGroupMembershipForIndividual(RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut);
-        virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight);
+        virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) override;
+        virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual) override;
+        virtual void GetGroupMembershipForIndividual(RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut) override;
+        virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight) override;
         virtual void SetupIntranodeTransmission();
 
-        virtual act_prob_vec_t DiscreteGetTotalContagion(const TransmissionGroupMembership_t* membership);
+        virtual act_prob_vec_t DiscreteGetTotalContagion(const TransmissionGroupMembership_t* membership) override;
 
         virtual void ValidateIntranodeTransmissionConfiguration();
         virtual bool IsValidTransmissionRoute( string& transmissionRoute );
 
-        virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership);
-        virtual RouteList_t& GetTransmissionRoutes();
+        virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership) override;
+        virtual RouteList_t& GetTransmissionRoutes() override;
         //Methods for implementing time dependence in various quantities; infectivity, birth rate, migration rate
-        virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const;
-        virtual float getBoxcarCorrection(float boxcar_amplitude, float boxcar_start_time, float boxcar_end_time) const;
+        virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const override;
+        virtual float getBoxcarCorrection(float boxcar_amplitude, float boxcar_start_time, float boxcar_end_time) const override;
 
         // These methods are not const because they will extract the value from the demographics
         // if it has not been done yet.
@@ -268,9 +268,9 @@ namespace Kernel
 
         RouteList_t routes;
 
-        void Initialize();
+        /* clorton virtual */ void Initialize() /* clorton override */;
         virtual void setupEventContextHost();
-        virtual bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
         void ExtractDataFromDemographics();
         virtual void LoadImmunityDemographicsDistribution();
 
@@ -333,37 +333,29 @@ namespace Kernel
         void checkIpKeyInWhitelist(const std::string& key, size_t numValues );
         void convertTransitions( const NodeDemographics &trans, json::Object& tx_camp, const std::string& key );
         std::string getAgeBinPropertyNameFromIndex( const NodeDemographics& demo, unsigned int idx );
-        virtual void checkValidIPValue( const std::string& key, const std::string& to_value );
+        virtual void checkValidIPValue( const std::string& key, const std::string& to_value ) override;
 
         //Verify that the user entered in set of property key/value pairs which are included in the demographics file
-        virtual void VerifyPropertyDefined( const std::string& rKey, const std::string& rVal ) const;
+        virtual void VerifyPropertyDefined( const std::string& rKey, const std::string& rVal ) const override;
 
         bool whitelist_enabled;
         std::set< std::string > ipkeys_whitelist;
         static const char* _age_bins_key;
         static const char* transitions_dot_json_filename;
 
-        float infectivity_sinusoidal_forcing_amplitude;     // Only for Infectivity_Scale_Type = SINUSOIDAL_FUNCTION_OF_TIME
-        float infectivity_sinusoidal_forcing_phase;			// Only for Infectivity_Scale_Type = SINUSOIDAL_FUNCTION_OF_TIME
+        float infectivity_sinusoidal_forcing_amplitude; // Only for Infectivity_Scale_Type = SINUSOIDAL_FUNCTION_OF_TIME
+        float infectivity_sinusoidal_forcing_phase;     // Only for Infectivity_Scale_Type = SINUSOIDAL_FUNCTION_OF_TIME
         float infectivity_boxcar_forcing_amplitude;     // Only for Infectivity_Scale_Type = ANNUAL_BOXCAR_FUNCTION
-        float infectivity_boxcar_start_time;			    // Only for Infectivity_Scale_Type = ANNUAL_BOXCAR_FUNCTION
-        float infectivity_boxcar_end_time;			// Only for Infectivity_Scale_Type = ANNUAL_BOXCAR_FUNCTION
+        float infectivity_boxcar_start_time;            // Only for Infectivity_Scale_Type = ANNUAL_BOXCAR_FUNCTION
+        float infectivity_boxcar_end_time;              // Only for Infectivity_Scale_Type = ANNUAL_BOXCAR_FUNCTION
 
-        float birth_rate_sinusoidal_forcing_amplitude;     // Only for Birth_Rate_Time_Dependence = SINUSOIDAL_FUNCTION_OF_TIME
-        float birth_rate_sinusoidal_forcing_phase;			// Only for Birth_Rate_Time_Dependence = SINUSOIDAL_FUNCTION_OF_TIME
-        float birth_rate_boxcar_forcing_amplitude;     // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
-        float birth_rate_boxcar_start_time;			    // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
-        float birth_rate_boxcar_end_time;			// Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
+        float birth_rate_sinusoidal_forcing_amplitude;  // Only for Birth_Rate_Time_Dependence = SINUSOIDAL_FUNCTION_OF_TIME
+        float birth_rate_sinusoidal_forcing_phase;      // Only for Birth_Rate_Time_Dependence = SINUSOIDAL_FUNCTION_OF_TIME
+        float birth_rate_boxcar_forcing_amplitude;      // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
+        float birth_rate_boxcar_start_time;             // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
+        float birth_rate_boxcar_end_time;               // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
 
 #pragma warning( pop )
-
-#if USE_JSON_SERIALIZATION
-     public:
-
-         // IJsonSerializable Interfaces
-         virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-         virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
 
     private:
 

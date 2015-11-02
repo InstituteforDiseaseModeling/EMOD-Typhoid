@@ -22,7 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 
 #ifndef USE_JSON_SERIALIZATION
-#define USE_JSON_SERIALIZATION 1
+#define USE_JSON_SERIALIZATION 0 // clorton 1
 #endif
 
 #ifndef USE_JSON_MPI

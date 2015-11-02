@@ -34,7 +34,7 @@ namespace Kernel
         virtual void Expire();
 
         IIndividualHumanContext *parent;
-		IndividualInterventionConfig intervention_list; // TBD
+        IndividualInterventionConfig intervention_list; // TBD
 
     private:
 

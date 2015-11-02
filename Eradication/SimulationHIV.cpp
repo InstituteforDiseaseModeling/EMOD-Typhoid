@@ -70,7 +70,7 @@ namespace Kernel
 
     SimulationHIV *SimulationHIV::CreateSimulation(const ::Configuration *config)
     {
-        SimulationHIV *newsimulation = NULL;
+        SimulationHIV *newsimulation = nullptr;
 
         newsimulation = _new_ SimulationHIV();
         if (newsimulation)
@@ -83,7 +83,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -199,10 +199,10 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationHIV::resolveMigration()
-    {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-    }
+// clorton    void SimulationHIV::resolveMigration()
+// clorton    {
+// clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
+// clorton    }
 
     void SimulationHIV::Validate( const std::string& rClassName,
                                   IDistributableIntervention* pInterventionToValidate )

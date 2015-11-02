@@ -21,6 +21,7 @@ namespace Kernel {
         ReportSTI();
         static IReport* ReportSTI::CreateReport() { return new ReportSTI(); }
 
+        virtual void LogNodeData( INodeContext* pNC );
         virtual void LogIndividualData( IndividualHuman* individual );
         virtual void EndTimestep( float currentTime, float dt );
 
@@ -50,12 +51,5 @@ namespace Kernel {
         unsigned int num_sexually_active_prevalance;
         unsigned int num_post_debut_pop;
         NaturalNumber num_circumcised_males;
-
-        NonNegativeFloat youngMaleInfected;
-        NonNegativeFloat youngMaleCount;
-        NonNegativeFloat youngFemaleInfected;
-        NonNegativeFloat youngFemaleCount;
-
-
     };
 }

@@ -48,7 +48,7 @@ namespace Kernel {
 
         // Relationships
         virtual void UpdateEligibility() = 0;
-        virtual void UpdateSTINetworkParams(const char *prop = NULL, const char* new_value = NULL) = 0;
+        virtual void UpdateSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) = 0;
         virtual void ConsiderRelationships(float dt) = 0;
         virtual void AddRelationship( IRelationship* pNewRelationship ) = 0;
         virtual void RemoveRelationship( IRelationship* pNewRelationship ) = 0;

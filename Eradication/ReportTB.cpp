@@ -346,7 +346,7 @@ ReportTB::LogNodeData(
 
     Accumulate(_disease_deaths_MDR_label,            disease_deaths_MDR );
 
-    const INodeTB* pTBNode = NULL;
+    const INodeTB* pTBNode = nullptr;
     if( pNC->QueryInterface( GET_IID(INodeTB), (void**)&pTBNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTB", "INodeContext" );

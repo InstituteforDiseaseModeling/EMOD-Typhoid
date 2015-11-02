@@ -46,7 +46,7 @@ namespace UnitTest {
     bool TestRunner::IsTestInSuite(const Test* const curTest, char const* suiteName) const
     {
         using namespace std;
-        return (suiteName == NULL) || !strcmp(curTest->m_details.suiteName, suiteName);
+        return (suiteName == nullptr) || !strcmp(curTest->m_details.suiteName, suiteName);
     }
 
     void TestRunner::RunTest(TestResults* const result, Test* const curTest, int const maxTestTimeInMs) const

@@ -505,9 +505,9 @@ namespace Kernel
         // Polio only cares when a new vaccine dose has been given - durability does not apply to Polio vaccines
         // Polio should set the durability of all vaccines to 1 day. This will eliminate unnecessary iteration through the following loops.
         // Use GetParent, and then intervention interfaces here.
-        IIndividualHumanContext* vaccinee = NULL;
-        IIndividualHumanInterventionsContext* context = NULL;
-        IPolioVaccineEffects* ipve = NULL;
+        IIndividualHumanContext* vaccinee = nullptr;
+        IIndividualHumanInterventionsContext* context = nullptr;
+        IPolioVaccineEffects* ipve = nullptr;
 
         vaccinee = GetParent();
 
@@ -828,7 +828,7 @@ namespace Kernel
         PolioVaccineType::Enum vac_type = (PolioVaccineType::Enum) (type); // not great, but better
         PolioVaccine* vac = PolioVaccine::CreateVaccine(vac_type, time_since_vaccination);
         IIndividualHumanInterventionsContext* context = parent->GetInterventionsContext();
-        IInterventionConsumer* iic = NULL;
+        IInterventionConsumer* iic = nullptr;
         if (s_OK ==  context->QueryInterface(GET_IID(IInterventionConsumer), (void**)&iic) )
         {
             iic->GiveIntervention(vac);
@@ -990,6 +990,30 @@ namespace Kernel
         return( receiveHumoralMemoryNAb[ serotype ] > pit );
     }
 
+    REGISTER_SERIALIZABLE(SusceptibilityPolio, ISusceptibilityContext);
+
+    void SusceptibilityPolio::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    {
+        SusceptibilityEnvironmental::serialize(ar, obj);
+        SusceptibilityPolio& susceptibility = *dynamic_cast<SusceptibilityPolio*>(obj);
+        ar.startElement();
+            ar.labelElement(""); ar.serialize(susceptibility.shedding_titer, N_POLIO_VIRUS_TYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.humoralNAb, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.mucosalNAb, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.maternalSerumNAb, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.humoralMemoryNAb, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.mucosalMemoryNAb, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.humoral_fastDecayCompartment, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.mucosal_fastDecayCompartment, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.time_since_last_infection, N_POLIO_SEROTYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.time_since_last_IPV, N_POLIO_SEROTYPES);
+            ar.labelElement("") & susceptibility.individual_acquire_risk;
+            ar.labelElement(""); ar.serialize(susceptibility.vaccine_doses_received, N_POLIO_VACCINES);
+            ar.labelElement(""); ar.serialize(susceptibility.vaccine_doses_received_by_type, N_POLIO_VIRUS_TYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.infectionStrains, N_POLIO_VIRUS_TYPES);
+            ar.labelElement(""); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

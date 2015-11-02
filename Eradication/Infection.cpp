@@ -17,10 +17,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "MathFunctions.h"
 
-#include "Serializer.h"
-
-#include "RapidJsonImpl.h"
-
 static const char* _module = "Infection";
 
 namespace Kernel
@@ -132,27 +128,38 @@ namespace Kernel
         return bRet;
     }
 
-    Infection::Infection() :
-        parent(NULL),
-        suid(suids::nil_suid()),
-        duration(0.0f),
-        total_duration(0.0f),
-        infectious_timer(0.0f),
-        infectiousness(0.0f),
-        StateChange(InfectionStateChange::None),
-        infection_strain(NULL)
+    Infection::Infection()
+        : parent(nullptr)
+        , suid(suids::nil_suid())
+        , duration(0.0f)
+        , total_duration(0.0f)
+        , incubation_timer(0.0f)
+        , infectious_timer(0.0f)
+        , infectiousness(0.0f)
+        , contact_shedding_fraction(0.0f)
+        , infectiousnessByRoute()
+        , StateChange(InfectionStateChange::None)
+        , infection_strain(nullptr)
     {
     }
 
-    Infection::Infection(IIndividualHumanContext *context) :
-        parent(context),
-        suid(suids::nil_suid()),
-        duration(0.0f),
-        total_duration(0.0f),
-        infectious_timer(0.0f),
-        infectiousness(0.0f),
-        StateChange(InfectionStateChange::None),
-        infection_strain(NULL)
+    BEGIN_QUERY_INTERFACE_BODY(Infection)
+        HANDLE_INTERFACE(IInfection)
+        HANDLE_ISUPPORTS_VIA(IInfection)
+    END_QUERY_INTERFACE_BODY(Infection)
+
+    Infection::Infection(IIndividualHumanContext *context)
+        : parent(context)
+        , suid(suids::nil_suid())
+        , duration(0.0f)
+        , total_duration(0.0f)
+        , incubation_timer(0.0f)
+        , infectious_timer(0.0f)
+        , infectiousness(0.0f)
+        , contact_shedding_fraction(0.0f)
+        , infectiousnessByRoute()
+        , StateChange(InfectionStateChange::None)
+        , infection_strain(nullptr)
     {
     }
 
@@ -181,7 +188,7 @@ namespace Kernel
 
         if( incubation_period_override != -1 )
         {
-            incubation_timer = (float)incubation_period_override;
+            incubation_timer = float(incubation_period_override);
         }
         else
         {
@@ -256,7 +263,7 @@ namespace Kernel
     }
 
     // TODO future : grant access to the susceptibility object by way of the host context and keep the update call neutral
-    void Infection::Update(float dt, Susceptibility* immunity)
+    void Infection::Update(float dt, ISusceptibilityContext* immunity)
     {
         StateChange = InfectionStateChange::None;
         duration += dt;
@@ -271,7 +278,7 @@ namespace Kernel
         }
 
         // To query for mortality-reducing effects of drugs or vaccines
-        IDrugVaccineInterventionEffects* idvie = NULL;
+        IDrugVaccineInterventionEffects* idvie = nullptr;
 
         // if disease has a daily mortality rate, and disease mortality is on, then check for death
         if (params()->vital_disease_mortality
@@ -319,20 +326,20 @@ namespace Kernel
 
     void Infection::CreateInfectionStrain(StrainIdentity* infstrain)
     {
-        if (infection_strain == NULL)
+        if (infection_strain == nullptr)
         {
             // this infection is new, not passed from another processor, so need to initialize the strain object
             infection_strain = _new_ Kernel::StrainIdentity;
         }
 
-        if (infstrain != NULL)
+        if (infstrain != nullptr)
         {
             *infection_strain = *infstrain;
             // otherwise, using the default antigenID and substrainID from the StrainIdentity constructor
         }
     }
 
-    void Infection::EvolveStrain(Kernel::Susceptibility* immunity, float dt)
+    void Infection::EvolveStrain(ISusceptibilityContext* immunity, float dt)
     {
         // genetic evolution happens here.
         // infection_strain
@@ -377,71 +384,26 @@ namespace Kernel
     {
         return duration;
     }
+
+    REGISTER_SERIALIZABLE(Infection, IInfection);
+
+    void Infection::serialize(IArchive& ar, IInfection* obj)
+    {
+        Infection& infection = *dynamic_cast<Infection*>(obj);
+        ar.startElement();
+        ar.labelElement("suid") & infection.suid.data;
+        ar.labelElement("duration") & infection.duration;
+        ar.labelElement("total_duration") & infection.total_duration;
+        ar.labelElement("incubation_timer") & infection.incubation_timer;
+        ar.labelElement("infectious_timer") & infection.infectious_timer;
+        ar.labelElement("infectiousness") & infection.infectiousness;
+        ar.labelElement("contact_shedding_fraction") & infection.contact_shedding_fraction;
+        ar.labelElement("infectiousnessByRoute") & infection.infectiousnessByRoute;
+        ar.labelElement("StateChange") & (uint32_t&)infection.StateChange;
+        ar.labelElement("infection_strain"); Kernel::serialize(ar, infection.infection_strain);
+        ar.endElement();
+    }
 }
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-namespace Kernel
-{
-
-    void Infection::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("suid");
-        suid.JSerialize(root, helper);
-
-        root->Insert("duration", duration);
-        root->Insert("total_duration", total_duration);
-        root->Insert("incubation_timer", incubation_timer);
-        root->Insert("infectious_timer", infectious_timer);
-        root->Insert("infectiousness", infectiousness);
-
-        root->Insert("contact_shedding_fraction", contact_shedding_fraction);
-
-        // root->Insert("infectiousnessByRoute", infectiousnessByRoute);
-        root->Insert("infectiousnessByRoute");
-        helper->JSerialize(infectiousnessByRoute, root);
-
-        root->Insert("StateChange", (int) StateChange);
-
-        if (infection_strain)
-        {
-            root->Insert("infection_strain");
-            infection_strain->JSerialize(root, helper);
-        }
-
-        root->EndObject();
-    }
-        
-    void Infection::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-        rapidjson::Document * doc = (rapidjson::Document*) root; // total hack to get around build path issues with rapid json and abstraction
-        suid.data                 = (*doc)[ "suid" ][ "data" ].GetInt();
-        duration                  = (*doc)[ "duration" ].GetDouble();
-        total_duration            = (*doc)[ "total_duration" ].GetDouble();
-        incubation_timer          = (*doc)[ "incubation_timer" ].GetDouble();
-        infectious_timer          = (*doc)[ "infectious_timer" ].GetDouble();
-        infectiousness            = (*doc)[ "infectiousness" ].GetDouble();
-        contact_shedding_fraction = (*doc)[ "contact_shedding_fraction" ].GetDouble();
-        //infectiousnessByRoute   = (*doc)["infectiousnessByRoute"].GetMap();
-        std::ostringstream errMsg;
-        errMsg << "infectiousnessByRoute map serialization not yet implemented.";
-        throw NotYetImplementedException(  __FILE__, __LINE__, __FUNCTION__, errMsg.str().c_str() );
-        StateChange = static_cast<InfectionStateChange::_enum>((*doc)[ "StateChange" ].GetInt());
-
-        if ((*doc).HasMember( "infection" ))
-        {
-            infection_strain = new StrainIdentity();
-            infection_strain->JDeserialize((IJsonObjectAdapter*) &(*doc)[ "infection_strain" ], helper);
-        }
-        else
-        {
-            infection_strain = nullptr;
-        }
-    }
-} // namespace Kernel
-
-#endif
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
 namespace Kernel {

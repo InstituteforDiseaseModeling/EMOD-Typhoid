@@ -288,7 +288,7 @@ namespace Kernel
     )
     {
         IncrementCampaignCost( cost );
-        INodeVector * pNV = NULL;
+        INodeVector * pNV = nullptr;
         if( node->QueryInterface( GET_IID( INodeVector ), (void**)&pNV ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "node", "Node", "INodeVector" );

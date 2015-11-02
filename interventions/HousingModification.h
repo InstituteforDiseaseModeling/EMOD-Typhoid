@@ -47,6 +47,8 @@ namespace Kernel
         float secondary_decay_time_constant;
         IHousingModificationConsumer *ihmc; // aka individual or individual vector interventions container
 
+        static void serialize(IArchive& ar, IDistributableIntervention* obj);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class ::boost::serialization::access;
@@ -58,6 +60,8 @@ namespace Kernel
     class IRSHousingModification : public SimpleHousingModification
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, IRSHousingModification, IDistributableIntervention)
+
+        DECLARE_SERIALIZABLE(IRSHousingModification, IDistributableIntervention);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

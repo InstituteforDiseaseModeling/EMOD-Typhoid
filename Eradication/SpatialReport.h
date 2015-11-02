@@ -43,7 +43,7 @@ inline std::set< std::string > getKeys(
     )
 {
     std::set< std::string > returnSet;
-    
+
     for( auto entry: myMap )
     {
         returnSet.insert( entry.first );
@@ -134,7 +134,7 @@ protected:
 
     typedef std::map<std::string, std::ofstream *> channel_file_map_t;
     channel_file_map_t channel_file_map;
-    JsonConfigurable::tFixedStringSet spatial_output_channels;
+    jsonConfigurable::tFixedStringSet spatial_output_channels;
 
 private:
 #if USE_BOOST_SERIALIZATION

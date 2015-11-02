@@ -18,7 +18,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "InterventionFactory.h"
 #include "Interventions.h"
-#include "InterventionEnums.h"
+// clorton #include "InterventionEnums.h"
+#include "Log.h"
 
 static const char * _module = "InterventionFactory";
 
@@ -29,12 +30,12 @@ namespace Kernel
     bool InterventionFactory::useDefaults = false; // stores value from campaign.json
     // Technically this should be in its own file, BaseIntervention.cpp, but I couldn't bring myself to 
     // create such a miniscule file, so I talked myself into putting it here. :)
-    IInterventionFactory* InterventionFactory::_instance = NULL;
+    IInterventionFactory* InterventionFactory::_instance = nullptr;
 
     // ctor
     InterventionFactory::InterventionFactory()
     {
-        if( _instance != NULL )
+        if( _instance != nullptr )
         {
             throw std::runtime_error( "Second InterventionFactory being created." );
         }

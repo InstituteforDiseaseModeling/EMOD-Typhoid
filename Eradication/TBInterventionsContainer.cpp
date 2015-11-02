@@ -53,7 +53,7 @@ namespace Kernel
 
     void TBInterventionsContainer::UpdateHealthSeekingBehaviors(float new_probability_of_seeking)
     {
-        IHealthSeekingBehavior * IHSB = NULL;
+        IHealthSeekingBehavior * IHSB = nullptr;
 
         //this section for counting the number of HSB interventions in the interventionslist
         //in future clean up so that this function doesn't have hard coded intervention class names
@@ -84,7 +84,7 @@ namespace Kernel
 
     int TBInterventionsContainer::GetNumTBDrugsActive()
     {
-        IDrug * ITB_drug = NULL;
+        IDrug * ITB_drug = nullptr;
 
         //this section for counting the number of AntiTBDrug interventions in the interventionslist
         std::list<IDistributableIntervention*> list_of_tb_drugs = GetInterventionsByType("class Kernel::AntiTBDrug");
@@ -155,7 +155,7 @@ namespace Kernel
         //this function is called when the drug is started and stopped/expires
         
         //first get the pointer to the person, parent is the generic individual
-        IIndividualHumanTB2* tb_patient = NULL;
+        IIndividualHumanTB2* tb_patient = nullptr;
         if ( parent->QueryInterface( GET_IID(IIndividualHumanTB2), (void**) &tb_patient ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndvidualHumanTB2", "IndividualHuman" );
@@ -241,7 +241,7 @@ namespace Kernel
     {
         // NOTE: Calling this AFTER the QI/GiveDrug crashes!!! Both win and linux. Says SetContextTo suddenly became a pure virtual.
         pIV->SetContextTo( parent ); 
-        IDrug * pDrug = NULL;
+        IDrug * pDrug = nullptr;
         if( s_OK == pIV->QueryInterface(GET_IID(IDrug), (void**) &pDrug) )
         {
             LOG_DEBUG("Getting a drug\n");
@@ -254,6 +254,66 @@ namespace Kernel
     TBDrugEffectsMap_t TBInterventionsContainer::GetDrugEffectsMap() 
     { 
         return TB_drug_effects; 
+    }
+
+    REGISTER_SERIALIZABLE(TBInterventionsContainer, IIndividualHumanInterventionsContext);
+
+    void serialize(IArchive& ar, TBDrugEffects_t& effects)
+    {
+        ar.startElement();
+        ar.labelElement("clearance_rate") & effects.clearance_rate;
+        ar.labelElement("inactivation_rate") & effects.inactivation_rate;
+        ar.labelElement("resistance_rate") & effects.resistance_rate;
+        ar.labelElement("relapse_rate") & effects.relapse_rate;
+        ar.labelElement("mortality_rate") & effects.mortality_rate;
+        ar.endElement();
+    }
+
+    void serialize(IArchive& ar, TBDrugEffectsMap_t& map)
+    {
+        size_t count = ar.IsWriter() ? map.size() : -1;
+        ar.startElement();
+            ar.labelElement("__count__") & count;
+            if (count > 0)
+            {
+                ar.labelElement("__map__");
+                ar.startElement();
+                    if (ar.IsWriter())
+                    {
+                        for (auto& entry : map)
+                        {
+                            ar.startElement();
+                                ar.labelElement("key") & (uint32_t&)entry.first;
+                                ar.labelElement("value"); Kernel::serialize(ar, entry.second);
+                            ar.endElement();
+                        }
+                    }
+                    else
+                    {
+                        for (size_t i = 0; i < count; i++)
+                        {
+                            TBDrugType::Enum type;
+                            ar.labelElement("key") & (uint32_t&)type;
+                            TBDrugEffects_t effects;
+                            ar.labelElement("value"); Kernel::serialize(ar, effects);
+                            map[type] = effects;
+                        }
+                    }
+                ar.endElement();
+            }
+        ar.endElement();
+    }
+
+    void TBInterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    {
+        InterventionsContainer::serialize(ar, obj);
+        TBInterventionsContainer& interventions = *dynamic_cast<TBInterventionsContainer*>(obj);
+        ar.startElement();
+            ar.labelElement("TB_drug_effects"); Kernel::serialize(ar, interventions.TB_drug_effects);
+            ar.labelElement("m_is_tb_tx_naive_TBIVC") & interventions.m_is_tb_tx_naive_TBIVC;
+            ar.labelElement("m_failed_tx_TBIVC") & interventions.m_failed_tx_TBIVC;
+            ar.labelElement("m_ever_relapsed_TBIVC") & interventions.m_ever_relapsed_TBIVC;
+        ar.endElement();
     }
 }
 

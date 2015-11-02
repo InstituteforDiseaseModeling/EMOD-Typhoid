@@ -62,7 +62,7 @@ public:
     }
 
 
-    virtual void CheckSTINetworkParams(const char *prop = NULL, const char* new_value = NULL) {}
+    virtual void CheckSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) {}
 
     // ---------------------
     // --- ISupport Methods

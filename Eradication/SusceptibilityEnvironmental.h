@@ -25,6 +25,8 @@ namespace Kernel
         SusceptibilityEnvironmental(IIndividualHumanContext *context);
         void Initialize(float age, float immmod, float riskmod);
 
+        DECLARE_SERIALIZABLE(SusceptibilityEnvironmental, ISusceptibilityContext);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;

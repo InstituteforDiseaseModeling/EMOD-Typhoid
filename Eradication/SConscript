@@ -13,7 +13,9 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
     eradenv.Append( CPPDEFINES=["_DLLS_" ] )
     eradenv.Append(LIBS=['libgeneric_static'])
     eradenv.Append(LIBPATH=['$BUILD_DIR/libgeneric_static'])
-    eradenv.Append( CPPDEFINES=["ENABLE_PYTHON" ] )
+    if env["Debug"]:
+        print( "Disabling embedded python for debug builds until we figure out where to find python27_d.lib" )
+        eradenv.Append( CPPDEFINES=["ENABLE_PYTHON" ] )
     #env.Append( CPPDEFINES=["ENABLE_TB" ] )
     #env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
     #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
@@ -48,14 +50,18 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
 
 else:
 
+    if env["Debug"]:
+        print( "Disabling embedded python for debug builds until we figure out where to find python27_d.lib" )
     env.Append( CPPDEFINES=["ENABLE_PYTHON" ] )
     #env.Append( CPPDEFINES=["DISABLE_HIV" ] )
-    env.Append( CPPDEFINES=["ENABLE_TB" ] )
-    env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
-    env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+    #clorton env.Append( CPPDEFINES=["ENABLE_TB" ] )
+    #clorton env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
+    #clorton env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
     #env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
     #env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
     #env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+    env.Append( CPPDEFINES=["DISABLE_STI" ] )     #clorton
+    env.Append( CPPDEFINES=["DISABLE_HIV" ] )     #clorton
 
     eradicationSrcFiles = [
                             # Common
@@ -135,6 +141,7 @@ else:
                             "../interventions/WaningEffectConstant.cpp",
                             "../interventions/WaningEffectExponential.cpp",
                             "../interventions/WaningEffectFactory.cpp",
+                            "../interventions/Registration.cpp"
     ]
 
     vectorSrcFiles = [
@@ -316,8 +323,6 @@ else:
                             "SimulationHIV.cpp",
                             "HivObjectFactory.cpp",
                             "HIVRelationshipStartReporter.cpp",
-                            "HIVReportEventRecorder.cpp",
-                            "HIVTransmissionReporter.cpp",
                             "ReportHIVInfection.cpp",
                             "ReportHIVByAgeAndGender.cpp",
                             "ReportHIVMortalityEvents.cpp",
@@ -345,12 +350,19 @@ else:
                             "../interventions/PMTCT.cpp"
     ]
 
-    eradicationSrcFiles.extend( hivSrcFiles )
+    #clorton eradicationSrcFiles.extend( hivSrcFiles )
     eradicationSrcFiles.extend( malariaSrcFiles )
-    eradicationSrcFiles.extend( polioSrcFiles )
-    eradicationSrcFiles.extend( tbSrcFiles )
-    eradicationSrcFiles.extend( tbhivSrcFiles )
+    #clorton eradicationSrcFiles.extend( polioSrcFiles )
+    #clorton eradicationSrcFiles.extend( tbSrcFiles )
+    #clorton eradicationSrcFiles.extend( tbhivSrcFiles )
 
+    if 'Disease' in env:
+        if env['Disease'] == "STI":
+            eradicationSrcFiles += stiSrcFiles
+        elif env['Disease'] == "HIV":
+            eradicationSrcFiles += hivSrcFiles
+        print( "Building these source files: " + str(eradicationSrcFiles) )
+    
     # Monolithic
     eradicationExe = env.Program('Eradication', eradicationSrcFiles)
 

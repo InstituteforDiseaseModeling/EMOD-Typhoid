@@ -93,7 +93,7 @@ void Kernel::NodePolio::resetNodeStateCounters(void)
 void Kernel::NodePolio::updateNodeStateCounters(IndividualHuman *ih)
 {
     float mc_weight                = float(ih->GetMonteCarloWeight());
-    IIndividualHumanPolio *tempind2 = NULL;
+    IIndividualHumanPolio *tempind2 = nullptr;
     if( ih->QueryInterface( GET_IID( IIndividualHumanPolio ), (void**)&tempind2 ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "tempind2", "IndividualHumanPolio", "IndividualHuman" );

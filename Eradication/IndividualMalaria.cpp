@@ -20,7 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "MalariaInterventionsContainer.h"
 #include "SimulationConfig.h"
-#include "MathFunctions.h"
 #include "MalariaBarcode.h"
 
 #ifdef randgen
@@ -82,30 +81,30 @@ namespace Kernel
 
     IndividualHumanMalaria::IndividualHumanMalaria(suids::suid _suid, double monte_carlo_weight, double initial_age, int gender, double initial_poverty) :
         IndividualHumanVector(_suid, monte_carlo_weight, initial_age, gender, initial_poverty),
+        malaria_susceptibility(nullptr),
+        m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
         m_male_gametocytes(0),
         m_female_gametocytes(0),
-        m_CSP_antibody(NULL),
-        m_initial_infected_hepatocytes(0),
-        m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
-        malaria_susceptibility(NULL)
+        m_CSP_antibody(nullptr),
+        m_initial_infected_hepatocytes(0)
     {
         ResetClinicalSymptoms();
     }
 
     IndividualHumanMalaria::IndividualHumanMalaria(INodeContext *context) : IndividualHumanVector(context),
+        malaria_susceptibility(nullptr),
+        m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
         m_male_gametocytes(0),
         m_female_gametocytes(0),
-        m_CSP_antibody(NULL),
-        m_initial_infected_hepatocytes(0),
-        m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
-        malaria_susceptibility(NULL)
+        m_CSP_antibody(nullptr),
+        m_initial_infected_hepatocytes(0)
     {
     }
 
     IndividualHumanMalaria *IndividualHumanMalaria::CreateHuman(INodeContext *context, suids::suid id, double weight, double initial_age, int gender, double poverty)
     {
         IndividualHumanMalaria *newhuman = _new_ IndividualHumanMalaria(id, weight, initial_age, gender, poverty);
-        
+
         newhuman->SetContextTo(context);
         LOG_DEBUG_F( "Created human with age=%f\n", newhuman->m_age );
 
@@ -122,7 +121,7 @@ namespace Kernel
     {
         IndividualHumanVector::PropagateContextToDependents();
 
-        if( malaria_susceptibility == NULL && susceptibility != NULL)
+        if( malaria_susceptibility == nullptr && susceptibility != nullptr)
         {
             if ( s_OK != susceptibility->QueryInterface(GET_IID(IMalariaSusceptibility), (void**)&malaria_susceptibility) )
             {
@@ -179,7 +178,7 @@ namespace Kernel
     {
         // If m_initial_infected_hepatocytes=0, this function is being called from initial infections at t=0 or an Outbreak intervention.
         // In that case, default to the mean number of infected hepatocytes.
-        int initial_hepatocytes = (int)( mean_sporozoites_per_bite * base_sporozoite_survival_fraction );
+        int initial_hepatocytes = int(mean_sporozoites_per_bite * base_sporozoite_survival_fraction);
 
         // A non-zero value for m_initial_infected_hepatocytes means
         // that the Poisson draw in ApplyTotalBitingExposure initiated the AcquireNewInfection function call.
@@ -296,7 +295,7 @@ namespace Kernel
     {
         // Check for mature gametocyte drug killing
         float drugGametocyteKill = 0;
-        IMalariaDrugEffects* imde = NULL;
+        IMalariaDrugEffects* imde = nullptr;
         if (s_OK == GetInterventionsContext()->QueryInterface(GET_IID(IMalariaDrugEffects), (void **)&imde))
         {
             drugGametocyteKill = imde->get_drug_gametocyteM();
@@ -320,7 +319,7 @@ namespace Kernel
             // Gaussian approximation of binomial errors for each strain that is present
             numkilled = (randgen->eGauss() * sqrt(pkill * gc->second * (1.0 - pkill)) + pkill * gc->second); // halflife of 2.5 days
             numkilled = max(0.0, numkilled); //can't add by killing
-            gc->second = (int64_t)( gc->second - numkilled );
+            gc->second = int64_t(gc->second - numkilled);
             gc->second = max(0L, gc->second);
             if ( gc->second == 0 ) 
             {
@@ -329,7 +328,7 @@ namespace Kernel
             else
             {
                 m_male_gametocytes += gc->second;
-                gc++;
+                ++gc;
             }
         }
 
@@ -338,7 +337,7 @@ namespace Kernel
         {
             numkilled = (randgen->eGauss() * sqrt(pkill * gc->second * (1.0 - pkill)) + pkill * gc->second); // halflife of 2.5 days
             numkilled = max(0.0, numkilled); //can't add by killing
-            gc->second = (int64_t)(gc->second - numkilled);
+            gc->second = int64_t(gc->second - numkilled);
             gc->second = max(0L, gc->second);
             if ( gc->second == 0 ) 
             {
@@ -347,7 +346,7 @@ namespace Kernel
             else
             {
                 m_female_gametocytes += gc->second;
-                gc++;
+                ++gc;
             }
         }
 
@@ -360,7 +359,7 @@ namespace Kernel
         for (auto infection : infections)
         {
             // Cast from Infection --> InfectionMalaria
-            IInfectionMalaria *tempinf = NULL;
+            IInfectionMalaria *tempinf = nullptr;
             if( infection->QueryInterface( GET_IID(IInfectionMalaria), (void**)&tempinf ) != s_OK )
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "Infection", "IInfectionMalaria", "tempinf" );
@@ -394,9 +393,8 @@ namespace Kernel
 
         // Now add a factor to limit inactivation of gametocytes by inflammatory cytokines
         // Important for slope of infectivity v. gametocyte counts
-        double fever_effect = 0;
-        fever_effect = malaria_susceptibility->get_cytokines();
-        fever_effect = Sigmoid::basic_sigmoid(SusceptibilityMalariaConfig::cytokine_gametocyte_inactivation, (float)fever_effect);
+        double fever_effect = malaria_susceptibility->get_cytokines();
+        fever_effect = Sigmoid::basic_sigmoid(SusceptibilityMalariaConfig::cytokine_gametocyte_inactivation, float(fever_effect));
         // fever_effect*=0.95;
 
         // Infectivity is reviewed by Sinden, R. E., G. A. Butcher, et al. (1996). "Regulation of Infectivity of Plasmodium to the Mosquito Vector." Advances in Parasitology 38: 53-117.
@@ -404,7 +402,7 @@ namespace Kernel
         // and Schneider, P., J. T. Bousema, et al. (2007). "Submicroscopic Plasmodium falciparum gametocyte densities frequently result in mosquito infection." Am J Trop Med Hyg 76(3): 470-474.
         // 2 due to bloodmeal and other factor due to conservative estimate for macrogametocyte ookinete transition, can be a higher reduction due to immune response
         // that factor also includes effect of successful fertilization with male gametocytes
-        infectiousness = (float)EXPCDF(-(double)m_female_gametocytes * m_inv_microliters_blood * MICROLITERS_PER_BLOODMEAL * SusceptibilityMalariaConfig::base_gametocyte_mosquito_survival * (1.0 - fever_effect)); //temp function, see vector_parameter_scratch.xlsx
+        infectiousness = float(EXPCDF(-double(m_female_gametocytes) * m_inv_microliters_blood * MICROLITERS_PER_BLOODMEAL * SusceptibilityMalariaConfig::base_gametocyte_mosquito_survival * (1.0 - fever_effect))); //temp function, see vector_parameter_scratch.xlsx
 
         LOG_DEBUG_F("Gametocytes: %lld (male) %lld (female).  Infectiousness=%0.2g\n", m_male_gametocytes, m_female_gametocytes, infectiousness);
 
@@ -413,11 +411,11 @@ namespace Kernel
         infectiousness *= modtransmit;
 
         // Host weight is the product of MC weighting and relative biting
-        float host_vector_weight = (float) ( GetMonteCarloWeight() * GetRelativeBitingRate() );
+        float host_vector_weight = float(GetMonteCarloWeight() * GetRelativeBitingRate());
         float weighted_infectiousnesss = host_vector_weight * infectiousness;
 
         // Effects from vector intervention container
-        IVectorInterventionsEffects* ivie = NULL;
+        IVectorInterventionsEffects* ivie = nullptr;
         if ( s_OK !=  interventions->QueryInterface(GET_IID(IVectorInterventionsEffects), (void**)&ivie) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "IVectorInterventionsEffects", "IndividualHumanVector" );
@@ -425,22 +423,22 @@ namespace Kernel
 
         // Here we deposit human-to-vector infectiousness based on proportional outcrossing of strain IDs
         gametocytes_strain_map_t::const_iterator gc1,gc2,end=m_female_gametocytes_by_strain.end();
-        for (gc1=m_female_gametocytes_by_strain.begin(); gc1!=end; gc1++)
+        for (gc1=m_female_gametocytes_by_strain.begin(); gc1!=end; ++gc1)
         {
-            for (gc2=gc1; gc2!=end; gc2++)
+            for (gc2=gc1; gc2!=end; ++gc2)
             {
                 // Fractional weight is product of component weights
                 float strain_weight;
                 if (gc1==gc2)
                 {
-                    strain_weight = pow( (float) gc1->second / (float)m_female_gametocytes, 2 );
+                    strain_weight = pow( float(gc1->second) / float(m_female_gametocytes), 2 );
                     DepositFractionalContagionByStrain( weighted_infectiousnesss * strain_weight, ivie, gc1->first.GetAntigenID(), gc1->first.GetGeneticID() );
                     continue;
                 }
 
                 // Two off-diagonal contributions given how pairwise iteration is done in this loop
-                strain_weight = 2.0f * gc1->second * gc2->second / pow( (float)m_female_gametocytes, 2 );
-                LOG_DEBUG_F("Crossing two strains with weight %0.2f and %0.2f\n", gc1->second/(float)m_female_gametocytes, gc2->second/(float)m_female_gametocytes);
+                strain_weight = 2.0f * gc1->second * gc2->second / pow( float(m_female_gametocytes), 2 );
+                LOG_DEBUG_F("Crossing two strains with weight %0.2f and %0.2f\n", gc1->second/float(m_female_gametocytes), gc2->second/(float)m_female_gametocytes);
 
                 // Genetic ID from first component
                 int geneticID = gc1->first.GetGeneticID();
@@ -545,7 +543,7 @@ namespace Kernel
 
             // then gametocytes
             float gametocyte_density = (m_female_gametocytes + m_male_gametocytes) * m_inv_microliters_blood;
-            m_gametocytes_detected = (float)( 1.0 / params()->parasiteSmearSensitivity * randgen->Poisson(params()->parasiteSmearSensitivity * gametocyte_density) );
+            m_gametocytes_detected = float(1.0 / params()->parasiteSmearSensitivity * randgen->Poisson(params()->parasiteSmearSensitivity * gametocyte_density));
         }
         else if (test_type == MALARIA_TEST_NEW_DIAGNOSTIC)
         {
@@ -630,6 +628,60 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
+    REGISTER_SERIALIZABLE(IndividualHumanMalaria, IIndividualHuman);
+
+    void serialize(IArchive& ar, IndividualHumanMalaria::gametocytes_strain_map_t& mapping)
+    {
+        size_t count = ar.IsWriter() ? mapping.size() : -1;
+        ar.startElement();
+        ar.labelElement("__count__") & count;
+        if (count > 0)
+        {
+            ar.labelElement("__map__");
+            ar.startElement();
+            if (ar.IsWriter())
+            {
+                for (auto& entry : mapping)
+                {
+                    StrainIdentity* strain = const_cast<StrainIdentity*>(&entry.first);
+                    ar.labelElement("key"); serialize(ar, strain);
+                    ar.labelElement("value") & entry.second;
+                }
+            }
+            else
+            {
+                for (size_t i = 0; i < count; i++)
+                {
+                    StrainIdentity* strain;
+                    ar.labelElement("key"); serialize(ar, strain);
+                    int64_t value;
+                    ar.labelElement("value") & value;
+                    mapping[*strain] = value;
+                }
+            }
+            ar.endElement();
+        }
+        ar.endElement();
+    }
+
+    void IndividualHumanMalaria::serialize(IArchive& ar, IIndividualHuman* obj)
+    {
+        IndividualHumanVector::serialize(ar, obj);
+        IndividualHumanMalaria& individual = *dynamic_cast<IndividualHumanMalaria*>(obj);
+        ar.startElement();
+        ar.labelElement("m_inv_microliters_blood") & individual.m_inv_microliters_blood;
+        ar.labelElement("m_male_gametocytes") & individual.m_male_gametocytes;
+        ar.labelElement("m_female_gametocytes") & individual.m_female_gametocytes;
+        ar.labelElement("m_male_gametocytes_by_strain"); Kernel::serialize(ar, individual.m_male_gametocytes_by_strain);
+        ar.labelElement("m_female_gametocytes_by_strain"); Kernel::serialize(ar, individual.m_female_gametocytes_by_strain);
+///        ar.labelElement("m_parasites_detected_by_blood_smear") & individual.m_parasites_detected_by_blood_smear;
+///        ar.labelElement("m_parasites_detected_by_new_diagnostic") & individual.m_parasites_detected_by_new_diagnostic;
+///        ar.labelElement("m_gametocytes_detected") & individual.m_gametocytes_detected;
+///        ar.labelElement("m_clinical_symptoms"); ::serialize(ar, individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
+        ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, individual.m_CSP_antibody);
+        ar.labelElement("m_initial_infected_hepatocytes") & individual.m_initial_infected_hepatocytes;
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION
@@ -689,62 +741,3 @@ namespace Kernel {
     }
 }
 #endif
-
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-namespace Kernel {
-
-    // IJsonSerializable Interfaces
-    void IndividualHumanMalaria::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("m_male_gametocytes", m_male_gametocytes);
-        root->Insert("m_female_gametocytes", m_female_gametocytes);
-
-        // m_male_gametocytes_by_strain: map<StrainIdentity, int64_t> m_male_gametocytes_by_strain
-        // so map is treated as json array, and each entry of the map is key/value pair, which
-        // is a two elelment array of key and value. So basically we have array of array
-        root->Insert("m_male_gametocytes_by_strain");
-        root->BeginArray();
-        for (auto& gsm : m_male_gametocytes_by_strain)
-        {
-            root->BeginArray();
-            (const_cast<StrainIdentity &>(gsm.first)).JSerialize(root, helper);
-            root->Add(gsm.second);
-            root->EndArray();
-        }
-        root->EndArray();
-
-
-        // The same is done to m_female_gametocytes_by_strain
-        root->Insert("m_female_gametocytes_by_strain");
-        root->BeginArray();
-        for (auto& gsm : m_female_gametocytes_by_strain)
-        {
-            root->BeginArray();
-            (const_cast<StrainIdentity &>(gsm.first)).JSerialize(root, helper);
-            root->Add(gsm.second);
-            root->EndArray();
-        }
-        root->EndArray();
-
-        root->Insert("m_CSP_antibody");
-        m_CSP_antibody->JSerialize(root, helper);
-
-        root->Insert("m_inv_microliters_blood", m_inv_microliters_blood);
-
-        root->Insert("IndividualHumanVector");
-        IndividualHumanVector::JSerialize(root, helper);
-
-        root->EndObject();
-    }
-
-    void IndividualHumanMalaria::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-
-}
-#endif
-
-

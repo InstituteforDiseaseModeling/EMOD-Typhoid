@@ -15,11 +15,16 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorSpeciesReport.h"
 #include "NodeVector.h"
 #include "IndividualVector.h"
-#include "InfectionVector.h"
-#include "SusceptibilityVector.h"
+// clorton #include "InfectionVector.h"
+// clorton #include "SusceptibilityVector.h"
 #include "Sugar.h"
 #include "Vector.h"
 #include "SimulationConfig.h"
+#include "JsonRawWriter.h"
+#include "JsonRawReader.h"
+
+#include <chrono>
+typedef std::chrono::high_resolution_clock _clock;
 
 static const char * _module = "SimulationVector";
 
@@ -53,24 +58,24 @@ namespace Kernel
                 netdefaultcost[i] = DEFAULT_RETREATMENT_COST;
 
             //cost to user/campaign
-            // Those magic numbers you see before you today, you will never see again, but will be removed in distribution refactor in August 2011
-            if ((int)(i / 64) == 1 || (int)(i / 64) == 4 || (int)(i / 64) == 7 || (int)(i / 64) == 10)
+            // TODO Those magic numbers you see before you today, you will never see again, but will be removed in distribution refactor in August 2011
+            if (int(i / 64) == 1 || int(i / 64) == 4 || int(i / 64) == 7 || int(i / 64) == 10)
                 netdefaultcost[i] *= 0.75;
-            else if ((int)(i / 64) == 2 || (int)(i / 64) == 5 || (int)(i / 64) == 8 || (int)(i / 64) == 11)
+            else if (int(i / 64) == 2 || int(i / 64) == 5 || int(i / 64) == 8 || int(i / 64) == 11)
                 netdefaultcost[i] *= 0.1f;
 
             //delivery type
-            if ((int)(i / 16) % 4 == 0)
+            if (int(i / 16) % 4 == 0)
                 netdefaultcost[i] += 0.50; //sentinel
-            else if ((int)(i / 16) % 4 == 1)
+            else if (int(i / 16) % 4 == 1)
                 netdefaultcost[i] += 1.00; //catchup without other campaign to share costs
-            else if ((int)(i / 16) % 4 == 2)
+            else if (int(i / 16) % 4 == 2)
                 netdefaultcost[i] += 2.00; //door-to-door
-            else if ((int)(i / 16) % 4 == 3)
+            else if (int(i / 16) % 4 == 3)
                 netdefaultcost[i] += 4.00; //door-to-door with verification
 
             //urban vs rural
-            if ((int)(i / 2) % 2 == 0)
+            if (int(i / 2) % 2 == 0)
                 netdefaultcost[i] += 0.17f; //urban
             else
                 netdefaultcost[i] += 0.33f;   //rural
@@ -84,7 +89,7 @@ namespace Kernel
                 housingmoddefaultcost[i] = DEFAULT_SCREENING_COST;
             else
                 housingmoddefaultcost[i] = DEFAULT_IRS_COST + DEFAULT_SCREENING_COST;
-            if ((int)(i / 2) % 2 == 0)
+            if (int(i / 2) % 2 == 0)
                 netdefaultcost[i] += 0.50; //urban
             else
                 netdefaultcost[i] += 1.00; //rural
@@ -113,8 +118,7 @@ namespace Kernel
 
     SimulationVector *SimulationVector::CreateSimulation(const ::Configuration *config)
     {
-        SimulationVector *newsimulation = NULL;
-        newsimulation = _new_ SimulationVector();
+        SimulationVector *newsimulation = _new_ SimulationVector();
         if (newsimulation)
         {
             // This sequence is important: first
@@ -123,7 +127,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "VECTOR_SIM requested with invalid configuration." );
             }
         }
@@ -170,8 +174,119 @@ namespace Kernel
 
     void SimulationVector::resolveMigration()
     {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-        resolveMigrationInternal( typed_vector_migration_queue_storage, migratingVectorQueues );
+//clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
+//clorton        resolveMigrationInternal( typed_vector_migration_queue_storage, migratingVectorQueues );
+
+        Simulation::resolveMigration(); // Take care of the humans
+
+        std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
+        std::list< MPI_Request > outbound_requests;     // requests for each outbound message
+        std::list< JsonRawWriter* > outbound_messages;  // buffers for outbound messages
+
+        for (int destination_rank = 0; destination_rank < EnvPtr->MPI.NumTasks; ++destination_rank)
+        {
+            if (destination_rank == EnvPtr->MPI.Rank)
+            {
+                // Don't bother to serialize locally
+                for (auto individual : migratingVectorQueues[destination_rank])
+                {
+                    IMigrate* emigre = dynamic_cast<IMigrate*>(individual);
+                    emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
+                }
+
+//                auto writer = new JsonRawWriter();
+//                IVectorCohort::serialize(*writer, migratingVectorQueues[destination_rank]);
+//                for (auto& individual : migratingVectorQueues[destination_rank])
+//                    individual->Recycle();
+//                migratingVectorQueues[destination_rank].clear();
+//                const char* buffer = ((IArchive*)writer)->GetBuffer();
+//                auto reader = new JsonRawReader(buffer);
+//                IVectorCohort::serialize(*reader, migratingVectorQueues[destination_rank]);
+//                for (auto individual : migratingVectorQueues[destination_rank])
+//                {
+//                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+//                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()]);
+//                }
+//                delete reader;
+//                delete writer;
+            }
+            else
+            {
+                auto writer = new JsonRawWriter();
+//cout << "Emmigrating (" << destination_rank << "): " << migratingVectorQueues[destination_rank].size() << endl;
+//auto t1 = _clock::now();
+                IVectorCohort::serialize(*writer, migratingVectorQueues[destination_rank]);
+//auto t2 = _clock::now();
+                for (auto& individual : migratingVectorQueues[destination_rank])
+                    individual->Recycle();  // delete individual
+//auto t3 = _clock::now();
+
+                uint32_t buffer_size = message_size_by_rank[destination_rank] = ((IArchive*)writer)->GetBufferSize();
+                MPI_Request size_request;
+                MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, 0, MPI_COMM_WORLD, &size_request);
+
+                if (buffer_size > 0)
+                {
+                    const char* buffer = ((IArchive*)writer)->GetBuffer();
+                    MPI_Request buffer_request;
+                    MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, 0, MPI_COMM_WORLD, &buffer_request);
+                    outbound_requests.push_back(buffer_request);
+                    outbound_messages.push_back(writer);
+                }
+//cout << "Serialize   (" << destination_rank << "): " << (t2 - t1).count() << endl;
+//cout << "Delete      (" << destination_rank << "): " << (t3 - t2).count() << endl;
+            }
+
+            migratingVectorQueues[destination_rank].clear();
+        }
+
+        for (int source_rank = 0; source_rank < EnvPtr->MPI.NumTasks; ++source_rank)
+        {
+            if (source_rank == EnvPtr->MPI.Rank) continue;  // We don't use MPI to send individuals to ourselves.
+
+            uint32_t size;
+            MPI_Status status;
+            MPI_Recv(&size, 1, MPI_UNSIGNED, source_rank, 0, MPI_COMM_WORLD, &status);
+
+            if (size > 0)
+            {
+                unique_ptr<char[]> buffer(new char[size]);
+                MPI_Status buffer_status;
+                MPI_Recv(buffer.get(), size, MPI_BYTE, source_rank, 0, MPI_COMM_WORLD, &buffer_status);
+
+//auto t3 = _clock::now();
+                auto reader = make_shared<JsonRawReader>(buffer.get());
+//auto t4 = _clock::now();
+                IVectorCohort::serialize(*reader, migratingVectorQueues[source_rank]);
+//auto t5 =_clock::now();
+                for (auto individual : migratingVectorQueues[source_rank])
+                {
+                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+                }
+//auto t6 = _clock::now();
+
+//cout << "Parse       (" << source_rank << "): " << (t4 - t3).count() << endl;
+//cout << "Deserialize (" << source_rank << "): " << (t5 - t4).count() << endl;
+//cout << "Integrate   (" << source_rank << "): " << (t6 - t5).count() << endl;
+//cout << "Immigrating (" << source_rank << "): " << migratingVectorQueues[source_rank].size() << endl;
+
+                migratingVectorQueues[source_rank].clear();
+          }
+        }
+
+        {   // Clean up from Isend(s)
+            for (auto& request : outbound_requests)
+            {
+                MPI_Status status;
+                MPI_Wait(&request, &status);
+            }
+
+            for (auto writer : outbound_messages)
+            {
+                delete writer;
+            }
+        }
     }
 
     void SimulationVector::PostMigratingVector(VectorCohort* ind)

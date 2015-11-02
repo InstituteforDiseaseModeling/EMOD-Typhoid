@@ -66,7 +66,7 @@ ReportVector::LogNodeData(
     float daily_eir          = 0;
     float daily_hbr          = 0;
 
-    INodeVector* pNV = NULL;
+    INodeVector* pNV = nullptr;
     if( pNC->QueryInterface( GET_IID( INodeVector ), (void**) & pNV ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeVector", "INodeContext" );

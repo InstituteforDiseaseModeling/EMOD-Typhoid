@@ -9,8 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "StrainIdentity.h"
-
-#include "RapidJsonImpl.h" // render unnecessary when the deserializing wrapper is done
+#include "Log.h"
 
 Kernel::StrainIdentity::StrainIdentity(void)
 {
@@ -50,25 +49,22 @@ void Kernel::StrainIdentity::SetGeneticID(int in_geneticID)
 
 namespace Kernel
 {
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-
-    void StrainIdentity::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
+    IArchive& serialize(IArchive& ar, StrainIdentity*& ptr)
     {
-        root->BeginObject();
-        root->Insert("antigenID", antigenID);
-        root->Insert("geneticID", geneticID);
-        root->EndObject();
+        if (!ar.IsWriter())
+        {
+            ptr = new StrainIdentity();
+        }
+
+        StrainIdentity& strain = *ptr;
+
+        ar.startElement();
+            ar.labelElement("antigenID") & strain.antigenID;
+            ar.labelElement("geneticID") & strain.geneticID;
+        ar.endElement();
+
+        return ar;
     }
-
-    void StrainIdentity::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-        rapidjson::Document * doc = (rapidjson::Document*) root; 
-
-        antigenID = (*doc)["antigenID"].GetInt();
-        geneticID = (*doc)["geneticID"].GetInt();
-    }
-
-#endif
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

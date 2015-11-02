@@ -43,7 +43,7 @@ namespace Kernel
         virtual ~IndividualHumanPolio(void) {}
 
         virtual void CreateSusceptibility(float imm_mod = 1.0, float risk_mod = 1.0);
-        virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = NULL);
+        virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = nullptr);
         virtual ISusceptibilityPolioReportable *GetSusceptibilityReporting() const;
         virtual void ClearNewInfectionState();
 
@@ -78,6 +78,8 @@ namespace Kernel
 
         virtual void setupInterventionsContainer();
         virtual void PropagateContextToDependents();
+
+        DECLARE_SERIALIZABLE(IndividualHumanPolio, IIndividualHuman);
 
     private:
         SusceptibilityPolio * polio_susceptibility;

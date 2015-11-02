@@ -12,9 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Exceptions.h"
 #include "InterventionFactory.h"
-#include "SimpleTypemapRegistration.h"
 #include "SimulationConfig.h"  // for "Human_Feeding_Mortality" parameter
-#include "Sugar.h"
 
 static const char* _module = "VectorInterventionsContainer";
 
@@ -186,20 +184,45 @@ namespace Kernel
     int VectorInterventionsContainer::Release() { return InterventionsContainer::Release(); }
 
     float VectorInterventionsContainer::GetDieBeforeFeeding()           { return pDieBeforeFeeding; }
-    float VectorInterventionsContainer::GetHostNotAvailable()           { return pHostNotAvailable; }  
-    float VectorInterventionsContainer::GetDieDuringFeeding()           { return pDieDuringFeeding; }  
-    float VectorInterventionsContainer::GetDiePostFeeding()             { return pDiePostFeeding; }  
-    float VectorInterventionsContainer::GetSuccessfulFeedHuman()        { return pSuccessfulFeedHuman; }  
-    float VectorInterventionsContainer::GetSuccessfulFeedAD()           { return pSuccessfulFeedAD; } 
+    float VectorInterventionsContainer::GetHostNotAvailable()           { return pHostNotAvailable; }
+    float VectorInterventionsContainer::GetDieDuringFeeding()           { return pDieDuringFeeding; }
+    float VectorInterventionsContainer::GetDiePostFeeding()             { return pDiePostFeeding; }
+    float VectorInterventionsContainer::GetSuccessfulFeedHuman()        { return pSuccessfulFeedHuman; }
+    float VectorInterventionsContainer::GetSuccessfulFeedAD()           { return pSuccessfulFeedAD; }
     float VectorInterventionsContainer::GetOutdoorDieBeforeFeeding()    { return pOutdoorDieBeforeFeeding; }
-    float VectorInterventionsContainer::GetOutdoorHostNotAvailable()    { return pOutdoorHostNotAvailable; }  
-    float VectorInterventionsContainer::GetOutdoorDieDuringFeeding()    { return pOutdoorDieDuringFeeding; }  
-    float VectorInterventionsContainer::GetOutdoorDiePostFeeding()      { return pOutdoorDiePostFeeding; }  
-    float VectorInterventionsContainer::GetOutdoorSuccessfulFeedHuman() { return pOutdoorSuccessfulFeedHuman; }   
-    float VectorInterventionsContainer::GetblockIndoorVectorAcquire()   { return blockIndoorVectorAcquire; }  
-    float VectorInterventionsContainer::GetblockIndoorVectorTransmit()  { return blockIndoorVectorTransmit; } 
-    float VectorInterventionsContainer::GetblockOutdoorVectorAcquire()  { return blockOutdoorVectorAcquire; }  
+    float VectorInterventionsContainer::GetOutdoorHostNotAvailable()    { return pOutdoorHostNotAvailable; }
+    float VectorInterventionsContainer::GetOutdoorDieDuringFeeding()    { return pOutdoorDieDuringFeeding; }
+    float VectorInterventionsContainer::GetOutdoorDiePostFeeding()      { return pOutdoorDiePostFeeding; }
+    float VectorInterventionsContainer::GetOutdoorSuccessfulFeedHuman() { return pOutdoorSuccessfulFeedHuman; }
+    float VectorInterventionsContainer::GetblockIndoorVectorAcquire()   { return blockIndoorVectorAcquire; }
+    float VectorInterventionsContainer::GetblockIndoorVectorTransmit()  { return blockIndoorVectorTransmit; }
+    float VectorInterventionsContainer::GetblockOutdoorVectorAcquire()  { return blockOutdoorVectorAcquire; }
     float VectorInterventionsContainer::GetblockOutdoorVectorTransmit() { return blockOutdoorVectorTransmit; }
+
+    REGISTER_SERIALIZABLE(VectorInterventionsContainer, IIndividualHumanInterventionsContext);
+
+    void VectorInterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    {
+        VectorInterventionsContainer& container = *static_cast<VectorInterventionsContainer*>(obj);
+        InterventionsContainer::serialize(ar, obj);
+        ar.startElement();
+        ar.labelElement("pDieBeforeFeeding")           & container.pDieBeforeFeeding;
+        ar.labelElement("pHostNotAvailable")           & container.pHostNotAvailable;
+        ar.labelElement("pDieDuringFeeding")           & container.pDieDuringFeeding;
+        ar.labelElement("pDiePostFeeding")             & container.pDiePostFeeding;
+        ar.labelElement("pSuccessfulFeedHuman")        & container.pSuccessfulFeedHuman;
+        ar.labelElement("pSuccessfulFeedAD")           & container.pSuccessfulFeedAD;
+        ar.labelElement("pOutdoorDieBeforeFeeding")    & container.pOutdoorDieBeforeFeeding;
+        ar.labelElement("pOutdoorHostNotAvailable")    & container.pOutdoorHostNotAvailable;
+        ar.labelElement("pOutdoorDieDuringFeeding")    & container.pOutdoorDieDuringFeeding;
+        ar.labelElement("pOutdoorDiePostFeeding")      & container.pOutdoorDiePostFeeding;
+        ar.labelElement("pOutdoorSuccessfulFeedHuman") & container.pOutdoorSuccessfulFeedHuman;
+        ar.labelElement("blockIndoorVectorAcquire")    & container.blockIndoorVectorAcquire;
+        ar.labelElement("blockIndoorVectorTransmit")   & container.blockIndoorVectorTransmit;
+        ar.labelElement("blockOutdoorVectorAcquire")   & container.blockOutdoorVectorAcquire;
+        ar.labelElement("blockOutdoorVectorTransmit")  & container.blockOutdoorVectorTransmit;
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

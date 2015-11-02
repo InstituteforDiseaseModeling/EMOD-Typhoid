@@ -30,9 +30,9 @@ namespace Kernel
     , oviposition_timer(-0.1f)
     , parity(0)
     , neweggs(0)
-    , m_strain(NULL)
     , migration_destination(suids::nil_suid())
     , species("gambiae")
+    , m_strain(nullptr)
     {
     }
 
@@ -43,9 +43,9 @@ namespace Kernel
     , oviposition_timer(-0.1f) // newly-mated mosquitoes feed on first cycle
     , parity(0)
     , neweggs(0)
-    , m_strain(NULL)
     , migration_destination(suids::nil_suid())
     , species(vector_species_name)
+    , m_strain(nullptr)
     {
     }
 
@@ -85,7 +85,7 @@ namespace Kernel
     void VectorCohortIndividual::ImmigrateTo(Node* node)
     {
         LOG_DEBUG_F( "Vector immigrating to node #%d\n", (node->GetSuid()).data );
-        INodeVector* pNV = NULL;
+        INodeVector* pNV = nullptr;
         if( node->QueryInterface( GET_IID( INodeVector ), (void**)&pNV ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "node", "INodeVector", "Node" );
@@ -107,7 +107,7 @@ namespace Kernel
 
     VectorCohortIndividual::~VectorCohortIndividual()
     {
-        if ( m_strain != NULL ) delete m_strain;
+        if ( m_strain != nullptr ) delete m_strain;
     }
 
     void
@@ -202,8 +202,8 @@ namespace Kernel
     )
     const
     {
-        float ret = 0.0f;
-        
+        float ret;
+
         if (GET_CONFIGURABLE(SimulationConfig)->vector_aging)
         {
             ret = additional_mortality + addition + mortalityFromAge( age );
@@ -213,30 +213,56 @@ namespace Kernel
             // does this really ever get called?
             ret = additional_mortality + addition;
         }
+
         return ret;
     }
 
     float VectorCohortIndividual::GetOvipositionTimer()
     {
         return oviposition_timer;
-
     }
 
     int VectorCohortIndividual::GetParity()
     {
         return parity;
-
     }
 
     int VectorCohortIndividual::GetNewEggs()
     {
         return neweggs;
-
     }
 
     const std::string & VectorCohortIndividual::GetSpecies()
     {
         return species;
+    }
+
+    REGISTER_SERIALIZABLE(VectorCohortIndividual, IVectorCohort);
+// clorton     IMPLEMENT_POOL(VectorCohortIndividual);
+
+    void VectorCohortIndividual::serialize(IArchive& ar, IVectorCohort* obj)
+    {
+        VectorCohortAging::serialize(ar, obj);
+        VectorCohortIndividual& cohort = *dynamic_cast<VectorCohortIndividual*>(obj);
+        ar.startElement();
+        ar.labelElement("state") & (uint32_t&)cohort.state;
+        ar.labelElement("additional_mortality") & cohort.additional_mortality;
+        ar.labelElement("oviposition_timer") & cohort.oviposition_timer;
+        ar.labelElement("parity") & cohort.parity;
+        ar.labelElement("neweggs") & cohort.neweggs;
+        ar.labelElement("migration_destination") & cohort.migration_destination.data;
+        ar.labelElement("species") & cohort.species;
+
+        bool has_strain = ar.IsWriter() ? (cohort.m_strain != nullptr) : false; // We put false here, but this is just a placeholder since we're reading from the archive.
+        ar.labelElement("__has_strain__");
+        ar & has_strain;
+        // TODO - perhaps the cohort should always have a non-null m_strain, just use a dummy StrainIdentity when there's no infection.
+        if (has_strain)
+        {
+            ar.labelElement("m_strain"); Kernel::serialize(ar, cohort.m_strain);
+        }
+
+        ar.endElement();
     }
 
 #if 0

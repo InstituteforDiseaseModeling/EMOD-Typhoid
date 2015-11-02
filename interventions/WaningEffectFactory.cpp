@@ -75,5 +75,5 @@ namespace Kernel
         return retSchema;
     }
 
-    IWaningEffectFactory * WaningEffectFactory::_instance = NULL;
+    IWaningEffectFactory * WaningEffectFactory::_instance = nullptr;
 }

@@ -45,7 +45,7 @@ namespace Kernel
                 groupindex = entry.second;
                 float forceOfInfection = forceOfInfectionForRouteGroup[routeIndex][groupindex];
                 vector<const SubstrainMap_t*> substrainDistributions(1, &sumInfectivityByAntigenRouteGroupSubstrain[iAntigen][routeIndex][groupindex]);
-                if ((forceOfInfection > 0) && (candidate != NULL))
+                if ((forceOfInfection > 0) && (candidate != nullptr))
                 {
                     SubstrainPopulationImpl contagionPopulation(iAntigen, forceOfInfection, substrainDistributions);
                      // Are you a human or mosquito?

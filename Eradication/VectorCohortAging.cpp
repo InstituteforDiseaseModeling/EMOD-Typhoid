@@ -25,7 +25,7 @@ namespace Kernel
     }
 
     VectorCohortAging::VectorCohortAging(float _age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics) :
-        VectorCohort((float)progress, initial_population, _vector_genetics),
+        VectorCohort(float(progress), initial_population, _vector_genetics),
         age(_age)
     {
     }
@@ -60,6 +60,18 @@ namespace Kernel
     float VectorCohortAging::GetMortality( uint32_t addition ) const
     {
         return addition + mortalityFromAge( age );
+    }
+
+    REGISTER_SERIALIZABLE(VectorCohortAging, IVectorCohort);
+// clorton     IMPLEMENT_POOL(VectorCohortAging);
+
+    void VectorCohortAging::serialize(IArchive& ar, IVectorCohort* obj)
+    {
+        VectorCohort::serialize(ar, obj);
+        VectorCohortAging& cohort = *dynamic_cast<VectorCohortAging*>(obj);
+        ar.startElement();
+        ar.labelElement("age") & cohort.age;
+        ar.endElement();
     }
 
 #if 0

@@ -102,7 +102,7 @@ namespace Kernel
         bool ret = false;
         for (auto infection : infections)
         {
-            IInfectionHIV* pinfHIV = NULL;
+            IInfectionHIV* pinfHIV = nullptr;
             if (s_OK == infection->QueryInterface(GET_IID( IInfectionHIV ), (void**)&pinfHIV) )
             {
                 ret = true;
@@ -116,10 +116,10 @@ namespace Kernel
     IndividualHumanHIV::GetHIVInfection()
     const
     {
-        IInfectionHIV* pinfHIV = NULL;
+        IInfectionHIV* pinfHIV = nullptr;
         if( infections.size() == 0 )
         {
-            return NULL;
+            return nullptr;
         }
         else if (s_OK == (*infections.begin())->QueryInterface(GET_IID( IInfectionHIV ), (void**)&pinfHIV) )
         {
@@ -143,7 +143,7 @@ namespace Kernel
     IndividualHumanHIV::GetHIVInterventionsContainer()
     const
     {
-        IHIVInterventionsContainer *ic = NULL;
+        IHIVInterventionsContainer *ic = nullptr;
         if (s_OK == interventions->QueryInterface(GET_IID( IHIVInterventionsContainer ), (void**)&ic) )
         {
             return ic;

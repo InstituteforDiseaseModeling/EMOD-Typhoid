@@ -20,7 +20,7 @@ static const char * _module = "MathFunctions";
 namespace Kernel 
 {
 
-    Probability * Probability::_instance = NULL;
+    Probability * Probability::_instance = nullptr;
     double Probability::fromDistribution(DistributionFunction::Enum distribution_flag, double param1, double param2, double default_value)
     {
         //std::cout << __FUNCTION__ << " called with distribution = " << distribution_flag << std::endl;

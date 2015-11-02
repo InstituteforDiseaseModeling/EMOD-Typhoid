@@ -44,8 +44,7 @@ namespace Kernel
 
     SimulationTBHIV *SimulationTBHIV::CreateSimulation(const ::Configuration *config)
     {
-        SimulationTBHIV *newsimulation = NULL;
-        newsimulation = _new_ SimulationTBHIV();
+        SimulationTBHIV *newsimulation = _new_ SimulationTBHIV();
         if (newsimulation)
         {
             // This sequence is important: first
@@ -54,7 +53,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -85,10 +84,10 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationTBHIV::resolveMigration()
-    {
-        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
-    }
+//clorton    void SimulationTBHIV::resolveMigration()
+//clorton    {
+//clorton        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
+//clorton    }
 }
 
 #if 1

@@ -10,11 +10,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "Simulation.h"
 
-#include <ctime>
 #include <iomanip>      // std::setprecision
 
 #ifdef WIN32
-#include "windows.h"
 #endif
 
 #include "FileSystem.h"
@@ -25,22 +23,23 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SpatialReport.h"
 #include "PropertyReport.h"
 #include "Exceptions.h"
-#include "IndividualEventContext.h"
 #include "Instrumentation.h"
-#include "InterventionEnums.h"
 #include "Migration.h"
 #include "Node.h"
 #include "NodeDemographics.h"
-#include "ProgVersion.h" // Version info extraction for both program and dlls
 #include "RANDOM.h"
 #include "SimulationConfig.h"
 #include "SimulationEventContext.h"
-#include "StatusReporter.h"
 #include "ReportEventRecorder.h"
 
 #include "DllLoader.h"
 
 #include "RapidJsonImpl.h"
+#include "JsonRawWriter.h"
+#include "JsonRawReader.h"
+
+#include <chrono>
+typedef std::chrono::high_resolution_clock _clock;
 
 using namespace std;
 
@@ -62,29 +61,29 @@ namespace Kernel
     //------------------------------------------------------------------
 
     Simulation::Simulation()
-        : demographicsContext(nullptr)
-        , nodeSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
-        , individualHumanSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
+        : m_simConfigObj(nullptr)
+        , m_interventionFactoryObj(nullptr)
+        , demographicsContext(nullptr)
         , infectionSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
+        , individualHumanSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
+        , nodeSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
         , rng(nullptr)
-        , event_context_host(nullptr)
         , reportClassCreator(nullptr)
         , propertiesReportClassCreator(nullptr)
         , demographicsReportClassCreator(nullptr)
         , eventReportClassCreator(nullptr)
-        , m_simConfigObj(nullptr)
-        , m_interventionFactoryObj(nullptr)
-        , new_node_observers()
+        , event_context_host(nullptr)
         , random_type(RandomType::USE_PSEUDO_DES)
         , demographic_tracking(false)
-        , enable_event_report(false)
         , enable_spatial_output(false)
         , enable_property_output(false)
         , enable_default_report(false)
+        , enable_event_report(false)
         , campaign_filename()
         , loadbalance_filename()
         , Run_Number(0)
         , demographics_factory(nullptr)
+        , new_node_observers()
     {
         LOG_DEBUG( "CTOR\n" );
 
@@ -121,7 +120,7 @@ namespace Kernel
         if (rng) delete rng;
 
         delete event_context_host;
-        event_context_host = NULL;
+        event_context_host = nullptr;
 
         for (auto report : reports)
         {
@@ -151,9 +150,7 @@ namespace Kernel
 
     Simulation *Simulation::CreateSimulation(const ::Configuration *config)
     {
-        Simulation *newsimulation = NULL;
-
-        newsimulation = _new_ Simulation();
+        Simulation *newsimulation = _new_ Simulation();
         if (newsimulation)
         {
             // This sequence is important: first
@@ -162,7 +159,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -235,9 +232,9 @@ namespace Kernel
         if (random_type == RandomType::USE_PSEUDO_DES)
         { 
             uint16_t randomseed[2];
-            randomseed[0] = (uint16_t) Run_Number;
-            randomseed[1] = (uint16_t) EnvPtr->MPI.Rank;
-            rng = _new_ PSEUDO_DES(*((uint32_t*) randomseed));
+            randomseed[0] = uint16_t(Run_Number);
+            randomseed[1] = uint16_t(EnvPtr->MPI.Rank);
+            rng = _new_ PSEUDO_DES(*reinterpret_cast<uint32_t*>(randomseed));
             const_cast<Environment*>(Environment::getInstance())->RNG = rng;
             
 
@@ -419,7 +416,7 @@ namespace Kernel
 
         bool load_all_reports = (p_cr_config == nullptr) ||
                                 !p_cr_config->Exist( "Use_Explicit_Dlls" ) ||
-                                ((int)(p_cr_config->operator[]( "Use_Explicit_Dlls" ).As<json::Number>()) != 1) ;
+                                (int(p_cr_config->operator[]( "Use_Explicit_Dlls" ).As<json::Number>()) != 1) ;
 
         LOG_INFO_F("Found %d Custom Report DLL's to consider loading\n", rReportInstantiatorMap.size() );
         for( auto ri_entry : rReportInstantiatorMap )
@@ -431,7 +428,7 @@ namespace Kernel
                 {
                     LOG_INFO_F("Found custom report data for %s\n", class_name.c_str());
                     json::QuickInterpreter dll_data = p_cr_config->operator[]( class_name ).As<json::Object>() ;
-                    if( (int)(dll_data["Enabled"].As<json::Number>()) != 0 )
+                    if( int(dll_data["Enabled"].As<json::Number>()) != 0 )
                     {
                         json::Array report_data = dll_data["Reports"].As<json::Array>() ;
                         for( int i = 0 ; i < report_data.Size() ; i++ )
@@ -513,7 +510,7 @@ namespace Kernel
         }
 
         std::ostringstream oss;
-        oss << std::fixed << std::setprecision(1) << "Update(): Time: " << (float)currentTime.time;
+        oss << std::fixed << std::setprecision(1) << "Update(): Time: " << float(currentTime.time);
         if( currentTime.getBaseYear() > 0 )
         {
             oss << std::fixed << " Year: " << currentTime.Year();
@@ -558,7 +555,7 @@ namespace Kernel
         // -----------------
         // --- Update Nodes
         // -----------------
-        for (auto iterator = nodes.rbegin(); iterator != nodes.rend(); iterator++)
+        for (auto iterator = nodes.rbegin(); iterator != nodes.rend(); ++iterator)
         {
             Node *n = iterator->second;
             release_assert(n);
@@ -640,7 +637,7 @@ namespace Kernel
     {
         struct merge_duplicate_key_exception : public std::exception
         {
-            virtual const char* what() const throw() { return "Duplicate key in map merge\n"; }
+            virtual const char* what() const throw() override { return "Duplicate key in map merge\n"; }
         };
 
         nodeid_suid_map_t operator()(const nodeid_suid_map_t& x, const nodeid_suid_map_t& y) const
@@ -707,11 +704,11 @@ namespace Kernel
         demographicsContext = demographics_factory->CreateDemographicsContext();
         string idreference  = demographics_factory->GetIdReference();
         vector<uint32_t> nodeIDs = demographics_factory->GetNodeIDs();
-        ClimateFactory * climate_factory = NULL;
+        ClimateFactory * climate_factory = nullptr;
 #ifndef DISABLE_CLIMATE
         // Initialize climate from file
         climate_factory = ClimateFactory::CreateClimateFactory(&nodeid_suid_map, EnvPtr->Config, idreference);
-        if (climate_factory == NULL)
+        if (climate_factory == nullptr)
         {
             throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "Failed to create ClimateFactory" );
         }
@@ -724,12 +721,12 @@ namespace Kernel
         if (filescheme->Initialize(loadbalancefilename, nodeIDs.size()))
         {
             LOG_INFO("Loaded load balancing file.\n");
-            nodeRankMap.SetInitialLoadBalanceScheme((IInitialLoadBalanceScheme*)filescheme.get());
+            nodeRankMap.SetInitialLoadBalanceScheme(static_cast<IInitialLoadBalanceScheme*>(filescheme.get()));
         }
         else 
         {
             LOG_WARN("Failed to use legacy loadbalance file. Defaulting to checkerboard.\n");
-            nodeRankMap.SetInitialLoadBalanceScheme((IInitialLoadBalanceScheme*)checkerboardscheme.get());
+            nodeRankMap.SetInitialLoadBalanceScheme(static_cast<IInitialLoadBalanceScheme*>(checkerboardscheme.get()));
         }
 
         // Delete any existing transitions.json file
@@ -772,13 +769,13 @@ namespace Kernel
 #endif
 
         // Initialize migration structure from file
-        MigrationInfoFactory * migration_factory = NULL;
+        MigrationInfoFactory * migration_factory = nullptr;
         release_assert( m_simConfigObj );
         if (m_simConfigObj->migration_structure != MigrationStructure::NO_MIGRATION)
         {
             migration_factory = MigrationInfoFactory::CreateMigrationInfoFactory(&merged_map, EnvPtr->Config, idreference);
 
-            if (migration_factory == NULL)
+            if (migration_factory == nullptr)
             {
                 throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "MigrationInfoFactory" );
             }
@@ -802,15 +799,15 @@ namespace Kernel
 #ifndef DISABLE_CLIMATE
         // Clean up
         delete climate_factory; 
-        climate_factory = NULL;
+        climate_factory = nullptr;
 #endif
 
         delete migration_factory;
-        migration_factory = NULL;
+        migration_factory = nullptr;
 
 
         LOG_INFO_F( "populateFromDemographics() created %d nodes\n", nodes.size() );
-        return (int)nodes.size();
+        return int(nodes.size());
     }
 
     void Kernel::Simulation::addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory)
@@ -828,7 +825,7 @@ namespace Kernel
 #endif
 
         // Add node to the map
-        nodes.insert(std::pair<suids::suid, Node*>(node->GetSuid(), (Node*)node));
+        nodes.insert(std::pair<suids::suid, Node*>(node->GetSuid(), static_cast<Node*>(node)));
         node_event_context_list.push_back( node->GetEventContext() );
         nodeRankMap.Add(node->GetSuid(), EnvPtr->MPI.Rank);
 
@@ -870,7 +867,129 @@ namespace Kernel
 
         // Entire implementation of "resolveMigrationInternal" moved to header file
         // as a (necessary?) step towards disease-specific DLLs (because of the template)
-        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
+// clorton        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
+
+        std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
+        std::list< MPI_Request > outbound_requests( EnvPtr->MPI.NumTasks );     // requests for each outbound message
+        std::list< JsonRawWriter* > outbound_messages( EnvPtr->MPI.NumTasks );  // buffers for outbound messages
+
+        for (int destination_rank = 0; destination_rank < EnvPtr->MPI.NumTasks; ++destination_rank)
+        {
+            if (destination_rank == EnvPtr->MPI.Rank)
+            {
+                // Don't bother to serialize locally
+                for (auto individual : migratingIndividualQueues[destination_rank])
+                {
+                    IMigrate* emigre = dynamic_cast<IMigrate*>(individual);
+                    emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
+                }
+
+//                auto writer = make_shared<JsonRawWriter>(); //  new JsonRawWriter();
+//cout << "Emmigrating: " << migratingIndividualQueues[destination_rank].size() << endl;
+//auto t1 = _clock::now();
+//                Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
+//auto t2 = _clock::now();
+//for (auto& individual : migratingIndividualQueues[destination_rank])
+//    individual->Recycle();  // delete individual
+//auto t3 = _clock::now();
+//                migratingIndividualQueues[destination_rank].clear();
+//
+//                auto reader = make_shared<JsonRawReader>(((IArchive*)writer.get())->GetBuffer()); // new JsonRawReader(writer->GetBuffer());
+//auto t4 = _clock::now();
+//                Kernel::serialize(*reader, migratingIndividualQueues[destination_rank]);
+//auto t5 =_clock::now();
+//                for (auto individual : migratingIndividualQueues[destination_rank])
+//                {
+//                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+//                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+//                }
+//auto t6 = _clock::now();
+//
+//cout << "Serialize:   " << (t2 - t1).count() << endl;
+//cout << "Delete:      " << (t3 - t2).count() << endl;
+//cout << "Parse:       " << (t4 - t3).count() << endl;
+//cout << "Deserialize: " << (t5 - t4).count() << endl;
+//cout << "Absorb:      " << (t6 - t5).count() << endl;
+//cout << "Immigrating: " << migratingIndividualQueues[destination_rank].size() << endl;
+            }
+            else
+            {
+                auto writer = new JsonRawWriter();
+//cout << "Emmigrating (" << destination_rank << "): " << migratingIndividualQueues[destination_rank].size() << endl;
+//auto t1 = _clock::now();
+                Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
+//auto t2 = _clock::now();
+                for (auto& individual : migratingIndividualQueues[destination_rank])
+                    individual->Recycle();  // delete individual
+//auto t3 = _clock::now();
+                migratingIndividualQueues[destination_rank].clear();
+
+                uint32_t buffer_size = message_size_by_rank[destination_rank] = ((IArchive*)writer)->GetBufferSize();
+                MPI_Request size_request;
+                MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, 0, MPI_COMM_WORLD, &size_request);
+
+                if (buffer_size > 0)
+                {
+                    const char* buffer = ((IArchive*)writer)->GetBuffer();
+                    MPI_Request buffer_request;
+                    MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, 0, MPI_COMM_WORLD, &buffer_request);
+                    outbound_requests.push_back(buffer_request);
+                    outbound_messages.push_back(writer);
+                }
+//cout << "Serialize   (" << destination_rank << "): " << (t2 - t1).count() << endl;
+//cout << "Delete      (" << destination_rank << "): " << (t3 - t2).count() << endl;
+            }
+
+            migratingIndividualQueues[destination_rank].clear();
+        }
+
+        for (int source_rank = 0; source_rank < EnvPtr->MPI.NumTasks; ++source_rank)
+        {
+            if (source_rank == EnvPtr->MPI.Rank) continue;  // We don't use MPI to send individuals to ourselves.
+
+            uint32_t size;
+            MPI_Status status;
+            MPI_Recv(&size, 1, MPI_UNSIGNED, source_rank, 0, MPI_COMM_WORLD, &status);
+
+            if (size > 0)
+            {
+                unique_ptr<char[]> buffer(new char[size]);
+                MPI_Status buffer_status;
+                MPI_Recv(buffer.get(), size, MPI_BYTE, source_rank, 0, MPI_COMM_WORLD, &buffer_status);
+
+//auto t3 = _clock::now();
+                auto reader = make_shared<JsonRawReader>(buffer.get());
+//auto t4 = _clock::now();
+                Kernel::serialize(*reader, migratingIndividualQueues[source_rank]);
+//auto t5 =_clock::now();
+                for (auto individual : migratingIndividualQueues[source_rank])
+                {
+                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+                }
+//auto t6 = _clock::now();
+
+//cout << "Parse       (" << source_rank << "): " << (t4 - t3).count() << endl;
+//cout << "Deserialize (" << source_rank << "): " << (t5 - t4).count() << endl;
+//cout << "Integrate   (" << source_rank << "): " << (t6 - t5).count() << endl;
+//cout << "Immigrating (" << source_rank << "): " << migratingIndividualQueues[source_rank].size() << endl;
+
+                migratingIndividualQueues[source_rank].clear();
+          }
+        }
+
+        {   // Clean up from Isend(s)
+            for (auto& request : outbound_requests)
+            {
+                MPI_Status status;
+                MPI_Wait(&request, &status);
+            }
+
+            for (auto writer : outbound_messages)
+            {
+                delete writer;
+            }
+        }
     }
 
     void Simulation::PostMigratingIndividualHuman(IndividualHuman *i)
@@ -1007,7 +1126,7 @@ namespace Kernel
 
         ar  & sim.campaignFilename
         ar & sim.event_context_host;
-        ar.register_type(static_cast<PSEUDO_DES*>(NULL));
+        ar.register_type(static_cast<PSEUDO_DES*>(nullptr));
         ar & sim.rng;
 
         if (typename Archive::is_loading())
@@ -1056,28 +1175,27 @@ namespace Kernel
                     LOG_DEBUG( "rapidjson Parsed!\n" );
                     LOG_DEBUG_F( "Creating & deserializing %d humans.\n", document.Size() );
                     //for( unsigned int idx = 0; idx < ppl_array.Size(); idx ++ )
-                    bool infected_migrant = false;
                     for( unsigned int idx = 0; idx < document.Size(); idx ++ )
                     {
 
                         // Check if this is base class IndividualHuman, or the derived one
-                        int mig_dest_data = -1;
+                        int mig_dest_data;
                         if (document[ idx ]["IndividualHuman"].IsObject())
                         {
                             // derived class
-                            mig_dest_data = (int) document[ idx ]["IndividualHuman"][ "migration_destination" ][ "data" ].GetInt();
+                            mig_dest_data = document[ idx ]["IndividualHuman"][ "migration_destination" ][ "data" ].GetInt();
                         }
                         else
                         {
                             // it is base class
-                            mig_dest_data = (int) document[ idx ][ "migration_destination" ][ "data" ].GetInt();
+                            mig_dest_data = document[ idx ][ "migration_destination" ][ "data" ].GetInt();
                         }
                        
                         suids::suid node_id;
                         //LOG_DEBUG( "Getting migration_destination\n" );
                         node_id.data = mig_dest_data;
                         Node * targetNode = nodes[ node_id ];
-                        if( targetNode == NULL )
+                        if( targetNode == nullptr )
                         {
                             LOG_WARN( "Weird, node pointer is null. We get sent to the wrong place????\n" );
                             continue;
@@ -1085,14 +1203,8 @@ namespace Kernel
                         //IndividualHuman * new_individual = targetNode->addNewIndividual(0.0/*mc weight*/, 0.0 /*age*/, 0, 0 /*(int)(rand()%20)/18.0*//*infs*/, (float)0.0 /*imm*/, (float)0.0/*risk*/, (float)0.0f/*mighet*/, (float)0.0f /*poverty*/);
                         IndividualHuman * new_individual = targetNode->addNewIndividualFromSerialization();
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-                        new_individual->JDeserialize( (IJsonObjectAdapter*) &document[ idx ], NULL );
-                        //new_individual->JDeserialize( json::json_cast< const json::Object& > ( ppl_array[ idx ] ) );
-#endif
-
                         LOG_DEBUG_F( "new_individual ImmigrateTo to targetNode: %d\n", node_id.data );
                         new_individual->ImmigrateTo( targetNode ); // this causes crashes for some inexplicable reason: memory corruption???
-
 
                         //infected_migrant |= ( document[ idx ][ "infections" ].Size() > 0 ? true : false );
                     }
@@ -1134,5 +1246,5 @@ template void Kernel::serialize( boost::archive::binary_iarchive & ar, Simulatio
 
 #ifdef _DLLS_
 // hack because of weird build error on dll, just seeing if this works, will use as data to solve problem
-//Environment* EnvPtr = NULL;
+//Environment* EnvPtr = nullptr;
 #endif

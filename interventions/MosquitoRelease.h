@@ -59,7 +59,7 @@ namespace Kernel
         virtual int getNumber() const;
 
     protected:
-        JsonConfigurable::ConstrainedString releasedSpecies;
+        jsonConfigurable::ConstrainedString releasedSpecies;
         VectorMatingStructure vector_genetics;
         ResistanceHegGenetics self;
         ResistanceHegGenetics mate;

@@ -36,7 +36,7 @@ namespace Kernel
         public:
             tPropertyRestrictions() {}
             virtual void ConfigureFromJsonAndKey( const Configuration *, const std::string &key );
-            virtual json::QuickBuilder GetSchema();
+            virtual json::QuickBuilder GetSchema() override;
 
             std::list< std::map< std::string, std::string > > _restrictions;
         };
@@ -44,19 +44,19 @@ namespace Kernel
     public:        
         NodeLevelHealthTriggeredIV();
         virtual ~NodeLevelHealthTriggeredIV();
-        virtual int AddRef();
-        virtual int Release();
-        virtual bool Configure( const Configuration* config );
+        virtual int AddRef() override;
+        virtual int Release() override;
+        virtual bool Configure( const Configuration* config ) override;
         virtual bool ConfigureTriggers( const Configuration* config );
 
         // INodeDistributableIntervention
-        virtual bool Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC );
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void SetContextTo(INodeEventContext *context);
-        virtual void Update(float dt);
+        virtual bool Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC ) override;
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual void SetContextTo(INodeEventContext *context) override;
+        virtual void Update(float dt) override;
 
         // IIndividualEventObserver
-        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
+        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
 
     protected:
         INodeEventContext* parent;
@@ -81,13 +81,6 @@ namespace Kernel
         virtual void onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv );
 
         bool m_disqualified_by_coverage_only;
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
 
 #if USE_BOOST_SERIALIZATION
     private:

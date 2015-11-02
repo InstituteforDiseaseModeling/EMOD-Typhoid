@@ -20,13 +20,15 @@ namespace Kernel
         static InfectionEnvironmental *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
         virtual ~InfectionEnvironmental(void);
 
-        virtual void Update(float dt, Susceptibility* immunity = NULL);
-        virtual void SetParameters(StrainIdentity* _infstrain=NULL, int incubation_period_override = -1 );
+        virtual void Update(float dt, ISusceptibilityContext* immunity = nullptr) override;
+        virtual void SetParameters(StrainIdentity* _infstrain=nullptr, int incubation_period_override = -1 ) override;
 
     protected:
         InfectionEnvironmental(IIndividualHumanContext *context);
         void Initialize(suids::suid _suid);
         InfectionEnvironmental();
+
+        DECLARE_SERIALIZABLE(InfectionEnvironmental, IInfection);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -31,7 +31,7 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleDiagnostic, IDistributableIntervention)
 
-    public: 
+    public:
         SimpleDiagnostic();
         SimpleDiagnostic( const SimpleDiagnostic& master );
         virtual ~SimpleDiagnostic() {  }
@@ -65,7 +65,7 @@ namespace Kernel
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         IndividualInterventionConfig positive_diagnosis_config;
-        ConstrainedString positive_diagnosis_event;
+        jsonConfigurable::ConstrainedString positive_diagnosis_event;
 #pragma warning( pop )
 
     private:

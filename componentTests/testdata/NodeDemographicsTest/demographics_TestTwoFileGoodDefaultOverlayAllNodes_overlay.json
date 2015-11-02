@@ -10,5 +10,6 @@
         "NodeAttributes": {
             "BirthRate": 0.777
         }
-    }
+    },
+    "Nodes": "All"
 }

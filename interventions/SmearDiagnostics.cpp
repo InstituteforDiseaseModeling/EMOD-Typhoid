@@ -51,7 +51,7 @@ namespace Kernel
 
         // Apply diagnostic test with given specificity/sensitivity
 
-        IIndividualHumanTB* tb_ind = NULL;
+        IIndividualHumanTB* tb_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanTB ), (void**)&tb_ind ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanTB", "IIndividualHuman" );

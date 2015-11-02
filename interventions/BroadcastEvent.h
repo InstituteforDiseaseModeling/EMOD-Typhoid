@@ -30,7 +30,7 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, BroadcastEvent, IDistributableIntervention)
 
-    public: 
+    public:
         BroadcastEvent();
         BroadcastEvent( const BroadcastEvent& master );
         virtual ~BroadcastEvent() {  }
@@ -48,7 +48,7 @@ namespace Kernel
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         IIndividualHumanContext *parent;
-        ConstrainedString broadcast_event;
+        jsonConfigurable::ConstrainedString broadcast_event;
 #pragma warning( pop )
 
     private:

@@ -233,6 +233,10 @@ $RECYCLE.BIN/
 # Subversion
 .svn/
 
+# Mercurial
+.hg/
+.hgignore
+
 # Simulation output
 time.txt
 status.txt

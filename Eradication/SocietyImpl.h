@@ -28,26 +28,20 @@ namespace Kernel {
 
     public:
         static ISociety* Create(IRelationshipManager*);
-        virtual void BeginUpdate();
-        virtual void UpdatePairFormationRates( const IdmDateTime& rCurrentTime, float dt );
-        virtual void UpdatePairFormationAgents( const IdmDateTime& rCurrentTime, float dt );
+        virtual void BeginUpdate() override;
+        virtual void UpdatePairFormationRates( const IdmDateTime& rCurrentTime, float dt ) override;
+        virtual void UpdatePairFormationAgents( const IdmDateTime& rCurrentTime, float dt ) override;
 
-        virtual const IPairFormationRateTable* GetRates(RelationshipType::Enum);
-        virtual IPairFormationAgent* GetPFA(RelationshipType::Enum);
-        virtual IPairFormationStats* GetStats(RelationshipType::Enum);
+        virtual const IPairFormationRateTable* GetRates(RelationshipType::Enum) override;
+        virtual IPairFormationAgent* GetPFA(RelationshipType::Enum) override;
+        virtual IPairFormationStats* GetStats(RelationshipType::Enum) override;
 
-        virtual void SetParameters( const Configuration* config );
+        virtual void SetParameters( const Configuration* config ) override;
 
         // ---------------------------
         // --- JsonConfiurable Methods
         // ---------------------------
-        virtual bool Configure(const Configuration *config);
-
-#if USE_JSON_SERIALIZATION
-        // For JSON serialization
-        virtual void JSerialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) const {}
-        virtual void JDeserialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) {}
-#endif
+        virtual bool Configure(const Configuration *config) override;
 
     protected:
         SocietyImpl(IRelationshipManager* pmgr = nullptr );

@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "IPairFormationAgent.h"
-#include <queue>
+// clorton #include <queue>
 #include <list>
 #include <vector>
 #include <map>
@@ -31,18 +31,18 @@ namespace Kernel {
                                                RANDOMBASE* prng, 
                                                RelationshipCreator rc );
 
-        virtual void SetUpdatePeriod(float);
-        virtual void AddIndividual(IIndividualHumanSTI*);
+        virtual void SetUpdatePeriod(float) override;
+        virtual void AddIndividual(IIndividualHumanSTI*) override;
 
-        virtual void RemoveIndividual(IIndividualHumanSTI*);
+        virtual void RemoveIndividual(IIndividualHumanSTI*) override;
 
-        virtual void Update( const IdmDateTime& rCurrentTime, float dt );
-        virtual const map<int, vector<float>>& GetAgeBins();
-        virtual const map<int, vector<float>>& GetDesiredFlow();
-        virtual const map<int, vector<int>>& GetQueueLengthsBefore();
-        virtual const map<int, vector<int>>& GetQueueLengthsAfter();
+        virtual void Update( const IdmDateTime& rCurrentTime, float dt ) override;
+        virtual const map<int, vector<float>>& GetAgeBins() override;
+        virtual const map<int, vector<float>>& GetDesiredFlow() override;
+        virtual const map<int, vector<int>>& GetQueueLengthsBefore() override;
+        virtual const map<int, vector<int>>& GetQueueLengthsAfter() override;
 
-        virtual void Print(const char *rel_type) const;
+        virtual void Print(const char *rel_type) const override;
 
         int GetNumPopulationTotal() const { return m_population_map.size() ; }
 
@@ -56,20 +56,14 @@ namespace Kernel {
         // ---------------------------
         // --- JsonConfiurable Methods
         // ---------------------------
-        virtual bool Configure(const Configuration *config);
-
-#if USE_JSON_SERIALIZATION
-        // For JSON serialization
-        virtual void JSerialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) const {}
-        virtual void JDeserialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) {}
-#endif
+        virtual bool Configure(const Configuration *config) override;
 
         // ---------------------
         // --- ISupport Methods
         // ---------------------
-        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) { return Kernel::e_NOINTERFACE; }
-        virtual int32_t AddRef()  { return -1 ; }
-        virtual int32_t Release() { return -1 ; }
+        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) override { return Kernel::e_NOINTERFACE; }
+        virtual int32_t AddRef()  override { return -1 ; }
+        virtual int32_t Release() override { return -1 ; }
     protected:
         BehaviorPfa( const IPairFormationParameters*, 
                      float updatePeriod, 

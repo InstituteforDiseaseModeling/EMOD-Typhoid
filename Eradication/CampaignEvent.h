@@ -82,14 +82,6 @@ namespace Kernel
         NodeSetConfig nodeset_config;
         EventConfig event_coordinator_config;
 
-#if USE_JSON_SERIALIZATION
-    public:
-
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
     private:
 
 #if USE_BOOST_SERIALIZATION

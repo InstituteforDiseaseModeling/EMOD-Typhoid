@@ -16,6 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "VectorInterventionsContainer.h"  // for IBednetConsumer methods
+#include "Log.h"
 
 static const char* _module = "SimpleBednet";
 
@@ -28,7 +29,7 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(SimpleBednet)
 
     IMPLEMENT_FACTORY_REGISTERED(SimpleBednet)
-    
+
     SimpleBednet::SimpleBednet()
     {
         initSimTypes( 2, "MALARIA_SIM", "VECTOR_SIM" );
@@ -121,7 +122,6 @@ namespace Kernel
         }
     }
 
-
 /*
     Kernel::QueryResult SimpleBednet::QueryInterface( iid_t iid, void **ppinstance )
     {
@@ -132,10 +132,10 @@ namespace Kernel
 
         ISupports* foundInterface;
 
-        if ( iid == GET_IID(IBednet)) 
+        if ( iid == GET_IID(IBednet))
             foundInterface = static_cast<IBednet*>(this);
-        // -->> add support for other I*Consumer interfaces here <<--      
-        else if ( iid == GET_IID(ISupports)) 
+        // -->> add support for other I*Consumer interfaces here <<--
+        else if ( iid == GET_IID(ISupports))
             foundInterface = static_cast<ISupports*>(static_cast<IBednet*>(this));
         else
             foundInterface = 0;
@@ -153,6 +153,21 @@ namespace Kernel
         return status;
 
     }*/
+
+    REGISTER_SERIALIZABLE(SimpleBednet, IDistributableIntervention);
+
+    void SimpleBednet::serialize(IArchive& ar, IDistributableIntervention* obj)
+    {
+        SimpleBednet& bednet = *dynamic_cast<SimpleBednet*>(obj);
+        ar.startElement();
+            ar.labelElement("current_blockingrate") & bednet.current_blockingrate;
+            ar.labelElement("current_killingrate") & bednet.current_killingrate;
+            ar.labelElement("primary_decay_time_constant") & bednet.primary_decay_time_constant;
+            ar.labelElement("secondary_decay_time_constant") & bednet.secondary_decay_time_constant;
+            ar.labelElement("durability_time_profile") & (uint32_t&)bednet.durability_time_profile;
+            ar.labelElement("bednet_type") & (uint32_t&)bednet.bednet_type;
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
@@ -162,7 +177,10 @@ namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, SimpleBednet& bn, const unsigned int v)
     {
-        //LOG_DEBUG("(De)serializing SimpleHousingBednet\n");
+//        LOG_ERR("serializing SimpleBednet\n");
+        boost::serialization::split_member(ar, bn, v);
+/*
+        LOG_ERR("(De)serializing SimpleBednet\n");
 
         boost::serialization::void_cast_register<SimpleBednet, IDistributableIntervention>();
         ar & bn.bednet_type;
@@ -172,6 +190,58 @@ namespace Kernel {
         ar & bn.primary_decay_time_constant;
         ar & bn.secondary_decay_time_constant;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(bn);
+
+        LOG_ERR("Done\n");
+*/    }
+
+/*    template void serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::detail::ignore_skeleton_oarchive<boost::mpi::detail::content_oarchive>&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::detail::content_oarchive&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::detail::ignore_skeleton_oarchive<boost::mpi::detail::mpi_datatype_oarchive>&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::packed_oarchive&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::archive::binary_oarchive&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::detail::forward_skeleton_oarchive<boost::mpi::packed_skeleton_oarchive, boost::mpi::packed_oarchive>&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::detail::forward_skeleton_iarchive<boost::mpi::packed_skeleton_iarchive, boost::mpi::packed_iarchive>&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::mpi::packed_iarchive&, Kernel::SimpleBednet&, unsigned int);
+    template void serialize(boost::archive::binary_iarchive&, Kernel::SimpleBednet&, unsigned int);
+*/
+#include "Templates.h"
+    DECLARE_TEMPLATES(SimpleBednet)
+
+    template<class Archive>
+    void SimpleBednet::save(Archive& ar, const unsigned int version) const
+    {
+      LOG_DEBUG("Serializing SimpleBednet\n");
+
+      boost::serialization::void_cast_register<SimpleBednet, IDistributableIntervention>();
+      ar & boost::serialization::base_object<Kernel::BaseIntervention>(*this);
+      ar & bednet_type;
+      ar & durability_time_profile;
+      ar & current_blockingrate;
+      ar & current_killingrate;
+      ar & primary_decay_time_constant;
+      ar & secondary_decay_time_constant;
+
+      LOG_DEBUG("Done serializing\n");
+    }
+
+    template<class Archive>
+    void SimpleBednet::load(Archive& ar, const unsigned int version)
+    {
+      LOG_DEBUG("De-serializing SimpleBednet\n");
+
+      boost::serialization::void_cast_register<SimpleBednet, IDistributableIntervention>();
+      ar & boost::serialization::base_object<Kernel::BaseIntervention>(*this);
+      ar & bednet_type;
+      ar & durability_time_profile;
+      ar & current_blockingrate;
+      ar & current_killingrate;
+      ar & primary_decay_time_constant;
+      ar & secondary_decay_time_constant;
+
+      LOG_DEBUG("Done de-serializing\n");
     }
 }
 #endif

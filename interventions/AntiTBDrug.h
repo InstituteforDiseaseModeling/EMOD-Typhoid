@@ -25,20 +25,21 @@ namespace Kernel
         virtual ~AntiTBDrug() {};
 
         // ISupports
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void SetContextTo(IIndividualHumanContext *context);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual void SetContextTo(IIndividualHumanContext *context) override;
 
         // IDistributableIntervention
-        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );
+        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
 
         // inherited from base class Drugs.cpp
-        virtual int GetDrugType() const;
-        virtual std::string GetDrugName() const;
+        virtual int GetDrugType() const override;
+        virtual std::string GetDrugName() const override;
 
         //IDrug
-        virtual void  ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc = NULL );
+        virtual void  ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc = nullptr ) override;
 
     protected:
+
         // These have same names as analogous methods on container but are internal for this drug itself.
         float GetDrugInactivationRate() const;
         float GetDrugClearanceRate() const;
@@ -59,6 +60,8 @@ namespace Kernel
         virtual void Expire();
 
         ICampaignCostObserver * m_pCCO;
+
+        DECLARE_SERIALIZABLE(AntiTBDrug, IDistributableIntervention);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:

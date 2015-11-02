@@ -33,7 +33,7 @@ namespace Kernel {
 
     void BehaviorPfa::AddIndividual( IIndividualHumanSTI* sti_person )
     {
-        IIndividualHuman* person = NULL;
+        IIndividualHuman* person = nullptr;
         if (sti_person->QueryInterface(GET_IID(IIndividualHuman), (void**)&person) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "sti_person", "IIndividualHuman*", "IIndividualHumanSTI*");
@@ -61,7 +61,7 @@ namespace Kernel {
 
     void BehaviorPfa::RemoveIndividual( IIndividualHumanSTI* sti_person )
     {
-        IIndividualHuman* person = NULL;
+        IIndividualHuman* person = nullptr;
         if (sti_person->QueryInterface(GET_IID(IIndividualHuman), (void**)&person) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "sti_person", "IIndividualHuman*", "IIndividualHumanSTI*");
@@ -112,7 +112,7 @@ namespace Kernel {
             for (human_list_t::iterator it = m_all_males.begin(); it != m_all_males.end(); /*it++*/)
             {
                 IIndividualHumanSTI* sti_male = *it;
-                IIndividualHuman* male = NULL;
+                IIndividualHuman* male = nullptr;
                 if (sti_male->QueryInterface(GET_IID(IIndividualHuman), (void**)&male))
                 {
                     throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "sti_male", "IIndividualHuman", "IIndividualHumanSTI" );

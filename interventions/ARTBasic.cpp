@@ -28,7 +28,7 @@ namespace Kernel
 
     ARTBasic::ARTBasic()
     : GenericDrug()
-    , itbda(NULL)
+    , itbda(nullptr)
     , viral_suppression(true)
     , days_to_achieve_suppression(183.0f)
     {

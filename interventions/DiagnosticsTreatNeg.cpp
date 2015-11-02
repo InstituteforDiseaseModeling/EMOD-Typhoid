@@ -138,7 +138,7 @@ namespace Kernel
         //This test is the same as smear, but if you are smear neg you can get a different intervention
 
         // Apply diagnostic test with given specificity/sensitivity
-        IIndividualHumanTB2* tb_ind = NULL;
+        IIndividualHumanTB2* tb_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanTB2 ), (void**)&tb_ind ) != s_OK)
         {
             LOG_WARN("DiagnosticTreatNeg works with TB sims ONLY");
@@ -167,8 +167,8 @@ namespace Kernel
 
         LOG_DEBUG_F( "Individual %d tested 'negative', receiving negative intervention.\n", parent->GetSuid().data );
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-        IGlobalContext *pGC = NULL;
-        const IInterventionFactory* ifobj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const IInterventionFactory* ifobj = nullptr;
         if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             ifobj = pGC->GetInterventionFactory();
@@ -219,8 +219,8 @@ namespace Kernel
         LOG_DEBUG_F( "Individual %d got the test but defaulted, receiving Defaulters intervention without waiting for days_to_diagnosis (actually means days_to_intervention) \n", parent->GetSuid().data );
 
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-        IGlobalContext *pGC = NULL;
-        const IInterventionFactory* ifobj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const IInterventionFactory* ifobj = nullptr;
         if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             ifobj = pGC->GetInterventionFactory();

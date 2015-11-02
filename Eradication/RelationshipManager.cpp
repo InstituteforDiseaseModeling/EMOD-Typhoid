@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "RelationshipManager.h"
 #include "IRelationship.h"
 #include "Debug.h"
+#include "Log.h"
 
 static const char * _module = "RelationshipMgr";
 
@@ -20,10 +21,9 @@ static void
         const char * label = "NA"
     )
 {
-    clock_t after = clock();
-    clock_t diff = after - before;
-    float thediff = diff/(float)CLOCKS_PER_SEC;
-
+    //clock_t after = clock();
+    //clock_t diff = after - before;
+    //float thediff = diff/(float)CLOCKS_PER_SEC;
     //std::cout << label << " took " << thediff << " seconds." << std::endl;
 }
 
@@ -81,7 +81,7 @@ namespace Kernel
         IIndividualHumanSTI** partnerOut
     )
     {
-        *partnerOut = NULL;
+        *partnerOut = nullptr;
         float targetPartnerAge = selectAgeFromCDF( targetAge );
         LOG_DEBUG_F( "%s: Searching sorted-by-age individuals with %d people.\n", __FUNCTION__, candidatesByAge.size() );
 
@@ -113,14 +113,14 @@ namespace Kernel
 
         // update all existing relationships
         LOG_INFO_F( "%s: Updating %d relationships\n", __FUNCTION__, nodeRelationships.size() );
-        clock_t before_update = clock();
+        //clock_t before_update = clock();
         for( auto it = nodeRelationships.begin();
                   it != nodeRelationships.end();
                    )
         {
-            auto relId = it->first;
+            //auto relId = it->first;
             IRelationship* pRel = it->second;
-            it++;
+            ++it;
             LOG_DEBUG_F( "%s: Updating relationship %d at node %lu\n", __FUNCTION__, pRel->GetId(), _node->GetSuid().data );
             if( pRel->Update( dt ) == false )
             {
@@ -257,7 +257,7 @@ namespace Kernel
         if( nodeRelationships.find( relId ) == nodeRelationships.end() )
         {
             LOG_WARN_F( "%s: Failed to find relationship %d in the container of %d nodeRelationships at this node. Is this person an immigrant?\n", __FUNCTION__, relId, nodeRelationships.size() );
-            return NULL;
+            return nullptr;
         }
 
         return nodeRelationships.at( relId );

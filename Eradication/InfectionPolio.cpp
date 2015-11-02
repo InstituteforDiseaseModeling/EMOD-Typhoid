@@ -119,12 +119,38 @@ namespace Kernel
     InfectionPolio::~InfectionPolio()
     {
     }
+
+    REGISTER_SERIALIZABLE(InfectionPolio, IInfection);
+
+    void InfectionPolio::serialize(IArchive& ar, IInfection* obj)
+    {
+        InfectionEnvironmental::serialize(ar, obj);
+        InfectionPolio& infection = *dynamic_cast<InfectionPolio*>(obj);
+        ar.startElement();
+            ar.labelElement("shed_genome_traceContactMode") & infection.shed_genome_traceContactMode;
+            ar.labelElement("immunity_updated") & infection.immunity_updated;
+            ar.labelElement("paralysis_reported") & infection.paralysis_reported;
+            ar.labelElement("paralysis_time") & infection.paralysis_time;
+            ar.labelElement("initial_infectiousness") & infection.initial_infectiousness;
+            ar.labelElement("cached_mucosal_immunity") & infection.cached_mucosal_immunity;
+            ar.labelElement("cached_humoral_immunity") & infection.cached_humoral_immunity;
+            ar.labelElement("host_mc_weight") & infection.host_mc_weight;
+            ar.labelElement("peakFecalLog10VirusTiter") & infection.peakFecalLog10VirusTiter;
+            ar.labelElement("peakOralLog10VirusTiter") & infection.peakOralLog10VirusTiter;
+            ar.labelElement("durationFecalInfection") & infection.durationFecalInfection;
+            ar.labelElement("durationOralInfection") & infection.durationOralInfection;
+            ar.labelElement("paralysis_probability") & infection.paralysis_probability;
+            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
+            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
+            ar.labelElement("drug_flag") & infection.drug_flag;
+        ar.endElement();
+    }
 }
 
 void Kernel::InfectionPolio::SetParameters(StrainIdentity* infstrain, int incubation_period_override)
 {
     InfectionEnvironmental::SetParameters(infstrain, incubation_period_override); // setup infection timers and infection state
-    if(infstrain == NULL)
+    if(infstrain == nullptr)
     {
         // using default strainIDs
         infection_strain->SetAntigenID(default_antigen);
@@ -138,7 +164,7 @@ void Kernel::InfectionPolio::SetParameters(StrainIdentity* infstrain, int incuba
 
 void Kernel::InfectionPolio::InitInfectionImmunology(Susceptibility* _immunity)
 {
-    ISusceptibilityPolio* immunity = NULL;
+    ISusceptibilityPolio* immunity = nullptr;
     if( _immunity->QueryInterface( GET_IID( ISusceptibilityPolio ), (void**)&immunity ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "ISusceptibilityPolio", "Susceptibility" );
@@ -168,10 +194,10 @@ void Kernel::InfectionPolio::InitInfectionImmunology(Susceptibility* _immunity)
     //cached_humoral_immunity = immunity->GetHumoralImmunity(infection_strain);
 }
 
-void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
+void Kernel::InfectionPolio::Update(float dt, ISusceptibilityContext* _immunity)
 {
     StateChange = InfectionStateChange::None;
-    ISusceptibilityPolio* immunity = NULL;
+    ISusceptibilityPolio* immunity = nullptr;
     if( _immunity->QueryInterface( GET_IID( ISusceptibilityPolio ), (void**)&immunity ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "Susceptibility", "SusceptibilityPolio" );
@@ -188,11 +214,9 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
     drug_infection_duration_reduction = 0.0f;
 
     // Query for drug present effects
-    IIndividualHumanContext *patient = NULL;
-    IIndividualHumanInterventionsContext *context = NULL;
-    IPolioDrugEffects *ipde = NULL;
-
-    context = GetParent()->GetInterventionsContext();
+    IIndividualHumanContext *patient = GetParent();
+    IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
+    IPolioDrugEffects *ipde = nullptr;
 
     if (s_OK ==  context->QueryInterface(GET_IID(IPolioDrugEffects), (void **)&ipde))
     {
@@ -248,7 +272,7 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
     {
         switch (infection_strain->GetAntigenID())
         {
-			case PolioVirusTypes::WPV1:  
+            case PolioVirusTypes::WPV1:  
                 StateChange = InfectionStateChange::PolioParalysis_WPV1;
                 break;
 
@@ -284,7 +308,7 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
         if(paralysis_reported && params()->vital_disease_mortality)
         {
             // To query for mortality-reducing effects of drugs or vaccines
-            IDrugVaccineInterventionEffects* idvie = NULL;
+            IDrugVaccineInterventionEffects* idvie = nullptr;
             if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IDrugVaccineInterventionEffects), (void**)&idvie) )
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionsContext()", "IDrugVaccineInterventionEffects", "IIndividualHumanEventContext" );
@@ -320,17 +344,11 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
         immunity->DecrementInfection(infection_strain);
     }
 
-    evolveStrain(_immunity, dt); // genetic modifications
+    evolveStrain(immunity, dt); // genetic modifications
 }
 
-void Kernel::InfectionPolio::evolveStrain(Susceptibility* _immunity, float dt)
+void Kernel::InfectionPolio::evolveStrain(ISusceptibilityPolio* immunity, float dt)
 {
-    ISusceptibilityPolio* immunity = NULL;
-    if( _immunity->QueryInterface( GET_IID( ISusceptibilityPolio ), (void**)&immunity ) != s_OK )
-    {
-        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "ISusceptibilityPolio", "Susceptibility" );
-    }
-
     if(params()->number_substrains > 1)
     {
         int serotype = infection_strain->GetAntigenID();
@@ -344,7 +362,7 @@ void Kernel::InfectionPolio::evolveStrain(Susceptibility* _immunity, float dt)
             vdpv_state = uint16_t(1) << uint16_t(params()->reversionSteps_cVDPV[serotype] - 1);
         } // minimum genome value for fully reverted VDPV
         
-        float prob_mutation = 0.0f;
+        float prob_mutation;
         if( IS_WILD_TYPE( infection_strain->GetAntigenID() ) )
         {
             prob_mutation = evolutionWPVLinearRate * dt; // wild type only uses linear mutation
@@ -362,11 +380,11 @@ void Kernel::InfectionPolio::evolveStrain(Susceptibility* _immunity, float dt)
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_IMMUNITY:
-                    prob_mutation = (float)((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2));
+                    prob_mutation = float((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2));
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_REVERSION_AND_IMMUNITY:
-                    prob_mutation = (float)((evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + evolutionHalfmaxReversion)) * ((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2)));
+                    prob_mutation = float((evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + evolutionHalfmaxReversion)) * ((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2)));
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_REVERSION:
@@ -512,7 +530,7 @@ void Kernel::InfectionPolio::CacheMCWeightOfHost(float ind_mc_weight)
     host_mc_weight = ind_mc_weight;
 }
 
-const float Kernel::InfectionPolio::GetMusocalImmunity() const
+float Kernel::InfectionPolio::GetMusocalImmunity() const
 {
     LOG_DEBUG_F( "Individual %lu returning %f for (cached) mucosal immunity.\n", parent->GetSuid().data, cached_mucosal_immunity );
     return cached_mucosal_immunity;

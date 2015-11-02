@@ -23,7 +23,7 @@ namespace Kernel {
 
     IJsonObjectAdapter* CreateJsonObjAdapter(JsonLibType jsLib)
     {
-        IJsonObjectAdapter* jsObj = NULL;
+        IJsonObjectAdapter* jsObj = nullptr;
 
         switch(jsLib)
         {

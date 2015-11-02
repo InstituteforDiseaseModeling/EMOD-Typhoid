@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "VectorEnums.h"
 #include "BoostLibWrapper.h"
+#include "IArchive.h"
 
 namespace Kernel
 {
@@ -62,6 +63,8 @@ namespace Kernel
         {
             return lhs.GetIndex() == GetIndex();
         }
+
+        static void serialize(IArchive&, VectorMatingStructure&);
 
     protected:
         // Helper function to take a single parent's alleles (e.g. HALF)

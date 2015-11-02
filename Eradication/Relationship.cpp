@@ -40,7 +40,7 @@ howlong(
 
 namespace Kernel {
 
-    unsigned long int Relationship::counter = 0;
+    unsigned long int Relationship::counter = 1;
 
     // static
     bool alreadyInRelationship(
@@ -78,24 +78,8 @@ namespace Kernel {
         , scheduled_end_time(0)
         , using_condom(false)
     {
-        // ------------------------------------------------
-        // ---make sure each relationship has a unique id
-        // ------------------------------------------------
-        int num_tasks = 1 ;
-        int rank = 0 ;
-        if( EnvPtr != nullptr )
-        {
-            num_tasks = EnvPtr->MPI.NumTasks ;
-            rank = EnvPtr->MPI.Rank ;
-        }
-        if( counter == 0 )
-        {
-            counter = rank + 1 ;
-        }
-        _id = counter ;
-        counter += num_tasks ;
-
         original_node_id = dynamic_cast<IIndividualHuman*>(male_partner)->GetParent()->GetSuid();
+        _id = counter++;
         LOG_DEBUG_F( "%s: Creating relationship %d between %d and %d\n", __FUNCTION__, _id, MALE_PARTNER_ID().data, FEMALE_PARTNER_ID().data );
         //LogRelationship( _id, MALE_PARTNER_ID(), FEMALE_PARTNER_ID(), relationship_type );
     }
@@ -263,7 +247,7 @@ namespace Kernel {
     )
     const
     {
-        if ( individual == NULL )
+        if ( individual == nullptr )
         {
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "GetPartner called with null pointer.\n" );
         }
@@ -544,7 +528,7 @@ namespace Kernel {
         rel_timer = DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( GET_CONFIGURABLE(SimulationConfig)->transitoryRel_lambda, 
                                                                              GET_CONFIGURABLE(SimulationConfig)->transitoryRel_inv_kappa );
 
-        IIndividualHuman* individual = NULL;
+        IIndividualHuman* individual = nullptr;
         if( male_partnerIn->QueryInterface(GET_IID(IIndividualHuman), (void**)&individual) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "male_partnerIn", "IIndividualHuman", "IIndividualHumanSTI" );
@@ -568,7 +552,7 @@ namespace Kernel {
         rel_timer = DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( GET_CONFIGURABLE(SimulationConfig)->informalRel_lambda, 
                                                                              GET_CONFIGURABLE(SimulationConfig)->informalRel_inv_kappa );
 
-        IIndividualHuman* individual = NULL;
+        IIndividualHuman* individual = nullptr;
         if( male_partnerIn->QueryInterface(GET_IID(IIndividualHuman), (void**)&individual) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "male_partnerIn", "IIndividualHuman", "IIndividualHumanSTI" );
@@ -593,7 +577,7 @@ namespace Kernel {
         rel_timer = DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( GET_CONFIGURABLE(SimulationConfig)->maritalRel_lambda, 
                                                                              GET_CONFIGURABLE(SimulationConfig)->maritalRel_inv_kappa );
 
-        IIndividualHuman* individual = NULL;
+        IIndividualHuman* individual = nullptr;
         if( male_partnerIn->QueryInterface(GET_IID(IIndividualHuman), (void**)&individual) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "male_partnerIn", "IIndividualHuman", "IIndividualHumanSTI" );

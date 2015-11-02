@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<testsuite errors="0" failures="1" name="polio regression suite" tests="3" time="199.828">
+	<properties>
+		<property name="Version string" value="2.0.5633.0 trunk"/>
+		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
+		<property name="HPC Nodegroup" value="ComputeNodes"/>
+	</properties>
+	<testcase name="42_Polio_Default_Geography" time="-1">
+		<failure message="42_Polio_Default_Geography failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_28_01_24_36_883000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="17_Polio_Bihar_Simplest" time="125.0"/>
+	<testcase name="14_Polio_Bihar_Larger" time="189.0"/>
+</testsuite>

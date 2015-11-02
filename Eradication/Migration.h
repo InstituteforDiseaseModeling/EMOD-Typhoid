@@ -96,13 +96,6 @@ namespace Kernel
 
         bool Configure( const Configuration * config );
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
 #if USE_BOOST_SERIALIZATION
         friend class ::boost::serialization::access;
 

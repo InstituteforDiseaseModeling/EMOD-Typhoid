@@ -28,7 +28,7 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(HumanHostSeekingTrap)
 
     IMPLEMENT_FACTORY_REGISTERED(HumanHostSeekingTrap)
-    
+
     HumanHostSeekingTrap::HumanHostSeekingTrap()
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );

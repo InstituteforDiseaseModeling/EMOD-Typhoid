@@ -25,7 +25,7 @@ namespace Kernel
     InfectionEnvironmental::~InfectionEnvironmental(void)
     { }
 
-    void InfectionEnvironmental::Update(float dt, Susceptibility* immunity)
+    void InfectionEnvironmental::Update(float dt, ISusceptibilityContext* immunity)
     {
         Infection::Update(dt);
         //for Environmental, same infectiousness is deposited to both environmental and contact routes (if applicable)
@@ -71,6 +71,14 @@ namespace Kernel
         newinfection->Initialize(_suid);
 
         return newinfection;
+    }
+
+    REGISTER_SERIALIZABLE(InfectionEnvironmental, IInfection);
+
+    void InfectionEnvironmental::serialize(IArchive& ar, IInfection* obj)
+    {
+        Infection::serialize(ar, obj);
+        // nothing else, yet
     }
 }
 

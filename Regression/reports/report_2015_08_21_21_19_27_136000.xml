@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<testsuite errors="0" failures="0" name="43 regression suite" tests="1" time="135.785">
+	<properties>
+		<property name="Version string" value="2.0.5538.0 trunk"/>
+		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
+		<property name="HPC Nodegroup" value="ComputeNodes"/>
+	</properties>
+	<testcase name="43_Vector_Garki_MultiCore_VectorMigration" time="128.0"/>
+</testsuite>

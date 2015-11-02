@@ -18,7 +18,7 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, STIIsPostDebut, IDistributableIntervention)
 
-    public: 
+    public:
         STIIsPostDebut();
         STIIsPostDebut( const STIIsPostDebut& ); // copy ctor
 
@@ -32,7 +32,7 @@ namespace Kernel
     protected:
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        ConstrainedString negative_diagnosis_event;
+        jsonConfigurable::ConstrainedString negative_diagnosis_event;
 #pragma warning( pop )
 
     private:

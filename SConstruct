@@ -217,7 +217,8 @@ else:
     env['SVN_BRANCH'] = SVN_BRANCH
     env['OS_FAMILY'] = 'posix'
     env['CC'] = "mpicxx"
-    env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
+    #env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
+    env['CXX'] = "/usr/lib64/mpi/gcc/openmpi/bin/mpicxx"
     env.Append( CCFLAGS=["-fpermissive"] )
     env.Append( CCFLAGS=["--std=c++0x"] )
     env.Append( CCFLAGS=["-w"] )
@@ -284,9 +285,6 @@ def findVersion( root , choices ):
 #if has_option('Dlls'):
 #    env.Append( CPPDEFINES=["USE_JSON_MPI" ] )
 
-env.Append( EXTRALIBPATH=["#Dependencies/ComputeClusterPack/Lib/amd64"] )
-env.Append( EXTRALIBPATH=["C:/boost/boost_1_51_0/lib/x64"] )
-
 boostLibs = ["system", "filesystem" , "program_options", "serialization" ]
 
 if os.sys.platform.startswith("linux"):
@@ -295,15 +293,19 @@ if os.sys.platform.startswith("linux"):
     platform = "linux"
 
     env.Append( LIBS=['m'] )
-    env.Append( CPPDEFINES={'USE_BOOST_MPI' : '0'})
+    #env.Append( CPPDEFINES={'USE_BOOST_MPI' : '0'})
+    env.Append( CPPDEFINES={'USE_BOOST_MPI' : '1'})
 
     if os.uname()[4] == "x86_64":
         linux64 = True
         nixLibPrefix = "lib64"
         env.Append( EXTRALIBPATH=["/usr/lib64" , "/lib64" ] )
 
-    env.Append( LIBS=["pthread", "mpichcxx", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
-    env.Append( EXTRALIBPATH="-L/usr/local/lib -L/usr/local/lib -L/usr/lib/mpich2/lib/ -L /usr/lib/mpich2/lib/" )
+    #env.Append( LIBS=["pthread", "mpichcxx", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
+    env.Append( LIBS=["pthread", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
+    #env.Append( LIBS=["pthread", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "mpi", "dl" ] ) 
+    #env.Append( EXTRALIBPATH="-L/usr/local/lib -L/usr/local/lib -L/usr/lib/mpich2/lib/ -L /usr/lib/mpich2/lib/" )
+    env.Append( EXTRALIBPATH=[ "/usr/local/lib", "/usr/lib64/mpich/lib" ] )
 
     if static:
         #env.Append( LINKFLAGS=" -static " )

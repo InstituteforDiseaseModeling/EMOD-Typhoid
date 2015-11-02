@@ -69,7 +69,7 @@ namespace Kernel
         bool retQualifies = true;
 
 
-        IIndividualHumanCoinfection* Coinf_ind = NULL;
+        IIndividualHumanCoinfection* Coinf_ind = nullptr;
         if(const_cast<IIndividualHumanEventContext*>(pIndividual)->QueryInterface( GET_IID( IIndividualHumanCoinfection ), (void**)&Coinf_ind ) != s_OK)
         { //error here
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHumanCoinfection", "IIndividualHumanEventContext" );

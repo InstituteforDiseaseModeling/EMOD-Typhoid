@@ -18,20 +18,16 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeDemographics.h"
 #include "Node.h"
 #include "Individual.h"
-//#include "IndividualCoinfection.h" // TBD: No disease-specific includes here.
-
-#include "Drugs.h"
 
 #include "Log.h"
 #include "Exceptions.h"
-#include "IdmString.h"
 
 static const char * _module = "NodeEventContext";
 
 namespace Kernel
 {
     NodeEventContextHost::NodeEventContextHost()
-    : node(NULL)
+    : node(nullptr)
     {
         arrival_distribution_sources.clear();
     }
@@ -68,7 +64,7 @@ namespace Kernel
         else if (iid == GET_IID(INodeContext))
             foundInterface = (INodeContext*)node;
         else
-            foundInterface = 0;
+            foundInterface = nullptr;
 
         QueryResult status = e_NOINTERFACE;
         if ( foundInterface )
@@ -114,7 +110,7 @@ namespace Kernel
         float probThreshold = 1.0;
         if( limit != -1 )
         {
-            probThreshold = ((float)limit)/nodePop;
+            probThreshold = float(limit)/nodePop;
         }
         float nodeCostThisInterventionThisTimestep = 0.0f;
         for( auto individual : node->individualHumans)
@@ -154,7 +150,7 @@ namespace Kernel
         {
             LOG_DEBUG("Campaign expense was incurred\n");
         }
-        IncrementCampaignCost( expenseIncurred * (float)pIndiv->GetMonteCarloWeight() );
+        IncrementCampaignCost( expenseIncurred * float(pIndiv->GetMonteCarloWeight()) );
     }
 
     // First cut of this function writes the intervention report to stdout. It is an abbreviated,
@@ -174,7 +170,7 @@ namespace Kernel
         {
             // intervention recipient
             std::stringstream msg;
-            float recipientAge = (float) pDistributeeIndividual->GetEventContext()->GetAge();
+            float recipientAge = float(pDistributeeIndividual->GetEventContext()->GetAge());
             msg << ",hum_id="
                 << pDistributeeIndividual->GetSuid().data
                 << ",ra="
@@ -353,7 +349,7 @@ namespace Kernel
             for (auto &observer : observer_nvp.second) // observer_nvp.second is list, observer is intervention
             {
                 // QI for NDI to reset context
-                INodeDistributableIntervention * intervention = NULL;
+                INodeDistributableIntervention * intervention = nullptr;
                 if( s_OK == observer->QueryInterface(GET_IID(INodeDistributableIntervention), (void**)&intervention) )
                 {
                     intervention->SetContextTo(inec);
@@ -430,7 +426,7 @@ namespace Kernel
         node_interventions.push_back( iv );
         iv->AddRef();
 
-        IBaseIntervention * pBaseIV = NULL;
+        IBaseIntervention * pBaseIV = nullptr;
         if( iv->QueryInterface( GET_IID(IBaseIntervention), (void**)&pBaseIV ) == s_OK ) 
         {
             IncrementCampaignCost( pBaseIV->GetCostPerUnit() );
@@ -500,7 +496,7 @@ namespace Kernel
 
     NodeEventContextHost::travel_distribution_source_map_t* NodeEventContextHost::sourcesMapForType( INodeEventContext::TravelEventType type )
     {
-        travel_distribution_source_map_t *sources = NULL;
+        travel_distribution_source_map_t *sources = nullptr;
         switch (type)
         {
         case Arrival: sources = &arrival_distribution_sources; break;
@@ -575,7 +571,7 @@ namespace Kernel
     int NodeEventContextHost::GetIndividualHumanCount() const
     {
         size_t nodePop = node->individualHumans.size();
-        return (int)nodePop;
+        return int(nodePop);
     }
 
     int NodeEventContextHost::GetExternalId() const
@@ -583,44 +579,6 @@ namespace Kernel
         uint32_t nodeId = node->GetExternalID();
         return nodeId;
     }
-
-#if USE_JSON_SERIALIZATION
-
-    // IJsonSerializable Interfaces
-    void NodeEventContextHost::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("arrival_distribution_sources");
-        root->BeginArray();
-        arrival_distribution_sources;
-        root->EndArray();
-
-        root->Insert("departure_distribution_sources");
-        root->BeginArray();
-        departure_distribution_sources;
-        root->EndArray();
-
-        root->Insert("individual_event_observers");
-        root->BeginArray();
-        individual_event_observers;
-        root->EndArray();
-
-        root->Insert("node_interventions");
-        root->BeginArray();
-        for (auto intervention : node_interventions)
-        {
-            intervention->JSerialize(root, helper);
-        }
-        root->EndArray();
-
-        root->EndObject();
-    }
-
-    void NodeEventContextHost::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
 
     /*template void NodeEventContextHost::serialize(boost::archive::binary_oarchive &ar, unsigned int);
     template void NodeEventContextHost::serialize(boost::archive::binary_iarchive &ar, unsigned int);

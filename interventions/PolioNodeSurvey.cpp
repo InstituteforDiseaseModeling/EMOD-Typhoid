@@ -20,8 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char* _module = "PolioNodeSurvey";
 
-#define nullptr NULL
-
 namespace Kernel
 {
     BEGIN_QUERY_INTERFACE_BODY(PolioNodeSurvey)

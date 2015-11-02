@@ -30,8 +30,8 @@ namespace Kernel
     class IDMAPI SimpleHealthSeekingBehavior : public BaseIntervention //, public JsonConfigurable
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleHealthSeekingBehavior, IDistributableIntervention)
-    
-    public: 
+
+    public:
         SimpleHealthSeekingBehavior();
         virtual ~SimpleHealthSeekingBehavior() {  }
 
@@ -58,6 +58,8 @@ namespace Kernel
         IndividualInterventionConfig actual_intervention_config;
         std::string actual_intervention_event;
         bool single_use;
+
+        DECLARE_SERIALIZABLE(SimpleHealthSeekingBehavior, IDistributableIntervention);
 #pragma warning( pop )
 
     private:

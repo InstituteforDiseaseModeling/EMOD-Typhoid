@@ -33,6 +33,7 @@ namespace Kernel
         virtual void  ConfigureDrugTreatment();  // read in PkPd and drug-killing parameters from Susceptibility Flags
 
     protected:
+
         // These have same names as analogous methods on container but are internal for the drug itself.
 
         float adherence_rate;

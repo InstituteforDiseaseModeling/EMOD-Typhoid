@@ -30,7 +30,7 @@ namespace Kernel
         virtual void ApplyDrugDurationEffect( float rate ) = 0;
     };
 
-    class IPolioVaccine;
+    struct IPolioVaccine;
 
     class PolioInterventionsContainer : public InterventionsContainer,
                                         public IPolioVaccineEffects,
@@ -69,6 +69,8 @@ namespace Kernel
         void GiveDrug(IDrug* drug);
         float titer_efficacy;
         float infection_duration_efficacy;
+
+        DECLARE_SERIALIZABLE(PolioInterventionsContainer, IIndividualHumanInterventionsContext);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

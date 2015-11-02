@@ -33,7 +33,7 @@ namespace Kernel
         virtual void SetContextTo(IIndividualHumanContext *context) {}
         virtual void Update(float dt);
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver* const pEC);
-        
+
 protected:
         IHIVMTCTEffects * ivc; // interventions container
         NonNegativeFloat timer;

@@ -29,7 +29,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
     public:
-        static VectorCohortWithHabitat *CreateCohort( VectorHabitat* _habitat = NULL, float progress = 0.0f, int32_t initial_population = 0, VectorMatingStructure _vector_genetics = VectorMatingStructure() );
+        static VectorCohortWithHabitat *CreateCohort( VectorHabitat* _habitat = nullptr, float progress = 0.0f, int32_t initial_population = 0, VectorMatingStructure _vector_genetics = VectorMatingStructure() );
         virtual ~VectorCohortWithHabitat();
 
         virtual VectorHabitat* GetHabitat();

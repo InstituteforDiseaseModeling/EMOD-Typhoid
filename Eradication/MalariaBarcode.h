@@ -19,7 +19,7 @@ class MalariaBarcode
     public:
         static MalariaBarcode * getInstance()
         {
-            if( _instance == NULL )
+            if( _instance == nullptr )
             {
                 _instance = new MalariaBarcode();
             }

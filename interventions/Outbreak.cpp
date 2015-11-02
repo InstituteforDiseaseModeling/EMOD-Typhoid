@@ -87,13 +87,12 @@ namespace Kernel
 
     Kernel::StrainIdentity* Outbreak::GetNewStrainIdentity(INodeEventContext *context)
     {
-        StrainIdentity *outbreak_strainID = NULL;
-        
-        
+        StrainIdentity *outbreak_strainID = nullptr;
+
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
         // NO usage of GET_CONFIGURABLE(SimulationConfig)->number_substrains in DLL
-        IGlobalContext *pGC = NULL;
-        const SimulationConfig* simConfigObj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const SimulationConfig* simConfigObj = nullptr;
         if (s_OK == context->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             simConfigObj = pGC->GetSimulationConfigObj();

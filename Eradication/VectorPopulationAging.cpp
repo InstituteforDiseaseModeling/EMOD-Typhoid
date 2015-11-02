@@ -249,7 +249,7 @@ namespace Kernel
         // Use the verbose "foreach" construct here because empty male cohorts (e.g. old vectors) will be removed
         for ( VectorCohortList_t::iterator iList = MaleQueues.begin(); iList != MaleQueues.end(); )
         { 
-            IVectorCohortAging *tempentry = NULL;
+            IVectorCohortAging *tempentry = nullptr;
             if( (*iList)->QueryInterface( GET_IID( IVectorCohortAging ), (void**)&tempentry ) != s_OK )
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "(*iList)", "IVectorCohortAging", "VectorCohort" );

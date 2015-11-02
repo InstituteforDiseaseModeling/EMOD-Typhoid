@@ -23,10 +23,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IVaccineConsumer; 
-    struct ICampaignCostObserver; 
+    struct IVaccineConsumer;
+    struct ICampaignCostObserver;
 
-    struct IVaccine : public ISupports
+    struct IVaccine : ISerializable
     {
         virtual void  ApplyVaccineTake()                = 0;
         virtual ~IVaccine() { } // needed for cleanup via interface pointer
@@ -44,7 +44,7 @@ namespace Kernel
 
     public:
         SimpleVaccine();
-        virtual ~SimpleVaccine() { }
+        virtual ~SimpleVaccine();
         virtual int AddRef() { return BaseIntervention::AddRef(); }
         virtual int Release() { return BaseIntervention::Release(); }
         bool Configure( const Configuration* pConfig );
@@ -59,7 +59,7 @@ namespace Kernel
 
         // IVaccine
         virtual int   GetVaccineType()            const;
-        virtual void  ApplyVaccineTake(); 
+        virtual void  ApplyVaccineTake();
 
     protected:
         // context for this intervention--does not need to be reset upon migration, it is just for GiveVaccine()
@@ -76,23 +76,23 @@ namespace Kernel
         float secondary_decay_time_constant;
         IVaccineConsumer * ivc; // interventions container
 
+        DECLARE_SERIALIZABLE(SimpleVaccine, IDistributableIntervention);
+
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:
+//        template<class Archive>
+//        friend void serialize(Archive &ar, SimpleVaccine& vacc, const unsigned int v);
+        friend class ::boost::serialization::access;
         template<class Archive>
-        friend void serialize(Archive &ar, SimpleVaccine& vacc, const unsigned int v);
-#endif
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    public:
-     // IJsonSerializable Interfaces
-     virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-     virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
+        void save(Archive& ar, const unsigned int version) const;
+        template<class Archive>
+        void load(Archive& ar, const unsigned int version);
+        template<typename Archive>
+        friend void serialize( Archive &ar, SimpleVaccine& vaccine, const unsigned int version );
 #endif
     };
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#ifdef WIN32
 BOOST_CLASS_EXPORT_KEY(Kernel::SimpleVaccine)
-#endif
 #endif

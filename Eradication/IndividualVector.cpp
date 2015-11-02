@@ -23,9 +23,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Log.h"
 
-#include "RapidJsonImpl.h" // render unnecessary when the deserializing wrapper is done
-
-
 #ifdef randgen
 #undef randgen
 #endif
@@ -41,16 +38,16 @@ namespace Kernel
     END_QUERY_INTERFACE_DERIVED(IndividualHumanVector, IndividualHuman)
 
     IndividualHumanVector::IndividualHumanVector(suids::suid _suid, double monte_carlo_weight, double initial_age, int gender, double initial_poverty)
-    : Kernel::IndividualHuman(_suid, (float)monte_carlo_weight, (float)initial_age, gender, (float)initial_poverty)
-    , vector_susceptibility(NULL)
-    , vector_interventions(NULL)
+    : Kernel::IndividualHuman(_suid, float(monte_carlo_weight), float(initial_age), gender, float(initial_poverty))
+    , vector_susceptibility(nullptr)
+    , vector_interventions(nullptr)
     {
     }
 
     IndividualHumanVector::IndividualHumanVector(INodeContext *context)
     : Kernel::IndividualHuman(context)
-    , vector_susceptibility(NULL)
-    , vector_interventions(NULL)
+    , vector_susceptibility(nullptr)
+    , vector_interventions(nullptr)
     {
     }
 
@@ -84,7 +81,7 @@ namespace Kernel
     {
         IndividualHuman::PropagateContextToDependents();
 
-        if( vector_susceptibility == NULL && susceptibility != NULL)
+        if( vector_susceptibility == nullptr && susceptibility != nullptr)
         {
             if ( s_OK != susceptibility->QueryInterface(GET_IID(IVectorSusceptibilityContext), (void**)&vector_susceptibility) )
             {
@@ -143,7 +140,7 @@ namespace Kernel
     {
         // Make random draw whether to acquire new infection
         // dt incorporated already in ExposeIndividual function arguments
-        float acquisition_probability = (float)EXPCDF(-m_total_exposure);
+        float acquisition_probability = float(EXPCDF(-m_total_exposure));
         if ( randgen->e() >= acquisition_probability ) return;
             
         // Choose a strain based on a weighted draw over values from all vector-to-human pools
@@ -233,10 +230,10 @@ namespace Kernel
         infectiousness *= truncate_infectious_mod * modtransmit;
 
         // Host weight is the product of MC weighting and relative biting
-        float host_vector_weight = (float) ( GetMonteCarloWeight() * GetRelativeBitingRate() );
+        float host_vector_weight = float(GetMonteCarloWeight() * GetRelativeBitingRate());
 
         // Effects from vector intervention container
-        IVectorInterventionsEffects* ivie = NULL;
+        IVectorInterventionsEffects* ivie = nullptr;
         if ( s_OK !=  interventions->QueryInterface(GET_IID(IVectorInterventionsEffects), (void**)&ivie) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "IVectorInterventionsEffects", "IndividualHumanVector" );
@@ -263,64 +260,49 @@ namespace Kernel
         release_assert( vector_susceptibility );
         return vector_susceptibility->GetRelativeBitingRate();
     }
-}
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-namespace Kernel {
+    REGISTER_SERIALIZABLE(IndividualHumanVector, IIndividualHuman);
 
-    // IJsonSerializable Interfaces
-    void IndividualHumanVector::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
+    void IndividualHumanVector::serialize(IArchive& ar, IIndividualHuman* obj)
     {
+        IndividualHumanVector& individual = *dynamic_cast<IndividualHumanVector*>(obj);
 
-        root->BeginObject();
+        IndividualHuman::serialize(ar, obj);
+        ar.startElement();
+            ar.labelElement("m_strain_exposure");
+                Kernel::serialize(ar, individual.m_strain_exposure);
+            ar.labelElement("m_total_exposure") & individual.m_total_exposure;
 
-        root->Insert("m_total_exposure", m_total_exposure);
-
-        // m_strain_exposure is a vector of pair of StrainIdentity and float.
-        // vector is a Json array while pair is array
-        // so array of array
-        root->Insert("m_strain_exposure");
-        root->BeginArray();
-        for (auto& exposure : m_strain_exposure)
-        {
-            root->BeginArray();
-            exposure.first.JSerialize(root, helper);
-            root->Add(exposure.second);
-            root->EndArray();
-        }
-        root->EndArray();
-
-        root->Insert("IndividualHuman");
-        IndividualHuman::JSerialize( root, helper );
-
-        root->EndObject();
+        ar.endElement();
     }
 
-    void IndividualHumanVector::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
+    IArchive& serialize(IArchive& ar, std::vector<strain_exposure_t>& vec)
     {
-        
-        rapidjson::Document * doc = (rapidjson::Document*) root; 
-        
-        m_total_exposure = (*doc)["m_total_exposure"].GetDouble();
-        unsigned int num_strains = (*doc)["m_strain_exposure"].Size();
-        LOG_INFO_F( "num_strains=%d, m_total_exposure=%f\n",num_strains, m_total_exposure);
-        for( unsigned int idx = 0; idx < num_strains; idx++ )
-        {
-            
-            StrainIdentity strain_id;
-            unsigned int iid = 0;
-            strain_id.JDeserialize((IJsonObjectAdapter*) &((*doc)["m_strain_exposure"][idx][iid]),helper);
-            float t_exp = (*doc)["m_strain_exposure"][idx][iid+1].GetDouble();
-            m_strain_exposure.push_back( std::make_pair(strain_id, t_exp) );
-            LOG_INFO_F( "num_strains_aid=%d, num_strins_gid=%d, t_exp=%f\n", strain_id.GetAntigenID(), strain_id.GetGeneticID(),t_exp);
-        }
+        size_t count = ar.IsWriter() ? vec.size() : 0xDEADBEEF;
+        ar.startElement();
+            ar.labelElement("__count__") & count;
+            ar.labelElement("__vector__");
 
-        IndividualHuman::JDeserialize((IJsonObjectAdapter*) &((*doc)["IndividualHuman"]), helper);
+            if (!ar.IsWriter())
+            {
+                vec.resize(count);
+            }
 
+            ar.startElement();
+
+            for (auto& entry : vec)
+            {
+                StrainIdentity* strain = &entry.first;
+                Kernel::serialize(ar, strain);
+                ar & entry.second;
+            }
+
+            ar.endElement();
+        ar.endElement();
+
+        return ar;
     }
-
 }
-#endif
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanVector)

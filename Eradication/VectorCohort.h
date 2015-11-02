@@ -12,17 +12,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <boost/serialization/access.hpp>
 #include <list>
 #include "suids.hpp"
-#include "ISupports.h"
 #include "IMigrate.h"
 #include "Vector.h"
-#include "VectorEnums.h"
 #include "VectorMatingStructure.h"
+#include "ISerializable.h"
 
 namespace Kernel
 {
-    struct IVectorCohort : public ISupports
+    struct IVectorCohort : ISerializable
     {
-    public:
         /* Only for type-ID right now */
         virtual int32_t GetPopulation() const = 0;
         virtual void SetPopulation( int32_t new_pop ) = 0;
@@ -32,12 +30,18 @@ namespace Kernel
         virtual VectorMatingStructure& GetVectorGenetics() = 0;
         virtual void SetVectorGenetics( const VectorMatingStructure& new_value ) = 0;
         virtual float GetMortality( uint32_t addition ) const = 0;
+
+        static void serialize(IArchive&, std::vector<IVectorCohort*>&);
+        DECLARE_SERIALIZATION_REGISTRAR(IVectorCohort);
     };
 
     class Node;
     class StrainIdentity;
 
-    struct VectorCohort : public IVectorCohort, public IMigrate
+    struct VectorCohort;
+    typedef std::list<VectorCohort *> VectorCohortList_t;
+
+    struct VectorCohort : IMigrate, IVectorCohort
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -62,6 +66,8 @@ namespace Kernel
         virtual void SetVectorGenetics( const VectorMatingStructure& new_value );
         virtual float GetMortality( uint32_t addition ) const;
 
+        static void serialize(IArchive&, VectorCohortList_t&);
+
     protected:
         VectorCohort();
         VectorCohort(float progress, uint32_t population, VectorMatingStructure _vector_genetics);
@@ -71,6 +77,9 @@ namespace Kernel
         double progress;
         int32_t population;
 
+// clorton         GETCLASSNAME_IMPL(VectorCohort);
+        DECLARE_SERIALIZABLE(VectorCohort, IVectorCohort);
+
     private:
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
@@ -79,6 +88,4 @@ namespace Kernel
         friend void serialize(Archive & ar, VectorCohort &obj, const unsigned int  file_version );
 #endif
     };
-
-    typedef std::list<VectorCohort *> VectorCohortList_t;
 }

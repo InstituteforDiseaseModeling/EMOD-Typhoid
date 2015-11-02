@@ -63,7 +63,7 @@ namespace Kernel
 */
 
         // INodeDistributableIntervention
-        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC /* = NULL */);
+        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC /* = nullptr */);
 
         void ReleaseSurveyDataMemory();
 

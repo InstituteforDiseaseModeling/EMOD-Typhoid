@@ -50,7 +50,7 @@ static const char* malaria_drug_placeholder_string = "<malaria_drug_name_goes_he
 
 ISimulationConfigFactory * SimulationConfigFactory::getInstance()
 {
-    if( _instance == NULL )
+    if( _instance == nullptr )
     {
         _instance = new SimulationConfigFactory();
     }
@@ -70,7 +70,7 @@ SimulationConfig* SimulationConfigFactory::CreateInstance(const Configuration * 
         else
         {
             SimConfig->Release();
-            SimConfig = NULL;
+            SimConfig = nullptr;
         }
     }
     return SimConfig;
@@ -450,6 +450,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif
 #endif
 
+#ifndef DISABLE_STI
     if( sim_type == SimType::STI_SIM ||
         sim_type == SimType::HIV_SIM 
       )
@@ -465,7 +466,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         initConfigTypeMap( "Coital_Act_Rate_Transitory", &coital_act_rate[RelationshipType::TRANSITORY], Coital_Act_Rate_Transitory_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
         initConfigTypeMap( "Coital_Act_Rate_Informal", &coital_act_rate[RelationshipType::INFORMAL], Coital_Act_Rate_Informal_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
         initConfigTypeMap( "Coital_Act_Rate_Marital", &coital_act_rate[RelationshipType::MARITAL], Coital_Act_Rate_Marital_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
-#endif    
+#endif
         initConfigTypeMap( "Relationships_Transitory_Weibull_Heterogeneity", &transitoryRel_inv_kappa, Relationships_Transitory_Weibull_Heterogeneity_DESC_TEXT, 0.0f, 100.0f, 1.0f );
         initConfigTypeMap( "Relationships_Transitory_Weibull_Scale", &transitoryRel_lambda, Relationships_Transitory_Weibull_Scale_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
 
@@ -476,6 +477,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         initConfigTypeMap( "Relationships_Marital_Weibull_Scale", &maritalRel_lambda, Relationships_Marital_Weibull_Scale_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
     }
 
+#ifndef DISABLE_HIV
     if( sim_type == SimType::HIV_SIM )
     {
         initConfigTypeMap( "Maternal_Transmission_ART_Multiplier", &maternal_transmission_ART_multiplier, Maternal_Transmission_ART_Multiplier_DESC_TEXT, 0.0f, 1.0f, 0.1f );
@@ -483,6 +485,8 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         initConfigTypeMap( "Days_Between_Symptomatic_And_Death_Weibull_Scale", &days_between_symptomatic_and_death_lambda, Days_Between_Symptomatic_And_Death_Weibull_Scale_DESC_TEXT, 1, 3650.0f, 183.0f );   // Constrain away from 0 for use as a rate
         initConfigTypeMap( "Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity", &days_between_symptomatic_and_death_inv_kappa, Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity_DESC_TEXT, 0.1f, 10.0f, 1.0f );   // Constrain away from 0 for use as a rate
     }
+#endif // DISABLE_HIV
+#endif // DISABLE_STI
 
     LOG_DEBUG( "Calling main Configure...\n" );
     bool ret = JsonConfigurable::Configure( inputJson );
@@ -569,6 +573,8 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
 
     lloffset = 0.5f * node_grid_size;
+
+    //if (vector_sampling_type == VectorSamplingType::TRACK_ALL_VECTORS) mosquito_weight = 1;
 
     // a little malaria range checking
     if( sim_type == SimType::MALARIA_SIM )
@@ -851,12 +857,11 @@ SimulationConfig::SimulationConfig()
     , vspMap()
     , MalariaDrugMap()
     , m_jsonConfig(nullptr)
+#ifndef DISABLE_STI
     //, shortTermRelationshipLength(10.0f)
     , prob_super_spreader(0.0f)
     , enable_coital_dilution(true)
-#ifndef DISABLE_HIV 
     , coital_act_rate( )
-#endif
     , coital_dilution_2_partners(1)
     , coital_dilution_3_partners(1)
     , coital_dilution_4_plus_partners(1)
@@ -868,10 +873,13 @@ SimulationConfig::SimulationConfig()
     , transitoryRel_lambda(1.0f)
     //, femaleToMaleRelativeInfectivity(1.0f)
 
+#ifndef DISABLE_HIV
     , prob_maternal_transmission(1.0f)
     , days_between_symptomatic_and_death_lambda(183.0f)
     , days_between_symptomatic_and_death_inv_kappa(1.0f)
     , maternal_transmission_ART_multiplier(1.0f)
+#endif // DISABLE_HIV
+#endif // DISABLE_STI
 {
 #ifdef ENABLE_POLIO
     ZERO_ARRAY(PVinf0);

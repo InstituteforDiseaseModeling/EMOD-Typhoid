@@ -49,7 +49,7 @@ namespace Kernel
     ISimulation * SimulationFactory::CreateSimulation()
     {
 
-        ISimulation * newsim = NULL;
+        ISimulation * newsim = nullptr;
         std::string sSimType;
 
         try

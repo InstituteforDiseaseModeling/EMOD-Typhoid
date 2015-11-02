@@ -927,6 +927,16 @@
     <ClCompile Include="CalendarEventCoordinator.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
+    <ClCompile Include="CampaignEventByYear.cpp" />
+    <ClCompile Include="IIndividualHuman.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="ISusceptibilityContext.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="IInfection.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2014,6 +2024,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\utils\RANDOM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CampaignEventByYear.h" />
+    <ClInclude Include="IInfection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ISusceptibilityContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

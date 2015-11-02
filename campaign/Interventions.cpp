@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <stdafx.h>
 #include "Interventions.h"
 #include "InterventionFactory.h"
-#include "IndividualEventContext.h"
+// clorton #include "IndividualEventContext.h"
 #include "NodeEventContext.h"
 #include "Contexts.h"
 #include "Exceptions.h"
@@ -171,46 +171,34 @@ namespace Kernel
         return wasDistributed;
     }
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
+    IMPLEMENT_SERIALIZATION_REGISTRAR(IDistributableIntervention);
 
-    // IJsonSerializable Interfaces
-    void BaseIntervention::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
+    IArchive& serialize(IArchive& ar, std::list<IDistributableIntervention*>& interventions)
     {
-        // begin json object
-        root->BeginObject();
+        size_t count = ar.IsWriter() ? interventions.size() : -1;
 
-        root->Insert("cost_per_unit",cost_per_unit);
-        root->Insert("expired", expired);
+        ar.startElement();
+            ar.labelElement("__count__") & count;
+            if (ar.IsWriter())
+            {
+                for (auto& intervention : interventions)
+                {
+                    Kernel::serialize<IDistributableIntervention>(ar, intervention);
+                }
+            }
+            else
+            {
+                for (size_t i = 0; i < count; ++i)
+                {
+                    IDistributableIntervention* intervention;
+                    Kernel::serialize<IDistributableIntervention>(ar, intervention);
+                    interventions.push_back(intervention);
+                }
+            }
+        ar.endElement();
 
-        root->EndObject();
+        return ar;
     }
-
-    void BaseIntervention::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-
-        LOG_INFO( "In JDeserialize\n");
-        rapidjson::Document * doc = (rapidjson::Document*) root;   
-        cost_per_unit = (*doc)["cost_per_unit"].GetDouble();
-        expired = (*doc)["expired"].GetBool();
-
-    }
-
-    // IJsonSerializable Interfaces
-    void BaseNodeIntervention::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("cost_per_unit",cost_per_unit);
-        root->Insert("expired", expired);
-
-        root->EndObject();
-    }
-
-    void BaseNodeIntervention::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
-
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

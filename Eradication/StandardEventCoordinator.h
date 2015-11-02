@@ -26,7 +26,7 @@ namespace Kernel
     // Standard distribution ec that just gives out the intervention once to the fraction of people specified by the coverage parameter
     class StandardInterventionDistributionEventCoordinator : public IEventCoordinator, public ITravelLinkedDistributionSource, public IVisitIndividual, public IEventCoordinator2, public JsonConfigurable
     {
-        DECLARE_FACTORY_REGISTERED_EXPORT(EventCoordinatorFactory, StandardInterventionDistributionEventCoordinator, IEventCoordinator)    
+        DECLARE_FACTORY_REGISTERED_EXPORT(EventCoordinatorFactory, StandardInterventionDistributionEventCoordinator, IEventCoordinator)
 
     public:
         DECLARE_CONFIGURED(StandardInterventionDistributionEventCoordinator)
@@ -34,11 +34,11 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
         StandardInterventionDistributionEventCoordinator();
-        virtual ~StandardInterventionDistributionEventCoordinator() { } 
+        virtual ~StandardInterventionDistributionEventCoordinator() { }
 
         // IEventCoordinator
         virtual void SetContextTo(ISimulationEventContext *isec);
-        
+
         virtual void AddNode( const suids::suid& node_suid);
 
         virtual void Update(float dt);
@@ -67,12 +67,12 @@ namespace Kernel
         int num_repetitions;
         int tsteps_between_reps;
         float demographic_coverage;
-        JsonConfigurable::tDynamicStringSet property_restrictions;
+        jsonConfigurable::tDynamicStringSet property_restrictions;
         std::map< std::string, std::string > property_restrictions_map;
         TargetDemographicType::Enum target_demographic;
         float target_age_min;
         float target_age_max;
-        TargetGender::Enum target_gender; 
+        TargetGender::Enum target_gender;
         int travel_linked; // should be bool
         int include_emigrants;
         int include_immigrants;
@@ -90,13 +90,6 @@ namespace Kernel
         virtual void validateInterventionConfig( const json::Element& rElement );
         virtual bool TargetedIndividualIsCovered(IIndividualHumanEventContext *ihec);
         bool property_restrictions_verified;
-
-#if USE_JSON_SERIALIZATION
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif    
 
 #if USE_BOOST_SERIALIZATION
     private:

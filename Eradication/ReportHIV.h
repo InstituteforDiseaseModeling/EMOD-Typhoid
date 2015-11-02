@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <map>
 #include "ReportSTI.h"
 #include "IndividualEventContext.h"
+#include "Interventions.h"
 
 namespace Kernel {
 
@@ -25,30 +26,25 @@ namespace Kernel {
 
         static IReport* ReportHIV::CreateReport() { return new ReportHIV(); }
 
-        virtual bool Configure( const Configuration* inputJson );
+        virtual bool Configure( const Configuration* inputJson ) override;
         virtual void UpdateEventRegistration( float currentTime, 
                                               float dt, 
-                                              std::vector<INodeEventContext*>& rNodeEventContextList ) ;
+                                              std::vector<INodeEventContext*>& rNodeEventContextList ) override;
 
-        virtual void LogIndividualData( IndividualHuman* individual );
-        virtual void EndTimestep( float currentTime, float dt );
-        virtual void Reduce();
+        virtual void LogIndividualData( IndividualHuman* individual ) override;
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual void Reduce() override;
 
         // for IIndividualEventObserver
         virtual bool notifyOnEvent( IIndividualHumanEventContext *context, 
-                                    const std::string& StateChange );
+                                    const std::string& StateChange ) override;
 
-#if USE_JSON_SERIALIZATION
-        // For JSON serialization
-        virtual void JSerialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) const {};
-        virtual void JDeserialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) {};
-#endif
         // ISupports
-        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) { return Kernel::e_NOINTERFACE; }
+        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) override { return Kernel::e_NOINTERFACE; }
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     protected:
-        virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
+        virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) override;
 
         float num_acute;
         float num_latent;
@@ -64,6 +60,4 @@ namespace Kernel {
         std::vector< std::string > eventTriggerList ;
         std::vector<INodeTriggeredInterventionConsumer*> ntic_list ;
     };
-
 }
-

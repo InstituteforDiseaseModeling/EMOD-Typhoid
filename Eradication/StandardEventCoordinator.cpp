@@ -46,7 +46,7 @@ namespace Kernel
 
     // ctor
     StandardInterventionDistributionEventCoordinator::StandardInterventionDistributionEventCoordinator()
-    : parent(NULL)
+    : parent(nullptr)
     , coverage(0)
     , distribution_complete(false)
     , num_repetitions(-1)
@@ -225,7 +225,7 @@ namespace Kernel
         // Only visit individuals if this is NOT an NTI. Check...
         // Check to see if intervention is an INodeDistributable...
         INodeDistributableIntervention *ndi = InterventionFactory::getInstance()->CreateNDIIntervention(qi_as_config);
-        INodeDistributableIntervention *ndi2 = NULL;
+        INodeDistributableIntervention *ndi2 = nullptr;
 
         //LOG_DEBUG_F("[UpdateNodes] limitPerNode = %d\n", limitPerNode);
         LOG_DEBUG_F("[UpdateNodes] visiting %d nodes per NodeSet\n", cached_nodes.size());
@@ -549,7 +549,7 @@ namespace Kernel
     {
         LOG_INFO("Individual departing from node receiving intervention. TODO: enforce demographic and other qualifiers.\n");
         float incrementalCostOut = 0.0f;
-        visitIndividualCallback( pInd, incrementalCostOut, NULL /* campaign cost observer */ );
+        visitIndividualCallback( pInd, incrementalCostOut, nullptr /* campaign cost observer */ );
     } // these do nothing for now
 
     void
@@ -559,48 +559,10 @@ namespace Kernel
     {
         LOG_INFO("Individual arriving at node receiving intervention. TODO: enforce demographic and other qualifiers.\n");
         float incrementalCostOut = 0.0f;
-        visitIndividualCallback( pInd, incrementalCostOut, NULL /* campaign cost observer */ );
+        visitIndividualCallback( pInd, incrementalCostOut, nullptr /* campaign cost observer */ );
     }
-
-#if USE_JSON_SERIALIZATION
-
-    // IJsonSerializable Interfaces
-    void StandardInterventionDistributionEventCoordinator::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("coverage", coverage);
-        root->Insert("distribution_complete", distribution_complete);
-        root->Insert("num_repetitions", num_repetitions);
-        root->Insert("tsteps_between_reps", tsteps_between_reps);
-        root->Insert("demographic_coverage", demographic_coverage);
-        root->Insert("target_demographic", target_demographic);
-        root->Insert("target_age_min", target_age_min);
-        root->Insert("target_age_max", target_age_max);
-        root->Insert("include_emigrants", include_emigrants);
-        root->Insert("include_immigrants", include_immigrants);
-        root->Insert("tsteps_since_last", tsteps_since_last);
-        root->Insert("intervention_activated", intervention_activated);
-
-        root->Insert("intervention_config");
-        intervention_config.JSerialize(root, helper);
-
-        root->Insert("node_suids");
-        root->BeginArray();
-        for (auto& sid : node_suids)
-        {
-            sid.JSerialize(root, helper);
-        }
-        root->EndArray();
-
-        root->EndObject();
-    }
-
-    void StandardInterventionDistributionEventCoordinator::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
 }
+
 #if USE_BOOST_SERIALIZATION
 // TODO: Consolidate with serialization code in header.
 #include <boost/serialization/export.hpp>

@@ -9,7 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include <string>
-#include <list>
 #include <map>
 
 #include "BoostLibWrapper.h"
@@ -21,20 +20,16 @@ class Configuration;
 
 #include "Sugar.h"
 #include "SimulationEnums.h" // to get DistributionFunction enum. Don't want utils reaching into Eradication though. TBD!!!
-#include <boost/serialization/binary_object.hpp>
 
-#include "StrainIdentity.h"
-#include "Common.h"
+#include "IInfection.h"
 
-#include <typeinfo>
 #include "Configure.h"
-#include "Types.h"
 
 namespace Kernel
 {
     class Susceptibility;
 
-    class InfectionConfig : public JsonConfigurable 
+    class InfectionConfig : public JsonConfigurable
     {
     public:
         bool Configure( const Configuration* config );
@@ -57,14 +52,17 @@ namespace Kernel
         static DistributionFunction::Enum                         infectious_distribution;                          // INFECTIOUS_DISTRIBUTION
 
         GET_SCHEMA_STATIC_WRAPPER(InfectionConfig)
-        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
     };
 
     // generic infection base class
     // may not necessary want to derive from this for real infections
-    class Infection : public InfectionConfig
+    class Infection : public IInfection, protected InfectionConfig
     {
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
+        DECLARE_QUERY_INTERFACE()
+
     public:
         static Infection *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
         virtual ~Infection();
@@ -74,19 +72,18 @@ namespace Kernel
 
         virtual suids::suid GetSuid() const;
 
-        virtual void SetParameters(StrainIdentity* infstrain=NULL, int incubation_period_override = -1 );
-        virtual void Update(float, Susceptibility* =NULL);
+        virtual void SetParameters(StrainIdentity* infstrain=nullptr, int incubation_period_override = -1 );
+        virtual void Update(float, ISusceptibilityContext* =nullptr) override;
 
-        InfectionStateChange::_enum GetStateChange() const;
-        virtual float GetInfectiousness() const;
-        float GetInfectiousnessByRoute(string route) const; //used in multi-route simulations
-        float GetContactSheddingFraction() const;
-        float GetInfectiousPeriod() const;
+        virtual InfectionStateChange::_enum GetStateChange() const override;
+        virtual float GetInfectiousness() const override;
+        virtual float GetInfectiousnessByRoute(string route) const override; //used in multi-route simulations
+        virtual float GetInfectiousPeriod() const override;
 
         virtual void InitInfectionImmunology(Susceptibility* _immunity);
-        virtual void GetInfectiousStrainID(StrainIdentity* infstrain); // the ID of the strain being shed
-        virtual bool IsActive() const;
-        virtual NonNegativeFloat GetDuration() const;
+        virtual void GetInfectiousStrainID(StrainIdentity* infstrain) override; // the ID of the strain being shed
+        virtual bool IsActive() const override;
+        virtual NonNegativeFloat GetDuration() const override;
 
     protected:
         IIndividualHumanContext *parent;
@@ -114,22 +111,18 @@ namespace Kernel
         const SimulationConfig* params();
 
         virtual void CreateInfectionStrain(StrainIdentity* infstrain);
-        virtual void EvolveStrain(Susceptibility* immunity, float dt);
+        virtual void EvolveStrain(ISusceptibilityContext* immunity, float dt);
 
     private:
+
+        DECLARE_SERIALIZABLE(Infection, IInfection);
+
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;
 
         template<class Archive>
         friend void serialize(Archive & ar, Infection &inf, const unsigned int  file_version );
 
-#endif
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    public:
-     // IJsonSerializable Interfaces
-     virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-     virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
 #endif
     };
 }

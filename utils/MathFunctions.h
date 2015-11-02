@@ -72,7 +72,7 @@ class Probability
     public:
         static Probability * getInstance()
         {
-            if( _instance == NULL )
+            if( _instance == nullptr )
             {
                 _instance = new Probability();
             }

@@ -12,10 +12,10 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #include "IdmApi.h"
 #include "BoostLibWrapper.h"
-#include "Serializer.h" // For IJsonSerializable
-#include <stdint.h>
 
 // helper macros for verifying 
 
@@ -145,14 +145,6 @@ private:
     friend class boost::serialization::access;
     template<class Archive>
     friend void serialize(Archive & ar, RANDOMBASE &rng, const unsigned int /* file_version */);
-#endif
-
-#if USE_JSON_SERIALIZATION
-     public:
-
-         // IJsonSerializable Interfaces
-         virtual void JSerialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) const;
-         virtual void JDeserialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper );
 #endif
 };
 

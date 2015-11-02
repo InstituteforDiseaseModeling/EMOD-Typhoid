@@ -28,7 +28,7 @@ namespace Kernel
 
     ARTDropout::ARTDropout()
     : GenericDrug()
-    , itbda(NULL)
+    , itbda(nullptr)
     {
         initSimTypes( 1, "HIV_SIM" );
     }

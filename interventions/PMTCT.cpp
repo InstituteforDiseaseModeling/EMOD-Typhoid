@@ -83,7 +83,6 @@ namespace Kernel
             expired = true;
         }
     }
-
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

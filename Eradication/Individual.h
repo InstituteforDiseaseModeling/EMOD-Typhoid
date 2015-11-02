@@ -22,9 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEventContext.h"
 #include "InterventionsContainer.h" // for serialization code to compile
 #include "TransmissionGroupMembership.h"
-#include "SimpleTypemapRegistration.h"
 #include "SimulationEnums.h"
-#include "Sugar.h"
 #include "suids.hpp"
 #include "IContagionPopulation.h"
 #include "IIndividualHuman.h"
@@ -44,7 +42,7 @@ namespace Kernel
     class  StrainIdentity;
     class  Susceptibility;
 
-    class IndividualHumanConfig : public JsonConfigurable 
+    class IndividualHumanConfig : public JsonConfigurable
     {
         GET_SCHEMA_STATIC_WRAPPER(IndividualHumanConfig)
         friend class Simulation;
@@ -53,7 +51,7 @@ namespace Kernel
         static bool aging;
 
         // migration parameters
-        static int roundtrip_waypoints; 
+        static int roundtrip_waypoints;
         static MigrationPattern::Enum migration_pattern;
         static float local_roundtrip_prob;
         static float air_roundtrip_prob;
@@ -72,20 +70,20 @@ namespace Kernel
         static bool superinfection;
         static float x_othermortality;
 
-        virtual bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
         void RegisterRandomWalkDiffusionParameters();
         void RegisterSingleRoundTripsParameters();
         void RegisterWaypointsHomeParameters();
 
-        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
     };
 
     class IndividualHuman : public IIndividualHuman,
-                            public IIndividualHumanContext, 
-                            public IIndividualHumanEventContext, 
-                            public IInfectable, 
+                            public IIndividualHumanContext,
+                            public IIndividualHumanEventContext,
+                            public IInfectable,
                             public IInfectionAcquirable,
                             public IMigrate,
                             protected IndividualHumanConfig
@@ -100,20 +98,20 @@ namespace Kernel
         virtual void InitializeHuman();
         virtual ~IndividualHuman();
 
-        virtual void Update(float currenttime, float dt);
+        virtual void Update(float currenttime, float dt) override;
 
         // IIndividualHumanContext
-        virtual suids::suid GetSuid() const;
-        virtual suids::suid GetNextInfectionSuid();
-        virtual ::RANDOMBASE* GetRng();
+        virtual suids::suid GetSuid() const override;
+        virtual suids::suid GetNextInfectionSuid() override;
+        virtual ::RANDOMBASE* GetRng() override;
 
-        virtual IIndividualHumanInterventionsContext* GetInterventionsContext() const;
-        virtual IIndividualHumanInterventionsContext* GetInterventionsContextbyInfection(Infection* infection);
-        virtual IIndividualHumanEventContext*         GetEventContext();
-        virtual ISusceptibilityContext*               GetSusceptibilityContext() const;
+        virtual IIndividualHumanInterventionsContext* GetInterventionsContext() const override;
+        virtual IIndividualHumanInterventionsContext* GetInterventionsContextbyInfection(Infection* infection) override;
+        virtual IIndividualHumanEventContext*         GetEventContext() override;
+        virtual ISusceptibilityContext*               GetSusceptibilityContext() const override;
 
-        virtual const Kernel::NodeDemographics*     GetDemographics() const;
-        virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string key) const;
+        virtual const Kernel::NodeDemographics*     GetDemographics() const override;
+        virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string key) const override;
 
         // IIndividualHumanEventContext methods
         inline  bool   IsPregnant()           const { return is_pregnant; };
@@ -123,23 +121,23 @@ namespace Kernel
         inline  double GetMonteCarloWeight()  const { return m_mc_weight; }
         virtual bool   IsPossibleMother()     const;
         inline  bool   IsInfected()           const { return m_is_infected; }
-        virtual float  GetAcquisitionImmunity()          const;  // KM: For downsampling based on immune status.  For now, just takes perfect immunity; can be updated to include a threshold.  Unclear how to work with multiple strains or waning immunity. 
+        virtual float  GetAcquisitionImmunity()          const;  // KM: For downsampling based on immune status.  For now, just takes perfect immunity; can be updated to include a threshold.  Unclear how to work with multiple strains or waning immunity.
         inline HumanStateChange GetStateChange() const { return StateChange; }
-        virtual void Die( HumanStateChange );
-        virtual INodeEventContext   * GetNodeEventContext(); // for campaign cost reporting in e.g. HealthSeekingBehavior
-        virtual tProperties* GetProperties();
+        virtual void Die( HumanStateChange ) override;
+        virtual INodeEventContext   * GetNodeEventContext() override; // for campaign cost reporting in e.g. HealthSeekingBehavior
+        virtual tProperties* GetProperties() override;
 
         // Migration
-        virtual void ImmigrateTo(Node* destination_node);
-        virtual const suids::suid& GetMigrationDestination();
+        virtual void ImmigrateTo(Node* destination_node) override;
+        virtual const suids::suid& GetMigrationDestination() override;
         void SetMigrationDestination(suids::suid destination);
         bool IsMigrating();
         virtual void CheckForMigration(float currenttime, float dt);
         void SetNextMigration();
 
         // Heterogeneous intra-node transmission
-        virtual void UpdateGroupMembership();
-        virtual void UpdateGroupPopulation(float size_changes);
+        virtual void UpdateGroupMembership() override;
+        virtual void UpdateGroupPopulation(float size_changes) override;
 
         // Initialization
         virtual void SetInitialInfections(int init_infs);
@@ -149,9 +147,9 @@ namespace Kernel
 
         // Infections
         virtual void ExposeToInfectivity(float dt, const TransmissionGroupMembership_t* transmissionGroupMembership);
-        virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route = TransmissionRoute::TRANSMISSIONROUTE_ALL );
-        virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
-        virtual const infection_list_t &GetInfections() const;
+        virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route = TransmissionRoute::TRANSMISSIONROUTE_ALL ) override;
+        virtual void AcquireNewInfection(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1) override;
+        virtual const infection_list_t &GetInfections() const override;
         virtual void UpdateInfectiousness(float dt);
         virtual bool InfectionExistsForThisStrain(StrainIdentity* check_strain_id);
         virtual void ClearNewInfectionState();
@@ -159,7 +157,7 @@ namespace Kernel
         virtual inline float GetInfectiousness() const { return infectiousness; }
 
         virtual float GetImmunityReducedAcquire() const;
-        virtual float GetInterventionReducedAcquire() const;
+        virtual float GetInterventionReducedAcquire() const override;
 
         // Births and deaths
         virtual bool  UpdatePregnancy(float dt=1); // returns true if birth happens this time step and resets is_pregnant to false
@@ -170,7 +168,7 @@ namespace Kernel
 
         // Assorted getters and setters
         virtual void SetContextTo(INodeContext* context);
-        virtual INodeContext* GetParent() const;
+        virtual INodeContext* GetParent() const override;
         inline Kernel::suids::suid GetParentSuid() const { return parent->GetSuid(); }
         virtual ProbabilityNumber getProbMaternalTransmission() const;
 
@@ -233,25 +231,24 @@ namespace Kernel
         virtual void PropagateContextToDependents();
         INodeTriggeredInterventionConsumer* broadcaster;
 
-    private:
-
         virtual IIndividualHumanContext* GetContextPointer();
 
+        DECLARE_SERIALIZABLE(IndividualHuman, IIndividualHuman);
+
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
+
+        // From http://www.boost.org/doc/libs/1_59_0/libs/serialization/doc/tutorial.html
         friend class boost::serialization::access;
         template<class Archive>
-        friend void serialize(Archive & ar, IndividualHuman& human, const unsigned int file_version);
-#endif
+        void save(Archive& ar, const unsigned int version) const;
+        template<class Archive>
+        void load(Archive& ar, const unsigned int version);
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    public:
-     // IJsonSerializable Interfaces
-     virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        
-     virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-     virtual void JDeserialize( const json::Object &IndividualJson );
-     //virtual void JDeserialize( const rapidjson::Document &IndividualJson );
+        template<class Archive>
+        friend void serialize(Archive& ar, IndividualHuman& human, const unsigned int version);
+
+        std::string toJson();
+        void fromJson(std::string& json);
 #endif
     };
 }

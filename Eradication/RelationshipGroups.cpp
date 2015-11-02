@@ -52,6 +52,8 @@ namespace Kernel {
     )
     {
         LOG_DEBUG_F( "%s: propertyName = %s\n", __FUNCTION__, propertyName.c_str() );
+        static int func_counter = 0;
+        func_counter++;
         clock_t apv = clock();
 
         ValueToIndexMap_t &valueToIndexMap = propertyValueToIndexMap[propertyName] ;
@@ -168,7 +170,7 @@ namespace Kernel {
     {
         (*membershipOut)[0] = (GroupIndex)0; // map route 0 to index 0 // why?
         membershipOut->clear();
-        std::ostringstream* msg = NULL;
+        std::ostringstream* msg = nullptr;
         /*if (LOG_LEVEL(DEBUG))
         {
             msg = new std::ostringstream();
@@ -257,7 +259,7 @@ namespace Kernel {
             if (act_prob_vec.size() > 0)
             {
                 LOG_INFO_F( "act_prob_vec.size() = %d for index %d\n", act_prob_vec.size(), poolIndex );
-                if (candidate != NULL)
+                if (candidate != nullptr)
                 {
 #if 0
                     std::cout << "I am "
@@ -332,8 +334,8 @@ namespace Kernel {
         auto male_partner = *(members.begin());
         auto female_partner = *(members.rbegin());
 
-        IIndividualHumanContext* human1 = NULL;
-        IIndividualHumanContext* human2 = NULL;
+        IIndividualHumanContext* human1 = nullptr;
+        IIndividualHumanContext* human2 = nullptr;
 
         if (male_partner->QueryInterface(GET_IID(IIndividualHumanContext), (void**)&human1) != s_OK) {
             LOG_ERR("Couldn't get IIndividualHumanContext pointer for male_partner.");
@@ -345,8 +347,8 @@ namespace Kernel {
             return;
         }
 
-        IIndividualHumanEventContext* humanEvent1 = NULL;
-        IIndividualHumanEventContext* humanEvent2 = NULL;
+        IIndividualHumanEventContext* humanEvent1 = nullptr;
+        IIndividualHumanEventContext* humanEvent2 = nullptr;
 
         if (male_partner->QueryInterface(GET_IID(IIndividualHumanEventContext), (void**)&humanEvent1) != s_OK) {
             LOG_ERR("Couldn't get IIndividualHumanEventContext pointer for male_partner.");

@@ -10,6 +10,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "InterpolatedValueMap.h"
 
+#include "Log.h"
+
 static const char* _module = "InterpolatedValueMap";
 
 static const float MIN_TIME = 0.0f ;

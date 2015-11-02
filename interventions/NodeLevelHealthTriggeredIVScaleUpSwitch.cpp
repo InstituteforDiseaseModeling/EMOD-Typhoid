@@ -101,8 +101,8 @@ namespace Kernel
 
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
         //const IInterventionFactory* ifobj = dynamic_cast<NodeEventContextHost *>(parent)->GetInterventionFactoryObj();
-        IGlobalContext *pGC = NULL;
-        const IInterventionFactory* ifobj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const IInterventionFactory* ifobj = nullptr;
         if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             ifobj = pGC->GetInterventionFactory();

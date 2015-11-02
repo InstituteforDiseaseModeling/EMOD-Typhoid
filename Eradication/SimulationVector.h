@@ -59,7 +59,8 @@ namespace Kernel
     protected:
 
         // holds a vector of migrating vectors for each node rank
-        vector< vector< IMigrate* > > migratingVectorQueues;
+// clorton        vector< vector< IMigrate* > > migratingVectorQueues;
+        vector<vector<IVectorCohort*>> migratingVectorQueues;
 
         float drugdefaultcost;
         float vaccinedefaultcost;
@@ -85,10 +86,10 @@ namespace Kernel
 
         virtual ISimulationContext *GetContextPointer();
 
-        TypedPrivateMigrationQueueStorage<Kernel::IndividualHumanVector>  typed_migration_queue_storage;
+// clorton        TypedPrivateMigrationQueueStorage<Kernel::IndividualHumanVector>  typed_migration_queue_storage;
 
     protected:
-        TypedPrivateMigrationQueueStorage<Kernel::VectorCohortIndividual> typed_vector_migration_queue_storage; // inherited by SimulationMalaria
+// clorton        TypedPrivateMigrationQueueStorage<Kernel::VectorCohortIndividual> typed_vector_migration_queue_storage; // inherited by SimulationMalaria
     };
 }
 

@@ -39,7 +39,7 @@ namespace Kernel
         // ]
         // We give the intervention if the individuals has
         // Good Character AND High Income OR Bad Character AND Low Income.
-        // So we AND together the elements of each json object and OR together these 
+        // So we AND together the elements of each json object and OR together these
         // calculated truth values of the elements of the json array.
         json::QuickInterpreter s2sarray = (*inputJson)[key].As<json::Array>();
         for( int idx=0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
@@ -104,7 +104,7 @@ namespace Kernel
         initConfigTypeMap("Demographic_Coverage", &demographic_coverage, BT_Demographic_Coverage_DESC_TEXT, 0.0f, 1.0f, 1.0f );
 
         //ugh should do the same thing like standard event coordinator but then I have to add targetdemographic to all my files
-        initConfigTypeMap( "Target_Age_Min", &target_age_min, Target_Age_Min_DESC_TEXT, 0.0f, FLT_MAX, 0.0f); 
+        initConfigTypeMap( "Target_Age_Min", &target_age_min, Target_Age_Min_DESC_TEXT, 0.0f, FLT_MAX, 0.0f);
         initConfigTypeMap( "Target_Age_Max", &target_age_max, Target_Age_Max_DESC_TEXT, 0.0f, FLT_MAX, FLT_MAX);
 
         initConfigComplexType("Property_Restrictions_Within_Node", &property_restrictions, Property_Restriction_DESC_TEXT, "Intervention_Config.*.iv_type", "IndividualTargeted" );
@@ -126,19 +126,19 @@ namespace Kernel
     )
     {
         // First, read in Trigger_Condition as an enum. 3 possible value (types):
-        // 1) Actual enum (not NoTrigger). 
+        // 1) Actual enum (not NoTrigger).
         // 2) TriggerList (of strings). Read directly into m_trigger_conditions as string list.
         // 3) TriggerString. Read directly into trigger_condition_string and then push into m_trigger_conditions as single string.
         // Either way, we end up with m_trigger_conditions contains 1 or more strings. That's what we use.
 
         IndividualEventTriggerType::Enum trigger_condition = IndividualEventTriggerType::NoTrigger;
-        ConstrainedString trigger_condition_string = NO_TRIGGER_STR;
+        jsonConfigurable::ConstrainedString trigger_condition_string = NO_TRIGGER_STR;
         initConfig( "Trigger_Condition", trigger_condition, inputJson, MetadataDescriptor::Enum("Trigger_Condition", HTI_Trigger_Condition_DESC_TEXT, MDD_ENUM_ARGS(IndividualEventTriggerType)) );
         if( trigger_condition == IndividualEventTriggerType::TriggerList || JsonConfigurable::_dryrun )
         {
             initConfigTypeMap( "Trigger_Condition_List", &m_trigger_conditions, NLHTI_Trigger_Condition_List_DESC_TEXT ); // TODO need to add conditionality but not supported in all datatypes yet
         }
-        // would have else but schema needs to be able to enter both blocks. 
+        // would have else but schema needs to be able to enter both blocks.
         if( trigger_condition == IndividualEventTriggerType::TriggerString || JsonConfigurable::_dryrun )
         {
             trigger_condition_string.constraints = "<configuration>:Listed_Events.*";
@@ -172,7 +172,7 @@ namespace Kernel
         {
             InterventionValidator::ValidateIntervention( actual_intervention_config._json );
         }
-        return retValue;    
+        return retValue;
     }
 
     bool
@@ -184,7 +184,7 @@ namespace Kernel
         LOG_DEBUG_F("Distributed Nodelevel health-triggered intervention to NODE: %d\n", pNodeEventContext->GetId().data);
 
         // QI to register ourself as a NodeLevelHealthTriggeredIV observer
-        INodeTriggeredInterventionConsumer * pNTIC = NULL;
+        INodeTriggeredInterventionConsumer * pNTIC = nullptr;
         if (s_OK != pNodeEventContext->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&pNTIC) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNodeEventContext", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
@@ -222,7 +222,7 @@ namespace Kernel
         //initialize this flag by individual (not by node)
         m_disqualified_by_coverage_only = false;
 
-        if( qualifiesToGetIntervention( pIndiv ) == false )  
+        if( qualifiesToGetIntervention( pIndiv ) == false )
         {
             LOG_DEBUG_F("Individual failed to qualify for intervention, m_disqualified_by_coverage_only is %d \n", m_disqualified_by_coverage_only);
             if (m_disqualified_by_coverage_only == true)
@@ -232,7 +232,7 @@ namespace Kernel
             return false;
         }
         property_restrictions_verified = true;
-        
+
 
         // Query for campaign cost observer interface from INodeEventContext *parent
         ICampaignCostObserver *iCCO;
@@ -243,8 +243,8 @@ namespace Kernel
 
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
         //const IInterventionFactory* ifobj = dynamic_cast<NodeEventContextHost *>(parent)->GetInterventionFactoryObj();
-        IGlobalContext *pGC = NULL;
-        const IInterventionFactory* ifobj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const IInterventionFactory* ifobj = nullptr;
         if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             ifobj = pGC->GetInterventionFactory();
@@ -257,7 +257,7 @@ namespace Kernel
         if( _di == nullptr )
         {
             auto config = Configuration::CopyFromElement( (actual_intervention_config._json) );
-            _di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config ); 
+            _di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config );
             release_assert( _di );
             delete config;
         }
@@ -310,10 +310,10 @@ namespace Kernel
         }
     }
 
-    void NodeLevelHealthTriggeredIV::SetContextTo(INodeEventContext *context) 
-    { 
+    void NodeLevelHealthTriggeredIV::SetContextTo(INodeEventContext *context)
+    {
         release_assert( context );
-        parent = context; 
+        parent = context;
     }
 
     // private/protected
@@ -325,7 +325,7 @@ namespace Kernel
         bool retQualifies = true;
 
         //based on StandardEventCoordinator pattern, first check if the individual has the right property, then check their age, then check if they are part of the demographic coverage
-        
+
         //this section directly copied from StandardEventCoordinator
         if( property_restrictions._restrictions.size() )
         {
@@ -381,7 +381,7 @@ namespace Kernel
         {
             LOG_DEBUG( "No property restrictions in NodeLevelHealthTriggeredIV to apply.\n" );
         }
-        
+
         //OK they passed the property test, now check if they pass the age test
         if (retQualifies)
         {
@@ -413,27 +413,16 @@ namespace Kernel
         LOG_DEBUG_F( "Returning %d from %s\n", retQualifies, __FUNCTION__ );
         return retQualifies;
     }
-  
+
     float NodeLevelHealthTriggeredIV::getDemographicCoverage() const
     {
-        return demographic_coverage;    
+        return demographic_coverage;
     }
 
     void NodeLevelHealthTriggeredIV::onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv )
     {
-    //do nothing, this is for the scale up switch
+        //do nothing, this is for the scale up switch
     }
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    void NodeLevelHealthTriggeredIV::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__);
-    }
-
-    void NodeLevelHealthTriggeredIV::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__);
-    }
-#endif
 }
 
 #if USE_BOOST_SERIALIZATION

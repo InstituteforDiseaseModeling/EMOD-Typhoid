@@ -25,7 +25,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IBednetConsumer; 
+    struct IBednetConsumer;
 
     /* Keep around as an identity solution??? */
     struct IBednet : public ISupports
@@ -49,6 +49,7 @@ namespace Kernel
         virtual void Update(float dt);
 
     protected:
+
         float current_blockingrate;
         float current_killingrate;
         float primary_decay_time_constant;
@@ -57,9 +58,15 @@ namespace Kernel
         BednetType::Enum bednet_type;
         IBednetConsumer *ibc;
 
+        DECLARE_SERIALIZABLE(SimpleBednet, IDistributableIntervention);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class ::boost::serialization::access;
+        template<class Archive>
+        void save(Archive& ar, const unsigned int version) const;
+        template<class Archive>
+        void load(Archive& ar, const unsigned int version);
         template<typename Archive>
         friend void serialize( Archive &ar, SimpleBednet& bn, unsigned int version );
 #endif

@@ -35,10 +35,9 @@ namespace Kernel
         void Initialize(const ::Configuration *config);
 
         // Allows correct type of community to be added by derived class Simulations
-        virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
+        virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory) override;
 
-        virtual void InitializeFlags(const ::Configuration *config);
-        virtual void resolveMigration();
+        virtual void InitializeFlags(const ::Configuration *config) override;
 
     private:
 
@@ -48,7 +47,6 @@ namespace Kernel
         template<class Archive>
         friend void serialize(Archive & ar, SimulationPolio& sim, const unsigned int  file_version );
 #endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanPolio> typed_migration_queue_storage;
     };
 }
 

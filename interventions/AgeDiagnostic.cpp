@@ -33,7 +33,7 @@ namespace Kernel
         assert( a_qi.As<json::Array>().Size() );
         for( unsigned int idx=0; idx<a_qi.As<json::Array>().Size(); idx++ )
         {
-            ConstrainedString signal = "UNITIALIZED";
+            jsonConfigurable::ConstrainedString signal = "UNITIALIZED";
             signal.constraints = "<configuration>:Listed_Events.*";
             signal.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
             initConfigTypeMap( "Event", &signal, HIV_Age_Diagnostic_Event_Name_DESC_TEXT );
@@ -47,7 +47,7 @@ namespace Kernel
             if( high <= low )
             {
                 throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__,
-                                                        "low",  std::to_string( low ).c_str(), 
+                                                        "low",  std::to_string( low ).c_str(),
                                                         "high", std::to_string( high ).c_str(),
                                                         "High value must be higher than Low value." );
             }
@@ -106,9 +106,9 @@ namespace Kernel
     {
         age_thresholds = master.age_thresholds;
     }
-        
+
     AgeDiagnostic::~AgeDiagnostic()
-    { 
+    {
         LOG_DEBUG("Destructing Age Diagnostic \n");
     }
 
@@ -119,7 +119,7 @@ namespace Kernel
         // Apply diagnostic test with given specificity/sensitivity
         bool test_pos = false;
 
-        IIndividualHumanEventContext* ind_hec = NULL;
+        IIndividualHumanEventContext* ind_hec = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanEventContext ), (void**)&ind_hec ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanEventContext", "IIndividualHuman" );

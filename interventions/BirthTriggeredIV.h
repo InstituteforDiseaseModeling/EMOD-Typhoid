@@ -10,13 +10,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include <string>
-#include <list>
-#include <vector>
 
 #include "BoostLibWrapper.h"
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
@@ -34,18 +31,18 @@ namespace Kernel
     public:
         BirthTriggeredIV();
         virtual ~BirthTriggeredIV();
-        virtual int AddRef();
-        virtual int Release();
-        bool Configure( const Configuration* config );
+        virtual int AddRef() override;
+        virtual int Release() override;
+        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
 
         // INodeDistributableIntervention
-        virtual bool Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC );
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void SetContextTo(INodeEventContext *context);
-        virtual void Update(float dt);
+        virtual bool Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC ) override;
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual void SetContextTo(INodeEventContext *context) override;
+        virtual void Update(float dt) override;
 
         // IIndividualEventObserver
-        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
+        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
 
         virtual void SetDemographicCoverage(float new_coverage) {demographic_coverage = new_coverage;};
         virtual void SetMaxDuration(float new_duration) {max_duration = new_duration;};
@@ -58,11 +55,6 @@ namespace Kernel
         float demographic_coverage;
 
         IndividualInterventionConfig actual_intervention_config;
-
-#if USE_JSON_SERIALIZATION
-        void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
 
 #if USE_BOOST_SERIALIZATION
     private:

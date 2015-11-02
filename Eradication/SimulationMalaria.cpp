@@ -11,11 +11,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "SimulationMalaria.h"
 #include "NodeMalaria.h"
-#include "InfectionMalaria.h"
+// clorton #include "InfectionMalaria.h"
 #include "ReportMalaria.h"
 #include "BinnedReportMalaria.h"
 #include "SpatialReportMalaria.h"
-#include "ProgVersion.h"
+// clorton #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
 
@@ -35,7 +35,6 @@ extern "C" {          // we need to export the C interface
 //
 namespace Kernel
 {
-   
     DTK_DLLEXPORT ISimulation* __cdecl
     CreateSimulation(
         const Environment * pEnv 
@@ -124,9 +123,7 @@ namespace Kernel
 
     SimulationMalaria *SimulationMalaria::CreateSimulation(const ::Configuration *config)
     {
-        SimulationMalaria *newsimulation = NULL;
-
-        newsimulation = _new_ SimulationMalaria();
+        SimulationMalaria *newsimulation = _new_ SimulationMalaria();
         if (newsimulation)
         {
             // This sequence is important: first
@@ -135,7 +132,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
                 throw GeneralConfigurationException(__FILE__, __LINE__, __FUNCTION__, "Malaria simulations do not currently support heterogeneous intra-node transmission.");
             }
         }
@@ -165,12 +162,11 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationMalaria::resolveMigration()
-    {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-        resolveMigrationInternal( typed_vector_migration_queue_storage, migratingVectorQueues );
-    }
-
+//clorton    void SimulationMalaria::resolveMigration()
+//clorton    {
+//clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
+//clorton        resolveMigrationInternal( typed_vector_migration_queue_storage, migratingVectorQueues );
+//clorton    }
 
     //const SimulationFlagsMalaria *
     //SimulationMalaria::flags() { return (SimulationFlagsMalaria *)simulationFlags; } // overridden in derived classes but with different return types to hide the casting operation

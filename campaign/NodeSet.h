@@ -72,14 +72,6 @@ namespace Kernel
         
         virtual bool Contains(INodeEventContext *ndc);
 
-#if USE_JSON_SERIALIZATION
-    public:
-
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
 #if USE_BOOST_SERIALIZATION
     private:
         friend class ::boost::serialization::access;
@@ -112,14 +104,6 @@ namespace Kernel
         size_t num_points;
         std::string vertices_raw;
 #pragma warning( pop )
-
-#if USE_JSON_SERIALIZATION
-    public:
-
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
 
 #if USE_BOOST_SERIALIZATION
     private:
@@ -162,14 +146,6 @@ namespace Kernel
 
     protected:
         NodeListConfig nodelist_config;
-
-#if USE_JSON_SERIALIZATION
-    public:
-
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
 
 #if USE_BOOST_SERIALIZATION
     private:

@@ -66,12 +66,12 @@ namespace Kernel
 
     // Each time this is called, the HSB intervention is going to decide for itself if
     // health should be sought. For start, just do it based on roll of the dice. If yes,
-    // an intervention needs to be created (from 'actual' config) and distributed to the 
+    // an intervention needs to be created (from 'actual' config) and distributed to the
     // individual who owns us.
     void SimpleHealthSeekingBehavior::Update( float dt )
     {
         bool wasDistributed = false;
-        
+
         if(expired) return; // don't give expired intervention.  should be cleaned up elsewhere anyways, though.
 
         LOG_DEBUG_F("Individual %d is seeking with tendency %f \n", parent->GetSuid().data, probability_of_seeking*dt);
@@ -79,10 +79,10 @@ namespace Kernel
         if( SMART_DRAW( probability_of_seeking * dt ) )
         {
             LOG_DEBUG_F("SimpleHealthSeekingBehavior is going to give the actual intervention to individual %d\n", parent->GetSuid().data );
-            
+
             // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-            IGlobalContext *pGC = NULL;
-            const IInterventionFactory* ifobj = NULL;
+            IGlobalContext *pGC = nullptr;
+            const IInterventionFactory* ifobj = nullptr;
             if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
             {
                 ifobj = pGC->GetInterventionFactory();
@@ -108,7 +108,7 @@ namespace Kernel
                 //auto indiv_id = parent->GetInterventionsContext()->GetParent()->GetSuid().data;
                 LOG_INFO_F("SimpleHealthSeekingBehavior is distributing actual intervention to individual %d.\n", parent->GetSuid().data );
                 auto config = Configuration::CopyFromElement( (actual_intervention_config._json) );
-                IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config ); 
+                IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config );
                 delete config;
 /*
                 // In theory this is a good addition, but I can't get it to trigger when I add other upstream
@@ -116,7 +116,7 @@ namespace Kernel
                 IDistributableIntervention *di = nullptr;
                 try
                 {
-                    di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement( (actual_intervention_config._json) )); 
+                    di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement( (actual_intervention_config._json) ));
                 }
                 catch( json::Exception &except )
                 {
@@ -129,7 +129,7 @@ namespace Kernel
                 // Now make sure cost gets reported back to node
                 ICampaignCostObserver* pICCO;
                 if (s_OK == parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(ICampaignCostObserver), (void**)&pICCO) )
-                { 
+                {
                     m_pCCO = pICCO;
                 }
                 else
@@ -138,7 +138,7 @@ namespace Kernel
                 }
 
                 //Expire();
-    
+
                 if (s_OK == parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(ICampaignCostObserver), (void**)&pICCO) )
                 {
                     LOG_DEBUG_F( "Got di object; calling Distribute.\n" );
@@ -165,11 +165,11 @@ namespace Kernel
             LOG_DEBUG("SimpleHealthSeekingBehavior did not distribute\n");
         }
     }
-    
-    void SimpleHealthSeekingBehavior::SetContextTo(IIndividualHumanContext *context) 
-    { 
+
+    void SimpleHealthSeekingBehavior::SetContextTo(IIndividualHumanContext *context)
+    {
         parent = context; // for rng
- 
+
         if (s_OK != context->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(ICampaignCostObserver), (void**)&m_pCCO) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext");
@@ -181,11 +181,23 @@ namespace Kernel
     {
         expired = true;
         // notify campaign event observer
-        if (m_pCCO != NULL)
+        if (m_pCCO != nullptr)
         {
-            m_pCCO->notifyCampaignEventOccurred( (IBaseIntervention*)this, NULL, parent );
-        }   
+            m_pCCO->notifyCampaignEventOccurred( (IBaseIntervention*)this, nullptr, parent );
+        }
+    }
 
+    REGISTER_SERIALIZABLE(SimpleHealthSeekingBehavior, IDistributableIntervention);
+
+    void SimpleHealthSeekingBehavior::serialize(IArchive& ar, IDistributableIntervention* obj)
+    {
+        SimpleHealthSeekingBehavior& intervention = *dynamic_cast<SimpleHealthSeekingBehavior*>(obj);
+        ar.startElement();
+            ar.labelElement("probability_of_seeking") & intervention.probability_of_seeking;
+//            ar.labelElement("actual_intervention_config") & intervention.actual_intervention_config;
+            ar.labelElement("actual_intervention_event") & intervention.actual_intervention_event;
+            ar.labelElement("single_use") & intervention.single_use;
+        ar.endElement();
     }
 }
 
@@ -204,7 +216,7 @@ namespace Kernel {
         LOG_DEBUG("(De)serializing SimpleHealthSeekingBehavior\n");
 
         boost::serialization::void_cast_register<SimpleHealthSeekingBehavior, IDistributableIntervention>();
-        ar & (std::string) obj.actual_intervention_event;
+        ar & /*(std::string)*/ obj.actual_intervention_event;
         ar & obj.actual_intervention_config;
         ar & obj.probability_of_seeking;
         ar & obj.single_use;

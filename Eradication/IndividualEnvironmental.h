@@ -25,7 +25,7 @@ namespace Kernel
 
         virtual void CreateSusceptibility(float = 1.0, float = 1.0);
 
-        virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = NULL);
+        virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = nullptr);
         virtual void UpdateInfectiousness(float dt);
 
     protected:
@@ -34,6 +34,8 @@ namespace Kernel
         // Factory methods
         virtual Infection* createInfection(suids::suid _suid);
         virtual void ReportInfectionState();
+
+        DECLARE_SERIALIZABLE(IndividualHumanEnvironmental, IIndividualHuman);
 
     private:
 

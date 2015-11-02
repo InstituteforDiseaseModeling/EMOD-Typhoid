@@ -33,7 +33,7 @@ namespace Kernel
         // Allows correct type of Node to be added by classes derived from Simulation
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
 
-        virtual void resolveMigration();
+// clorton        virtual void resolveMigration();
 
     private:
 
@@ -42,7 +42,7 @@ namespace Kernel
         template<class Archive>
         friend void serialize(Archive & ar, SimulationTB &sim, const unsigned int  file_version );
 #endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanTB> typed_migration_queue_storage;
+// clorton        TypedPrivateMigrationQueueStorage<IndividualHumanTB> typed_migration_queue_storage;
     };
 }
 

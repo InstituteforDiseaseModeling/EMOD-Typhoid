@@ -74,7 +74,7 @@ namespace Kernel
     InputEIR::InputEIR() 
         : today(0)
         , daily_EIR(0.0f)
-        , risk_function(NULL)
+        , risk_function(nullptr)
     {
         initSimTypes( 1, "MALARIA_SIM" ); // using sporozoite challenge
     }
@@ -87,7 +87,7 @@ namespace Kernel
         switch(age_dependence)
         {
             case AgeDependentBitingRisk::OFF:
-                risk_function=NULL;
+                risk_function=nullptr;
                 break;
 
             case AgeDependentBitingRisk::LINEAR:

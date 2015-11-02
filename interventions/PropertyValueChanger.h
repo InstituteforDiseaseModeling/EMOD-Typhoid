@@ -25,7 +25,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IPropertyValueChangerEffects; 
+    struct IPropertyValueChangerEffects;
     /* Keep around as an identity solution??? */
     struct IPropertyValueChanger : public ISupports
     {
@@ -39,7 +39,7 @@ namespace Kernel
 
         DECLARE_FACTORY_REGISTERED(InterventionFactory, PropertyValueChanger, IDistributableIntervention)
 
-    public: 
+    public:
         PropertyValueChanger();
 
         // factory method
@@ -50,7 +50,7 @@ namespace Kernel
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
         virtual void SetContextTo(IIndividualHumanContext *context);
         virtual void Update(float dt);
-        
+
         virtual int AddRef();
         virtual int Release();
 
@@ -58,8 +58,8 @@ namespace Kernel
 
     protected:
         IIndividualHumanContext *parent;
-        JsonConfigurable::ConstrainedString target_property_key;
-        JsonConfigurable::ConstrainedString target_property_value;
+        jsonConfigurable::ConstrainedString target_property_key;
+        jsonConfigurable::ConstrainedString target_property_value;
         IPropertyValueChangerEffects *ibc;
         float probability;
         float revert;
@@ -77,4 +77,3 @@ namespace Kernel
 #endif
     };
 }
-

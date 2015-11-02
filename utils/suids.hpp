@@ -15,7 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdint.h"
 #include "BoostLibWrapper.h"
-#include "Serializer.h"
 #include "Configuration.h"
 
 namespace Kernel
@@ -38,7 +37,7 @@ namespace Kernel
 
         typedef int32_t suid_data_t; 
 
-        class IDMAPI suid : public IJsonSerializable
+        class IDMAPI suid : public ISupports // clorton ISerializable
         {
         public:
             DECLARE_QUERY_INTERFACE()
@@ -55,10 +54,10 @@ namespace Kernel
             static size_type static_size() { return sizeof(suid_data_t); }
 
             // iteration
-            iterator begin() { return (iterator)&data; }
-            iterator end() { return (iterator)(&data)+sizeof(suid_data_t); }
-            const_iterator begin() const { return (iterator)&data; }
-            const_iterator end() const { return (iterator)(&data)+sizeof(suid_data_t); }
+            iterator begin() { return iterator(&data); }
+            iterator end() { return iterator(&data)+sizeof(suid_data_t); }
+            const_iterator begin() const { return iterator(&data); }
+            const_iterator end() const { return iterator(&data)+sizeof(suid_data_t); }
 
             size_type size() const { return sizeof(suid_data_t); }
 
@@ -97,12 +96,6 @@ namespace Kernel
             // POD implementation as with boost::uuid
             /*uint8_t data[static_size()];*/
             suid_data_t data;
-
-        public:
-            // IJsonSerializable Interfaces
-            virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        
-            virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
 
         private:
             ///////////////////////////////////////////////////////////////////////////
@@ -179,16 +172,6 @@ namespace Kernel
             int rank;
             int numtasks;
 
-        private:
-            ///////////////////////////////////////////////////////////////////////////
-            // Serialization
-#if USE_JSON_SERIALIZATION
-        public:
-            // IJsonSerializable Interfaces
-            virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-            virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
 #if USE_BOOST_SERIALIZATION
         private:
             friend class boost::serialization::access;
@@ -202,30 +185,6 @@ namespace Kernel
 #endif
             ///////////////////////////////////////////////////////////////////////////
         };
-
-#if USE_JSON_SERIALIZATION
-        // template member function definition has to be in the header file
-        template<class ObjectCategoryT> void distributed_generator<ObjectCategoryT>::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-        {
-            root->BeginObject();
-
-            helper->JSerialize("next_suid", (IJsonSerializable*)&next_suid, root);
-
-            root->Insert("rank", rank);
-            root->Insert("numtasks", numtasks);
-
-            root->EndObject();
-        }
-
-        template<class ObjectCategoryT> void distributed_generator<ObjectCategoryT>::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-        {
-            IJsonObjectAdapter* next = (*root)["next_suid"];
-            helper->JDeserialize((IJsonSerializable*)&next_suid, next);
-
-            rank     = root->GetInt("rank");
-            numtasks = root->GetInt("numtasks");
-        }
-#endif
     } // namespace Kernel::suids
 }
 

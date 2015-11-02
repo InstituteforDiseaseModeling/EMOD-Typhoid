@@ -57,7 +57,7 @@ namespace Kernel
 
         // NOTE: Calling this AFTER the QI/GiveDrug crashes!!! Both win and linux. Says SetContextTo suddenly became a pure virtual.
 
-        ICircumcision * pCirc = NULL;
+        ICircumcision * pCirc = nullptr;
         if( s_OK == pIV->QueryInterface(GET_IID(ICircumcision), (void**) &pCirc) )
         {
             LOG_DEBUG("Getting circumcised\n");
@@ -138,7 +138,7 @@ namespace Kernel
 
     bool STIInterventionsContainer::ApplyCircumcision( ICircumcision *pCirc ) {
         // Need to get gender
-        IIndividualHuman *ih = NULL;
+        IIndividualHuman *ih = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHuman), (void**) &ih) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHuman", "IIndividualHuman" );
@@ -160,7 +160,7 @@ namespace Kernel
 
     void STIInterventionsContainer::ChangeProperty( const char *prop, const char* new_value)
     {
-        IIndividualHumanSTI *ihsti = NULL;
+        IIndividualHumanSTI *ihsti = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanSTI), (void**) &ihsti) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanContext", "IIndividualHumanSTI" );
@@ -173,7 +173,7 @@ namespace Kernel
     void
     STIInterventionsContainer::SpreadStiCoInfection()
     {
-        IIndividualHumanSTI *ihsti = NULL;
+        IIndividualHumanSTI *ihsti = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanSTI), (void**) &ihsti) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanContext", "IIndividualHumanSTI" );
@@ -184,7 +184,7 @@ namespace Kernel
     void
     STIInterventionsContainer::CureStiCoInfection()
     {
-        IIndividualHumanSTI *ihsti = NULL;
+        IIndividualHumanSTI *ihsti = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanSTI), (void**) &ihsti) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanContext", "IIndividualHumanSTI" );

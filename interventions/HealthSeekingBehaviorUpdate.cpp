@@ -29,7 +29,7 @@ namespace Kernel
 
     HealthSeekingBehaviorUpdate::HealthSeekingBehaviorUpdate()
     :new_probability_of_seeking(0.0f)
-    , ihsbuea(NULL)
+    , ihsbuea(nullptr)
     {
         initSimTypes( 1, "TB_SIM" );
     }
@@ -55,7 +55,7 @@ namespace Kernel
         }
 
         // this intervention only works with TB Interventions Container, throw an error if you are not using that
-        ITBInterventionsContainer * itbivc = NULL;    
+        ITBInterventionsContainer * itbivc = nullptr;
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc)  )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "ITBInterventionsContainer", "IIndividualHumanInterventionsContext" );
@@ -80,8 +80,6 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IHealthSeekingBehaviorUpdateEffectsApply", "IIndividualHumanContext" );
         }
     }
-
-
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

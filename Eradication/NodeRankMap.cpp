@@ -8,7 +8,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
-#include "sys/stat.h"
+// clorton #include "sys/stat.h"
 #include <fstream>
 
 #include "NodeRankMap.h"
@@ -209,7 +209,7 @@ namespace Kernel {
     int LegacyFileInitialLoadBalanceScheme::GetInitialRankFromNodeId(node_id_t node_id)
     { return initialNodeRankMapping[node_id]; }
 
-    NodeRankMap::NodeRankMap() : initialLoadBalanceScheme(NULL) { }
+    NodeRankMap::NodeRankMap() : initialLoadBalanceScheme(nullptr) { }
 
     void NodeRankMap::SetInitialLoadBalanceScheme(IInitialLoadBalanceScheme *ilbs) { initialLoadBalanceScheme = ilbs; } 
 
@@ -256,45 +256,6 @@ namespace Kernel {
 
         return mergedMap;
     }
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-
-    // IJsonSerializable Interfaces
-    void NodeRankMap::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-        root->Insert("rankMap");
-        root->BeginArray();
-        for (auto& entry : rankMap)
-        {
-            root->BeginArray();
-            ((suids::suid)(entry.first)).JSerialize(root, helper);
-            root->Add(entry.second);
-            root->EndArray();
-        }
-        root->EndArray();
-        root->EndObject();
-    }
-
-    void NodeRankMap::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-        IJsonObjectAdapter* map = root->GetArray("rankMap");
-        IJsonObjectAdapter* element;
-        IJsonObjectAdapter* id;
-        suids::suid node_id;
-        for (unsigned int i = 0; i < map->GetSize(); i++)
-        {
-            element = (*map)[i];
-            id = (*element)[(IndexType)0];
-            node_id.JDeserialize(id, helper);
-            int rank = ((*element)[1])->AsInt();
-            rankMap[node_id] = rank;
-            delete id;
-            delete element;
-        }
-    }
-
-#endif
 }
 
 #if USE_BOOST_SERIALIZATION

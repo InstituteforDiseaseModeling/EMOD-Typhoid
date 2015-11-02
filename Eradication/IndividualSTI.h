@@ -89,7 +89,7 @@ namespace Kernel
         virtual bool Configure( const Configuration* config );
         virtual void Update(float currenttime, float dt);
 
-        virtual void UpdateSTINetworkParams(const char *prop = NULL, const char* new_value = NULL);
+        virtual void UpdateSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr);
 
         virtual suids::suid GetSuid() const { return IndividualHuman::GetSuid(); }
         virtual bool IsInfected() const { return IndividualHuman::IsInfected(); }
@@ -104,7 +104,7 @@ namespace Kernel
         virtual void UpdateInfectiousness(float dt);
         virtual void UpdateInfectiousnessSTI(std::vector<act_prob_t> &act_prob_vec, unsigned int rel_id);
         
-        virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
+        virtual void AcquireNewInfection(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1);
 
         virtual bool AvailableForRelationship(RelationshipType::Enum) const;
 

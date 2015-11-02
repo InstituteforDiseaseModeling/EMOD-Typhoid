@@ -116,6 +116,8 @@ namespace Kernel
         bool m_failed_tx_TBIVC;
         bool m_ever_relapsed_TBIVC;
 
+        DECLARE_SERIALIZABLE(TBInterventionsContainer, IIndividualHumanInterventionsContext);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class ::boost::serialization::access;

@@ -8,7 +8,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
-#include <cstdlib>
 #include <stdio.h>
 #include <strstream>
 #include "Migration.h"
@@ -101,7 +100,7 @@ namespace Kernel
     {
         int index = 0;
 
-        time = (float)randgen->expdist(migration_rate_modifier * migration_totalrate);
+        time = float(randgen->expdist(migration_rate_modifier * migration_totalrate));
 
         float desttemp = randgen->e();
         while (desttemp > migration_rate_cdf[index]) // TODO: std::lower_bound would be preferable, although this code doesn't take much time overall.
@@ -124,7 +123,7 @@ namespace Kernel
         uint32_t tempIDarray[MAX_AIR_MIGRATION_DESTINATIONS] = {0}; // TODO: this assumes air-migration has the most # of destinations... could potentially break in the future
         double tempIDrates[MAX_AIR_MIGRATION_DESTINATIONS] = {0};
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
         static bool dump_map = false;
         if (EnvPtr->MPI.Rank == 0 && dump_map) {
             for (auto& entry : nodeid_suid_map->left)
@@ -133,7 +132,7 @@ namespace Kernel
             }
             dump_map = false;
         }
-#endif
+//#endif
 
         try
         {
@@ -249,7 +248,7 @@ namespace Kernel
         if(!factory->Initialize(config, idreference))
         {
             delete factory;
-            factory = NULL;
+            factory = nullptr;
         }
 
         return factory;
@@ -259,10 +258,10 @@ namespace Kernel
     {
         Configure( EnvPtr->Config );
 
-        local_migration_file = NULL;
-        air_migration_file = NULL;
-        regional_migration_file = NULL;
-        sea_migration_file = NULL;
+        local_migration_file = nullptr;
+        air_migration_file = nullptr;
+        regional_migration_file = nullptr;
+        sea_migration_file = nullptr;
 
         try
         {
@@ -352,21 +351,21 @@ namespace Kernel
 
         Configuration* config = Configuration::Load(metadata_filepath);
 
-        if (config == NULL)
+        if (config == nullptr)
         {
             // std::cerr << "Failed parsing migration metadata file " << metadata_filepath << std::endl;
             throw FileNotFoundException( __FILE__, __LINE__, __FUNCTION__, metadata_filepath.c_str() );
         }
 
-        if(!boost::iequals((string)((*config)["Metadata"]["IdReference"].As<json::String>()), idreference))
+        if(!boost::iequals(string((*config)["Metadata"]["IdReference"].As<json::String>()), idreference))
         {
             // std::cerr << "IdReference used to generate migration file " << data_filepath << " doesn't match the IdReference used for the demographics" << std::endl;
-            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "idreference", idreference.c_str(), "(string)((*config)[\"Metadata\"][\"IdReference\"].As<json::String>())", ((string)((*config)["Metadata"]["IdReference"].As<json::String>())).c_str() );
+            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "idreference", idreference.c_str(), "(string)((*config)[\"Metadata\"][\"IdReference\"].As<json::String>())", string((*config)["Metadata"]["IdReference"].As<json::String>()).c_str() );
         }
 
-        int num_nodes = (int)((*config)["Metadata"]["NodeCount"].As<json::Number>());
+        int num_nodes = int((*config)["Metadata"]["NodeCount"].As<json::Number>());
 
-        string offsets_str = (string)((*config)["NodeOffsets"].As<json::String>());
+        string offsets_str = string((*config)["NodeOffsets"].As<json::String>());
         if(offsets_str.length() / 16 != num_nodes)
         {
             //std::cerr << "Format error encountered loading climate metadata file: " << metadata_filepath << endl;
@@ -423,7 +422,7 @@ namespace Kernel
 
     MigrationInfo* MigrationInfoFactory::CreateMigrationInfo(INodeContext *parent_node)
     {
-        MigrationInfo* new_migration_info = NULL;
+        MigrationInfo* new_migration_info = nullptr;
 
         suids::suid node_suid = parent_node->GetSuid();
 
@@ -464,9 +463,9 @@ namespace Kernel
                 new_migration_info = _new_ MigrationInfo(parent_node);
 
                 if(!new_migration_info->Initialize(local_migration_file, 
-                                                    isAirport ? air_migration_file : NULL,
-                                                    isRegionHub ? regional_migration_file : NULL,
-                                                    isSeaport ? sea_migration_file : NULL,
+                                                    isAirport ? air_migration_file : nullptr,
+                                                    isRegionHub ? regional_migration_file : nullptr,
+                                                    isSeaport ? sea_migration_file : nullptr,
                                                     nodeid_suid_map))
                 {
                     std::ostringstream msg;
@@ -477,7 +476,7 @@ namespace Kernel
         }
         else
         {
-            int torus_size = (int)NodeDemographicsFactory::default_geography_torus_size;
+            int torus_size = int(NodeDemographicsFactory::default_geography_torus_size);
 
             // Create a buffer which mirrors what would be in a migration file for this node
 
@@ -507,13 +506,13 @@ namespace Kernel
                 offsets[7] -= torus_size;
             }
 
-            if (nodeid <= (uint32_t)torus_size) // top edge
+            if (nodeid <= uint32_t(torus_size)) // top edge
             {
                 offsets[0] += torus_size * torus_size;
                 offsets[1] += torus_size * torus_size;
                 offsets[2] += torus_size * torus_size;
             }
-            else if (nodeid > (uint32_t)(torus_size * (torus_size - 1))) // bottom edge
+            else if (nodeid > uint32_t(torus_size * (torus_size - 1))) // bottom edge
             {
                 offsets[5] -= torus_size * torus_size;
                 offsets[6] -= torus_size * torus_size;
@@ -524,7 +523,7 @@ namespace Kernel
             for (int i = 0; i < MAX_LOCAL_MIGRATION_DESTINATIONS; i++)
             {
                 release_assert(nodeid + offsets[i] >= 1);
-                release_assert(nodeid + offsets[i] <= (uint32_t)(torus_size * torus_size));
+                release_assert(nodeid + offsets[i] <= uint32_t(torus_size * torus_size));
 
                 nodedata[i] = nodeid + offsets[i];
                 //LOG_DEBUG_F( "Setting nodedata/buffer index %d to %lu\n", i, nodeid+offsets[i] );
@@ -537,7 +536,7 @@ namespace Kernel
             //LOG_DEBUG_F( "Sanity test: first int in ss = %d\n", (int*)(buff_oss.str().c_str())[0] );
 
             new_migration_info = _new_ MigrationInfo(parent_node);
-            if(!new_migration_info->Initialize(&ss, NULL, NULL, NULL, nodeid_suid_map))
+            if(!new_migration_info->Initialize(&ss, nullptr, nullptr, nullptr, nodeid_suid_map))
             {
                 // ERROR: "Error initializing migration info for NodeID " << nodeid << endl;
                 std::ostringstream msg;
@@ -595,35 +594,6 @@ namespace Kernel
     {
         this->nodeid_suid_map = nodeid_suid_map;
     }
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-    // IJsonSerializable Interfaces
-    void MigrationInfo::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("adjacent_nodes");
-        root->BeginArray();
-        for (auto& node_id : adjacent_nodes)
-        {
-            node_id.JSerialize(root, helper);
-        }
-        root->EndArray();
-
-        root->Insert("migration_rate_cdf");
-        helper->JSerialize(migration_rate_cdf,root);
-
-        root->Insert("migration_types");
-        helper->JSerialize(migration_types,root);
-
-        root->Insert("migration_totalrate",migration_totalrate);
-
-        root->EndObject();
-    }
-    void MigrationInfo::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
 }
 
 #if USE_BOOST_SERIALIZATION

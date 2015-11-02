@@ -53,7 +53,7 @@ namespace Kernel
 
     SimulationSTI *SimulationSTI::CreateSimulation(const ::Configuration *config)
     {
-        SimulationSTI *newsimulation = NULL;
+        SimulationSTI *newsimulation = nullptr;
 
         newsimulation = _new_ SimulationSTI();
         if (newsimulation)
@@ -64,7 +64,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -149,10 +149,10 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationSTI::resolveMigration()
-    {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-    }
+// clorton    void SimulationSTI::resolveMigration()
+// clorton    {
+// clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
+// clorton    }
 
     suids::suid SimulationSTI::GetNextRelationshipSuid()
     {

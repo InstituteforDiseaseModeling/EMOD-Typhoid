@@ -102,7 +102,7 @@
         "Mortality_Time_Course": "DAILY_MORTALITY", 
         "Mosquito_Weight": 1, 
         "Node_Grid_Size": 0.009, 
-        "Num_Cores": 1, 
+        "Num_Cores": 4, 
         "Number_Basestrains": 1, 
         "Number_Substrains": 1, 
         "PKPD_Model": "FIXED_DURATION_CONSTANT_EFFECT", 

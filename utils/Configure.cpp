@@ -1,11 +1,17 @@
-/***************************************************************************************************
+/*****************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
 
-EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
-To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+Except for any rights expressly granted to you in a separate license with the
+Global Good Fund (GGF), GGF reserves all rights, title and interest in the
+software and documentation.  GGF grants recipients of this software and
+documentation no other rights either expressly, impliedly or by estoppel.
 
-***************************************************************************************************/
+THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
+ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
+
+*****************************************************************************/
 
 #include "stdafx.h"
 #include "Configuration.h"
@@ -14,6 +20,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "IdmString.h"
 #include "Log.h"
+
+#include "boost/serialization/set.hpp"
 
 static const char * _module = "JsonConfigurable";
 
@@ -28,7 +36,7 @@ namespace Kernel
     {
     }
 
-    json::QuickBuilder 
+    json::QuickBuilder
     NodeSetConfig::GetSchema()
     {
         json::QuickBuilder schema( jsonSchemaBase );
@@ -54,11 +62,11 @@ namespace Kernel
 
         _json = (*inputJson)[key];
         //std::cout << "NodeSetConfig::Configure called with json blob." << std::endl;
-        //json::Writer::Write( _json, std::cout ); 
+        //json::Writer::Write( _json, std::cout );
     }
 
     /// END NodeSetConfig
- 
+
     /// EventConfig
     EventConfig::EventConfig()
     {}
@@ -83,7 +91,7 @@ namespace Kernel
         //json::Writer::Write( _json, std::cout );
     }
 
-    json::QuickBuilder 
+    json::QuickBuilder
     EventConfig::GetSchema()
     {
         json::QuickBuilder schema( jsonSchemaBase );
@@ -125,11 +133,11 @@ namespace Kernel
         // This might be useful for debugging, but couldn't agree on how to whether to include or not. Uncomment if you need it.
         /*std::ostringstream msg;
         msg << "InterventionConfig::" << __FUNCTION__ << " called with json blob." << std::endl;
-        json::Writer::Write( _json, msg ); 
+        json::Writer::Write( _json, msg );
         LOG_DEBUG_F( "%s", msg.str().c_str() );*/
     }
 
-    json::QuickBuilder 
+    json::QuickBuilder
     InterventionConfig::GetSchema()
     {
         json::QuickBuilder schema( jsonSchemaBase );
@@ -152,7 +160,7 @@ namespace Kernel
     {
     }
 
-    json::QuickBuilder 
+    json::QuickBuilder
     IndividualInterventionConfig::GetSchema()
     {
         json::QuickBuilder schema = InterventionConfig::GetSchema();
@@ -163,7 +171,7 @@ namespace Kernel
         return schema;
     }
 
-    json::QuickBuilder 
+    json::QuickBuilder
     NodeInterventionConfig::GetSchema()
     {
         json::QuickBuilder schema = InterventionConfig::GetSchema();
@@ -186,7 +194,7 @@ namespace Kernel
     {
     }
 
-    json::QuickBuilder 
+    json::QuickBuilder
     WaningConfig::GetSchema()
     {
         json::QuickBuilder schema( jsonSchemaBase );
@@ -211,54 +219,51 @@ namespace Kernel
         }
         _json = (*inputJson)[key];
         //std::cout << "WaningConfig::Configure called with json blob." << std::endl;
-        //json::Writer::Write( _json, std::cout ); 
+        //json::Writer::Write( _json, std::cout );
     }
 
     /// END WaningConfig
 
     std::map< std::string, IJsonConfigurable* > IJsonConfigurable::generic_container;
 
-    JsonConfigurable::ConstrainedString::ConstrainedString( std::string &init_str )
-    : constraint_param(nullptr)
+    namespace jsonConfigurable
     {
-        *((std::string*)(this)) = init_str;
-    }
-
-    JsonConfigurable::ConstrainedString::ConstrainedString( const char* init_str )
-    : constraint_param(nullptr)
-    {
-        *((std::string*)(this)) = std::string( init_str );
-    }
-
-    const JsonConfigurable::ConstrainedString&
-    JsonConfigurable::ConstrainedString::operator=( const std::string& new_value )
-    {
-        *((std::string*)(this)) = new_value;
-        //release_assert( constraint_param );
-        if( constraint_param && constraint_param->count( new_value ) == 0 )
+        ConstrainedString::ConstrainedString( std::string &init_str )
+        : constraint_param(nullptr)
         {
-            std::ostringstream msg;
-            msg << "Constrained String" ;
-            if( !parameter_name.empty() )
-            {
-                msg << " (" << parameter_name << ")" ;
-            }
-            msg << " with specified value " 
-                << new_value 
-                << " invalid. Possible values are: " << std::endl ;
-            for( auto value : (*constraint_param) )
-            {
-                msg << value << std::endl;
-            }
-            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            *((std::string*)(this)) = init_str;
         }
-        return *this ;
-    }
 
-    template < class Archive >
-    void serialize( Archive &ar, JsonConfigurable::ConstrainedString& cs, unsigned int file_version )
-    {
-        //ar & cs.;
+        ConstrainedString::ConstrainedString( const char* init_str )
+        : constraint_param(nullptr)
+        {
+            *((std::string*)(this)) = std::string( init_str );
+        }
+
+        const ConstrainedString&
+        ConstrainedString::operator=( const std::string& new_value )
+        {
+            *((std::string*)(this)) = new_value;
+            //release_assert( constraint_param );
+            if( constraint_param && constraint_param->count( new_value ) == 0 )
+            {
+                std::ostringstream msg;
+                msg << "Constrained String" ;
+                if( !parameter_name.empty() )
+                {
+                    msg << " (" << parameter_name << ")" ;
+                }
+                msg << " with specified value "
+                    << new_value
+                    << " invalid. Possible values are: " << std::endl ;
+                for( auto value : (*constraint_param) )
+                {
+                    msg << value << std::endl;
+                }
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            }
+            return *this ;
+        }
     }
 
     const char * JsonConfigurable::default_description = "No Description Yet";
@@ -379,7 +384,7 @@ namespace Kernel
     void
     JsonConfigurable::initConfigTypeMap(
         const char* paramName,
-        ConstrainedString * pVariable,
+        jsonConfigurable::ConstrainedString * pVariable,
         const char * description,
         const std::string& default_str
     )
@@ -398,7 +403,7 @@ namespace Kernel
     void
     JsonConfigurable::initConfigTypeMap(
         const char* paramName,
-        tStringSetBase * pVariable,
+        jsonConfigurable::tStringSetBase * pVariable,
         const char* description,
         const char* condition_key,
         const char* condition_value
@@ -415,14 +420,14 @@ namespace Kernel
         if( pVariable->getTypeName() == FIXED_STRING_SET_LABEL )
         {
             newStringSetSchema["possible_values"] = json::Array();
-            for( auto& value : ((tFixedStringSet*)pVariable)->possible_values )
+            for( auto& value : ((jsonConfigurable::tFixedStringSet*)pVariable)->possible_values )
             {
                 newStringSetSchema["possible_values"][counter++] = json::String( value );
             }
         }
         else if( pVariable->getTypeName() == DYNAMIC_STRING_SET_LABEL )
         {
-            newStringSetSchema["value_source"] = json::String( ((tDynamicStringSet*)pVariable)->value_source );
+            newStringSetSchema["value_source"] = json::String( ((jsonConfigurable::tDynamicStringSet*)pVariable)->value_source );
         }
         else
         {
@@ -955,8 +960,8 @@ namespace Kernel
                 if( allowed_values->size() > 0 && std::find( allowed_values->begin(), allowed_values->end(), candidate ) == allowed_values->end() )
                 {
                     std::ostringstream msg;
-                    msg << "Constrained strings (dynamic enum) with specified value " 
-                        << candidate 
+                    msg << "Constrained strings (dynamic enum) with specified value "
+                        << candidate
                         << " invalid. Possible values are: ";
                     for( auto value: *allowed_values )
                     {
@@ -1027,11 +1032,11 @@ namespace Kernel
         // Let's see if we can iterate over our template base class generic container!
         //std::cout << "IJsonConfigurable::generic_container.size() = " << IJsonConfigurable::generic_container.size() << std::endl;
         for( auto iter = IJsonConfigurable::generic_container.begin();
-			 IJsonConfigurable::generic_container.size() > 0;
-			 )
+             IJsonConfigurable::generic_container.size() > 0;
+             )
         {
             auto temp_cont = *iter;
-			IJsonConfigurable::generic_container.erase( iter++ );
+            IJsonConfigurable::generic_container.erase( iter++ );
             temp_cont.second->Configure( inputJson );
         }
 
@@ -1047,7 +1052,7 @@ namespace Kernel
                       ++data )
             {
                 float year = atof( data->name.c_str() );
-                auto tvcs = inputJson->As< json::Object >()[ key ]; 
+                auto tvcs = inputJson->As< json::Object >()[ key ];
                 float constant = (float) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
                 LOG_DEBUG_F( "Inserting year %f and delay %f into map.\n", year, constant );
                 pFFMap->insert( std::make_pair( year, constant ) );
@@ -1065,7 +1070,7 @@ namespace Kernel
                       data != tvcs_jo.End();
                       ++data )
             {
-                auto tvcs = inputJson->As< json::Object >()[ key ]; 
+                auto tvcs = inputJson->As< json::Object >()[ key ];
                 float value = (float) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
                 LOG_DEBUG_F( "Inserting string %s and value %f into map.\n", data->name.c_str(), value );
                 pSFMap->insert( std::make_pair( data->name, value ) );
@@ -1088,22 +1093,36 @@ namespace Kernel
         static JsonConfigurable::name2CreatorMapType name2CreatorMap;
         return name2CreatorMap;
     }
-    
+
     JsonConfigurable::Registrator::Registrator( const char* classname, get_schema_funcptr_t gs_callback )
     {
         const std::string stored_class_name = std::string( classname );
         get_registration_map()[ stored_class_name ] = gs_callback;
     }
-
-    // IJsonSerializable Interfaces Implementation
-    void JsonConfigurable::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Nothing to serialize because IJsonSerializable has to be implemented by each individual class for actual serialization." );
-    }
-
-    void JsonConfigurable::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Nothing to deserialize because IJsonSerializable has to be implemented by each individual class for actual deserialization." );
-    }
-
 }
+
+#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+BOOST_CLASS_EXPORT(Kernel::jsonConfigurable::ConstrainedString)
+namespace Kernel
+{
+    namespace jsonConfigurable
+    {
+          template <class Archive>
+          void serialize( Archive &ar, Kernel::jsonConfigurable::ConstrainedString& cs, const unsigned int file_version )
+          {
+              ar & cs.constraints;
+              ar & cs.constraint_param;
+          }
+
+          template void serialize(boost::mpi::packed_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+          template void serialize(boost::mpi::packed_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+          template void serialize(boost::archive::binary_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+          template void serialize(boost::archive::binary_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+          template void serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+          template void serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+        //  template void serialize(boost::mpi::detail::content_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+          template void serialize(boost::mpi::detail::content_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+          template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+    }
+}
+#endif

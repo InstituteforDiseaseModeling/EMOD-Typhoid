@@ -12,9 +12,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #if USE_BOOST_SERIALIZATION
 #include <boost/serialization/export.hpp>
 #endif
-#include "CajunIncludes.h"
-#include "ConfigurationImpl.h"
-#include "InterventionEnums.h"
+// clorton #include "CajunIncludes.h"
+// clorton #include "ConfigurationImpl.h"
+// clorton #include "InterventionEnums.h"
 
 #if USE_BOOST_SERIALIZATION
 BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:INodeSet);
@@ -27,6 +27,8 @@ namespace Kernel
 {
     // NodeSetAll
     IMPLEMENT_FACTORY_REGISTERED(NodeSetAll)
+    IMPLEMENT_FACTORY_REGISTERED(NodeSetNodeList)
+    IMPLEMENT_FACTORY_REGISTERED(NodeSetPolygon)
 
     IMPL_QUERY_INTERFACE2(NodeSetAll, INodeSet, IConfigurable)
 
@@ -52,16 +54,4 @@ namespace Kernel
     {
         return true;
     }
-
-#if USE_JSON_SERIALIZATION
-    void NodeSetAll::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-        root->EndObject();
-    }
-
-    void NodeSetAll::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
 }

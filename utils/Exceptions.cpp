@@ -79,7 +79,7 @@ static inline std::string dump_backtrace()
     // 3 - Derived Exception constructor
     ULONG frames_to_skip = 3 ;
     ULONG frames_to_capature = MAX_STACK ;
-    unsigned short num_frames = CaptureStackBackTrace( frames_to_skip, frames_to_capature, stack, NULL );
+    unsigned short num_frames = CaptureStackBackTrace( frames_to_skip, frames_to_capature, stack, nullptr );
 
     // -------------------------------------------------
     // --- Prepare memory for getting symbol information

@@ -8,12 +8,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #pragma once
-#include <string>
-#include <list>
+// clorton #include <string>
+// clorton #include <list>
 #include <map>
-#include <functional>
+// clorton #include <functional>
 #include "BoostLibWrapper.h"
-#include "Environment.h"
+// clorton #include "Environment.h"
 #include "suids.hpp"
 
 namespace Kernel
@@ -23,6 +23,7 @@ namespace Kernel
     struct IInitialLoadBalanceScheme
     {
         virtual int GetInitialRankFromNodeId(node_id_t node_id) = 0;
+        virtual ~IInitialLoadBalanceScheme() {}
     };
 
     class CheckerboardInitialLoadBalanceScheme : public IInitialLoadBalanceScheme
@@ -30,7 +31,7 @@ namespace Kernel
     public:
         CheckerboardInitialLoadBalanceScheme();
 
-        virtual int GetInitialRankFromNodeId(node_id_t node_id);
+        virtual int GetInitialRankFromNodeId(node_id_t node_id) override;
 
     protected:
         uint32_t num_ranked;
@@ -116,13 +117,6 @@ namespace Kernel
         {
             RankMap_t operator()(const RankMap_t& x, const RankMap_t& y) const;
         };
-
-#if USE_JSON_SERIALIZATION
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
 
 #if USE_BOOST_SERIALIZATION
     private:

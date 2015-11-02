@@ -53,7 +53,7 @@ namespace Kernel
         //       - relative importance of settling, ventilation, inactivation
         //       - temperature/humidity effects on contagion viability
 
-        if ( localWeather == NULL )
+        if ( localWeather == nullptr )
         {
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "localWeather", "Climate");
             //throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "climate_structure", "CLIMATE_OFF", "infectivity_scaling", "FUNCTION_OF_CLIMATE");

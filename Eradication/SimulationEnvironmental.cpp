@@ -57,7 +57,7 @@ namespace Kernel
 
     SimulationEnvironmental *SimulationEnvironmental::CreateSimulation(const ::Configuration *config)
     {
-        SimulationEnvironmental *newsimulation = NULL;
+        SimulationEnvironmental *newsimulation = nullptr;
 
         newsimulation = _new_ SimulationEnvironmental();
         if (newsimulation)
@@ -68,7 +68,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -98,11 +98,7 @@ void Kernel::SimulationEnvironmental::InitializeFlags( const ::Configuration *co
 {
 }
 
-#include "IndividualEnvironmental.h"
-void Kernel::SimulationEnvironmental::resolveMigration()
-{
-    resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-}
+// clorton #include "IndividualEnvironmental.h"
 
 #if USE_BOOST_SERIALIZATION
 BOOST_CLASS_EXPORT(Kernel::SimulationEnvironmental)

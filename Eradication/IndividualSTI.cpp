@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Debug.h"
 #include "MathFunctions.h"
-#include "IndividualEventContext.h"
+// clorton #include "IndividualEventContext.h"
 #include "IIndividualHuman.h"
 #include "InfectionSTI.h"
 #include "NodeEventContext.h"
@@ -144,12 +144,12 @@ namespace Kernel
             foundInterface = static_cast<IIndividualHuman*>(this);
         else if ( iid == GET_IID(IIndividualHumanSTI)) 
             foundInterface = static_cast<IIndividualHumanSTI*>(this);
-        else if ( iid == GET_IID(IJsonSerializable)) 
-            foundInterface = static_cast<IJsonSerializable*>(static_cast<IndividualHuman*>(this));
+//        else if ( iid == GET_IID(IJsonSerializable)) 
+//            foundInterface = static_cast<IJsonSerializable*>(static_cast<IndividualHuman*>(this));
         else if ( iid == GET_IID(ISupports)) 
             foundInterface = static_cast<ISupports*>(static_cast<IIndividualHumanSTI*>(this));
         else if( IndividualHuman::QueryInterface( iid, (void**)&foundInterface ) != s_OK )
-            foundInterface = 0;
+            foundInterface = nullptr;
 
         QueryResult status = e_NOINTERFACE;
         if ( foundInterface )
@@ -173,17 +173,17 @@ namespace Kernel
         else
             promiscuity_flags = 0;
 
-        promiscuity_flags |= GetProbExtraRelationalBitMask( (Gender::Enum)GetGender() );
+        promiscuity_flags |= GetProbExtraRelationalBitMask( Gender::Enum(GetGender()) );
 
         // Max allowable relationships
         NaturalNumber totalMax = 0;
         for( int rel = 0; rel < RelationshipType::COUNT; rel++)
         {
-            float max_num = GetMaxNumRels( (Gender::Enum)GetGender(), (RelationshipType::Enum)rel);
+            float max_num = GetMaxNumRels( Gender::Enum(GetGender()), RelationshipType::Enum(rel));
             float intpart = 0.0;
 
             float fractpart = modff(max_num , &intpart);
-            max_relationships[rel] = (int)intpart + ((randgen->e() < fractpart) ? 1 : 0);
+            max_relationships[rel] = int(intpart) + ((randgen->e() < fractpart) ? 1 : 0);
             totalMax += max_relationships[rel];
         }
         if( totalMax > MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES )
@@ -194,7 +194,7 @@ namespace Kernel
 
     void IndividualHumanSTI::UpdateSTINetworkParams(const char *prop, const char* new_value)
     {
-        IIndividualHuman* individual = NULL;
+        IIndividualHuman* individual = nullptr;
         if( QueryInterface( GET_IID( IIndividualHuman ), (void**)&individual ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "this", "IIndividualHuman", "IndividualHumanSTI" );
@@ -289,12 +289,12 @@ namespace Kernel
             if( idx == 0 )
             {
                 multiplier = maleToFemaleRelativeInfectivityMultipliers[0];
-                LOG_DEBUG_F( "Using value of %f for age-asymmetric infection multiplier for female age (in yrs) %f.\n", (float) multiplier, (float) age_in_yrs );
+                LOG_DEBUG_F( "Using value of %f for age-asymmetric infection multiplier for female age (in yrs) %f.\n", float(multiplier), (float) age_in_yrs );
             }
             else if( idx == maleToFemaleRelativeInfectivityAges.size() )
             {
                 multiplier = maleToFemaleRelativeInfectivityMultipliers.back();
-                LOG_DEBUG_F( "Using value of %f for age-asymmetric infection multiplier for female age (in yrs) %f.\n", (float) multiplier, (float) age_in_yrs );
+                LOG_DEBUG_F( "Using value of %f for age-asymmetric infection multiplier for female age (in yrs) %f.\n", float(multiplier), (float) age_in_yrs );
             }
             else 
             {
@@ -304,7 +304,7 @@ namespace Kernel
                 float left_mult = maleToFemaleRelativeInfectivityMultipliers[idx-1];
                 float right_mult = maleToFemaleRelativeInfectivityMultipliers[idx];
                 multiplier = left_mult + ( age_in_yrs - left_age ) / ( right_age - left_age ) * ( right_mult - left_mult );
-                LOG_DEBUG_F( "Using interpolated value of %f for age-asymmetric infection multiplier for age (in yrs) %f.\n", (float) multiplier, (float) age_in_yrs );
+                LOG_DEBUG_F( "Using interpolated value of %f for age-asymmetric infection multiplier for age (in yrs) %f.\n", float(multiplier), (float) age_in_yrs );
             } 
 
             mult *= multiplier;
@@ -320,7 +320,7 @@ namespace Kernel
                 //prob_non_infection *= (1 - mult * prob.prob_per_act);
 
                 ProbabilityNumber capped_prob = ( mult * prob.prob_per_act > 1.0f ) ? 1.0f : ( mult * prob.prob_per_act );
-                LOG_INFO_F( "prob = %f\n", (float) capped_prob );
+                LOG_INFO_F( "prob = %f\n", float(capped_prob) );
                 prob_non_infection *= (1.0f - capped_prob);
             }
         }
@@ -345,6 +345,7 @@ namespace Kernel
 
     IndividualHumanSTI::IndividualHumanSTI(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
         : IndividualHuman(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
+        , net_params( "<NONE>" )
         , relationships()
         , promiscuity_flags(0)
         , sexual_debut_age(0.0f)
@@ -352,6 +353,7 @@ namespace Kernel
         , transmissionInterventionsDisabled(false)
         , relationshipSlots(0)
         , delay_between_adding_relationships_timer(0.0f)
+        , potential_exposure_flag(false)
         , relationships_at_death()
         , num_lifetime_relationships(0)
         , last_6_month_relationships()
@@ -361,8 +363,6 @@ namespace Kernel
         , transitory_eligibility(0)
         , informal_eligibility(0)
         , marital_elibigility(0)
-        , potential_exposure_flag(false)
-        , net_params( "<NONE>" )
     {
         ZERO_ARRAY( queued_relationships );
         ZERO_ARRAY( active_relationships );
@@ -370,8 +370,8 @@ namespace Kernel
 
         // Sexual debut
         float min_age_sexual_debut_in_days = debutAgeYrsMin * DAYSPERYEAR;
-        float debut_lambda = 0;
-        float debut_inv_kappa = 0;
+        float debut_lambda;
+        float debut_inv_kappa;
         if( GetGender() == Gender::MALE ) 
         {
             debut_inv_kappa = debutAgeYrsMale_inv_kappa;
@@ -382,7 +382,7 @@ namespace Kernel
             debut_inv_kappa = debutAgeYrsFemale_inv_kappa;
             debut_lambda    = debutAgeYrsFemale_lambda;
         }
-        float debut_draw = (float)(DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( debut_lambda, debut_inv_kappa ) );
+        float debut_draw = float(DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( debut_lambda, debut_inv_kappa ));
         sexual_debut_age = (std::max)(min_age_sexual_debut_in_days, debut_draw );
 
         // Promiscuity flags, including behavioral super-spreader
@@ -565,7 +565,7 @@ namespace Kernel
 
     void IndividualHumanSTI::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
     {
-        int numInfs = (int)infections.size();
+        int numInfs = int(infections.size());
         if( (numInfs >= max_ind_inf) ||
             (!superinfection && numInfs > 0 )
           )
@@ -619,7 +619,7 @@ namespace Kernel
 
             for( int type=0; type<RelationshipType::COUNT; type++ )
             {
-                RelationshipType::Enum rel_type = (RelationshipType::Enum) type;
+                RelationshipType::Enum rel_type = RelationshipType::Enum(type);
                 if( AvailableForRelationship( rel_type ) )
                 {
                     RiskGroup::Enum risk_group = IS_EXTRA_ALLOWED(rel_type) ? RiskGroup::HIGH : RiskGroup::LOW;
@@ -647,12 +647,12 @@ namespace Kernel
         float cumulative_rate = 0.0f;
         for( int type = 0; type < RelationshipType::COUNT; type++ )
         {
-            available[type] = AvailableForRelationship( (RelationshipType::Enum)type);
+            available[type] = AvailableForRelationship( RelationshipType::Enum(type));
             is_any_available |= available[type] ;
 
             if( available[type] )
             {
-                RelationshipType::Enum rel_type = (RelationshipType::Enum) type;
+                RelationshipType::Enum rel_type = RelationshipType::Enum(type);
                 RiskGroup::Enum risk_group = IS_EXTRA_ALLOWED(rel_type) ? RiskGroup::HIGH : RiskGroup::LOW;
                 formation_rates[type] = society->GetRates(rel_type)->GetRateForAgeAndSexAndRiskGroup(m_age, m_gender, risk_group);
                 cumulative_rate += formation_rates[type] ;
@@ -689,7 +689,7 @@ namespace Kernel
 
                     LOG_DEBUG_F( "%s: individual %d joining %s PFA.\n", __FUNCTION__, suid.data, RelationshipType::pairs::lookup_key(type) );
 
-                    society->GetPFA((RelationshipType::Enum)type)->AddIndividual(this);
+                    society->GetPFA(RelationshipType::Enum(type))->AddIndividual(this);
                     ++queued_relationships[type] ;
                     release_assert( queued_relationships[type] == 1 );
                 }
@@ -749,7 +749,7 @@ namespace Kernel
         }
         // DJK: Can these counters live elsewhere?  Either reporter or something parallel to interventions container, e.g. counters container
         num_lifetime_relationships++;
-        last_6_month_relationships.push_back( (float) parent->GetTime().time );
+        last_6_month_relationships.push_back( float(parent->GetTime().time) );
     }
 
     void
@@ -891,7 +891,7 @@ namespace Kernel
 
     bool IndividualHumanSTI::IsCircumcised() const
     {
-        ISTICircumcisionConsumer *ic = NULL;
+        ISTICircumcisionConsumer *ic = nullptr;
         if (s_OK != interventions->QueryInterface(GET_IID( ISTICircumcisionConsumer ), (void**)&ic) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTICircumcisionConsumer", "interventions" );
@@ -1072,28 +1072,11 @@ namespace Kernel
     )
     {
         IndividualHuman::CheckForMigration( currenttime, dt );
-/* clorton
-        if( StateChange == HumanStateChange::Migrating )
-        {
-            // if existing Transitory Relationship skip this, else do base class.
-            for( auto &rel : relationships )
-            {
-                if( rel->GetType() == RelationshipType::TRANSITORY )
-                {
-                    LOG_DEBUG_F( "Individual %d staying put because in a transitory relationship.\n", GetSuid().data );
-                    StateChange = HumanStateChange::None;
-                    return;
-                }
-            }
-        }
-clorton */
     }
 
     unsigned char IndividualHumanSTI::GetProbExtraRelationalBitMask(Gender::Enum gender)
     {
         unsigned char ret = 0;
-        float prob_extrarelational = 0;
-        float draw = 0;
 
         if( IS_SUPER_SPREADER() ) 
         {
@@ -1105,6 +1088,9 @@ clorton */
         }
         else
         {
+            float prob_extrarelational;
+            float draw;
+
             for( int rel = 0; rel < RelationshipType::COUNT; rel++ )
             {
                 prob_extrarelational = net_params.prob_extra_relational[rel][gender];
@@ -1143,7 +1129,7 @@ clorton */
             if (queued_relationships[type] > 0)
             {
                 LOG_DEBUG_F( "%s: individual %lu is in %s PFA - removing.\n", __FUNCTION__, suid.data, RelationshipType::pairs::lookup_key(type) );
-                society->GetPFA((RelationshipType::Enum)type)->RemoveIndividual(this);
+                society->GetPFA(RelationshipType::Enum(type))->RemoveIndividual(this);
                 --queued_relationships[type] ;
                 release_assert( queued_relationships[type] == 0 );
             }
@@ -1158,7 +1144,7 @@ clorton */
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTIBarrierConsumer", "InterventionsContainer" );
         }
         auto probs = p_barrier->GetSTIBarrierProbabilitiesByRelType( relationship_type );
-        float year = (float) GetParent()->GetTime().Year();
+        float year = float(GetParent()->GetTime().Year());
         ProbabilityNumber prob = Sigmoid::variableWidthAndHeightSigmoid( year, probs.midyear, probs.rate, probs.early, probs.late );
         //LOG_DEBUG_F( "%s: returning %f from Sigmoid::vWAHS( %f, %f, %f, %f, %f )\n", __FUNCTION__, (float) prob, year, probs.midyear, probs.rate, probs.early, probs.late );
         return prob;

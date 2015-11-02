@@ -27,7 +27,7 @@ std::list<IDrug*> ReportUtilities::GetDrugList( const IndividualHuman * individu
     std::list<IDrug*> drugs_of_type;
     for (auto idi : idi_list)
     {
-        IDrug * pDrug = NULL;
+        IDrug * pDrug = nullptr;
         if( s_OK == idi->QueryInterface(GET_IID(IDrug), (void**) &pDrug) )
         {
             drugs_of_type.push_back( pDrug );

@@ -11,10 +11,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Debug.h"
 #include "InfectionSTI.h"
-#include "STIInterventionsContainer.h"
-#include "Individual.h"
-#include "SimulationConfig.h"
-#include "RANDOM.h"
+// clorton #include "STIInterventionsContainer.h"
+// clorton #include "Individual.h"
+// clorton #include "SimulationConfig.h"
+// clorton #include "RANDOM.h"
 
 static const char* _module = "InfectionSTI";
 
@@ -52,9 +52,9 @@ namespace Kernel
 
     void InfectionSTI::Update(
         float dt,
-        Susceptibility* immunity
+        ISusceptibilityContext* immunity
     )
-    { 
+    {
         Infection::Update( dt, immunity );
     }
 }

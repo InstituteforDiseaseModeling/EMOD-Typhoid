@@ -10,14 +10,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "VectorCohortAging.h"
-#include "Common.h"
-#include "BoostLibWrapper.h"
+// clorton #include "Common.h"
+// clorton #include "BoostLibWrapper.h"
 
 namespace Kernel
 {
-    class IVectorCohortIndividual : public ISupports
+    struct IVectorCohortIndividual : ISupports
     {
-    public:
         virtual VectorStateEnum::Enum & GetState() = 0;
         virtual void SetState( const VectorStateEnum::Enum & ) = 0;
         virtual float GetAdditionalMortality() const = 0;
@@ -33,7 +32,7 @@ namespace Kernel
         virtual void SetAdditionalMortality( float new_mortality ) = 0;
         virtual void SetNewEggs( int new_eggs ) = 0;
         virtual void SetOvipositionTimer( float new_opt ) = 0;
-        virtual void AcquireNewInfection( StrainIdentity *infstrain = NULL, int incubation_period_override = -1 ) = 0;
+        virtual void AcquireNewInfection( StrainIdentity *infstrain = nullptr, int incubation_period_override = -1 ) = 0;
         virtual bool IsProgressedOrEmpty() const = 0;
         virtual float GetMortality( uint32_t addition ) const = 0;
 
@@ -42,8 +41,7 @@ namespace Kernel
         virtual void IncreaseAge( float dt ) = 0;
     };
 
-    class VectorCohortIndividual : public IVectorCohortIndividual, public VectorCohortAging
- 
+    class VectorCohortIndividual : public VectorCohortAging, public IVectorCohortIndividual
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -53,38 +51,38 @@ namespace Kernel
         virtual ~VectorCohortIndividual();
 
         // should we bother with an interface for this common function to individual human? IInfectable?
-        virtual void AcquireNewInfection( StrainIdentity *infstrain = NULL, int incubation_period_override = -1 );
-        virtual const StrainIdentity* GetStrainIdentity() const;
+        virtual void AcquireNewInfection( StrainIdentity *infstrain = nullptr, int incubation_period_override = -1 ) override;
+        virtual const StrainIdentity* GetStrainIdentity() const override;
 
         // IMigrate interfaces
-        virtual void ImmigrateTo(Node* destination_node);
-        virtual void SetMigrationDestination(suids::suid destination);
-        virtual const suids::suid& GetMigrationDestination();
+        virtual void ImmigrateTo(Node* destination_node) override;
+        virtual void SetMigrationDestination(suids::suid destination) override;
+        virtual const suids::suid& GetMigrationDestination() override;
 
-        virtual VectorStateEnum::Enum & GetState();
-        virtual void SetState( const VectorStateEnum::Enum & );
-        virtual float GetAdditionalMortality() const;
-        virtual float GetOvipositionTimer();
-        virtual int GetParity();
-        virtual int GetNewEggs();
-        virtual const std::string &GetSpecies();
-        virtual void IncrementParity();
-        virtual void ReduceOvipositionTimer( float delta );
-        virtual void SetAdditionalMortality( float new_mortality );
-        virtual void SetNewEggs( int new_eggs );
-        virtual void SetOvipositionTimer( float new_opt );
-        virtual bool IsProgressedOrEmpty() const;
+        virtual VectorStateEnum::Enum & GetState() override;
+        virtual void SetState( const VectorStateEnum::Enum & ) override;
+        virtual float GetAdditionalMortality() const override;
+        virtual float GetOvipositionTimer() override;
+        virtual int GetParity() override;
+        virtual int GetNewEggs() override;
+        virtual const std::string &GetSpecies() override;
+        virtual void IncrementParity() override;
+        virtual void ReduceOvipositionTimer( float delta ) override;
+        virtual void SetAdditionalMortality( float new_mortality ) override;
+        virtual void SetNewEggs( int new_eggs ) override;
+        virtual void SetOvipositionTimer( float new_opt ) override;
+        virtual bool IsProgressedOrEmpty() const override;
 
-        virtual float GetMortality( uint32_t addition ) const;
+        virtual float GetMortality( uint32_t addition ) const override;
 
         // base class wrappers
-        virtual float GetAge() const;
-        virtual void IncreaseAge( float dt );
+        virtual float GetAge() const override;
+        virtual void IncreaseAge( float dt ) override;
 
     protected:
         VectorCohortIndividual();
         VectorCohortIndividual(VectorStateEnum::Enum state, float age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics, std::string vector_species_name);
-        void Initialize();
+        /* clorton virtual */ void Initialize() /* clorton override */;
 
         VectorStateEnum::Enum state;
         float additional_mortality;
@@ -95,6 +93,9 @@ namespace Kernel
         std::string species;
 
         StrainIdentity* m_strain;
+
+// clorton         GETCLASSNAME_IMPL(VectorCohortIndividual);
+        DECLARE_SERIALIZABLE(VectorCohortIndividual, IVectorCohort);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

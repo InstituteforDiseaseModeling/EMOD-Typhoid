@@ -9,16 +9,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include "ISupports.h"
+#include "ISerializable.h"
 #include "suids.hpp"
 #include "Common.h"
 #include "Contexts.h"
 #include "INodeContext.h"
-#include "InterventionsContainer.h"
 
 namespace Kernel
 {
-    struct IIndividualHuman : public ISupports {
+    struct IIndividualHuman : ISerializable {
         virtual suids::suid GetSuid() const = 0;
         virtual double GetAge() const = 0;
         virtual int GetGender() const = 0;
@@ -29,12 +28,14 @@ namespace Kernel
         virtual HumanStateChange GetStateChange() const = 0;
 
         virtual IIndividualHumanInterventionsContext* GetInterventionsContext() const = 0;
-        /*virtual IIndividualHumanEventContext*         GetEventContext() = 0;*/
-        /*virtual ISusceptibilityContext*               GetSusceptibilityContext() const = 0;*/
 
         virtual tProperties* GetProperties() = 0;
         virtual INodeContext* GetParent() const = 0;
 
         virtual void Update(float current_time, float dt) = 0;
+
+        virtual ~IIndividualHuman() {}
+        friend IArchive& serialize(IArchive&, std::vector<IIndividualHuman*>&);
+        DECLARE_SERIALIZATION_REGISTRAR(IIndividualHuman);
     };
 }

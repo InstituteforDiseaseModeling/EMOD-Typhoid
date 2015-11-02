@@ -1,0 +1,145 @@
+<?xml version="1.0" ?>
+<testsuite errors="1" failures="1" name="win_trunk regression suite" tests="129" time="2651.769">
+	<properties>
+		<property name="Version string" value="2.0.5538.0 trunk"/>
+		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
+		<property name="HPC Nodegroup" value="ComputeNodes"/>
+	</properties>
+	<testcase name="11_Vector_Namawala_Larvicides" time="3.0"/>
+	<testcase name="23_Generic_Namawala" time="1.0"/>
+	<testcase name="20_Vector_Namawala_IRSOnly" time="2.0"/>
+	<testcase name="19_Vector_Namawala_Indoor_4Interventions" time="2.0"/>
+	<testcase name="18_Vector_Namawala_Indoor_IRSOnly" time="2.0"/>
+	<testcase name="21_Vector_Namawala_4Interventions" time="2.0"/>
+	<testcase name="10_Vector_Namawala_Oviposition" time="13.0"/>
+	<testcase name="12_Malaria_Namawala_LargeVectorCampaign" time="12.0"/>
+	<testcase name="37_Vector_Release_Sterile_Male_Cohort" time="3.0"/>
+	<testcase name="39_Vector_Namawala_HostSeekingTrap" time="3.0"/>
+	<testcase name="8_Vector_Namawala_SugarTrap_EmergeFeed" time="19.0"/>
+	<testcase name="5_Vector_Namawala_SugarTrap_EveryFeedFeed" time="16.0"/>
+	<testcase name="9_Vector_Namawala_SugarTrap_NoFeed" time="20.0"/>
+	<testcase name="38_Malaria_Namawala_HousingModAt540_WithDeaths" time="10.0"/>
+	<testcase name="40_Malaria_Namawala_LargeVectorCampaign_StrainGenerator" time="13.0"/>
+	<testcase name="45_Vector_An_farauti_IRS" time="3.0"/>
+	<testcase name="46_Vector_An_arabiensis_MultipleHabitats" time="3.0"/>
+	<testcase name="49_Environmental_Namawala" time="1.0"/>
+	<testcase name="36_Vector_Release_Wolbachia_Females_Individual" time="22.0"/>
+	<testcase name="50_Airborne_Namawala" time="1.0"/>
+	<testcase name="34_Malaria_Namawala_Drugs" time="28.0"/>
+	<testcase name="42_Polio_Default_Geography" time="19.0"/>
+	<testcase name="48_Generic_Seattle_SingleCore_Zoonosis" time="12.0"/>
+	<testcase name="52_Vector_Namawala_Cohort_WeatherDependentFeed" time="4.0"/>
+	<testcase name="53_Vector_Release_HEGs" time="3.0"/>
+	<testcase name="54_Vector_Release_Wolbachia" time="2.0"/>
+	<testcase name="47_Vector_An_arabiensis_MultipleHabitats_Oviposition" time="25.0"/>
+	<testcase name="58_Vector_Release_HEGs_multipuddle" time="3.0"/>
+	<testcase name="59_Generic_Individual_Properties" time="1.0"/>
+	<testcase name="51_Vector_Namawala_SugarTrap_WeatherDependentFeed" time="18.0"/>
+	<testcase name="22_Malaria_Namawala_HousingModAt540" time="57.0"/>
+	<testcase name="64_Vector_ScaleLarvalHabitat" time="5.0"/>
+	<testcase name="56_Vector_InsectKillingFence" time="14.0"/>
+	<testcase name="1_Generic_Seattle_MultiNode" time="66.0"/>
+	<testcase name="69_Vector_IRS_Ivermectin" time="6.0"/>
+	<testcase name="73_Vector_AnimalFeedKill" time="2.0"/>
+	<testcase name="41_Malaria_Default_Geography" time="49.0"/>
+	<testcase name="74_Vector_ArtificialDiet" time="2.0"/>
+	<testcase name="66_Malaria_InputEIR" time="13.0"/>
+	<testcase name="65_Generic_Seattle_CoverageByNode" time="17.0"/>
+	<testcase name="67_Malaria_Namawala_AgeConcentrationDrugs" time="15.0"/>
+	<testcase name="75_Vector_ArtificialDietHousingModification" time="2.0"/>
+	<testcase name="72_DistributionOverlay" time="14.0"/>
+	<testcase name="77_Vector_IRSHousingModification" time="1.0"/>
+	<testcase name="78_Vector_InsectKillingFenceHousingModification" time="1.0"/>
+	<testcase name="79_Vector_Ivermectin" time="2.0"/>
+	<testcase name="57_Malaria_Namawala_Drugs_PkPd" time="33.0"/>
+	<testcase name="81_Vector_OutdoorRestKill" time="1.0"/>
+	<testcase name="83_Vector_ScreeningHousingModification" time="2.0"/>
+	<testcase name="84_Vector_SimpleHousingModification" time="2.0"/>
+	<testcase name="85_Vector_SpaceSpraying" time="1.0"/>
+	<testcase name="80_Vector_Larvicides" time="7.0"/>
+	<testcase name="82_Vector_OvipositionTrap" time="8.0"/>
+	<testcase name="86_Vector_SimpleIndividualRepellent" time="1.0"/>
+	<testcase name="87_Vector_SpatialRepellent" time="1.0"/>
+	<testcase name="88_Vector_SpatialRepellentHousingModification" time="1.0"/>
+	<testcase name="89_Generic_SimpleImmunoglobulin" time="1.0"/>
+	<testcase name="90_Generic_Namawala_Climate_Constant" time="1.0"/>
+	<testcase name="91_Generic_Namawala_Climate_Data" time="1.0"/>
+	<testcase name="92_Generic_Namawala_Property_Restrictions_NLHTI" time="2.0"/>
+	<testcase name="93_Generic_AgeDependentSusceptibility" time="2.0"/>
+	<testcase name="94_Generic_Intervention_SimpleDiagnostic" time="1.0"/>
+	<testcase name="93_Generic_Namawala_DelayedIntervention" time="5.0"/>
+	<testcase name="96_Generic_CalendarEventCoordinator" time="2.0"/>
+	<testcase name="95_Malaria_Intervention_RTSSVaccine" time="6.0"/>
+	<testcase name="97_Generic_Intervention_ImportPressure" time="9.0"/>
+	<testcase name="100_OneMalariaIndividual_SingleAntigen" time="5.0"/>
+	<testcase name="101_OneMalariaIndividual_MultipleAntigens" time="5.0"/>
+	<testcase name="102_OneMalariaIndividual_MultipleSwitchingAntigens" time="5.0"/>
+	<testcase name="103_OneMalariaIndividual_MultipleSwitchingAntigensSuperInfection" time="5.0"/>
+	<testcase name="94_Generic_InfectivityForcing_Sinusoid" time="17.0"/>
+	<testcase name="95_Generic_InfectivityForcing_Boxcar" time="17.0"/>
+	<testcase name="68_Malaria_Barcode_Genetics" time="59.0"/>
+	<testcase name="Scenarios/Generic/09_DensityScaling" time="5.0"/>
+	<testcase name="Scenarios/HINT/03_AgeAndAccess/A_BaselineOutbreak" time="2.0"/>
+	<testcase name="Scenarios/HINT/03_AgeAndAccess/B_AgeTargetedVaccine" time="3.0"/>
+	<testcase name="Scenarios/HINT/03_AgeAndAccess/C_AccessTargetedVaccine" time="2.0"/>
+	<testcase name="Scenarios/HINT/01_RiskGroups" time="3.0"/>
+	<testcase name="55_Malaria_Strain_Tracking" time="82.0"/>
+	<testcase name="TB_1_MDR_evolution" time="1.0"/>
+	<testcase name="TB_2_MDR_transmission_only" time="1.0"/>
+	<testcase name="TB_2b_MDR_transmission_mixed" time="3.0"/>
+	<testcase name="Scenarios/HINT/02_SchoolClosure" time="4.0"/>
+	<testcase name="TB_2c_MDR_transmission_mixed_reducedfitness" time="2.0"/>
+	<testcase name="TB_3_Relapse_after_tx" time="1.0"/>
+	<testcase name="TB_4_PropertyChanger_Hospital2CDC" time="2.0"/>
+	<testcase name="TB_5a_CalendarIV_delayedTreatment" time="5.0"/>
+	<testcase name="TB_7b_Diagnostic_smearPositive" time="2.0"/>
+	<testcase name="TB_6_OutbreakIndividual" time="3.0"/>
+	<testcase name="TB_7c_Diagnostic_MDR" time="2.0"/>
+	<testcase name="TB_8_PropDependentDrug_Retxspecific" time="2.0"/>
+	<testcase name="TB_8b_PropDependentDrug_MDRspecific" time="2.0"/>
+	<testcase name="Scenarios/Generic/04_SEIR_VitalDynamics" time="34.0"/>
+	<testcase name="TB_10_LatentFast_Smearpos" time="0.0"/>
+	<testcase name="TB_5b_BirthTriggeredIV_BCG" time="9.0"/>
+	<testcase name="TB_11_LatentFast_SmearNeg" time="1.0"/>
+	<testcase name="Scenarios/HINT/05_SeattleCommuting" time="26.0"/>
+	<testcase name="TB_12_LatentFast_Extrapulm" time="0.0"/>
+	<testcase name="TB_13_LatentFast_ActivePresymptomatic" time="1.0"/>
+	<testcase name="TB_14_LatentSlow_SmearPos_Relapse" time="1.0"/>
+	<testcase name="TB_14b_LatentSlow_SmearPos_Relapse_NodeHTIPostRelapse" time="1.0"/>
+	<testcase name="43_Vector_Garki_MultiCore_VectorMigration" time="-1">
+		<failure message="43_Vector_Garki_MultiCore_VectorMigration failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_09_11_16_13_20_427000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+	<testcase name="TB_15_LatentSlow_SmearNeg_Inactivation" time="1.0"/>
+	<testcase name="TB_16_LatentSlow_Extrapulm_Clearance" time="0.0"/>
+	<testcase name="TB_17_LatentSlow_ActivePresymptomatic" time="1.0"/>
+	<testcase name="TB_18_LatentFast_NaturalCure" time="1.0"/>
+	<testcase name="TB_19_LatentFast_ActivePresymp_NaturalCure" time="0.0"/>
+	<testcase name="TB_20_LatentFast_ActiveSmearpos_NaturalCure" time="1.0"/>
+	<testcase name="TB_21_LatentFast_SmearPos_NaturalInactivation" time="1.0"/>
+	<testcase name="TB_22_LatentFast_SmearPos_DiseaseMortality" time="1.0"/>
+	<testcase name="TB_23_LatentFast_SmearPos_ImmuneLoss" time="1.0"/>
+	<testcase name="TB_27_nodeHTI_ActiveSymptomatic" time="1.0"/>
+	<testcase name="TB_28_nodeHTI_ActivePresymptomatic" time="1.0"/>
+	<testcase name="TB_29_nodeHTI_PendingRelapse" time="1.0"/>
+	<testcase name="TB_30_HSB" time="1.0"/>
+	<testcase name="TB_32_HSBUpdate" time="2.0"/>
+	<testcase name="TB_33_DiagnosticTreatNeg" time="2.0"/>
+	<testcase name="TB_34_GroupCoordinator" time="1.0"/>
+	<testcase name="TB_35_NodeHTIScaleUpSwitch_PhaseInOnly" time="2.0"/>
+	<testcase name="TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn" time="1.0"/>
+	<testcase name="14_Polio_Bihar_Larger" time="220.0"/>
+	<testcase name="31_TB_Seattle_BirthTriggered_BCG_Calendar" time="329.0"/>
+	<testcase name="29_TB_Seattle_HTI_HSB_Drugs" time="338.0"/>
+	<testcase name="26_Vector_Garki" time="394.0"/>
+	<testcase name="32_TB_Seattle_Diagnostic_Drugs" time="481.0"/>
+	<testcase name="25_Vector_Madagascar" time="514.0"/>
+	<testcase name="Scenarios/HINT/04_WAPertussis/A_BaselineOutbreak" time="806.0"/>
+	<testcase name="Scenarios/HINT/04_WAPertussis/B_TargetVaccineRefusers" time="940.0"/>
+	<testcase name="24_Malaria_Garki" time="-1">
+		<error message="24_Malaria_Garki exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_09_11_16_13_14_349000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+</testsuite>

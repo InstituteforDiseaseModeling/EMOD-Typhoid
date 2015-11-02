@@ -31,8 +31,8 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
         static float x_population_immunity;
         static float mucosalImmIPV;
-		static float mucosalImmIPVOPVExposed;
-		static float TauNAb;
+        static float mucosalImmIPVOPVExposed;
+        static float TauNAb;
         static float paralytic_immunity_titer;
         static float waning_humoral_rate_fast;
         static float waning_humoral_rate_slow;
@@ -98,7 +98,7 @@ namespace Kernel
     protected:
         float getProbabilityInfectionSingleStrain(StrainIdentity* strain_id, float challenge_dose);
         void  challengeIPV(float* dose_Dantigen_content);
-		bool  isOPVExposed(int serotype);
+        bool  isOPVExposed(int serotype);
         void  updateMemoryImmunity(void);
         virtual void validateStrainSettings(void);
 
@@ -116,7 +116,7 @@ namespace Kernel
         float time_since_last_IPV[N_POLIO_SEROTYPES]; // (days) time elapsed from exposure
         float individual_acquire_risk; // (dimensionless) demographic- and age-dependent acquisition risk, multiplies with contact_acquire_polio to give the individual's contact acquisition
         int   vaccine_doses_received[N_POLIO_VACCINES];     // {tOPV bOPV mOPV1 mOPV2 mOPV3 IPV} counters for number of doses already received
-		int   vaccine_doses_received_by_type[N_POLIO_VIRUS_TYPES]; // number of doses received by type {1,2,3}
+        int   vaccine_doses_received_by_type[N_POLIO_VIRUS_TYPES]; // number of doses received by type {1,2,3}
 
         int infectionStrains[N_POLIO_VIRUS_TYPES];          // number of current infections of each virus type
         int newInfectionByStrain[N_POLIO_VIRUS_TYPES];      // number of new infections of each virus type
@@ -131,6 +131,8 @@ namespace Kernel
         SusceptibilityPolio(IIndividualHumanContext *context);
         void Initialize(float age, float immmod, float riskmod);
         void AddVaccineToInterventionsContainer(int type, float time_since_vaccination);
+
+        DECLARE_SERIALIZABLE(SusceptibilityPolio, ISusceptibilityContext);
 
     public:
         static SusceptibilityPolio *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);

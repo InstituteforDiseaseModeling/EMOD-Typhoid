@@ -39,7 +39,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IRelationship.h"
 #endif
 
-// This macro, GET_CONFIGURABLE(Category), is the convenient and fast way to access the SimulationConfig parameters 
+// This macro, GET_CONFIGURABLE(Category), is the convenient and fast way to access the SimulationConfig parameters
 // within monolithic executable Eradication.exe.
 // To access the same SimulationConfig instance from EModule (Dlls/so), use the IGlobalContext method
 // GetSimulationConfigObj() via emodule's context QI's return for IGlobalContext interface
@@ -49,14 +49,14 @@ using namespace std;
 
 namespace Kernel
 {
-    class MalariaDrugTypeParameters; 
+    class MalariaDrugTypeParameters;
     class SimulationConfig;
 
     class ISimulationConfigFactory
     {
     public:
         virtual void Register(string classname, instantiator_function_t _if) = 0;
-    };            
+    };
 
     class IDMAPI SimulationConfigFactory : public ISimulationConfigFactory
     {
@@ -75,9 +75,9 @@ namespace Kernel
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SimulationConfig Class Layout Special Notes 
-// Note 1: 
-// All non-primitive objects on the stack (like STL or user-defined type) have to be at the very last 
+// SimulationConfig Class Layout Special Notes
+// Note 1:
+// All non-primitive objects on the stack (like STL or user-defined type) have to be at the very last
 // for the primitive objects in the SimulationConfig object crossing the DLL/EModule boundary
 // without affecting the memory image and therefore its member values
 // Note 2:
@@ -92,12 +92,12 @@ namespace Kernel
 
     public:
         DECLARE_CONFIGURED(SimulationConfig)
-        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        JsonConfigurable::tDynamicStringSet listed_events;
+        jsonConfigurable::tDynamicStringSet listed_events;
 #pragma warning( pop )
         // Enum type name                                    Enum variable name                                name in config.json
         //
@@ -173,7 +173,7 @@ namespace Kernel
         // parameters for individual
         bool vital_dynamics;
         bool vital_disease_mortality;
-        
+
         int infection_updates_per_tstep;
         bool interventions;
 
@@ -280,9 +280,10 @@ namespace Kernel
         int vaccine_genome_OPV3;
 #endif
 #ifdef ENABLE_TB
-        JsonConfigurable::tDynamicStringSet tb_drug_names_for_this_sim;
+        jsonConfigurable::tDynamicStringSet tb_drug_names_for_this_sim;
         std::map< std::string, TBDrugTypeParameters * > TBDrugMap;
 #endif
+#ifndef DISABLE_STI
         // STI: these will all move to IndividualHumanSTIConfig soon.
         float shortTermRelationshipLength;
         float concurrentRelationshipLength;
@@ -303,6 +304,7 @@ namespace Kernel
         float transitoryRel_inv_kappa;
         float transitoryRel_lambda;
 
+#ifndef DISABLE_HIV
         bool  Enable_cd4_dep_prog;
         int num_cd4_time_steps;
         float cd4_time_step;
@@ -311,10 +313,12 @@ namespace Kernel
 
         float days_between_symptomatic_and_death_lambda;
         float days_between_symptomatic_and_death_inv_kappa;
+#endif // DISABLE_HIV
+#endif // DISABLE_STI
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Important Note: 
-        // All static STL objects have to be at the very last 
+        // Important Note:
+        // All static STL objects have to be at the very last
         // for the SimulationConfig object crossing the DLL/EModule boundary
         // without affecting the memory layout and therefore its member values
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -330,7 +334,7 @@ namespace Kernel
 
 #endif
 
-        JsonConfigurable::tDynamicStringSet vector_species_names;
+        jsonConfigurable::tDynamicStringSet vector_species_names;
 
         std::string ConfigName;
         std::string airmig_filename;
@@ -372,7 +376,7 @@ namespace Kernel
         const Configuration* m_jsonConfig;
 
 #if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;    
+        friend class boost::serialization::access;
         template<class Archive>
         friend void serialize(Archive & ar, SimulationConfig& configs, const unsigned int /* file_version */);
         FORCE_POLYMORPHIC()

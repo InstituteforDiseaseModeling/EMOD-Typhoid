@@ -279,7 +279,7 @@ namespace Kernel
             unsigned int relId = relationship->second;
 
             LOG_DEBUG_F( "Restore %lu to relationship %d at node %lu.\n", movedId, relId, GetSuid().data );
-            if( relMan->GetRelationshipById( relId ) != NULL )
+            if( relMan->GetRelationshipById( relId ) != nullptr )
             {
                 IIndividualHumanSTI* sti_individual = nullptr;
                 if (movedind->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)

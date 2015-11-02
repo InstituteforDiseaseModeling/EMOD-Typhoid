@@ -68,18 +68,6 @@ namespace Kernel
         }
     }
 
-#if USE_JSON_SERIALIZATION
-   void BaseTextReportEvents::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const 
-   {
-        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "JSerialize() needs to be implemented.\n" );
-   }
-
-   void BaseTextReportEvents::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-   {
-        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "JDeserialize() needs to be implemented.\n" );
-   }
-#endif
-
     void BaseTextReportEvents::UpdateRegistration( INodeTriggeredInterventionConsumer* pNTIC,
                                                    bool registering )
     {

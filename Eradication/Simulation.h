@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include <functional>
+// test removal #include <functional>
 #include <list>
 #include <map>
 #include <unordered_map>
@@ -26,7 +26,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Node.h"
 #include "NodeRankMap.h"
 #include "IReport.h"
-#include "Susceptibility.h"
+// test removal #include "Susceptibility.h"
 #include "Configure.h"
 #include "IdmApi.h"
 
@@ -55,38 +55,38 @@ namespace Kernel
         static Simulation *CreateSimulation(const ::Configuration *config);
         virtual ~Simulation();
 
-        virtual bool Configure( const ::Configuration *json );
+        virtual bool Configure( const ::Configuration *json ) override;
 
         // IGlobalContext interfaces
-        virtual const SimulationConfig* GetSimulationConfigObj() const;
-        virtual const IInterventionFactory* GetInterventionFactory() const;
+        virtual const SimulationConfig* GetSimulationConfigObj() const override;
+        virtual const IInterventionFactory* GetInterventionFactory() const override;
 
         // ISimulation methods
-        virtual bool  Populate();
-        virtual void  Update(float dt);
-        virtual int   GetSimulationTimestep() const;
-        virtual IdmDateTime GetSimulationTime() const;
-        virtual void  RegisterNewNodeObserver(void* id, Kernel::ISimulation::callback_t observer);
-        virtual void  UnregisterNewNodeObserver(void* id);
-        virtual void  WriteReportsData();
+        virtual bool  Populate() override;
+        virtual void  Update(float dt) override;
+        virtual int   GetSimulationTimestep() const override;
+        virtual IdmDateTime GetSimulationTime() const override;
+        virtual void  RegisterNewNodeObserver(void* id, Kernel::ISimulation::callback_t observer) override;
+        virtual void  UnregisterNewNodeObserver(void* id) override;
+        virtual void  WriteReportsData() override;
 
-        virtual const DemographicsContext* GetDemographicsContext() const;
+        virtual const DemographicsContext* GetDemographicsContext() const override;
 
         // Migration
-        virtual void PostMigratingIndividualHuman(IndividualHuman *i);
+        virtual void PostMigratingIndividualHuman(IndividualHuman *i) override;
 
         // Unique ID services
-        virtual suids::suid GetNextNodeSuid();
-        virtual suids::suid GetNextIndividualHumanSuid();
-        virtual suids::suid GetNextInfectionSuid();
+        virtual suids::suid GetNextNodeSuid() override;
+        virtual suids::suid GetNextIndividualHumanSuid() override;
+        virtual suids::suid GetNextInfectionSuid() override;
 
         // Random number handling
-        virtual RANDOMBASE* GetRng();
+        virtual RANDOMBASE* GetRng() override;
         void ResetRng(); // resets random seed to a new value. necessary when branching from a common state
 
         // Reporting
-        virtual std::vector<IReport*>& GetReports();
-        virtual std::vector<IReport*>& GetReportsNeedingIndividualData();
+        virtual std::vector<IReport*>& GetReports() override;
+        virtual std::vector<IReport*>& GetReportsNeedingIndividualData() override;
 
 
     protected:
@@ -109,7 +109,7 @@ namespace Kernel
 
         // TODO: this is only here temporarily... should really go in a MigrationFactory class or 
         // something similar to ClimateFactory::ParseMetadataForFile() when migration gets refactored
-        bool ParseMetadataForMigrationFile(std::string data_filepath, std::string idreference, hash_map<uint32_t, uint32_t> &node_offsets);
+// test removal        bool ParseMetadataForMigrationFile(std::string data_filepath, std::string idreference, hash_map<uint32_t, uint32_t> &node_offsets);
 
         // Node initialization
         int  populateFromDemographics(const char* campaign_filename, const char* loadbalance_filename); // creates nodes from demographics input file data
@@ -120,7 +120,7 @@ namespace Kernel
         // Migration
         boost::mpi::request sendHuman(IndividualHuman *ind_human, int dest_rank);
         IndividualHuman*    receiveHuman(int src_rank);
-        virtual void resolveMigration(); // derived classes overide this...
+        virtual void resolveMigration(); // derived classes override this...
 
         // Campaign input file parsing
         virtual void   loadCampaignFromFile( const std::string& campaign_filename );
@@ -144,7 +144,8 @@ namespace Kernel
         struct map_merge;
 
         // Migration
-        std::vector< std::vector< IMigrate* > > migratingIndividualQueues;
+// clorton        std::vector< std::vector< IMigrate* > > migratingIndividualQueues;
+        std::vector<std::vector<IIndividualHuman*>> migratingIndividualQueues;
 
         // Master copies of contained-class flags are maintained here so that they only get serialized once
         // TODO: deprecate and use SimulationConfig everywhere
@@ -213,236 +214,169 @@ namespace Kernel
 
         void doJsonDeserializeReceive();
 
-        // Helper class to minimize code duplication in derived classes
-        template <class IndividualT>
-        class TypedPrivateMigrationQueueStorage
-        {
-        public:
-            std::vector< IndividualT* > receive_queue;
-            std::vector< std::vector< IndividualT* > > send_queue;
-
-            TypedPrivateMigrationQueueStorage() { init(); }
-
-            virtual void init()
-            {
-                send_queue.resize(EnvPtr->MPI.NumTasks);
-                receive_queue.resize(EnvPtr->MPI.NumTasks);
-            }
-        };
-
-        // ...and call this with the individual types they desire along with the appropriately typed queue storage classes
-        template <class IndividualT> 
-        void resolveMigrationInternal( 
-            TypedPrivateMigrationQueueStorage<IndividualT> &typed_migration_queue_storage,
-            std::vector< std::vector< IMigrate* > > &migrating_queues
-            )
-        {
-            // relatively inefficient but straightforward sync step
-
-            // TODO: investigate allgather (or whatever) to sync up numbers of individuals being sent and received
-
-            // Create a vector of individual counts to be sent. This is necessary because
-            // I cannot reuse the same memory location in subsequent calls to MPI_Isend
-            // (and MPI_Bsend incurs even uglier syntax)
-            // (but still hack-y and possibly slower than it needs to be)
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-            IJsonObjectAdapter* pIJsonObj = CreateJsonObjAdapter();
-            std::vector<std::string*> jsstr_buffer;
-#endif
-
-            individual_count_send_buffers.resize(EnvPtr->MPI.NumTasks); // ensure cached send count buffer has enough storage
-
-            for (int dest_rank = 0; dest_rank < EnvPtr->MPI.NumTasks; dest_rank++)
-            {
-                if (dest_rank == EnvPtr->MPI.Rank) 
-                {
-                    // distribute individuals in the queue locally 
-                    for (auto iterator = migrating_queues[dest_rank].rbegin(); iterator != migrating_queues[dest_rank].rend(); iterator++)
-                    {
-                        auto migrant = *iterator;
-                        migrant->ImmigrateTo( nodes[migrant->GetMigrationDestination()] );
-                    }
-                    migrating_queues[dest_rank].clear(); // clear the queue of locally migrating individuals so they aren't cleaned up later
-                }
-                else
-                {
-                    // send number of individuals going to this processor in a message. possibly not most efficient communication scheme
-
-                    MPI_Request request;
-                    individual_count_send_buffers[dest_rank] = (int)migrating_queues[dest_rank].size(); 
-                    MPI_Isend(&individual_count_send_buffers[dest_rank], 1, MPI_INT, dest_rank, 0, MPI_COMM_WORLD, &request); 
-                    pending_sends_plain.push_back(request);
-
-                    // Use of Isend here presents a problem because I can't wait for the matching receive to be posted. 
-                    // Provide different memory locations for each individual count. These values must remain valid until the barrier!
-
-                    if (individual_count_send_buffers[dest_rank] > 0) 
-                    {
-                        //if (ENABLE_DEBUG_MPI_TIMING)
-                        //    LOG_INFO_F("syncDistributedState(): Rank %d sending %d individuals to %d.\n", EnvPtr->MPI.Rank, individual_count_send_buffers[dest_rank], dest_rank);
-
-                        // apparently I cannot send my array without casting the pointers in it first.
-                        // utilize some cached class local storage to accomplish this
-                        typed_migration_queue_storage.send_queue[dest_rank].resize(migrating_queues[dest_rank].size());
-                        for (int k = 0; k < typed_migration_queue_storage.send_queue[dest_rank].size(); k++)
-                        {
-                            // static_cast appears crucial for the object to be sent whole and unperturbed. not sure why, I thought the pointer to the derived class started at the same offset as the base. but it appears not
-                            typed_migration_queue_storage.send_queue[dest_rank][k] = static_cast<IndividualT*>(migrating_queues[dest_rank][k]);
-                        }
-
-#if (USE_BOOST_SERIALIZATION || USE_BOOST_MPI) && !USE_JSON_MPI
-                        pending_sends.push_back(
-                            EnvPtr->MPI.World->isend(dest_rank, 0, typed_migration_queue_storage.send_queue[dest_rank])
-                            );
-                        //LOG_DEBUG_F("sending %d individuals to %d.\n", individual_count_send_buffers[dest_rank], dest_rank);
-
-#elif USE_JSON_SERIALIZATION || USE_JSON_MPI
-                                                // Send json version of individuals.
-
-//#define WRITEOUT
-#ifdef WRITEOUT
-                        ofstream ofs;
-                        ostringstream stringStream;
-                        static int ws = 0;
-                        stringStream << "mpindiv" << currentTimestep << "_" << ws++ << ".json";
-                        ofs.open(stringStream.str(), ios_base::app);
-                        if (!ofs.is_open())
-                        {
-                            LOG_ERR_F("Failed to open file %s in serialization\n", stringStream.str());
-                            return;
-                        }
-#endif
-                        int counter = 0;
-                        JSerializer js;
-                        const char* sHumans;
-                      
-
-                        pIJsonObj->CreateNewWriter();
-                        
-                        pIJsonObj->BeginArray();
-                        for (auto individual : typed_migration_queue_storage.send_queue[dest_rank])
-                        {
-                            // TBD: fix it later to make sure all possible individual classes have implementation
-                            IJsonSerializable * jsonser_individual = nullptr;
-                            // Ideally would throw QI exception but in interests of performance...
-                            individual->QueryInterface( GET_IID(IJsonSerializable), (void**)&jsonser_individual );
-                            //release_assert( jsonser_individual );
-                            jsonser_individual->JSerialize(pIJsonObj, &js);
-                        }
-                        pIJsonObj->EndArray();
-                        js.GetFormattedOutput(pIJsonObj, sHumans);
-                            
-#ifdef WRITEOUT
-                        char* prettyHumans = NULL;
-                        js.GetPrettyFormattedOutput(pIJsonObj, prettyHumans);
-                        if (prettyHumans)
-                        {
-                            ofs << prettyHumans << endl;
-                        }
-                        else
-                        {
-                            LOG_ERR("failed to get prettyHumans\n");
-                        }
-                        if (ofs.is_open())
-                            ofs.close();
-#endif
-
-                        string* stringHumans = new string(sHumans);
-                        jsstr_buffer.push_back(stringHumans);
-                        pending_sends.push_back(
-                            //EnvPtr->MPI.World->isend(dest_rank, 0, typed_migration_queue_storage.send_queue[dest_rank])
-                            EnvPtr->MPI.World->isend( dest_rank, 0, *stringHumans )
-                            );
-
-                        //LOG_INFO_F("Send to dst rank %d humans %d for %d bytes. \n", dest_rank, individual_count_send_buffers[dest_rank], strlen(sHumans));
-                        pIJsonObj->FinishWriter();
-#endif
-                    }
-                }
-            }
-            // Done sending
-
-#if (USE_BOOST_SERIALIZATION || USE_BOOST_MPI) && !USE_JSON_MPI
-            
-            for (int src_rank = 0; src_rank < EnvPtr->MPI.NumTasks; src_rank++)
-            {
-                if (src_rank == EnvPtr->MPI.Rank) continue; // we'll never receive a message from our own process
-
-                int receiving_humans = 0;
-                MPI_Status status;
-                MPI_Request request;
-
-                // Non-blocking receive
-                MPI_Irecv(&receiving_humans, 1, MPI_INT, src_rank, 0, MPI_COMM_WORLD, &request); // receive number of humans I need to receive
-                
-                // After issue the receiving command for number of humans, synchronous wait until the last MPI request (MPI_Irecv) to complete
-                MPI_Wait(&request, &status);
-                
-                //LOG_DEBUG_F("receiving_humans = %d from src=%d\n", receiving_humans, src_rank);
-                if (receiving_humans > 0) 
-                {
-                    //if (ENABLE_DEBUG_MPI_TIMING)
-                    //    LOG_INFO_F("syncDistributedState(): Rank %d receiving %d individuals from %d.\n", EnvPtr->MPI.Rank, receiving_humans, src_rank);
-
-                    // receive the whole list structure
-                    typed_migration_queue_storage.receive_queue.resize(receiving_humans);
-
-                    boost::mpi::request request = EnvPtr->MPI.World->irecv(src_rank, 0, typed_migration_queue_storage.receive_queue); 
-
-                    request.wait();
-                    for (auto migrant : typed_migration_queue_storage.receive_queue)
-                    {
-                        migrant->ImmigrateTo( nodes[migrant->GetMigrationDestination()] );
-                        // TODO: error handling if nodes[dest] not present on this rank
-                    }
-
-                    typed_migration_queue_storage.receive_queue.clear();
-                    //std::cout << "migrating_humans = " << receiving_humans << std::endl;
-                }
-            }
-
-#elif USE_JSON_SERIALIZATION || USE_JSON_MPI
-            doJsonDeserializeReceive();
-#endif
-            
-            // Cleanup phase
-            // wait for any still pending sends, then free memory for individuals that were sent
-            boost::mpi::wait_all(pending_sends.begin(), pending_sends.end());
-            for (auto request : pending_sends_plain)    // important - gotta free em all!
-            {
-                MPI_Status status;
-                MPI_Wait(&request, &status);
-            }
-
-            for (int dest_rank = 0; dest_rank < EnvPtr->MPI.NumTasks; dest_rank++)
-            {
-                for (auto migrant : migrating_queues[dest_rank])
-                {
-                    delete migrant;
-                }
-
-                migrating_queues[dest_rank].clear();
-                typed_migration_queue_storage.send_queue[dest_rank].clear();
-            }
-
-            pending_sends.clear();
-            pending_sends_plain.clear();
-
-            EnvPtr->MPI.World->barrier();
-
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-
-            if (pIJsonObj)
-            {
-                delete pIJsonObj;
-            }
-            for (auto pstring : jsstr_buffer)
-            {
-                delete pstring;
-            }
-#endif
-        }
+// clorton         // Helper class to minimize code duplication in derived classes
+// clorton         template <class IndividualT>
+// clorton         class TypedPrivateMigrationQueueStorage
+// clorton         {
+// clorton         public:
+// clorton             virtual ~TypedPrivateMigrationQueueStorage() {}
+// clorton 
+// clorton             std::vector< IndividualT* > receive_queue;
+// clorton             std::vector< std::vector< IndividualT* > > send_queue;
+// clorton 
+// clorton             TypedPrivateMigrationQueueStorage() { init(); }
+// clorton 
+// clorton             /* TEST virtual */ void init()
+// clorton             {
+// clorton                 send_queue.resize(EnvPtr->MPI.NumTasks);
+// clorton                 receive_queue.resize(EnvPtr->MPI.NumTasks);
+// clorton             }
+// clorton         };
+// clorton 
+// clorton         // ...and call this with the individual types they desire along with the appropriately typed queue storage classes
+// clorton         template <class IndividualT> 
+// clorton         void resolveMigrationInternal( 
+// clorton             TypedPrivateMigrationQueueStorage<IndividualT> &typed_migration_queue_storage,
+// clorton             std::vector< std::vector< IMigrate* > > &migrating_queues
+// clorton             )
+// clorton         {
+// clorton             // relatively inefficient but straightforward sync step
+// clorton 
+// clorton             // TODO: investigate allgather (or whatever) to sync up numbers of individuals being sent and received
+// clorton 
+// clorton             // Create a vector of individual counts to be sent. This is necessary because
+// clorton             // I cannot reuse the same memory location in subsequent calls to MPI_Isend
+// clorton             // (and MPI_Bsend incurs even uglier syntax)
+// clorton             // (but still hack-y and possibly slower than it needs to be)
+// clorton 
+// clorton             individual_count_send_buffers.resize(EnvPtr->MPI.NumTasks); // ensure cached send count buffer has enough storage
+// clorton 
+// clorton             for (int dest_rank = 0; dest_rank < EnvPtr->MPI.NumTasks; dest_rank++)
+// clorton             {
+// clorton                 if (dest_rank == EnvPtr->MPI.Rank) 
+// clorton                 {
+// clorton                     // distribute individuals in the queue locally 
+// clorton                     for (auto iterator = migrating_queues[dest_rank].rbegin(); iterator != migrating_queues[dest_rank].rend(); ++iterator)
+// clorton                     {
+// clorton                         auto migrant = *iterator;
+// clorton                         migrant->ImmigrateTo( nodes[migrant->GetMigrationDestination()] );
+// clorton                     }
+// clorton                     migrating_queues[dest_rank].clear(); // clear the queue of locally migrating individuals so they aren't cleaned up later
+// clorton                 }
+// clorton                 else
+// clorton                 {
+// clorton                     // send number of individuals going to this processor in a message. possibly not most efficient communication scheme
+// clorton 
+// clorton                     MPI_Request request;
+// clorton /* clorton
+// clorton static const char * _module = "Simulation";
+// clorton LOG_ERR_F("Sending %d individuals to rank %d.\n", int(migrating_queues[dest_rank].size()), dest_rank);
+// clorton fflush(stdout);
+// clorton clorton */
+// clorton                     individual_count_send_buffers[dest_rank] = int(migrating_queues[dest_rank].size()); 
+// clorton                     MPI_Isend(&individual_count_send_buffers[dest_rank], 1, MPI_INT, dest_rank, 0, MPI_COMM_WORLD, &request); 
+// clorton                     pending_sends_plain.push_back(request);
+// clorton 
+// clorton                     // Use of Isend here presents a problem because I can't wait for the matching receive to be posted. 
+// clorton                     // Provide different memory locations for each individual count. These values must remain valid until the barrier!
+// clorton 
+// clorton                     if (individual_count_send_buffers[dest_rank] > 0) 
+// clorton                     {
+// clorton                         //if (ENABLE_DEBUG_MPI_TIMING)
+// clorton                         //    LOG_INFO_F("syncDistributedState(): Rank %d sending %d individuals to %d.\n", EnvPtr->MPI.Rank, individual_count_send_buffers[dest_rank], dest_rank);
+// clorton 
+// clorton                         // apparently I cannot send my array without casting the pointers in it first.
+// clorton                         // utilize some cached class local storage to accomplish this
+// clorton                         typed_migration_queue_storage.send_queue[dest_rank].resize(migrating_queues[dest_rank].size());
+// clorton                         for (int k = 0; k < typed_migration_queue_storage.send_queue[dest_rank].size(); k++)
+// clorton                         {
+// clorton                             // static_cast appears crucial for the object to be sent whole and unperturbed. not sure why, I thought the pointer to the derived class started at the same offset as the base. but it appears not
+// clorton                             typed_migration_queue_storage.send_queue[dest_rank][k] = static_cast<IndividualT*>(migrating_queues[dest_rank][k]);
+// clorton                         }
+// clorton 
+// clorton #if (USE_BOOST_SERIALIZATION || USE_BOOST_MPI) && !USE_JSON_MPI
+// clorton                         pending_sends.push_back(
+// clorton                             EnvPtr->MPI.World->isend(dest_rank, 0, typed_migration_queue_storage.send_queue[dest_rank])
+// clorton                             );
+// clorton                         //LOG_DEBUG_F("sending %d individuals to %d.\n", individual_count_send_buffers[dest_rank], dest_rank);
+// clorton 
+// clorton                     }
+// clorton                 }
+// clorton             }
+// clorton             // Done sending
+// clorton /* clorton
+// clorton LOG_ERR("Done sending migrating individuals.\n");
+// clorton fflush(stdout);
+// clorton clorton */
+// clorton 
+// clorton #if (USE_BOOST_SERIALIZATION || USE_BOOST_MPI) && !USE_JSON_MPI
+// clorton             
+// clorton             for (int src_rank = 0; src_rank < EnvPtr->MPI.NumTasks; src_rank++)
+// clorton             {
+// clorton                 if (src_rank == EnvPtr->MPI.Rank) continue; // we'll never receive a message from our own process
+// clorton 
+// clorton                 int receiving_humans = 0;
+// clorton                 MPI_Status status;
+// clorton                 MPI_Request request;
+// clorton 
+// clorton                 // Non-blocking receive
+// clorton                 MPI_Irecv(&receiving_humans, 1, MPI_INT, src_rank, 0, MPI_COMM_WORLD, &request); // receive number of humans I need to receive
+// clorton                 
+// clorton                 // After issue the receiving command for number of humans, synchronous wait until the last MPI request (MPI_Irecv) to complete
+// clorton                 MPI_Wait(&request, &status);
+// clorton                 
+// clorton                 //LOG_DEBUG_F("receiving_humans = %d from src=%d\n", receiving_humans, src_rank);
+// clorton /* clorton
+// clorton LOG_ERR_F("receiving_humans = %d from src=%d\n", receiving_humans, src_rank);
+// clorton fflush(stdout);
+// clorton clorton */
+// clorton                 if (receiving_humans > 0) 
+// clorton                 {
+// clorton                     //if (ENABLE_DEBUG_MPI_TIMING)
+// clorton                     //    LOG_INFO_F("syncDistributedState(): Rank %d receiving %d individuals from %d.\n", EnvPtr->MPI.Rank, receiving_humans, src_rank);
+// clorton 
+// clorton                     // receive the whole list structure
+// clorton                     typed_migration_queue_storage.receive_queue.resize(receiving_humans);
+// clorton 
+// clorton                     boost::mpi::request recv_request = EnvPtr->MPI.World->irecv(src_rank, 0, typed_migration_queue_storage.receive_queue); 
+// clorton 
+// clorton                     recv_request.wait();
+// clorton                     for (auto migrant : typed_migration_queue_storage.receive_queue)
+// clorton                     {
+// clorton                         migrant->ImmigrateTo( nodes[migrant->GetMigrationDestination()] );
+// clorton                         // TODO: error handling if nodes[destination] not present on this rank
+// clorton                     }
+// clorton 
+// clorton                     typed_migration_queue_storage.receive_queue.clear();
+// clorton                     //std::cout << "migrating_humans = " << receiving_humans << std::endl;
+// clorton                 }
+// clorton             }
+// clorton 
+// clorton             // Cleanup phase
+// clorton             // wait for any still pending sends, then free memory for individuals that were sent
+// clorton             boost::mpi::wait_all(pending_sends.begin(), pending_sends.end());
+// clorton             for (auto request : pending_sends_plain)    // important - gotta free em all!
+// clorton             {
+// clorton                 MPI_Status status;
+// clorton                 MPI_Wait(&request, &status);
+// clorton             }
+// clorton 
+// clorton             for (int dest_rank = 0; dest_rank < EnvPtr->MPI.NumTasks; dest_rank++)
+// clorton             {
+// clorton                 for (auto migrant : migrating_queues[dest_rank])
+// clorton                 {
+// clorton                     delete migrant;
+// clorton                 }
+// clorton 
+// clorton                 migrating_queues[dest_rank].clear();
+// clorton                 typed_migration_queue_storage.send_queue[dest_rank].clear();
+// clorton             }
+// clorton 
+// clorton             pending_sends.clear();
+// clorton             pending_sends_plain.clear();
+// clorton 
+// clorton             EnvPtr->MPI.World->barrier();
+// clorton         }
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -477,9 +411,9 @@ namespace Kernel
         // (but still hack-y and possibly slower than it needs to be)
         std::vector<int> individual_count_send_buffers;
 
-        // Derived classes need to implement their own member of this type and pass it to resolveMigrationWithTypedStorage.
-        // Its constructor will be called from the simulation constructor and all will be happy.
-        TypedPrivateMigrationQueueStorage<IndividualHuman> typed_migration_queue_storage; 
+// clorton        // Derived classes need to implement their own member of this type
+// clorton        // Its constructor will be called from the simulation constructor and all will be happy.
+// clorton        TypedPrivateMigrationQueueStorage<IndividualHuman> typed_migration_queue_storage; 
 #pragma warning( pop )
 
 #if USE_BOOST_SERIALIZATION

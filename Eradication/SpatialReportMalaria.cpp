@@ -86,7 +86,7 @@ SpatialReportMalaria::LogNodeData(
 
     int nodeid = pNC->GetExternalID();
 
-    const INodeMalaria* pMalariaNode = NULL;
+    const INodeMalaria* pMalariaNode = nullptr;
     if( pNC->QueryInterface( GET_IID(INodeMalaria), (void**)&pMalariaNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeMalaria", "INodeContext" );

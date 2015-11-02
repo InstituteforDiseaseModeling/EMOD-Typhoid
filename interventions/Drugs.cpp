@@ -88,8 +88,8 @@ namespace Kernel
         }
     }
 
-    GenericDrug::GenericDrug() 
-        : parent(NULL)
+    GenericDrug::GenericDrug()
+        : parent(nullptr)
         , drug_type(0)
         , dosing_type(DrugUsageType::SingleDose)
         , durability_time_profile(PKPDModel::FIXED_DURATION_CONSTANT_EFFECT)
@@ -130,7 +130,7 @@ namespace Kernel
     GenericDrug::SetContextTo(IIndividualHumanContext *context)
     {
         parent = context;
-    } 
+    }
 
     void
     GenericDrug::ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc )
@@ -163,7 +163,7 @@ namespace Kernel
         return current_concentration;
     }
 
-    float 
+    float
     GenericDrug::GetDrugCurrentEfficacy() const
     {
         return current_efficacy;
@@ -272,11 +272,11 @@ namespace Kernel
             LOG_DEBUG_F("Remaining doses = %d, Dosing timer = %0.3f\n", remaining_doses, dosing_timer);
             if ( dosing_timer <= 0 )
             {
-                float slow_component_fraction = 0;
+                float slow_component_fraction;
                 if ( fast_decay_time_constant == slow_decay_time_constant )
                 {
                     // DJK: Should be easier to configure first order pkpd (see <ERAD-1853>)
-                    slow_component_fraction = 0;   
+                    slow_component_fraction = 0;
                 }
                 else
                 {
@@ -284,7 +284,7 @@ namespace Kernel
                                        (slow_decay_time_constant - fast_decay_time_constant);
                     LOG_DEBUG_F("fast_component_fraction = %0.2f for Tfast=%0.2f, Tslow=%0.2f, Vd=%0.2f\n", 1-slow_component_fraction, fast_decay_time_constant, slow_decay_time_constant, Vd);
                 }
-                
+
                 // DJK: Why not Cmax - Cmin? <ERAD-1855>
                 fast_component += Cmax*(1-slow_component_fraction);         // Central 1=primary=fast, 2=secondary=slow
                 slow_component += Cmax*slow_component_fraction;
@@ -300,7 +300,7 @@ namespace Kernel
         if ( fast_component > 0 || slow_component > 0 )
         {
             if ( fast_decay_time_constant > 0 && fast_component > 0)
-            { 
+            {
                 fast_component *= exp(-dt/fast_decay_time_constant);
             }
             if ( slow_decay_time_constant > 0 && slow_component > 0)
@@ -336,6 +336,34 @@ namespace Kernel
     void GenericDrug::Expire()
     {
         expired = true;
+    }
+
+    REGISTER_SERIALIZABLE(GenericDrug, IDistributableIntervention);
+
+    void GenericDrug::serialize(IArchive& ar, IDistributableIntervention* obj)
+    {
+        GenericDrug& drug = *dynamic_cast<GenericDrug*>(obj);
+        ar.startElement();
+        ar.labelElement("drug_type") & drug.drug_type;
+        ar.labelElement("dosing_type") & (uint32_t&)drug.dosing_type;
+        ar.labelElement("durability_time_profile") & (uint32_t&)drug.durability_time_profile;
+        ar.labelElement("fast_decay_time_constant") & drug.fast_decay_time_constant;
+        ar.labelElement("slow_decay_time_constant") & drug.slow_decay_time_constant;
+        ar.labelElement("dosing_timer") & drug.dosing_timer;
+        ar.labelElement("remaining_doses") & drug.remaining_doses;
+        ar.labelElement("time_between_doses") & drug.time_between_doses;
+        ar.labelElement("fast_component") & drug.fast_component;
+        ar.labelElement("slow_component") & drug.slow_component;
+        ar.labelElement("current_efficacy") & drug.current_efficacy;
+        ar.labelElement("current_concentration") & drug.current_concentration;
+        ar.labelElement("current_reducedacquire") & drug.current_reducedacquire;
+        ar.labelElement("current_reducedtransmit") & drug.current_reducedtransmit;
+        ar.labelElement("pk_rate_mod") & drug.pk_rate_mod;
+        ar.labelElement("Cmax") & drug.Cmax;
+        ar.labelElement("Vd") & drug.Vd;
+        ar.labelElement("drug_c50") & drug.drug_c50;
+        ar.labelElement("fraction_defaulters") & drug.fraction_defaulters;
+        ar.endElement();
     }
 }
 

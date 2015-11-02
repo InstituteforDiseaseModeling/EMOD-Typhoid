@@ -195,7 +195,7 @@ namespace Kernel
     {
         LOG_DEBUG_F( "%s: doReport = %d\n", __FUNCTION__, doReport );
 
-        IIndividualHumanHIV* hiv_individual = NULL;
+        IIndividualHumanHIV* hiv_individual = nullptr;
         if( individual->QueryInterface( GET_IID( IIndividualHumanHIV ), (void**)&hiv_individual ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualHIV", "IndividualHuman" );

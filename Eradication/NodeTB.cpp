@@ -65,7 +65,7 @@ namespace Kernel
     {
         // Trigger any node level HTI
 
-        IIndividualHumanTB2 *tb_ind= NULL;
+        IIndividualHumanTB2 *tb_ind= nullptr;
         if( ih->QueryInterface( GET_IID( IIndividualHumanTB2 ), (void**) &tb_ind ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "ih", "IndividualHuman", "IIndividualHumanTB2" );

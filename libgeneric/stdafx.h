@@ -15,28 +15,28 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #ifdef WIN32
+    #include <windows.h>
+    #if defined(_DEBUG)
+        #define USE_DEBUG_NEW
+        #ifdef USE_DEBUG_NEW
+            #define _CRTDBG_MAP_ALLOC
+            #include <stdlib.h>
+            #include <crtdbg.h>
+            #pragma message( "Using debug new()" )
+            #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+            #define _new_ DEBUG_NEW
+        #else
 
-    #define USE_DEBUG_NEW
-    #ifdef USE_DEBUG_NEW
-        // for memory leak reporting
-        #define _CRTDBG_MAP_ALLOC
-
-        #include <stdlib.h>
-        #include <crtdbg.h>
-
-        #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
-        #define _new_ DEBUG_NEW
+            #define _new_ new
+        #endif
     #else
-    
+
         #define _new_ new
-    #endif 
+    #endif
 #else  // not doing anything special on unix
 
     #define _new_ new
 #endif
-
-
-
 
 #ifdef WIN32
     #ifndef _WIN32_WINNT        // Allow use of features specific to Windows XP or later.                   

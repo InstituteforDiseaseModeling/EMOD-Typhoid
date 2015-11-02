@@ -58,7 +58,7 @@ namespace Kernel
         , days_to_achieve_suppression(183.0f)
         , days_since_most_recent_ART_start(INACTIVE_DURATION)
         , m_suppression_failure_timer(INACTIVE_DURATION)
-        , hiv_parent(NULL)
+        , hiv_parent(nullptr)
         , maternal_transmission_suppression(0.0f)
         , cascade_state("")
         , campaign_semaphores()
@@ -509,7 +509,7 @@ namespace Kernel
     {
         release_assert( hiv_parent );
         release_assert( hiv_parent->GetHIVSusceptibility() );
-        if( hiv_parent->GetHIVInfection() == NULL )
+        if( hiv_parent->GetHIVInfection() == nullptr )
         {
             LOG_WARN_F( "Individual %d coming off ART without infection!!!\n", parent->GetSuid().data );
             return;
@@ -573,7 +573,7 @@ namespace Kernel
 
         release_assert( hiv_parent );
         release_assert( hiv_parent->GetHIVSusceptibility() );
-        if( hiv_parent->GetHIVInfection() == NULL )
+        if( hiv_parent->GetHIVInfection() == nullptr )
         {
             LOG_DEBUG_F( "GoOnART called for *uninfected* individual %d.  Not distributing ART!\n", parent->GetSuid().data );
             return;
@@ -704,7 +704,7 @@ namespace Kernel
     {
         // NOTE: Calling this AFTER the QI/GiveDrug crashes!!! Both win and linux. Says SetContextTo suddenly became a pure virtual.
         pIV->SetContextTo( parent );
-        IDrug * pDrug = NULL;
+        IDrug * pDrug = nullptr;
         if( s_OK == pIV->QueryInterface(GET_IID(IDrug), (void**) &pDrug) )
         {
             LOG_DEBUG("Getting a HIV drug\n");

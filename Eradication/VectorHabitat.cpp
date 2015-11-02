@@ -37,6 +37,20 @@ namespace Kernel
     {
     }
 
+    VectorHabitat::VectorHabitat()
+        : m_habitat_type(VectorHabitatType::Enum(0))
+        , m_max_larval_capacity(0)
+        , m_current_larval_capacity(0.0f)
+        , m_total_larva_count(0)
+        , m_new_egg_count(0)
+        , m_oviposition_trap_killing(0.0f)
+        , m_artificial_larval_mortality(0.0f)
+        , m_larvicide_habitat_scaling(1.0f)
+        , m_rainfall_mortality(0.0f)
+        , m_egg_crowding_correction(0.0f)
+    {
+    }
+
     VectorHabitat::~VectorHabitat()
     {
     }
@@ -148,7 +162,7 @@ namespace Kernel
     void VectorHabitat::UpdateLarvalProbabilities(float dt, INodeContext* node)
     {
         // TODO: if this querying gets tedious, we can pass it in as an argument from NodeVector?
-        INodeVectorInterventionEffects* invie = NULL;
+        INodeVectorInterventionEffects* invie = nullptr;
         if (s_OK != node->GetEventContext()->QueryInterface(GET_IID(INodeVectorInterventionEffects), (void**)&invie))
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "GetEventContext()", "INodeVectorInterventionEffects", "INodeEventContext" );
@@ -349,5 +363,86 @@ namespace Kernel
     const SimulationConfig* VectorHabitat::params() const
     {
         return GET_CONFIGURABLE(SimulationConfig);
+    }
+
+    void VectorHabitat::serialize(IArchive& ar, VectorHabitat* habitat)
+    {
+        ar.startElement();
+            ar.labelElement("m_habitat_type") & (uint32_t&)habitat->m_habitat_type;
+            ar.labelElement("m_max_larval_capacity") & habitat->m_max_larval_capacity;
+            ar.labelElement("m_current_larval_capacity") & habitat->m_current_larval_capacity;
+            ar.labelElement("m_total_larva_count") & habitat->m_total_larva_count;
+            ar.labelElement("m_new_egg_count") & habitat->m_new_egg_count;
+            ar.labelElement("m_oviposition_trap_killing") & habitat->m_oviposition_trap_killing;
+            ar.labelElement("m_artificial_larval_mortality") & habitat->m_artificial_larval_mortality;
+            ar.labelElement("m_larvicide_habitat_scaling") & habitat->m_larvicide_habitat_scaling;
+            ar.labelElement("m_rainfall_mortality") & habitat->m_rainfall_mortality;
+            ar.labelElement("m_egg_crowding_correction") & habitat->m_egg_crowding_correction;
+        ar.endElement();
+    }
+
+    void serialize(IArchive& ar, map<VectorHabitatType::Enum, float>& mapping)
+    {
+        size_t count=  ar.IsWriter() ? mapping.size() : -1;
+
+        ar.startElement();
+            ar.labelElement("__count__") & count;
+            if (count > 0)
+            {
+                if (ar.IsWriter())
+                {
+                    for (auto entry : mapping)
+                    {
+                        ar.startElement();
+                            ar.labelElement("enum") & (uint32_t&)entry.first;
+                            ar.labelElement("float") & entry.second;
+                        ar.endElement();
+                    }
+                }
+                else
+                {
+                    for (size_t i = 0; i < count; ++i)
+                    {
+                        VectorHabitatType::Enum type;
+                        float value;
+                        ar.startElement();
+                            ar.labelElement("enum") & (uint32_t&)type;
+                            ar.labelElement("float") & value;
+                        ar.endElement();
+                        mapping[type] = value;
+                    }
+                }
+            }
+        ar.endElement();
+    }
+
+    void VectorHabitat::serialize(IArchive& ar, list<VectorHabitat*>& habitats)
+    {
+        size_t count = ar.IsWriter() ? habitats.size() : -1;
+
+        ar.startElement();
+            ar.labelElement("__count__") & count;
+            if (count > 0)
+            {
+                ar.labelElement("__list__");
+
+                if (ar.IsWriter())
+                {
+                    for (auto habitat : habitats)
+                    {
+                        serialize(ar, habitat);
+                    }
+                }
+                else
+                {
+                    for (size_t i = 0; i < count; ++i)
+                    {
+                        auto habitat = new VectorHabitat();
+                        serialize(ar, habitat);
+                        habitats.push_back(habitat);
+                    }
+                }
+            }
+        ar.endElement();
     }
 }

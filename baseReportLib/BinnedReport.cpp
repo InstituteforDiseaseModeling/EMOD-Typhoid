@@ -227,9 +227,9 @@ void  BinnedReport::LogIndividualData( Kernel::IndividualHuman * individual )
     }
 
     if(individual->GetStateChange() == HumanStateChange::KilledByInfection)
-	{
+    {
         disease_deaths_bins[bin_index] += mc_weight;
-	}
+    }
 }
 
 void BinnedReport::Finalize()

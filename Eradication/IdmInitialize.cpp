@@ -24,14 +24,14 @@ void IDMAPI IdmInitialize()
 
     if (!_processIsInitialized)
     {
-        _CRT_INIT(GetModuleHandleA("eradication.exe"), DLL_PROCESS_ATTACH, NULL);
+        _CRT_INIT(GetModuleHandleA("eradication.exe"), DLL_PROCESS_ATTACH, nullptr);
         _processIsInitialized = true;
         _threadMap = new std::map<DWORD, bool>();
     }
 
     if (!(*_threadMap)[threadId])
     {
-        _CRT_INIT(GetModuleHandleA("eradication.exe"), DLL_THREAD_ATTACH, NULL);
+        _CRT_INIT(GetModuleHandleA("eradication.exe"), DLL_THREAD_ATTACH, nullptr);
         (*_threadMap)[threadId] = true;
     }
 }

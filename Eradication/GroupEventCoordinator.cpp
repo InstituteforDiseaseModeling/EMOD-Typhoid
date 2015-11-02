@@ -64,7 +64,7 @@ namespace Kernel
     {
         bool retQualifies = true;
 
-        IIndividualHumanTB* tb_ind = NULL;
+        IIndividualHumanTB* tb_ind = nullptr;
         if(const_cast<IIndividualHumanEventContext*>(pIndividual)->QueryInterface( GET_IID( IIndividualHumanTB ), (void**)&tb_ind ) != s_OK)
         { //error here
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHumanTB", "IIndividualHumanEventContext" );
@@ -74,7 +74,7 @@ namespace Kernel
         if ( target_demographic == TargetDemographicType::ExplicitDiseaseState )
         {
             //TB SPECIFIC DISEASE STATES
-            IIndividualHumanTB2* tb_ind = NULL;
+            IIndividualHumanTB2* tb_ind = nullptr;
             if(const_cast<IIndividualHumanEventContext*>(pIndividual)->QueryInterface( GET_IID( IIndividualHumanTB2 ), (void**)&tb_ind ) != s_OK)
             { 
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHumanTB2", "IIndividualHumanEventContext" );

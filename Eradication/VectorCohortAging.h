@@ -10,14 +10,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "VectorCohort.h"
-#include "Common.h"
-#include "BoostLibWrapper.h"
+// clorton #include "Common.h"
+// clorton #include "BoostLibWrapper.h"
 
 namespace Kernel
 {
-    class IVectorCohortAging : public ISupports
+    struct IVectorCohortAging : ISupports
     {
-    public:
         virtual float GetAge() const = 0;
         virtual void IncreaseAge( float dt ) = 0;
     };
@@ -27,9 +26,9 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual float GetAge() const;
-        virtual void IncreaseAge( float dt );
-        virtual float GetMortality( uint32_t addition ) const;
+        virtual float GetAge() const override;
+        virtual void IncreaseAge( float dt ) override;
+        virtual float GetMortality( uint32_t addition ) const override;
 
     public:
         static VectorCohortAging *CreateCohort( float age = 0.0f, float progress = 0.0f, int32_t initial_population = 0, VectorMatingStructure = VectorMatingStructure() );
@@ -38,11 +37,14 @@ namespace Kernel
     protected:
         VectorCohortAging();
         VectorCohortAging(float age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics);
-        void Initialize();
+        /* clorton virtual */ void Initialize() /* clorton override */;
 
         float age;
         // TODO - document this function/expression/calculation
         inline static float mortalityFromAge(float age) { return (0.006f * exp(0.2f * age) / (1.0f + (0.006f * 1.5f / 0.2f * (exp(0.2f * age) - 1.0f)))); }
+
+// clorton         GETCLASSNAME_IMPL(VectorCohortAging);
+        DECLARE_SERIALIZABLE(VectorCohortAging, IVectorCohort);
 
     private:
 

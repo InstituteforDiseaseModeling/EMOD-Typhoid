@@ -279,6 +279,11 @@ namespace Kernel
             throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "_allele", _allele, VectorAllele::pairs::lookup_key(_allele) );
         }
     }
+
+    void VectorMatingStructure::serialize(IArchive& ar, VectorMatingStructure& structure)
+    {
+        ar & structure.vector_mating.index;
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

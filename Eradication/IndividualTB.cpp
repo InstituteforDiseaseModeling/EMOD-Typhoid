@@ -303,8 +303,8 @@ namespace Kernel
     bool IndividualHumanTB::IsTreatmentNaive() const
     {
          // Query for intervention container, in future cache TB Intervention container when we create it 
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = nullptr;
+        ITBInterventionsContainer * itbivc = nullptr;
 
         context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )
@@ -318,8 +318,8 @@ namespace Kernel
     bool IndividualHumanTB::HasFailedTreatment() const
     {
         // Query for intervention container
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = nullptr;
+        ITBInterventionsContainer * itbivc = nullptr;
 
         context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )
@@ -333,8 +333,8 @@ namespace Kernel
     bool IndividualHumanTB::HasEverRelapsedAfterTreatment() const
     {
         // Query for intervention container
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = nullptr;
+        ITBInterventionsContainer * itbivc = nullptr;
 
         context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )
@@ -360,8 +360,8 @@ namespace Kernel
     bool IndividualHumanTB::IsOnTreatment() const 
     { 
         // Query for intervention container
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = nullptr;
+        ITBInterventionsContainer * itbivc = nullptr;
 
         context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )

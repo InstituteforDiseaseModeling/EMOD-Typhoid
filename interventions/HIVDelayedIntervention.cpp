@@ -64,14 +64,14 @@ namespace Kernel
         DelayedIntervention::DistributionConfigure(inputJson);
 
         // HIVDelayedIntervention specific
-        if( delay_distribution == DistributionFunction::PIECEWISE_CONSTANT 
+        if( delay_distribution == DistributionFunction::PIECEWISE_CONSTANT
             || delay_distribution == DistributionFunction::PIECEWISE_LINEAR
             || JsonConfigurable::_dryrun )
         {
-            initConfigComplexType( "Time_Varying_Constants", 
-                                   &year2DelayMap, 
-                                   HIV_Delayed_Intervention_TVC_DESC_TEXT, 
-                                   "Delay_Distribution", 
+            initConfigComplexType( "Time_Varying_Constants",
+                                   &year2DelayMap,
+                                   HIV_Delayed_Intervention_TVC_DESC_TEXT,
+                                   "Delay_Distribution",
                                    "PIECEWISE_CONSTANT || PIECEWISE_LINEAR" );
         }
 
@@ -84,8 +84,8 @@ namespace Kernel
         broadcast_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
 
         initConfigTypeMap( "Broadcast_On_Expiration_Event",
-                           &broadcast_on_expiration_event, 
-                           HIV_Delayed_Intervention_Broadcast_On_Expiration_Event_DESC_TEXT, 
+                           &broadcast_on_expiration_event,
+                           HIV_Delayed_Intervention_Broadcast_On_Expiration_Event_DESC_TEXT,
                            NO_TRIGGER_STR );
         broadcast_on_expiration_event.constraints = "<configuration>:Listed_Events.*";
         broadcast_on_expiration_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
@@ -114,9 +114,9 @@ namespace Kernel
             {
                 abort_state_list = abort_state_list.substr( 0, abort_state_list.length() - 2 );
             }
-            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
-                                                    "Cascade_State", cascadeState.c_str(), 
-                                                    "Abort_States", abort_state_list.c_str(), 
+            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__,
+                                                    "Cascade_State", cascadeState.c_str(),
+                                                    "Abort_States", abort_state_list.c_str(),
                                                     "The Cascade_State cannot be one of the Abort_States." );
         }
     }
@@ -180,9 +180,9 @@ namespace Kernel
         IHIVCascadeOfCare *ihcc = nullptr;
         if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IHIVCascadeOfCare), (void **)&ihcc) )
         {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__,
                                            "parent->GetInterventionsContext()",
-                                           "IHIVCascadeOfCare", 
+                                           "IHIVCascadeOfCare",
                                            "IIndividualHumanInterventionsContext" );
         }
 
@@ -242,7 +242,7 @@ namespace Kernel
         }
 
         days_remaining -= dt;
-        if( days_remaining < 0 ) 
+        if( days_remaining < 0 )
         {
             expired = true;
 
@@ -295,7 +295,7 @@ namespace Kernel
         return cascadeState;
     }
 
-    const JsonConfigurable::tDynamicStringSet& HIVDelayedIntervention::GetAbortStates()
+    const jsonConfigurable::tDynamicStringSet& HIVDelayedIntervention::GetAbortStates()
     {
         return abortStates;
     }

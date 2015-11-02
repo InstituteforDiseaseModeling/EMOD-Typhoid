@@ -8,7 +8,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
-#include <cstdlib>
 #include <ctime>
 
 #include "Debug.h"
@@ -16,11 +15,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Environment.h"
 #include "FileSystem.h"
 #include "Exceptions.h"
-#include "FileSystem.h"
 #include "IdmString.h"
 #include "Log.h"
 #include "SimulationConfig.h"
-#include "Types.h"
 
 #define EPSILON (FLT_EPSILON)
 
@@ -142,7 +139,7 @@ const NodeDemographics NodeDemographics::operator[]( int index ) const
         std::string msg = GetFailedToInterpretMessage( "array" ) ;
         throw NodeDemographicsFormatErrorException( __FILE__, __LINE__, __FUNCTION__, "UNKNOWN", msg.c_str() );
     }
-    return NodeDemographics(jsonValue[(IndexType)index], string_table, parent, nodeID, "array", valueKey );
+    return NodeDemographics(jsonValue[IndexType(index)], string_table, parent, nodeID, "array", valueKey );
 }
 
 std::string NodeDemographics::GetFailedToInterpretMessage( const char* pExpType ) const
@@ -174,7 +171,7 @@ JsonObjectDemog NodeDemographics::get_array() const
 
 double NodeDemographics::AsDouble() const
 {
-    double db = 0.0 ;
+    double db;
     try
     {
         db = jsonValue.AsDouble();
@@ -189,7 +186,7 @@ double NodeDemographics::AsDouble() const
 
 int NodeDemographics::AsInt() const
 {
-    int integer = 0 ;
+    int integer;
     try
     {
         integer = jsonValue.AsInt();
@@ -204,7 +201,7 @@ int NodeDemographics::AsInt() const
 
 bool NodeDemographics::AsBool() const
 {
-    bool flag = false;
+    bool flag;
     try
     {
         flag = jsonValue.AsBool();
@@ -219,7 +216,7 @@ bool NodeDemographics::AsBool() const
 
 uint64_t NodeDemographics::AsUint64() const
 {
-    uint64_t integer = 0 ;
+    uint64_t integer;
     try
     {
         integer = jsonValue.AsUint64();
@@ -344,7 +341,7 @@ NodeDemographicsFactory * NodeDemographicsFactory::CreateNodeDemographicsFactory
     catch( std::exception& )
     {
         delete factory ;
-        factory = NULL ;
+        factory = nullptr ;
         throw ;  //rethrow the exception preserving the object
     }
 
@@ -528,6 +525,12 @@ void NodeDemographicsFactory::Initialize(const ::Configuration* config)
 
                         throw NodeDemographicsFormatErrorException( __FILE__, __LINE__, __FUNCTION__, demo_filename.c_str(), msg.str().c_str());
                     }
+                    else
+                    {
+                        LOG_WARN_F("Demographics file \"%s\" doesn't share any nodes with the base demographics file!\n", demo_filename.c_str());
+                        demographics_filenames.erase( demographics_filenames.begin() + layer );
+                        layer--;
+                    }
                 }
             }
         }
@@ -579,7 +582,7 @@ std::vector<std::string> NodeDemographicsFactory::GetDemographicFileNames(const 
 {
     if( demographics_filenames_list.empty() )
     {
-        bool configured = Configure(config);
+        Configure(config);
     }
     else
     {
@@ -617,9 +620,9 @@ bool NodeDemographicsFactory::ReadNodeData( bool isUnCompiled,
 
     // Extract the data for each node and put it into a map so that node creation
     // can access only the nodes it needs to.
-    std::map<uint32_t,JsonObjectDemog> nodeid_2_nodedata_map;
     if( layer_has_nodes )
     {
+        std::map<uint32_t,JsonObjectDemog> nodeid_2_nodedata_map;
 
         for( int i = 0 ; i < node_list_data.size() ; i++ )
         {
@@ -659,10 +662,10 @@ bool NodeDemographicsFactory::ReadNodeData( bool isUnCompiled,
             }
             nodeid_2_nodedata_map[ node_id ] = nodedata ;
         }
-    }
 
-    // each layer should have a map of nodeid to nodedata
-    nodedata_maps.push_back( nodeid_2_nodedata_map );
+        // each layer should have a map of nodeid to nodedata
+        nodedata_maps.push_back( nodeid_2_nodedata_map );
+    }
 
     return layer_has_nodes ;
 }
@@ -769,7 +772,7 @@ void NodeDemographicsFactory::SetIdReference( int layer, const std::string& rDem
 
 string NodeDemographicsFactory::GetNextStringValue(string last_value, set<string> used_values)
 {
-    int len = (int)last_value.length();
+    int len = int(last_value.length());
     for(int i = len - 1; i >= 0; i--)
     {
         if(last_value[i] != 'z')
@@ -875,7 +878,7 @@ JsonObjectDemog NodeDemographicsFactory::CreateDefaultNodeDemograhics( uint32_t 
 
 NodeDemographics* NodeDemographicsFactory::CreateNodeDemographics(INodeContext *parent_node)
 {
-    NodeDemographics * new_demographics = NULL;
+    NodeDemographics * new_demographics = nullptr;
 
     JsonObjectDemog finalnodedata( JsonObjectDemog::JSON_OBJECT_OBJECT ) ;
 
@@ -892,32 +895,20 @@ NodeDemographics* NodeDemographicsFactory::CreateNodeDemographics(INodeContext *
     uint32_t nodeid = nodeid_suid_map->right.at(node_suid);
 
     bool found_node = false ;
-    for(int i = (int)(demographics_filenames.size() - 1); i >= 0; i--)
+    for(int i = int(demographics_filenames.size() - 1); i >= 0; i--)
     {
-        JsonObjectDemog nodedata ;
-        if( nodedata_maps[i].count(nodeid) > 0 )
-        {
-            nodedata = nodedata_maps[i][nodeid] ;
-        }
+        JsonObjectDemog nodedata = nodedata_maps[i][nodeid] ;
+        found_node = !nodedata.IsNull() ;
 
-        if( !nodedata.IsNull() )
+        if( found_node )
         {
             TranslateNodeData(nodedata, i, finalnodedata);
-            found_node = true ;
-        }
 
-        // -----------------------------------------------------------------------------------
-        // --- We want to support the situation where the user defines Defaults in the overlay.
-        // --- If the user does NOT define any nodes in the overlay, then the Defaults applys to all nodes.
-        // --- If the user DOES define nodes in the overlay, then the Defaults in the overlay only apply to those nodes.
-        // -----------------------------------------------------------------------------------
-        bool apply_defaults =  !layer_defaults[i].IsNull()
-                            && ((i == 0) || found_node || (nodedata_maps[i].size() == 0));
-
-        if( apply_defaults )
-        {
-            LOG_DEBUG_F( "layer %d has defaults layer, translating now...\n", i );
-            TranslateNodeData(layer_defaults[i], i, finalnodedata);
+            if(!layer_defaults[i].IsNull())
+            {
+                LOG_DEBUG_F( "layer %d has defaults layer, translating now...\n", i );
+                TranslateNodeData(layer_defaults[i], i, finalnodedata);
+            }
         }
     }
     if( !found_node )
@@ -1205,7 +1196,7 @@ NodeDemographicsDistribution* NodeDemographicsDistribution::CreateDistribution( 
 
                 pop_groups.push_back(std::vector<double>());
                 for(int j = 0; j < pop_groups_orig[i].size(); j++)
-                    pop_groups[i].push_back((float)(pop_groups_orig[i][j].AsDouble()));
+                    pop_groups[i].push_back(float(pop_groups_orig[i][j].AsDouble()));
             }
 
             for(int axis = 0; axis < num_axes; axis++)
@@ -1232,7 +1223,6 @@ NodeDemographicsDistribution* NodeDemographicsDistribution::CreateDistribution( 
             // --- That is, create the list of the number of arrays and array elements in the distribution.
             // -------------------------------------------------------------------------------------------
             std::vector<int> num_elements_dist ;
-            int size = num_pop_groups.size();
             for( int j = 0 ; j < num_pop_groups.size() ; j++ )
             {
                 num_elements_dist.push_back( num_pop_groups[j] );
@@ -1363,7 +1353,7 @@ float NodeDemographicsDistribution::DrawFromDistribution(float randdraw, ...) co
     va_start(groupvals_valist, randdraw);
 
     for(int axis = 0; axis < num_axes; axis++)
-        groupvals[axis] = (float)(va_arg(groupvals_valist, double)); // can't pass floats in varargs for some reason...
+        groupvals[axis] = float(va_arg(groupvals_valist, double)); // can't pass floats in varargs for some reason...
 
     va_end(groupvals_valist);
 
@@ -1377,13 +1367,13 @@ float NodeDemographicsDistribution::DrawResultValue(double axis0value, ...) cons
     static vector<float> groupvals;
     groupvals.resize(num_axes);
 
-    groupvals[0] = (float)axis0value;
+    groupvals[0] = float(axis0value);
 
     va_list groupvals_valist;
     va_start(groupvals_valist, axis0value);
 
     for(int axis = 1; axis < num_axes; axis++)
-        groupvals[axis] = (float)(va_arg(groupvals_valist, double)); // can't pass floats in varargs for some reason...
+        groupvals[axis] = float(va_arg(groupvals_valist, double)); // can't pass floats in varargs for some reason...
 
     va_end(groupvals_valist);
 
@@ -1413,22 +1403,22 @@ float NodeDemographicsDistribution::pickDistributionValue(vector<float> &groupva
             float ret_val = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * 0));
             return ret_val ;
         }
-        else if(i == num_groups)
+        /*else*/ if(i == num_groups)
         {
             float ret_val = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * (i - 1)));
             return ret_val ;
         }
-        else
+        /*else*/
         {
             float val1 = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * (i - 1)));
             float val2 = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * i));
 
             // calculate linear-interpolation for val1, val2
-            float ret_val = (float)(val1 + ((groupvals[start_axis] - pop_groups[start_axis][i -1]) * (val2 - val1) / (pop_groups[start_axis][i] - pop_groups[start_axis][i - 1])));
+            float ret_val = float(val1 + ((groupvals[start_axis] - pop_groups[start_axis][i -1]) * (val2 - val1) / (pop_groups[start_axis][i] - pop_groups[start_axis][i - 1])));
             return ret_val ;
         }
     }
-    else
+    /*else*/
     {
         if(dist_values.size() != 0)
         {
@@ -1439,15 +1429,15 @@ float NodeDemographicsDistribution::pickDistributionValue(vector<float> &groupva
                 if(randdraw <= cdf[i])  break;
 
             if(i == 0)
-                return (float)(result_values[0]);
-            else if(i == cdf.size())
-                return (float)(result_values[i - 1]);
-            else
-                return (float)(result_values[i - 1] + ((randdraw - cdf[i - 1]) * (result_values[i] - result_values[i - 1]) / (cdf[i] - cdf[i - 1])));
+                return float(result_values[0]);
+            /*else*/ if(i == cdf.size())
+                return float(result_values[i - 1]);
+            /*else*/
+                return float(result_values[i - 1] + ((randdraw - cdf[i - 1]) * (result_values[i] - result_values[i - 1]) / (cdf[i] - cdf[i - 1])));
         }
-        else
+        /*else*/
         {
-            return (float)result_values[slot];
+            return float(result_values[slot]);
         }
     }
 }
@@ -1538,65 +1528,6 @@ void NodeDemographics::validateIPTransition() const
 }
 
 }
-
-#if USE_JSON_SERIALIZATION
-void Kernel::NodeDemographics::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-{
-    root->BeginObject();
-    std::string s = jsonValue.ToString();
-    root->Insert("value", s.c_str());
-    root->EndObject();
-}
-
-void Kernel::NodeDemographics::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-{
-}
-
-void Kernel::DemographicsContext::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-{
-    root->BeginObject();
-
-    root->Insert("stringTable");
-    helper->JSerialize(*stringTable, root);
-
-    root->EndObject();
-}
-
-void Kernel::DemographicsContext::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-{
-}
-
-void Kernel::NodeDemographicsDistribution::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-{
-    root->BeginObject();
-
-    root->Insert("num_pop_groups");
-    helper->JSerialize(num_pop_groups, root);
-
-    root->Insert("result_values");
-    helper->JSerialize(result_values, root);
-
-    root->Insert("pop_groups");
-    helper->JSerialize(pop_groups, root);
-
-    root->Insert("dist_values");
-    helper->JSerialize(dist_values, root);
-
-    root->Insert("num_axes", num_axes);
-
-    // Serialize base class
-    root->Insert("NodeDemographics");
-    NodeDemographics::JSerialize( root, helper );
-
-    root->EndObject();
-
-}
-
-void Kernel::NodeDemographicsDistribution::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-{
-}
-
-#endif 
 
 // a step towards limiting the lookup in Node for demographic_distributions by arbitrary keys
 const std::string Kernel::NodeDemographicsDistribution::FertilityDistribution       = "FertilityDistribution";

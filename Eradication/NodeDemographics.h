@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "IdmApi.h"
-#include <string>
+// clorton #include <string>
 #include <set>
 #include <map>
 #include "BoostLibWrapper.h"
@@ -40,14 +40,6 @@ namespace Kernel
         friend class ::boost::serialization::access;
         template<class Archive>
         friend void serialize(Archive & ar, DemographicsContext& nd, const unsigned int /* file_version */); // { ar & stringTable; }
-#endif
-
-#if USE_JSON_SERIALIZATION
-    public:
-
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
 #endif
     };
 
@@ -139,14 +131,6 @@ namespace Kernel
 
         friend struct NodeDemographicsDistribution;
 
-#if USE_JSON_SERIALIZATION
-    public:
-
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
 #if USE_BOOST_SERIALIZATION
         friend class ::boost::serialization::access;
 
@@ -180,7 +164,7 @@ namespace Kernel
                                                          const std::string& rParentKey );
 
         const std::vector<uint32_t>& GetNodeIDs() { return nodeIDs; }
-        const std::string GetIdReference() { return idreference; }
+        std::string GetIdReference() { return idreference; }
 
         // If the user selected to use the default demographics, this routine can be used
         // to write the demographics to a file once the demographics have been initialized.
@@ -238,7 +222,7 @@ namespace Kernel
         };
         void Initialize(const ::Configuration *config);
 
-        virtual bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
         // Create json object of the data that is unique for this default node.
         JsonObjectDemog CreateDefaultNodeDemograhics( uint32_t nodeid );
@@ -395,14 +379,6 @@ namespace Kernel
         std::vector<double> result_values;
         std::vector< std::vector<double> > dist_values;
 #pragma warning( pop )
-
-#if USE_JSON_SERIALIZATION
-    public:
-
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
 
 #if USE_BOOST_SERIALIZATION
         friend class ::boost::serialization::access;

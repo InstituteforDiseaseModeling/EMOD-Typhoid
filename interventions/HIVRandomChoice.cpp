@@ -29,7 +29,7 @@ namespace Kernel
         const std::string& key
     )
     {
-        ConstrainedString event ;
+        jsonConfigurable::ConstrainedString event ;
         event.parameter_name = "HIVRandomChoices::Choices::Event" ;
         event.constraints = "<configuration>:Listed_Events.*";
         event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
@@ -40,7 +40,7 @@ namespace Kernel
                   data != tvcs_jo.End();
                   ++data )
         {
-            auto tvcs = inputJson->As< json::Object >()[ key ]; 
+            auto tvcs = inputJson->As< json::Object >()[ key ];
 
             event = data->name;
             float probability = (float) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
@@ -50,7 +50,7 @@ namespace Kernel
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if ( probability > MAX_PROBABILITY )
             {
-                throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__, 
+                throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
                                                    "HIVRandomChoices::Choices::Probability", probability, MAX_PROBABILITY );
             }
             else if ( probability < MIN_PROBABILITY )
@@ -83,7 +83,7 @@ namespace Kernel
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:Event2ProbabilityMapType" );
-    
+
         schema[ts]["Event"] = json::Object();
         schema[ts]["Event"][ "type" ] = json::String( "Constrained String" );
         schema[ts]["Event"][ "description" ] = json::String( HIV_Event2ProbabilityMap_Event_DESC_TEXT );
@@ -93,7 +93,7 @@ namespace Kernel
         schema[ts]["Probability"][ "min" ] = json::Number( MIN_PROBABILITY );
         schema[ts]["Probability"][ "max" ] = json::Number( MAX_PROBABILITY );
         schema[ts]["Probability"][ "description" ] = json::String( HIV_Event2ProbabilityMap_Probability_DESC_TEXT );
-        
+
         return schema;
     }
     BEGIN_QUERY_INTERFACE_DERIVED(HIVRandomChoice, SimpleDiagnostic)
@@ -124,7 +124,7 @@ namespace Kernel
 
         // random number to choose an event from the dictionary
         float p = Environment::getInstance()->RNG->e();
-        
+
         std::string eventEnum = NO_TRIGGER_STR ;
         float probSum = 0;
 
@@ -148,7 +148,7 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__,
                                            "parent->GetEventContext()->GetNodeEventContext()",
-                                           "INodeTriggeredInterventionConsumer", 
+                                           "INodeTriggeredInterventionConsumer",
                                            "INodeEventContext" );
         }
         if( eventEnum != NO_TRIGGER_STR )

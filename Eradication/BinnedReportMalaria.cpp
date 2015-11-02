@@ -136,7 +136,7 @@ void BinnedReportMalaria::LogIndividualData( Kernel::IndividualHuman * individua
 
     int bin_index = calcBinIndex(individual);
 
-    Kernel::IMalariaHumanContext* individual_malaria = NULL;
+    Kernel::IMalariaHumanContext* individual_malaria = nullptr;
     if( individual->QueryInterface( GET_IID( Kernel::IMalariaHumanContext), (void**) &individual_malaria ) != Kernel::s_OK )
     {
         throw Kernel::QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IndividualHuman", "IMalariaHumanContext" );

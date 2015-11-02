@@ -15,11 +15,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISupports.h"
 #include "IdmDateTime.h"
 #include "IInfectable.h"
-#include "SimpleTypemapRegistration.h"
-#include "ITransmissionGroups.h"
 #include "INodeContext.h"
-#include "Exceptions.h"
 #include "IdmApi.h"
+#include "ISusceptibilityContext.h"
 
 class RANDOMBASE;
 
@@ -83,9 +81,8 @@ namespace Kernel
 
     struct IIndividualHumanInterventionsContext;
     struct IIndividualHumanEventContext;
-    struct ISusceptibilityContext;
 
-    struct IIndividualHumanContext : public ISupports
+    struct IIndividualHumanContext : ISupports
     {
         virtual suids::suid GetSuid() const = 0;
 
@@ -103,13 +100,6 @@ namespace Kernel
         
         virtual void UpdateGroupMembership() = 0;
         virtual void UpdateGroupPopulation(float size_changes) = 0;
-    };
-
-    struct ISusceptibilityContext : public ISupports
-    {
-        virtual float getModAcquire() const = 0;
-        virtual float GetModTransmit() const = 0;
-        virtual float getModMortality() const = 0;
     };
 
 // helper macro for readability

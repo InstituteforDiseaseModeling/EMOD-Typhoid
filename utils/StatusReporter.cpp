@@ -153,7 +153,7 @@ long StatusReporter::GetJobId()
 void StatusReporter::GetSchedulerInterface()
 {
     HRESULT hr;
-    if (FAILED(hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)))
+    if (FAILED(hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED)))
     {
         errorMessage << "CoInitializeEx() failed - " << hr << std::endl;
         throw errorMessage.str().c_str();
@@ -163,7 +163,7 @@ void StatusReporter::GetSchedulerInterface()
 
     hr = CoCreateInstance(
         __uuidof(Scheduler),
-        NULL,
+        nullptr,
         CLSCTX_INPROC_SERVER,
         __uuidof(IScheduler),
         reinterpret_cast<void **>(&scheduler));
@@ -300,7 +300,7 @@ void StatusReporter::UpdateJobProgress( int step, int steps, const std::string &
 {
     if (schedulerJob)
     {
-        time_t now = time(NULL);
+        time_t now = time(nullptr);
         if(now - lastProgressUpdateTime >= SECONDS_BETWEEN_UPDATES || step == steps )
         {
             lastProgressUpdateTime = now;
@@ -321,7 +321,7 @@ void StatusReporter::UpdateJobProgressMessage( const std::string &status )
 {
     if (schedulerJob)
     {
-        time_t now = time(NULL);
+        time_t now = time(nullptr);
         if(now - lastProgressUpdateTime >= SECONDS_BETWEEN_UPDATES)
         {
             lastProgressUpdateTime = now;

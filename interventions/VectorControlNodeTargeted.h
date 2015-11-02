@@ -34,7 +34,7 @@ namespace Kernel
 
         // INodeDistributableIntervention
         bool Configure( const Configuration * config );
-        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC=NULL); 
+        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC=nullptr); 
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
         virtual void SetContextTo(INodeEventContext *context);
         virtual void Update(float dt);

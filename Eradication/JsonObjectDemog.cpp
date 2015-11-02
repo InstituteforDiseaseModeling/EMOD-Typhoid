@@ -127,23 +127,6 @@ namespace Kernel {
         return !(*this == rThat);
     }
 
-    void JsonObjectDemog::WriteToFile( const char* filename )
-    {
-        JsonWriterDemog writer( true ) ;
-        writer << *this ;
-
-        std::string text = writer.PrettyText();
-
-        std::ofstream json_file;
-        json_file.open( filename );
-        if( json_file.fail() )
-        {
-            throw FileIOException( __FILE__, __LINE__, __FUNCTION__, filename );
-        }
-        json_file << text ;
-        json_file.close();
-    }
-
     // ------------------------------------------------------
     // --- Methods for creating an object from a string and
     // --- for creating the string from the object
@@ -890,7 +873,7 @@ namespace Kernel {
 
     char* JsonWriterDemog::PrettyText() const
     {
-        char* prettyString = NULL;
+        char* prettyString = nullptr;
         rapidjson::Document doc;
         rapidjson::StringBuffer& r_buffer = *((rapidjson::StringBuffer*)m_pBuffer);
 

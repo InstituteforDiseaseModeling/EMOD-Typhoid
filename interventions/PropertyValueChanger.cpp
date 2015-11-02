@@ -39,7 +39,7 @@ namespace Kernel
         , max_duration(0.0f)
         , action_timer(0.0f)
         , reversion_timer(0.0f)
-        , ibc(NULL)
+        , ibc(nullptr)
     {
         expired = false;
         //std::cout << __FUNCTION__ << ":" << __LINE__ << std::endl;
@@ -58,8 +58,8 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        target_property_key.constraints = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>"; 
-        target_property_value.constraints = "<demographics>::Defaults.Individual_Properties.*.Value.<keys>"; 
+        target_property_key.constraints = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>";
+        target_property_value.constraints = "<demographics>::Defaults.Individual_Properties.*.Value.<keys>";
         initConfigTypeMap("Target_Property_Key", &target_property_key, PC_Target_Property_Key_DESC_TEXT );
         initConfigTypeMap("Target_Property_Value", &target_property_value, PC_Target_Property_Value_DESC_TEXT );
         initConfigTypeMap("Daily_Probability", &probability, PC_Daily_Probability_DESC_TEXT, 0.0f, 1.0f );
@@ -166,7 +166,7 @@ namespace Kernel
     {
         return BaseIntervention::Release();
     }
-    
+
     const char * PropertyValueChanger::GetTargetPropertyValue()
     {
         return target_property_value.c_str();
@@ -181,8 +181,10 @@ namespace Kernel {
     void serialize(Archive &ar, PropertyValueChanger& pc, const unsigned int v)
     {
         boost::serialization::void_cast_register<PropertyValueChanger, IDistributableIntervention>();
-        ar & (std::string)pc.target_property_key;
-        ar & (std::string)pc.target_property_value;
+        //ar & (std::string)pc.target_property_key;
+        //ar & (std::string)pc.target_property_value;
+        ar & pc.target_property_key;
+        ar & pc.target_property_value;
         ar & pc.probability;
         ar & pc.revert;
         ar & pc.max_duration;

@@ -17,13 +17,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class ActiveDiagnostic : public SimpleDiagnostic 
+    class ActiveDiagnostic : public SimpleDiagnostic
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, ActiveDiagnostic, IDistributableIntervention)
 
-    public: 
+    public:
         ActiveDiagnostic();
         virtual bool Configure( const Configuration* pConfig );
         virtual ~ActiveDiagnostic();

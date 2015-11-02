@@ -314,7 +314,7 @@ namespace Kernel
     {
         // DJK: What is the purpose of this function?  What if an individual goes on ART?
 #ifdef ENABLE_TBHIV
-        IIndividualHumanCoinfection *pihc = NULL;
+        IIndividualHumanCoinfection *pihc = nullptr;
         if ( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanCoinfection), (void**)&pihc) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanCoinfection", "IndividualHumanCoinfection" );
@@ -378,7 +378,7 @@ namespace Kernel
         , sqrtCD4_PostInfection( 0 )
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
-        , hiv_parent( NULL )
+        , hiv_parent( nullptr )
     { 
     }
 
@@ -390,7 +390,7 @@ namespace Kernel
         , sqrtCD4_PostInfection( 0 )
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
-        , hiv_parent( NULL )
+        , hiv_parent( nullptr )
         { }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

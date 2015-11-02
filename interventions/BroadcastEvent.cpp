@@ -70,7 +70,7 @@ namespace Kernel
         expired = true;
     }
 
-    void 
+    void
     BroadcastEvent::broadcastEvent(const std::string& event)
     {
         if( event != NO_TRIGGER_STR )
@@ -97,7 +97,7 @@ namespace Kernel {
         LOG_DEBUG("(De)serializing BroadcastEvent\n");
 
         boost::serialization::void_cast_register<BroadcastEvent, IDistributableIntervention>();
-        ar & (std::string) obj.broadcast_event;
+        ar & /*(std::string)*/ obj.broadcast_event;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
         //ar & boost::serialization::base_object<Kernel::SimpleHealthSeekingBehavior>(obj);
     }

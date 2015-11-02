@@ -75,6 +75,8 @@ namespace Kernel
         float nooutdoorhumanfound;
         float outdoorRestKilling;
 
+        static void serialize(IArchive&, VectorProbabilities*&);
+
     protected:
         VectorProbabilities();
 

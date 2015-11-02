@@ -163,7 +163,7 @@ namespace Kernel
         if( parent->QueryInterface( GET_IID( IIndividualHumanCoinfection ), (void**)&human_coinf ) != s_OK )
         {
             LOG_DEBUG_F( "parent is just tb person, not co-inf.\n" );
-            human_coinf = NULL;
+            human_coinf = nullptr;
         }
         m_duration_since_init_infection = 0.0f;
     }
@@ -182,7 +182,7 @@ namespace Kernel
     // TODO: PUT A BIG EXPLANATION OF THE TB S-E-I-R NATURAL HISTORY HERE
     // including FAST and SLOW progression from exposed to infectious
     // and heterogeneity in infectivity of active disease cases
-    void InfectionTB::Update(float dt, Susceptibility* immunity)
+    void InfectionTB::Update(float dt, ISusceptibilityContext* immunity)
     {
         StateChange = InfectionStateChange::None; // reset state change of previous time-step
         LOG_DEBUG("InfectionTB Update \n");
@@ -194,13 +194,13 @@ namespace Kernel
         if (total_drug_effects.inactivation_rate == 0 && total_drug_effects.clearance_rate == 0 && total_drug_effects.mortality_rate == 0 && total_drug_effects.relapse_rate == 0) 
         {
             duration +=dt;
-            float rand = 0;
+
             LOG_DEBUG_F("Your incubation_timer is %f \n", incubation_timer);
             //LATENT
             if (!m_is_active && duration > incubation_timer) 
             {
                 // Latent-to-Cured
-                rand = randgen->e();
+                float rand = randgen->e();
                 if (rand < m_recover_fraction)
                 {
                     StateChange = InfectionStateChange::Cleared; 
@@ -220,7 +220,7 @@ namespace Kernel
             //ACTIVE PRESYMPTOMATIC
             else if (m_is_active && !m_shows_symptoms && duration > infectious_timer ) 
             {
-                rand = randgen->e();
+                float rand = randgen->e();
                 //Active presymptomatic-to-Cured
                 if (rand < m_recover_fraction)
                 {
@@ -254,7 +254,7 @@ namespace Kernel
             else if (m_is_active && m_shows_symptoms && duration > infectious_timer) //USE CAUTION IF YOUR DURATION IS ZERO! YOU WILL GET LOTS OF PEOPLE ROLLING ZERO AND GOING TO LATENT!
             {
                 // Active-to-Cured
-                rand = randgen->e();
+                float rand = randgen->e();
                 if (rand < m_recover_fraction)
                 {
                     StateChange = InfectionStateChange::Cleared;
@@ -308,7 +308,7 @@ namespace Kernel
 
     }
 
-    void InfectionTB::InitializeLatentInfection(Susceptibility* immunity)
+    void InfectionTB::InitializeLatentInfection(ISusceptibilityContext* immunity)
     {
         LOG_DEBUG( "Initializing a latent infection.\n" ); 
         StateChange = InfectionStateChange::TBLatent; 
@@ -323,7 +323,7 @@ namespace Kernel
             msg << ",inf_mdr=" << IsMDR();
             Environment::getInstance()->Log->LogF(Logger::DEBUG, "EEL", "%s\n", msg.str().c_str()  );
         }
-        ISusceptibilityTB* immunityTB = NULL;
+        ISusceptibilityTB* immunityTB = nullptr;
         if( immunity->QueryInterface( GET_IID( ISusceptibilityTB ), (void**)&immunityTB ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "immunity", "Susceptibility", "SusceptibilityTB" );
@@ -337,13 +337,13 @@ namespace Kernel
 
         // Set the timer for state changes from latent TB i.e. activation, recovery, death
         //Latent fast
-        float total_rate = 0.0f;
+
         if(randgen->e() < fast_fraction)
         {
             m_is_fast_progressor = true;
 
-            total_rate = TB_fast_progressor_rate + TB_latent_cure_rate;
-            incubation_timer = (float) randgen->expdist(total_rate); 
+            float total_rate = TB_fast_progressor_rate + TB_latent_cure_rate;
+            incubation_timer = float(randgen->expdist(total_rate)); 
 
             m_recover_fraction = (total_rate > 0 ? TB_latent_cure_rate/total_rate : 0);
         }
@@ -356,8 +356,8 @@ namespace Kernel
             //Latent slow by exponential rate
             if (TB_slow_progressor_rate >= 0)
             {
-                total_rate = TB_slow_progressor_rate + TB_latent_cure_rate;
-                incubation_timer = (float) randgen->expdist(total_rate);
+                float total_rate = TB_slow_progressor_rate + TB_latent_cure_rate;
+                incubation_timer = float(randgen->expdist(total_rate));
 
                 m_recover_fraction = (total_rate > 0 ? TB_latent_cure_rate/total_rate : 0);
             }
@@ -376,7 +376,7 @@ namespace Kernel
         {
 
             incubation_timer = randgen->time_varying_rate_dist( human_coinf->GetTBactivationvector(), human_coinf->GetCD4TimeStep(), TB_latent_cure_rate);
-            total_rate = human_coinf->GetNextLatentActivation(incubation_timer) + TB_latent_cure_rate;
+            float total_rate = human_coinf->GetNextLatentActivation(incubation_timer) + TB_latent_cure_rate;
             m_recover_fraction = (total_rate > 0 ?  TB_latent_cure_rate/total_rate : 0);
         }
 #endif
@@ -397,10 +397,10 @@ namespace Kernel
 
     }
 
-    void InfectionTB::InitializePendingRelapse( Susceptibility* immunity)
+    void InfectionTB::InitializePendingRelapse(ISusceptibilityContext* immunity)
     {
         LOG_DEBUG( "Initializing a pending relapse.\n" );
-        ISusceptibilityTB* immunityTB = NULL;
+        ISusceptibilityTB* immunityTB = nullptr;
         if( immunity->QueryInterface( GET_IID( ISusceptibilityTB ), (void**)&immunityTB ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "immunity", "Susceptibility", "SusceptibilityTB" );
@@ -412,7 +412,7 @@ namespace Kernel
         // Set the timer for pending relapse
         float relapse_rate = TB_relapsed_to_active_rate; 
 
-        incubation_timer = (float) randgen->expdist(relapse_rate);
+        incubation_timer = float(randgen->expdist(relapse_rate));
         m_is_active = false;
         m_is_smear_positive = false;
         m_is_extrapulmonary = false;
@@ -430,10 +430,10 @@ namespace Kernel
         //tracking of ever_relapsed done directly by the drug and stored in TB IVC now
 
     }
-    void InfectionTB::InitializeActivePresymptomaticInfection(Susceptibility* immunity)
+    void InfectionTB::InitializeActivePresymptomaticInfection(ISusceptibilityContext* immunity)
     {
         LOG_DEBUG( "InitializeActivePresymptomaticInfection\n" );
-        ISusceptibilityTB* immunityTB = NULL;
+        ISusceptibilityTB* immunityTB = nullptr;
         if( immunity->QueryInterface( GET_IID( ISusceptibilityTB ), (void**)&immunityTB ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "immunity", "ISusceptibilityTB", "Susceptibility" );
@@ -453,7 +453,7 @@ namespace Kernel
         }
 
         //Relapsers do not spend any time in Presymptomatic infection, they go directly to active disease
-        IIndividualHumanTB2* tb_ind = NULL;
+        IIndividualHumanTB2* tb_ind = nullptr;
         
         IIndividualHumanContext * patient = GetParent();
         if(patient->GetEventContext()->QueryInterface( GET_IID( IIndividualHumanTB2 ), (void**)&tb_ind ) != s_OK)
@@ -471,7 +471,7 @@ namespace Kernel
         {
             float total_rate = TB_presymptomatic_cure_rate + TB_presymptomatic_rate;
             m_recover_fraction = TB_presymptomatic_cure_rate / total_rate;
-            infectious_timer = (float) randgen->expdist(total_rate);
+            infectious_timer = float(randgen->expdist(total_rate));
         }
 
         m_is_active = true;
@@ -481,7 +481,7 @@ namespace Kernel
         m_shows_symptoms = false;    
     }
     
-    void InfectionTB::InitializeActiveInfection(Susceptibility* immunity)
+    void InfectionTB::InitializeActiveInfection(ISusceptibilityContext* immunity)
     {
         dynamic_cast<IIndividualHumanTB2*>(parent)->onInfectionIncidence();
         if (infection_strain->GetGeneticID() == TBInfectionDrugResistance::FirstLineResistant)
@@ -489,7 +489,7 @@ namespace Kernel
             dynamic_cast<IIndividualHumanTB2*>(parent)->onInfectionMDRIncidence();
         }
         LOG_DEBUG( "InitializeActiveInfection\n" );
-        ISusceptibilityTB* immunityTB = NULL;
+        ISusceptibilityTB* immunityTB = nullptr;
         if( immunity->QueryInterface( GET_IID( ISusceptibilityTB ), (void**)&immunityTB ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "immunity", "ISusceptibilityTB", "Susceptibility" );
@@ -509,7 +509,7 @@ namespace Kernel
         // TODO: depending on the decay profile of a mortality-reducing vaccine,
         //       we may prefer to change "death as a compartmental transition" to "death as a daily update"
         //       so that we aren't picking the death rate based on the efficacy of a vaccine at the beginning of the infection alone.
-        IDrugVaccineInterventionEffects* idvie = NULL;
+        IDrugVaccineInterventionEffects* idvie = nullptr;
         if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IDrugVaccineInterventionEffects), (void**)&idvie) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionsContext()", "IDrugVaccineInterventionEffects", "IIndividualHumanEventContext" );
@@ -550,16 +550,16 @@ namespace Kernel
         switch( TB_active_period_distribution ) 
         {
             case DistributionFunction::EXPONENTIAL_DURATION:
-                infectious_timer = (float) randgen->expdist(total_rate);
+                infectious_timer = float(randgen->expdist(total_rate));
                 break;
 
             case DistributionFunction::GAUSSIAN_DURATION:
-                infectious_timer = (float) Probability::getInstance()->fromDistribution(  DistributionFunction::GAUSSIAN_DURATION, (log(2.0f)/total_rate), TB_active_period_std_dev );
+                infectious_timer = float(Probability::getInstance()->fromDistribution(  DistributionFunction::GAUSSIAN_DURATION, (log(2.0f)/total_rate), TB_active_period_std_dev ));
                 break;
 
             default:
                 throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "TB infectious period distribution can only be exponential or Gaussian distribution right now" );
-                break;
+                // break;
         }
         // FOR CHINA ONLY infectious_timer = (float) Probability::getInstance()->fromDistribution(  DistributionFunction::GAUSSIAN_DURATION, (log(2.0f)/total_rate), 200 );
         m_is_active = true;
@@ -593,14 +593,14 @@ namespace Kernel
         float TB_drug_relapse_rate = 0;
         float TB_drug_mortality_rate = 0;
 
-        IIndividualHumanContext *patient              = NULL;
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBDrugEffects *itde                          = NULL;
+        IIndividualHumanContext *patient              = nullptr;
+        IIndividualHumanInterventionsContext *context = nullptr;
+        ITBDrugEffects *itde                          = nullptr;
 
         patient = GetParent();
         context = patient->GetInterventionsContext();
 
-        if (s_OK ==  context->QueryInterface(GET_IID(ITBDrugEffects), (void **)&itde))
+        if (s_OK ==  context->QueryInterface(GET_IID(ITBDrugEffects), (void**)&itde))
         {
             TBDrugEffectsMap_t TB_drug_effects = itde->GetDrugEffectsMap();
 
@@ -628,7 +628,7 @@ namespace Kernel
         }
 
         //Modulate drug clearance rate depending if person has ever failed (prob should be specific for drug type and for this particular infection in future)
-        IIndividualHumanTB2* tb_ind = NULL;
+        IIndividualHumanTB2* tb_ind = nullptr;
         if(patient->GetEventContext()->QueryInterface( GET_IID( IIndividualHumanTB2 ), (void**)&tb_ind ) != s_OK)
         { 
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHumanTB2", "IIndividualHumanEventContext" );
@@ -664,7 +664,7 @@ namespace Kernel
     }
 
 
-    void InfectionTB::EvolveStrain(Susceptibility* _immunity, float dt)
+    void InfectionTB::EvolveStrain(ISusceptibilityContext* _immunity, float dt)
     {
         // TODO: here we have only FirstLineResistant strain type of drug resistance
         // later can add new types of resistance here, back evolution from resistant to sensitive strain etc
@@ -695,13 +695,13 @@ namespace Kernel
                         msg << ",inf_id=-1";
                         msg << ",ev=MDR";
                         Environment::getInstance()->Log->LogF(Logger::DEBUG, "EEL", "%s\n", msg.str().c_str()  );
-                    }    
+                    }
                 }
             }
         }
     }
 
-    bool InfectionTB::ApplyDrugEffects(float dt, Susceptibility* immunity)
+    bool InfectionTB::ApplyDrugEffects(float dt, ISusceptibilityContext* immunity)
     {
         // Check for valid inputs
         if (dt <= 0 || !immunity) 
@@ -710,8 +710,7 @@ namespace Kernel
             return false;
         }
 
-        IIndividualHumanContext *patient              = NULL;
-        patient = GetParent();
+        // clorton IIndividualHumanContext *patient = GetParent();
         TBDrugEffects_t total_drug_effects = GetTotalDrugEffectsForThisInfection();
         
         //if no drugs on board now, don't need to do all the following computations
@@ -767,9 +766,7 @@ namespace Kernel
                 }
             }
         }
-        
-        //LATENT AND PENDING RELAPSE CAN ONLY GO TO CLEARED or DEATH
-        else 
+        else    //LATENT AND PENDING RELAPSE CAN ONLY GO TO CLEARED or DEATH
         {
             //PENDING RELAPSE - NOT ALLOWED TO GET TREATMENT
             //IF STILL ON TREATMENT INCREMENT THE INCUBATION TIMER so that you are not allowed to re-advance to active disease on this treatment 
@@ -803,7 +800,7 @@ namespace Kernel
         return ret;
     }
 
-    float InfectionTB::CalculateTimerAgeDepSlowProgression(Susceptibility* immunity)
+    float InfectionTB::CalculateTimerAgeDepSlowProgression(ISusceptibilityContext* immunity)
     {
         /*Non-homogeneous Poisson process using AGE_DEP_REACTIVATION_ALPHA and AGE_DEP_REACTIVATION_BETA to define slow progressors time until activation 
         with increasing probability as people get older, using parameters A, and B where B = 1-beta and A = alpha / B
@@ -818,7 +815,7 @@ namespace Kernel
         float bigB = 1- AGE_DEP_REACTIVATION_BETA;
         float bigA = AGE_DEP_REACTIVATION_ALPHA / bigB;
         float rand = randgen->e();
-        float current_age_years = (immunity->getAge()) / DAYSPERYEAR;
+        float current_age_years = immunity->getAge() / DAYSPERYEAR;
         float reactivation_age_years = pow( pow(current_age_years, bigB) - (1 / bigA) * log(rand), (1/bigB));
         float calculated_incubation_timer = DAYSPERYEAR * (reactivation_age_years - current_age_years);
 

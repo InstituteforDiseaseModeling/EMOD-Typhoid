@@ -46,7 +46,7 @@ namespace Kernel
         LOG_DEBUG("Positive test Result function\n");
 
         // Apply diagnostic test with given specificity/sensitivity
-        IIndividualHumanTB* tb_ind = NULL;
+        IIndividualHumanTB* tb_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanTB ), (void**)&tb_ind ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanTB", "IIndividualHuman" );
@@ -72,9 +72,7 @@ namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, ActiveDiagnostic& obj, const unsigned int v)
     {
-
         boost::serialization::void_cast_register<ActiveDiagnostic, IDistributableIntervention>();
-
         ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
     }
 }

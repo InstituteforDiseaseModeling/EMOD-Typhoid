@@ -50,6 +50,9 @@
                "Max_Individual_Infections": 5, 
                "Max_Node_Population_Samples": 100, 
                "Sample_Rate_Birth": 1
+          },
+          "HPC": {
+               "Num_Cores": 4
           }
      }
 }

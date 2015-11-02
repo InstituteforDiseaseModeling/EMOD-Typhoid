@@ -41,6 +41,17 @@ namespace Kernel
     SusceptibilityEnvironmental::~SusceptibilityEnvironmental(void)
     {
     }
+
+    REGISTER_SERIALIZABLE(SusceptibilityEnvironmental, ISusceptibilityContext);
+
+    void SusceptibilityEnvironmental::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    {
+        Susceptibility::serialize(ar, obj);
+        SusceptibilityEnvironmental& susceptibility = *dynamic_cast<SusceptibilityEnvironmental*>(obj);
+        ar.startElement();
+            ar.labelElement("demographic_risk") & susceptibility.demographic_risk;
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -1,0 +1,16 @@
+{
+    "tests": [
+        { "path": "1_Generic_Seattle_MultiNode",               "Num_Cores":  4 },
+        { "path": "24_Malaria_Garki",                          "Num_Cores": 32 },
+        { "path": "25_Vector_Madagascar",                      "Num_Cores": 16 },
+        { "path": "26_Vector_Garki",                           "Num_Cores":  4 },
+        { "path": "43_Vector_Garki_MultiCore_VectorMigration", "Num_Cores":  8 },
+        { "path": "48_Generic_Seattle_SingleCore_Zoonosis",    "Num_Cores":  4 },
+        { "path": "70_TB_Seattle_Multicore",                   "Num_Cores":  4 },
+        { "path": "71_Polio_Default_Multicore",                "Num_Cores":  4 }
+    ],
+    "development": [
+        { "path": "1024_Malaria_Garki",                          "Num_Cores": 8 },
+        { "path": "1043_Vector_Garki_MultiCore_VectorMigration", "Num_Cores": 8 }
+    ]
+}

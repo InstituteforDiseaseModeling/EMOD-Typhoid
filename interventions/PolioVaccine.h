@@ -13,9 +13,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class IPolioVaccine : public ISupports
+    struct IPolioVaccine : ISupports
     {
-    public:
         virtual PolioVaccineType::Enum   GetVaccineType()            const = 0;
     };
 
@@ -27,30 +26,33 @@ namespace Kernel
         static PolioVaccine* CreateVaccine(PolioVaccineType::Enum type, float days_since_vaccine);
         PolioVaccine();
         virtual ~PolioVaccine();
-        bool Configure( const Configuration* config );
-        virtual int AddRef() { return BaseIntervention::AddRef(); }
-        virtual int Release() { return BaseIntervention::Release(); }
+        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual int AddRef() override { return BaseIntervention::AddRef(); }
+        virtual int Release() override { return BaseIntervention::Release(); }
 
         // IDistributableIntervention
-        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );
-        virtual void SetContextTo(IIndividualHumanContext *context) { /* not needed for this intervention */ }
-        virtual void Update(float dt);
+        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
+        virtual void SetContextTo(IIndividualHumanContext *context) override { /* not needed for this intervention */ }
+        virtual void Update(float dt) override;
 
         // ISupports
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
         // IPolioVaccine
-        virtual PolioVaccineType::Enum   GetVaccineType()            const;
+        virtual PolioVaccineType::Enum GetVaccineType() const override;
 
         // IVaccine
-        virtual void  ApplyVaccineTake() {} // Take is handled in live vaccines
-        virtual float GetVaccineReducedAcquire()  const { return 0; }
-        virtual float GetVaccineReducedTransmit() const { return 0; }
+        virtual void  ApplyVaccineTake() override {} // Take is handled in live vaccines
+        
+        /* clorton virtual */ float GetVaccineReducedAcquire()  const { return 0; }
+        /* clorton virtual */ float GetVaccineReducedTransmit() const { return 0; }
 
     protected:
         PolioVaccineType::Enum vaccine_type;
         float time_since_vaccination;
         IVaccineConsumer *ivc;
+
+        DECLARE_SERIALIZABLE(PolioVaccine, IDistributableIntervention);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

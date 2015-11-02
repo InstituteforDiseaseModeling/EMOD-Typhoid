@@ -111,6 +111,18 @@ namespace Kernel
     {
         return InfectionEnvironmental::CreateInfection(this, _suid);
     }
+
+    REGISTER_SERIALIZABLE(IndividualHumanEnvironmental, IIndividualHuman);
+
+    void IndividualHumanEnvironmental::serialize(IArchive& ar, IIndividualHuman* obj)
+    {
+        IndividualHuman::serialize(ar, obj);
+        /* IndividualHumanEnvironmental doesn't (yet) have any member fields.
+        IndividualHumanEnvironmental& individual = *dynamic_cast<IndividualHumanEnvironmental*>(obj);
+        ar.startElement();
+        ar.endElement();
+        */
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

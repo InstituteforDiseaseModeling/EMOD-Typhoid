@@ -26,10 +26,10 @@ static const char* _module = "RapidJsonObj";
 namespace Kernel {
 
     RapidJsonObj::RapidJsonObj()
-        : m_buffer(NULL)
-        , m_writer(NULL)
+        : m_buffer(nullptr)
+        , m_writer(nullptr)
         , m_bCacheWriter(false)
-        , m_document(NULL)
+        , m_document(nullptr)
     {
     }
 
@@ -211,7 +211,7 @@ namespace Kernel {
         if (!rjObj)
         {
             LOG_ERR_F("Failed to clone IJsonObjectAdapter object for key=%s\n", key);
-            return NULL;
+            return nullptr;
         }
 
         assert(m_document);
@@ -231,7 +231,7 @@ namespace Kernel {
         if (!rjObj)
         {
             LOG_ERR_F("Failed to clone IJsonObjectAdapter object for key=%s\n", key);
-            return NULL;
+            return nullptr;
         }
 
         assert(m_document);
@@ -315,7 +315,7 @@ namespace Kernel {
         if (!rjObj)
         {
             LOG_ERR_F("Failed to clone IJsonObjectAdapter object for index=%d\n", index);
-            return NULL;
+            return nullptr;
         }
 
         assert(m_document);

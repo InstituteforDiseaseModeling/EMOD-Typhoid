@@ -58,7 +58,7 @@ namespace Kernel
         virtual bool HasEverTestedPositiveForHIV() const = 0;
         virtual void TakeHIVDiagnosticTest() = 0;*/
         virtual void InitiateART() = 0;
-        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = NULL, int incubation_period_override = -1) = 0;
+        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1) = 0;
         virtual bool HasActivePresymptomaticInfection() const = 0;
         virtual bool HasExtrapulmonaryInfection() const = 0;
         virtual void SetTBactivationvector( const std::vector<float>& ) = 0;
@@ -82,8 +82,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config );
 
         // Infections and Susceptibility
-        virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
-        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
+        virtual void AcquireNewInfection(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1);
+        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1);
         virtual void CreateSusceptibility(float=1.0, float=1.0);
         virtual void UpdateInfectiousness(float dt);
         virtual void Update(float currenttime, float dt);
@@ -175,8 +175,8 @@ namespace Kernel
         std::list< Susceptibility* > susceptibilitylist;
         //std::list< InterventionsContainer* > interventionslist;
 
-        std::map< Infection*, Susceptibility*> infection2susceptibilitymap;
-        std::map< Infection*, InterventionsContainer*> infection2interventionsmap;
+        std::map< IInfection*, ISusceptibilityContext*> infection2susceptibilitymap;
+        std::map< IInfection*, InterventionsContainer*> infection2interventionsmap;
 
         //future, please use the list not the individual ones
         Susceptibility* susceptibility_tb;

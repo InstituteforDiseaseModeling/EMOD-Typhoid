@@ -26,7 +26,7 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(RTSSVaccine)
 
     IMPLEMENT_FACTORY_REGISTERED(RTSSVaccine)
-    
+
     RTSSVaccine::RTSSVaccine()
     {
         initSimTypes( 1, "MALARIA_SIM" );
@@ -50,7 +50,7 @@ namespace Kernel
         ICampaignCostObserver * const pCCO
     )
     {
-        IMalariaHumanContext * imhc = NULL;
+        IMalariaHumanContext * imhc = nullptr;
         if (s_OK != context->GetParent()->QueryInterface(GET_IID(IMalariaHumanContext), (void**)&imhc) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "imhc", "IMalariaHumanContext", "IIndividualHumanContext" );

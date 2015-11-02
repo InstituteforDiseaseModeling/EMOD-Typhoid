@@ -9,12 +9,59 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "VectorProbabilities.h"
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
+// clorton #include <boost/archive/binary_oarchive.hpp>
+// clorton #include <boost/archive/binary_iarchive.hpp>
 #include "Common.h"
 
 namespace Kernel
 {
+    void VectorProbabilities::serialize(IArchive& ar, VectorProbabilities*& probabilities)
+    {
+        probabilities = ar.IsWriter() ? probabilities : new VectorProbabilities();
+
+        ar.startElement();
+        ar.labelElement("effective_host_population") & probabilities->effective_host_population;
+
+        ar.labelElement("outdoorareakilling") & probabilities->outdoorareakilling;
+        ar.labelElement("outdoorareakilling_male") & probabilities->outdoorareakilling_male;
+        ar.labelElement("diebeforeattempttohumanfeed") & probabilities->diebeforeattempttohumanfeed;
+        ar.labelElement("diewithoutattemptingfeed") & probabilities->diewithoutattemptingfeed;
+        ar.labelElement("survivewithoutsuccessfulfeed") & probabilities->survivewithoutsuccessfulfeed;
+        ar.labelElement("successfulfeed_animal") & probabilities->successfulfeed_animal;
+        ar.labelElement("successfulfeed_AD") & probabilities->successfulfeed_AD;
+        ar.labelElement("indoorattempttohumanfeed") & probabilities->indoorattempttohumanfeed;
+        ar.labelElement("outdoorattempttohumanfeed") & probabilities->outdoorattempttohumanfeed;
+
+        ar.labelElement("ADbiocontrol_additional_mortality") & probabilities->ADbiocontrol_additional_mortality;
+
+        ar.labelElement("outdoor_returningmortality") & probabilities->outdoor_returningmortality;
+
+        ar.labelElement("indoor_diebeforefeeding") & probabilities->indoor_diebeforefeeding;
+        ar.labelElement("indoor_hostnotavailable") & probabilities->indoor_hostnotavailable;
+        ar.labelElement("indoor_dieduringfeeding") & probabilities->indoor_dieduringfeeding;
+        ar.labelElement("indoor_diepostfeeding") & probabilities->indoor_diepostfeeding;
+        ar.labelElement("indoor_successfulfeed_human") & probabilities->indoor_successfulfeed_human;
+        ar.labelElement("indoor_successfulfeed_AD") & probabilities->indoor_successfulfeed_AD;
+
+        ar.labelElement("outdoor_diebeforefeeding") & probabilities->outdoor_diebeforefeeding;
+        ar.labelElement("outdoor_hostnotavailable") & probabilities->outdoor_hostnotavailable;
+        ar.labelElement("outdoor_dieduringfeeding") & probabilities->outdoor_dieduringfeeding;
+        ar.labelElement("outdoor_diepostfeeding") & probabilities->outdoor_diepostfeeding;
+        ar.labelElement("outdoor_successfulfeed_human") & probabilities->outdoor_successfulfeed_human;
+
+        ar.labelElement("sugarTrapKilling") & probabilities->sugarTrapKilling;
+        ar.labelElement("individualRepellentBlock") & probabilities->individualRepellentBlock;
+
+        ar.labelElement("attraction_ADOV") & probabilities->attraction_ADOV;
+        ar.labelElement("attraction_ADIV") & probabilities->attraction_ADIV;
+        ar.labelElement("kill_livestockfeed") & probabilities->kill_livestockfeed;
+        ar.labelElement("kill_PFV") & probabilities->kill_PFV;
+        ar.labelElement("spatial_repellent") & probabilities->spatial_repellent;
+        ar.labelElement("nooutdoorhumanfound") & probabilities->nooutdoorhumanfound;
+        ar.labelElement("outdoorRestKilling") & probabilities->outdoorRestKilling;
+        ar.endElement();
+    }
+
     VectorProbabilities::VectorProbabilities() : 
         effective_host_population(0.0f),
         outdoorareakilling(0.0f),

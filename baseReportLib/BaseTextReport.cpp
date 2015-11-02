@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "FileSystem.h"
 #include "BaseTextReport.h"
+#include "Sugar.h"
 
 static const char* _module = "BaseTextReport";
 

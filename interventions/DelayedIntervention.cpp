@@ -180,8 +180,8 @@ namespace Kernel
     	actual_intervention_config = master.actual_intervention_config;
     }
 
-    void DelayedIntervention::SetContextTo(IIndividualHumanContext *context) 
-    { 
+    void DelayedIntervention::SetContextTo(IIndividualHumanContext *context)
+    {
         parent = context; // for rng
     }
 
@@ -196,13 +196,10 @@ namespace Kernel
 
         try
         {
-            // TODO: factorize this bit out so it isn't repeating base class behavior here
-            bool wasDistributed = false;
-
             // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-            IGlobalContext *pGC = NULL;
-            const IInterventionFactory* ifobj = NULL;
-            if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
+            IGlobalContext *pGC = nullptr;
+            const IInterventionFactory* ifobj = nullptr;
+            if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), reinterpret_cast<void**>(&pGC)))
             {
                 ifobj = pGC->GetInterventionFactory();
             }
@@ -212,7 +209,7 @@ namespace Kernel
             }
 
             // don't give expired intervention.  should be cleaned up elsewhere anyways, though.
-            if(expired) 
+            if(expired)
                 return;
 
             const json::Array & interventions_array = json::QuickInterpreter( actual_intervention_config._json ).As<json::Array>();
@@ -223,13 +220,13 @@ namespace Kernel
                 Configuration * tmpConfig = Configuration::CopyFromElement(actualIntervention);
                 release_assert( tmpConfig );
                 LOG_DEBUG_F("DelayedIntervention distributed intervention #%d\n", idx);
-                IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig); 
+                IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig);
                 delete tmpConfig;
                 expired = true;
 
                 // Now make sure cost gets reported back to node
                 ICampaignCostObserver* pICCO;
-                if (s_OK == parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(ICampaignCostObserver), (void**)&pICCO) )
+                if (s_OK == parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(ICampaignCostObserver), reinterpret_cast<void**>(&pICCO)) )
                 {
                     di->Distribute( parent->GetInterventionsContext(), pICCO );
                 }
@@ -246,7 +243,7 @@ namespace Kernel
         }
 
     }
-    
+
     DelayedIntervention::~DelayedIntervention()
     { LOG_DEBUG("Destructing DelayedIntervention\n");
     }
@@ -262,7 +259,7 @@ namespace Kernel {
         boost::serialization::void_cast_register<DelayedIntervention, IDistributableIntervention>();
         ar & obj.remaining_delay_days;
 
-        // ERAD-1235: Note that an unregistered class exception is thrown when serializing the 
+        // ERAD-1235: Note that an unregistered class exception is thrown when serializing the
         //            base class, SimpleHealthSeekingBehavior, if we don't call the following two
         //            lines but instead do serialization::base_object<Kernel::SimpleHealthSeekingBehavior>(obj)
         ar & obj.actual_intervention_config;

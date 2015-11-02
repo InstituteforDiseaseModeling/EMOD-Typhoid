@@ -120,7 +120,7 @@ namespace Kernel
         }
         else
         {
-            // ERROR: ihmc (interventions container) pointer null. Should be impossible to get here, but that's 
+            // ERROR: ihmc (interventions container) pointer null. Should be impossible to get here, but that's
             // what one always says about null pointers! :)
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "ihmc", "IIndividualRepellentConsumer" );
         }
@@ -141,11 +141,11 @@ namespace Kernel
 
         ISupports* foundInterface;
 
-        if ( iid == GET_IID(IIndividualRepellent)) 
+        if ( iid == GET_IID(IIndividualRepellent))
             foundInterface = static_cast<IIndividualRepellent*>(this);
-        // -->> add support for other I*Consumer interfaces here <<--      
-      
-        else if ( iid == GET_IID(ISupports)) 
+        // -->> add support for other I*Consumer interfaces here <<--
+
+        else if ( iid == GET_IID(ISupports))
             foundInterface = static_cast<ISupports*>(static_cast<IIndividualRepellent*>(this));
         else
             foundInterface = 0;

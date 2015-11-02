@@ -116,8 +116,8 @@ namespace Kernel
                 {
                     if (demographics["NodeAttributes"]["LarvalHabitatMultiplier"].Contains(habitat_name))
                     {
-                        VectorHabitatType::Enum habitat=(VectorHabitatType::Enum) VectorHabitatType::pairs::lookup_value(habitat_name.c_str());
-                        larval_habitat_multiplier[habitat] = (float)(demographics["NodeAttributes"]["LarvalHabitatMultiplier"][habitat_name].AsDouble());
+                        VectorHabitatType::Enum habitat = VectorHabitatType::Enum(VectorHabitatType::pairs::lookup_value(habitat_name.c_str()));
+                        larval_habitat_multiplier[habitat] = float(demographics["NodeAttributes"]["LarvalHabitatMultiplier"][habitat_name].AsDouble());
                         LOG_INFO_F("Node ID=%d with LarvalHabitatMultiplier(%s)=%0.2f\n", externalId, habitat_name.c_str(), larval_habitat_multiplier[habitat]);
                     }
                     else
@@ -128,7 +128,7 @@ namespace Kernel
             }
             else
             {
-                float multiplier = (float)(demographics["NodeAttributes"]["LarvalHabitatMultiplier"].AsDouble());
+                float multiplier = float(demographics["NodeAttributes"]["LarvalHabitatMultiplier"].AsDouble());
                 larval_habitat_multiplier[VectorHabitatType::ALL_HABITATS] = multiplier;
                 LOG_INFO_F("Node ID=%d with LarvalHabitatMultiplier(ALL_HABITATS)=%0.2f\n", externalId, multiplier);
                 LOG_WARN("DeprecationWarning: Specification of \"LarvalHabitatMultiplier\" as a floating-point value in the \"NodeAttributes\" block will soon be deprecated. Specify as an object with habitat-type keys, e.g. \"LarvalHabitatMultiplier\" : {\"TEMPORARY_RAINFALL\" : 0.3}\n");
@@ -274,7 +274,7 @@ namespace Kernel
         // normalize human-to-vector contagion (per-bite infection probabilities)
         // This is the place in this pattern to scale by returning mortality: (1-p_kill_PFV)
         // TODO: it should be possible to push the PFV normalization back into VectorProbabilities
-        INodeVectorInterventionEffects* invie = NULL;
+        INodeVectorInterventionEffects* invie = nullptr;
         if (s_OK != GetEventContext()->QueryInterface(GET_IID(INodeVectorInterventionEffects), (void**)&invie))
         {
             throw QueryInterfaceException( __FILE__, __LINE__, "GetEventContext()", "INodeVectorInterventionEffects", "INodeEventContext" );
@@ -304,7 +304,7 @@ namespace Kernel
         {
             release_assert(population);
             population->UpdateVectorPopulation(dt);
-            infectionrate += (float) ( population->getInfectivity() );
+            infectionrate += float(population->getInfectivity());
         }
 
         // Now process the node's emigrating mosquitoes
@@ -315,11 +315,11 @@ namespace Kernel
     {
         // Reset vector lifecycle transition probabilities
         m_vector_lifecycle_probabilities->ResetProbabilities();
-        IVectorInterventionsEffects* ivie = NULL;
+        IVectorInterventionsEffects* ivie = nullptr;
 
         for (auto individual : individualHumans)
         {
-            IIndividualHumanVectorContext* host_individual = NULL;
+            IIndividualHumanVectorContext* host_individual = nullptr;
             // We want IndividualHUman base class to give us a blessed pointer to IndivudalHumanVector
             if( individual->QueryInterface( GET_IID( IIndividualHumanVectorContext ), (void**)&host_individual ) != s_OK )
             {
@@ -329,7 +329,7 @@ namespace Kernel
             // Host vector weight includes heterogeneous biting
             // effect of heterogeneous biting explored in Smith, D. L., F. E. McKenzie, et al. (2007). "Revisiting the basic reproductive number for malaria and its implications for malaria control." PLoS Biol 5(3): e42.
             // also in Smith, D. L., J. Dushoff, et al. (2005). "The entomological inoculation rate and Plasmodium falciparum infection in African children." Nature 438(7067): 492-495.
-            float host_vector_weight = (float) ( individual->GetMonteCarloWeight() * host_individual->GetRelativeBitingRate() );
+            float host_vector_weight = float(individual->GetMonteCarloWeight() * host_individual->GetRelativeBitingRate());
 
             // Query for individual vector intervention effects interface
             IIndividualHumanInterventionsContext* context = individual->GetInterventionsContext();
@@ -346,7 +346,7 @@ namespace Kernel
         m_vector_lifecycle_probabilities->NormalizeIndividualProbabilities();
 
         // Query for node vector intervention effects interface
-        INodeVectorInterventionEffects* invie = NULL;
+        INodeVectorInterventionEffects* invie = nullptr;
         if (s_OK !=  GetEventContext()->QueryInterface(GET_IID(INodeVectorInterventionEffects), (void**)&invie))
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "GetEventContext()", "INodeVectorInterventionEffects", "INodeEventContext" );
@@ -452,7 +452,7 @@ namespace Kernel
         // Looping over each population to check if the species ID is the same is a bit lame
         // But propagating a list-to-map container change for typically 1-3 species is probably overkill
         // Given that the conditional takes less time than the AddAdults line in performance profiling
-        IVectorCohortIndividual* vci = NULL;
+        IVectorCohortIndividual* vci = nullptr;
         if( immigrant->QueryInterface( GET_IID( IVectorCohortIndividual ), (void**) &vci ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "immigrant", "IVectorCohortIndividual", "VectorCohort" );
@@ -489,12 +489,12 @@ namespace Kernel
                     if (params()->lloffset > 0)
                     {
                         // .0045 is the lloffset for the 30 arc second grid.  This allows bigger cells to lose fewer mosquitoes to diffusion
-                        vectormigrationrate = (float)(vectormigrationrate + 0.125 * 0.5 * 0.0045 / params()->lloffset);   // 50 percent leave a 1km x 1 km square per day
+                        vectormigrationrate = float(vectormigrationrate + 0.125 * 0.5 * 0.0045 / params()->lloffset);   // 50 percent leave a 1km x 1 km square per day
                     }
                     else
                     {
                         // If there is no spatial scale associated with the grid, then only 10 percent of mosquitoes leave the node
-                        vectormigrationrate = (float)(vectormigrationrate + 0.125 * 0.5 * 0.2);
+                        vectormigrationrate = float(vectormigrationrate + 0.125 * 0.5 * 0.2);
                     }
 
                     // locally adjacent nodes
@@ -582,7 +582,7 @@ namespace Kernel
         else
         {
             LOG_DEBUG_F("There is no larval habitat yet with type = %s\n", VectorHabitatType::pairs::lookup_key(type));
-            return NULL;
+            return nullptr;
         }
     }
 

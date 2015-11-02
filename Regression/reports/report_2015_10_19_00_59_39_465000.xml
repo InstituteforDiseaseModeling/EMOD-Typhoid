@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<testsuite errors="0" failures="1" name="43 regression suite" tests="1" time="68.365">
+	<properties>
+		<property name="Version string" value="2.0.5633.0 trunk"/>
+		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
+		<property name="HPC Nodegroup" value="ComputeNodes"/>
+	</properties>
+	<testcase name="43_Vector_Garki_MultiCore_VectorMigration" time="-1">
+		<failure message="43_Vector_Garki_MultiCore_VectorMigration failed validation!  Result data can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_19_00_59_39_465000\output/InsetChart.json" type="Validation failure"/>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+</testsuite>

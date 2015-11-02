@@ -22,9 +22,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IIndividualRepellentConsumer; 
+    struct IIndividualRepellentConsumer;
 
-    class SimpleIndividualRepellent : public BaseIntervention 
+    class SimpleIndividualRepellent : public BaseIntervention
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleIndividualRepellent, IDistributableIntervention)

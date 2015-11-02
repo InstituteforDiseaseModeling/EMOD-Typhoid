@@ -11,22 +11,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "IdmApi.h"
 #include <string>
-#include <list>
 #include <set>
 #include <vector>
-#include <set>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
 
 #include "BoostLibWrapper.h"
-
 #include "ISupports.h"
-#include "EnumSupport.h"
-#include "SimpleTypemapRegistration.h"
 #include "CajunIncludes.h"
-#include "Sugar.h"
-#include "ValidationLog.h"
-#include "Log.h"
 
 #include "Serializer.h"
 
@@ -46,13 +36,6 @@ public:
     static Configuration* LoadFromPython(const std::string &configFileName);
     virtual ~Configuration() { delete pElement; }
 
-#if USE_JSON_SERIALIZATION
-public:
-    // IJsonSerializable Interfaces
-    virtual void JSerialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) const;
-    virtual void JDeserialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper );
-#endif
-
 private:
     // Don't let users create an empty one.
     Configuration(json::Element* element) : QuickInterpreter(*element) { pElement = element; }
@@ -67,7 +50,7 @@ private:
     void serialize(Archive &ar, const unsigned int v);
 #endif
 
-    Configuration() : QuickInterpreter(json::Element()), pElement(NULL) {} // this ctor only for serialization, the base class will be initialized to an invalid state which deserialization must repair
+    Configuration() : QuickInterpreter(json::Element()), pElement(nullptr) {} // this ctor only for serialization, the base class will be initialized to an invalid state which deserialization must repair
 };
 
 class JsonUtility
@@ -178,12 +161,7 @@ namespace Kernel
     //////////////////////////////////////////////////////////////////////
     // Configuration Mechanism
 
-    struct IDMAPI IConfigurable
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-        : public IJsonSerializable
-#else
-        : public ISupports
-#endif
+    struct IDMAPI IConfigurable : ISupports // clorton IJsonSerializable
     {
         virtual bool Configure(const Configuration *config) = 0;
         virtual QuickBuilder GetSchema() = 0;

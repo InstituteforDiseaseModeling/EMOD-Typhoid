@@ -47,7 +47,7 @@ namespace Kernel
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:CalendarIV" );
-    
+
         schema[ts] = json::Array();
         schema[ts][0] = json::Object();
         schema[ts][0]["Age"] = json::Object();
@@ -73,7 +73,7 @@ namespace Kernel
     IMPLEMENT_FACTORY_REGISTERED(IVCalendar)
 
     IVCalendar::IVCalendar()
-    : parent(NULL)
+    : parent(nullptr)
     , dropout(false)
     {
         initConfigTypeMap("Dropout", &dropout, CAL_Dropout_DESC_TEXT, false);
@@ -152,7 +152,7 @@ namespace Kernel
 
     // Each time this is called, the HSB intervention is going to decide for itself if
     // health should be sought. For start, just do it based on roll of the dice. If yes,
-    // an intervention needs to be created (from what config?) and distributed to the 
+    // an intervention needs to be created (from what config?) and distributed to the
     // individual who owns us. Hmm...
     void IVCalendar::Update( float dt )
     {
@@ -172,8 +172,8 @@ namespace Kernel
                 LOG_DEBUG_F("interventions array size = %d\n", interventions_array.Size());
 
                 // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-                IGlobalContext *pGC = NULL;
-                const IInterventionFactory* ifobj = NULL;
+                IGlobalContext *pGC = nullptr;
+                const IInterventionFactory* ifobj = nullptr;
                 if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
                 {
                     ifobj = pGC->GetInterventionFactory();
@@ -194,7 +194,7 @@ namespace Kernel
                         // Calendar wanted to distribute intervention but factory returned null pointer.
                         throw FactoryCreateFromJsonException( __FILE__, __LINE__, __FUNCTION__, "Unable to create intervention object from actualIntervention (apparently). Factory should actually throw exception. This exception throw is just paranoid exception handling." );
                     }
-                    float interventionCost = 0.0f; 
+                    float interventionCost = 0.0f;
                     LOG_DEBUG_F("Calendar (intervention) distributed actual intervention at age %f\n", parent->GetEventContext()->GetAge());
 
                     // Now make sure cost gets reported.
@@ -230,7 +230,6 @@ namespace Kernel
         }
         return msg.str();
     }
-
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

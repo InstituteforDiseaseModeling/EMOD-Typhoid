@@ -73,7 +73,7 @@ public:
     // Cleans up open files, handles, memory, etc held by the environment
     static void Finalize();
 
-    static void setLogger(SimpleLogger* log) { if(localEnv == NULL) localEnv = new Environment();  localEnv->Log = log; }
+    static void setLogger(SimpleLogger* log) { if(localEnv == nullptr) localEnv = new Environment();  localEnv->Log = log; }
     static const Configuration* getConfiguration() { return localEnv->Config ; }
     static Configuration* CopyFromElement( const json::Element& rElement );
     static Configuration* LoadConfigurationFile( const std::string& rFileName );

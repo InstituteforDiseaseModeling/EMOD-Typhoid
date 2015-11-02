@@ -101,13 +101,6 @@ namespace Kernel
 
         void propagateContextToDependents();
 
-#if USE_JSON_SERIALIZATION
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const {};
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper ) {};
-#endif
-
 #if USE_BOOST_SERIALIZATION
     private:
         template<class Archive>

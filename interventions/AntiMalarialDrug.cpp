@@ -80,14 +80,14 @@ namespace Kernel
         return JsonConfigurable::Configure( inputJson );
     }
 
-    AntimalarialDrug::AntimalarialDrug() 
+    AntimalarialDrug::AntimalarialDrug()
         : GenericDrug(),
         drug_IRBC_killrate(0),
+        drug_hepatocyte(0),
         drug_gametocyte02(0),
         drug_gametocyte34(0),
         drug_gametocyteM(0),
-        drug_hepatocyte(0),
-        imda(NULL)
+        imda(nullptr)
     {
         initSimTypes( 1, "MALARIA_SIM" );
     }
@@ -101,7 +101,7 @@ namespace Kernel
         if (s_OK != context->QueryInterface(GET_IID(IMalariaDrugEffectsApply), (void**)&imda) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IMalariaDrugEffectsApply", "IIndividualHumanInterventionsContext" );
-        } 
+        }
 
         // just add in another Drug to list, can later check the person's records and apply accordingly (TODO)
         return GenericDrug::Distribute( context, pCCO );
@@ -117,10 +117,10 @@ namespace Kernel
         if (s_OK != context->GetInterventionsContext()->QueryInterface(GET_IID(IMalariaDrugEffectsApply), (void**)&imda) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "IMalariaDrugEffectsApply", "IIndividualHumanInterventionsContext" );
-        } 
+        }
 
-        IGlobalContext *pGC = NULL;
-        const SimulationConfig* simConfigObj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const SimulationConfig* simConfigObj = nullptr;
         if (s_OK == context->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             release_assert( pGC );
@@ -201,8 +201,8 @@ namespace Kernel
         drug_gametocyteM   = drug_params->drug_gametocyteM_killrate;
         drug_hepatocyte    = drug_params->drug_hepatocyte_killrate;
 
-        IGlobalContext *pGC = NULL;
-        const SimulationConfig* simConfigObj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const SimulationConfig* simConfigObj = nullptr;
         if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             simConfigObj = pGC->GetSimulationConfigObj();
@@ -268,7 +268,7 @@ namespace Kernel
 
         // 20yr (used in original Cmax fitting)
         m[7300.0f] = _adult_bodyweight_kg;
-        
+
         return m;
     }
 
@@ -295,6 +295,22 @@ namespace Kernel
 
         return lower_bw + (upper_bw-lower_bw)*(age_in_days-lower_age)/(upper_age-lower_age);
     }
+
+    REGISTER_SERIALIZABLE(AntimalarialDrug, IDistributableIntervention);
+
+    void AntimalarialDrug::serialize(IArchive& ar, IDistributableIntervention* obj)
+    {
+        GenericDrug::serialize(ar, obj);
+        AntimalarialDrug& drug = *dynamic_cast<AntimalarialDrug*>(obj);
+        ar.startElement();
+        ar.labelElement("drug_IRBC_killrate") & drug.drug_IRBC_killrate;
+        ar.labelElement("drug_hepatocyte") & drug.drug_hepatocyte;
+        ar.labelElement("drug_gametocyte02") & drug.drug_gametocyte02;
+        ar.labelElement("drug_gametocyte34") & drug.drug_gametocyte34;
+        ar.labelElement("drug_gametocyteM") & drug.drug_gametocyteM;
+        ar.labelElement("drug_type") & (std::string&)drug.drug_type;
+        ar.endElement();
+    }
 }
 
 // TODO: move to single serialization block
@@ -310,7 +326,8 @@ namespace Kernel {
         ar & drug.drug_gametocyte02;
         ar & drug.drug_gametocyte34;
         ar & drug.drug_gametocyteM;
-        ar & (std::string) drug.drug_type;
+//        ar & (std::string) drug.drug_type;
+        ar & drug.drug_type;
         ar & boost::serialization::base_object<GenericDrug>(drug);
     }
 }

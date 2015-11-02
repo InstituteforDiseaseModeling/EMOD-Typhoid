@@ -517,7 +517,7 @@ SUITE(NodeDemographicsTest)
 
         double  lat_1 = (*p_node_demo_1)["NodeAttributes"]["Latitude"         ].AsDouble();
         double  lon_1 = (*p_node_demo_1)["NodeAttributes"]["Longitude"        ].AsDouble();
-        double  alt_1 = (*p_node_demo_1)["NodeAttributes"]["Altitude"         ].AsDouble();
+        int32_t alt_1 = (*p_node_demo_1)["NodeAttributes"]["Altitude"         ].AsInt();
         int32_t air_1 = (*p_node_demo_1)["NodeAttributes"]["Airport"          ].AsInt();
         int32_t reg_1 = (*p_node_demo_1)["NodeAttributes"]["Region"           ].AsInt();
         int32_t sea_1 = (*p_node_demo_1)["NodeAttributes"]["Seaport"          ].AsInt();
@@ -525,7 +525,7 @@ SUITE(NodeDemographicsTest)
 
         CHECK_EQUAL( -8.5, lat_1 );
         CHECK_EQUAL( 36.5, lon_1 );
-        CHECK_EQUAL(  1.0, alt_1 );
+        CHECK_EQUAL(    1, alt_1 );
         CHECK_EQUAL(    2, air_1 );
         CHECK_EQUAL(    3, reg_1 );
         CHECK_EQUAL(    4, sea_1 );
@@ -533,7 +533,7 @@ SUITE(NodeDemographicsTest)
 
         double  lat_2 = (*p_node_demo_2)["NodeAttributes"]["Latitude"         ].AsDouble();
         double  lon_2 = (*p_node_demo_2)["NodeAttributes"]["Longitude"        ].AsDouble();
-        double  alt_2 = (*p_node_demo_2)["NodeAttributes"]["Altitude"         ].AsDouble();
+        int32_t alt_2 = (*p_node_demo_2)["NodeAttributes"]["Altitude"         ].AsInt();
         int32_t air_2 = (*p_node_demo_2)["NodeAttributes"]["Airport"          ].AsInt();
         int32_t reg_2 = (*p_node_demo_2)["NodeAttributes"]["Region"           ].AsInt();
         int32_t sea_2 = (*p_node_demo_2)["NodeAttributes"]["Seaport"          ].AsInt();
@@ -541,7 +541,7 @@ SUITE(NodeDemographicsTest)
 
         CHECK_EQUAL( -9.5, lat_2 );
         CHECK_EQUAL( 37.5, lon_2 );
-        CHECK_EQUAL(  5.0, alt_2 );
+        CHECK_EQUAL(    5, alt_2 );
         CHECK_EQUAL(    6, air_2 );
         CHECK_EQUAL(    7, reg_2 );
         CHECK_EQUAL(    8, sea_2 );
@@ -572,10 +572,11 @@ SUITE(NodeDemographicsTest)
         CHECK_EQUAL( 0.1, ad2_2 );
     }
 
+#ifdef SUPPORT_NODES_ALL
     TEST_FIXTURE(NodeDemographicsFactoryFixture, TestTwoFileGoodDefaultOverlayAllNodes)
     {
         pSimConfig->demographics_initial = true ;
-        NodeDemographicsFactory::SetDemographicsFileList( NodeDemographicsFactory::ConvertLegacyStringToSet("demographics_TestTwoFileGoodDefaultOverlayAllNodes_base.json;demographics_TestTwoFileGoodDefaultOverlayAllNodes_overlay.json") ) ;
+        NodeDemographicsFactory::SetDemographicsFilenames( NodeDemographicsFactory::ConvertLegacyStringToSet("demographics_TestTwoFileGoodDefaultOverlayAllNodes_base.json;demographics_TestTwoFileGoodDefaultOverlayAllNodes_overlay.json") ) ;
 
         nodeid_suid_map_t node_id_suid_map;
         unique_ptr<NodeDemographicsFactory> factory( NodeDemographicsFactory::CreateNodeDemographicsFactory(&node_id_suid_map, Environment::getInstance()->Config) );
@@ -614,6 +615,7 @@ SUITE(NodeDemographicsTest)
         CHECK_CLOSE( 0.777, node_br_1, 0.001 );
         CHECK_CLOSE( 0.777, node_br_2, 0.001 );
     }
+#endif
 
     TEST_FIXTURE(NodeDemographicsFactoryFixture, TestTwoFileDiffIdRef)
     {

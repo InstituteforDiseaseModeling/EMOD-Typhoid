@@ -30,7 +30,7 @@ public:
 
     virtual ~TestReport() {};
 
-    virtual bool Configure( const Configuration* inputJson )
+    virtual bool Configure( const Configuration* inputJson ) override
     {
         initConfigTypeMap("Report_Value", &m_ReportValue, "Test getting subclass value from config", 0, 10, 1 );
 
@@ -39,7 +39,7 @@ public:
     }
 
     virtual bool notifyOnEvent( Kernel::IIndividualHumanEventContext *context, 
-                                const std::string& StateChange)
+                                const std::string& StateChange) override
     {
         if( HaveUnregisteredAllEvents() )
         {
@@ -79,22 +79,18 @@ public:
         , m_pNTIC( pNTIC )
     {};
 
-    virtual void Update(float dt)
+    virtual void Update(float dt) override
     {
         m_pNTIC->TriggerNodeEventObservers( nullptr, IndividualEventTriggerType::NonDiseaseDeaths );
     };
 
-    virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC = NULL ) { assert( false ) ; return false ; }; 
-    virtual void SetContextTo(INodeEventContext *context) {};
-    virtual void ValidateSimType( const std::string& simTypeStr ) {};
-    virtual QueryResult QueryInterface(iid_t iid, void** pinstance) { return Kernel::e_NOINTERFACE; };
-    virtual int32_t AddRef() { return 0 ;};
-    virtual int32_t Release() { return 0 ;};
-#if USE_JSON_SERIALIZATION
-    // For JSON serialization
-    virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const {} ;
-    virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper ) {};
-#endif
+    virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC = nullptr ) override { assert( false ); return false; };
+    virtual void SetContextTo(INodeEventContext *context) override {};
+    virtual void ValidateSimType( const std::string& simTypeStr ) override {};
+    virtual QueryResult QueryInterface(iid_t iid, void** pinstance) override { return Kernel::e_NOINTERFACE; };
+    virtual int32_t AddRef() override { return 0 ;};
+    virtual int32_t Release() override { return 0 ;};
+
 private:
     INodeTriggeredInterventionConsumer* m_pNTIC ;
 };
@@ -161,7 +157,7 @@ SUITE(BaseEventReportTest)
         CHECK_EQUAL( 1, report_data.Size() );
 
         unique_ptr<Configuration> p_cfg( Environment::CopyFromElement( report_data[0] ) );
-        std::string class_name = (string)((*p_cfg)["class"].As<json::String>());
+        std::string class_name = string((*p_cfg)["class"].As<json::String>());
 
         CHECK_EQUAL( std::string("TestReport"), class_name );
 

@@ -247,6 +247,9 @@
     <ClCompile Include="HIVReportEventRecorder.cpp" />
     <ClCompile Include="HIVTransmissionReporter.cpp" />
     <ClCompile Include="IdmInitialize.cpp" />
+    <ClCompile Include="IIndividualHuman.cpp" />
+    <ClCompile Include="IInfection.cpp" />
+    <ClCompile Include="ISusceptibilityContext.cpp" />
     <ClCompile Include="JsonObjectDemog.cpp" />
     <ClCompile Include="MalariaBarcode.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
@@ -536,6 +539,7 @@
     <ClInclude Include="IAssortivity.h" />
     <ClInclude Include="IHIVInterventionsContainer.h" />
     <ClInclude Include="IIndividualHumanHIV.h" />
+    <ClInclude Include="IInfection.h" />
     <ClInclude Include="IInfectionHIV.h" />
     <ClInclude Include="INodeContext.h" />
     <ClInclude Include="INodeHIV.h" />
@@ -543,6 +547,7 @@
     <ClInclude Include="IntranodeTransmissionTypes.h" />
     <ClInclude Include="IRelationshipManager.h" />
     <ClInclude Include="ISTIInterventionsContainer.h" />
+    <ClInclude Include="ISusceptibilityContext.h" />
     <ClInclude Include="JsonObjectDemog.h" />
     <ClInclude Include="MalariaBarcode.h" />
     <ClInclude Include="NoCrtWarnings.h" />

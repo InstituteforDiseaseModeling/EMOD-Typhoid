@@ -25,27 +25,27 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, GenericDrug, IDistributableIntervention)
 
     public:
-        bool Configure( const Configuration * );
+        /* clorton virtual */ bool Configure( const Configuration * ) /* clorton override */;
         virtual ~GenericDrug();
-        virtual int AddRef();
-        virtual int Release();
+        virtual int AddRef() override;
+        virtual int Release() override;
 
         // ISupports
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
         // IDistributableIntervention
-        virtual void SetContextTo(IIndividualHumanContext *context);
-        virtual void Update(float dt);
+        virtual void SetContextTo(IIndividualHumanContext *context) override;
+        virtual void Update(float dt) override;
 
         // IDrug
-        virtual void  ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc = NULL );
-        virtual int   GetDrugType() const;
-        virtual std::string GetDrugName() const;
-        virtual DrugUsageType::Enum GetDrugUsageType();
-        virtual float GetDrugReducedAcquire()  const;
-        virtual float GetDrugReducedTransmit() const;
-        virtual float GetDrugCurrentConcentration() const;
-        virtual float GetDrugCurrentEfficacy() const;
+        virtual void  ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc = nullptr ) override;
+        virtual int   GetDrugType() const override;
+        virtual std::string GetDrugName() const override;
+        virtual DrugUsageType::Enum GetDrugUsageType() override;
+        virtual float GetDrugReducedAcquire()  const override;
+        virtual float GetDrugReducedTransmit() const override;
+        virtual float GetDrugCurrentConcentration() const override;
+        virtual float GetDrugCurrentEfficacy() const override;
 
     protected:
         GenericDrug();
@@ -82,6 +82,8 @@ namespace Kernel
         float Vd;
         float drug_c50;
         float fraction_defaulters;
+
+        DECLARE_SERIALIZABLE(GenericDrug, IDistributableIntervention);
 
     private:
 

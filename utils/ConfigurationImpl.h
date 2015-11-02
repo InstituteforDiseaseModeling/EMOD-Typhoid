@@ -345,7 +345,7 @@ namespace Kernel
     bool classname::Configure(const Configuration *config) \
     {\
         base_class_configure_call_block; \
-        common_configured_dispatch<ModeConfigure>(config, NULL);\
+        common_configured_dispatch<ModeConfigure>(config, nullptr);\
         return true; \
     }\
     QuickBuilder classname::GetSchema()\
@@ -355,7 +355,7 @@ namespace Kernel
         (*schema)["class"] = String(#classname);\
         (*schema)["members"] = Array();\
         base_class_get_schema_call_block; /* substitute the members list of the base class before the members of the derived class are added*/\
-        common_configured_dispatch<ModeGetSchema>(NULL, schema);\
+        common_configured_dispatch<ModeGetSchema>(nullptr, schema);\
         return *schema;\
     }\
     template<class Mode>\

@@ -98,12 +98,16 @@
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="Exceptions.cpp" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="IArchive.cpp" />
     <ClCompile Include="IdmDateTime.cpp" />
     <ClCompile Include="InterpolatedValueMap.cpp" />
+    <ClCompile Include="ISerializable.cpp" />
     <ClCompile Include="ISupports.cpp">
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PreprocessToFile>
     </ClCompile>
     <ClCompile Include="JsonObject.cpp" />
+    <ClCompile Include="JsonRawReader.cpp" />
+    <ClCompile Include="JsonRawWriter.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="MathFunctions.cpp" />
     <ClCompile Include="ProgramOptions.cpp" />
@@ -152,13 +156,17 @@
     <ClInclude Include="Environment.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="FactorySupport.h" />
+    <ClInclude Include="IArchive.h" />
     <ClInclude Include="IdmDateTime.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="IdmApi.h" />
     <ClInclude Include="IdmString.h" />
     <ClInclude Include="InterpolatedValueMap.h" />
+    <ClInclude Include="ISerializable.h" />
     <ClInclude Include="ISupports.h" />
     <ClInclude Include="JsonObject.h" />
+    <ClInclude Include="JsonRawReader.h" />
+    <ClInclude Include="JsonRawWriter.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Profile.h" />

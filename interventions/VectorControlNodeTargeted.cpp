@@ -57,7 +57,7 @@ namespace Kernel
         , habitat_target(VectorHabitatType::ALL_HABITATS)
         , primary_decay_time_constant(0)
         , secondary_decay_time_constant(0)
-        , invic(NULL)
+        , invic(nullptr)
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
     }

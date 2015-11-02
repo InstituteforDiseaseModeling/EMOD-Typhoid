@@ -28,7 +28,7 @@ namespace Kernel
 
     IMPLEMENT_FACTORY_REGISTERED(SimpleDiagnostic)
 
-    EventOrConfig::Enum 
+    EventOrConfig::Enum
     SimpleDiagnostic::getEventOrConfig(
         const Configuration * inputJson
     )
@@ -79,7 +79,7 @@ namespace Kernel
     }
 
     SimpleDiagnostic::SimpleDiagnostic()
-    : parent(NULL)
+    : parent(nullptr)
     , diagnostic_type(0)
     , base_specificity(0)
     , base_sensitivity(0)
@@ -118,16 +118,16 @@ namespace Kernel
         if ( positiveTestResult() )
         {
             LOG_DEBUG_F( "Individual %d tested positive: treatment fraction = %f.\n", parent->GetSuid().data, (float) treatment_fraction );
-                
+
             if( SMART_DRAW(treatment_fraction) )
-            { 
-                if ( days_to_diagnosis <= 0 ) 
+            {
+                if ( days_to_diagnosis <= 0 )
                 {
                     positiveTestDistribute(); // since there is no waiting time, distribute intervention right now
                 }
             }
             else
-            { 
+            {
                 onPatientDefault();
                 expired = true;         // this person doesn't get the intervention despite the positive test
             }
@@ -178,9 +178,9 @@ namespace Kernel
     {
         // Apply diagnostic test with given specificity/sensitivity
         bool  infected = parent->GetEventContext()->IsInfected();
-        
+
         // True positive (sensitivity), or False positive (1-specificity)
-        
+
         return applySensitivityAndSpecificity( infected );
     }
 
@@ -196,7 +196,7 @@ namespace Kernel
         expired = true;
     }
 
-    void 
+    void
     SimpleDiagnostic::broadcastEvent( const std::string& event )
     {
         if( event != NO_TRIGGER_STR )
@@ -215,7 +215,7 @@ namespace Kernel
     {
         LOG_DEBUG_F( "Individual %d tested 'positive' in SimpleDiagnostic, receiving actual intervention: event = %s.\n", parent->GetSuid().data, positive_diagnosis_event.c_str() );
 
-        // Next alternative is that we were configured to broadcast a raw event string. In which case the value will not 
+        // Next alternative is that we were configured to broadcast a raw event string. In which case the value will not
         // the "uninitialized" value.
         if( positive_diagnosis_event != "UNINITIALIZED" )
         {
@@ -225,8 +225,8 @@ namespace Kernel
         else
         {
             // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-            IGlobalContext *pGC = NULL;
-            const IInterventionFactory* ifobj = NULL;
+            IGlobalContext *pGC = nullptr;
+            const IInterventionFactory* ifobj = nullptr;
             if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
             {
                 ifobj = pGC->GetInterventionFactory();
@@ -269,7 +269,8 @@ namespace Kernel {
 
         boost::serialization::void_cast_register<SimpleDiagnostic, IDistributableIntervention>();
         ar & obj.positive_diagnosis_config;
-        ar & (std::string) obj.positive_diagnosis_event;
+//        ar & (std::string) obj.positive_diagnosis_event;
+        ar & obj.positive_diagnosis_event;
         ar & obj.diagnostic_type;
         ar & (float&) obj.base_specificity;
         ar & (float&) obj.base_sensitivity;

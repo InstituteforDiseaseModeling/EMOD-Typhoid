@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<testsuite errors="1" failures="0" name="71 regression suite" tests="1" time="14.356">
+	<properties>
+		<property name="Version string" value="2.0.5633.0 trunk"/>
+		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
+		<property name="HPC Nodegroup" value="ComputeNodes"/>
+	</properties>
+	<testcase name="71_Polio_Default_Multicore" time="-1">
+		<error message="71_Polio_Default_Multicore exited unexpectedly!  Simulation output can be found at \\bayesianfil01\IDM\home\clorton\output\simulations\\2015_10_29_22_49_47_043000" type="Functional failure"></error>
+		<system-out>n/a</system-out>
+		<system-err>n/a</system-err>
+	</testcase>
+</testsuite>

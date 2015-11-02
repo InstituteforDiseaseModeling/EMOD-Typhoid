@@ -28,12 +28,12 @@ static const std::string _report_name = "VectorSpeciesReport.json";   // Report 
 #endif
 
 Kernel::IReport*
-VectorSpeciesReport::CreateReport( const JsonConfigurable::tDynamicStringSet& rVectorSpeciesNames )
+VectorSpeciesReport::CreateReport( const Kernel::jsonConfigurable::tDynamicStringSet& rVectorSpeciesNames )
 {
     return new VectorSpeciesReport( rVectorSpeciesNames );
 }
 
-VectorSpeciesReport::VectorSpeciesReport( const JsonConfigurable::tDynamicStringSet& rVectorSpeciesNames )
+VectorSpeciesReport::VectorSpeciesReport( const Kernel::jsonConfigurable::tDynamicStringSet& rVectorSpeciesNames )
     : BinnedReport()
     , adult_vectors(nullptr)
     , infectious_vectors(nullptr)
@@ -133,7 +133,7 @@ void VectorSpeciesReport::LogNodeData( Kernel::INodeContext * pNC )
     LOG_DEBUG( "VectorSpeciesReport::LogNodeData.\n" );
 
     int   bin_index = 0;
-    Kernel::INodeVector * pNV = NULL;
+    Kernel::INodeVector * pNV = nullptr;
     if( pNC->QueryInterface( GET_IID( Kernel::INodeVector ), (void**) &pNV ) != Kernel::s_OK )
     {
         throw Kernel::QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeVector", "INodeContext" );

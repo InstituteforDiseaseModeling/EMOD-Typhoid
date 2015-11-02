@@ -201,7 +201,7 @@ ReportPolio::LogIndividualData(
 )
 {
     ReportEnvironmental::LogIndividualData( individual );
-    IIndividualHumanPolio* polio_individual = NULL;
+    IIndividualHumanPolio* polio_individual = nullptr;
     if( individual->QueryInterface( GET_IID( IIndividualHumanPolio ), (void**)&polio_individual ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualPolio", "IndividualHuman" );
@@ -288,7 +288,7 @@ ReportPolio::LogNodeData(
 )
 {
     ReportEnvironmental::LogNodeData( pNC );
-    const INodePolio * pPolioNode = NULL; // TBD: Use limited read-only interface, not full NodePolio
+    const INodePolio * pPolioNode = nullptr; // TBD: Use limited read-only interface, not full NodePolio
     if( pNC->QueryInterface( GET_IID( INodePolio), (void**) &pPolioNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePolio", "INodeContext" );

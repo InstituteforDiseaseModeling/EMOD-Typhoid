@@ -678,20 +678,6 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
             EnvPtr->getStatusReporter()->SetHPCId( po.GetCommandLineValueString( "sim_id" ) );
         }
 
-#if 0
-    Kernel::SimulationConfig* SimConfig = Kernel::SimulationConfigFactory::CreateInstance(EnvPtr->Config);
-    if (SimConfig)
-    {
-        Environment::setSimulationConfig(SimConfig);
-        LOG_INFO_F( "setSimulationConfig: %p\n", SimConfig );
-    }
-    else
-    {
-        LOG_ERR("Failed to create SimulationConfig instance\n");
-        return false;
-    }
-#endif
-
 #ifdef _DEBUG
     //#define DEBUG_MEMORY_LEAKS // uncomment this to run an extra warm-up pass and enable dumping objects 
 #endif 
@@ -720,7 +706,7 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
         //LOG_INFO_F( "Name: %s\n", GET_CONFIGURABLE(SimulationConfig)->ConfigName.c_str() );  // can't get ConfigName because we haven't initialized SimulationConfig yet...
         LOG_INFO_F( "%d parameters found.\n", (EnvPtr->Config)->As<json::Object>().Size() );
 
-        IController *controller = NULL;
+        IController *controller = nullptr;
 
         // override controller selection if unit tests requested on command line
         LOG_INFO("Initializing Controller...\n");
@@ -810,7 +796,7 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
 #endif
     }
 
-    if( EnvPtr != NULL )
+    if( EnvPtr != nullptr )
     {
         EnvPtr->Log->Flush();
         if((Kernel::SimulationConfig*)EnvPtr->SimConfig)

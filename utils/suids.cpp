@@ -13,28 +13,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "suids.hpp"
 
-#include "RapidJsonImpl.h"
-
 namespace Kernel
 {
     namespace suids 
     {
         BEGIN_QUERY_INTERFACE_BODY(suid)
-        HANDLE_INTERFACE(IJsonSerializable)
         END_QUERY_INTERFACE_BODY(suid)
-
-#if USE_JSON_SERIALIZATION
-        void suid::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-        {
-            root->BeginObject();
-            root->Insert("data", data);
-            root->EndObject();
-        }
-
-        void suid::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-        {
-            data = root->GetInt("data");
-        }
-#endif
     }
 }

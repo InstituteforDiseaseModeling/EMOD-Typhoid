@@ -38,7 +38,7 @@ def application( config_file_name ):
             handle.write( json.dumps( config_json, indent=4, sort_keys=True ) )
         return output_config_file_name 
 
-    elif config_file_name.endswith( ".xlsx" ) or config_file_name.endswith( ".xlsm" ):
+    elif config_file_name.endswith( ".xlsx" ):
         wb = xlrd.open_workbook( config_file_name ) 
         # just support single worksheet for now
         config_json = json.loads( "{}" )

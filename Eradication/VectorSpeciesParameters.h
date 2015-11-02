@@ -52,6 +52,8 @@ namespace Kernel
         float adultmortality;
         float immaturerate;
 
+        static void serialize(IArchive&, VectorSpeciesParameters*&);
+
     protected:
         VectorSpeciesParameters();
         void Initialize(const std::string& vector_species_name);
