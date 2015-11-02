@@ -116,23 +116,76 @@ bool call_templated_functor_with_sim_type_hack(ControllerExecuteFunctorT &cef)
 #include "StatusReporter.h"
 
 #include <functional>
+#include<sys/socket.h>
+int client_sock;
+//std::stringstream timestep_report_json;
 
 void StepSimulation(ISimulation* sim, float dt);
+void * start_routine(void* args );
+pthread_t server_thread;
+typedef enum {
+    paused,
+    stepping,
+    stepping_and_reloading,
+    playing
+} tPlayback;
+
+tPlayback playback = playing;
 
 // Basic simulation main loop with reporting
 template <class SimulationT> 
 void RunSimulation(SimulationT &sim, int steps, float dt)
 {
+    bool game_mode = false;
+    int threadid = -1;
+    if( getenv( "GAME_MODE" ) )
+    {
+        game_mode = true;
+        threadid = pthread_create( &server_thread, NULL, &start_routine, NULL );
+        playback = paused;
+    }
+
     LOG_DEBUG( "RunSimulation\n" );
 
     for (int t = 0; t < steps; t++)
     {
+        while( playback == paused )
+        {
+            sleep(0.1);
+            //if( playback > 0 )
+            if( playback == stepping_and_reloading )
+            {
+                sim.LoadCampaignFile();
+                playback = stepping;
+            }
+        }
+
+        //sleep(1.0);
         StepSimulation(&sim, dt);
+        if( game_mode )
+        {
+            if(playback == stepping )
+            {
+                playback = paused;
+            }
+
+            //auto status_message = timestep_report_json.str().c_str();
+            auto status_message = getenv( "JSON_SER_REPORT" );
+            write(client_sock, status_message, strlen(status_message));
+
+            //timestep_report_json.str("");
+            //timestep_report_json.clear();
+        }
 
         if (EnvPtr->MPI.Rank == 0)
         {
             EnvPtr->getStatusReporter()->ReportProgress(t+1, steps);
         }
+    }
+
+    if( getenv( "GAME_MODE" ) )
+    {
+        pthread_join( threadid, NULL );
     }
 }
 
@@ -887,3 +940,111 @@ ISimulation* load_sim(const char * filename)
 template void Kernel::serialize( boost::archive::binary_oarchive & ar, Simulation& sim, const unsigned int file_version);
 template void Kernel::serialize( boost::archive::binary_iarchive & ar, Simulation& sim, const unsigned int file_version);
 #endif
+
+
+/*
+    C socket server example
+*/
+ 
+#include<stdio.h>
+#include<string.h>    //strlen
+#include<arpa/inet.h> //inet_addr
+#include<unistd.h>    //write
+#include<semaphore.h>    //write
+#include<pthread.h>    //write
+#include<errno.h>    //write
+
+sem_t mysem;
+
+void * start_routine(void* args )
+{
+    int socket_desc, c, read_size, new_sock;
+    struct sockaddr_in server , client;
+    char client_message[4000];
+     
+    //Create socket
+    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    if (socket_desc == -1)
+    {
+        printf("Could not create socket");
+    }
+    puts("Socket created");
+     
+    //Prepare the sockaddr_in structure
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = INADDR_ANY;
+    int game_port = 8887;
+    if( getenv( "GAME_PORT" ) )
+    {
+        game_port = atoi( getenv( "GAME_PORT" ) );
+    }
+    std::cout << "Listening for controller socket connections on port " << game_port << std::endl;
+    server.sin_port = htons( game_port );
+     
+    //Bind
+    if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
+    {
+        //print the error message
+        perror("bind failed. Error");
+        //playback = playing;
+        return; // 1;
+    }
+    puts("bind done");
+     
+    //Listen
+    listen(socket_desc , 3);
+     
+    //Accept and incoming connection
+    puts("Waiting for incoming connections...");
+    c = sizeof(struct sockaddr_in);
+     
+    //accept connection from an incoming client
+    client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
+    if (client_sock < 0)
+    {
+        perror("accept failed");
+        return; // 1;
+    }
+    puts("Connection accepted");
+     
+    //Receive a message from client
+    while( (read_size = recv(client_sock, client_message, 4000, 0)) > 0 )
+    {
+        //Send the message back to client
+        printf( "msg = %s\n", client_message );
+        int sem_value = 0;
+        if( strcmp( client_message, "PAUSE" ) == 0 )
+        {
+            printf( "Pausing...\n" );
+            playback = paused;
+        }
+        else if( strcmp( client_message, "PLAY" ) == 0 )
+        {
+            printf( "Playing...\n" );
+            playback = playing;
+        }
+        else if( strcmp( client_message, "STEP" ) == 0 )
+        {
+            printf( "Playing 1 timestep...\n" );
+            playback = stepping;
+        }
+        else if( strcmp( client_message, "STEP_RELOAD" ) == 0 )
+        {
+            printf( "Playing 1 timestep and re-upping campaign...\n" );
+            playback = stepping_and_reloading;
+        }
+        bzero( client_message, 4000 );
+    }
+     
+    if(read_size == 0)
+    {
+        puts("Client disconnected");
+        fflush(stdout);
+    }
+    else if(read_size == -1)
+    {
+        perror("recv failed");
+    }
+     
+    return; // 0
+}
