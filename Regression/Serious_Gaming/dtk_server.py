@@ -35,6 +35,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
         self.running = True
         self.request.sendall( "hello!\nType \"RUN\", \"STEP\", or \"KILL\"\n" )
+        self.ref_json = json.loads( open( "output/InsetChart.json" ).read() )["Channels"]
         #self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
             # self.request is the TCP socket connected to the client
@@ -99,8 +100,12 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         self.dtk_socket.sendall( msg )
         data = self.dtk_socket.recv( 2000 )
         data_json = json.loads(data)
+
+        data_json["New Severe Cases Averted"] = self.ref_json["New Severe Cases"]["Data"][self.timestep] - data_json["New Severe Cases"]
+
         data_json["Timestep"] = self.timestep
         self.timestep = self.timestep + 1
+
         return (str(data_json) + "\n").replace( "u'", "'" )
 
     def insert_new_camp_event_and_step_reload( self, new_event_params ):
