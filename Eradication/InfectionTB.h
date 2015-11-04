@@ -143,6 +143,8 @@ namespace Kernel
         bool  m_shows_symptoms;
         float m_duration_since_init_infection; //for reporting only
 
+        DECLARE_SERIALIZABLE(InfectionTB, IInfection);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;

@@ -893,6 +893,26 @@ namespace Kernel
     InfectionTB::InfectionTB() { }
     InfectionTB::InfectionTB(IIndividualHumanContext *context) : InfectionAirborne(context) { }
     //const SimulationConfig* InfectionTB::params() { return GET_CONFIGURABLE(SimulationConfig); }
+
+    REGISTER_SERIALIZABLE(InfectionTB, IInfection);
+
+    void InfectionTB::serialize(IArchive& ar, IInfection* obj)
+    {
+        InfectionAirborne::serialize(ar, obj);
+        InfectionTB& infection = *dynamic_cast<InfectionTB*>(obj);
+        ar.startElement();
+        ar.labelElement("m_is_active") & infection.m_is_active;
+        ar.labelElement("m_recover_fraction") & infection.m_recover_fraction;
+        ar.labelElement("m_death_fraction") & infection.m_death_fraction;
+        ar.labelElement("m_is_smear_positive") & infection.m_is_smear_positive;
+        ar.labelElement("m_is_extrapulmonary") & infection.m_is_extrapulmonary;
+        ar.labelElement("m_is_fast_progressor") & infection.m_is_fast_progressor;
+        ar.labelElement("m_evolved_resistance") & infection.m_evolved_resistance;
+        ar.labelElement("m_is_pending_relapse") & infection.m_is_pending_relapse;
+        ar.labelElement("m_shows_symptoms") & infection.m_shows_symptoms;
+        ar.labelElement("m_duration_since_init_infection") & infection.m_duration_since_init_infection;
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

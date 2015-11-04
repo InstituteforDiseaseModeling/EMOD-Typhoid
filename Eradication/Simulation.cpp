@@ -877,32 +877,35 @@ namespace Kernel
         {
             if (destination_rank == EnvPtr->MPI.Rank)
             {
+#ifndef _DEBUG
                 // Don't bother to serialize locally
-                for (auto individual : migratingIndividualQueues[destination_rank])
+//                for (auto individual : migratingIndividualQueues[destination_rank])
+                for (auto iterator = migratingIndividualQueues[destination_rank].rbegin(); iterator != migratingIndividualQueues[destination_rank].rend(); ++iterator)
                 {
+                    auto individual = *iterator;
                     IMigrate* emigre = dynamic_cast<IMigrate*>(individual);
                     emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
                 }
-
-//                auto writer = make_shared<JsonRawWriter>(); //  new JsonRawWriter();
+#else
+                auto writer = make_shared<JsonRawWriter>(); //  new JsonRawWriter();
 //cout << "Emmigrating: " << migratingIndividualQueues[destination_rank].size() << endl;
 //auto t1 = _clock::now();
-//                Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
+                Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
 //auto t2 = _clock::now();
-//for (auto& individual : migratingIndividualQueues[destination_rank])
-//    individual->Recycle();  // delete individual
+for (auto& individual : migratingIndividualQueues[destination_rank])
+    delete individual; // individual->Recycle();
 //auto t3 = _clock::now();
-//                migratingIndividualQueues[destination_rank].clear();
-//
-//                auto reader = make_shared<JsonRawReader>(((IArchive*)writer.get())->GetBuffer()); // new JsonRawReader(writer->GetBuffer());
+                migratingIndividualQueues[destination_rank].clear();
+
+                auto reader = make_shared<JsonRawReader>(static_cast<IArchive*>(writer.get())->GetBuffer()); // new JsonRawReader(writer->GetBuffer());
 //auto t4 = _clock::now();
-//                Kernel::serialize(*reader, migratingIndividualQueues[destination_rank]);
+                Kernel::serialize(*reader, migratingIndividualQueues[destination_rank]);
 //auto t5 =_clock::now();
-//                for (auto individual : migratingIndividualQueues[destination_rank])
-//                {
-//                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
-//                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
-//                }
+                for (auto individual : migratingIndividualQueues[destination_rank])
+                {
+                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+                }
 //auto t6 = _clock::now();
 //
 //cout << "Serialize:   " << (t2 - t1).count() << endl;
@@ -911,6 +914,7 @@ namespace Kernel
 //cout << "Deserialize: " << (t5 - t4).count() << endl;
 //cout << "Absorb:      " << (t6 - t5).count() << endl;
 //cout << "Immigrating: " << migratingIndividualQueues[destination_rank].size() << endl;
+#endif                
             }
             else
             {
@@ -924,13 +928,13 @@ namespace Kernel
 //auto t3 = _clock::now();
                 migratingIndividualQueues[destination_rank].clear();
 
-                uint32_t buffer_size = message_size_by_rank[destination_rank] = ((IArchive*)writer)->GetBufferSize();
+                uint32_t buffer_size = message_size_by_rank[destination_rank] = static_cast<IArchive*>(writer)->GetBufferSize();
                 MPI_Request size_request;
                 MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, 0, MPI_COMM_WORLD, &size_request);
 
                 if (buffer_size > 0)
                 {
-                    const char* buffer = ((IArchive*)writer)->GetBuffer();
+                    const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
                     MPI_Request buffer_request;
                     MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, 0, MPI_COMM_WORLD, &buffer_request);
                     outbound_requests.push_back(buffer_request);

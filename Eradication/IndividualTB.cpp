@@ -411,6 +411,14 @@ namespace Kernel
     {
         interventions = _new_ TBInterventionsContainer();
     }
+
+    REGISTER_SERIALIZABLE(IndividualHumanTB, IIndividualHuman);
+
+    void IndividualHumanTB::serialize(IArchive& ar, IIndividualHuman* obj)
+    {
+        IndividualHumanAirborne::serialize(ar, obj);
+        // IndividualHumanTB doesn't have any additional fields.
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

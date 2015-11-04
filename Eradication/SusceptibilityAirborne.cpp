@@ -35,6 +35,17 @@ namespace Kernel
         // initialize members of airborne susceptibility below
         demographic_risk = _riskmod; 
     }
+
+    REGISTER_SERIALIZABLE(SusceptibilityAirborne, ISusceptibilityContext);
+
+    void SusceptibilityAirborne::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    {
+        Susceptibility::serialize(ar, obj);
+        SusceptibilityAirborne& susceptibility = *dynamic_cast<SusceptibilityAirborne*>(obj);
+        ar.startElement();
+        ar.labelElement("demographic_risk") & susceptibility.demographic_risk;
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -50,10 +50,11 @@ namespace Kernel
         return JsonConfigurable::Configure( config );
     }
 
-    IndividualHumanPolio::IndividualHumanPolio(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
-        IndividualHumanEnvironmental(_suid, monte_carlo_weight, initial_age, gender, initial_poverty),
-        age_most_recent_infection(0),
-        polio_susceptibility(nullptr)
+    IndividualHumanPolio::IndividualHumanPolio(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
+        : IndividualHumanEnvironmental(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
+        , age_most_recent_infection(0)
+        , paralysisVirusTypeMask(0)
+        , polio_susceptibility(nullptr)
     {
     }
 

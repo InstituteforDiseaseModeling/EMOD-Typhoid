@@ -72,6 +72,9 @@ namespace Kernel
         std::set < IInfectionIncidenceObserver * > infectionIncidenceObservers;
         virtual void onInfectionIncidence();
         virtual void onInfectionMDRIncidence();
+
+        DECLARE_SERIALIZABLE(IndividualHumanTB, IIndividualHuman);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         // Serialization

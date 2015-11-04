@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<testsuite errors="0" failures="0" name="24 regression suite" tests="1" time="280.413">
-	<properties>
-		<property name="Version string" value="2.0.5677.0 trunk"/>
-		<property name="HPC Headnode" value="bayesianhpc.internal.idm.ctr"/>
-		<property name="HPC Nodegroup" value="ComputeNodes"/>
-	</properties>
-	<testcase name="24_Malaria_Garki" time="272.0"/>
-</testsuite>

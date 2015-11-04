@@ -27,6 +27,8 @@ namespace Kernel
         // additional members of airborne susceptibility
         float demographic_risk;
 
+        DECLARE_SERIALIZABLE(SusceptibilityAirborne, ISusceptibilityContext);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;

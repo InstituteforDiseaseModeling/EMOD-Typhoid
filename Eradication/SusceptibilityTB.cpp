@@ -210,6 +210,21 @@ namespace Kernel
     }
          
     SusceptibilityTB::SusceptibilityTB(IIndividualHumanContext *context) : SusceptibilityAirborne(context) { }
+
+    REGISTER_SERIALIZABLE(SusceptibilityTB, ISusceptibilityContext);
+
+    void SusceptibilityTB::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    {
+        SusceptibilityAirborne::serialize(ar, obj);
+        SusceptibilityTB& susceptibility = *dynamic_cast<SusceptibilityTB*>(obj);
+        ar.startElement();
+        ar.labelElement("Flag_use_CD4_for_act") & susceptibility.Flag_use_CD4_for_act;
+        ar.labelElement("m_is_immune_competent") & susceptibility.m_is_immune_competent;
+        ar.labelElement("m_is_immune") & susceptibility.m_is_immune;
+        ar.labelElement("m_current_infections") & susceptibility.m_current_infections;
+        ar.labelElement("m_cough_infectiousness") & susceptibility.m_cough_infectiousness;
+        ar.endElement();
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

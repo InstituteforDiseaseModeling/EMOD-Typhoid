@@ -31,6 +31,8 @@ namespace Kernel
         virtual Infection* createInfection(suids::suid _suid);
         virtual void ReportInfectionState();
 
+        DECLARE_SERIALIZABLE(IndividualHumanAirborne, IIndividualHuman);
+
     private:
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

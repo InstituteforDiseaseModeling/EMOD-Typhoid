@@ -82,6 +82,8 @@ namespace Kernel
         int  m_current_infections;  
         float m_cough_infectiousness;
 
+        DECLARE_SERIALIZABLE(SusceptibilityTB, ISusceptibilityContext);
+
     private:
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -26,6 +26,14 @@ namespace Kernel
     InfectionAirborne::~InfectionAirborne(void) { }
     InfectionAirborne::InfectionAirborne() { }
     InfectionAirborne::InfectionAirborne(IIndividualHumanContext *context) : Infection(context) { }
+
+    REGISTER_SERIALIZABLE(InfectionAirborne, IInfection);
+
+    void InfectionAirborne::serialize(IArchive& ar, IInfection* obj)
+    {
+        Infection::serialize(ar, obj);
+        // InfectionAirborne doesn't add any fields to the class.
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

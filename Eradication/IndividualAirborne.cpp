@@ -55,6 +55,13 @@ namespace Kernel
         return InfectionAirborne::CreateInfection(this, _suid);
     }
 
+    REGISTER_SERIALIZABLE(IndividualHumanAirborne, IIndividualHuman);
+
+    void IndividualHumanAirborne::serialize(IArchive& ar, IIndividualHuman* obj)
+    {
+        IndividualHuman::serialize(ar, obj);
+        // IndividualHumanAirborne doesn't have any additional fields.
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
