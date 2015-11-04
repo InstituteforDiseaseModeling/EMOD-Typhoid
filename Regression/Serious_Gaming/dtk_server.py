@@ -246,10 +246,10 @@ if __name__ == "__main__":
     if len( sys.argv ) > 1:
         PORT = int(sys.argv[1])
         print( "Using " + str(PORT) + " as python server port." )
-        MyTCPHandler.game_port = PORT + 100
     if len( sys.argv ) > 2:
         HOST = sys.argv[2]
         print( "Using " + HOST + " as python server host IP." )
+    MyTCPHandler.game_port = PORT + 100
 
     # Create the server, binding to localhost on port 9999
     SocketServer.TCPServer.allow_reuse_address = True
