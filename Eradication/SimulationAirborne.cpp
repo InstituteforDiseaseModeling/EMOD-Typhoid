@@ -69,11 +69,6 @@ namespace Kernel
         NodeAirborne *node = NodeAirborne::CreateNode(this, node_suid);
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
-
-// clorton    void SimulationAirborne::resolveMigration()
-// clorton    {
-// clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-// clorton    }
 }
 
 #if USE_BOOST_SERIALIZATION

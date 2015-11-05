@@ -26,7 +26,7 @@ namespace Kernel
         friend class IndividualHumanPolio;
 
     public:
-        virtual bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
         static float x_population_immunity;
@@ -129,7 +129,7 @@ namespace Kernel
 
         SusceptibilityPolio();
         SusceptibilityPolio(IIndividualHumanContext *context);
-        void Initialize(float age, float immmod, float riskmod);
+        /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
         void AddVaccineToInterventionsContainer(int type, float time_since_vaccination);
 
         DECLARE_SERIALIZABLE(SusceptibilityPolio, ISusceptibilityContext);
@@ -138,47 +138,47 @@ namespace Kernel
         static SusceptibilityPolio *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);
         virtual ~SusceptibilityPolio(void);
 
-        virtual void Update(float dt = 0.0);
-        virtual void UpdateInfectionCleared();
+        virtual void Update(float dt = 0.0) override;
+        virtual void UpdateInfectionCleared() override;
         virtual void GetNewInterventionsForIndividual(float dt, int* n_vaccine_strains, StrainIdentity* strain_id, float* dose_titer);
         virtual void GetProbabilityInfected(StrainIdentity* strain_id, float *acquired_virus, int n_challenge_strains, float* probability_infected);
-        virtual float GetFecalInfectiousDuration(StrainIdentity* strain_id); // (days)
-        virtual float GetOralInfectiousDuration(StrainIdentity* strain_id); // days
-        virtual float GetPeakFecalLog10VirusTiter(StrainIdentity* strain_id); // (TCID50 virus per day excreted)
-        virtual float GetPeakOralLog10VirusTiter(StrainIdentity* strain_id); // (TCID50 virus per day excreted)
-        virtual float GetParalysisTime(StrainIdentity* strain_id, float infect_duration); // days incubation to paralysis. returns -1 if no paralysis
-        virtual float GetReversionDegree(StrainIdentity* strain_id); // (on scale from 0 to 1)
-        virtual void ApplyImmumeResponseToInfection(StrainIdentity* infection_strain);
-        virtual void DecrementInfection(StrainIdentity* infection_strain);
-        virtual void IncrementInfection(StrainIdentity* infection_strain);
-        virtual const int* GetInfectionStrains() const;
+        virtual float GetFecalInfectiousDuration(StrainIdentity* strain_id) override; // (days)
+        virtual float GetOralInfectiousDuration(StrainIdentity* strain_id) override; // days
+        virtual float GetPeakFecalLog10VirusTiter(StrainIdentity* strain_id) override; // (TCID50 virus per day excreted)
+        virtual float GetPeakOralLog10VirusTiter(StrainIdentity* strain_id) override; // (TCID50 virus per day excreted)
+        virtual float GetParalysisTime(StrainIdentity* strain_id, float infect_duration) override; // days incubation to paralysis. returns -1 if no paralysis
+        virtual float GetReversionDegree(StrainIdentity* strain_id) override; // (on scale from 0 to 1)
+        virtual void ApplyImmumeResponseToInfection(StrainIdentity* infection_strain) override;
+        virtual void DecrementInfection(StrainIdentity* infection_strain) override;
+        virtual void IncrementInfection(StrainIdentity* infection_strain) override;
+        virtual const int* GetInfectionStrains() const override;
         virtual void AccumulateNewInfectionCount(float ind_MCweight, float* inf_count);
         void ClearAllNewInfectionByStrain(void);
-        virtual void SetNewInfectionByStrain(StrainIdentity* infection_strain);
-        virtual bool GetSusceptibleStatus(int pvType);
-        virtual float GetRandNBounded(void);
+        virtual void SetNewInfectionByStrain(StrainIdentity* infection_strain) override;
+        virtual bool GetSusceptibleStatus(int pvType) override;
+        virtual float GetRandNBounded(void) override;
         virtual void waneAntibodyTitersFromLastEvent(void);
 
-        virtual int   GetSerotype(StrainIdentity* strain_id);
-        virtual float GetMucosalImmunity(StrainIdentity* strain_id); // (reciprocal titer linear units)
-        virtual float GetHumoralImmunity(StrainIdentity* strain_id); // (reciprocal titer linear units)
+        virtual int   GetSerotype(StrainIdentity* strain_id) override;
+        virtual float GetMucosalImmunity(StrainIdentity* strain_id) override; // (reciprocal titer linear units)
+        virtual float GetHumoralImmunity(StrainIdentity* strain_id) override; // (reciprocal titer linear units)
         float GetDefaultAcquireRate(void);
-        virtual void  ResetTimeSinceLastInfection(int serotype);
+        virtual void  ResetTimeSinceLastInfection(int serotype) override;
         virtual void  ResetTimeSinceLastIPV(int serotype);
 
         // ISusceptibilityPolioReporting
-        virtual void GetSheddingTiter(float sheddingTiters[])            const;
-        virtual void GetHumoralNAb(float humoralNAb[])                   const;
-        virtual void GetMucosalNAb(float mucosalNAb[])                   const;
-        virtual void GetMaternalSerumNAb(float maternalSerumNAb[])       const;
-        virtual void GetHumoralMemoryNAb(float humoralMemoryNAb[])       const;
-        virtual void GetMucosalMemoryNAb(float mucosalMemoryNAb[])       const;
-        virtual void GetTimeSinceLastInfection(float times[])            const;
+        virtual void GetSheddingTiter(float sheddingTiters[])            const override;
+        virtual void GetHumoralNAb(float humoralNAb[])                   const override;
+        virtual void GetMucosalNAb(float mucosalNAb[])                   const override;
+        virtual void GetMaternalSerumNAb(float maternalSerumNAb[])       const override;
+        virtual void GetHumoralMemoryNAb(float humoralMemoryNAb[])       const override;
+        virtual void GetMucosalMemoryNAb(float mucosalMemoryNAb[])       const override;
+        virtual void GetTimeSinceLastInfection(float times[])            const override;
         virtual void GetTimeSinceLastIPV(float times[])                  const;
-        virtual void GetVaccineDosesReceived(int vaccineDosesReceived[]) const;
-        virtual const int* GetNewInfectionsByStrain()                    const;
-        virtual float GetIndividualAcquireRisk()                         const;
-        virtual bool IsSeropositive( unsigned char serotype)             const;
+        virtual void GetVaccineDosesReceived(int vaccineDosesReceived[]) const override;
+        virtual const int* GetNewInfectionsByStrain()                    const override;
+        virtual float GetIndividualAcquireRisk()                         const override;
+        virtual bool IsSeropositive( unsigned char serotype)             const override;
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

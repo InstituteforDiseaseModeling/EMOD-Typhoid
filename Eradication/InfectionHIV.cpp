@@ -12,15 +12,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InfectionHIV.h"
 
 #include "Interventions.h"
-// clorton #include "InterventionsContainer.h"
-// clorton #include "SimulationConfig.h"
 #include "RANDOM.h"
 #include "Exceptions.h"
 #include "IndividualEventContext.h"
 #include "IIndividualHumanHIV.h"
 #include "HIVInterventionsContainer.h"
 #include "IIndividualHuman.h"
-// clorton #include "NodeEventContext.h"
 
 #include "Types.h" // for ProbabilityNumber and NaturalNumber
 #include "Debug.h" // for release_assert

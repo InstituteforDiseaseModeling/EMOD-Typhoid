@@ -84,11 +84,6 @@ namespace Kernel
         NodeTB *node = NodeTB::CreateNode(this, node_suid);
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
-
-// clorton    void SimulationTB::resolveMigration()
-// clorton    {
-// clorton        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
-// clorton    }
 }
 
 #if USE_BOOST_SERIALIZATION

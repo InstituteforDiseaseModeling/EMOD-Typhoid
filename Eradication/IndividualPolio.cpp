@@ -123,7 +123,7 @@ void Kernel::IndividualHumanPolio::CreateSusceptibility(float imm_mod, float ris
 
 int Kernel::IndividualHumanPolio::CountInfections(void) const
 {
-    return (int)infections.size();
+    return int(infections.size());
 }
 
 void Kernel::IndividualHumanPolio::ClearAllNewInfectionByStrain(void)
@@ -208,9 +208,7 @@ void Kernel::IndividualHumanPolio::Expose( const IContagionPopulation* cp, float
     {
         float acquired_virus;
         float infection_prob;
-        float acquisition_rate=0.0f;
-
-        acquisition_rate = polio_susceptibility->GetDefaultAcquireRate();
+        float acquisition_rate = polio_susceptibility->GetDefaultAcquireRate();
 
         //dt contains x_acquisition_scaling so we only need one acquisition rate, see pool.cpp
         acquired_virus = cp->GetTotalContagion() * acquisition_rate;
@@ -258,7 +256,7 @@ void Kernel::IndividualHumanPolio::ExposeToInfectivity(float dt, const Transmiss
 void Kernel::IndividualHumanPolio::ReportInfectionState()
 {
     IndividualHumanEnvironmental::ReportInfectionState();
-    age_most_recent_infection = (float) m_age;
+    age_most_recent_infection = float(m_age);
 }
 
 bool Kernel::IndividualHumanPolio::SetNewInfectionState(InfectionStateChange::_enum inf_state_change)
@@ -314,9 +312,9 @@ Kernel::Infection* Kernel::IndividualHumanPolio::createInfection( suids::suid _s
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include "InfectionPolio.h"
-#include "SusceptibilityPolio.h"
-#include "PolioInterventionsContainer.h"
+// clorton #include "InfectionPolio.h"
+// clorton #include "SusceptibilityPolio.h"
+// clorton #include "PolioInterventionsContainer.h"
 
 #include <boost/serialization/export.hpp>
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanPolio)

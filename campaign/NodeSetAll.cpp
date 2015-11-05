@@ -12,9 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #if USE_BOOST_SERIALIZATION
 #include <boost/serialization/export.hpp>
 #endif
-// clorton #include "CajunIncludes.h"
-// clorton #include "ConfigurationImpl.h"
-// clorton #include "InterventionEnums.h"
 
 #if USE_BOOST_SERIALIZATION
 BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:INodeSet);

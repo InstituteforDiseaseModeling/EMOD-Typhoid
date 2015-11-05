@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InfectionVector.h"
 
 #include "BoostLibWrapper.h"
-// clorton #include "Common.h"
 #include "MalariaContexts.h"
 #include "MalariaEnums.h"
 #include "IMalariaAntibody.h"

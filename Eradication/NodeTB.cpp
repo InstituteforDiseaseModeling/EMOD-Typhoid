@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "NodeTB.h"
 #include "TransmissionGroupsFactory.h" //for SetupIntranodeTransmission
-#include "NodeEventContext.h" //for node level trigger
 #include "NodeEventContextHost.h" //for node level trigger
 #include "IndividualTB.h"
 #include "SimulationConfig.h"
@@ -157,7 +156,7 @@ namespace Kernel
     
                             for (int iSink = 0; iSink < valueCount; iSink++) 
                             {
-                                 matrixRow.push_back((float)scalingMatrixRow[iSink].AsDouble());
+                                 matrixRow.push_back(float(scalingMatrixRow[iSink].AsDouble()));
                             }
                             scalingMatrix.push_back(matrixRow);
                         }
@@ -174,7 +173,7 @@ namespace Kernel
     
                             for (int iSink = 0; iSink < valueCount; iSink++) 
                             {
-                                 matrixRow.push_back((float)scalingMatrixRow[iSink].AsDouble());
+                                 matrixRow.push_back(float(scalingMatrixRow[iSink].AsDouble()));
                             }
                             scalingMatrix.push_back(matrixRow);
                         }

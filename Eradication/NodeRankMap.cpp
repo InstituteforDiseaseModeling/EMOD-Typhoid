@@ -8,7 +8,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
-// clorton #include "sys/stat.h"
 #include <fstream>
 
 #include "NodeRankMap.h"

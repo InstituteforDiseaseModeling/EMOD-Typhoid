@@ -9,9 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "NodeSet.h"
-// clorton #include "CajunIncludes.h"
-// clorton #include "ConfigurationImpl.h"
-// clorton #include "InterventionEnums.h"
 #include "NodeEventContext.h"
 
 static const char* _module = "NodeSetNodeList";

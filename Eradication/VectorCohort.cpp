@@ -10,9 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "VectorCohort.h"
-// clorton #include "Environment.h"
 #include "Exceptions.h"
-// clorton #include "Log.h"
 #include "Node.h"
 #include "StrainIdentity.h"
 
@@ -133,7 +131,6 @@ namespace Kernel
 
     IMPLEMENT_SERIALIZATION_REGISTRAR(IVectorCohort);
     REGISTER_SERIALIZABLE(VectorCohort, IVectorCohort);
-// clorton     IMPLEMENT_POOL(VectorCohort);
 
     void VectorCohort::serialize(IArchive& ar, IVectorCohort* obj)
     {

@@ -22,7 +22,7 @@ namespace Kernel
 
         SusceptibilityAirborne();
         SusceptibilityAirborne(IIndividualHumanContext *context);
-        void Initialize(float age, float immmod, float riskmod);
+        /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
 
         // additional members of airborne susceptibility
         float demographic_risk;

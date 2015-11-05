@@ -150,7 +150,6 @@ namespace Kernel
     }
 
     REGISTER_SERIALIZABLE(SusceptibilityVector, ISusceptibilityContext);
-// clorton     IMPLEMENT_POOL(SusceptibilityVector);
 
     void SusceptibilityVector::serialize(IArchive& ar, ISusceptibilityContext* obj)
     {

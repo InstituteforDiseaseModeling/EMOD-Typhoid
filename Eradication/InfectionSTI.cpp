@@ -11,10 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Debug.h"
 #include "InfectionSTI.h"
-// clorton #include "STIInterventionsContainer.h"
-// clorton #include "Individual.h"
-// clorton #include "SimulationConfig.h"
-// clorton #include "RANDOM.h"
 
 static const char* _module = "InfectionSTI";
 
@@ -45,7 +41,7 @@ namespace Kernel
         // TBD: Nasty cast
         float retInf = infectiousness;
 
-        LOG_DEBUG_F( "raw infectiousness = %f, modified = %f\n", (float)infectiousness, (float)retInf );
+        LOG_DEBUG_F( "raw infectiousness = %f, modified = %f\n", float(infectiousness), (float)retInf );
         //release_assert( retInf>0.0f );
         return retInf;
     }

@@ -12,10 +12,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InfectionAirborne.h"
 
 #include "TBInterventionsContainer.h"
-// clorton #include "InterventionEnums.h"
 #include "SusceptibilityTB.h"
 #include "Infection.h"
-// clorton #include "Interventions.h"
 
 namespace Kernel
 {
@@ -37,9 +35,7 @@ namespace Kernel
         virtual bool IsSymptomatic() const = 0;
         virtual bool IsActive() const = 0;
         virtual bool IsExtrapulmonary() const = 0; 
-
     };
-
 
     class InfectionTBConfig : public JsonConfigurable
     {
@@ -118,7 +114,7 @@ namespace Kernel
         InfectionTB(IIndividualHumanContext *context);
 
         // For disease progression and MDR evolution, virtual functions are inherited from base class Infection
-        /* clorton */ virtual void  Initialize(suids::suid _suid);
+        /* clorton */ virtual void Initialize(suids::suid _suid);
         void  InitializeLatentInfection(ISusceptibilityContext* immunity);
         void  InitializeActivePresymptomaticInfection(ISusceptibilityContext* immunity);
         void  InitializeActiveInfection(ISusceptibilityContext* immunity);

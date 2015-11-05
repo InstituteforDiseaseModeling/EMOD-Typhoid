@@ -710,7 +710,6 @@ namespace Kernel
             return false;
         }
 
-        // clorton IIndividualHumanContext *patient = GetParent();
         TBDrugEffects_t total_drug_effects = GetTotalDrugEffectsForThisInfection();
         
         //if no drugs on board now, don't need to do all the following computations

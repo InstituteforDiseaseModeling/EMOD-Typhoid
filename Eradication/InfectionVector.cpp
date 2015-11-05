@@ -41,7 +41,6 @@ namespace Kernel
     }
 
     REGISTER_SERIALIZABLE(InfectionVector, IInfection);
-// clorton     IMPLEMENT_POOL(InfectionVector);
 
     void InfectionVector::serialize(IArchive& ar, IInfection *obj)
     {

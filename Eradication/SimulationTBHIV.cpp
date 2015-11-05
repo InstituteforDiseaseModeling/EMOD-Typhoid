@@ -13,14 +13,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Exceptions.h"
 #include "SimulationTBHIV.h"
-//#include "PropertyReportTBHIV.h"
-
-//#include "InfectionTBHIV.h"
 #include "NodeTBHIV.h"
-//#include "SusceptibilityTBHIV.h"
 #include "ReportTBHIV.h"
-//#include "SpatialReportTBHIV.h"
-//#include "BinnedReportTBHIV.h"
 
 static const char* _module = "SimulationTBHIV";
 
@@ -83,11 +77,6 @@ namespace Kernel
         NodeTBHIV *node = NodeTBHIV::CreateNode(this, node_suid);
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
-
-//clorton    void SimulationTBHIV::resolveMigration()
-//clorton    {
-//clorton        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
-//clorton    }
 }
 
 #if 1

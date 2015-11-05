@@ -161,7 +161,7 @@ namespace Kernel
     //////////////////////////////////////////////////////////////////////
     // Configuration Mechanism
 
-    struct IDMAPI IConfigurable : ISupports // clorton IJsonSerializable
+    struct IDMAPI IConfigurable : ISupports
     {
         virtual bool Configure(const Configuration *config) = 0;
         virtual QuickBuilder GetSchema() = 0;

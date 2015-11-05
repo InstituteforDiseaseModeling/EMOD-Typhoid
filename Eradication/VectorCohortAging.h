@@ -10,8 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "VectorCohort.h"
-// clorton #include "Common.h"
-// clorton #include "BoostLibWrapper.h"
 
 namespace Kernel
 {
@@ -43,7 +41,6 @@ namespace Kernel
         // TODO - document this function/expression/calculation
         inline static float mortalityFromAge(float age) { return (0.006f * exp(0.2f * age) / (1.0f + (0.006f * 1.5f / 0.2f * (exp(0.2f * age) - 1.0f)))); }
 
-// clorton         GETCLASSNAME_IMPL(VectorCohortAging);
         DECLARE_SERIALIZABLE(VectorCohortAging, IVectorCohort);
 
     private:

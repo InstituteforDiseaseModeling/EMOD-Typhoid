@@ -9,8 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "VectorProbabilities.h"
-// clorton #include <boost/archive/binary_oarchive.hpp>
-// clorton #include <boost/archive/binary_iarchive.hpp>
 #include "Common.h"
 
 namespace Kernel

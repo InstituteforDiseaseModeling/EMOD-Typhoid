@@ -106,10 +106,10 @@ namespace Kernel
         virtual float getCurrentTiterFromProfile(float peak_Log10Titer, float infectiousTime, float mu, float sigma); // (TCID50 per volume excretion at time from infection)
         virtual void  setCurrentInfectivity(float relative_infectivity, float infectionTimeFecal, float InfectionTimeOral);// (TCID50 virus per day excreted)
 
-        const SimulationConfig* params();
+        /* clorton virtual */ const SimulationConfig* params() /* clorton override */;
 
         InfectionPolio(IIndividualHumanContext *context);
-        void Initialize(suids::suid _suid);
+        /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
 
         DECLARE_SERIALIZABLE(InfectionPolio, IInfection);
 

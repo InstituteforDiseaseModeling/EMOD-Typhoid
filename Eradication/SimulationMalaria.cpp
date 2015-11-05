@@ -11,11 +11,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "SimulationMalaria.h"
 #include "NodeMalaria.h"
-// clorton #include "InfectionMalaria.h"
 #include "ReportMalaria.h"
 #include "BinnedReportMalaria.h"
 #include "SpatialReportMalaria.h"
-// clorton #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
 
@@ -162,15 +160,6 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-//clorton    void SimulationMalaria::resolveMigration()
-//clorton    {
-//clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-//clorton        resolveMigrationInternal( typed_vector_migration_queue_storage, migratingVectorQueues );
-//clorton    }
-
-    //const SimulationFlagsMalaria *
-    //SimulationMalaria::flags() { return (SimulationFlagsMalaria *)simulationFlags; } // overridden in derived classes but with different return types to hide the casting operation
- 
     ISimulationContext *
     SimulationMalaria::GetContextPointer() { return (ISimulationContext*)this; }
 } // end namespace Kernel

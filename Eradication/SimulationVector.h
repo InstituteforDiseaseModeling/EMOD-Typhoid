@@ -85,11 +85,6 @@ namespace Kernel
 #endif
 
         virtual ISimulationContext *GetContextPointer();
-
-// clorton        TypedPrivateMigrationQueueStorage<Kernel::IndividualHumanVector>  typed_migration_queue_storage;
-
-    protected:
-// clorton        TypedPrivateMigrationQueueStorage<Kernel::VectorCohortIndividual> typed_vector_migration_queue_storage; // inherited by SimulationMalaria
     };
 }
 

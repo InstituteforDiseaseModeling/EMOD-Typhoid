@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Debug.h"
 #include "MathFunctions.h"
-// clorton #include "IndividualEventContext.h"
 #include "IIndividualHuman.h"
 #include "InfectionSTI.h"
 #include "NodeEventContext.h"
@@ -1080,7 +1079,7 @@ namespace Kernel
 
         if( IS_SUPER_SPREADER() ) 
         {
-            LOG_DEBUG_F("Individual %d is a super spreader, enabling all extra-relational flags\n", (int)(GetSuid().data));
+            LOG_DEBUG_F("Individual %d is a super spreader, enabling all extra-relational flags\n", int(GetSuid().data));
             for( int rel = 0; rel < RelationshipType::COUNT; rel++ )
             {
                 ret |= EXTRA_RELATIONAL_ALLOWED( rel );
@@ -1149,14 +1148,12 @@ namespace Kernel
         //LOG_DEBUG_F( "%s: returning %f from Sigmoid::vWAHS( %f, %f, %f, %f, %f )\n", __FUNCTION__, (float) prob, year, probs.midyear, probs.rate, probs.early, probs.late );
         return prob;
     }
-
-
 }
 
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include "InfectionSTI.h"
-#include "SusceptibilitySTI.h"
+// clorton #include "InfectionSTI.h"
+// clorton #include "SusceptibilitySTI.h"
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanSTI)
 namespace Kernel
 {

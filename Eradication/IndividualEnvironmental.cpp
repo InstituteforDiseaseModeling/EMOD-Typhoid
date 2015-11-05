@@ -15,7 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEnvironmental.h"
 #include "InfectionEnvironmental.h"
 #include "SusceptibilityEnvironmental.h"
-#include "IndividualEventContext.h"
 
 #pragma warning(disable: 4244)
 
@@ -126,9 +125,6 @@ namespace Kernel
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include "InfectionEnvironmental.h"
-#include "IndividualEnvironmental.h"
-#include "SusceptibilityEnvironmental.h"
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanEnvironmental)
 namespace Kernel
 {

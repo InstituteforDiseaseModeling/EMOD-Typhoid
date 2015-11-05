@@ -15,8 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorSpeciesReport.h"
 #include "NodeVector.h"
 #include "IndividualVector.h"
-// clorton #include "InfectionVector.h"
-// clorton #include "SusceptibilityVector.h"
 #include "Sugar.h"
 #include "Vector.h"
 #include "SimulationConfig.h"

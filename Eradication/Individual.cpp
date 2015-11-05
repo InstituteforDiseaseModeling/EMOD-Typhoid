@@ -812,7 +812,7 @@ namespace Kernel
     {
         tProperties* properties = GetProperties();
         RouteList_t& routes = parent->GetTransmissionRoutes();
-        //LOG_DEBUG_F("Updating transmission group membership for individual %d for %d routes (first route is %s).\n", this->GetSuid().data, routes.size(), routes[0].c_str());
+        LOG_DEBUG_F("Updating transmission group membership for individual %d for %d routes (first route is %s).\n", this->GetSuid().data, routes.size(), routes[0].c_str());
 
         for (auto& route : routes)
         {

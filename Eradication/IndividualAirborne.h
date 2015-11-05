@@ -23,13 +23,13 @@ namespace Kernel
         static   IndividualHumanAirborne *CreateHuman(INodeContext *context, suids::suid _suid, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
 
         // Infections and Susceptibility
-        virtual void  CreateSusceptibility(float=1.0, float=1.0);
+        virtual void CreateSusceptibility(float=1.0, float=1.0) override;
 
     protected:
         IndividualHumanAirborne(suids::suid id = suids::nil_suid(), float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
 
-        virtual Infection* createInfection(suids::suid _suid);
-        virtual void ReportInfectionState();
+        virtual Infection* createInfection(suids::suid _suid) override;
+        virtual void ReportInfectionState() override;
 
         DECLARE_SERIALIZABLE(IndividualHumanAirborne, IIndividualHuman);
 

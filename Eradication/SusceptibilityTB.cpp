@@ -23,7 +23,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SusceptibilityTB.h"
 #include "Common.h"
 #include "RANDOM.h"
-#include "MathFunctions.h" //for Sigmoid in modmortality
 #ifdef ENABLE_TBHIV
 #include "IndividualCoinfection.h"
 #endif
@@ -119,7 +118,7 @@ namespace Kernel
 
     float SusceptibilityTB::GetFastProgressorFraction() 
     {
-        float fast_fraction = 0;
+        float fast_fraction;
 
         if(age < CHILD_AGE_YEARS * DAYSPERYEAR)
             fast_fraction = TB_fast_progressor_fraction_child;
@@ -131,7 +130,7 @@ namespace Kernel
 
     float SusceptibilityTB::GetSmearPositiveFraction() 
     {
-        float smear_positive_fraction = 0;
+        float smear_positive_fraction;
 
         if(age < CHILD_AGE_YEARS * DAYSPERYEAR)
             smear_positive_fraction = TB_smear_positive_fraction_child;
@@ -143,7 +142,7 @@ namespace Kernel
 
     float SusceptibilityTB::GetExtraPulmonaryFraction() 
     {
-        float extrapulmonary_fraction = 0;
+        float extrapulmonary_fraction;
 
         if(age < CHILD_AGE_YEARS* DAYSPERYEAR)
             extrapulmonary_fraction = TB_extrapulmonary_fraction_child;

@@ -11,9 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "SimulationFactory.h"
 #include "Simulation.h"
-// clorton #include "NodeEnvironmental.h"
-// clorton #include "IndividualEnvironmental.h"
-// clorton #include "Sugar.h" // for DECLARE_VIRTUAL_BASE_OF
 
 namespace Kernel
 {

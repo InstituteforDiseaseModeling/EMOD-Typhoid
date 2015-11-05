@@ -10,7 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <stdafx.h>
 #include "Interventions.h"
 #include "InterventionFactory.h"
-// clorton #include "IndividualEventContext.h"
 #include "NodeEventContext.h"
 #include "Contexts.h"
 #include "Exceptions.h"

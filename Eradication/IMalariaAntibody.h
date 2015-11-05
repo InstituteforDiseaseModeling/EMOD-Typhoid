@@ -18,7 +18,7 @@ namespace Kernel
 {
     class SusceptibilityMalariaConfig;
 
-    struct IMalariaAntibody : ISerializable // clorton ISupports
+    struct IMalariaAntibody : ISerializable
     {
         // EAW: inv_uL_blood arguments can be removed when we switch to m_antigen_concentration from m_antigen_count
         virtual void  Decay( float dt, SusceptibilityMalariaConfig* params ) = 0;

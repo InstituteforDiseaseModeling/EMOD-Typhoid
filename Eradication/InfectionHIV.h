@@ -10,7 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 #include "InfectionSTI.h"
 #include "IInfectionHIV.h"
-// clorton #include "InterventionEnums.h"
 #include "SusceptibilityHIV.h"
 #include "FerrandAgeDependentDistribution.h"
 #include "HIVEnums.h"
@@ -79,7 +78,7 @@ namespace Kernel
         InfectionHIV();
         InfectionHIV(IIndividualHumanContext *context);
 
-        virtual void Initialize(suids::suid _suid);
+        /* clorton */ virtual void Initialize(suids::suid _suid);
 
         void SetupNonSuppressedDiseaseTimers();
         /* clorton virtual */ bool  ApplyDrugEffects(float dt, ISusceptibilityContext* immunity = nullptr);

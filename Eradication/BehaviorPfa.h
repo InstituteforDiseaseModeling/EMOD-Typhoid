@@ -10,7 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "IPairFormationAgent.h"
-// clorton #include <queue>
 #include <list>
 #include <vector>
 #include <map>

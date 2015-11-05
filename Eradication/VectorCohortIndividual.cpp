@@ -238,7 +238,6 @@ namespace Kernel
     }
 
     REGISTER_SERIALIZABLE(VectorCohortIndividual, IVectorCohort);
-// clorton     IMPLEMENT_POOL(VectorCohortIndividual);
 
     void VectorCohortIndividual::serialize(IArchive& ar, IVectorCohort* obj)
     {

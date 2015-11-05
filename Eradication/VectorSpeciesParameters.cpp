@@ -11,11 +11,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorSpeciesParameters.h"
 
 #include "NodeVector.h"  // just for the NodeFlags :(
-// clorton #include "SimulationConfig.h"  // just for vspMap (to avoid static)
 #include "Vector.h"
 #include "Exceptions.h"
-// clorton #include <algorithm> // for transform
-// clorton #include <cctype> // for tolower
 
 static const char * _module = "VectorSpeciesParameters";
 

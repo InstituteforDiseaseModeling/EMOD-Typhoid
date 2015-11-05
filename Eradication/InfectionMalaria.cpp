@@ -169,11 +169,11 @@ namespace Kernel
 
         // Variables for strain generator
         // In the future replace this with the specific strain ID
-        unsigned int tempstrainID; // clorton = 0;
+        unsigned int tempstrainID;  // = 0;
         // 120 primes
         unsigned int stridelengths[] = {73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809};
-        unsigned int tempStridePosition; // clorton = 0;
-        unsigned int tempStrideLength; // clorton = 0;
+        unsigned int tempStridePosition;    // = 0;
+        unsigned int tempStrideLength;      // = 0;
 
         switch (malaria_strains)
         {
@@ -480,9 +480,9 @@ namespace Kernel
     // Calculates the IRBC killing from drugs and immune action
     void InfectionMalaria::malariaImmunityIRBCKill(float dt, IMalariaSusceptibility *immunity)
     {
-        double tempval1               ; // clorton = 0;
-        double pkill                  ; // clorton = 0;
-        double fever_cytokine_killrate; // clorton = 0;
+        double tempval1               ; // = 0;
+        double pkill                  ; // = 0;
+        double fever_cytokine_killrate; // = 0;
         double drug_killrate           = 0;
 
         // check for valid inputs

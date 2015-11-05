@@ -98,8 +98,6 @@ void Kernel::SimulationEnvironmental::InitializeFlags( const ::Configuration *co
 {
 }
 
-// clorton #include "IndividualEnvironmental.h"
-
 #if USE_BOOST_SERIALIZATION
 BOOST_CLASS_EXPORT(Kernel::SimulationEnvironmental)
 namespace Kernel {

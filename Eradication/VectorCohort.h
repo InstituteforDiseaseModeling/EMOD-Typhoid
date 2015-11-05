@@ -77,7 +77,6 @@ namespace Kernel
         double progress;
         int32_t population;
 
-// clorton         GETCLASSNAME_IMPL(VectorCohort);
         DECLARE_SERIALIZABLE(VectorCohort, IVectorCohort);
 
     private:

@@ -743,11 +743,7 @@ namespace Kernel
             {
                 measured_count = float(1.0 / params()->parasiteSmearSensitivity * randgen->Poisson(params()->parasiteSmearSensitivity * m_parasite_density));
             }
-/* clorton            else
-            {
-                measured_count = 0;
-            }
-*/
+
             return measured_count;
         }
 
@@ -1051,7 +1047,7 @@ namespace Kernel
         SusceptibilityVector::serialize(ar, obj);
         SusceptibilityMalaria& susceptibility = *dynamic_cast<SusceptibilityMalaria*>(obj);
         ar.startElement();
-            ar.labelElement("m_antigenic_flag") & susceptibility.m_antigenic_flag;
+//            ar.labelElement("m_antigenic_flag") & susceptibility.m_antigenic_flag;
             ar.labelElement("m_maternal_antibody_strength") & susceptibility.m_maternal_antibody_strength;
             ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, susceptibility.m_CSP_antibody);
             ar.labelElement("m_active_MSP_antibodies"); Kernel::serialize(ar, susceptibility.m_active_MSP_antibodies);

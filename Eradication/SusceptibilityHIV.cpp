@@ -20,7 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Common.h"
 #include "Debug.h"
 #include "RANDOM.h"
-#include "MathFunctions.h"
 #include "math.h"
 #include "NodeEventContext.h"
 #include "SimulationConfig.h"
@@ -327,23 +326,22 @@ namespace Kernel
         int jj = 0;
         for (auto& vit : v_CD4)
         {
-            vit = GetCD4count() - CD4_MINIMUM/DAYSPERYEAR * CD4_time_step * ( (float)jj++ );  // need to add more realistic CD4 dynamics later
+            vit = GetCD4count() - CD4_MINIMUM/DAYSPERYEAR * CD4_time_step * float(jj++);  // need to add more realistic CD4 dynamics later
         }
 
         pihc->Set_forward_CD4(v_CD4);
 #endif
     }
 
-    const ProbabilityNumber
+    ProbabilityNumber
     SusceptibilityHIV::GetPrognosisCompletedFraction()
     const
     {
         release_assert( sqrtCD4_PostInfection != sqrtCD4_AtDiseaseDeath );
 
-        ProbabilityNumber fraction_completed = 0.0f;
         float fraction = max(0.0f, (sqrtCD4_PostInfection - sqrtCD4_Current)) / (sqrtCD4_PostInfection - sqrtCD4_AtDiseaseDeath);
         NO_MORE_THAN( fraction, 1.0f )
-        fraction_completed = fraction;
+        ProbabilityNumber fraction_completed = fraction;
 
         LOG_DEBUG_F( "Individual %d in GetPrognosisCompletedFraction: sqrtCD4_PostInfection=%f, sqrtCD4_AtDiseaseDeath=%f, sqrtCD4_Current=%f --> fraction=%f\n", 
                      parent->GetSuid().data, sqrtCD4_PostInfection, sqrtCD4_AtDiseaseDeath, sqrtCD4_Current, float(fraction_completed) );
@@ -372,25 +370,25 @@ namespace Kernel
 
     SusceptibilityHIV::SusceptibilityHIV()
         : SusceptibilitySTI()
+        , hiv_parent( nullptr )
         , days_between_symptomatic_and_death(0)
         , sqrtCD4_Current( 0 )
         , sqrtCD4_Rate( UNINITIALIZED_RATE )
         , sqrtCD4_PostInfection( 0 )
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
-        , hiv_parent( nullptr )
     { 
     }
 
     SusceptibilityHIV::SusceptibilityHIV(IIndividualHumanContext *context)
         : SusceptibilitySTI(context)
+        , hiv_parent( nullptr )
         , days_between_symptomatic_and_death(0)
         , sqrtCD4_Current( 0 )
         , sqrtCD4_Rate( UNINITIALIZED_RATE )
         , sqrtCD4_PostInfection( 0 )
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
-        , hiv_parent( nullptr )
         { }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -37,7 +37,7 @@ namespace Kernel
 
         typedef int32_t suid_data_t; 
 
-        class IDMAPI suid : public ISupports // clorton ISerializable
+        class IDMAPI suid : public ISupports
         {
         public:
             DECLARE_QUERY_INTERFACE()

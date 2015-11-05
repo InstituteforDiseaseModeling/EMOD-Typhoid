@@ -25,7 +25,7 @@ namespace Kernel
 
     protected:
         InfectionEnvironmental(IIndividualHumanContext *context);
-        void Initialize(suids::suid _suid);
+        /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
         InfectionEnvironmental();
 
         DECLARE_SERIALIZABLE(InfectionEnvironmental, IInfection);

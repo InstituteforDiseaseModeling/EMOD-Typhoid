@@ -150,7 +150,6 @@ namespace Kernel
         float ADfeed_eggbatchmod;
 
         // List of habitats for this species
-        // clorton std::list<VectorHabitat*> m_larval_habitats;
         VectorHabitatList_t m_larval_habitats;
         std::map<VectorHabitatType::Enum, float> m_larval_capacities;
 
@@ -204,7 +203,6 @@ namespace Kernel
         VectorProbabilities           *m_probabilities;
         ITransmissionGroups           *m_transmissionGroups;
 
-// clorton         GETCLASSNAME_IMPL(VectorPopulation);
         DECLARE_SERIALIZABLE(VectorPopulation, IVectorPopulation);
 
     private:

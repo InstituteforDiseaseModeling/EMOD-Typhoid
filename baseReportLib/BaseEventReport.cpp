@@ -11,7 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISupports.h"
 #include "BaseEventReport.h"
 #include "NodeEventContext.h"
-// clorton #include "Types.h"
 
 static const char * _module = "BaseEventReport";
 

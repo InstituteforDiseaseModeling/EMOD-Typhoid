@@ -54,8 +54,6 @@ namespace Kernel
         // Allows correct type of Node to be added by classes derived from Simulation
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
 
-// clorton        virtual void resolveMigration();
-
         bool report_hiv_by_age_and_gender;
         bool report_hiv_ART;
         bool report_hiv_infection;
@@ -75,7 +73,6 @@ namespace Kernel
         template<class Archive>
         friend void serialize(Archive & ar, SimulationHIV &sim, const unsigned int  file_version );
 #endif
-// clorton        TypedPrivateMigrationQueueStorage<IndividualHumanHIV> typed_migration_queue_storage;
     };
 }
 

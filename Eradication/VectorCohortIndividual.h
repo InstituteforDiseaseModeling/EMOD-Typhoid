@@ -10,8 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "VectorCohortAging.h"
-// clorton #include "Common.h"
-// clorton #include "BoostLibWrapper.h"
 
 namespace Kernel
 {
@@ -94,7 +92,6 @@ namespace Kernel
 
         StrainIdentity* m_strain;
 
-// clorton         GETCLASSNAME_IMPL(VectorCohortIndividual);
         DECLARE_SERIALIZABLE(VectorCohortIndividual, IVectorCohort);
 
     private:

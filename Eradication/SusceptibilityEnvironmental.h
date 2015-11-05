@@ -23,7 +23,7 @@ namespace Kernel
 
         SusceptibilityEnvironmental();
         SusceptibilityEnvironmental(IIndividualHumanContext *context);
-        void Initialize(float age, float immmod, float riskmod);
+        /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
 
         DECLARE_SERIALIZABLE(SusceptibilityEnvironmental, ISusceptibilityContext);
 

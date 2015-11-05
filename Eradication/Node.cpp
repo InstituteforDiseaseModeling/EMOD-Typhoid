@@ -15,7 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <algorithm>
 #include <numeric>
 
-// clorton #include "CajunIncludes.h" // for IsInPolygon (2)
 #include "Debug.h" // for release_assert
 #include "MathFunctions.h" // for fromDistribution
 #include "Common.h"
@@ -1232,7 +1231,7 @@ namespace Kernel
             }
             else
             {
-                iHuman++;
+                ++iHuman;
             }
         }
 

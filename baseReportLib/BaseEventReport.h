@@ -11,7 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "IdmApi.h"
 #include "IReport.h"
-// clorton #include "suids.hpp"
 #include "NodeSet.h"
 #include "Interventions.h" //IIndividualEventObserver
 

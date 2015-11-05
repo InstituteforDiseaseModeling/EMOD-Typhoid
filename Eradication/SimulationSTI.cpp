@@ -149,11 +149,6 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-// clorton    void SimulationSTI::resolveMigration()
-// clorton    {
-// clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-// clorton    }
-
     suids::suid SimulationSTI::GetNextRelationshipSuid()
     {
         return relationshipSuidGenerator();

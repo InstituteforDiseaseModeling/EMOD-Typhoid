@@ -23,17 +23,17 @@ namespace Kernel
         static IndividualHumanEnvironmental *CreateHuman(INodeContext *context, suids::suid _suid, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
         virtual ~IndividualHumanEnvironmental(void);
 
-        virtual void CreateSusceptibility(float = 1.0, float = 1.0);
+        virtual void CreateSusceptibility(float = 1.0, float = 1.0) override;
 
-        virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = nullptr);
-        virtual void UpdateInfectiousness(float dt);
+        virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = nullptr) override;
+        virtual void UpdateInfectiousness(float dt) override;
 
     protected:
         IndividualHumanEnvironmental( suids::suid id = suids::nil_suid(), float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
 
         // Factory methods
-        virtual Infection* createInfection(suids::suid _suid);
-        virtual void ReportInfectionState();
+        virtual Infection* createInfection(suids::suid _suid) override;
+        virtual void ReportInfectionState() override;
 
         DECLARE_SERIALIZABLE(IndividualHumanEnvironmental, IIndividualHuman);
 

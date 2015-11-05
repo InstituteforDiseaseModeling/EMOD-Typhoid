@@ -12,11 +12,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 #include "Common.h"
 #include "IMalariaAntibody.h" // for MalariaAntibodyType enum, containers of IMalariaAntibody pointers
-// clorton #include "SimpleTypemapRegistration.h"
 #include "MalariaEnums.h"
 #include "MalariaContexts.h"
 #include "SusceptibilityVector.h"
-// clorton #include "InterventionEnums.h"
 
 namespace Kernel
 {

@@ -11,8 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <typeinfo>
 #include "IndividualHIV.h"
-#include "Debug.h"
-#include "MathFunctions.h"
 #include "InfectionHIV.h"
 #include "NodeEventContext.h"
 #include "SusceptibilityHIV.h"
@@ -224,17 +222,17 @@ namespace Kernel
     const
     {
         ProbabilityNumber retValue = IndividualHuman::getProbMaternalTransmission();
-        auto mod = (float) GetHIVInterventionsContainer()->GetProbMaternalTransmissionModifier();
+        auto mod = float(GetHIVInterventionsContainer()->GetProbMaternalTransmissionModifier());
         if( GetHIVInterventionsContainer()->OnArtQuery() && GetHIVInterventionsContainer()->GetArtStatus() != ARTStatus::ON_BUT_ADHERENCE_POOR )
         {
             retValue *= GET_CONFIGURABLE(SimulationConfig)->maternal_transmission_ART_multiplier;
-            LOG_DEBUG_F( "Mother giving birth on ART: prob tx = %f\n", (float) retValue );
+            LOG_DEBUG_F( "Mother giving birth on ART: prob tx = %f\n", float(retValue) );
         }
         else if( mod > 0 )
         {
             // 100% "modifier" = 0% prob of transmission.
             retValue *= (1.0f - mod );
-            LOG_DEBUG_F( "Mother giving birth on PMTCT: prob tx = %f\n", (float) retValue );
+            LOG_DEBUG_F( "Mother giving birth on PMTCT: prob tx = %f\n", float(retValue) );
         }
         return retValue;
     }

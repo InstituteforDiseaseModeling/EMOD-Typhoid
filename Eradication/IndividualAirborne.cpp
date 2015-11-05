@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "IndividualAirborne.h"
 
-#include "IndividualEventContext.h"
 #include "InfectionAirborne.h"
 #include "SusceptibilityAirborne.h"
 
@@ -65,8 +64,6 @@ namespace Kernel
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include "InfectionAirborne.h"
-#include "SusceptibilityAirborne.h"
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanAirborne)
 namespace Kernel
 {

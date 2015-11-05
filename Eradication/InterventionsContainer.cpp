@@ -74,7 +74,7 @@ namespace Kernel
     {
         for (auto intervention : interventions)
         {
-            delete intervention; // clorton intervention->Recycle();
+            delete intervention;
         }
     }
 

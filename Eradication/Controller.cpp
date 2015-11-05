@@ -9,7 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <iomanip> //setw(), setfill()
 
@@ -20,7 +19,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "suids.hpp"
 #include "SimulationConfig.h"
 #include "SimulationFactory.h"
-#include "SimulationEventContext.h" // compiler forcing me to do this...
 #include "Simulation.h"
 
 #ifndef _DLLS_
@@ -84,29 +82,26 @@ bool call_templated_functor_with_sim_type_hack(ControllerExecuteFunctorT &cef)
         throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, note.c_str() );
     }
 
-    Simulation * newsim = nullptr;
     switch (sim_type)
     {
-        case SimType::GENERIC_SIM:       return cef.template call<Simulation>(); break;
-        case SimType::VECTOR_SIM:        return cef.template call<SimulationVector>(); break;
-        case SimType::MALARIA_SIM:       return cef.template call<SimulationMalaria>(); break;
+        case SimType::GENERIC_SIM:       return cef.template call<Simulation>();
+        case SimType::VECTOR_SIM:        return cef.template call<SimulationVector>();
+        case SimType::MALARIA_SIM:       return cef.template call<SimulationMalaria>();
 #ifdef ENABLE_POLIO
-        case SimType::ENVIRONMENTAL_SIM: return cef.template call<SimulationEnvironmental>(); break;
-        case SimType::POLIO_SIM:         return cef.template call<SimulationPolio>(); break;
+        case SimType::ENVIRONMENTAL_SIM: return cef.template call<SimulationEnvironmental>();
+        case SimType::POLIO_SIM:         return cef.template call<SimulationPolio>();
 #endif
 #ifdef ENABLE_TB
-        case SimType::AIRBORNE_SIM:      return cef.template call<SimulationAirborne>(); break;
-        case SimType::TB_SIM:            return cef.template call<SimulationTB>(); break;
+        case SimType::AIRBORNE_SIM:      return cef.template call<SimulationAirborne>();
+        case SimType::TB_SIM:            return cef.template call<SimulationTB>();
 #ifdef ENABLE_TBHIV
-        case SimType::TBHIV_SIM:         return cef.template call<SimulationTBHIV>(); break;
+        case SimType::TBHIV_SIM:         return cef.template call<SimulationTBHIV>();
 #endif // TBHIV
 #endif // TB
     default: 
         // ERROR: ("call_templated_functor_with_sim_type_hack(): Error, Sim_Type %d is not implemented.\n", sim_type);
         throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "sim_type", sim_type, SimType::pairs::lookup_key( sim_type ) );
-        break;
     }
-    return false;
 #endif
 }
 
@@ -145,7 +140,7 @@ void RunSimulation(SimulationT &sim, std::function<bool(SimulationT &, float)> t
 
     float branch_begin = sim.GetSimulationTime();
     float branch_time  = 0;
-    float dt           = (float)(GET_CONFIGURABLE(SimulationConfig)->Sim_Tstep);
+    float dt           = float(GET_CONFIGURABLE(SimulationConfig)->Sim_Tstep);
 
     while(!termination_predicate(sim, branch_time))
     {
@@ -156,7 +151,7 @@ void RunSimulation(SimulationT &sim, std::function<bool(SimulationT &, float)> t
 
 void StepSimulation(ISimulation* sim, float dt)
 {
-    int currentTimestep = sim->GetSimulationTimestep();
+// clorton    int currentTimestep = sim->GetSimulationTimestep();
 
     sim->Update(dt);
 
@@ -180,21 +175,21 @@ class MassivelyHackedLeakyPointer
 public:
     MassivelyHackedLeakyPointer(T* _ptr) : px(_ptr) {}
 
-    void reset(T * p = 0) // never throws
+    void reset(T * p = nullptr) // never throws
     {
-        BOOST_ASSERT( p == 0 || p != px ); // catch self-reset errors
+        BOOST_ASSERT( p == nullptr || p != px ); // catch self-reset errors
         px = p;
     }
 
     T & operator*() const // never throws
     {
-        BOOST_ASSERT( px != 0 );
+        BOOST_ASSERT( px != nullptr );
         return *px;
     }
 
     T * operator->() const // never throws
     {
-        BOOST_ASSERT( px != 0 );
+        BOOST_ASSERT( px != nullptr );
         return px;
     }
 
@@ -239,7 +234,7 @@ bool DefaultController::execute_internal()
 #endif
 #endif
 
-    std::string state_filename = (boost::format("SimulationStateProc%04d.txt") % EnvPtr->MPI.Rank).str();
+// clorton    std::string state_filename = (boost::format("SimulationStateProc%04d.txt") % EnvPtr->MPI.Rank).str();
 
     if (EnvPtr->MPI.Rank==0) { ostringstream oss; oss << "Beginning Simulation...";  EnvPtr->getStatusReporter()->ReportStatus(oss.str()); }
 
@@ -261,7 +256,7 @@ bool DefaultController::execute_internal()
         // now try to run it
         // divide the simulation into stages according to requesting number of serialization test cycles
         float dt = GET_CONFIGURABLE(SimulationConfig)->Sim_Tstep;
-        int simulation_steps = (int)(GET_CONFIGURABLE(SimulationConfig)->Sim_Duration)/dt;
+        int simulation_steps = int(GET_CONFIGURABLE(SimulationConfig)->Sim_Duration)/dt;
 
 #ifndef _DLLS_
         int remaining_steps = simulation_steps;
@@ -276,7 +271,7 @@ bool DefaultController::execute_internal()
             {
                 LOG_INFO("Saving Simulation to disk...\n");
 
-                state_filename = (boost::format("SimulationStateProc%04dCycle%04d.txt") % EnvPtr->MPI.Rank % j).str();
+// clorton                state_filename = (boost::format("SimulationStateProc%04dCycle%04d.txt") % EnvPtr->MPI.Rank % j).str();
 
 #if USE_BOOST_SERIALIZATION
                 REPORT_TIME(false,(boost::format("SaveCycle%d") % k).str(),
@@ -348,7 +343,7 @@ bool DefaultController::execute_internal()
 
 #endif // End of _DLLS_
 
-    std::string state_filename = (boost::format("SimulationStateProc%04d.txt") % EnvPtr->MPI.Rank).str();
+// clorton    std::string state_filename = (boost::format("SimulationStateProc%04d.txt") % EnvPtr->MPI.Rank).str();
 
     if (EnvPtr->MPI.Rank==0) { ostringstream oss; oss << "Beginning Simulation...";  EnvPtr->getStatusReporter()->ReportStatus(oss.str()); }
 
@@ -375,7 +370,7 @@ bool DefaultController::execute_internal()
         // now try to run it
         // divide the simulation into stages according to requesting number of serialization test cycles
         float dt = GET_CONFIGURABLE(SimulationConfig)->Sim_Tstep;
-        int simulation_steps = (int)(GET_CONFIGURABLE(SimulationConfig)->Sim_Duration)/dt;
+        int simulation_steps = int(GET_CONFIGURABLE(SimulationConfig)->Sim_Duration)/dt;
 
 #ifndef _DLLS_
         int remaining_steps = simulation_steps;
@@ -390,7 +385,7 @@ bool DefaultController::execute_internal()
             {
                 LOG_INFO("Saving Simulation to disk...\n");
 
-                state_filename = (boost::format("SimulationStateProc%04dCycle%04d.txt") % EnvPtr->MPI.Rank % j).str();
+// clorton                state_filename = (boost::format("SimulationStateProc%04dCycle%04d.txt") % EnvPtr->MPI.Rank % j).str();
 
 #if USE_BOOST_SERIALIZATION
                 REPORT_TIME(false,(boost::format("SaveCycle%d") % k).str(),
@@ -691,7 +686,7 @@ bool SimpleBranchController::Execute()
 }
 
 template <class SimulationT>
-static std::function<bool(SimulationT&,float)>
+std::function<bool(SimulationT&,float)>
     SimpleTerminationPredicateFactory::CreatePredicate(SimulationT &sim_context,  const Configuration *config)
 {
     string TerminationPredicate;

@@ -199,11 +199,6 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-// clorton    void SimulationHIV::resolveMigration()
-// clorton    {
-// clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-// clorton    }
-
     void SimulationHIV::Validate( const std::string& rClassName,
                                   IDistributableIntervention* pInterventionToValidate )
     {

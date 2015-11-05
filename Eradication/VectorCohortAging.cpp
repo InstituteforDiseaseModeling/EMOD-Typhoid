@@ -63,7 +63,6 @@ namespace Kernel
     }
 
     REGISTER_SERIALIZABLE(VectorCohortAging, IVectorCohort);
-// clorton     IMPLEMENT_POOL(VectorCohortAging);
 
     void VectorCohortAging::serialize(IArchive& ar, IVectorCohort* obj)
     {

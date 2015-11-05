@@ -8,12 +8,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #pragma once
-// clorton #include <string>
-// clorton #include <list>
 #include <map>
-// clorton #include <functional>
 #include "BoostLibWrapper.h"
-// clorton #include "Environment.h"
 #include "suids.hpp"
 
 namespace Kernel
