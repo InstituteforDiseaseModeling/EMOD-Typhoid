@@ -15,6 +15,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #ifdef WIN32
+
+    // http://www.zachburlingame.com/2011/05/resolving-redefinition-errors-betwen-ws2def-h-and-winsock-h/
+    // WinSock/WinSock2 includes interact (and with Windows.h)
+// clorton    #undef UNICODE
+    #define WIN32_LEAN_AND_MEAN
+
     #include <Windows.h>
     #define USE_DEBUG_NEW
     #ifdef USE_DEBUG_NEW
