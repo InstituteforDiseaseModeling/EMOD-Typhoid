@@ -1038,7 +1038,7 @@ namespace Kernel
             ar.labelElement("vaccine_doses_received"); ar.serialize(susceptibility.vaccine_doses_received, N_POLIO_VACCINES);
             ar.labelElement("vaccine_doses_received_by_type"); ar.serialize(susceptibility.vaccine_doses_received_by_type, N_POLIO_VIRUS_TYPES);
             ar.labelElement("infectionStrains"); ar.serialize(susceptibility.infectionStrains, N_POLIO_VIRUS_TYPES);
-            ar.labelElement("newInfectionByStrain"); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
+// see below            ar.labelElement("newInfectionByStrain"); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
             ar.labelElement("individual_acquire_risk") & susceptibility.individual_acquire_risk;
         ar.endElement();
     }

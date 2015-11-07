@@ -38,6 +38,7 @@ struct IArchive
     virtual void serialize(int64_t array[], size_t count) = 0;
     virtual void serialize(float array[], size_t count) = 0;
 
+    virtual bool HasError() = 0;
     virtual bool IsWriter() = 0;
     virtual size_t GetBufferSize() = 0;
     virtual const char* GetBuffer() = 0;

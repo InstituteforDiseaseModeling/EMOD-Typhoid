@@ -73,6 +73,22 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(InfectionPolio)
 
     InfectionPolio::InfectionPolio()
+        : shed_genome_traceContactMode(-1)
+        , immunity_updated(0)
+        , paralysis_reported(0)
+        , paralysis_time(-1.0f)
+        , initial_infectiousness(0.0f)
+        , cached_mucosal_immunity(0.0f)
+        , cached_humoral_immunity(0.0f)
+        , host_mc_weight(0.0f)
+        , peakFecalLog10VirusTiter(0.0f)
+        , peakOralLog10VirusTiter(0.0f)
+        , durationFecalInfection(0.0f)
+        , durationOralInfection(0.0f)
+        , paralysis_probability(-1.0f)
+        , drug_titer_reduction(0.0f)
+        , drug_infection_duration_reduction(0.0f)
+        , drug_flag(false)
     {
     }
 
@@ -82,23 +98,25 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    InfectionPolio::InfectionPolio(IIndividualHumanContext *context) : InfectionEnvironmental(context)
+    InfectionPolio::InfectionPolio(IIndividualHumanContext *context)
+        : InfectionEnvironmental(context)
+        , shed_genome_traceContactMode(-1)
+        , immunity_updated(0)
+        , paralysis_reported(0)
+        , paralysis_time(-1.0f)
+        , initial_infectiousness(0.0f)
+        , cached_mucosal_immunity(0.0f)
+        , cached_humoral_immunity(0.0f)
+        , host_mc_weight(0.0f)
+        , peakFecalLog10VirusTiter(0.0f)
+        , peakOralLog10VirusTiter(0.0f)
+        , durationFecalInfection(0.0f)
+        , durationOralInfection(0.0f)
+        , paralysis_probability(-1.0f)
+        , drug_titer_reduction(0.0f)
+        , drug_infection_duration_reduction(0.0f)
+        , drug_flag(false)
     {
-        duration = 0.0; // time counter of infection
-        immunity_updated = 0;
-        paralysis_reported = 0;
-        paralysis_time = -1.0f;
-        host_mc_weight = 0.0f;
-        peakFecalLog10VirusTiter = 0.0f;
-        peakOralLog10VirusTiter = 0.0f;
-        durationFecalInfection = 0.0f;
-        durationOralInfection = 0.0f;
-        shed_genome_traceContactMode = -1; // invalid value (-1) indicates the shed genome has not been set
-        paralysis_probability = -1.0f;
-        drug_titer_reduction = 0.0f;
-        drug_infection_duration_reduction = 0.0f;
-
-        drug_flag = false;
     }
 
     void InfectionPolio::Initialize(suids::suid _suid)
@@ -132,17 +150,17 @@ namespace Kernel
             ar.labelElement("paralysis_reported") & infection.paralysis_reported;
             ar.labelElement("paralysis_time") & infection.paralysis_time;
             ar.labelElement("initial_infectiousness") & infection.initial_infectiousness;
-            ar.labelElement("cached_mucosal_immunity") & infection.cached_mucosal_immunity;
-            ar.labelElement("cached_humoral_immunity") & infection.cached_humoral_immunity;
+// see below            ar.labelElement("cached_mucosal_immunity") & infection.cached_mucosal_immunity;
+// see below            ar.labelElement("cached_humoral_immunity") & infection.cached_humoral_immunity;
             ar.labelElement("host_mc_weight") & infection.host_mc_weight;
             ar.labelElement("peakFecalLog10VirusTiter") & infection.peakFecalLog10VirusTiter;
             ar.labelElement("peakOralLog10VirusTiter") & infection.peakOralLog10VirusTiter;
             ar.labelElement("durationFecalInfection") & infection.durationFecalInfection;
             ar.labelElement("durationOralInfection") & infection.durationOralInfection;
             ar.labelElement("paralysis_probability") & infection.paralysis_probability;
-            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
-            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
-            ar.labelElement("drug_flag") & infection.drug_flag;
+// see below            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
+// see below            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
+// see below            ar.labelElement("drug_flag") & infection.drug_flag;
         ar.endElement();
     }
 }

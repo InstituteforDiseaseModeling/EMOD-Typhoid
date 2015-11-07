@@ -8,8 +8,8 @@
 namespace Kernel {
     struct IDMAPI ISerializable : ISupports
     {
-        virtual const char* GetClassName() { throw "GetClassName() not implemented on this class."; }
-        virtual void Recycle() { throw "Recycle() not implemented on this class."; }
+        virtual const char* GetClassName() { std::cout << "GetClassName() not implemented on this class." << std::endl; std::cout.flush(); throw; }
+        virtual void Recycle() { std::cout << "Recycle() not implemented on this class." << std::endl; std::cout.flush(); throw; }
         virtual ~ISerializable() {}
     };
 

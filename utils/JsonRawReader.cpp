@@ -97,6 +97,8 @@ IArchive& JsonRawReader::operator&(std::string& s)
     return *this;
 }
 
+bool JsonRawReader::HasError() { return m_document->HasParseError(); }
+
 bool JsonRawReader::IsWriter() { return false; }
 
 size_t JsonRawReader::GetBufferSize()

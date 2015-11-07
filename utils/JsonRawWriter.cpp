@@ -83,6 +83,8 @@ IArchive& JsonRawWriter::operator&(std::string& s)
     return *this;
 }
 
+bool JsonRawWriter::HasError() { return false; }
+
 bool JsonRawWriter::IsWriter() { return true; }
 
 size_t JsonRawWriter::GetBufferSize()

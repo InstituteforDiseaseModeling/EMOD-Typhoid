@@ -27,6 +27,7 @@ private:
     virtual void serialize(int64_t array[], size_t count);
     virtual void serialize(float array[], size_t count);
 
+    virtual bool HasError() override;
     virtual bool IsWriter() override;
     virtual size_t GetBufferSize() override;
     virtual const char* GetBuffer() override;
