@@ -34,7 +34,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             return
 
         self.running = True
-        self.request.sendall( "hello!\nType \"RUN\", \"STEP\", or \"KILL\"\n" )
+        self.request.sendall( "hello!\nType \"RUN\", \"STEP\", \"KILL\", \"NEW_EVENT\", or \"NEW_EVENT_COST\".\n" )
         self.ref_json = json.loads( open( "output/InsetChart.json" ).read() )["Channels"]
         #self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
@@ -55,9 +55,11 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                     msg = self.pass_through( self.data )
                 elif self.data.startswith( "NEW_EVENT:" ):
                     print( "Received NEW_EVENT. Everything after colon better be valid json." )
-                    #pdb.set_trace()
                     msg = self.insert_new_camp_event_and_step_reload( self.data.strip( "NEW_EVENT:" ) )
                     print( msg )
+                elif self.data.startswith( "NEW_EVENT_COST:" ):
+                    print( "Received NEW_EVENT_COST. Everything after colon better be valid json." )
+                    msg = self.cost_proposed_event( self.data.strip( "NEW_EVENT_COST:" ) ) + "\n"
                 else:
                     msg = self.data + " is not a recognized command.\n"
                     print( msg )
@@ -239,6 +241,33 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             print( "ERROR: Intervention type not supported: " + epj["Intervention"] )
 
         return camp_event
+
+    def cost_proposed_event( self, proposed_campaign ):
+        #pdb.set_trace()
+        try:
+            return_msg = json.loads( "{}" )
+            return_value = -1
+
+            event_params_json = None
+            try:
+                event_params_json = json.loads( proposed_campaign )
+            except Exception as ex:
+                return_msg["error"] = str(ex)
+
+            iq       = event_params_json["Intervention_Quality"]
+            iv       = event_params_json["Intervention"]
+            coverage = event_params_json["Percentage_Of_Target_Population_Reached"]
+            age_min  = event_params_json["Target_Population_Min_Age_In_Years"]
+            age_max  = event_params_json["Target_Population_Max_Age_In_Years"]
+            rollout  = event_params_json["Rollout_Distribution"]
+
+            print( "Calculated projected cost of campaign as: " + str(return_value) )
+            return_msg["Projected_Cost"] = return_value
+
+        except Exception as ex:
+            return_msg["error"] = "Missing Key: " + str(ex)
+
+        return json.dumps( return_msg )
 
 if __name__ == "__main__":
     HOST, PORT = "10.129.110.137", 7777
