@@ -860,8 +860,11 @@ namespace Kernel
         IMalariaAntibody* antibody = nullptr;
         for (auto tmp_antibody : *variant_vector)
         {
-            if(tmp_antibody->GetAntibodyVariant() == variant)
+            if ( tmp_antibody->GetAntibodyVariant() == variant )
+            {
                 antibody = tmp_antibody;
+                break;
+            }
         }
 
         if (antibody == nullptr) // make a new antibody if it hasn't been created yet

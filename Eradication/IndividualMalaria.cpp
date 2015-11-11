@@ -628,6 +628,18 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
+    void IndividualHumanMalaria::SetContextTo(INodeContext* context)
+    {
+        IndividualHumanVector::SetContextTo(context);
+
+        // We could be called from CreateHuman in which case we haven't yet initialized malaria_susceptibility.
+        if (malaria_susceptibility != nullptr)
+        {
+            m_CSP_antibody = malaria_susceptibility->RegisterAntibody(MalariaAntibodyType::CSP, 0);
+        }
+    }
+
+
     REGISTER_SERIALIZABLE(IndividualHumanMalaria, IIndividualHuman);
 
     void serialize(IArchive& ar, IndividualHumanMalaria::gametocytes_strain_map_t& mapping)
@@ -678,7 +690,7 @@ namespace Kernel
 ///        ar.labelElement("m_parasites_detected_by_new_diagnostic") & individual.m_parasites_detected_by_new_diagnostic;
 ///        ar.labelElement("m_gametocytes_detected") & individual.m_gametocytes_detected;
 ///        ar.labelElement("m_clinical_symptoms"); ::serialize(ar, individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
-        ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, individual.m_CSP_antibody);
+// shared pointer        ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, individual.m_CSP_antibody);
         ar.labelElement("m_initial_infected_hepatocytes") & individual.m_initial_infected_hepatocytes;
         ar.endElement();
     }

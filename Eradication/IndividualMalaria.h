@@ -57,6 +57,8 @@ namespace Kernel
         virtual void ExposeToInfectivity(float = 1.0f, const TransmissionGroupMembership_t* transmissionGroupMembership = nullptr) override;
         virtual void UpdateInfectiousness(float dt) override;
 
+        virtual void SetContextTo(INodeContext* context);
+
         // infectivity debugging
         virtual void Drug_Report();
         // void malaria_infectivity_report();
