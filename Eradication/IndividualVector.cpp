@@ -39,6 +39,8 @@ namespace Kernel
 
     IndividualHumanVector::IndividualHumanVector(suids::suid _suid, double monte_carlo_weight, double initial_age, int gender, double initial_poverty)
     : Kernel::IndividualHuman(_suid, float(monte_carlo_weight), float(initial_age), gender, float(initial_poverty))
+    , m_strain_exposure()
+    , m_total_exposure(0.0f)
     , vector_susceptibility(nullptr)
     , vector_interventions(nullptr)
     {
@@ -46,6 +48,8 @@ namespace Kernel
 
     IndividualHumanVector::IndividualHumanVector(INodeContext *context)
     : Kernel::IndividualHuman(context)
+    , m_strain_exposure()
+    , m_total_exposure(0.0f)
     , vector_susceptibility(nullptr)
     , vector_interventions(nullptr)
     {

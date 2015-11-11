@@ -334,6 +334,31 @@ namespace Kernel
         }
         ar.endElement();
     }
+
+    REGISTER_SERIALIZABLE(MalariaAntibodyCSP, IMalariaAntibody);
+    REGISTER_SERIALIZABLE(MalariaAntibodyMSP, IMalariaAntibody);
+    REGISTER_SERIALIZABLE(MalariaAntibodyPfEMP1Minor, IMalariaAntibody);
+    REGISTER_SERIALIZABLE(MalariaAntibodyPfEMP1Major, IMalariaAntibody);
+
+    void MalariaAntibodyCSP::serialize(IArchive& ar, IMalariaAntibody* obj)
+    {
+        MalariaAntibody::serialize(ar, obj);
+    }
+
+    void MalariaAntibodyMSP::serialize(IArchive& ar, IMalariaAntibody* obj)
+    {
+        MalariaAntibody::serialize(ar, obj);
+    }
+
+    void MalariaAntibodyPfEMP1Minor::serialize(IArchive& ar, IMalariaAntibody* obj)
+    {
+        MalariaAntibody::serialize(ar, obj);
+    }
+
+    void MalariaAntibodyPfEMP1Major::serialize(IArchive& ar, IMalariaAntibody* obj)
+    {
+        MalariaAntibody::serialize(ar, obj);
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

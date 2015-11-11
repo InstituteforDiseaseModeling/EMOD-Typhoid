@@ -20,6 +20,7 @@ IArchive& IArchive::operator & (std::vector<int32_t>& vec)
             }
             else
             {
+                vec.clear();
                 for (size_t i = 0; i < count; ++i)
                 {
                     int32_t value;
@@ -53,6 +54,7 @@ IArchive& IArchive::operator&(std::vector<uint32_t>& vec)
             }
             else
             {
+                vec.clear();
                 for (size_t i = 0; i < count; ++i)
                 {
                     uint32_t value;
@@ -86,6 +88,7 @@ IArchive& IArchive::operator&(std::vector<int64_t>& vec)
             }
             else
             {
+                vec.clear();
                 for (size_t i = 0; i < count; ++i)
                 {
                     int64_t value;
@@ -119,6 +122,7 @@ IArchive& IArchive::operator & (std::vector<float>& vec)
             }
             else
             {
+                vec.clear();
                 for (size_t i = 0; i < count; ++i)
                 {
                     float value;
@@ -191,6 +195,7 @@ IArchive& IArchive::operator & (std::vector<Kernel::suids::suid>& vec)
             }
             else
             {
+                vec.clear();
                 for (size_t i = 0; i < count; ++i)
                 {
                     Kernel::suids::suid value;

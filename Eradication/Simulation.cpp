@@ -891,9 +891,10 @@ namespace Kernel
     #ifdef WIN32
         sprintf_s(filename, 256, "%s\\%03d-%02d-%02d-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, suffix);
         FILE* f = nullptr;
-        if ( fopen_s( &f, filename, "w" ) == 0)
+        errno = 0;
+        if ( fopen_s( &f, filename, "w" ) != 0)
         {
-            LOG_ERR_F( "Couldn't open '%s' for writing.\n", filename );
+            LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
             return;
         }
     #else
@@ -932,52 +933,69 @@ namespace Kernel
                     emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
                 }
 #else
-                auto writer = make_shared<JsonRawWriter>();
-                Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
-
-                for (auto& individual : migratingIndividualQueues[destination_rank])
-                    delete individual; // individual->Recycle();
-
-                migratingIndividualQueues[destination_rank].clear();
-
-                auto reader = make_shared<JsonRawReader>(static_cast<IArchive*>(writer.get())->GetBuffer());
-                Kernel::serialize(*reader, migratingIndividualQueues[destination_rank]);
-                for (auto individual : migratingIndividualQueues[destination_rank])
+                if ( migratingIndividualQueues[destination_rank].size() > 0 )
                 {
-                    auto* immigrant = dynamic_cast<IMigrate*>(individual);
-                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+                    auto writer = make_shared<JsonRawWriter>();
+                    Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
+
+                    for (auto& individual : migratingIndividualQueues[destination_rank])
+                        delete individual; // individual->Recycle();
+
+                    migratingIndividualQueues[destination_rank].clear();
+
+                    if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+                        _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "self", static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize() );
+                    }
+
+                    auto reader = make_shared<JsonRawReader>(static_cast<IArchive*>(writer.get())->GetBuffer());
+                    Kernel::serialize(*reader, migratingIndividualQueues[destination_rank]);
+                    for (auto individual : migratingIndividualQueues[destination_rank])
+                    {
+                        auto* immigrant = dynamic_cast<IMigrate*>(individual);
+                        immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+                    }
                 }
-#endif                
+#endif
             }
             else
             {
-                auto writer = new JsonRawWriter();
-                // section = "resolveMigration() - remote migration, serialize::write";
-                Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
-                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "send", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
-                }
-                LOG_VALID_F( "Rank %d sending %d individuals to rank %d ( %d bytes ).\n", EnvPtr->MPI.Rank, migratingIndividualQueues[destination_rank].size(), destination_rank, static_cast<IArchive*>(writer)->GetBufferSize() );
-
-                // section = "resolveMigration() - remote migration, recycle";
-                for (auto& individual : migratingIndividualQueues[destination_rank])
-                    individual->Recycle();  // delete individual
-
-                migratingIndividualQueues[destination_rank].clear();
-
-                // section = "resolveMigration() - remote migration, send buffer size";
-                uint32_t buffer_size = message_size_by_rank[destination_rank] = static_cast<IArchive*>(writer)->GetBufferSize();
-                MPI_Request size_request;
-                MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, SIZE_TAG, MPI_COMM_WORLD, &size_request);
-
-                if (buffer_size > 0)
+                if ( migratingIndividualQueues[destination_rank].size() > 0 )
                 {
-                    const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
-                    MPI_Request buffer_request;
-                    // section = "resolveMigration() - remote migration, send buffer";
-                    MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, CONTENT_TAG, MPI_COMM_WORLD, &buffer_request);
-                    outbound_requests.push_back(buffer_request);
-                    outbound_messages.push_back(writer);
+                    auto writer = new JsonRawWriter();
+                    // section = "resolveMigration() - remote migration, serialize::write";
+                    Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
+                    if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+                        _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "send", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
+                    }
+                    LOG_VALID_F( "Rank %d sending %d individuals to rank %d ( %d bytes ).\n", EnvPtr->MPI.Rank, migratingIndividualQueues[destination_rank].size(), destination_rank, static_cast<IArchive*>(writer)->GetBufferSize() );
+
+                    // section = "resolveMigration() - remote migration, recycle";
+                    for (auto& individual : migratingIndividualQueues[destination_rank])
+                        individual->Recycle();  // delete individual
+
+                    migratingIndividualQueues[destination_rank].clear();
+
+                    // section = "resolveMigration() - remote migration, send buffer size";
+                    uint32_t buffer_size = message_size_by_rank[destination_rank] = static_cast<IArchive*>(writer)->GetBufferSize();
+                    MPI_Request size_request;
+                    MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, SIZE_TAG, MPI_COMM_WORLD, &size_request);
+
+                    if (buffer_size > 0)
+                    {
+                        const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
+                        MPI_Request buffer_request;
+                        // section = "resolveMigration() - remote migration, send buffer";
+                        MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, CONTENT_TAG, MPI_COMM_WORLD, &buffer_request);
+                        outbound_requests.push_back(buffer_request);
+                        outbound_messages.push_back(writer);
+                    }
+                }
+                else
+                {
+                    // section = "resolveMigration() - remote migration, send buffer size";
+                    uint32_t buffer_size = 0;
+                    MPI_Request size_request;
+                    MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, SIZE_TAG, MPI_COMM_WORLD, &size_request);
                 }
             }
 
@@ -1013,7 +1031,7 @@ namespace Kernel
 
                 // section = "resolveMigration() - remote migration, serialize::read";
                 Kernel::serialize(*reader, migratingIndividualQueues[source_rank]);
-                LOG_VALID_F( " Rank %d receiving %d individuals from rank %d ( %d bytes ).\n", EnvPtr->MPI.Rank, migratingIndividualQueues[source_rank].size(), source_rank, size );
+                LOG_VALID_F( "Rank %d receiving %d individuals from rank %d ( %d bytes ).\n", EnvPtr->MPI.Rank, migratingIndividualQueues[source_rank].size(), source_rank, size );
                 // section = "resolveMigration() - remote migration, immigrate";
                 for (auto individual : migratingIndividualQueues[source_rank])
                 {
