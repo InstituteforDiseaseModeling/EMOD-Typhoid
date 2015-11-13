@@ -110,7 +110,7 @@ namespace Kernel
         /* clorton virtual */ const SimulationConfig *params() /*clorton override */;
         void processEndOfAsexualCycle( IMalariaSusceptibility* immunity );
 
-        DECLARE_SERIALIZABLE(InfectionMalaria, IInfection);
+        DECLARE_SERIALIZABLE(InfectionMalaria);
 
     private:
         // duration, incubation period, and infectious period are reused with different meanings from Infection, and Infection_Vector

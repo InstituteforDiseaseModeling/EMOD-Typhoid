@@ -40,9 +40,9 @@ namespace Kernel
     {
     }
 
-    REGISTER_SERIALIZABLE(InfectionVector, IInfection);
+    REGISTER_SERIALIZABLE(InfectionVector);
 
-    void InfectionVector::serialize(IArchive& ar, IInfection *obj)
+    void InfectionVector::serialize(IArchive& ar, ISerializable* obj)
     {
         Infection::serialize(ar, obj);
     }

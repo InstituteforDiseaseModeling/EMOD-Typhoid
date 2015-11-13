@@ -149,9 +149,9 @@ namespace Kernel
         return 1.0f;
     }
 
-    REGISTER_SERIALIZABLE(SusceptibilityVector, ISusceptibilityContext);
+    REGISTER_SERIALIZABLE(SusceptibilityVector);
 
-    void SusceptibilityVector::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    void SusceptibilityVector::serialize(IArchive& ar, ISerializable* obj)
     {
         SusceptibilityVector& susceptibility = *static_cast<SusceptibilityVector*>(obj);
         Susceptibility::serialize(ar, obj);

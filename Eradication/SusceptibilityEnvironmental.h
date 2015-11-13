@@ -25,7 +25,7 @@ namespace Kernel
         SusceptibilityEnvironmental(IIndividualHumanContext *context);
         /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
 
-        DECLARE_SERIALIZABLE(SusceptibilityEnvironmental, ISusceptibilityContext);
+        DECLARE_SERIALIZABLE(SusceptibilityEnvironmental);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

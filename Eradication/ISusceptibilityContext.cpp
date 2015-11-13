@@ -3,5 +3,4 @@
 
 namespace Kernel
 {
-    IMPLEMENT_SERIALIZATION_REGISTRAR(ISusceptibilityContext);
 }

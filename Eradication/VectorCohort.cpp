@@ -129,10 +129,9 @@ namespace Kernel
         //throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "VectorCohort::GetMortality" );
     }
 
-    IMPLEMENT_SERIALIZATION_REGISTRAR(IVectorCohort);
-    REGISTER_SERIALIZABLE(VectorCohort, IVectorCohort);
+    REGISTER_SERIALIZABLE(VectorCohort);
 
-    void VectorCohort::serialize(IArchive& ar, IVectorCohort* obj)
+    void VectorCohort::serialize(IArchive& ar, ISerializable* obj)
     {
         VectorCohort& cohort = *dynamic_cast<VectorCohort*>(obj);
         ar.startElement();
@@ -140,66 +139,6 @@ namespace Kernel
         VectorMatingStructure::serialize(ar, cohort.vector_genetics);
         ar.labelElement("progress") & cohort.progress;
         ar.labelElement("population") & cohort.population;
-        ar.endElement();
-    }
-
-    void IVectorCohort::serialize(IArchive& ar, std::vector<IVectorCohort*>& cohorts)
-    {
-        size_t count = ar.IsWriter() ? cohorts.size() : -1;
-
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            if (count > 0)
-            {
-                ar.labelElement("__vector__");
-
-                if (ar.IsWriter())
-                {
-                    for (auto cohort : cohorts)
-                    {
-                        Kernel::serialize<IVectorCohort>(ar, cohort);
-                    }
-                }
-                else
-                {
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        IVectorCohort* cohort;
-                        Kernel::serialize<IVectorCohort>(ar, cohort);
-                        cohorts.push_back(cohort);
-                    }
-                }
-            }
-        ar.endElement();
-    }
-
-    void VectorCohort::serialize(IArchive& ar, VectorCohortList_t& list)
-    {
-        size_t count = ar.IsWriter() ? list.size() : -1;
-
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            if (count > 0)
-            {
-                ar.labelElement("__vector__");
-
-                if (ar.IsWriter())
-                {
-                    for (auto cohort : list)
-                    {
-                        serialize(ar, cohort);
-                    }
-                }
-                else
-                {
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        VectorCohort* cohort = new VectorCohort();
-                        serialize(ar, cohort);
-                        list.push_back(cohort);
-                    }
-                }
-            }
         ar.endElement();
     }
 

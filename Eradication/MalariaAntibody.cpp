@@ -281,10 +281,9 @@ namespace Kernel
         return antibody;
     }
 
-    IMPLEMENT_SERIALIZATION_REGISTRAR(IMalariaAntibody);
-    REGISTER_SERIALIZABLE(MalariaAntibody, IMalariaAntibody);
+    REGISTER_SERIALIZABLE(MalariaAntibody);
 
-    void MalariaAntibody::serialize(IArchive& ar, IMalariaAntibody* obj)
+    void MalariaAntibody::serialize(IArchive& ar, ISerializable* obj)
     {
         MalariaAntibody& antibody = *dynamic_cast<MalariaAntibody*>(obj);
         ar.startElement();
@@ -300,62 +299,32 @@ namespace Kernel
     void serialize(IArchive& ar, pfemp1_antibody_t& antibodies)
     {
         ar.startElement();
-        ar.labelElement("minor"); Kernel::serialize<IMalariaAntibody>(ar, antibodies.minor);
-        ar.labelElement("major"); Kernel::serialize<IMalariaAntibody>(ar, antibodies.major);
+            ar.labelElement("minor") & antibodies.minor;
+            ar.labelElement("major") & antibodies.major;
         ar.endElement();
     }
 
-    void serialize(IArchive& ar, std::vector<IMalariaAntibody*>& vec)
-    {
-        size_t count = ar.IsWriter() ? vec.size() : -1;
-        ar.startElement();
-        ar.labelElement("__count__") & count;
-        if (count > 0)
-        {
-            ar.labelElement("__vec__");
-            ar.startElement();
-            if (ar.IsWriter())
-            {
-                for (auto antibody : vec)
-                {
-                    Kernel::serialize<IMalariaAntibody>(ar, antibody);
-                }
-            }
-            else
-            {
-                for (size_t i = 0; i < count; ++i)
-                {
-                    IMalariaAntibody* antibody;
-                    Kernel::serialize<IMalariaAntibody>(ar, antibody);
-                    vec.push_back(antibody);
-                }
-            }
-            ar.endElement();
-        }
-        ar.endElement();
-    }
+    REGISTER_SERIALIZABLE(MalariaAntibodyCSP);
+    REGISTER_SERIALIZABLE(MalariaAntibodyMSP);
+    REGISTER_SERIALIZABLE(MalariaAntibodyPfEMP1Minor);
+    REGISTER_SERIALIZABLE(MalariaAntibodyPfEMP1Major);
 
-    REGISTER_SERIALIZABLE(MalariaAntibodyCSP, IMalariaAntibody);
-    REGISTER_SERIALIZABLE(MalariaAntibodyMSP, IMalariaAntibody);
-    REGISTER_SERIALIZABLE(MalariaAntibodyPfEMP1Minor, IMalariaAntibody);
-    REGISTER_SERIALIZABLE(MalariaAntibodyPfEMP1Major, IMalariaAntibody);
-
-    void MalariaAntibodyCSP::serialize(IArchive& ar, IMalariaAntibody* obj)
+    void MalariaAntibodyCSP::serialize(IArchive& ar, ISerializable* obj)
     {
         MalariaAntibody::serialize(ar, obj);
     }
 
-    void MalariaAntibodyMSP::serialize(IArchive& ar, IMalariaAntibody* obj)
+    void MalariaAntibodyMSP::serialize(IArchive& ar, ISerializable* obj)
     {
         MalariaAntibody::serialize(ar, obj);
     }
 
-    void MalariaAntibodyPfEMP1Minor::serialize(IArchive& ar, IMalariaAntibody* obj)
+    void MalariaAntibodyPfEMP1Minor::serialize(IArchive& ar, ISerializable* obj)
     {
         MalariaAntibody::serialize(ar, obj);
     }
 
-    void MalariaAntibodyPfEMP1Major::serialize(IArchive& ar, IMalariaAntibody* obj)
+    void MalariaAntibodyPfEMP1Major::serialize(IArchive& ar, ISerializable* obj)
     {
         MalariaAntibody::serialize(ar, obj);
     }

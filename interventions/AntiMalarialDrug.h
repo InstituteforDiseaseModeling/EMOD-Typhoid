@@ -62,7 +62,7 @@ namespace Kernel
         static bodyweight_map_t create_bodyweight_map();
         static const bodyweight_map_t bodyweight_map_;
 
-        DECLARE_SERIALIZABLE(AntimalarialDrug, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(AntimalarialDrug);
 
     private:
 

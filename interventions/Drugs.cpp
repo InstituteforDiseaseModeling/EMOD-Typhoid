@@ -338,9 +338,9 @@ namespace Kernel
         expired = true;
     }
 
-    REGISTER_SERIALIZABLE(GenericDrug, IDistributableIntervention);
+    REGISTER_SERIALIZABLE(GenericDrug);
 
-    void GenericDrug::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void GenericDrug::serialize(IArchive& ar, ISerializable* obj)
     {
         GenericDrug& drug = *dynamic_cast<GenericDrug*>(obj);
         ar.startElement();

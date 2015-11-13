@@ -28,7 +28,7 @@ namespace Kernel
         /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
         InfectionEnvironmental();
 
-        DECLARE_SERIALIZABLE(InfectionEnvironmental, IInfection);
+        DECLARE_SERIALIZABLE(InfectionEnvironmental);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

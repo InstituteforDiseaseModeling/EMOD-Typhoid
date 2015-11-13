@@ -197,9 +197,9 @@ namespace Kernel
         // no-op
     }
 
-    REGISTER_SERIALIZABLE(Susceptibility, ISusceptibilityContext);
+    REGISTER_SERIALIZABLE(Susceptibility);
 
-    void Susceptibility::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    void Susceptibility::serialize(IArchive& ar, ISerializable* obj)
     {
         Susceptibility& susceptibility = *static_cast<Susceptibility*>(obj);
         ar.startElement();

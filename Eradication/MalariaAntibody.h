@@ -60,7 +60,7 @@ namespace Kernel
         MalariaAntibody();
         void Initialize( MalariaAntibodyType::Enum type, int variant, float capacity = 0, float concentration = 0 );
 
-        DECLARE_SERIALIZABLE(MalariaAntibody, IMalariaAntibody);
+        DECLARE_SERIALIZABLE(MalariaAntibody);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:
@@ -80,7 +80,7 @@ namespace Kernel
         virtual void Decay( float dt, SusceptibilityMalariaConfig* params ) override;
 
     protected:
-        DECLARE_SERIALIZABLE(MalariaAntibodyCSP, IMalariaAntibody);
+        DECLARE_SERIALIZABLE(MalariaAntibodyCSP);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:
@@ -96,7 +96,7 @@ namespace Kernel
         static IMalariaAntibody* CreateAntibody( int variant, float capacity=0.0f );
 
     protected:
-        DECLARE_SERIALIZABLE(MalariaAntibodyMSP, IMalariaAntibody);
+        DECLARE_SERIALIZABLE(MalariaAntibodyMSP);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:
@@ -113,7 +113,7 @@ namespace Kernel
         virtual void UpdateAntibodyCapacity( float dt, SusceptibilityMalariaConfig* params, float inv_uL_blood ) override;
 
     protected:
-        DECLARE_SERIALIZABLE(MalariaAntibodyPfEMP1Minor, IMalariaAntibody);
+        DECLARE_SERIALIZABLE(MalariaAntibodyPfEMP1Minor);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:
@@ -130,7 +130,7 @@ namespace Kernel
         virtual void UpdateAntibodyCapacity( float dt, SusceptibilityMalariaConfig* params, float inv_uL_blood ) override;
 
     protected:
-        DECLARE_SERIALIZABLE(MalariaAntibodyPfEMP1Major, IMalariaAntibody);
+        DECLARE_SERIALIZABLE(MalariaAntibodyPfEMP1Major);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:

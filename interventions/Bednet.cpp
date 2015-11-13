@@ -154,9 +154,9 @@ namespace Kernel
 
     }*/
 
-    REGISTER_SERIALIZABLE(SimpleBednet, IDistributableIntervention);
+    REGISTER_SERIALIZABLE(SimpleBednet);
 
-    void SimpleBednet::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void SimpleBednet::serialize(IArchive& ar, ISerializable* obj)
     {
         SimpleBednet& bednet = *dynamic_cast<SimpleBednet*>(obj);
         ar.startElement();

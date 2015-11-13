@@ -61,7 +61,7 @@ namespace Kernel
 
         ICampaignCostObserver * m_pCCO;
 
-        DECLARE_SERIALIZABLE(AntiTBDrug, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(AntiTBDrug);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:

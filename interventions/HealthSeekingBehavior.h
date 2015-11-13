@@ -59,7 +59,7 @@ namespace Kernel
         std::string actual_intervention_event;
         bool single_use;
 
-        DECLARE_SERIALIZABLE(SimpleHealthSeekingBehavior, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(SimpleHealthSeekingBehavior);
 #pragma warning( pop )
 
     private:

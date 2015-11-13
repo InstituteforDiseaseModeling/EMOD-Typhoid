@@ -52,7 +52,7 @@ namespace Kernel
         float time_since_vaccination;
         IVaccineConsumer *ivc;
 
-        DECLARE_SERIALIZABLE(PolioVaccine, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(PolioVaccine);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

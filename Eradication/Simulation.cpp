@@ -908,12 +908,8 @@ namespace Kernel
 
     void Simulation::resolveMigration()
     {
-        static const char * _module = "Migration";
+        static const char * _module = "MpiMigration";
         LOG_DEBUG("resolveMigration\n");
-
-        // Entire implementation of "resolveMigrationInternal" moved to header file
-        // as a (necessary?) step towards disease-specific DLLs (because of the template)
-// clorton        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
 
         std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
         std::list< MPI_Request > outbound_requests( EnvPtr->MPI.NumTasks );     // requests for each outbound message
@@ -936,7 +932,7 @@ namespace Kernel
                 if ( migratingIndividualQueues[destination_rank].size() > 0 )
                 {
                     auto writer = make_shared<JsonRawWriter>();
-                    Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
+                    (*static_cast<IArchive*>(writer.get())) & migratingIndividualQueues[destination_rank];
 
                     for (auto& individual : migratingIndividualQueues[destination_rank])
                         delete individual; // individual->Recycle();
@@ -948,7 +944,7 @@ namespace Kernel
                     }
 
                     auto reader = make_shared<JsonRawReader>(static_cast<IArchive*>(writer.get())->GetBuffer());
-                    Kernel::serialize(*reader, migratingIndividualQueues[destination_rank]);
+                    (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[destination_rank];
                     for (auto individual : migratingIndividualQueues[destination_rank])
                     {
                         auto* immigrant = dynamic_cast<IMigrate*>(individual);
@@ -963,7 +959,7 @@ namespace Kernel
                 {
                     auto writer = new JsonRawWriter();
                     // section = "resolveMigration() - remote migration, serialize::write";
-                    Kernel::serialize(*writer, migratingIndividualQueues[destination_rank]);
+                    (*static_cast<IArchive*>(writer)) & migratingIndividualQueues[destination_rank];
                     if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
                         _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "send", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
                     }
@@ -993,7 +989,6 @@ namespace Kernel
                 else
                 {
                     // section = "resolveMigration() - remote migration, send buffer size";
-                    uint32_t buffer_size = 0;
                     MPI_Request size_request;
                     MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, SIZE_TAG, MPI_COMM_WORLD, &size_request);
                 }
@@ -1030,7 +1025,7 @@ namespace Kernel
                 }
 
                 // section = "resolveMigration() - remote migration, serialize::read";
-                Kernel::serialize(*reader, migratingIndividualQueues[source_rank]);
+                (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[source_rank];
                 LOG_VALID_F( "Rank %d receiving %d individuals from rank %d ( %d bytes ).\n", EnvPtr->MPI.Rank, migratingIndividualQueues[source_rank].size(), source_rank, size );
                 // section = "resolveMigration() - remote migration, immigrate";
                 for (auto individual : migratingIndividualQueues[source_rank])

@@ -101,9 +101,9 @@ namespace Kernel
         interventions = _new_ PolioInterventionsContainer();
     }
 
-    REGISTER_SERIALIZABLE(IndividualHumanPolio, IIndividualHuman);
+    REGISTER_SERIALIZABLE(IndividualHumanPolio);
 
-    void IndividualHumanPolio::serialize(IArchive& ar, IIndividualHuman* obj)
+    void IndividualHumanPolio::serialize(IArchive& ar, ISerializable* obj)
     {
         IndividualHumanEnvironmental::serialize(ar, obj);
         IndividualHumanPolio& individual = *dynamic_cast<IndividualHumanPolio*>(obj);

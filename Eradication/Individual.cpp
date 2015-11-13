@@ -1174,7 +1174,7 @@ namespace Kernel
         delete adapter;
     }
 
-    void IndividualHuman::serialize(IArchive& ar, IIndividualHuman* obj)
+    void IndividualHuman::serialize(IArchive& ar, ISerializable* obj)
     {
         IndividualHuman& individual = *static_cast<IndividualHuman*>(obj);
         ar.startElement();
@@ -1186,20 +1186,9 @@ namespace Kernel
             ar.labelElement("above_poverty") & individual.above_poverty;
             ar.labelElement("is_pregnant") & individual.is_pregnant;
             ar.labelElement("pregnancy_timer") & individual.pregnancy_timer;
-            ar.labelElement("susceptibility");
-            {
-                auto tmp = static_cast<ISusceptibilityContext*>(individual.susceptibility);
-                Kernel::serialize<ISusceptibilityContext>(ar, tmp);
-                individual.susceptibility = dynamic_cast<Susceptibility*>(tmp);
-            }
-            ar.labelElement("infections");
-                Kernel::serialize(ar, individual.infections);
-            ar.labelElement("interventions");
-            {
-                auto tmp = static_cast<IIndividualHumanInterventionsContext*>(individual.interventions);
-                Kernel::serialize<IIndividualHumanInterventionsContext>(ar, tmp);
-                individual.interventions = dynamic_cast<InterventionsContainer*>(tmp);
-            }
+            ar.labelElement("susceptibility") & individual.susceptibility;
+            ar.labelElement("infections") & individual.infections;
+            ar.labelElement("interventions") & individual.interventions;
             // don't serialize transmissionGroupMembership, it will be reconstituted on deserialization
             // don't serialize transmissionGroupMembershipByRoute, it will be reconstituted on deserialization
             ar.labelElement("m_is_infected") & individual.m_is_infected;
@@ -1221,7 +1210,7 @@ namespace Kernel
         ar.endElement();
     }
 
-    REGISTER_SERIALIZABLE(IndividualHuman, IIndividualHuman);
+    REGISTER_SERIALIZABLE(IndividualHuman);
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

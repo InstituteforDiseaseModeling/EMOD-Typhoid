@@ -181,7 +181,7 @@ namespace Kernel
         float  cumulative_days_of_severe_anemia_incident;
         float  days_between_incidents;
 
-        DECLARE_SERIALIZABLE(SusceptibilityMalaria, ISusceptibilityContext);
+        DECLARE_SERIALIZABLE(SusceptibilityMalaria);
 
     private:
 

@@ -1333,10 +1333,9 @@ namespace Kernel
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__ );
     }
 
-    IMPLEMENT_SERIALIZATION_REGISTRAR(IVectorPopulation);
-    REGISTER_SERIALIZABLE(VectorPopulation, IVectorPopulation);
+    REGISTER_SERIALIZABLE(VectorPopulation);
 
-    void VectorPopulation::serialize(IArchive& ar, IVectorPopulation* obj)
+    void VectorPopulation::serialize(IArchive& ar, ISerializable* obj)
     {
         VectorPopulation& population = *dynamic_cast<VectorPopulation*>(obj);
         ar.startElement();
@@ -1367,13 +1366,13 @@ namespace Kernel
             ar.labelElement("vector_genetics_infected"); Kernel::serialize(ar, population.vector_genetics_infected);
             ar.labelElement("vector_genetics_infectious"); Kernel::serialize(ar, population.vector_genetics_infectious);
             ar.labelElement("species_ID") & population.species_ID;
-            ar.labelElement("EggQueues"); VectorCohort::serialize(ar, population.EggQueues);
-            ar.labelElement("LarvaQueues"); VectorCohort::serialize(ar, population.LarvaQueues);
-            ar.labelElement("ImmatureQueues"); VectorCohort::serialize(ar, population.ImmatureQueues);
-            ar.labelElement("AdultQueues"); VectorCohort::serialize(ar, population.AdultQueues);
-            ar.labelElement("InfectedQueues"); VectorCohort::serialize(ar, population.InfectedQueues);
-            ar.labelElement("InfectiousQueues"); VectorCohort::serialize(ar, population.InfectiousQueues);
-            ar.labelElement("MaleQueues"); VectorCohort::serialize(ar, population.MaleQueues);
+            ar.labelElement("EggQueues") & population.EggQueues;
+            ar.labelElement("LarvaQueues") & population.LarvaQueues;
+            ar.labelElement("ImmatureQueues") & population.ImmatureQueues;
+            ar.labelElement("AdultQueues") & population.AdultQueues;
+            ar.labelElement("InfectedQueues") & population.InfectedQueues;
+            ar.labelElement("InfectiousQueues") & population.InfectiousQueues;
+            ar.labelElement("MaleQueues") & population.MaleQueues;
             ar.labelElement("m_species_params"); VectorSpeciesParameters::serialize(ar, const_cast<VectorSpeciesParameters*&>(population.m_species_params));
             ar.labelElement("m_probabilities"); VectorProbabilities::serialize(ar, population.m_probabilities);
         ar.endElement();

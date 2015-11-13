@@ -22,7 +22,6 @@ static const char * _module = "PolioVaccine";
 
 namespace Kernel
 {
-
     ///////////////////////////////////////////////////////////////////////////////////////
     IMPLEMENT_FACTORY_REGISTERED(PolioVaccine)
 
@@ -132,9 +131,9 @@ namespace Kernel
         return status;
     }
 
-    REGISTER_SERIALIZABLE(PolioVaccine, IDistributableIntervention);
+    REGISTER_SERIALIZABLE(PolioVaccine);
 
-    void PolioVaccine::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void PolioVaccine::serialize(IArchive& ar, ISerializable* obj)
     {
         PolioVaccine& vaccine = *dynamic_cast<PolioVaccine*>(obj);
         ar.startElement();

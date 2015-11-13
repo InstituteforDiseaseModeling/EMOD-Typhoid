@@ -210,9 +210,9 @@ namespace Kernel
          
     SusceptibilityTB::SusceptibilityTB(IIndividualHumanContext *context) : SusceptibilityAirborne(context) { }
 
-    REGISTER_SERIALIZABLE(SusceptibilityTB, ISusceptibilityContext);
+    REGISTER_SERIALIZABLE(SusceptibilityTB);
 
-    void SusceptibilityTB::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    void SusceptibilityTB::serialize(IArchive& ar, ISerializable* obj)
     {
         SusceptibilityAirborne::serialize(ar, obj);
         SusceptibilityTB& susceptibility = *dynamic_cast<SusceptibilityTB*>(obj);

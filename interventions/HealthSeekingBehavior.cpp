@@ -187,9 +187,9 @@ namespace Kernel
         }
     }
 
-    REGISTER_SERIALIZABLE(SimpleHealthSeekingBehavior, IDistributableIntervention);
+    REGISTER_SERIALIZABLE(SimpleHealthSeekingBehavior);
 
-    void SimpleHealthSeekingBehavior::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void SimpleHealthSeekingBehavior::serialize(IArchive& ar, ISerializable* obj)
     {
         SimpleHealthSeekingBehavior& intervention = *dynamic_cast<SimpleHealthSeekingBehavior*>(obj);
         ar.startElement();

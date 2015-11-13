@@ -18,7 +18,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Individual.h"                // for implementation of IIndividualHumanContext functions e.g. GetEventContext()
 #include <typeinfo>
 #include "NodeEventContext.h"
-#include "InterventionFactory.h"
 #include "INodeContext.h"
 
 // TBD: currently included for JDeserialize only. Once we figure out how to wrap the deserialize
@@ -277,19 +276,16 @@ namespace Kernel
     }
     float InterventionsContainer::GetInterventionReducedMortality() const { return drugVaccineReducedMortality; }
 
-    IMPLEMENT_SERIALIZATION_REGISTRAR(IIndividualHumanInterventionsContext);
+    REGISTER_SERIALIZABLE(InterventionsContainer);
 
-    REGISTER_SERIALIZABLE(InterventionsContainer, IIndividualHumanInterventionsContext);
-
-    void InterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    void InterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
     {
         InterventionsContainer& container = *static_cast<InterventionsContainer*>(obj);
         ar.startElement();
             ar.labelElement("drugVaccineReducedAcquire") & container.drugVaccineReducedAcquire;
             ar.labelElement("drugVaccineReducedTransmit") & container.drugVaccineReducedTransmit;
             ar.labelElement("drugVaccineReducedMortality") & container.drugVaccineReducedMortality;
-            ar.labelElement("interventions");
-                Kernel::serialize(ar, container.interventions);
+            ar.labelElement("interventions") & container.interventions;
         ar.endElement();
     }
 }

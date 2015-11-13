@@ -54,9 +54,9 @@ namespace Kernel
         return InfectionAirborne::CreateInfection(this, _suid);
     }
 
-    REGISTER_SERIALIZABLE(IndividualHumanAirborne, IIndividualHuman);
+    REGISTER_SERIALIZABLE(IndividualHumanAirborne);
 
-    void IndividualHumanAirborne::serialize(IArchive& ar, IIndividualHuman* obj)
+    void IndividualHumanAirborne::serialize(IArchive& ar, ISerializable* obj)
     {
         IndividualHuman::serialize(ar, obj);
         // IndividualHumanAirborne doesn't have any additional fields.

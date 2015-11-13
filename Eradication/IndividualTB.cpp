@@ -408,9 +408,9 @@ namespace Kernel
         interventions = _new_ TBInterventionsContainer();
     }
 
-    REGISTER_SERIALIZABLE(IndividualHumanTB, IIndividualHuman);
+    REGISTER_SERIALIZABLE(IndividualHumanTB);
 
-    void IndividualHumanTB::serialize(IArchive& ar, IIndividualHuman* obj)
+    void IndividualHumanTB::serialize(IArchive& ar, ISerializable* obj)
     {
         IndividualHumanAirborne::serialize(ar, obj);
         // IndividualHumanTB doesn't have any additional fields.

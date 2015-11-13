@@ -57,7 +57,7 @@ namespace Kernel
         void ResetOvipositionTimer( IVectorCohortIndividual* mosquito );
         IVectorCohortIndividual * current_vci; // added this since we have it, then call a function, and function re-qi's for it, which is unnecessary.
 
-        DECLARE_SERIALIZABLE(VectorPopulationIndividual, IVectorPopulation);
+        DECLARE_SERIALIZABLE(VectorPopulationIndividual);
 
     private:
 

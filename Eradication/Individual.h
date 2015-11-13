@@ -233,7 +233,7 @@ namespace Kernel
 
         virtual IIndividualHumanContext* GetContextPointer();
 
-        DECLARE_SERIALIZABLE(IndividualHuman, IIndividualHuman);
+        DECLARE_SERIALIZABLE(IndividualHuman);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
 

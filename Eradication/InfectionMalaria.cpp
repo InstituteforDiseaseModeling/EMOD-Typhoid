@@ -906,9 +906,9 @@ namespace Kernel
     void
     InfectionMalaria::reset_FemaleGametocytes(int stage) { m_femalegametocytes[stage] = 0; }
 
-    REGISTER_SERIALIZABLE(InfectionMalaria, IInfection);
+    REGISTER_SERIALIZABLE(InfectionMalaria);
 
-    void InfectionMalaria::serialize(IArchive& ar, IInfection* obj)
+    void InfectionMalaria::serialize(IArchive& ar, ISerializable* obj)
     {
         InfectionVector::serialize(ar, obj);
         InfectionMalaria& infection = *dynamic_cast<InfectionMalaria*>(obj);

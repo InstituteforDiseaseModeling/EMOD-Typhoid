@@ -199,9 +199,9 @@ namespace Kernel
     float VectorInterventionsContainer::GetblockOutdoorVectorAcquire()  { return blockOutdoorVectorAcquire; }
     float VectorInterventionsContainer::GetblockOutdoorVectorTransmit() { return blockOutdoorVectorTransmit; }
 
-    REGISTER_SERIALIZABLE(VectorInterventionsContainer, IIndividualHumanInterventionsContext);
+    REGISTER_SERIALIZABLE(VectorInterventionsContainer);
 
-    void VectorInterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    void VectorInterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
     {
         VectorInterventionsContainer& container = *static_cast<VectorInterventionsContainer*>(obj);
         InterventionsContainer::serialize(ar, obj);

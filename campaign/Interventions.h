@@ -61,8 +61,6 @@ namespace Kernel
         virtual IDistributableIntervention * Clone()  = 0;
 
         virtual ~IDistributableIntervention() { }
-        friend IArchive& serialize(IArchive&, std::list<IDistributableIntervention*>&);
-        DECLARE_SERIALIZATION_REGISTRAR(IDistributableIntervention);
 
     private:
         static void save(IArchive&, IDistributableIntervention*&);
@@ -79,7 +77,6 @@ namespace Kernel
         virtual void PurgeExisting( const std::string &iv_name ) = 0;
 
         virtual ~IIndividualHumanInterventionsContext() {}
-        DECLARE_SERIALIZATION_REGISTRAR(IIndividualHumanInterventionsContext);
     };
 
     struct INodeEventContext;

@@ -10,15 +10,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include <string>
-#include <list>
-#include <vector>
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "InterventionFactory.h"
 #include "Configuration.h"
 #include "InterventionEnums.h"
-#include "Configure.h"
 
 namespace Kernel
 {
@@ -29,15 +25,15 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleHousingModification, IDistributableIntervention)
 
     public:
-        bool Configure( const Configuration * config );
+        /* clorton virtual */ bool Configure( const Configuration * config ) /* clorton override */;
         SimpleHousingModification();
         virtual ~SimpleHousingModification() { }
 
         // IDistributableIntervention
-        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver  * const pCCO );
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void SetContextTo(IIndividualHumanContext *context);
-        virtual void Update(float dt);
+        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver  * const pCCO ) override;
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual void SetContextTo(IIndividualHumanContext *context) override;
+        virtual void Update(float dt) override;
 
     protected:
         InterventionDurabilityProfile::Enum durability_time_profile;
@@ -47,7 +43,7 @@ namespace Kernel
         float secondary_decay_time_constant;
         IHousingModificationConsumer *ihmc; // aka individual or individual vector interventions container
 
-        static void serialize(IArchive& ar, IDistributableIntervention* obj);
+        DECLARE_SERIALIZABLE(SimpleHousingModification);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
@@ -61,7 +57,7 @@ namespace Kernel
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, IRSHousingModification, IDistributableIntervention)
 
-        DECLARE_SERIALIZABLE(IRSHousingModification, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(IRSHousingModification);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
@@ -75,6 +71,8 @@ namespace Kernel
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, ScreeningHousingModification, IDistributableIntervention)
 
+        DECLARE_SERIALIZABLE(ScreeningHousingModification);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class ::boost::serialization::access;
@@ -86,6 +84,8 @@ namespace Kernel
     class SpatialRepellentHousingModification : public SimpleHousingModification
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SpatialRepellentHousingModification, IDistributableIntervention)
+
+        DECLARE_SERIALIZABLE(SpatialRepellentHousingModification);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
@@ -99,6 +99,8 @@ namespace Kernel
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, ArtificialDietHousingModification, IDistributableIntervention)
 
+        DECLARE_SERIALIZABLE(ArtificialDietHousingModification);
+
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class ::boost::serialization::access;
@@ -110,6 +112,8 @@ namespace Kernel
     class InsectKillingFenceHousingModification : public SimpleHousingModification
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, InsectKillingFenceHousingModification, IDistributableIntervention)
+
+        DECLARE_SERIALIZABLE(InsectKillingFenceHousingModification);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

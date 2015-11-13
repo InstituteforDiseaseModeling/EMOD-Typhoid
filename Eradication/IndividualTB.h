@@ -71,7 +71,7 @@ namespace Kernel
         virtual void onInfectionIncidence() override;
         virtual void onInfectionMDRIncidence() override;
 
-        DECLARE_SERIALIZABLE(IndividualHumanTB, IIndividualHuman);
+        DECLARE_SERIALIZABLE(IndividualHumanTB);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

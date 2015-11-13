@@ -22,8 +22,5 @@ namespace Kernel
         virtual NonNegativeFloat GetDuration() const = 0;
 
         virtual ~IInfection() {}
-
-        friend IArchive& serialize(IArchive&, infection_list_t&);
-        DECLARE_SERIALIZATION_REGISTRAR(IInfection);
     };
 }

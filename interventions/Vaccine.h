@@ -26,19 +26,13 @@ namespace Kernel
     struct IVaccineConsumer;
     struct ICampaignCostObserver;
 
-    struct IVaccine : ISerializable
+    struct IVaccine : public ISupports
     {
         virtual void  ApplyVaccineTake()                = 0;
         virtual ~IVaccine() { } // needed for cleanup via interface pointer
     };
 
-    class ISimpleVaccine : public ISupports
-    {
-    public:
-        virtual int   GetVaccineType()            const = 0;
-    };
-
-    class SimpleVaccine : public IVaccine, public ISimpleVaccine, public BaseIntervention
+    class SimpleVaccine : public BaseIntervention, public IVaccine
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleVaccine, IDistributableIntervention)
 
@@ -58,7 +52,7 @@ namespace Kernel
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
 
         // IVaccine
-        virtual int   GetVaccineType()            const;
+        virtual int   GetVaccineType()            const;    // clorton - still needed?
         virtual void  ApplyVaccineTake();
 
     protected:
@@ -76,7 +70,7 @@ namespace Kernel
         float secondary_decay_time_constant;
         IVaccineConsumer * ivc; // interventions container
 
-        DECLARE_SERIALIZABLE(SimpleVaccine, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(SimpleVaccine);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
     private:

@@ -24,12 +24,10 @@ static const char* _module = "SimpleVaccine";
 
 namespace Kernel
 {
-
     BEGIN_QUERY_INTERFACE_BODY(SimpleVaccine)
         HANDLE_INTERFACE(IConfigurable)
         HANDLE_INTERFACE(IDistributableIntervention)
         HANDLE_INTERFACE(IVaccine)
-        HANDLE_INTERFACE(ISimpleVaccine)
         HANDLE_INTERFACE(IBaseIntervention)
         HANDLE_ISUPPORTS_VIA(IDistributableIntervention)
         HANDLE_INTERFACE(IBaseIntervention)
@@ -230,9 +228,9 @@ namespace Kernel
         }
     } // needed for VaccineTake
 
-    REGISTER_SERIALIZABLE(SimpleVaccine, IDistributableIntervention);
+    REGISTER_SERIALIZABLE(SimpleVaccine);
 
-    void SimpleVaccine::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void SimpleVaccine::serialize(IArchive& ar, ISerializable* obj)
     {
         SimpleVaccine& vaccine = *dynamic_cast<SimpleVaccine*>(obj);
         ar.startElement();

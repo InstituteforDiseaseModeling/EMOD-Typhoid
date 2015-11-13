@@ -138,7 +138,7 @@ namespace Kernel
 
     void IndividualHumanMalaria::CreateSusceptibility(float imm_mod, float risk_mod)
     {
-        SusceptibilityMalaria *newsusceptibility = SusceptibilityMalaria::CreateSusceptibility((IIndividualHumanContext*)this, m_age, imm_mod, risk_mod);
+        SusceptibilityMalaria *newsusceptibility = SusceptibilityMalaria::CreateSusceptibility(dynamic_cast<IIndividualHumanContext*>(this), m_age, imm_mod, risk_mod);
         malaria_susceptibility = newsusceptibility;
         vector_susceptibility = newsusceptibility;
         susceptibility = newsusceptibility;
@@ -191,7 +191,7 @@ namespace Kernel
         // Reset initial infected hepatocyte variable for next time steps
         m_initial_infected_hepatocytes = 0;
 
-        return InfectionMalaria::CreateInfection((IIndividualHumanContext*)this, _suid, initial_hepatocytes);
+        return InfectionMalaria::CreateInfection(dynamic_cast<IIndividualHumanContext*>(this), _suid, initial_hepatocytes);
     }
 
 
@@ -640,7 +640,7 @@ namespace Kernel
     }
 
 
-    REGISTER_SERIALIZABLE(IndividualHumanMalaria, IIndividualHuman);
+    REGISTER_SERIALIZABLE(IndividualHumanMalaria);
 
     void serialize(IArchive& ar, IndividualHumanMalaria::gametocytes_strain_map_t& mapping)
     {
@@ -676,7 +676,7 @@ namespace Kernel
         ar.endElement();
     }
 
-    void IndividualHumanMalaria::serialize(IArchive& ar, IIndividualHuman* obj)
+    void IndividualHumanMalaria::serialize(IArchive& ar, ISerializable* obj)
     {
         IndividualHumanVector::serialize(ar, obj);
         IndividualHumanMalaria& individual = *dynamic_cast<IndividualHumanMalaria*>(obj);

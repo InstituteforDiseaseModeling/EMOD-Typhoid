@@ -62,9 +62,9 @@ namespace Kernel
         return addition + mortalityFromAge( age );
     }
 
-    REGISTER_SERIALIZABLE(VectorCohortAging, IVectorCohort);
+    REGISTER_SERIALIZABLE(VectorCohortAging);
 
-    void VectorCohortAging::serialize(IArchive& ar, IVectorCohort* obj)
+    void VectorCohortAging::serialize(IArchive& ar, ISerializable* obj)
     {
         VectorCohort::serialize(ar, obj);
         VectorCohortAging& cohort = *dynamic_cast<VectorCohortAging*>(obj);

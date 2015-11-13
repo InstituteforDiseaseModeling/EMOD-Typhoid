@@ -73,9 +73,9 @@ namespace Kernel
         return newinfection;
     }
 
-    REGISTER_SERIALIZABLE(InfectionEnvironmental, IInfection);
+    REGISTER_SERIALIZABLE(InfectionEnvironmental);
 
-    void InfectionEnvironmental::serialize(IArchive& ar, IInfection* obj)
+    void InfectionEnvironmental::serialize(IArchive& ar, ISerializable* obj)
     {
         Infection::serialize(ar, obj);
         // nothing else, yet

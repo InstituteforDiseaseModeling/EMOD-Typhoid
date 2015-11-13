@@ -132,7 +132,7 @@ namespace Kernel
         /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
         void AddVaccineToInterventionsContainer(int type, float time_since_vaccination);
 
-        DECLARE_SERIALIZABLE(SusceptibilityPolio, ISusceptibilityContext);
+        DECLARE_SERIALIZABLE(SusceptibilityPolio);
 
     public:
         static SusceptibilityPolio *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);

@@ -237,9 +237,9 @@ namespace Kernel
         return species;
     }
 
-    REGISTER_SERIALIZABLE(VectorCohortIndividual, IVectorCohort);
+    REGISTER_SERIALIZABLE(VectorCohortIndividual);
 
-    void VectorCohortIndividual::serialize(IArchive& ar, IVectorCohort* obj)
+    void VectorCohortIndividual::serialize(IArchive& ar, ISerializable* obj)
     {
         VectorCohortAging::serialize(ar, obj);
         VectorCohortIndividual& cohort = *dynamic_cast<VectorCohortIndividual*>(obj);

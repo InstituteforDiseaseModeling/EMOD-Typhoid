@@ -2,26 +2,33 @@
 
 #include "ISupports.h"
 
+#include <map>
+#include <string>
+
 #include <stack>        // for _pool declaration/implementation
-#include "IArchive.h"   // for serialization declaration
+// clorton #include "IArchive.h"   // for serialization declaration
 
 namespace Kernel {
+
+    struct IArchive;
+
     struct IDMAPI ISerializable : ISupports
     {
         virtual const char* GetClassName() { std::cout << "GetClassName() not implemented on this class." << std::endl; std::cout.flush(); throw; }
         virtual void Recycle() { std::cout << "Recycle() not implemented on this class." << std::endl; std::cout.flush(); throw; }
         virtual ~ISerializable() {}
+
+        static void serialize(IArchive&, ISerializable*&);
     };
 
-    template <typename I>
     struct SerializationRegistrar
     {
-        typedef void (*serialize_function_t)(IArchive&, I*);
-        typedef I* (*constructor_function_t)(void);
+        typedef void (*serialize_function_t)(IArchive&, ISerializable*);
+        typedef ISerializable* (*constructor_function_t)(void);
 
         static void _register(const char* classname, serialize_function_t serializer, constructor_function_t constructor)
         {
-            if (!_singleton) _singleton = new SerializationRegistrar<I>();
+            if (!_singleton) _singleton = new SerializationRegistrar();
             _singleton->serializer_map[classname] = serializer;
             _singleton->constructor_map[classname] = constructor;
         }
@@ -30,10 +37,10 @@ namespace Kernel {
         static constructor_function_t _get_constructor(std::string& classname) { return _singleton->constructor_map[classname]; }
         std::map<std::string, serialize_function_t> serializer_map;
         std::map<std::string, constructor_function_t> constructor_map;
-        static SerializationRegistrar<I>* _singleton;
+        static SerializationRegistrar* _singleton;
     };
 
-    template<typename Derived, typename Interface>
+    template<typename Derived>
     struct SerializationRegistrationCaller
     {
         SerializationRegistrationCaller()
@@ -42,8 +49,8 @@ namespace Kernel {
         }
         static void in_class_registration_hook()
         {
-            typename SerializationRegistrar<Interface>::_register(
-                typename Derived::_class_name.c_str(),
+            SerializationRegistrar::_register(
+                typename Derived::_class_name,
                 typename Derived::serialize,
                 typename Derived::construct);
         }
@@ -73,47 +80,22 @@ namespace Kernel {
         static std::stack<T*> _pool;
     };
 
-#define DECLARE_SERIALIZABLE(classname, base_interface)                             \
+#define DECLARE_SERIALIZABLE(classname)                                             \
     private:                                                                        \
-        virtual const char* GetClassName() override { return _class_name.c_str(); } \
-        static std::string _class_name;                                             \
-        friend SerializationRegistrationCaller<classname, base_interface>;          \
-        static SerializationRegistrationCaller<classname, base_interface> serialization_registration_caller; \
+        virtual const char* GetClassName() override { return _class_name; }         \
+        static char* _class_name;                                                   \
+        friend SerializationRegistrationCaller<classname>;                          \
+        static SerializationRegistrationCaller<classname> serialization_registration_caller; \
         friend PoolManager<classname>; \
-        static base_interface* construct() { return dynamic_cast<base_interface*>(PoolManager<classname>::_allocate()); }    \
+        static ISerializable* construct() { return dynamic_cast<ISerializable*>(PoolManager<classname>::_allocate()); }    \
         virtual void Recycle() override { PoolManager<classname>::_recycle(this); } \
-    protected:                                              \
-        static void serialize(IArchive&, base_interface*);  \
+    protected:                                                                      \
+        static void serialize(IArchive&, ISerializable*);                           \
 
 
-#define REGISTER_SERIALIZABLE(classname, base_interface)                                            \
-    std::string classname::_class_name(#classname);                                                 \
-    SerializationRegistrationCaller<classname, base_interface> classname::serialization_registration_caller; \
-    std::stack<classname*> PoolManager<classname>::_pool;                                           \
-
-
-#define DECLARE_SERIALIZATION_REGISTRAR(base_interface)         \
-    static SerializationRegistrar<base_interface> _registrar;   \
-    friend void serialize(IArchive&, base_interface*&);         \
-
-
-    template<typename IF>
-    void serialize(IArchive&ar, IF*& iface)
-    {
-        std::string class_name = ar.IsWriter() ? iface->GetClassName() : "__UNK__";
-        ar.startElement();
-        ar.labelElement("__cname__") & class_name;
-        typename SerializationRegistrar<IF>::constructor_function_t constructor_function = SerializationRegistrar<IF>::_get_constructor(class_name);
-        typename SerializationRegistrar<IF>::serialize_function_t serialize_function = SerializationRegistrar<IF>::_get_serializer(class_name);
-        ar.labelElement("__inst__");
-        if (!ar.IsWriter()) iface = constructor_function();
-        serialize_function(ar, iface);
-        ar.endElement();
-    }
-
-#define IMPLEMENT_SERIALIZATION_REGISTRAR(base_interface) \
-    SerializationRegistrar<base_interface> base_interface::_registrar; \
-    template void serialize<base_interface>(IArchive& ar, base_interface*& iface); \
-    SerializationRegistrar<base_interface>* SerializationRegistrar<base_interface>::_singleton = nullptr; \
+#define REGISTER_SERIALIZABLE(classname)                                                     \
+    char* classname::_class_name = #classname;                                               \
+    SerializationRegistrationCaller<classname> classname::serialization_registration_caller; \
+    std::stack<classname*> PoolManager<classname>::_pool;                                    \
 
 }

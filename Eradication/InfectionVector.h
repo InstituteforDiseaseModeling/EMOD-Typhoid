@@ -25,7 +25,7 @@ namespace Kernel
         InfectionVector(IIndividualHumanContext *context);
         /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
 
-        DECLARE_SERIALIZABLE(InfectionVector, IInfection);
+        DECLARE_SERIALIZABLE(InfectionVector);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -385,9 +385,9 @@ namespace Kernel
         return duration;
     }
 
-    REGISTER_SERIALIZABLE(Infection, IInfection);
+    REGISTER_SERIALIZABLE(Infection);
 
-    void Infection::serialize(IArchive& ar, IInfection* obj)
+    void Infection::serialize(IArchive& ar, ISerializable* obj)
     {
         Infection& infection = *dynamic_cast<Infection*>(obj);
         ar.startElement();

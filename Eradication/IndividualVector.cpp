@@ -265,9 +265,9 @@ namespace Kernel
         return vector_susceptibility->GetRelativeBitingRate();
     }
 
-    REGISTER_SERIALIZABLE(IndividualHumanVector, IIndividualHuman);
+    REGISTER_SERIALIZABLE(IndividualHumanVector);
 
-    void IndividualHumanVector::serialize(IArchive& ar, IIndividualHuman* obj)
+    void IndividualHumanVector::serialize(IArchive& ar, ISerializable* obj)
     {
         IndividualHumanVector& individual = *dynamic_cast<IndividualHumanVector*>(obj);
 

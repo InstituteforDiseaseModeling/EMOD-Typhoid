@@ -70,7 +70,7 @@ namespace Kernel
         float titer_efficacy;
         float infection_duration_efficacy;
 
-        DECLARE_SERIALIZABLE(PolioInterventionsContainer, IIndividualHumanInterventionsContext);
+        DECLARE_SERIALIZABLE(PolioInterventionsContainer);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -138,9 +138,9 @@ namespace Kernel
         }
     }
 
-    REGISTER_SERIALIZABLE(PolioInterventionsContainer, IIndividualHumanInterventionsContext);
+    REGISTER_SERIALIZABLE(PolioInterventionsContainer);
 
-    void PolioInterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    void PolioInterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
     {
         InterventionsContainer::serialize(ar, obj);
         /* Not needed yet(?)

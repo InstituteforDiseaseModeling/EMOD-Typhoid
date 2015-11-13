@@ -125,7 +125,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = nullptr;
+                /* newsimulation = nullptr; */
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "VECTOR_SIM requested with invalid configuration." );
             }
         }
@@ -170,10 +170,33 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
+#define SIZE_TAG    ('V')
+#define CONTENT_TAG (2015)
+
+    static void _write_json(uint32_t time_step, uint32_t source, uint32_t dest, char* suffix, const char* buffer, size_t size)
+    {
+        char filename[256];
+    #ifdef WIN32
+        sprintf_s(filename, 256, "%s\\%03d-%02d-%02d-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, suffix);
+        FILE* f = nullptr;
+        errno = 0;
+        if ( fopen_s( &f, filename, "w" ) != 0)
+        {
+            LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
+            return;
+        }
+    #else
+        sprintf(filename, "%s\\%03d-%02d-%02d-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, suffix);
+        FILE* f = fopen(filename, "w");
+    #endif
+        fwrite(buffer, 1, size, f);
+        fflush(f);
+        fclose(f);
+    }
+
     void SimulationVector::resolveMigration()
     {
-//clorton        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-//clorton        resolveMigrationInternal( typed_vector_migration_queue_storage, migratingVectorQueues );
+        static const char * _module = "MpiMigration";
 
         Simulation::resolveMigration(); // Take care of the humans
 
@@ -185,54 +208,58 @@ namespace Kernel
         {
             if (destination_rank == EnvPtr->MPI.Rank)
             {
+#ifndef _DEBUG
                 // Don't bother to serialize locally
                 for (auto individual : migratingVectorQueues[destination_rank])
                 {
                     IMigrate* emigre = dynamic_cast<IMigrate*>(individual);
                     emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
                 }
+#else
+                auto writer = new JsonRawWriter();
+                (*static_cast<IArchive*>(writer)) & migratingVectorQueues[destination_rank];
+                for (auto& individual : migratingVectorQueues[destination_rank])
+                    individual->Recycle();
+                migratingVectorQueues[destination_rank].clear();
 
-//                auto writer = new JsonRawWriter();
-//                IVectorCohort::serialize(*writer, migratingVectorQueues[destination_rank]);
-//                for (auto& individual : migratingVectorQueues[destination_rank])
-//                    individual->Recycle();
-//                migratingVectorQueues[destination_rank].clear();
-//                const char* buffer = ((IArchive*)writer)->GetBuffer();
-//                auto reader = new JsonRawReader(buffer);
-//                IVectorCohort::serialize(*reader, migratingVectorQueues[destination_rank]);
-//                for (auto individual : migratingVectorQueues[destination_rank])
-//                {
-//                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
-//                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()]);
-//                }
-//                delete reader;
-//                delete writer;
+                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+                    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "vect", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
+                }
+
+                const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
+                auto reader = new JsonRawReader(buffer);
+                (*static_cast<IArchive*>(reader)) & migratingVectorQueues[destination_rank];
+                for (auto individual : migratingVectorQueues[destination_rank])
+                {
+                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()]);
+                }
+                delete reader;
+                delete writer;
+#endif
             }
             else
             {
                 auto writer = new JsonRawWriter();
-//cout << "Emmigrating (" << destination_rank << "): " << migratingVectorQueues[destination_rank].size() << endl;
-//auto t1 = _clock::now();
-                IVectorCohort::serialize(*writer, migratingVectorQueues[destination_rank]);
-//auto t2 = _clock::now();
+                (*static_cast<IArchive*>(writer)) & migratingVectorQueues[destination_rank];
+                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+                    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "sndv", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
+                }
                 for (auto& individual : migratingVectorQueues[destination_rank])
                     individual->Recycle();  // delete individual
-//auto t3 = _clock::now();
 
-                uint32_t buffer_size = message_size_by_rank[destination_rank] = ((IArchive*)writer)->GetBufferSize();
+                uint32_t buffer_size = message_size_by_rank[destination_rank] = static_cast<IArchive*>(writer)->GetBufferSize();
                 MPI_Request size_request;
                 MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, 0, MPI_COMM_WORLD, &size_request);
 
                 if (buffer_size > 0)
                 {
-                    const char* buffer = ((IArchive*)writer)->GetBuffer();
+                    const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
                     MPI_Request buffer_request;
                     MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, 0, MPI_COMM_WORLD, &buffer_request);
                     outbound_requests.push_back(buffer_request);
                     outbound_messages.push_back(writer);
                 }
-//cout << "Serialize   (" << destination_rank << "): " << (t2 - t1).count() << endl;
-//cout << "Delete      (" << destination_rank << "): " << (t3 - t2).count() << endl;
             }
 
             migratingVectorQueues[destination_rank].clear();
@@ -252,22 +279,17 @@ namespace Kernel
                 MPI_Status buffer_status;
                 MPI_Recv(buffer.get(), size, MPI_BYTE, source_rank, 0, MPI_COMM_WORLD, &buffer_status);
 
-//auto t3 = _clock::now();
+                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+                    _write_json( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "rcvv", buffer.get(), size );
+                }
+
                 auto reader = make_shared<JsonRawReader>(buffer.get());
-//auto t4 = _clock::now();
-                IVectorCohort::serialize(*reader, migratingVectorQueues[source_rank]);
-//auto t5 =_clock::now();
+                (*static_cast<IArchive*>(reader.get())) & migratingVectorQueues[source_rank];
                 for (auto individual : migratingVectorQueues[source_rank])
                 {
                     IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
                     immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
                 }
-//auto t6 = _clock::now();
-
-//cout << "Parse       (" << source_rank << "): " << (t4 - t3).count() << endl;
-//cout << "Deserialize (" << source_rank << "): " << (t5 - t4).count() << endl;
-//cout << "Integrate   (" << source_rank << "): " << (t6 - t5).count() << endl;
-//cout << "Immigrating (" << source_rank << "): " << migratingVectorQueues[source_rank].size() << endl;
 
                 migratingVectorQueues[source_rank].clear();
           }
@@ -305,7 +327,7 @@ namespace Kernel
 
     ISimulationContext *SimulationVector::GetContextPointer()
     {
-        return (ISimulationContext*)this;
+        return dynamic_cast<ISimulationContext*>(this);
     }
 
 }

@@ -111,7 +111,7 @@ namespace Kernel
         InfectionPolio(IIndividualHumanContext *context);
         /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
 
-        DECLARE_SERIALIZABLE(InfectionPolio, IInfection);
+        DECLARE_SERIALIZABLE(InfectionPolio);
 
     /*public:
         virtual ~InfectionPolio(void);

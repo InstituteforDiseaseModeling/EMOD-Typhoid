@@ -296,9 +296,9 @@ namespace Kernel
         return lower_bw + (upper_bw-lower_bw)*(age_in_days-lower_age)/(upper_age-lower_age);
     }
 
-    REGISTER_SERIALIZABLE(AntimalarialDrug, IDistributableIntervention);
+    REGISTER_SERIALIZABLE(AntimalarialDrug);
 
-    void AntimalarialDrug::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void AntimalarialDrug::serialize(IArchive& ar, ISerializable* obj)
     {
         GenericDrug::serialize(ar, obj);
         AntimalarialDrug& drug = *dynamic_cast<AntimalarialDrug*>(obj);

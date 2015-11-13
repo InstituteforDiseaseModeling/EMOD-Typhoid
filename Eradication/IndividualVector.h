@@ -65,7 +65,7 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     private:
-        DECLARE_SERIALIZABLE(IndividualHumanVector, IIndividualHuman);
+        DECLARE_SERIALIZABLE(IndividualHumanVector);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;

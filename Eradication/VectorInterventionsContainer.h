@@ -137,7 +137,7 @@ namespace Kernel
         float blockOutdoorVectorAcquire;
         float blockOutdoorVectorTransmit;
 
-        DECLARE_SERIALIZABLE(VectorInterventionsContainer, IIndividualHumanInterventionsContext);
+        DECLARE_SERIALIZABLE(VectorInterventionsContainer);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

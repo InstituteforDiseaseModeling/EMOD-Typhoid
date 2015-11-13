@@ -169,35 +169,6 @@ namespace Kernel
         }
         return wasDistributed;
     }
-
-    IMPLEMENT_SERIALIZATION_REGISTRAR(IDistributableIntervention);
-
-    IArchive& serialize(IArchive& ar, std::list<IDistributableIntervention*>& interventions)
-    {
-        size_t count = ar.IsWriter() ? interventions.size() : -1;
-
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            if (ar.IsWriter())
-            {
-                for (auto& intervention : interventions)
-                {
-                    Kernel::serialize<IDistributableIntervention>(ar, intervention);
-                }
-            }
-            else
-            {
-                for (size_t i = 0; i < count; ++i)
-                {
-                    IDistributableIntervention* intervention;
-                    Kernel::serialize<IDistributableIntervention>(ar, intervention);
-                    interventions.push_back(intervention);
-                }
-            }
-        ar.endElement();
-
-        return ar;
-    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

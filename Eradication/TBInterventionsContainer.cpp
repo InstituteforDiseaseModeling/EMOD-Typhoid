@@ -256,7 +256,7 @@ namespace Kernel
         return TB_drug_effects; 
     }
 
-    REGISTER_SERIALIZABLE(TBInterventionsContainer, IIndividualHumanInterventionsContext);
+    REGISTER_SERIALIZABLE(TBInterventionsContainer);
 
     void serialize(IArchive& ar, TBDrugEffects_t& effects)
     {
@@ -304,7 +304,7 @@ namespace Kernel
         ar.endElement();
     }
 
-    void TBInterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    void TBInterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
     {
         InterventionsContainer::serialize(ar, obj);
         TBInterventionsContainer& interventions = *dynamic_cast<TBInterventionsContainer*>(obj);

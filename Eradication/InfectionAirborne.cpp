@@ -27,9 +27,9 @@ namespace Kernel
     InfectionAirborne::InfectionAirborne() { }
     InfectionAirborne::InfectionAirborne(IIndividualHumanContext *context) : Infection(context) { }
 
-    REGISTER_SERIALIZABLE(InfectionAirborne, IInfection);
+    REGISTER_SERIALIZABLE(InfectionAirborne);
 
-    void InfectionAirborne::serialize(IArchive& ar, IInfection* obj)
+    void InfectionAirborne::serialize(IArchive& ar, ISerializable* obj)
     {
         Infection::serialize(ar, obj);
         // InfectionAirborne doesn't add any fields to the class.

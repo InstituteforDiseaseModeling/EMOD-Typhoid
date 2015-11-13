@@ -41,7 +41,7 @@ namespace Kernel
         // TODO - document this function/expression/calculation
         inline static float mortalityFromAge(float age) { return (0.006f * exp(0.2f * age) / (1.0f + (0.006f * 1.5f / 0.2f * (exp(0.2f * age) - 1.0f)))); }
 
-        DECLARE_SERIALIZABLE(VectorCohortAging, IVectorCohort);
+        DECLARE_SERIALIZABLE(VectorCohortAging);
 
     private:
 

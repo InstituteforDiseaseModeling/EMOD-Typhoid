@@ -36,7 +36,6 @@ namespace Kernel
 
     struct IVectorPopulation : ISerializable
     {
-        DECLARE_SERIALIZATION_REGISTRAR(IVectorPopulation);
     };
 
     struct IVectorReportingOperations : ISupports
@@ -203,7 +202,7 @@ namespace Kernel
         VectorProbabilities           *m_probabilities;
         ITransmissionGroups           *m_transmissionGroups;
 
-        DECLARE_SERIALIZABLE(VectorPopulation, IVectorPopulation);
+        DECLARE_SERIALIZABLE(VectorPopulation);
 
     private:
 

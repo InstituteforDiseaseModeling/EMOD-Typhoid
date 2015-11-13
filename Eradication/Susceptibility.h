@@ -90,7 +90,7 @@ namespace Kernel
 
     private:
 
-        DECLARE_SERIALIZABLE(Susceptibility, ISusceptibilityContext);
+        DECLARE_SERIALIZABLE(Susceptibility);
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;

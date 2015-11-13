@@ -111,9 +111,9 @@ namespace Kernel
         return InfectionEnvironmental::CreateInfection(this, _suid);
     }
 
-    REGISTER_SERIALIZABLE(IndividualHumanEnvironmental, IIndividualHuman);
+    REGISTER_SERIALIZABLE(IndividualHumanEnvironmental);
 
-    void IndividualHumanEnvironmental::serialize(IArchive& ar, IIndividualHuman* obj)
+    void IndividualHumanEnvironmental::serialize(IArchive& ar, ISerializable* obj)
     {
         IndividualHuman::serialize(ar, obj);
         /* IndividualHumanEnvironmental doesn't (yet) have any member fields.

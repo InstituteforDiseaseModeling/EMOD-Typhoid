@@ -757,9 +757,9 @@ namespace Kernel
         return migrating_vectors;
     }
 
-    REGISTER_SERIALIZABLE(VectorPopulationIndividual, IVectorPopulation);
+    REGISTER_SERIALIZABLE(VectorPopulationIndividual);
 
-    void VectorPopulationIndividual::serialize(IArchive& ar, IVectorPopulation* obj)
+    void VectorPopulationIndividual::serialize(IArchive& ar, ISerializable* obj)
     {
         VectorPopulation::serialize(ar, obj);
 

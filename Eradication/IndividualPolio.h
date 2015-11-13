@@ -79,7 +79,7 @@ namespace Kernel
         virtual void setupInterventionsContainer() override;
         virtual void PropagateContextToDependents() override;
 
-        DECLARE_SERIALIZABLE(IndividualHumanPolio, IIndividualHuman);
+        DECLARE_SERIALIZABLE(IndividualHumanPolio);
 
     private:
         SusceptibilityPolio * polio_susceptibility;

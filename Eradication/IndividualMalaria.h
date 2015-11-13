@@ -95,7 +95,7 @@ namespace Kernel
         /* clorton virtual */ const SimulationConfig *params() const /* clorton override */;
         virtual void PropagateContextToDependents() override;
 
-        DECLARE_SERIALIZABLE(IndividualHumanMalaria, IIndividualHuman);
+        DECLARE_SERIALIZABLE(IndividualHumanMalaria);
         friend void serialize(IArchive&, gametocytes_strain_map_t&);
 
     private:

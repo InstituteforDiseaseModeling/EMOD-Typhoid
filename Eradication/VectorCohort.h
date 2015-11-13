@@ -30,9 +30,6 @@ namespace Kernel
         virtual VectorMatingStructure& GetVectorGenetics() = 0;
         virtual void SetVectorGenetics( const VectorMatingStructure& new_value ) = 0;
         virtual float GetMortality( uint32_t addition ) const = 0;
-
-        static void serialize(IArchive&, std::vector<IVectorCohort*>&);
-        DECLARE_SERIALIZATION_REGISTRAR(IVectorCohort);
     };
 
     class Node;
@@ -66,8 +63,6 @@ namespace Kernel
         virtual void SetVectorGenetics( const VectorMatingStructure& new_value );
         virtual float GetMortality( uint32_t addition ) const;
 
-        static void serialize(IArchive&, VectorCohortList_t&);
-
     protected:
         VectorCohort();
         VectorCohort(float progress, uint32_t population, VectorMatingStructure _vector_genetics);
@@ -77,7 +72,7 @@ namespace Kernel
         double progress;
         int32_t population;
 
-        DECLARE_SERIALIZABLE(VectorCohort, IVectorCohort);
+        DECLARE_SERIALIZABLE(VectorCohort);
 
     private:
 

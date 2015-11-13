@@ -41,8 +41,6 @@ namespace Kernel
 
         virtual MalariaAntibodyType::Enum GetAntibodyType() const = 0;
         virtual int GetAntibodyVariant() const = 0;
-
-        DECLARE_SERIALIZATION_REGISTRAR(IMalariaAntibody);
     };
 
     typedef struct
@@ -52,5 +50,4 @@ namespace Kernel
     } pfemp1_antibody_t;
 
     void serialize(IArchive&, pfemp1_antibody_t&);
-    void serialize(IArchive&, std::vector<IMalariaAntibody*>&);
 }

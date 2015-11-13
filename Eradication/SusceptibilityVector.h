@@ -62,7 +62,7 @@ namespace Kernel
         float m_relative_biting_rate;
         float m_age_dependent_biting_risk;
 
-        DECLARE_SERIALIZABLE(SusceptibilityVector, ISusceptibilityContext);
+        DECLARE_SERIALIZABLE(SusceptibilityVector);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

@@ -182,9 +182,9 @@ namespace Kernel
     float MalariaInterventionsContainer::get_drug_gametocyte34()  { return drug_gametocyte34;  }
     float MalariaInterventionsContainer::get_drug_gametocyteM()   { return drug_gametocyteM;   }
 
-    REGISTER_SERIALIZABLE(MalariaInterventionsContainer, IIndividualHumanInterventionsContext);
+    REGISTER_SERIALIZABLE(MalariaInterventionsContainer);
 
-    void MalariaInterventionsContainer::serialize(IArchive& ar, IIndividualHumanInterventionsContext* obj)
+    void MalariaInterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
     {
         MalariaInterventionsContainer& container = *static_cast<MalariaInterventionsContainer*>(obj);
         VectorInterventionsContainer::serialize(ar, obj);

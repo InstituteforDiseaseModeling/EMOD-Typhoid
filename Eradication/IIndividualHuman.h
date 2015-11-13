@@ -35,7 +35,5 @@ namespace Kernel
         virtual void Update(float current_time, float dt) = 0;
 
         virtual ~IIndividualHuman() {}
-        friend IArchive& serialize(IArchive&, std::vector<IIndividualHuman*>&);
-        DECLARE_SERIALIZATION_REGISTRAR(IIndividualHuman);
     };
 }

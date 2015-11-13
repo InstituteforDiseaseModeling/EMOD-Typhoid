@@ -36,9 +36,9 @@ namespace Kernel
         demographic_risk = _riskmod; 
     }
 
-    REGISTER_SERIALIZABLE(SusceptibilityAirborne, ISusceptibilityContext);
+    REGISTER_SERIALIZABLE(SusceptibilityAirborne);
 
-    void SusceptibilityAirborne::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    void SusceptibilityAirborne::serialize(IArchive& ar, ISerializable* obj)
     {
         Susceptibility::serialize(ar, obj);
         SusceptibilityAirborne& susceptibility = *dynamic_cast<SusceptibilityAirborne*>(obj);

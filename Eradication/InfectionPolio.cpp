@@ -138,9 +138,9 @@ namespace Kernel
     {
     }
 
-    REGISTER_SERIALIZABLE(InfectionPolio, IInfection);
+    REGISTER_SERIALIZABLE(InfectionPolio);
 
-    void InfectionPolio::serialize(IArchive& ar, IInfection* obj)
+    void InfectionPolio::serialize(IArchive& ar, ISerializable* obj)
     {
         InfectionEnvironmental::serialize(ar, obj);
         InfectionPolio& infection = *dynamic_cast<InfectionPolio*>(obj);

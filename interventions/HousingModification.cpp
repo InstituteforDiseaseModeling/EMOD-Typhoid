@@ -29,7 +29,14 @@ namespace Kernel
     IMPLEMENT_FACTORY_REGISTERED(ArtificialDietHousingModification)
     IMPLEMENT_FACTORY_REGISTERED(InsectKillingFenceHousingModification)
 
-    void SimpleHousingModification::serialize(IArchive& ar, IDistributableIntervention* obj)
+    REGISTER_SERIALIZABLE(SimpleHousingModification);
+    REGISTER_SERIALIZABLE(IRSHousingModification);
+    REGISTER_SERIALIZABLE(ScreeningHousingModification);
+    REGISTER_SERIALIZABLE(SpatialRepellentHousingModification);
+    REGISTER_SERIALIZABLE(ArtificialDietHousingModification);
+    REGISTER_SERIALIZABLE(InsectKillingFenceHousingModification);
+
+    void SimpleHousingModification::serialize(IArchive& ar, ISerializable* obj)
     {
         SimpleHousingModification& mod = *dynamic_cast<SimpleHousingModification*>(obj);
         ar.startElement();
@@ -41,13 +48,30 @@ namespace Kernel
         ar.endElement();
     }
 
-    REGISTER_SERIALIZABLE(IRSHousingModification, IDistributableIntervention);
-
-    void IRSHousingModification::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void IRSHousingModification::serialize(IArchive& ar, ISerializable* obj)
     {
         SimpleHousingModification::serialize(ar, obj);
     }
 
+    void ScreeningHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void SpatialRepellentHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void ArtificialDietHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void InsectKillingFenceHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
 
     bool
     SimpleHousingModification::Configure(

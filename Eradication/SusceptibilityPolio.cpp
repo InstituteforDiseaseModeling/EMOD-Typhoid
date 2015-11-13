@@ -1018,9 +1018,9 @@ namespace Kernel
         return( receiveHumoralMemoryNAb[ serotype ] > pit );
     }
 
-    REGISTER_SERIALIZABLE(SusceptibilityPolio, ISusceptibilityContext);
+    REGISTER_SERIALIZABLE(SusceptibilityPolio);
 
-    void SusceptibilityPolio::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    void SusceptibilityPolio::serialize(IArchive& ar, ISerializable* obj)
     {
         SusceptibilityEnvironmental::serialize(ar, obj);
         SusceptibilityPolio& susceptibility = *dynamic_cast<SusceptibilityPolio*>(obj);

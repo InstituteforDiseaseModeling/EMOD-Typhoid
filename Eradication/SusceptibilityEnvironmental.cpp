@@ -42,9 +42,9 @@ namespace Kernel
     {
     }
 
-    REGISTER_SERIALIZABLE(SusceptibilityEnvironmental, ISusceptibilityContext);
+    REGISTER_SERIALIZABLE(SusceptibilityEnvironmental);
 
-    void SusceptibilityEnvironmental::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    void SusceptibilityEnvironmental::serialize(IArchive& ar, ISerializable* obj)
     {
         Susceptibility::serialize(ar, obj);
         SusceptibilityEnvironmental& susceptibility = *dynamic_cast<SusceptibilityEnvironmental*>(obj);

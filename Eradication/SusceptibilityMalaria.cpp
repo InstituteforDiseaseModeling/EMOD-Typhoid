@@ -1043,19 +1043,19 @@ namespace Kernel
     double SusceptibilityMalaria::get_RBC_availability() const      { return (m_RBCcapacity > 0) ? (double(m_RBC) / m_RBCcapacity) : 0.0; }
     float SusceptibilityMalaria::get_inv_microliters_blood() const  { return m_inv_microliters_blood; }
 
-    REGISTER_SERIALIZABLE(SusceptibilityMalaria, ISusceptibilityContext);
+    REGISTER_SERIALIZABLE(SusceptibilityMalaria);
 
-    void SusceptibilityMalaria::serialize(IArchive& ar, ISusceptibilityContext* obj)
+    void SusceptibilityMalaria::serialize(IArchive& ar, ISerializable* obj)
     {
         SusceptibilityVector::serialize(ar, obj);
         SusceptibilityMalaria& susceptibility = *dynamic_cast<SusceptibilityMalaria*>(obj);
         ar.startElement();
 //            ar.labelElement("m_antigenic_flag") & susceptibility.m_antigenic_flag;
             ar.labelElement("m_maternal_antibody_strength") & susceptibility.m_maternal_antibody_strength;
-            ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, susceptibility.m_CSP_antibody);
-            ar.labelElement("m_active_MSP_antibodies"); Kernel::serialize(ar, susceptibility.m_active_MSP_antibodies);
-            ar.labelElement("m_active_PfEMP1_minor_antibodies"); Kernel::serialize(ar, susceptibility.m_active_PfEMP1_minor_antibodies);
-            ar.labelElement("m_active_PfEMP1_major_antibodies"); Kernel::serialize(ar, susceptibility.m_active_PfEMP1_major_antibodies);
+            ar.labelElement("m_CSP_antibody") & susceptibility.m_CSP_antibody;
+            ar.labelElement("m_active_MSP_antibodies") & susceptibility.m_active_MSP_antibodies;
+            ar.labelElement("m_active_PfEMP1_minor_antibodies") & susceptibility.m_active_PfEMP1_minor_antibodies;
+            ar.labelElement("m_active_PfEMP1_major_antibodies") & susceptibility.m_active_PfEMP1_major_antibodies;
             ar.labelElement("m_RBC") & susceptibility.m_RBC;
             ar.labelElement("m_RBCcapacity") & susceptibility.m_RBCcapacity;
             ar.labelElement("m_RBCproduction") & susceptibility.m_RBCproduction;

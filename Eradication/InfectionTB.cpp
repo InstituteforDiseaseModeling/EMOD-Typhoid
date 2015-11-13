@@ -893,9 +893,9 @@ namespace Kernel
     InfectionTB::InfectionTB(IIndividualHumanContext *context) : InfectionAirborne(context) { }
     //const SimulationConfig* InfectionTB::params() { return GET_CONFIGURABLE(SimulationConfig); }
 
-    REGISTER_SERIALIZABLE(InfectionTB, IInfection);
+    REGISTER_SERIALIZABLE(InfectionTB);
 
-    void InfectionTB::serialize(IArchive& ar, IInfection* obj)
+    void InfectionTB::serialize(IArchive& ar, ISerializable* obj)
     {
         InfectionAirborne::serialize(ar, obj);
         InfectionTB& infection = *dynamic_cast<InfectionTB*>(obj);

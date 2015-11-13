@@ -83,7 +83,7 @@ namespace Kernel
         float drug_c50;
         float fraction_defaulters;
 
-        DECLARE_SERIALIZABLE(GenericDrug, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(GenericDrug);
 
     private:
 

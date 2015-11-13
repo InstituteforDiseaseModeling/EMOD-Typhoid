@@ -11,7 +11,5 @@ namespace Kernel
         virtual float getModMortality() const = 0;
 
         virtual ~ISusceptibilityContext() {}
-
-        DECLARE_SERIALIZATION_REGISTRAR(ISusceptibilityContext);
     };
 }

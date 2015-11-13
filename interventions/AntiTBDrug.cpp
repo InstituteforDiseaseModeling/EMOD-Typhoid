@@ -174,9 +174,9 @@ namespace Kernel
         }
     }
 
-    REGISTER_SERIALIZABLE(AntiTBDrug, IDistributableIntervention);
+    REGISTER_SERIALIZABLE(AntiTBDrug);
 
-    void AntiTBDrug::serialize(IArchive& ar, IDistributableIntervention* obj)
+    void AntiTBDrug::serialize(IArchive& ar, ISerializable* obj)
     {
         GenericDrug::serialize(ar, obj);
         AntiTBDrug& drug = *dynamic_cast<AntiTBDrug*>(obj);

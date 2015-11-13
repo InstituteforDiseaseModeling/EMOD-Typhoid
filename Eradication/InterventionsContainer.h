@@ -91,7 +91,7 @@ namespace Kernel
 
         IIndividualHumanContext *parent;    // context for this interventions container
 
-        DECLARE_SERIALIZABLE(InterventionsContainer, IIndividualHumanInterventionsContext);
+        DECLARE_SERIALIZABLE(InterventionsContainer);
 
     private:
 

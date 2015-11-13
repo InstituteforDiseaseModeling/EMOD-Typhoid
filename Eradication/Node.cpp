@@ -30,7 +30,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "StatusReporter.h" // for initialization progress
 #include "StrainIdentity.h"
-#include "StatusReporter.h"
 #include "IInfectable.h"
 #include "Instrumentation.h"
 #include "FileSystem.h"
@@ -56,8 +55,8 @@ namespace Kernel
     )
     {
         release_assert( idx>0 );
-        float min_age = (float)demo[idx-1].AsDouble();
-        float max_age = (float)demo[idx].AsDouble();
+        float min_age = float(demo[idx-1].AsDouble());
+        float max_age = float(demo[idx].AsDouble());
         std::ostringstream retMsg;
         retMsg << "Age_Bin_Property_From_" << min_age << "_To_" << max_age;
         return retMsg.str();
@@ -219,7 +218,7 @@ namespace Kernel
                 stop_time = trans[idx][ IP_WHEN_KEY ][ "Duration" ].AsDouble();
                 LOG_DEBUG_F( "stop_time = %f\n", stop_time );
             }
-            std::string trigger = "";
+
             float reversion = 0.0f;
             if( trans[idx].Contains( IP_REVERSION_KEY ) )
             {
@@ -290,7 +289,7 @@ namespace Kernel
             else if( type == "At_Event" )
             {
                 // TBD: Add Health-Triggered Intervention
-                trigger = trans[idx][ "Trigger" ].AsString();
+                std::string trigger = trans[idx][ "Trigger" ].AsString();
                 new_event[ "Start_Day" ] = json::Number( 100000 );
                 new_ic_qb[ "class" ] = json::String( "HealthTriggeredIntervention" );
             }
@@ -336,62 +335,62 @@ namespace Kernel
 
     // <ERAD-291>
     // TODO: Make simulation object initialization more consistent.  Either all pass contexts to constructors or just have empty constructors
-    Node::Node(ISimulationContext *_parent_sim, suids::suid _suid) :
-        _latitude(FLT_MAX),
-        _longitude(FLT_MAX),
-        individualHumans(),
-        parent(nullptr),
-        transmissionGroups(nullptr),
-        ind_sampling_type( IndSamplingType::TRACK_ALL ),
-        suid(_suid),
-        Ind_Sample_Rate(1.0f),
-        urban(false),
-        birthrate(DEFAULT_BIRTHRATE),
-        Possible_Mothers(0),
-        Infected(0),
-        statPop(0),
-        Births(0.0f),
-        Campaign_Cost(0.0f),
-        Above_Poverty(DEFAULT_POVERTY_THRESHOLD),
-        infectionrate(0.0f),
-        susceptibility_dynamic_scaling(1.0f),
-        mInfectivity(0.0f),
-        localWeather(nullptr),
-        migration_info(nullptr),
-        event_context_host(nullptr),
-        max_sampling_cell_pop(0.0f),
-        new_infections(0.0f),           // counters starting with this one were only used for old spatial reporting and can probably now be removed
-        new_reportedinfections(0.0f),
-        Disease_Deaths(0.0f),
-        Cumulative_Infections(0.0f),
-        Cumulative_Reported_Infections(0.0f),
-        infectivity_scaling(InfectivityScaling::CONSTANT_INFECTIVITY),
-        vital_birth_dependence(VitalBirthDependence::FIXED_BIRTH_RATE),
-        vital_birth_time_dependence(VitalBirthTimeDependence::NONE),
-        birth_rate_sinusoidal_forcing_amplitude( 1.0f ),
-        birth_rate_sinusoidal_forcing_phase( 0.0f ),
-        birth_rate_boxcar_forcing_amplitude( 1.0f ),
-        birth_rate_boxcar_start_time( 0.0 ),
-        birth_rate_boxcar_end_time( 0.0 ),
-        infectivity_sinusoidal_forcing_amplitude( 1.0f ),
-        infectivity_sinusoidal_forcing_phase( 0.0f ),
-        infectivity_boxcar_forcing_amplitude( 1.0f ),
-        infectivity_boxcar_start_time( 0.0 ),
-        infectivity_boxcar_end_time( 0.0 )
+    Node::Node(ISimulationContext *_parent_sim, suids::suid _suid)
+        : _latitude(FLT_MAX)
+        , _longitude(FLT_MAX)
+        , ind_sampling_type( IndSamplingType::TRACK_ALL )
+        , suid(_suid)
+        , urban(false)
+        , birthrate(DEFAULT_BIRTHRATE)
+        , Above_Poverty(DEFAULT_POVERTY_THRESHOLD)
+        , individualHumans()
+        , Ind_Sample_Rate(1.0f)
+        , transmissionGroups(nullptr)
+        , susceptibility_dynamic_scaling(1.0f)
+        , localWeather(nullptr)
+        , migration_info(nullptr)
+        , event_context_host(nullptr)
+        , statPop(0)
+        , Infected(0)
+        , Births(0.0f)
+        , Disease_Deaths(0.0f)
+        , new_infections(0.0f)
+        , new_reportedinfections(0.0f)
+        , Cumulative_Infections(0.0f)
+        , Cumulative_Reported_Infections(0.0f)
+        , Campaign_Cost(0.0f)
+        , Possible_Mothers(0)           // counters starting with this one were only used for old spatial reporting and can probably now be removed
+        , infectionrate(0.0f)
+        , mInfectivity(0.0f)
+        , parent(nullptr)
+        , max_sampling_cell_pop(0.0f)
+        , vital_birth_dependence(VitalBirthDependence::FIXED_BIRTH_RATE)
+        , vital_birth_time_dependence(VitalBirthTimeDependence::NONE)
+        , infectivity_scaling(InfectivityScaling::CONSTANT_INFECTIVITY)
+        , infectivity_sinusoidal_forcing_amplitude( 1.0f )
+        , infectivity_sinusoidal_forcing_phase( 0.0f )
+        , infectivity_boxcar_forcing_amplitude( 1.0f )
+        , infectivity_boxcar_start_time( 0.0 )
+        , infectivity_boxcar_end_time( 0.0 )
+        , birth_rate_sinusoidal_forcing_amplitude( 1.0f )
+        , birth_rate_sinusoidal_forcing_phase( 0.0f )
+        , birth_rate_boxcar_forcing_amplitude( 1.0f )
+        , birth_rate_boxcar_start_time( 0.0 )
+        , birth_rate_boxcar_end_time( 0.0 )
     {
-        SetContextTo(_parent_sim);
+        SetContextTo(_parent_sim);  // TODO - this should be a virtual function call, but it isn't because the constructor isn't finished running yet.
         const char* keys_whitelist_tmp[] = { "Accessibility", "Geographic", "Place", "Risk", "QualityOfCare", "HasActiveTB"  };
         ipkeys_whitelist = std::set< std::string> ( keys_whitelist_tmp, keys_whitelist_tmp+sizeof_array(keys_whitelist_tmp) );
         whitelist_enabled = true;
     }
 
-    Node::Node() :
-          _latitude(FLT_MAX)
+    Node::Node()
+        : _latitude(FLT_MAX)
         , _longitude(FLT_MAX)
         , ind_sampling_type( IndSamplingType::TRACK_ALL )
-        , parent(nullptr)
         , transmissionGroups(nullptr)
         , event_context_host(nullptr)
+        , parent(nullptr)
     {
 
     }
@@ -425,7 +424,7 @@ namespace Kernel
     {
         if( _latitude == FLT_MAX )
         {
-            _latitude  = (float)(demographics["NodeAttributes"]["Latitude"].AsDouble());
+            _latitude  = float(demographics["NodeAttributes"]["Latitude"].AsDouble());
         }
         return _latitude ;
     }
@@ -434,7 +433,7 @@ namespace Kernel
     {
         if( _longitude == FLT_MAX )
         {
-            _longitude = (float)(demographics["NodeAttributes"]["Longitude"].AsDouble());
+            _longitude = float(demographics["NodeAttributes"]["Longitude"].AsDouble());
         }
         return _longitude ;
     }
@@ -451,7 +450,7 @@ namespace Kernel
         else if (iid == GET_IID(IGlobalContext))
             parent->QueryInterface(iid, (void**) &foundInterface);
         else
-            foundInterface = 0;
+            foundInterface = nullptr;
 
         QueryResult status = e_NOINTERFACE;
         if ( foundInterface )
@@ -668,7 +667,7 @@ namespace Kernel
                     float last_age_edge = -0.01f; // would use -1 but that's our max/"EOF" value.
                     for( int age_bin_idx=0; age_bin_idx<num_edges; age_bin_idx++ )
                     {
-                        float age_edge = (float)demographics[IP_KEY][idx][IP_AGE_BIN_KEY][age_bin_idx].AsDouble();
+                        float age_edge = float(demographics[IP_KEY][idx][IP_AGE_BIN_KEY][age_bin_idx].AsDouble());
                         if( age_edge <= last_age_edge && age_edge != -1)
                         {
                             throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "age_edge", age_edge, "last_age_edge", last_age_edge );
@@ -699,7 +698,7 @@ namespace Kernel
                            }
                         }
                         // Put people in correct bucket at first
-                        float min_age = (float)ageBinJsonArray[age_bin_idx-1].AsDouble();
+                        float min_age = float(ageBinJsonArray[age_bin_idx-1].AsDouble());
                         float max_age = age_edge;
                         if( max_age == -1 )
                         {
@@ -744,19 +743,19 @@ namespace Kernel
                             bdayTx.Add( "To", getAgeBinPropertyNameFromIndex( ageBinJsonArray, age_bin_idx) );
                             //distribs[ _age_bins_key ].insert( make_pair( 0.0f, getAgeBinPropertyNameFromIndex( ageBinJsonArray, age_bin_idx) ) ); // for PropertyReport
 
-                            JsonObjectDemog startStopObj( JsonObjectDemog::JSON_OBJECT_OBJECT );
-                            startStopObj.Add( "Start", 1.0 );
-                            startStopObj.Add( "Duration", -1.0 );
-                            bdayTx.Add( IP_WHEN_KEY, startStopObj );
+                            JsonObjectDemog binStartStopObj( JsonObjectDemog::JSON_OBJECT_OBJECT );
+                            binStartStopObj.Add( "Start", 1.0 );
+                            binStartStopObj.Add( "Duration", -1.0 );
+                            bdayTx.Add( IP_WHEN_KEY, binStartStopObj );
 
                             bdayTx.Add( "Type", "At_Age" );
                             bdayTx.Add( "Age_In_Years", min_age );
                             bdayTx.Add( "Coverage", 1.0 );
 
-                            JsonObjectDemog minmaxObj( JsonObjectDemog::JSON_OBJECT_OBJECT );
-                            minmaxObj.Add( "Min", 0.0 );
-                            minmaxObj.Add( "Max", min_age );
-                            bdayTx.Add( IP_AGE_KEY, minmaxObj );
+                            JsonObjectDemog binMinMaxObj( JsonObjectDemog::JSON_OBJECT_OBJECT );
+                            binMinMaxObj.Add( "Min", 0.0 );
+                            binMinMaxObj.Add( "Max", min_age );
+                            bdayTx.Add( IP_AGE_KEY, binMinMaxObj );
                             
                             bdayTx.Add( IP_PROBABILITY_KEY, 1.0 );
                             bdayTx.Add( IP_REVERSION_KEY, 0.0 );
@@ -886,13 +885,13 @@ namespace Kernel
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        birthrate = (float)(demographics["NodeAttributes"]["BirthRate"].AsDouble());
+        birthrate = float(demographics["NodeAttributes"]["BirthRate"].AsDouble());
         
         release_assert(params());
         if (demographics_other) 
         {
-            Above_Poverty = (float)(demographics["NodeAttributes"]["AbovePoverty"].AsDouble());
-            urban = (bool)demographics["NodeAttributes"]["Urban"].AsInt();
+            Above_Poverty = float(demographics["NodeAttributes"]["AbovePoverty"].AsDouble());
+            urban = bool(demographics["NodeAttributes"]["Urban"].AsInt());
 
             if (GET_CONFIGURABLE(SimulationConfig)->coinfection_incidence == true)
             {
@@ -943,18 +942,18 @@ namespace Kernel
                 // still allow simulation to run, but set birthrate depending on value of vital_birth_dependence
                 if (vital_birth_dependence == VitalBirthDependence::POPULATION_DEP_RATE)
                 {
-                    birthrate = (float) TWO_PERCENT_PER_YEAR; // TBD: literal should be defined as float
+                    birthrate = float(TWO_PERCENT_PER_YEAR); // TBD: literal should be defined as float
                 }
                 else if ( vital_birth_dependence == VitalBirthDependence::DEMOGRAPHIC_DEP_RATE   ||
                     vital_birth_dependence == VitalBirthDependence::INDIVIDUAL_PREGNANCIES ||
                     vital_birth_dependence == VitalBirthDependence::INDIVIDUAL_PREGNANCIES_BY_URBAN_AND_AGE ||
                     vital_birth_dependence == VitalBirthDependence::INDIVIDUAL_PREGNANCIES_BY_AGE_AND_YEAR )
                 {
-                    birthrate = (float) INDIVIDUAL_BIRTHRATE; // TBD: literal should be defined as float // DJK: why is this even needed for age-specific fertility?
+                    birthrate = float(INDIVIDUAL_BIRTHRATE); // TBD: literal should be defined as float // DJK: why is this even needed for age-specific fertility?
                 }
                 else
                 {
-                    birthrate = (float)FALLBACK_BIRTHRATE;
+                    birthrate = float(FALLBACK_BIRTHRATE);
                 }
             }
         }
@@ -963,7 +962,7 @@ namespace Kernel
         //if (GET_CONFIGURABLE(SimulationConfig)->climate_structure != ClimateStructure::CLIMATE_OFF)   // DJK: Why commented?
         {
             LOG_DEBUG( "Parsing NodeAttributes->Altitude tag in node demographics file.\n" );
-            float altitude = (float)(demographics["NodeAttributes"]["Altitude"].AsDouble());
+            float altitude = float(demographics["NodeAttributes"]["Altitude"].AsDouble());
             localWeather = climate_factory->CreateClimate(this, altitude, GetLatitudeDegrees() );
         }
 #endif
@@ -1034,7 +1033,7 @@ namespace Kernel
     
                             for (int iSink = 0; iSink < valueCount; iSink++) 
                             {
-                                 matrixRow.push_back((float)scalingMatrixRow[iSink].AsDouble());
+                                 matrixRow.push_back(float(scalingMatrixRow[iSink].AsDouble()));
                             }
                             scalingMatrix.push_back(matrixRow);
                         }
@@ -1051,7 +1050,7 @@ namespace Kernel
     
                             for (int iSink = 0; iSink < valueCount; iSink++) 
                             {
-                                 matrixRow.push_back((float)scalingMatrixRow[iSink].AsDouble());
+                                 matrixRow.push_back(float(scalingMatrixRow[iSink].AsDouble()));
                             }
                             scalingMatrix.push_back(matrixRow);
                         }
@@ -1182,15 +1181,15 @@ namespace Kernel
             LOG_DEBUG_F( "Check whether any individuals need to be down-sampled based on immunity.\n" );
             for (auto individual : individualHumans) 
             {
-                float current_mc_weight = (float)individual->GetMonteCarloWeight();
+                float current_mc_weight = float(individual->GetMonteCarloWeight());
                 if (current_mc_weight == 1.0f/Ind_Sample_Rate)  //KM: In immune state downsampling, there is only the regular sampling and downsampled; don't need to go through the logic if we've already been downsampled.
                 {
-                   float desired_mc_weight = 1.0f/(float)( adjustSamplingRateByImmuneState(Ind_Sample_Rate, ( individual->GetAcquisitionImmunity() < immune_threshold_for_downsampling ) && !individual->IsInfected() ) );
+                   float desired_mc_weight = 1.0f/float(adjustSamplingRateByImmuneState(Ind_Sample_Rate, ( individual->GetAcquisitionImmunity() < immune_threshold_for_downsampling ) && !individual->IsInfected() ));
                    if (desired_mc_weight > current_mc_weight)
                    {
                        LOG_DEBUG_F("MC Sampling: acq. immunity = %f, is infected = %i, current MC weight = %f, desired MC weight = %f\n", individual->GetAcquisitionImmunity(), individual->IsInfected(), current_mc_weight,desired_mc_weight);
                        individual->UpdateMCSamplingRate(desired_mc_weight);
-                       LOG_DEBUG_F("MC Weight now %f, state change = %i\n", (float)individual->GetMonteCarloWeight(), (int)individual->GetStateChange());
+                       LOG_DEBUG_F("MC Weight now %f, state change = %i\n", float(individual->GetMonteCarloWeight()), (int)individual->GetStateChange());
                    }
                    /*else if (desired_mc_weight < current_mc_weight)
                    {
@@ -1201,7 +1200,7 @@ namespace Kernel
         }
 
         // If individual has migrated or died -- HAPPENS AT THE END OF TIME STEP -- he/she still contributes to the infectivity
-        int tempflag = 0;
+// clorton        int tempflag = 0;
         for( int iHuman = 0 ; iHuman < individualHumans.size() ; /* control in loop */ )
         {
             IndividualHuman *individual = individualHumans[iHuman];
@@ -1215,7 +1214,7 @@ namespace Kernel
                 individual->UpdateGroupPopulation(-1.0f);
 
                 if (state_change == HumanStateChange::KilledByInfection)
-                    Disease_Deaths += (float)individual->GetMonteCarloWeight();
+                    Disease_Deaths += float(individual->GetMonteCarloWeight());
 
                 RemoveHuman( iHuman );
                 delete individual;
@@ -1318,7 +1317,7 @@ namespace Kernel
 
     void Node::accumulateIndividualPopulationStatistics(float dt, IndividualHuman* individual)
     {
-        float mc_weight = (float)individual->GetMonteCarloWeight();
+        float mc_weight = float(individual->GetMonteCarloWeight());
 
         individual->UpdateInfectiousness(dt);
         float infectiousness = mc_weight * individual->GetInfectiousness();
@@ -1329,7 +1328,7 @@ namespace Kernel
 
         // These are zeroed out in ResetNodeStateCounters before being accumulated each time step
         statPop          += mc_weight;
-        Possible_Mothers += (long int) (individual->IsPossibleMother() ? mc_weight : 0);
+        Possible_Mothers += long(individual->IsPossibleMother() ? mc_weight : 0);
         mInfectivity     += infectiousness;
         Infected         += individual->IsInfected() ? mc_weight : 0;
     }
@@ -1346,7 +1345,6 @@ namespace Kernel
 
     float Node::getDensityContactScaling()
     {
-        float cellarea          = 0;
         float localdensity      = 0;
         float densitycorrection = 1.00;
 
@@ -1365,10 +1363,10 @@ namespace Kernel
 
             // Pi/180 will convert degree to radian
             float lat_deg = GetLatitudeDegrees() ;
-            float lat_rad1 = (float) (( 90.0 - lat_deg - params()->lloffset ) * PI / 180.0);
-            float lat_rad2 = (float) (( 90.0 - lat_deg + params()->lloffset ) * PI / 180.0);
+            float lat_rad1 = float(( 90.0 - lat_deg - params()->lloffset ) * PI / 180.0);
+            float lat_rad2 = float(( 90.0 - lat_deg + params()->lloffset ) * PI / 180.0);
 
-            cellarea = (float) (EARTH_RADIUS_KM * EARTH_RADIUS_KM * (cos(lat_rad1) - cos(lat_rad2)) * params()->lloffset * 2.0 * (PI / 180.0));
+            float cellarea = float(EARTH_RADIUS_KM * EARTH_RADIUS_KM * (cos(lat_rad1) - cos(lat_rad2)) * params()->lloffset * 2.0 * (PI / 180.0));
 
             localdensity = statPop / cellarea;
             LOG_DEBUG_F("[getDensityContactScaling] cellarea = %f, localdensity = %f\n", cellarea, localdensity);
@@ -1412,7 +1410,6 @@ namespace Kernel
 
     void Node::updateVitalDynamics(float dt)
     {
-        bool newbirth        = false;
         long int newborns    = 0;
         float step_birthrate = birthrate * dt * x_birth;
 
@@ -1442,21 +1439,21 @@ namespace Kernel
         {
             case VitalBirthDependence::FIXED_BIRTH_RATE:
             //  Calculate births for this time step from constant rate and add them
-            newborns = (long)randgen->Poisson(step_birthrate);
+            newborns = long(randgen->Poisson(step_birthrate));
             populateNewIndividualsByBirth(newborns);
             break;
 
             case VitalBirthDependence::POPULATION_DEP_RATE:
             //  Birthrate dependent on current population, determined by census
-            if (ind_sampling_type) {  newborns = (long)randgen->Poisson(step_birthrate * statPop); }        // KTO !TRACK_ALL?  is this right?
-            else {  newborns = (long)randgen->Poisson(step_birthrate * individualHumans.size()); }
+            if (ind_sampling_type) {  newborns = long(randgen->Poisson(step_birthrate * statPop)); }        // KTO !TRACK_ALL?  is this right?
+            else {  newborns = long(randgen->Poisson(step_birthrate * individualHumans.size())); }
             populateNewIndividualsByBirth(newborns);
             break;
 
             case VitalBirthDependence::DEMOGRAPHIC_DEP_RATE:
             // Birthrate dependent on current census females in correct age range
-            if (ind_sampling_type) {  newborns = (long)randgen->Poisson(step_birthrate * Possible_Mothers); }       // KTO !TRACK_ALL?  is this right?
-            else {  newborns = (long)randgen->Poisson(step_birthrate * Possible_Mothers); }
+            if (ind_sampling_type) {  newborns = long(randgen->Poisson(step_birthrate * Possible_Mothers)); }       // KTO !TRACK_ALL?  is this right?
+            else {  newborns = long(randgen->Poisson(step_birthrate * Possible_Mothers)); }
             populateNewIndividualsByBirth(newborns);
             break;
 
@@ -1476,8 +1473,7 @@ namespace Kernel
 
                 if (individual->IsPregnant())
                 {
-                    newbirth = individual->UpdatePregnancy(dt);
-                    if (newbirth)
+                    if (individual->UpdatePregnancy(dt))
                     {
                         populateNewIndividualFromPregnancy(individual);
                     }
@@ -1496,10 +1492,10 @@ namespace Kernel
                         }
                         else    // INDIVIDUAL_PREGNANCIES_BY_AGE_AND_YEAR
                         {
-                            temp_birthrate = GetDemographicsDistribution(NodeDemographicsDistribution::FertilityDistribution)->DrawResultValue(individual->GetAge(), (float) GetTime().Year());
+                            temp_birthrate = GetDemographicsDistribution(NodeDemographicsDistribution::FertilityDistribution)->DrawResultValue(individual->GetAge(), float(GetTime().Year()));
                         }
 
-                        LOG_DEBUG_F("%d-year-old possible mother has annual fertility rate = %f\n", (int)(individual->GetAge()/DAYSPERYEAR), temp_birthrate * DAYSPERYEAR);
+                        LOG_DEBUG_F("%d-year-old possible mother has annual fertility rate = %f\n", int(individual->GetAge()/DAYSPERYEAR), temp_birthrate * DAYSPERYEAR);
 
                         // In the limit of low birth rate, the probability of becoming pregnant is equivalent to the birth rate.
                         // However, at higher birth rates, some fraction of possible mothers will already be pregnant.  
@@ -1520,7 +1516,7 @@ namespace Kernel
 
                     if (randgen->e() < step_birthrate) 
                     {
-                        LOG_DEBUG_F("New pregnancy for %d-year-old\n", (int)(individual->GetAge()/DAYSPERYEAR));
+                        LOG_DEBUG_F("New pregnancy for %d-year-old\n", int(individual->GetAge()/DAYSPERYEAR));
                         float duration = (DAYSPERWEEK * WEEKS_FOR_GESTATION) - (randgen->e() *dt);
                         individual->InitiatePregnancy( duration );
                     }
@@ -1537,12 +1533,12 @@ namespace Kernel
     // This function allows one to scale the initial population by a factor without modifying an input demographics file.
     void Node::PopulateFromDemographics()
     {
-        uint32_t InitPop = (unsigned long)(demographics["NodeAttributes"]["InitialPopulation"].AsUint64());
+        uint32_t InitPop = uint32_t(demographics["NodeAttributes"]["InitialPopulation"].AsUint64());
 
         // correct initial population if necessary (historical simulation for instance
         if ( GET_CONFIGURABLE(SimulationConfig)->population_scaling )
         {
-            InitPop = (unsigned long)(InitPop * population_scaling_factor);
+            InitPop = uint32_t(InitPop * population_scaling_factor);
         }
 
         populateNewIndividualsFromDemographics(InitPop);
@@ -1564,8 +1560,7 @@ namespace Kernel
         double female_ratio       = 0.5;
         const double default_age  = 20 * DAYSPERYEAR; // age to use by default if age_initialization_distribution_type config parameter is off.
 
-        float temp_sampling_rate  = (ind_sampling_type == IndSamplingType::TRACK_ALL) ? 1.0F : (float) Ind_Sample_Rate; // default sampling rate from config if we're doing sampling at all.  modified in case of adapted sampling.
-        IndividualHuman* tempind = nullptr;      // pointer to newly-created individuals for any necessary manipulation
+        float temp_sampling_rate  = (ind_sampling_type == IndSamplingType::TRACK_ALL) ? 1.0F : float(Ind_Sample_Rate); // default sampling rate from config if we're doing sampling at all.  modified in case of adapted sampling.
 
         // Cache pointers to the initial age distribution with the node, so it doesn't have to be created for each individual.
         // After the demographic initialization is complete, it can be removed from the map and deleted
@@ -1580,11 +1575,11 @@ namespace Kernel
         }
 
         LOG_DEBUG( "Parsing IndividualAttributes->PrevalenceDistributionFlag tag in node demographics file.\n" );
-        auto prevalence_distribution_type = (DistributionFunction::Enum)demographics["IndividualAttributes"]["PrevalenceDistributionFlag"].AsInt();
+        auto prevalence_distribution_type = DistributionFunction::Enum(demographics["IndividualAttributes"]["PrevalenceDistributionFlag"].AsInt());
         LOG_DEBUG( "Parsing IndividualAttributes->PrevalenceDistribution1 tag in node demographics file.\n" );
-        float prevdist1 = (float)(demographics["IndividualAttributes"]["PrevalenceDistribution1"].AsDouble());
+        float prevdist1 = float(demographics["IndividualAttributes"]["PrevalenceDistribution1"].AsDouble());
         LOG_DEBUG( "Parsing IndividualAttributes->PrevalenceDistribution2 tag in node demographics file.\n" );
-        float prevdist2 = (float)(demographics["IndividualAttributes"]["PrevalenceDistribution2"].AsDouble());
+        float prevdist2 = float(demographics["IndividualAttributes"]["PrevalenceDistribution2"].AsDouble());
         initial_prevalence = Probability::getInstance()->fromDistribution(prevalence_distribution_type, prevdist1, prevdist2, 0);
 
         // Male/Female ratio implemented as a Gaussian at 50 +/- 1%.
@@ -1621,7 +1616,7 @@ namespace Kernel
             if ( ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP && ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE )
                 temp_age = calculateInitialAge(default_age);
 
-            tempind = configureAndAddNewIndividual(1.0F / temp_sampling_rate, (float)temp_age, (float)initial_prevalence, (float)female_ratio);
+            IndividualHuman* tempind = configureAndAddNewIndividual(1.0F / temp_sampling_rate, float(temp_age), float(initial_prevalence), float(female_ratio));
             
             if(tempind->GetAge() == 0)
             {
@@ -1669,23 +1664,23 @@ namespace Kernel
         {
             // set heterogeneous immunity
             LOG_DEBUG( "Parsing ImmunityDistribution\n" );
-            immunity_dist_type = (DistributionFunction::Enum)(demographics["IndividualAttributes"]["ImmunityDistributionFlag"].AsInt());
-            immunity_dist1     = (float)                     (demographics["IndividualAttributes"]["ImmunityDistribution1"   ].AsDouble());
-            immunity_dist2     = (float)                     (demographics["IndividualAttributes"]["ImmunityDistribution2"   ].AsDouble());
+            immunity_dist_type = DistributionFunction::Enum(demographics["IndividualAttributes"]["ImmunityDistributionFlag"].AsInt());
+            immunity_dist1     =                      float(demographics["IndividualAttributes"]["ImmunityDistribution1"   ].AsDouble());
+            immunity_dist2     =                      float(demographics["IndividualAttributes"]["ImmunityDistribution2"   ].AsDouble());
 
             // set heterogeneous risk
             LOG_DEBUG( "Parsing RiskDistribution\n" );
-            risk_dist_type = (DistributionFunction::Enum)(demographics["IndividualAttributes"]["RiskDistributionFlag"].AsInt());
-            risk_dist1     = (float)                     (demographics["IndividualAttributes"]["RiskDistribution1"   ].AsDouble());
-            risk_dist2     = (float)                     (demographics["IndividualAttributes"]["RiskDistribution2"   ].AsDouble());
+            risk_dist_type = DistributionFunction::Enum(demographics["IndividualAttributes"]["RiskDistributionFlag"].AsInt());
+            risk_dist1     =                      float(demographics["IndividualAttributes"]["RiskDistribution1"   ].AsDouble());
+            risk_dist2     =                      float(demographics["IndividualAttributes"]["RiskDistribution2"   ].AsDouble());
         }
 
         if ( (migration_info != nullptr) && migration_info->IsHeterogeneityEnabled() )
         {
             LOG_DEBUG( "Parsing MigrationHeterogeneityDistribution\n" );
-            migration_dist_type = (DistributionFunction::Enum)(demographics["IndividualAttributes"]["MigrationHeterogeneityDistributionFlag"].AsInt());
-            migration_dist1     = (float)                     (demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution1"   ].AsDouble());
-            migration_dist2     = (float)                     (demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution2"   ].AsDouble());
+            migration_dist_type = DistributionFunction::Enum(demographics["IndividualAttributes"]["MigrationHeterogeneityDistributionFlag"].AsInt());
+            migration_dist1     =                      float(demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution1"   ].AsDouble());
+            migration_dist2     =                      float(demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution2"   ].AsDouble());
         }
     }
 
@@ -1701,7 +1696,7 @@ namespace Kernel
         int    temp_infections    = 0;
         double female_ratio       = 0.5;   // TODO: it would be useful to add the possibility to read this from demographics (e.g. in India where there is a significant gender imbalance at birth)
 
-        float  temp_sampling_rate = (ind_sampling_type == IndSamplingType::TRACK_ALL) ? 1.0F : (float)Ind_Sample_Rate; // default sampling rate from config if we're doing sampling at all.  modified in case of adapted sampling.
+        float  temp_sampling_rate = (ind_sampling_type == IndSamplingType::TRACK_ALL) ? 1.0F : float(Ind_Sample_Rate); // default sampling rate from config if we're doing sampling at all.  modified in case of adapted sampling.
 
         // Determine the prevalence from which maternal transmission events will be calculated, depending on birth model
         if (maternal_transmission) 
@@ -1713,6 +1708,11 @@ namespace Kernel
                 temp_prevalence = (statPop > 0) ? float(Infected) / statPop : 0; break;
             case VitalBirthDependence::DEMOGRAPHIC_DEP_RATE:
                 temp_prevalence = getPrevalenceInPossibleMothers(); break;
+
+            case VitalBirthDependence::INDIVIDUAL_PREGNANCIES: break;
+            case VitalBirthDependence::INDIVIDUAL_PREGNANCIES_BY_URBAN_AND_AGE: break;
+            case VitalBirthDependence::INDIVIDUAL_PREGNANCIES_BY_AGE_AND_YEAR: break;
+            default: break;
             }
         }
 
@@ -1731,7 +1731,6 @@ namespace Kernel
         }
 
         // Loop through potential new births 
-        IndividualHuman* child;
         for (int i = 1; i <= count_new_individuals; i++)
         {
             // Condition for rejecting potential individuals based on sampling rate in case we're using sampling
@@ -1739,10 +1738,10 @@ namespace Kernel
 
             // Configure and/or add new individual (EAW: there doesn't appear to be any significant difference between the two cases below)
             auto prob_maternal_transmission = GET_CONFIGURABLE(SimulationConfig)->prob_maternal_transmission;
-            child = nullptr;
+            IndividualHuman* child = nullptr;
             if (demographics_birth)
             {
-                child = configureAndAddNewIndividual(1.0F / temp_sampling_rate, 0, (float)temp_prevalence * prob_maternal_transmission, (float)female_ratio); // N.B. temp_prevalence=0 without maternal_transmission flag
+                child = configureAndAddNewIndividual(1.0F / temp_sampling_rate, 0, float(temp_prevalence) * prob_maternal_transmission, float(female_ratio)); // N.B. temp_prevalence=0 without maternal_transmission flag
             }
             else
             {
@@ -1768,17 +1767,13 @@ namespace Kernel
         int child_infections = 0;
         float child_age      = 0;
         int child_gender     = Gender::MALE;
-        float mc_weight      = 1;
-        float child_poverty  = 0; //note, child's financial level independent of mother, may be important for diseases with a social network structure
+        float mc_weight      = float(mother->GetMonteCarloWeight()); // same sampling weight as mother
+        float child_poverty  = float(mother->GetAbovePoverty()); //same poverty as mother //note, child's financial level independent of mother, may be important for diseases with a social network structure
         float female_ratio   = 0.5;
 
         IndividualHuman *child;
 
-        child_poverty = (float)mother->GetAbovePoverty(); //same poverty as mother
-
         if (randgen->e() < female_ratio) { child_gender = Gender::FEMALE; }
-
-        mc_weight = (float)mother->GetMonteCarloWeight(); // same sampling weight as mother
 
         if (maternal_transmission)
         {
@@ -1807,7 +1802,7 @@ namespace Kernel
         {
             if (individual->IsPossibleMother() && individual->IsInfected())
             {
-                prevalence += (float)individual->GetMonteCarloWeight();
+                prevalence += float(individual->GetMonteCarloWeight());
             }
         }
 
@@ -1829,19 +1824,19 @@ namespace Kernel
                 // "FertilityDistribution" is added to map in Node::SetParameters if 'vital_birth_dependence' flag is set to INDIVIDUAL_PREGNANCIES_BY_URBAN_AND_AGE
 
                 temp_birthrate = GetDemographicsDistribution(NodeDemographicsDistribution::FertilityDistribution)->DrawResultValue((GetUrban()?1.0:0.0), individual->GetAge());
-                LOG_DEBUG_F("%d-year-old possible mother has annual fertility rate = %f\n", (int)(individual->GetAge()/DAYSPERYEAR), temp_birthrate * DAYSPERYEAR);
+                LOG_DEBUG_F("%d-year-old possible mother has annual fertility rate = %f\n", int(individual->GetAge()/DAYSPERYEAR), temp_birthrate * DAYSPERYEAR);
             }
             else if(vital_birth_dependence == VitalBirthDependence::INDIVIDUAL_PREGNANCIES_BY_AGE_AND_YEAR) 
             { 
                 // "FertilityDistribution" is added to map in Node::SetParameters if 'vital_birth_dependence' flag is set to INDIVIDUAL_PREGNANCIES_BY_AGE_AND_YEAR
 
-                temp_birthrate = GetDemographicsDistribution(NodeDemographicsDistribution::FertilityDistribution)->DrawResultValue(individual->GetAge(), (float) GetTime().Year());
-                LOG_DEBUG_F("%d-year-old possible mother has annual fertility rate = %f\n", (int)(individual->GetAge()/DAYSPERYEAR), temp_birthrate * DAYSPERYEAR);
+                temp_birthrate = GetDemographicsDistribution(NodeDemographicsDistribution::FertilityDistribution)->DrawResultValue(individual->GetAge(), float(GetTime().Year()));
+                LOG_DEBUG_F("%d-year-old possible mother has annual fertility rate = %f\n", int(individual->GetAge()/DAYSPERYEAR), temp_birthrate * DAYSPERYEAR);
             }
 
             if (randgen->e() < x_birth * temp_birthrate * (DAYSPERWEEK * WEEKS_FOR_GESTATION)) // is the woman within any of the 40 weeks of pregnancy?
             {
-                duration = (float)randgen->e() * (DAYSPERWEEK * WEEKS_FOR_GESTATION); // uniform distribution over 40 weeks
+                duration = float(randgen->e()) * (DAYSPERWEEK * WEEKS_FOR_GESTATION); // uniform distribution over 40 weeks
                 LOG_DEBUG_F("Initial pregnancy of %f remaining days for %d-year-old\n", duration, (int)(individual->GetAge()/DAYSPERYEAR));
                 individual->InitiatePregnancy(duration);// initialize the pregnancy
             }
@@ -1856,18 +1851,20 @@ namespace Kernel
     float Node::drawInitialImmunity(float ind_init_age)
     {
         float temp_immunity = 1.0;
-        float randdraw = 0.0;
+
         switch( params()->immunity_initialization_distribution_type ) 
         {
         case DistributionType::DISTRIBUTION_COMPLEX:
+            {
             // Read from "ImmunityDistribution" that would have been added to map in Node::LoadImmunityDemographicsDistribution
-            randdraw = randgen->e();
+            float randdraw = randgen->e();
             temp_immunity = GetDemographicsDistribution(NodeDemographicsDistribution::ImmunityDistribution)->DrawFromDistribution(randdraw, ind_init_age);
             LOG_DEBUG_F( "creating individual with age = %f and immunity = %f, with randdraw = %f\n",  ind_init_age, temp_immunity, randdraw);
+            }
             break;
 
         case DistributionType::DISTRIBUTION_SIMPLE:
-            temp_immunity = (float)(Probability::getInstance()->fromDistribution(immunity_dist_type, immunity_dist1, immunity_dist2, 1.0));
+            temp_immunity = float(Probability::getInstance()->fromDistribution(immunity_dist_type, immunity_dist1, immunity_dist2, 1.0));
             break;
 
         case DistributionType::DISTRIBUTION_OFF:
@@ -1894,7 +1891,6 @@ namespace Kernel
         float temp_immunity  = 1.0;
         float temp_risk      = 1.0;
         float temp_migration = 1.0;
-        IndividualHuman* tempind = nullptr;
 
         // gender distribution exists regardless of gender demographics, but is ignored unless vital_birth_dependence is 2 or 3
         if (randgen->e() < comm_female_ratio)
@@ -1914,13 +1910,13 @@ namespace Kernel
             temp_immunity = drawInitialImmunity(ind_init_age);
 
             // set heterogeneous risk
-            temp_risk = (float)(Probability::getInstance()->fromDistribution(risk_dist_type, risk_dist1, risk_dist2, 1.0));
+            temp_risk = float(Probability::getInstance()->fromDistribution(risk_dist_type, risk_dist1, risk_dist2, 1.0));
         }
 
         if ( (migration_info != nullptr) && migration_info->IsHeterogeneityEnabled() )
         {
-            temp_migration = (float)(Probability::getInstance()->fromDistribution(migration_dist_type, migration_dist1, migration_dist2, 1.0));
-        }                          
+            temp_migration = float(Probability::getInstance()->fromDistribution(migration_dist_type, migration_dist1, migration_dist2, 1.0));
+        }
 
         // Finally, add the individual
         if (randgen->e() < Above_Poverty)
@@ -1928,7 +1924,7 @@ namespace Kernel
             temp_poverty = 1.0; 
         }
 
-        tempind = addNewIndividual(ind_MCweight, ind_init_age, temp_gender, temp_infs, temp_immunity, temp_risk, temp_migration, temp_poverty);
+        IndividualHuman* tempind = addNewIndividual(ind_MCweight, ind_init_age, temp_gender, temp_infs, temp_immunity, temp_risk, temp_migration, temp_poverty);
 
         // Now if tracking individual pregnancies, need to see if this new Individual is pregnant to begin the simulation
         if ( vital_birth_dependence == VitalBirthDependence::INDIVIDUAL_PREGNANCIES ||
@@ -2022,11 +2018,11 @@ namespace Kernel
                 throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Age_Initialization_Distribution_Type", "DISTRIBUTION_SIMPLE", "['IndividualAttributes']['AgeDistributionFlag' or 'AgeDistribution1' or 'AgeDistribution2']", "<not found>" );
             }
             LOG_DEBUG( "Parsing IndividualAttributes->AgeDistributionFlag tag in node demographics file.\n" );
-            auto age_distribution_type = (DistributionFunction::Enum)demographics["IndividualAttributes"]["AgeDistributionFlag"].AsInt();
+            auto age_distribution_type = DistributionFunction::Enum(demographics["IndividualAttributes"]["AgeDistributionFlag"].AsInt());
             LOG_DEBUG( "Parsing IndividualAttributes->AgeDistribution1 tag in node demographics file.\n" );
-            float agedist1 = (float)(demographics["IndividualAttributes"]["AgeDistribution1"].AsDouble()); 
+            float agedist1 = float(demographics["IndividualAttributes"]["AgeDistribution1"].AsDouble()); 
             LOG_DEBUG( "Parsing IndividualAttributes->AgeDistribution2 tag in node demographics file.\n" );
-            float agedist2 = (float)(demographics["IndividualAttributes"]["AgeDistribution2"].AsDouble());
+            float agedist2 = float(demographics["IndividualAttributes"]["AgeDistribution2"].AsDouble());
 
             age = Probability::getInstance()->fromDistribution(age_distribution_type, agedist1, agedist2, (20 * DAYSPERYEAR));
         }
@@ -2178,7 +2174,13 @@ namespace Kernel
 
         case NewInfectionState::NewInfection: 
             reportNewInfection(ih);
-            break; 
+            break;
+
+        case NewInfectionState::Invalid: break;
+        case NewInfectionState::NewlyActive: break;
+        case NewInfectionState::NewlyInactive: break;
+        case NewInfectionState::NewlyCleared: break;
+        default: break;
         } 
 
         ih->ClearNewInfectionState();
@@ -2186,7 +2188,7 @@ namespace Kernel
 
     void Node::reportNewInfection(IndividualHuman *ih)
     {
-        float monte_carlo_weight = (float)ih->GetMonteCarloWeight();
+        float monte_carlo_weight = float(ih->GetMonteCarloWeight());
 
         new_infections += monte_carlo_weight; 
         Cumulative_Infections += monte_carlo_weight; 
@@ -2199,12 +2201,12 @@ namespace Kernel
                 entry.second(ih);
             }
         }
-        newInfectedPeopleAgeProduct += monte_carlo_weight * (float)ih->GetAge();
+        newInfectedPeopleAgeProduct += monte_carlo_weight * float(ih->GetAge());
     }
 
     void Node::reportDetectedInfection(IndividualHuman *ih)
     {
-        float monte_carlo_weight = (float)ih->GetMonteCarloWeight();
+        float monte_carlo_weight = float(ih->GetMonteCarloWeight());
 
         new_reportedinfections += monte_carlo_weight; 
         Cumulative_Reported_Infections += monte_carlo_weight; 
@@ -2213,7 +2215,7 @@ namespace Kernel
 
     void Node::finalizeNodeStateCounters(void)
     {
-        infected_people_prior.push_back( (float)new_infections );
+        infected_people_prior.push_back( float(new_infections) );
         if( infected_people_prior.size() > infection_averaging_window )
         {
             infected_people_prior.pop_front();
@@ -2223,7 +2225,7 @@ namespace Kernel
             throw CalculatedValueOutOfRangeException( __FILE__, __LINE__, __FUNCTION__, "newInfectedPeopleAgeProduct", newInfectedPeopleAgeProduct, 0 );
         }
 
-        infected_age_people_prior.push_back( (float)newInfectedPeopleAgeProduct );
+        infected_age_people_prior.push_back( float(newInfectedPeopleAgeProduct) );
         if( infected_age_people_prior.size() > infection_averaging_window )
         {
             infected_age_people_prior.pop_front();
@@ -2302,14 +2304,14 @@ namespace Kernel
         {
             // first check if latitude is between the vertex latitude coordinates
             //if ((ndc->latitude < vertex_coords[2 * i + 1]) != (ndc->latitude < vertex_coords[2 * i + 3])) // also prevents divide by zero
-            if (lat < ((float)poly_interp[i][1].As<Number>()) != (lat < (float)poly_interp[i+1][1].As<Number>())) // also prevents divide by zero
+            if (lat < float(poly_interp[i][1].As<Number>()) != (lat < float(poly_interp[i+1][1].As<Number>()))) // also prevents divide by zero
             {
                 //if (ndc->longitude < (vertex_coords[2 * i + 2] - vertex_coords[2 * i]) * (ndc->latitude - vertex_coords[2 * i + 1]) / (vertex_coords[2 * i + 3] - vertex_coords[2 * i + 1]) + vertex_coords[2 * i])
                 // for clarity
-                float curLong = (float) poly_interp[i][0].As<Number>();
-                float curLat = (float) poly_interp[i][1].As<Number>();
-                float nextLong = (float) poly_interp[i+1][0].As<Number>();
-                float nextLat = (float) poly_interp[i+1][1].As<Number>();
+                float curLong  = float(poly_interp[i][0].As<Number>());
+                float curLat   = float(poly_interp[i][1].As<Number>());
+                float nextLong = float(poly_interp[i+1][0].As<Number>());
+                float nextLat  = float(poly_interp[i+1][1].As<Number>());
                 if (lon < (nextLong - curLong) * (lat - curLat) / (nextLat - curLat) + curLong)
                 {
                     inside = !inside;   // crossing!

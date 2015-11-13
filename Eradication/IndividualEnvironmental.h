@@ -35,7 +35,7 @@ namespace Kernel
         virtual Infection* createInfection(suids::suid _suid) override;
         virtual void ReportInfectionState() override;
 
-        DECLARE_SERIALIZABLE(IndividualHumanEnvironmental, IIndividualHuman);
+        DECLARE_SERIALIZABLE(IndividualHumanEnvironmental);
 
     private:
 

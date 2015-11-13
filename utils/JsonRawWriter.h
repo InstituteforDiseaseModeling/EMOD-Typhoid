@@ -4,38 +4,36 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 
-class JsonRawWriter : public IArchive
+namespace Kernel
 {
-public:
-    explicit JsonRawWriter();
-    virtual ~JsonRawWriter();
+    class JsonRawWriter : public IArchive
+    {
+    public:
+        explicit JsonRawWriter();
+        virtual ~JsonRawWriter();
 
-private:
+    private:
 
-    virtual IArchive& startElement() override;
-    virtual IArchive& endElement() override;
-    virtual IArchive& labelElement(char*) override;
+        virtual IArchive& startElement() override;
+        virtual IArchive& endElement() override;
+        virtual IArchive& labelElement(char*) override;
 
-    virtual IArchive& operator&(bool&) override;
-    virtual IArchive& operator&(int32_t&) override;
-    virtual IArchive& operator&(int64_t&) override;
-    virtual IArchive& operator&(uint32_t&) override;
-    virtual IArchive& operator&(uint64_t&) override;
-    virtual IArchive& operator&(float&) override;
-    virtual IArchive& operator&(double&) override;
-    virtual IArchive& operator&(std::string&) override;
+        virtual IArchive& operator&(bool&) override;
+        virtual IArchive& operator&(int32_t&) override;
+        virtual IArchive& operator&(int64_t&) override;
+        virtual IArchive& operator&(uint32_t&) override;
+        virtual IArchive& operator&(uint64_t&) override;
+        virtual IArchive& operator&(float&) override;
+        virtual IArchive& operator&(double&) override;
+        virtual IArchive& operator&(std::string&) override;
 
-    virtual void serialize(bool array[], size_t count);
-    virtual void serialize(int32_t array[], size_t count);
-    virtual void serialize(int64_t array[], size_t count);
-    virtual void serialize(float array[], size_t count);
+        virtual bool HasError() override;
+        virtual bool IsWriter() override;
+        virtual size_t GetBufferSize() override;
+        virtual const char* GetBuffer() override;
 
-    virtual bool HasError() override;
-    virtual bool IsWriter() override;
-    virtual size_t GetBufferSize() override;
-    virtual const char* GetBuffer() override;
-
-    rapidjson::StringBuffer* m_buffer;
-    rapidjson::Writer<rapidjson::StringBuffer>* m_writer;
-    bool m_closed;
-};
+        rapidjson::StringBuffer* m_buffer;
+        rapidjson::Writer<rapidjson::StringBuffer>* m_writer;
+        bool m_closed;
+    };
+}

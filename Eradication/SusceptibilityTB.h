@@ -82,7 +82,7 @@ namespace Kernel
         int  m_current_infections;  
         float m_cough_infectiousness;
 
-        DECLARE_SERIALIZABLE(SusceptibilityTB, ISusceptibilityContext);
+        DECLARE_SERIALIZABLE(SusceptibilityTB);
 
     private:
 

@@ -58,7 +58,7 @@ namespace Kernel
         BednetType::Enum bednet_type;
         IBednetConsumer *ibc;
 
-        DECLARE_SERIALIZABLE(SimpleBednet, IDistributableIntervention);
+        DECLARE_SERIALIZABLE(SimpleBednet);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

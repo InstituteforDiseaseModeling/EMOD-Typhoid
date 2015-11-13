@@ -92,7 +92,7 @@ namespace Kernel
 
         StrainIdentity* m_strain;
 
-        DECLARE_SERIALIZABLE(VectorCohortIndividual, IVectorCohort);
+        DECLARE_SERIALIZABLE(VectorCohortIndividual);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
