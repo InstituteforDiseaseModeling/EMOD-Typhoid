@@ -42,7 +42,7 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(InfectionVector);
 
-    void InfectionVector::serialize(IArchive& ar, ISerializable* obj)
+    void InfectionVector::serialize(IArchive& ar, InfectionVector* obj)
     {
         Infection::serialize(ar, obj);
     }

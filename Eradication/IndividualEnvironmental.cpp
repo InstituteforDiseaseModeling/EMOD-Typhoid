@@ -113,13 +113,13 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(IndividualHumanEnvironmental);
 
-    void IndividualHumanEnvironmental::serialize(IArchive& ar, ISerializable* obj)
+    void IndividualHumanEnvironmental::serialize(IArchive& ar, IndividualHumanEnvironmental* obj)
     {
         IndividualHuman::serialize(ar, obj);
         /* IndividualHumanEnvironmental doesn't (yet) have any member fields.
         IndividualHumanEnvironmental& individual = *dynamic_cast<IndividualHumanEnvironmental*>(obj);
-        ar.startElement();
-        ar.endElement();
+        ar.startObject();
+        ar.endObject();
         */
     }
 }

@@ -367,7 +367,7 @@ namespace Kernel
 
     void VectorHabitat::serialize(IArchive& ar, VectorHabitat* habitat)
     {
-        ar.startElement();
+        ar.startObject();
             ar.labelElement("m_habitat_type") & (uint32_t&)habitat->m_habitat_type;
             ar.labelElement("m_max_larval_capacity") & habitat->m_max_larval_capacity;
             ar.labelElement("m_current_larval_capacity") & habitat->m_current_larval_capacity;
@@ -378,71 +378,62 @@ namespace Kernel
             ar.labelElement("m_larvicide_habitat_scaling") & habitat->m_larvicide_habitat_scaling;
             ar.labelElement("m_rainfall_mortality") & habitat->m_rainfall_mortality;
             ar.labelElement("m_egg_crowding_correction") & habitat->m_egg_crowding_correction;
-        ar.endElement();
+        ar.endObject();
     }
 
     void serialize(IArchive& ar, map<VectorHabitatType::Enum, float>& mapping)
     {
         size_t count=  ar.IsWriter() ? mapping.size() : -1;
 
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            if (count > 0)
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto entry : mapping)
             {
-                if (ar.IsWriter())
-                {
-                    for (auto entry : mapping)
-                    {
-                        ar.startElement();
-                            ar.labelElement("enum") & (uint32_t&)entry.first;
-                            ar.labelElement("float") & entry.second;
-                        ar.endElement();
-                    }
-                }
-                else
-                {
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        VectorHabitatType::Enum type;
-                        float value;
-                        ar.startElement();
-                            ar.labelElement("enum") & (uint32_t&)type;
-                            ar.labelElement("float") & value;
-                        ar.endElement();
-                        mapping[type] = value;
-                    }
-                }
+                ar.startObject();
+                    ar.labelElement("key") & (uint32_t&)entry.first;
+                    ar.labelElement("value") & entry.second;
+                ar.endObject();
             }
-        ar.endElement();
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                VectorHabitatType::Enum type;
+                float value;
+                ar.startObject();
+                    ar.labelElement("key") & (uint32_t&)type;
+                    ar.labelElement("value") & value;
+                ar.endObject();
+                mapping[type] = value;
+            }
+        }
+        ar.endArray();
     }
 
     void VectorHabitat::serialize(IArchive& ar, list<VectorHabitat*>& habitats)
     {
         size_t count = ar.IsWriter() ? habitats.size() : -1;
 
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            if (count > 0)
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto habitat : habitats)
             {
-                ar.labelElement("__list__");
-
-                if (ar.IsWriter())
-                {
-                    for (auto habitat : habitats)
-                    {
-                        serialize(ar, habitat);
-                    }
-                }
-                else
-                {
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        auto habitat = new VectorHabitat();
-                        serialize(ar, habitat);
-                        habitats.push_back(habitat);
-                    }
-                }
+                serialize(ar, habitat);
             }
-        ar.endElement();
+        }
+        else
+        {
+            habitats.clear();
+            for (size_t i = 0; i < count; ++i)
+            {
+                auto habitat = new VectorHabitat();
+                serialize(ar, habitat);
+                habitats.push_back(habitat);
+            }
+        }
+        ar.endArray();
     }
 }

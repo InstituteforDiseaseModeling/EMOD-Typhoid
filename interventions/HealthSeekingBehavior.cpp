@@ -189,15 +189,15 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(SimpleHealthSeekingBehavior);
 
-    void SimpleHealthSeekingBehavior::serialize(IArchive& ar, ISerializable* obj)
+    void SimpleHealthSeekingBehavior::serialize(IArchive& ar, SimpleHealthSeekingBehavior* obj)
     {
-        SimpleHealthSeekingBehavior& intervention = *dynamic_cast<SimpleHealthSeekingBehavior*>(obj);
-        ar.startElement();
+        SimpleHealthSeekingBehavior& intervention = *obj;
+        ar.startObject();
             ar.labelElement("probability_of_seeking") & intervention.probability_of_seeking;
 //            ar.labelElement("actual_intervention_config") & intervention.actual_intervention_config;
             ar.labelElement("actual_intervention_event") & intervention.actual_intervention_event;
             ar.labelElement("single_use") & intervention.single_use;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

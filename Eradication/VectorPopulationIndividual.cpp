@@ -759,17 +759,17 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(VectorPopulationIndividual);
 
-    void VectorPopulationIndividual::serialize(IArchive& ar, ISerializable* obj)
+    void VectorPopulationIndividual::serialize(IArchive& ar, VectorPopulationIndividual* obj)
     {
         VectorPopulation::serialize(ar, obj);
 
-        VectorPopulationIndividual& population = *dynamic_cast<VectorPopulationIndividual*>(obj);
-        ar.startElement();
+        VectorPopulationIndividual& population = *obj;
+        ar.startObject();
             ar.labelElement("m_mosquito_weight") & population.m_mosquito_weight;
 //            ar.labelElement("m_average_oviposition_killing") & population.m_average_oviposition_killing;
 ////          ar.labelElement("IndoorExposedQueues"); serialize(ar, population.IndoorExposedQueues);
 ////          ar.labelElement("OutdoorExposedQueues"); serialize(ar, population.OutdoorExposedQueues);
-        ar.endElement();
+        ar.endObject();
     }
 
     //template void VectorPopulationIndividual::serialize(boost::archive::binary_iarchive & ar, const unsigned int file_version);

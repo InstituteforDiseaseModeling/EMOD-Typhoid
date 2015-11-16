@@ -278,15 +278,15 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(InterventionsContainer);
 
-    void InterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
+    void InterventionsContainer::serialize(IArchive& ar, InterventionsContainer* obj)
     {
-        InterventionsContainer& container = *static_cast<InterventionsContainer*>(obj);
-        ar.startElement();
+        InterventionsContainer& container = *obj;
+        ar.startObject();
             ar.labelElement("drugVaccineReducedAcquire") & container.drugVaccineReducedAcquire;
             ar.labelElement("drugVaccineReducedTransmit") & container.drugVaccineReducedTransmit;
             ar.labelElement("drugVaccineReducedMortality") & container.drugVaccineReducedMortality;
             ar.labelElement("interventions") & container.interventions;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

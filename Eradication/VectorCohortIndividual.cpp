@@ -239,29 +239,29 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(VectorCohortIndividual);
 
-    void VectorCohortIndividual::serialize(IArchive& ar, ISerializable* obj)
+    void VectorCohortIndividual::serialize(IArchive& ar, VectorCohortIndividual* obj)
     {
         VectorCohortAging::serialize(ar, obj);
-        VectorCohortIndividual& cohort = *dynamic_cast<VectorCohortIndividual*>(obj);
-        ar.startElement();
-        ar.labelElement("state") & (uint32_t&)cohort.state;
-        ar.labelElement("additional_mortality") & cohort.additional_mortality;
-        ar.labelElement("oviposition_timer") & cohort.oviposition_timer;
-        ar.labelElement("parity") & cohort.parity;
-        ar.labelElement("neweggs") & cohort.neweggs;
-        ar.labelElement("migration_destination") & cohort.migration_destination.data;
-        ar.labelElement("species") & cohort.species;
+        VectorCohortIndividual& cohort = *obj;
+        ar.startObject();
+            ar.labelElement("state") & (uint32_t&)cohort.state;
+            ar.labelElement("additional_mortality") & cohort.additional_mortality;
+            ar.labelElement("oviposition_timer") & cohort.oviposition_timer;
+            ar.labelElement("parity") & cohort.parity;
+            ar.labelElement("neweggs") & cohort.neweggs;
+            ar.labelElement("migration_destination") & cohort.migration_destination.data;
+            ar.labelElement("species") & cohort.species;
 
-        bool has_strain = ar.IsWriter() ? (cohort.m_strain != nullptr) : false; // We put false here, but this is just a placeholder since we're reading from the archive.
-        ar.labelElement("__has_strain__");
-        ar & has_strain;
-        // TODO - perhaps the cohort should always have a non-null m_strain, just use a dummy StrainIdentity when there's no infection.
-        if (has_strain)
-        {
-            ar.labelElement("m_strain"); Kernel::serialize(ar, cohort.m_strain);
-        }
+            bool has_strain = ar.IsWriter() ? (cohort.m_strain != nullptr) : false; // We put false here, but this is just a placeholder since we're reading from the archive.
+            ar.labelElement("__has_strain__");
+            ar & has_strain;
+            // TODO - perhaps the cohort should always have a non-null m_strain, just use a dummy StrainIdentity when there's no infection.
+            if (has_strain)
+            {
+                ar.labelElement("m_strain"); Kernel::serialize(ar, cohort.m_strain);
+            }
 
-        ar.endElement();
+        ar.endObject();
     }
 
 #if 0

@@ -891,7 +891,7 @@ namespace Kernel
         if (demographics_other) 
         {
             Above_Poverty = float(demographics["NodeAttributes"]["AbovePoverty"].AsDouble());
-            urban = bool(demographics["NodeAttributes"]["Urban"].AsInt());
+            urban = (demographics["NodeAttributes"]["Urban"].AsInt() != 0);
 
             if (GET_CONFIGURABLE(SimulationConfig)->coinfection_incidence == true)
             {

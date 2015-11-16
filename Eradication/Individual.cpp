@@ -1081,6 +1081,7 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig)->prob_maternal_transmission;
     }
 
+/* clorton
     std::string IndividualHuman::toJson()
     {
         IJsonObjectAdapter* adapter = CreateJsonObjAdapter();
@@ -1173,11 +1174,12 @@ namespace Kernel
 
         delete adapter;
     }
-
-    void IndividualHuman::serialize(IArchive& ar, ISerializable* obj)
+*/
+    
+    void IndividualHuman::serialize(IArchive& ar, IndividualHuman* obj)
     {
-        IndividualHuman& individual = *static_cast<IndividualHuman*>(obj);
-        ar.startElement();
+        IndividualHuman& individual = *obj;
+        ar.startObject();
             ar.labelElement("suid_data") & individual.suid.data;
             ar.labelElement("m_age") & individual.m_age;
             ar.labelElement("m_gender") & individual.m_gender;
@@ -1207,7 +1209,7 @@ namespace Kernel
             ar.labelElement("waypoints") & individual.waypoints;
             ar.labelElement("waypoints_trip_type") & individual.waypoints_trip_type;
             ar.labelElement("Properties") & individual.Properties;
-        ar.endElement();
+        ar.endObject();
     }
 
     REGISTER_SERIALIZABLE(IndividualHuman);

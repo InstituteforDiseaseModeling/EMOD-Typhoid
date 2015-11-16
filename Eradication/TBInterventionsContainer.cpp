@@ -260,60 +260,55 @@ namespace Kernel
 
     void serialize(IArchive& ar, TBDrugEffects_t& effects)
     {
-        ar.startElement();
+        ar.startObject();
         ar.labelElement("clearance_rate") & effects.clearance_rate;
         ar.labelElement("inactivation_rate") & effects.inactivation_rate;
         ar.labelElement("resistance_rate") & effects.resistance_rate;
         ar.labelElement("relapse_rate") & effects.relapse_rate;
         ar.labelElement("mortality_rate") & effects.mortality_rate;
-        ar.endElement();
+        ar.endObject();
     }
 
     void serialize(IArchive& ar, TBDrugEffectsMap_t& map)
     {
         size_t count = ar.IsWriter() ? map.size() : -1;
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            if (count > 0)
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto& entry : map)
             {
-                ar.labelElement("__map__");
-                ar.startElement();
-                    if (ar.IsWriter())
-                    {
-                        for (auto& entry : map)
-                        {
-                            ar.startElement();
-                                ar.labelElement("key") & (uint32_t&)entry.first;
-                                ar.labelElement("value"); Kernel::serialize(ar, entry.second);
-                            ar.endElement();
-                        }
-                    }
-                    else
-                    {
-                        for (size_t i = 0; i < count; i++)
-                        {
-                            TBDrugType::Enum type;
-                            ar.labelElement("key") & (uint32_t&)type;
-                            TBDrugEffects_t effects;
-                            ar.labelElement("value"); Kernel::serialize(ar, effects);
-                            map[type] = effects;
-                        }
-                    }
-                ar.endElement();
+                ar.startObject();
+                    ar.labelElement("key") & (uint32_t&)entry.first;
+                    ar.labelElement("value"); Kernel::serialize(ar, entry.second);
+                ar.endObject();
             }
-        ar.endElement();
+        }
+        else
+        {
+            for (size_t i = 0; i < count; i++)
+            {
+                TBDrugType::Enum type;
+                TBDrugEffects_t effects;
+                ar.startObject();
+                    ar.labelElement("key") & (uint32_t&)type;
+                    ar.labelElement("value"); Kernel::serialize(ar, effects);
+                ar.endObject();
+                map[type] = effects;
+            }
+        }
+        ar.endArray();
     }
 
-    void TBInterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
+    void TBInterventionsContainer::serialize(IArchive& ar, TBInterventionsContainer* obj)
     {
         InterventionsContainer::serialize(ar, obj);
-        TBInterventionsContainer& interventions = *dynamic_cast<TBInterventionsContainer*>(obj);
-        ar.startElement();
+        TBInterventionsContainer& interventions = *obj;
+        ar.startObject();
             ar.labelElement("TB_drug_effects"); Kernel::serialize(ar, interventions.TB_drug_effects);
             ar.labelElement("m_is_tb_tx_naive_TBIVC") & interventions.m_is_tb_tx_naive_TBIVC;
             ar.labelElement("m_failed_tx_TBIVC") & interventions.m_failed_tx_TBIVC;
             ar.labelElement("m_ever_relapsed_TBIVC") & interventions.m_ever_relapsed_TBIVC;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

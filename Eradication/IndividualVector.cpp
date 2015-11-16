@@ -267,42 +267,35 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(IndividualHumanVector);
 
-    void IndividualHumanVector::serialize(IArchive& ar, ISerializable* obj)
+    void IndividualHumanVector::serialize(IArchive& ar, IndividualHumanVector* obj)
     {
-        IndividualHumanVector& individual = *dynamic_cast<IndividualHumanVector*>(obj);
+        IndividualHumanVector& individual = *obj;
 
         IndividualHuman::serialize(ar, obj);
-        ar.startElement();
+        ar.startObject();
             ar.labelElement("m_strain_exposure");
                 Kernel::serialize(ar, individual.m_strain_exposure);
             ar.labelElement("m_total_exposure") & individual.m_total_exposure;
 
-        ar.endElement();
+        ar.endObject();
     }
 
     IArchive& serialize(IArchive& ar, std::vector<strain_exposure_t>& vec)
     {
         size_t count = ar.IsWriter() ? vec.size() : 0xDEADBEEF;
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            ar.labelElement("__vector__");
+        ar.startArray(count);
+        if (!ar.IsWriter())
+        {
+            vec.resize(count);
+        }
 
-            if (!ar.IsWriter())
-            {
-                vec.resize(count);
-            }
-
-            ar.startElement();
-
-            for (auto& entry : vec)
-            {
-                StrainIdentity* strain = &entry.first;
-                Kernel::serialize(ar, strain);
-                ar & entry.second;
-            }
-
-            ar.endElement();
-        ar.endElement();
+        for (auto& entry : vec)
+        {
+            StrainIdentity* strain = &entry.first;
+            Kernel::serialize(ar, strain);
+            ar & entry.second;
+        }
+        ar.endArray();
 
         return ar;
     }

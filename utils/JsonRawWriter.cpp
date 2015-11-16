@@ -11,17 +11,28 @@ namespace Kernel
         m_writer->StartArray();
     }
 
-    IArchive& JsonRawWriter::startElement()
+    IArchive& JsonRawWriter::startObject()
     {
-        m_writer->StartArray();
+// clorton        m_writer->StartArray();
 
         return *this;
     }
 
-    IArchive& JsonRawWriter::endElement()
+    IArchive& JsonRawWriter::endObject()
     {
-        m_writer->EndArray();
+// clorton        m_writer->EndArray();
 
+        return *this;
+    }
+
+    IArchive& JsonRawWriter::startArray(size_t& count)
+    {
+        m_writer->Uint(uint32_t(count));
+        return *this;
+    }
+
+    IArchive& JsonRawWriter::endArray()
+    {
         return *this;
     }
 

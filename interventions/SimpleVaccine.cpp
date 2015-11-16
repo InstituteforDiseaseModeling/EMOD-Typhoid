@@ -230,19 +230,19 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(SimpleVaccine);
 
-    void SimpleVaccine::serialize(IArchive& ar, ISerializable* obj)
+    void SimpleVaccine::serialize(IArchive& ar, SimpleVaccine* obj)
     {
-        SimpleVaccine& vaccine = *dynamic_cast<SimpleVaccine*>(obj);
-        ar.startElement();
-        ar.labelElement("vaccine_type")                  & vaccine.vaccine_type;
-        ar.labelElement("vaccine_take")                  & vaccine.vaccine_take;
-        ar.labelElement("current_reducedacquire")        & vaccine.current_reducedacquire;
-        ar.labelElement("current_reducedtransmit")       & vaccine.current_reducedtransmit;
-        ar.labelElement("current_reducedmortality")      & vaccine.current_reducedmortality;
-        ar.labelElement("durability_time_profile")       & (uint32_t&)vaccine.durability_time_profile;
-        ar.labelElement("primary_decay_time_constant")   & vaccine.primary_decay_time_constant;
-        ar.labelElement("secondary_decay_time_constant") & vaccine.secondary_decay_time_constant;
-        ar.endElement();
+        SimpleVaccine& vaccine = *obj;
+        ar.startObject();
+            ar.labelElement("vaccine_type")                  & vaccine.vaccine_type;
+            ar.labelElement("vaccine_take")                  & vaccine.vaccine_take;
+            ar.labelElement("current_reducedacquire")        & vaccine.current_reducedacquire;
+            ar.labelElement("current_reducedtransmit")       & vaccine.current_reducedtransmit;
+            ar.labelElement("current_reducedmortality")      & vaccine.current_reducedmortality;
+            ar.labelElement("durability_time_profile")       & (uint32_t&)vaccine.durability_time_profile;
+            ar.labelElement("primary_decay_time_constant")   & vaccine.primary_decay_time_constant;
+            ar.labelElement("secondary_decay_time_constant") & vaccine.secondary_decay_time_constant;
+        ar.endObject();
     }
 }
 

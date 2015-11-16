@@ -29,7 +29,7 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(InfectionAirborne);
 
-    void InfectionAirborne::serialize(IArchive& ar, ISerializable* obj)
+    void InfectionAirborne::serialize(IArchive& ar, InfectionAirborne* obj)
     {
         Infection::serialize(ar, obj);
         // InfectionAirborne doesn't add any fields to the class.

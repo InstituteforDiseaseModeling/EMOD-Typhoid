@@ -131,15 +131,15 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(VectorCohort);
 
-    void VectorCohort::serialize(IArchive& ar, ISerializable* obj)
+    void VectorCohort::serialize(IArchive& ar, VectorCohort* obj)
     {
-        VectorCohort& cohort = *dynamic_cast<VectorCohort*>(obj);
-        ar.startElement();
-        ar.labelElement("vector_genetics");
-        VectorMatingStructure::serialize(ar, cohort.vector_genetics);
-        ar.labelElement("progress") & cohort.progress;
-        ar.labelElement("population") & cohort.population;
-        ar.endElement();
+        VectorCohort& cohort = *obj;
+        ar.startObject();
+            ar.labelElement("vector_genetics");
+            VectorMatingStructure::serialize(ar, cohort.vector_genetics);
+            ar.labelElement("progress") & cohort.progress;
+            ar.labelElement("population") & cohort.population;
+        ar.endObject();
     }
 
 #if 0

@@ -645,42 +645,39 @@ namespace Kernel
     void serialize(IArchive& ar, IndividualHumanMalaria::gametocytes_strain_map_t& mapping)
     {
         size_t count = ar.IsWriter() ? mapping.size() : -1;
-        ar.startElement();
-        ar.labelElement("__count__") & count;
-        if (count > 0)
+        ar.startArray(count);
+        if (ar.IsWriter())
         {
-            ar.labelElement("__map__");
-            ar.startElement();
-            if (ar.IsWriter())
+            for (auto& entry : mapping)
             {
-                for (auto& entry : mapping)
-                {
-                    StrainIdentity* strain = const_cast<StrainIdentity*>(&entry.first);
+                StrainIdentity* strain = const_cast<StrainIdentity*>(&entry.first);
+                ar.startObject();
                     ar.labelElement("key"); serialize(ar, strain);
                     ar.labelElement("value") & entry.second;
-                }
+                ar.endObject();
             }
-            else
-            {
-                for (size_t i = 0; i < count; i++)
-                {
-                    StrainIdentity* strain;
-                    ar.labelElement("key"); serialize(ar, strain);
-                    int64_t value;
-                    ar.labelElement("value") & value;
-                    mapping[*strain] = value;
-                }
-            }
-            ar.endElement();
         }
-        ar.endElement();
+        else
+        {
+            for (size_t i = 0; i < count; i++)
+            {
+                StrainIdentity* strain;
+                int64_t value;
+                ar.startObject();
+                    ar.labelElement("key"); serialize(ar, strain);
+                    ar.labelElement("value") & value;
+                ar.endObject();
+                mapping[*strain] = value;
+            }
+        }
+        ar.endArray();
     }
 
-    void IndividualHumanMalaria::serialize(IArchive& ar, ISerializable* obj)
+    void IndividualHumanMalaria::serialize(IArchive& ar, IndividualHumanMalaria* obj)
     {
         IndividualHumanVector::serialize(ar, obj);
-        IndividualHumanMalaria& individual = *dynamic_cast<IndividualHumanMalaria*>(obj);
-        ar.startElement();
+        IndividualHumanMalaria& individual = *obj;
+        ar.startObject();
         ar.labelElement("m_inv_microliters_blood") & individual.m_inv_microliters_blood;
         ar.labelElement("m_male_gametocytes") & individual.m_male_gametocytes;
         ar.labelElement("m_female_gametocytes") & individual.m_female_gametocytes;
@@ -692,7 +689,7 @@ namespace Kernel
 ///        ar.labelElement("m_clinical_symptoms"); ::serialize(ar, individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
 // shared pointer        ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, individual.m_CSP_antibody);
         ar.labelElement("m_initial_infected_hepatocytes") & individual.m_initial_infected_hepatocytes;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

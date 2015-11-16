@@ -1045,11 +1045,11 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(SusceptibilityMalaria);
 
-    void SusceptibilityMalaria::serialize(IArchive& ar, ISerializable* obj)
+    void SusceptibilityMalaria::serialize(IArchive& ar, SusceptibilityMalaria* obj)
     {
         SusceptibilityVector::serialize(ar, obj);
-        SusceptibilityMalaria& susceptibility = *dynamic_cast<SusceptibilityMalaria*>(obj);
-        ar.startElement();
+        SusceptibilityMalaria& susceptibility = *obj;
+        ar.startObject();
 //            ar.labelElement("m_antigenic_flag") & susceptibility.m_antigenic_flag;
             ar.labelElement("m_maternal_antibody_strength") & susceptibility.m_maternal_antibody_strength;
             ar.labelElement("m_CSP_antibody") & susceptibility.m_CSP_antibody;
@@ -1073,7 +1073,7 @@ namespace Kernel
             ar.labelElement("cumulative_days_of_severe_incident") & susceptibility.cumulative_days_of_severe_incident;
             ar.labelElement("cumulative_days_of_severe_anemia_incident") & susceptibility.cumulative_days_of_severe_anemia_incident;
             ar.labelElement("days_between_incidents") & susceptibility.days_between_incidents;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

@@ -184,17 +184,17 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(MalariaInterventionsContainer);
 
-    void MalariaInterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
+    void MalariaInterventionsContainer::serialize(IArchive& ar, MalariaInterventionsContainer* obj)
     {
-        MalariaInterventionsContainer& container = *static_cast<MalariaInterventionsContainer*>(obj);
+        MalariaInterventionsContainer& container = *obj;
         VectorInterventionsContainer::serialize(ar, obj);
-        ar.startElement();
-        ar.labelElement("drug_IRBC_killrate") & container.drug_IRBC_killrate;
-        ar.labelElement("drug_hepatocyte")    & container.drug_hepatocyte;
-        ar.labelElement("drug_gametocyte02")  & container.drug_gametocyte02;
-        ar.labelElement("drug_gametocyte34")  & container.drug_gametocyte34;
-        ar.labelElement("drug_gametocyteM")   & container.drug_gametocyteM;
-        ar.endElement();
+        ar.startObject();
+            ar.labelElement("drug_IRBC_killrate") & container.drug_IRBC_killrate;
+            ar.labelElement("drug_hepatocyte")    & container.drug_hepatocyte;
+            ar.labelElement("drug_gametocyte02")  & container.drug_gametocyte02;
+            ar.labelElement("drug_gametocyte34")  & container.drug_gametocyte34;
+            ar.labelElement("drug_gametocyteM")   & container.drug_gametocyteM;
+        ar.endObject();
     }
 }
 

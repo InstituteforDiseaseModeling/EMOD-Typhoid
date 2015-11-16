@@ -10,7 +10,7 @@ namespace Kernel
     void ISerializable::serialize(IArchive& ar, ISerializable*& obj)
     {
         std::string class_name = ar.IsWriter() ? obj->GetClassName() : "__UNK__";
-        ar.startElement();
+        ar.startObject();
         ar.labelElement("__cname__") & class_name;
         auto serialize_function = SerializationRegistrar::_get_serializer(class_name);
         ar.labelElement("__inst__");
@@ -20,6 +20,6 @@ namespace Kernel
             obj = constructor_function();
         }
         serialize_function(ar, obj);
-        ar.endElement();
+        ar.endObject();
     }
 }

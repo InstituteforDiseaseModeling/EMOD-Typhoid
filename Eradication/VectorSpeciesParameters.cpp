@@ -25,30 +25,30 @@ namespace Kernel
             parameters = new VectorSpeciesParameters();
         }
 
-        ar.startElement();
-        ar.labelElement("habitat_param") & parameters->habitat_param;
-        ar.labelElement("habitat_type") & (std::vector<uint32_t>&)parameters->habitat_type;
-        ar.labelElement("aquaticarrhenius1") & parameters->aquaticarrhenius1;
-        ar.labelElement("aquaticarrhenius2") & parameters->aquaticarrhenius2;
-        ar.labelElement("infectedarrhenius1") & parameters->infectedarrhenius1;
-        ar.labelElement("infectedarrhenius2") & parameters->infectedarrhenius2;
-        ar.labelElement("immatureduration") & parameters->immatureduration;
-        ar.labelElement("daysbetweenfeeds") & parameters->daysbetweenfeeds;
-        ar.labelElement("anthropophily") & parameters->anthropophily;
-        ar.labelElement("eggbatchsize") & parameters->eggbatchsize;
-        ar.labelElement("infectedeggbatchmod") & parameters->infectedeggbatchmod;
-        ar.labelElement("infectiousmortalitymod") & parameters->infectiousmortalitymod;
-        ar.labelElement("aquaticmortalityrate") & parameters->aquaticmortalityrate;
-        ar.labelElement("adultlifeexpectancy") & parameters->adultlifeexpectancy;
-        ar.labelElement("transmissionmod") & parameters->transmissionmod;
-        ar.labelElement("acquiremod") & parameters->acquiremod;
-        ar.labelElement("infectioushfmortmod") & parameters->infectioushfmortmod;
-        ar.labelElement("indoor_feeding") & parameters->indoor_feeding;
+        ar.startObject();
+            ar.labelElement("habitat_param") & parameters->habitat_param;
+            ar.labelElement("habitat_type") & (std::vector<uint32_t>&)parameters->habitat_type;
+            ar.labelElement("aquaticarrhenius1") & parameters->aquaticarrhenius1;
+            ar.labelElement("aquaticarrhenius2") & parameters->aquaticarrhenius2;
+            ar.labelElement("infectedarrhenius1") & parameters->infectedarrhenius1;
+            ar.labelElement("infectedarrhenius2") & parameters->infectedarrhenius2;
+            ar.labelElement("immatureduration") & parameters->immatureduration;
+            ar.labelElement("daysbetweenfeeds") & parameters->daysbetweenfeeds;
+            ar.labelElement("anthropophily") & parameters->anthropophily;
+            ar.labelElement("eggbatchsize") & parameters->eggbatchsize;
+            ar.labelElement("infectedeggbatchmod") & parameters->infectedeggbatchmod;
+            ar.labelElement("infectiousmortalitymod") & parameters->infectiousmortalitymod;
+            ar.labelElement("aquaticmortalityrate") & parameters->aquaticmortalityrate;
+            ar.labelElement("adultlifeexpectancy") & parameters->adultlifeexpectancy;
+            ar.labelElement("transmissionmod") & parameters->transmissionmod;
+            ar.labelElement("acquiremod") & parameters->acquiremod;
+            ar.labelElement("infectioushfmortmod") & parameters->infectioushfmortmod;
+            ar.labelElement("indoor_feeding") & parameters->indoor_feeding;
 
-        ar.labelElement("feedingrate") & parameters->feedingrate;
-        ar.labelElement("adultmortality") & parameters->adultmortality;
-        ar.labelElement("immaturerate") & parameters->immaturerate;
-        ar.endElement();
+            ar.labelElement("feedingrate") & parameters->feedingrate;
+            ar.labelElement("adultmortality") & parameters->adultmortality;
+            ar.labelElement("immaturerate") & parameters->immaturerate;
+        ar.endObject();
     }
 
     VectorSpeciesParameters::VectorSpeciesParameters() :

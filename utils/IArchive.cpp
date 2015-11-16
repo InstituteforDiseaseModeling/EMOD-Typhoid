@@ -10,179 +10,37 @@ namespace Kernel
         return *this;
     }
 
-    /*
-    IArchive& IArchive::operator & (std::vector<int32_t>& vec)
-    {
-        size_t count = this->IsWriter() ? vec.size() : -1;
-
-        this->startElement();
-            this->labelElement("__count__") & count;
-            if (count > 0)
-            {
-                this->labelElement("__vector__");
-                this->startElement();
-                if (this->IsWriter())
-                {
-                    for (auto& entry : vec)
-                    {
-                        *this & entry;
-                    }
-                }
-                else
-                {
-                    vec.clear();
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        int32_t value;
-                        *this & value;
-                        vec.push_back(value);
-                    }
-                }
-                this->endElement();
-            }
-        this->endElement();
-
-        return *this;
-    }
-
-    IArchive& IArchive::operator&(std::vector<uint32_t>& vec)
-    {
-        size_t count = this->IsWriter() ? vec.size() : -1;
-
-        this->startElement();
-            this->labelElement("__count__") & count;
-            if (count > 0)
-            {
-                this->labelElement("__vector__");
-                this->startElement();
-                if (this->IsWriter())
-                {
-                    for (auto& entry : vec)
-                    {
-                        *this & entry;
-                    }
-                }
-                else
-                {
-                    vec.clear();
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        uint32_t value;
-                        *this & value;
-                        vec.push_back(value);
-                    }
-                }
-                this->endElement();
-            }
-        this->endElement();
-
-        return *this;
-    }
-
-    IArchive& IArchive::operator&(std::vector<int64_t>& vec)
-    {
-        size_t count = this->IsWriter() ? vec.size() : -1;
-
-        this->startElement();
-            this->labelElement("__count__") & count;
-            if (count > 0)
-            {
-                this->labelElement("__vector__");
-                this->startElement();
-                if (this->IsWriter())
-                {
-                    for (auto& entry : vec)
-                    {
-                        *this & entry;
-                    }
-                }
-                else
-                {
-                    vec.clear();
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        int64_t value;
-                        *this & value;
-                        vec.push_back(value);
-                    }
-                }
-                this->endElement();
-            }
-        this->endElement();
-
-        return *this;
-    }
-
-    IArchive& IArchive::operator & (std::vector<float>& vec)
-    {
-        size_t count = this->IsWriter() ? vec.size() : -1;
-
-        this->startElement();
-            this->labelElement("__count__") & count;
-            if (count > 0)
-            {
-                this->labelElement("__vector__");
-                this->startElement();
-                if (this->IsWriter())
-                {
-                    for (auto& entry : vec)
-                    {
-                        *this & entry;
-                    }
-                }
-                else
-                {
-                    vec.clear();
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        float value;
-                        *this & value;
-                        vec.push_back(value);
-                    }
-                }
-                this->endElement();
-            }
-        this->endElement();
-
-        return *this;
-    }
-    */
-
     IArchive& IArchive::operator & (std::map<std::string, float>& mapping)
     {
         size_t count = this->IsWriter() ? mapping.size() : -1;
 
-        this->startElement();
-            this->labelElement("__count__") & count;
-            if (count> 0)
+        this->startArray(count);
+        if (this->IsWriter())
+        {
+            for (auto& entry : mapping)
             {
-                this->labelElement("__map__");
-                this->startElement();
-                if (this->IsWriter())
-                {
-                    for (auto& entry : mapping)
-                    {
-                        std::string key = entry.first;
-                        float value = entry.second;
-                        *this & key;
-                        *this & value;
-                    }
-                }
-                else
-                {
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        std::string key;
-                        float value;
-                        *this & key;
-                        *this & value;
-                        mapping[key] = value;
-                    }
-                }
-                this->endElement();
+                std::string key = entry.first;
+                float value = entry.second;
+                startObject();
+                    labelElement("key") & key;
+                    labelElement("value") & value;
+                endObject();
             }
-
-        this->endElement();
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                std::string key;
+                float value;
+                startObject();
+                    labelElement("key") & key;
+                    labelElement("value") & value;
+                endObject();
+                mapping[key] = value;
+            }
+        }
+        this->endArray();
 
         return *this;
     }
@@ -191,32 +49,24 @@ namespace Kernel
     {
         size_t count = this->IsWriter() ? vec.size() : -1;
 
-        this->startElement();
-            this->labelElement("__count__") & count;
-            if (count > 0)
+        this->startArray(count);
+        if (this->IsWriter())
+        {
+            for (auto& entry : vec)
             {
-                this->labelElement("__vector__");
-                this->startElement();
-                if (this->IsWriter())
-                {
-                    for (auto& entry : vec)
-                    {
-                        *this & entry.data;
-                    }
-                }
-                else
-                {
-                    vec.clear();
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        Kernel::suids::suid value;
-                        *this & value.data;
-                        vec.push_back(value);
-                    }
-                }
-                this->endElement();
+                *this & entry.data;
             }
-        this->endElement();
+        }
+        else
+        {
+            vec.resize(count);
+            for (size_t i = 0; i < count; ++i)
+            {
+                Kernel::suids::suid value;
+                *this & vec[i].data;
+            }
+        }
+        this->endArray();
 
         return *this;
     }
@@ -225,37 +75,33 @@ namespace Kernel
     {
         size_t count = this->IsWriter() ? mapping.size() : -1;
 
-        this->startElement();
-            this->labelElement("__count__") & count;
-            if (count> 0)
+        this->startArray(count);
+        if (this->IsWriter())
+        {
+            for (auto& entry : mapping)
             {
-                this->labelElement("__map__");
-                this->startElement();
-                if (this->IsWriter())
-                {
-                    for (auto& entry : mapping)
-                    {
-                        std::string key = entry.first;
-                        std::string value = entry.second;
-                        *this & key;
-                        *this & value;
-                    }
-                }
-                else
-                {
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        std::string key;
-                        std::string value;
-                        *this & key;
-                        *this & value;
-                        mapping[key] = value;
-                    }
-                }
-                this->endElement();
+                std::string key = entry.first;
+                std::string value = entry.second;
+                startObject();
+                    labelElement("key") & key;
+                    labelElement("value") & value;
+                endObject();
             }
-
-        this->endElement();
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                std::string key;
+                std::string value;
+                startObject();
+                    labelElement("key") & key;
+                    labelElement("value") & value;
+                endObject();
+                mapping[key] = value;
+            }
+        }
+        this->endArray();
 
         return *this;
     }

@@ -1020,11 +1020,11 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(SusceptibilityPolio);
 
-    void SusceptibilityPolio::serialize(IArchive& ar, ISerializable* obj)
+    void SusceptibilityPolio::serialize(IArchive& ar, SusceptibilityPolio* obj)
     {
         SusceptibilityEnvironmental::serialize(ar, obj);
-        SusceptibilityPolio& susceptibility = *dynamic_cast<SusceptibilityPolio*>(obj);
-        ar.startElement();
+        SusceptibilityPolio& susceptibility = *obj;
+        ar.startObject();
             ar.labelElement("shedding_titer"); ar.serialize(susceptibility.shedding_titer, N_POLIO_VIRUS_TYPES);
             ar.labelElement("humoralNAb"); ar.serialize(susceptibility.humoralNAb, N_POLIO_SEROTYPES);
             ar.labelElement("mucosalNAb"); ar.serialize(susceptibility.mucosalNAb, N_POLIO_SEROTYPES);
@@ -1040,7 +1040,7 @@ namespace Kernel
             ar.labelElement("infectionStrains"); ar.serialize(susceptibility.infectionStrains, N_POLIO_VIRUS_TYPES);
 // see below            ar.labelElement("newInfectionByStrain"); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
             ar.labelElement("individual_acquire_risk") & susceptibility.individual_acquire_risk;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

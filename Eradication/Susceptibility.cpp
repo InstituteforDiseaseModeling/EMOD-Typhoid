@@ -199,10 +199,10 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(Susceptibility);
 
-    void Susceptibility::serialize(IArchive& ar, ISerializable* obj)
+    void Susceptibility::serialize(IArchive& ar, Susceptibility* obj)
     {
-        Susceptibility& susceptibility = *static_cast<Susceptibility*>(obj);
-        ar.startElement();
+        Susceptibility& susceptibility = *obj;
+        ar.startObject();
             ar.labelElement("age") & susceptibility.age;
             ar.labelElement("mod_acquire") & susceptibility.mod_acquire;
             ar.labelElement("mod_transmit") & susceptibility.mod_transmit;
@@ -210,7 +210,7 @@ namespace Kernel
             ar.labelElement("acqdecayoffset") & susceptibility.acqdecayoffset;
             ar.labelElement("trandecayoffset") & susceptibility.trandecayoffset;
             ar.labelElement("mortdecayoffset") & susceptibility.mortdecayoffset;
-        ar.endElement();
+        ar.endObject();
     }
 } // namespace Kernel
 

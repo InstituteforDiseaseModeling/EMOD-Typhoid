@@ -12,8 +12,10 @@ namespace Kernel
         virtual ~JsonRawReader();
 
     private:
-        virtual IArchive& startElement() override;
-        virtual IArchive& endElement() override;
+        virtual IArchive& startObject() override;
+        virtual IArchive& endObject() override;
+        virtual IArchive& startArray(size_t&) override;
+        virtual IArchive& endArray() override;
         virtual IArchive& labelElement(char*) override;
         virtual IArchive& operator&(bool&) override;
         virtual IArchive& operator&(int32_t&) override;

@@ -13,26 +13,37 @@ namespace Kernel
         m_document->Parse<0>(data);
     }
 
-    IArchive& JsonRawReader::startElement()
+    IArchive& JsonRawReader::startObject()
     {
-        assert((*m_json)[m_index].IsArray());
-        m_value_stack.push(m_json);
-        m_json = &(*m_json)[m_index];
-        m_index_stack.push(m_index);
-        m_index = 0;
+// clorton        assert((*m_json)[m_index].IsArray());
+// clorton        m_value_stack.push(m_json);
+// clorton        m_json = &(*m_json)[m_index];
+// clorton        m_index_stack.push(m_index);
+// clorton        m_index = 0;
 
         return *this;
     }
 
-    IArchive& JsonRawReader::endElement()
+    IArchive& JsonRawReader::endObject()
     {
-        m_json = m_value_stack.top();
-        m_value_stack.pop();
-        m_index = m_index_stack.top();
-        m_index_stack.pop();
+// clorton        m_json = m_value_stack.top();
+// clorton        m_value_stack.pop();
+// clorton        m_index = m_index_stack.top();
+// clorton        m_index_stack.pop();
+// clorton
+// clorton        m_index++;
 
-        m_index++;
+        return *this;
+    }
 
+    IArchive& JsonRawReader::startArray(size_t& count)
+    {
+        count = size_t((*m_json)[m_index++].GetUint());
+        return *this;
+    }
+
+    IArchive& JsonRawReader::endArray()
+    {
         return *this;
     }
 

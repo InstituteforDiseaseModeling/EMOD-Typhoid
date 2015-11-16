@@ -33,9 +33,9 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_BODY(InfectionPolioConfig)
     END_QUERY_INTERFACE_BODY(InfectionPolioConfig)
 
-    bool           InfectionPolioConfig::tracecontact_mode = 0.0f;          // flag for genome mutation algorithm for serial infection tracing
-    int            InfectionPolioConfig::default_antigen = 0.0f;            // default infection antigenID
-    int            InfectionPolioConfig::default_genome = 0.0f;             // default infection genomeID
+    bool           InfectionPolioConfig::tracecontact_mode = false;         // flag for genome mutation algorithm for serial infection tracing
+    int            InfectionPolioConfig::default_antigen = 0;               // default infection antigenID
+    int            InfectionPolioConfig::default_genome = 0;                // default infection genomeID
     float          InfectionPolioConfig::paralytic_case_mortality = 0.0f;   // (dimensionless) fraction of paralytic cases resulting in death
     float          InfectionPolioConfig::evolutionWPVLinearRate = 0.0f;     // (bits / day) mutation rate in the model genome
     float          InfectionPolioConfig::evolutionSabinLinearRate[N_POLIO_SEROTYPES];   // (bits / day) maximum mutation rate in model genome, Sabin reversion
@@ -140,11 +140,11 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(InfectionPolio);
 
-    void InfectionPolio::serialize(IArchive& ar, ISerializable* obj)
+    void InfectionPolio::serialize(IArchive& ar, InfectionPolio* obj)
     {
         InfectionEnvironmental::serialize(ar, obj);
-        InfectionPolio& infection = *dynamic_cast<InfectionPolio*>(obj);
-        ar.startElement();
+        InfectionPolio& infection = *obj;
+        ar.startObject();
             ar.labelElement("shed_genome_traceContactMode") & infection.shed_genome_traceContactMode;
             ar.labelElement("immunity_updated") & infection.immunity_updated;
             ar.labelElement("paralysis_reported") & infection.paralysis_reported;
@@ -161,7 +161,7 @@ namespace Kernel
 // see below            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
 // see below            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
 // see below            ar.labelElement("drug_flag") & infection.drug_flag;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

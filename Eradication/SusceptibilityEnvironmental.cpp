@@ -44,13 +44,13 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(SusceptibilityEnvironmental);
 
-    void SusceptibilityEnvironmental::serialize(IArchive& ar, ISerializable* obj)
+    void SusceptibilityEnvironmental::serialize(IArchive& ar, SusceptibilityEnvironmental* obj)
     {
         Susceptibility::serialize(ar, obj);
-        SusceptibilityEnvironmental& susceptibility = *dynamic_cast<SusceptibilityEnvironmental*>(obj);
-        ar.startElement();
+        SusceptibilityEnvironmental& susceptibility = *obj;
+        ar.startObject();
             ar.labelElement("demographic_risk") & susceptibility.demographic_risk;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

@@ -176,17 +176,17 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(AntiTBDrug);
 
-    void AntiTBDrug::serialize(IArchive& ar, ISerializable* obj)
+    void AntiTBDrug::serialize(IArchive& ar, AntiTBDrug* obj)
     {
         GenericDrug::serialize(ar, obj);
-        AntiTBDrug& drug = *dynamic_cast<AntiTBDrug*>(obj);
-        ar.startElement();
-        ar.labelElement("TB_drug_inactivation_rate") & drug.TB_drug_inactivation_rate;
-        ar.labelElement("TB_drug_clearance_rate") & drug.TB_drug_clearance_rate;
-        ar.labelElement("TB_drug_resistance_rate") & drug.TB_drug_resistance_rate;
-        ar.labelElement("TB_drug_relapse_rate") & drug.TB_drug_relapse_rate;
-        ar.labelElement("TB_drug_mortality_rate") & drug.TB_drug_mortality_rate;
-        ar.endElement();
+        AntiTBDrug& drug = *obj;
+        ar.startObject();
+            ar.labelElement("TB_drug_inactivation_rate") & drug.TB_drug_inactivation_rate;
+            ar.labelElement("TB_drug_clearance_rate") & drug.TB_drug_clearance_rate;
+            ar.labelElement("TB_drug_resistance_rate") & drug.TB_drug_resistance_rate;
+            ar.labelElement("TB_drug_relapse_rate") & drug.TB_drug_relapse_rate;
+            ar.labelElement("TB_drug_mortality_rate") & drug.TB_drug_mortality_rate;
+        ar.endObject();
     }
 }
 

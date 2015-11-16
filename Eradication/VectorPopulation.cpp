@@ -1335,10 +1335,10 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(VectorPopulation);
 
-    void VectorPopulation::serialize(IArchive& ar, ISerializable* obj)
+    void VectorPopulation::serialize(IArchive& ar, VectorPopulation* obj)
     {
-        VectorPopulation& population = *dynamic_cast<VectorPopulation*>(obj);
-        ar.startElement();
+        VectorPopulation& population = *obj;
+        ar.startObject();
             ar.labelElement("animalfeed_eggbatchmod") & population.animalfeed_eggbatchmod;
             ar.labelElement("ADfeed_eggbatchmod") & population.ADfeed_eggbatchmod;
             ar.labelElement("m_larval_habitats"); VectorHabitat::serialize(ar, population.m_larval_habitats);
@@ -1375,43 +1375,45 @@ namespace Kernel
             ar.labelElement("MaleQueues") & population.MaleQueues;
             ar.labelElement("m_species_params"); VectorSpeciesParameters::serialize(ar, const_cast<VectorSpeciesParameters*&>(population.m_species_params));
             ar.labelElement("m_probabilities"); VectorProbabilities::serialize(ar, population.m_probabilities);
-        ar.endElement();
+        ar.endObject();
     }
 
     void serialize(IArchive& ar, std::pair<float, float>& pair)
     {
-        ar.startElement();
+        ar.startObject();
             ar.labelElement("first") & pair.first;
             ar.labelElement("second") & pair.second;
-        ar.endElement();
+        ar.endObject();
     }
 
     void serialize(IArchive& ar, std::map<uint32_t, int>& mapping)
     {
         size_t count = ar.IsWriter() ? mapping.size() : -1;
-        ar.startElement();
-            ar.labelElement("__count__") & count;
-            ar.labelElement("__map__");
-            if (ar.IsWriter())
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto entry : mapping)
             {
-                for (auto entry : mapping)
-                {
-                    ar & (uint32_t&)entry.first;
-                    ar & entry.second;
-                }
+                ar.startObject();
+                    ar.labelElement("key") & (uint32_t&)entry.first;
+                    ar.labelElement("value") & entry.second;
+                ar.endObject();
             }
-            else
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
             {
-                for (size_t i = 0; i < count; ++i)
-                {
-                    uint32_t key;
-                    int value;
-                    ar & key;
-                    ar & value;
-                    mapping[key] = value;
-                }
+                uint32_t key;
+                int value;
+                ar.startObject();
+                    ar.labelElement("key") & key;
+                    ar.labelElement("value") & value;
+                ar.endObject();
+                mapping[key] = value;
             }
-        ar.endElement();
+        }
+        ar.endArray();
     }
 }
 

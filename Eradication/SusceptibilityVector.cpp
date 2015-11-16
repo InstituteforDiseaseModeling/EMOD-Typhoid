@@ -151,14 +151,14 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(SusceptibilityVector);
 
-    void SusceptibilityVector::serialize(IArchive& ar, ISerializable* obj)
+    void SusceptibilityVector::serialize(IArchive& ar, SusceptibilityVector* obj)
     {
-        SusceptibilityVector& susceptibility = *static_cast<SusceptibilityVector*>(obj);
+        SusceptibilityVector& susceptibility = *obj;
         Susceptibility::serialize(ar, obj);
-        ar.startElement();
+        ar.startObject();
             ar.labelElement("m_relative_biting_rate") & susceptibility.m_relative_biting_rate;
             ar.labelElement("m_age_dependent_biting_risk") & susceptibility.m_age_dependent_biting_risk;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

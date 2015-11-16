@@ -36,39 +36,39 @@ namespace Kernel
     REGISTER_SERIALIZABLE(ArtificialDietHousingModification);
     REGISTER_SERIALIZABLE(InsectKillingFenceHousingModification);
 
-    void SimpleHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    void SimpleHousingModification::serialize(IArchive& ar, SimpleHousingModification* obj)
     {
-        SimpleHousingModification& mod = *dynamic_cast<SimpleHousingModification*>(obj);
-        ar.startElement();
-        ar.labelElement("durability_time_profile") & (uint32_t&)mod.durability_time_profile;
-        ar.labelElement("current_blockingrate") & mod.current_blockingrate;
-        ar.labelElement("current_killingrate") & mod.current_killingrate;
-        ar.labelElement("primary_decay_time_constant") & mod.primary_decay_time_constant;
-        ar.labelElement("secondary_decay_time_constant") & mod.secondary_decay_time_constant;
-        ar.endElement();
+        SimpleHousingModification& mod = *obj;
+        ar.startObject();
+            ar.labelElement("durability_time_profile") & (uint32_t&)mod.durability_time_profile;
+            ar.labelElement("current_blockingrate") & mod.current_blockingrate;
+            ar.labelElement("current_killingrate") & mod.current_killingrate;
+            ar.labelElement("primary_decay_time_constant") & mod.primary_decay_time_constant;
+            ar.labelElement("secondary_decay_time_constant") & mod.secondary_decay_time_constant;
+        ar.endObject();
     }
 
-    void IRSHousingModification::serialize(IArchive& ar, ISerializable* obj)
-    {
-        SimpleHousingModification::serialize(ar, obj);
-    }
-
-    void ScreeningHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    void IRSHousingModification::serialize(IArchive& ar, IRSHousingModification* obj)
     {
         SimpleHousingModification::serialize(ar, obj);
     }
 
-    void SpatialRepellentHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    void ScreeningHousingModification::serialize(IArchive& ar, ScreeningHousingModification* obj)
     {
         SimpleHousingModification::serialize(ar, obj);
     }
 
-    void ArtificialDietHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    void SpatialRepellentHousingModification::serialize(IArchive& ar, SpatialRepellentHousingModification* obj)
     {
         SimpleHousingModification::serialize(ar, obj);
     }
 
-    void InsectKillingFenceHousingModification::serialize(IArchive& ar, ISerializable* obj)
+    void ArtificialDietHousingModification::serialize(IArchive& ar, ArtificialDietHousingModification* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void InsectKillingFenceHousingModification::serialize(IArchive& ar, InsectKillingFenceHousingModification* obj)
     {
         SimpleHousingModification::serialize(ar, obj);
     }

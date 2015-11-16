@@ -58,10 +58,10 @@ namespace Kernel
 
         StrainIdentity& strain = *ptr;
 
-        ar.startElement();
+        ar.startObject();
             ar.labelElement("antigenID") & strain.antigenID;
             ar.labelElement("geneticID") & strain.geneticID;
-        ar.endElement();
+        ar.endObject();
 
         return ar;
     }

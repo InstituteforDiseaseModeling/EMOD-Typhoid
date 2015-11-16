@@ -410,7 +410,7 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(IndividualHumanTB);
 
-    void IndividualHumanTB::serialize(IArchive& ar, ISerializable* obj)
+    void IndividualHumanTB::serialize(IArchive& ar, IndividualHumanTB* obj)
     {
         IndividualHumanAirborne::serialize(ar, obj);
         // IndividualHumanTB doesn't have any additional fields.

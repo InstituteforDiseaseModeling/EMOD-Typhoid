@@ -133,13 +133,13 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(PolioVaccine);
 
-    void PolioVaccine::serialize(IArchive& ar, ISerializable* obj)
+    void PolioVaccine::serialize(IArchive& ar, PolioVaccine* obj)
     {
-        PolioVaccine& vaccine = *dynamic_cast<PolioVaccine*>(obj);
-        ar.startElement();
-        ar.labelElement("vaccine_type") & (uint32_t&)vaccine.vaccine_type;
-        ar.labelElement("time_since_vaccination") & vaccine.time_since_vaccination;
-        ar.endElement();
+        PolioVaccine& vaccine = *obj;
+        ar.startObject();
+            ar.labelElement("vaccine_type") & (uint32_t&)vaccine.vaccine_type;
+            ar.labelElement("time_since_vaccination") & vaccine.time_since_vaccination;
+        ar.endObject();
     }
 }
 

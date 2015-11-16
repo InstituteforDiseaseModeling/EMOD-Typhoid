@@ -38,13 +38,13 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(SusceptibilityAirborne);
 
-    void SusceptibilityAirborne::serialize(IArchive& ar, ISerializable* obj)
+    void SusceptibilityAirborne::serialize(IArchive& ar, SusceptibilityAirborne* obj)
     {
         Susceptibility::serialize(ar, obj);
-        SusceptibilityAirborne& susceptibility = *dynamic_cast<SusceptibilityAirborne*>(obj);
-        ar.startElement();
-        ar.labelElement("demographic_risk") & susceptibility.demographic_risk;
-        ar.endElement();
+        SusceptibilityAirborne& susceptibility = *obj;
+        ar.startObject();
+            ar.labelElement("demographic_risk") & susceptibility.demographic_risk;
+        ar.endObject();
     }
 }
 

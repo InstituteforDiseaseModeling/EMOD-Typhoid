@@ -140,16 +140,16 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(PolioInterventionsContainer);
 
-    void PolioInterventionsContainer::serialize(IArchive& ar, ISerializable* obj)
+    void PolioInterventionsContainer::serialize(IArchive& ar, PolioInterventionsContainer* obj)
     {
         InterventionsContainer::serialize(ar, obj);
         /* Not needed yet(?)
         PolioInterventionsContainer& interventions = *dynamic_cast<PolioInterventionsContainer*>(obj);
-        ar.startElement();
+        ar.startObject();
             ar.labelElement("new_vaccines"); ar.serialize(interventions.new_vaccines);
             ar.labelElement("titer_efficacy") & interventions.titer_efficacy;
             ar.labelElement("infection_duration_efficacy") & interventions.infection_duration_efficacy;
-        ar.endElement();
+        ar.endObject();
         */
     }
 }

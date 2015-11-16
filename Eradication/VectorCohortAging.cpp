@@ -64,13 +64,13 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(VectorCohortAging);
 
-    void VectorCohortAging::serialize(IArchive& ar, ISerializable* obj)
+    void VectorCohortAging::serialize(IArchive& ar, VectorCohortAging* obj)
     {
         VectorCohort::serialize(ar, obj);
-        VectorCohortAging& cohort = *dynamic_cast<VectorCohortAging*>(obj);
-        ar.startElement();
-        ar.labelElement("age") & cohort.age;
-        ar.endElement();
+        VectorCohortAging& cohort = *obj;
+        ar.startObject();
+            ar.labelElement("age") & cohort.age;
+        ar.endObject();
     }
 
 #if 0

@@ -103,14 +103,14 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(IndividualHumanPolio);
 
-    void IndividualHumanPolio::serialize(IArchive& ar, ISerializable* obj)
+    void IndividualHumanPolio::serialize(IArchive& ar, IndividualHumanPolio* obj)
     {
         IndividualHumanEnvironmental::serialize(ar, obj);
-        IndividualHumanPolio& individual = *dynamic_cast<IndividualHumanPolio*>(obj);
-        ar.startElement();
+        IndividualHumanPolio& individual = *obj;
+        ar.startObject();
             ar.labelElement("age_most_recent_infection") & individual.age_most_recent_infection;
             ar.labelElement("paralysisVirusTypeMask") & individual.paralysisVirusTypeMask;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

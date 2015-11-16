@@ -170,7 +170,7 @@ namespace Kernel
             if( campaign->Exist( "Use_Defaults" ) )
             {
                 // store value of Use_Defaults from campaign.json in InterventionFactory.
-                InterventionFactory::useDefaults = bool((*campaign)["Use_Defaults"].As< json::Number >());
+                InterventionFactory::useDefaults = ((*campaign)["Use_Defaults"].As< json::Number >() != 0);
                 // We're about to parse some campaign event stuff from campaign.json. Set JC::_useDefaults.
                 JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
                 LOG_DEBUG_F( "UseDefault values for campaign.json (when key not found) specified in campaign.json as: %d.\n", JsonConfigurable::_useDefaults );

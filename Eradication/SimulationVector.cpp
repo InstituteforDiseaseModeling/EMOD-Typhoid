@@ -182,7 +182,8 @@ namespace Kernel
         errno = 0;
         if ( fopen_s( &f, filename, "w" ) != 0)
         {
-            LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
+//            LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
+            LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
             return;
         }
     #else

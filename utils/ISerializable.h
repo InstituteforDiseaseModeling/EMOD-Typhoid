@@ -51,7 +51,7 @@ namespace Kernel {
         {
             SerializationRegistrar::_register(
                 typename Derived::_class_name,
-                typename Derived::serialize,
+                [](IArchive& ar, ISerializable* obj) { return Derived::serialize(ar, dynamic_cast<Derived*>(obj)); },
                 typename Derived::construct);
         }
     };
@@ -90,7 +90,7 @@ namespace Kernel {
         static ISerializable* construct() { return dynamic_cast<ISerializable*>(PoolManager<classname>::_allocate()); }    \
         virtual void Recycle() override { PoolManager<classname>::_recycle(this); } \
     protected:                                                                      \
-        static void serialize(IArchive&, ISerializable*);                           \
+        static void serialize(IArchive&, classname*);                               \
 
 
 #define REGISTER_SERIALIZABLE(classname)                                                     \

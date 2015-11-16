@@ -56,7 +56,7 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(IndividualHumanAirborne);
 
-    void IndividualHumanAirborne::serialize(IArchive& ar, ISerializable* obj)
+    void IndividualHumanAirborne::serialize(IArchive& ar, IndividualHumanAirborne* obj)
     {
         IndividualHuman::serialize(ar, obj);
         // IndividualHumanAirborne doesn't have any additional fields.

@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 
 #ifndef USE_BOOST_ARCHIVE
-#define USE_BOOST_ARCHIVE 1
+#define USE_BOOST_ARCHIVE 0 // clorton 1
 #endif
 
 #ifndef USE_BOOST_SERIALIZATION
@@ -31,7 +31,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifndef USE_BOOST_MPI
 #ifdef WIN32
-#define USE_BOOST_MPI 1
+#define USE_BOOST_MPI 0 // clorton 1
 #endif
 #endif
 

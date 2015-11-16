@@ -32,11 +32,11 @@ static const char* _module = "IndividualSTI";
 #define EXTRA_MARITAL_ALLOWED    (EXTRA_RELATIONAL_ALLOWED(Kernel::RelationshipType::MARITAL))
 #define SUPER_SPREADER 0x8
 
-#define IS_SUPER_SPREADER()             (promiscuity_flags & SUPER_SPREADER)
-#define IS_EXTRA_TRANSITORY_ALLOWED()   (promiscuity_flags & EXTRA_TRANSITORY_ALLOWED)
-#define IS_EXTRA_INFORMAL_ALLOWED()     (promiscuity_flags & EXTRA_INFORMAL_ALLOWED)
-#define IS_EXTRA_MARITAL_ALLOWED()      (promiscuity_flags & EXTRA_MARITAL_ALLOWED)
-#define IS_EXTRA_ALLOWED(rel)           (promiscuity_flags & EXTRA_RELATIONAL_ALLOWED((Kernel::RelationshipType::Enum)rel))
+#define IS_SUPER_SPREADER()             ((promiscuity_flags & SUPER_SPREADER) != 0)
+#define IS_EXTRA_TRANSITORY_ALLOWED()   ((promiscuity_flags & EXTRA_TRANSITORY_ALLOWED) != 0)
+#define IS_EXTRA_INFORMAL_ALLOWED()     ((promiscuity_flags & EXTRA_INFORMAL_ALLOWED) != 0)
+#define IS_EXTRA_MARITAL_ALLOWED()      ((promiscuity_flags & EXTRA_MARITAL_ALLOWED) != 0)
+#define IS_EXTRA_ALLOWED(rel)           ((promiscuity_flags & EXTRA_RELATIONAL_ALLOWED((Kernel::RelationshipType::Enum)rel)) != 0)
 #define EXTRARELATIONAL_FLAGS()         (promiscuity_flags & (EXTRA_TRANSITORY_ALLOWED | EXTRA_INFORMAL_ALLOWED | EXTRA_MARITAL_ALLOWED))
 #define SIX_MONTHS (6*IDEALDAYSPERMONTH)
 

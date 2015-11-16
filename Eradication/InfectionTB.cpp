@@ -895,11 +895,11 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(InfectionTB);
 
-    void InfectionTB::serialize(IArchive& ar, ISerializable* obj)
+    void InfectionTB::serialize(IArchive& ar, InfectionTB* obj)
     {
         InfectionAirborne::serialize(ar, obj);
-        InfectionTB& infection = *dynamic_cast<InfectionTB*>(obj);
-        ar.startElement();
+        InfectionTB& infection = *obj;
+        ar.startObject();
         ar.labelElement("m_is_active") & infection.m_is_active;
         ar.labelElement("m_recover_fraction") & infection.m_recover_fraction;
         ar.labelElement("m_death_fraction") & infection.m_death_fraction;
@@ -910,7 +910,7 @@ namespace Kernel
         ar.labelElement("m_is_pending_relapse") & infection.m_is_pending_relapse;
         ar.labelElement("m_shows_symptoms") & infection.m_shows_symptoms;
         ar.labelElement("m_duration_since_init_infection") & infection.m_duration_since_init_infection;
-        ar.endElement();
+        ar.endObject();
     }
 }
 

@@ -12,8 +12,11 @@ namespace Kernel
     {
         virtual ~IArchive() {}
 
-        virtual IArchive& startElement() = 0;
-        virtual IArchive& endElement() = 0;
+        virtual IArchive& startObject() = 0;
+        virtual IArchive& endObject() = 0;
+
+        virtual IArchive& startArray(size_t&) = 0;
+        virtual IArchive& endArray() = 0;
 
         virtual IArchive& labelElement(char*) = 0;
 
@@ -49,32 +52,25 @@ namespace Kernel
         {
             size_t count = this->IsWriter() ? list.size() : -1;
 
-            this->startElement();
-            this->labelElement("__count__") & count;
-            if (count > 0)
+            this->startArray(count);
+            if (this->IsWriter())
             {
-                this->labelElement("__list__");
-                this->startElement();
-                if (this->IsWriter())
+                for (auto& entry : list)
                 {
-                    for (auto& entry : list)
-                    {
-                        ISerializable* serializable = dynamic_cast<ISerializable*>(entry);
-                        (*this) & serializable;
-                    }
+                    ISerializable* serializable = dynamic_cast<ISerializable*>(entry);
+                    (*this) & serializable;
                 }
-                else
-                {
-                    for (size_t i = 0; i < count; ++i)
-                    {
-                        ISerializable* serializable;
-                        (*this) & serializable;
-                        list.push_back(dynamic_cast<I*>(serializable));
-                    }
-                }
-                this->endElement();
             }
-            this->endElement();
+            else
+            {
+                for (size_t i = 0; i < count; ++i)
+                {
+                    ISerializable* serializable;
+                    (*this) & serializable;
+                    list.push_back(dynamic_cast<I*>(serializable));
+                }
+            }
+            this->endArray();
         }
 
         template <typename T>
@@ -82,38 +78,16 @@ namespace Kernel
         {
             size_t count = this->IsWriter() ? vec.size() : -1;
 
-            this->startElement();
-                this->labelElement("__count__") & count;
-                if (count > 0)
-                {
-                    this->labelElement("__vector__");
-                    this->startElement();
-                    if (this->IsWriter())
-                    {
-                        for (auto& entry : vec)
-                        {
-                            (*this) & entry;
-                        }
-                    }
-                    else
-                    {
-                        vec.clear();
-                        for (size_t i = 0; i < count; ++i)
-                        {
-                            T value;
-                            (*this) & value;
-                            vec.push_back(value);
-                        }
-                    }
-                    this->endElement();
-                }
-            this->endElement();
+            this->startArray(count);
+            if (!this->IsWriter()) {
+                vec.resize(count);
+            }
+            for (auto& entry : vec)
+            {
+                (*this) & entry;
+            }
+            this->endArray();
         }
-
-    //    virtual IArchive& operator & (std::vector<int32_t>&);
-    //    virtual IArchive& operator & (std::vector<uint32_t>&);
-    //    virtual IArchive& operator & (std::vector<int64_t>&);
-    //    virtual IArchive& operator & (std::vector<float>&);
 
         /* virtual */ IArchive& operator & (std::map<std::string, float>&);
 
@@ -121,20 +95,15 @@ namespace Kernel
         /* virtual */ IArchive& operator & (std::vector<Kernel::suids::suid>&);
         /* virtual */ IArchive& operator & (std::map<std::string, std::string>&);
 
-    //    /* virtual */ void serialize(bool array[], size_t count) = 0;
-    //    /* virtual */ void serialize(int32_t array[], size_t count) = 0;
-    //    /* virtual */ void serialize(int64_t array[], size_t count) = 0;
-    //    /* virtual */ void serialize(float array[], size_t count) = 0;
-
         template <typename A>
         void serialize(A array[], size_t count)
         {
-            startElement();
+            startArray(count);
             for (size_t i = 0; i < count; ++i)
             {
                 (*this) & array[i];
             }
-            endElement();
+            endArray();
         }
 
         virtual bool HasError() = 0;
