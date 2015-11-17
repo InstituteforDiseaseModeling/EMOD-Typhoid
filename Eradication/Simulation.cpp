@@ -34,7 +34,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "DllLoader.h"
 
-#include "RapidJsonImpl.h"
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
 
@@ -654,32 +653,68 @@ namespace Kernel
         return true;
     }
 
-    struct Simulation::map_merge : public std::binary_function<nodeid_suid_map_t, nodeid_suid_map_t, nodeid_suid_map_t>
+    void Simulation::MergeNodeIdSuidBimaps(nodeid_suid_map_t& local_map, nodeid_suid_map_t& merged_map)
     {
-        struct merge_duplicate_key_exception : public std::exception
-        {
-            virtual const char* what() const throw() override { return "Duplicate key in map merge\n"; }
-        };
+        merged_map = local_map;
 
-        nodeid_suid_map_t operator()(const nodeid_suid_map_t& x, const nodeid_suid_map_t& y) const
+        if (EnvPtr->MPI.NumTasks > 1)
         {
-            nodeid_suid_map_t mergedMap;
-
-            for (auto& pair : x)
+            auto json_writer = new JsonRawWriter();
+            IArchive& writer_archive = *static_cast<IArchive*>(json_writer);
+            size_t count = local_map.size();
+            writer_archive.startArray( count );
+            LOG_VALID_F( "Serializing %d id-suid bimap entries.\n", count );
+            for (auto& entry : local_map)
             {
-                if(!(mergedMap.insert(pair).second))
-                    throw(merge_duplicate_key_exception());
+                writer_archive.startObject();
+                    writer_archive.labelElement( "id" ) & uint32_t(entry.left);
+                    uint32_t suid = entry.right.data;
+                    writer_archive.labelElement( "suid") & suid;
+                writer_archive.endObject();
+            }
+            writer_archive.endArray();
+
+            for (int rank = 0; rank < EnvPtr->MPI.NumTasks; ++rank)
+            {
+                if (rank == EnvPtr->MPI.Rank)
+                {
+                    const char* buffer = writer_archive.GetBuffer();
+                    uint32_t byte_count = writer_archive.GetBufferSize();
+                    LOG_VALID_F( "Broadcasting serialized bimap (%d bytes)\n", byte_count );
+                    MPI_Bcast( (void*)&byte_count, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
+                    MPI_Bcast( (void*)const_cast<char*>(buffer), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
+                }
+                else
+                {
+                    uint32_t byte_count;
+                    MPI_Bcast( (void*)&byte_count, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
+                    char* buffer = new char[byte_count];
+                    LOG_VALID_F( "Receiving bimap (%d bytes) from rank %d\n", byte_count, rank );
+                    MPI_Bcast( (void*)buffer, byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
+                    auto json_reader = new JsonRawReader( buffer );
+                    IArchive& reader_archive = *static_cast<IArchive*>(json_reader);
+                    size_t entry_count;
+                    reader_archive.startArray( entry_count );
+                        LOG_VALID_F( "Merging %d id-suid bimap entries from rank %d\n", entry_count, rank );
+                        for (size_t i = 0; i < entry_count; ++i)
+                        {
+                            uint32_t id;
+                            suids::suid suid;
+                            reader_archive.startObject();
+                                reader_archive.labelElement( "id" ) & id;
+                                reader_archive.labelElement( "suid_data" ) & suid.data;
+                            reader_archive.endObject();
+                            merged_map.insert(nodeid_suid_pair(id, suid));
+                        }
+                    reader_archive.endArray();
+                    delete json_reader;
+                    delete [] buffer;
+                }
             }
 
-            for (auto& pair : y)
-            {
-                if(!(mergedMap.insert(pair).second)) // .second is false if the key already existed
-                    throw(merge_duplicate_key_exception());
-            }
-
-            return mergedMap;
+            delete json_writer;
         }
-    };
+    }
 
     int Simulation::populateFromDemographics(const char* campaignfilename, const char* loadbalancefilename)
     {
@@ -783,11 +818,7 @@ namespace Kernel
 
         // Merge nodeid<->suid bimaps
         nodeid_suid_map_t merged_map;
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        merged_map = all_reduce(*(EnvPtr->MPI.World), nodeid_suid_map, map_merge());
-#else
-        merged_map = nodeid_suid_map;
-#endif
+        MergeNodeIdSuidBimaps( nodeid_suid_map, merged_map );
 
         // Initialize migration structure from file
         MigrationInfoFactory * migration_factory = nullptr;
@@ -1044,6 +1075,7 @@ namespace Kernel
 
         // section = "resolveMigration() - clean up";
         {   // Clean up from Isend(s)
+            // TODO clorton - convert outbound_requests into vector and use MPI_Wait_all
             for (auto& request : outbound_requests)
             {
                 MPI_Status status;
@@ -1055,8 +1087,6 @@ namespace Kernel
                 delete writer;
             }
         }
-//
-//        MPI_Barrier( MPI_COMM_WORLD );
     }
 
     void Simulation::PostMigratingIndividualHuman(IndividualHuman *i)

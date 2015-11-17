@@ -133,22 +133,6 @@ namespace Kernel
         age = _age;
         demographic_risk = _riskmod; // takes values from 0 to 1, demographic_risk = 1+sanitation*(minrisk - 1), (sanitation = fraction of households with latrine)
 
-// clorton        ZERO_ARRAY( infectionStrains );
-// clorton        ZERO_ARRAY( newInfectionByStrain );
-// clorton        ZERO_ARRAY( shedding_titer );
-// clorton        ZERO_ARRAY( humoralNAb );
-// clorton        ZERO_ARRAY( mucosalNAb );
-// clorton        ZERO_ARRAY( humoral_fastDecayCompartment );
-// clorton        ZERO_ARRAY( mucosal_fastDecayCompartment );
-// clorton        ZERO_ARRAY( maternalSerumNAb );
-// clorton        ZERO_ARRAY( humoralMemoryNAb );
-// clorton        ZERO_ARRAY( mucosalMemoryNAb );
-// clorton        ZERO_ARRAY( time_since_last_infection );
-// clorton        ZERO_ARRAY( time_since_last_IPV );
-// clorton        ZERO_ARRAY( vaccine_doses_received );
-// clorton        ZERO_ARRAY(vaccine_doses_received_by_type);
-        
-// clorton        individual_acquire_risk = 1.0f; // (dimensionless) 
         release_assert( age >= 0);
 
         if (age == 0)
@@ -1038,7 +1022,7 @@ namespace Kernel
             ar.labelElement("vaccine_doses_received"); ar.serialize(susceptibility.vaccine_doses_received, N_POLIO_VACCINES);
             ar.labelElement("vaccine_doses_received_by_type"); ar.serialize(susceptibility.vaccine_doses_received_by_type, N_POLIO_VIRUS_TYPES);
             ar.labelElement("infectionStrains"); ar.serialize(susceptibility.infectionStrains, N_POLIO_VIRUS_TYPES);
-// see below            ar.labelElement("newInfectionByStrain"); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
+// Boost implementation didn't serialize this            ar.labelElement("newInfectionByStrain"); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
             ar.labelElement("individual_acquire_risk") & susceptibility.individual_acquire_risk;
         ar.endObject();
     }
@@ -1059,7 +1043,6 @@ namespace Kernel {
         ar & sus.mucosalMemoryNAb; // (reciprocal titer, linear units)
         ar & sus.humoral_fastDecayCompartment; // (reciprocal titer, linear units)
         ar & sus.mucosal_fastDecayCompartment; // (reciprocal titer, linear units)
-// clorton        ar & sus.mucosalMemoryNAb; // (reciprocal titer, linear units)
         ar & sus.time_since_last_infection; // (days) time elapsed from exposure
         ar & sus.time_since_last_IPV; // (days) time elapsed from exposure
         ar & sus.individual_acquire_risk; // (dimensionless) demographic- and age-dependent acquisition risk, multiplies with contact_acquire_polio to give the individual's contact acquisition

@@ -922,7 +922,7 @@ namespace Kernel
         ar.labelElement("m_minor_epitope_type"); ar.serialize(infection.m_minor_epitope_type, CLONAL_PfEMP1_VARIANTS);
         ar.labelElement("m_IRBCtype"); ar.serialize(infection.m_IRBCtype, CLONAL_PfEMP1_VARIANTS);
 // shared pointer        ar.labelElement("m_MSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, infection.m_MSP_antibody);
-/// clorton         ar.labelElement("m_PfEMP1_antibodies") & infection.m_PfEMP1_antibodies;
+// recreated in SetContextTo         ar.labelElement("m_PfEMP1_antibodies") & infection.m_PfEMP1_antibodies;
         ar.labelElement("m_IRBC_count") & infection.m_IRBC_count;
         ar.labelElement("m_malegametocytes"); ar.serialize(infection.m_malegametocytes, GametocyteStages::Count);
         ar.labelElement("m_femalegametocytes"); ar.serialize(infection.m_femalegametocytes, GametocyteStages::Count);

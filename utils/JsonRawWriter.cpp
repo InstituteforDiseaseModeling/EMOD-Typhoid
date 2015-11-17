@@ -63,7 +63,7 @@ namespace Kernel
 
     IArchive& JsonRawWriter::operator&(uint32_t& u32)
     {
-        m_writer->Uint64(u32);
+        m_writer->Uint(u32);
 
         return *this;
     }

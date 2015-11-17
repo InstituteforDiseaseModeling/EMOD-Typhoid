@@ -399,25 +399,27 @@ namespace Kernel
     {
         if (suid.data % 10 == 0) LOG_INFO_F("Freeing Node %d \n", suid.data);
 
-// clorton        for (auto individual : individualHumans)
-// clorton        {
-// clorton            delete individual;
-// clorton        }
+        /* Let all of this dangle, we're about to exit the process...
+        for (auto individual : individualHumans)
+        {
+            delete individual;
+        }
 
         individualHumans.clear();
 
-// clorton        if (transmissionGroups) delete transmissionGroups;
-// clorton        if (localWeather)       delete localWeather;
-// clorton        if (migration_info)     delete migration_info;
+        if (transmissionGroups) delete transmissionGroups;
+        if (localWeather)       delete localWeather;
+        if (migration_info)     delete migration_info;
 
         delete event_context_host;
 
-// clorton        for (auto& ndd_pair : demographic_distributions)
-// clorton        {
-// clorton            delete ndd_pair.second;
-// clorton        }
+        for (auto& ndd_pair : demographic_distributions)
+        {
+            delete ndd_pair.second;
+        }
 
         demographic_distributions.clear();
+        */
     }
 
     float Node::GetLatitudeDegrees()
@@ -1200,7 +1202,6 @@ namespace Kernel
         }
 
         // If individual has migrated or died -- HAPPENS AT THE END OF TIME STEP -- he/she still contributes to the infectivity
-// clorton        int tempflag = 0;
         for( int iHuman = 0 ; iHuman < individualHumans.size() ; /* control in loop */ )
         {
             IndividualHuman *individual = individualHumans[iHuman];

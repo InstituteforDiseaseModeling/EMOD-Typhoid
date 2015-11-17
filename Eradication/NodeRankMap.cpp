@@ -13,6 +13,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeRankMap.h"
 #include "Log.h"
 #include "FileSystem.h"
+#include "JsonRawWriter.h"
+#include "JsonRawReader.h"
 
 static const char * _module = "NodeRankMap";
 namespace Kernel {
@@ -33,7 +35,7 @@ namespace Kernel {
         if(loadbalancefile.is_open()) 
         {
             loadbalancefile.seekg(0, std::ios::end);
-            int filelen = (int)loadbalancefile.tellg();
+            int filelen = int(loadbalancefile.tellg());
             int expected_size = sizeof(uint32_t) + (expected_num_nodes * (sizeof(uint32_t) + sizeof(float)));
 
             if(filelen == expected_size)
@@ -54,7 +56,7 @@ namespace Kernel {
 
                     for(uint32_t i = 0; i < num_nodes; i++)
                     {
-                        initialNodeRankMapping[nodeids[i]] = (int)(EnvPtr->MPI.NumTasks*balance_scale[i]);
+                        initialNodeRankMapping[nodeids[i]] = int(EnvPtr->MPI.NumTasks*balance_scale[i]);
                     }
                     LOG_INFO("Static initial load balancing scheme initialized.\n");
 
@@ -95,87 +97,70 @@ namespace Kernel {
 
     bool NodeRankMap::MergeMaps()
     {
-
         RankMap_t mergedMap;
         // Style note: exceptions used locally here to obey MPI semantics but also allow me to detect failure without an overly complex return-code mechanism
         try
         {
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-            mergedMap = all_reduce(*(EnvPtr->MPI.World), rankMap, map_merge());
-#else
             LOG_DEBUG_F("%s\n", __FUNCTION__);
-            // USE_BOOST_SERIALIZATION: do something on the single machine without involving serialization
             mergedMap = rankMap;
 
-            // Serialize myself
-            IJsonObjectAdapter* writer = CreateJsonObjAdapter();
-            writer->CreateNewWriter();
-            JSerializer* helper = new JSerializer();
-            writer->BeginArray();
-            for (auto& entry : rankMap)
+            if (EnvPtr->MPI.NumTasks > 1)
             {
-                writer->BeginArray();
-                (entry.first).JSerialize(writer, helper);
-                writer->Add(uint32_t(entry.second));
-                writer->EndArray();
-            }
-            writer->EndArray();
-
-            // Send to all _other_ tasks
-            const char* text = writer->ToString();
-            LOG_DEBUG_F("%s: '%s'\n", __FUNCTION__, text);
-            size_t length = strlen(text) + 1;
-            MPI_Request request;
-            for (int destination = 0; destination < EnvPtr->MPI.NumTasks; destination++)
-            {
-                if (destination != EnvPtr->MPI.Rank)
+                auto json_writer = new JsonRawWriter();
+                IArchive& writer = *static_cast<IArchive*>(json_writer);
+                size_t count = rankMap.size();
+                writer.startArray( count );
+                LOG_VALID_F( "Serializing %d suid-rank map entries.\n", count );
+                for (auto& entry : rankMap)
                 {
-                    LOG_DEBUG_F("%s: Sending node<->rank map to %02d\n", __FUNCTION__, destination);
-                    MPI_Isend((void*)text, int(length), MPI_CHAR, destination, 0, MPI_COMM_WORLD, &request);
+                    writer.startObject();
+                        uint32_t suid = entry.first.data;
+                        writer.labelElement( "key" ) & suid;            // node.suid
+                        writer.labelElement( "value" ) & entry.second;  // rank
+                    writer.endObject();
                 }
-            }
+                writer.endArray();
 
-            // Receive node<->rank mapping from all _other_ tasks
-            IJsonObjectAdapter* json = CreateJsonObjAdapter();
-            vector<char> buffer;
-            for (int count = 0; count < (EnvPtr->MPI.NumTasks - 1); count++)
-            {
-                MPI_Status status;
-                MPI_Probe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
-                int size;
-                MPI_Get_count(&status, MPI_CHAR, &size);
-                if (buffer.size() < size)
+                for (int rank = 0; rank < EnvPtr->MPI.NumTasks; ++rank)
                 {
-                    buffer.resize(size);
+                    if (rank == EnvPtr->MPI.Rank)
+                    {
+                        const char* buffer = writer.GetBuffer();
+                        uint32_t size = writer.GetBufferSize();
+                        LOG_VALID_F( "Broadcasting serialized map (%d bytes)\n", size );
+                        MPI_Bcast( (void*)&size, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
+                        MPI_Bcast( (void*)const_cast<char*>(buffer), size, MPI_BYTE, rank, MPI_COMM_WORLD );
+                    }
+                    else
+                    {
+                        uint32_t size;
+                        MPI_Bcast( (void*)&size, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
+                        char* buffer = new char[size];
+                        LOG_VALID_F( "Receiving map (%d bytes) from rank %d\n", size, rank );
+                        MPI_Bcast( (void*)buffer, size, MPI_BYTE, rank, MPI_COMM_WORLD );
+                        auto json_reader = new JsonRawReader( buffer );
+                        IArchive& reader = *static_cast<IArchive*>(json_reader);
+                        size_t count;
+                        reader.startArray( count );
+                            LOG_VALID_F( "Merging %d suid-rank map entries from rank %d\n", count, rank );
+                            for (size_t i = 0; i < count; ++i)
+                            {
+                                suids::suid suid;
+                                int32_t node_rank;
+                                reader.startObject();
+                                    reader.labelElement( "key" ) & suid.data;
+                                    reader.labelElement( "value" ) & node_rank;
+                                reader.endObject();
+                                mergedMap[suid] = node_rank;
+                            }
+                        reader.endArray();
+                        delete json_reader;
+                        delete [] buffer;
+                    }
                 }
-                int source = status.MPI_SOURCE;
-                LOG_DEBUG_F("%s: Processing message %02d from rank %02d.\n", __FUNCTION__, count, source);
-                MPI_Request request;
-                MPI_Irecv(buffer.data(), size, MPI_CHAR, source, 0, MPI_COMM_WORLD, &request);
-                LOG_DEBUG_F("%s: '%s'\n", __FUNCTION__, buffer.data());
 
-                json->Parse(buffer.data());
-                for (IndexType i = 0; i < IndexType(json->GetSize()); i++)
-                {
-                    IJsonObjectAdapter* element = (*json)[i];
-                    IJsonObjectAdapter* suid_entry = (*element)[IndexType(0)];
-                    suids::suid node_suid;
-                    node_suid.JDeserialize(suid_entry, helper);
-                    IJsonObjectAdapter* rank_entry = (*element)[IndexType(1)];
-                    int32_t rank = int32_t(*rank_entry);
-                    mergedMap[node_suid] = rank;
-                    delete rank_entry;
-                    delete suid_entry;
-                    delete element;
-                }
-                LOG_DEBUG_F("%s: Finished processing message %d.\n", __FUNCTION__, count);
+                delete json_writer;
             }
-            LOG_DEBUG_F("%s: Finished node rank map merge.\n", __FUNCTION__);
-            delete json;
-            delete helper;
-            delete writer;
-            LOG_DEBUG_F("%s: Completed cleanup.\n", __FUNCTION__);
-#endif
         }
         catch (std::exception &e)
         {
@@ -196,14 +181,15 @@ namespace Kernel {
     { return (num_ranked++) % EnvPtr->MPI.NumTasks; }
 
     StripedInitialLoadBalanceScheme::StripedInitialLoadBalanceScheme()
-    : num_ranked(0), num_nodes(0)
+        : num_nodes(0)
+        , num_ranked(0)
     {}
 
     void StripedInitialLoadBalanceScheme::Initialize(uint32_t in_num_nodes) { num_nodes = in_num_nodes; }
 
     int
     StripedInitialLoadBalanceScheme::GetInitialRankFromNodeId(node_id_t node_id)
-    { return (int)(((float)(num_ranked++) / num_nodes) * EnvPtr->MPI.NumTasks); }
+    { return int((float(num_ranked++) / num_nodes) * EnvPtr->MPI.NumTasks); }
 
     int LegacyFileInitialLoadBalanceScheme::GetInitialRankFromNodeId(node_id_t node_id)
     { return initialNodeRankMapping[node_id]; }

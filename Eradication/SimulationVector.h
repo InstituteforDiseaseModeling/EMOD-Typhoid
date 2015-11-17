@@ -59,7 +59,6 @@ namespace Kernel
     protected:
 
         // holds a vector of migrating vectors for each node rank
-// clorton        vector< vector< IMigrate* > > migratingVectorQueues;
         vector<vector<IVectorCohort*>> migratingVectorQueues;
 
         float drugdefaultcost;

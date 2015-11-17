@@ -63,7 +63,6 @@ namespace Kernel
         virtual void SetParameters(StrainIdentity* infstrain = nullptr, int incubation_period_override = -1) override;
         virtual void InitInfectionImmunology(Susceptibility* _immunity) override;
         virtual void Update(float dt, ISusceptibilityContext* _immunity = nullptr) override;
-        // clorton void SetMCWeightOfHost(float ind_mc_weight);
 
         // IInfectionPolioReportable methods
         virtual float GetTotalDuration() const override { return total_duration; }

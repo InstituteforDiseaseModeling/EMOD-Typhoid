@@ -603,9 +603,6 @@ namespace Kernel
                     newinfected += uint32_t(randgen->binomial_approx(temp_number, species()->acquiremod * x_infectionWolbachia * host_infectivity_outdoor / ((1.0f - probs()->outdoor_returningmortality) * probs()->outdoor_successfulfeed_human * x_infectiouscorrection)));
                 }
             }
-
-            // survived without feeding
-// clorton            if (remainingPop > 0) { survived_wo_feeding += remainingPop; }
         }
 
         // now adjust population and eggs
