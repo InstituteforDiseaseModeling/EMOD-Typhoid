@@ -187,6 +187,7 @@ int MPIInitWrapper( int argc, char* argv[])
 #ifdef ENABLE_PYTHON
 
 #define DEFAULT_PYTHON_HOME "c:/python27/"
+static std::string python_script_path = std::string("");
 
 #pragma warning( push )
 #pragma warning( disable: 4996 )
@@ -211,11 +212,6 @@ IdmPyInit(
 )
 {
     //std::cout << __FUNCTION__ << ": " << python_script_name << ": " << python_function_name << std::endl;
-    auto python_script_path = std::string("");
-    if( EnvPtr != nullptr && EnvPtr->Config != nullptr && EnvPtr->Config->Exist( "Python_Script_Path") )
-    {
-        python_script_path = GET_CONFIG_STRING(EnvPtr->Config, "Python_Script_Path");
-    }
 #ifdef WIN32
     Py_SetPythonHome(PythonHomePath()); // add capability to override from command line???
 #endif
@@ -232,17 +228,16 @@ IdmPyInit(
 
     //std::cout << "Appending our path to existing python path." << std::endl;
     PyObject * path = nullptr;
-    if( python_script_path != "" )
+    if( python_script_path != "." )
     {
-        //std::cout << "Using dtk python path: " << GET_CONFIGURABLE(SimulationConfig)->python_script_path << std::endl;
-        path = PyString_FromString( python_script_path.c_str() );
+        std::cout << "Using (configured) dtk python path: " << python_script_path << std::endl;
     }
     else
     {
         // because say we're running locally (or --get-schema doesn't read config.json!) we can look locally... 
-        path = PyString_FromString( "." );
-        //std::cout << "Using dtk python path: " << "." << std::endl;
+        std::cout << "Using (default) dtk python path: " << "." << std::endl;
     }
+    path = PyString_FromString( python_script_path.c_str() );
     //LOG_DEBUG_F( "Using Python Script Path: %s.\n", GET_CONFIGURABLE(SimulationConfig)->python_script_path );
     release_assert( path );
     
@@ -269,7 +264,7 @@ IdmPyInit(
     pModule = PyImport_Import( pName );
     if( !pModule )
     {
-        //PyErr_Print(); // This error message on console seems to alarm folks. We'll let python errors log as warnings.
+        PyErr_Print(); // This error message on console seems to alarm folks. We'll let python errors log as warnings.
         LOG_WARN( "Embedded python code failed (PyImport_Import). Returning without doing anything.\n" );
         return nullptr;
     }
@@ -466,7 +461,11 @@ pythonOnExitHook()
     auto pFunc = IdmPyInit( "dtk_post_process", "application" );
     if( pFunc )
     {
-        PyObject * vars = nullptr;
+        PyObject * vars = PyTuple_New(1);
+        release_assert( EnvPtr );
+        PyObject* py_oppath_str = PyString_FromString( EnvPtr->OutputPath.c_str() );
+        PyTuple_SetItem(vars, 0, py_oppath_str );
+        PyObject * returnArgs = PyObject_CallObject( pFunc, vars );
         PyObject_CallObject( pFunc, vars );
         PyErr_Print();
     }
@@ -483,20 +482,22 @@ bool ControllerInitWrapper(int argc, char *argv[])
     ProgramOptions po("Recognized options");
     try
     {
-        po.AddOption( "help",         "Show this help message." );
-        po.AddOption( "version", "v", "Get version info." );
-        po.AddOption("get-schema",     "Request the kernel to write all its input definition schema json to the current working directory and exit." );
-        po.AddOptionWithValue( "schema-path", "stdout",                        "Path to write schema(s) to instead of writing to stdout." );
+        po.AddOption(          "help",         "Show this help message." );
+        po.AddOption(          "version",      "v",          "Get version info." );
+        po.AddOption(          "get-schema",   "Request the kernel to write all its input definition schema json to the current working directory and exit." );
+        po.AddOptionWithValue( "schema-path",  "stdout",     "Path to write schema(s) to instead of writing to stdout." );
         po.AddOptionWithValue( "config",       "C",          "default-config.json", "Name of config.json file to use" );
         po.AddOptionWithValue( "input-path",   "I",          ".",                   "Relative or absolute path to location of model input files" );       
         po.AddOptionWithValue( "output-path",  "O",          "output",              "Relative or absolute path for output files" );
         po.AddOptionWithValue( "dll-path",     "D",          "",                    "Relative (to the executable) or absolute path for EMODule (dll/shared object) root directory" );
 // 2.5        po.AddOptionWithValue( "state-path",   "S",          ".",                   "Relative or absolute path for state files" );  // should we remove this...?
-        po.AddOptionWithValue( "monitor_host",               "none",                "IP of commissioning/monitoring host" );
-        po.AddOptionWithValue( "monitor_port",               0,                     "port of commissioning/monitoring host" );
-        po.AddOptionWithValue( "sim_id",                    "none",                 "Unique id of this simulation, formerly sim_guid. Needed for self-identification to UDP host" );
-        po.AddOption( "progress",        "Send updates on the progress of the simulation to the HPC job scheduler." );
-
+        po.AddOptionWithValue( "monitor_host", "none",       "IP of commissioning/monitoring host" );
+        po.AddOptionWithValue( "monitor_port", 0,            "port of commissioning/monitoring host" );
+        po.AddOptionWithValue( "sim_id",       "none",       "Unique id of this simulation, formerly sim_guid. Needed for self-identification to UDP host" );
+        po.AddOption(          "progress",     "Send updates on the progress of the simulation to the HPC job scheduler." );
+#ifdef ENABLE_PYTHON
+        po.AddOptionWithValue( "python-script-path", ".",    "Path to python scripts." );
+#endif
 
         std::string errmsg = po.ParseCommandLine( argc, argv );
         if( !errmsg.empty() )
@@ -611,6 +612,17 @@ bool ControllerInitWrapper(int argc, char *argv[])
             StatusReporter::updateScheduler = true;
         }
 
+#ifdef ENABLE_PYTHON
+        if( po.CommandLineHas( "python-script-path" ) )
+        {
+            python_script_path = po.GetCommandLineValueString( "python-script-path" ).c_str();
+            std::cout << "python_script_path = " << python_script_path << std::endl;
+        }
+        else
+        {
+            std::cout << "python_script_path not set." << std::endl;
+        }
+#endif
         auto configFileName = po.GetCommandLineValueString( "config" );
         // Where to put config preprocessing? After command-line processing (e.g., what if we are invoked with --get-schema?) but before loading config.json
         // Prefer to put it in this function rather than inside Environment::Intialize, but note that in --get-schema mode we'll unnecessarily call preproc.
