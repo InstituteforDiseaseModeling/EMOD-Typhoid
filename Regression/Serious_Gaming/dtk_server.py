@@ -260,6 +260,33 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             age_min  = event_params_json["Target_Population_Min_Age_In_Years"]
             age_max  = event_params_json["Target_Population_Max_Age_In_Years"]
             rollout  = event_params_json["Rollout_Distribution"]
+            rollout_length = event_params_json["Length_Of_Rollout_In_Days"]
+
+            cost = 0
+
+            if iv == "BEDNET":
+                cost = 5
+            elif iv == "IRS":
+                cost = 15
+            elif iv == "DRUG":
+                cost = 10
+
+            if iq == "Low":
+                cost *= 1
+            elif iq == "Medium":
+                cost *= 2
+            elif iq == "High":
+                cost *= 3
+
+            num_individuals = 1000
+            num_individuals *= coverage
+            num_individuals *= (age_max-age_min)/100.0
+
+            cost *= num_individuals
+
+            cost *= 2.0/rollout_length
+
+            return_value = cost
 
             print( "Calculated projected cost of campaign as: " + str(return_value) )
             return_msg["Projected_Cost"] = return_value
