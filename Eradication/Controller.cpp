@@ -116,13 +116,30 @@ bool call_templated_functor_with_sim_type_hack(ControllerExecuteFunctorT &cef)
 #include "StatusReporter.h"
 
 #include <functional>
+#ifdef WIN32
+//#undef UNICODE
+//#define WIN32_LEAN_AND_MEAN
+//#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+//#include <stdlib.h>
+//#include <stdio.h>
+
+#pragma comment(lib, "Ws2_32.lib")
+
+HANDLE thread_handle;
+DWORD start_routine(void* args);
+SOCKET ClientSocket;
+#else
 #include<sys/socket.h>
+pthread_t server_thread;
+void * start_routine(void* args );
 int client_sock;
+#endif
 //std::stringstream timestep_report_json;
 
 void StepSimulation(ISimulation* sim, float dt);
-void * start_routine(void* args );
-pthread_t server_thread;
+
 typedef enum {
     paused,
     stepping,
@@ -137,6 +154,19 @@ template <class SimulationT>
 void RunSimulation(SimulationT &sim, int steps, float dt)
 {
     bool game_mode = false;
+#ifdef WIN32
+    DWORD threadid = -1;
+    size_t required;
+    char buffer[256];
+    auto ret = getenv_s( &required, buffer, 256, "GAME_MODE" );
+    if( required > 0 )
+    {
+        game_mode = true;
+        // CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+        thread_handle = CreateThread(nullptr, 0 /* default */, &start_routine, nullptr, 0 /* run immediately */, &threadid);
+        playback = paused;
+    }
+#else
     int threadid = -1;
     if( getenv( "GAME_MODE" ) )
     {
@@ -144,6 +174,7 @@ void RunSimulation(SimulationT &sim, int steps, float dt)
         threadid = pthread_create( &server_thread, NULL, &start_routine, NULL );
         playback = paused;
     }
+#endif
 
     LOG_DEBUG( "RunSimulation\n" );
 
@@ -151,7 +182,11 @@ void RunSimulation(SimulationT &sim, int steps, float dt)
     {
         while( playback == paused )
         {
+#ifdef WIN32
+            Sleep(0.1);
+#else
             sleep(0.1);
+#endif
             //if( playback > 0 )
             if( playback == stepping_and_reloading )
             {
@@ -169,9 +204,17 @@ void RunSimulation(SimulationT &sim, int steps, float dt)
                 playback = paused;
             }
 
+#ifdef WIN32
+            size_t required;
+            char status_message[1024];
+            auto ret = getenv_s( &required, status_message, 1024, "JSON_SER_REPORT" );
+            int iSendResult = send(ClientSocket, status_message, required + 1, 0);
+            cout << "send() returned " << iSendResult << endl; cout.flush();
+#else
             //auto status_message = timestep_report_json.str().c_str();
             auto status_message = getenv( "JSON_SER_REPORT" );
             write(client_sock, status_message, strlen(status_message));
+#endif
 
             //timestep_report_json.str("");
             //timestep_report_json.clear();
@@ -183,9 +226,13 @@ void RunSimulation(SimulationT &sim, int steps, float dt)
         }
     }
 
-    if( getenv( "GAME_MODE" ) )
+    if ( game_mode )
     {
+#ifdef WIN32
+        WaitForSingleObject( thread_handle, INFINITE );
+#else
         pthread_join( threadid, NULL );
+#endif
     }
 }
 
@@ -941,6 +988,163 @@ template void Kernel::serialize( boost::archive::binary_oarchive & ar, Simulatio
 template void Kernel::serialize( boost::archive::binary_iarchive & ar, Simulation& sim, const unsigned int file_version);
 #endif
 
+#ifdef WIN32
+
+DWORD start_routine(void* /*arg*/)
+{
+cout << "Starting server thread..." << endl; cout.flush();
+
+    WSADATA wsaData;
+    int iResult;
+    iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (iResult != 0)
+    {
+        printf("Could not initialize WinSock.\n");
+    }
+    cout << "WSAStartup() returned " << iResult << endl; cout.flush();
+
+#define DEFAULT_PORT    "8887"
+
+    struct addrinfo *result = nullptr, *ptr = nullptr, hints;
+
+    ZeroMemory(&hints, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = AI_PASSIVE;
+
+    // Resolve the local address and port to be used by the server
+    size_t required;
+    char port_string[16];
+    auto ret = getenv_s( &required, port_string, 16, "GAME_PORT" );
+    if ( required == 0)
+    {
+        strcpy_s( port_string, 16, DEFAULT_PORT );
+    }
+    cout << "Using port " << port_string << endl; cout.flush();
+
+    iResult = getaddrinfo(nullptr, port_string, &hints, &result);
+    if (iResult != 0) {
+        printf("getaddrinfo failed: %d\n", iResult);
+        WSACleanup();
+        return -1;
+    }
+    cout << "getaddrinfo() returned " << iResult << endl; cout.flush();
+
+    SOCKET ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+
+    if (ListenSocket == INVALID_SOCKET) {
+        printf("Error at socket(): %ld\n", WSAGetLastError());
+        freeaddrinfo(result);
+        WSACleanup();
+        return -1;
+    }
+    cout << "socket() returned " << ListenSocket << endl; cout.flush();
+
+    // Setup the TCP listening socket
+    iResult = ::bind( ListenSocket, result->ai_addr, int(result->ai_addrlen));
+    if (iResult == SOCKET_ERROR) {
+        printf("bind failed with error: %d\n", WSAGetLastError());
+        freeaddrinfo(result);
+        closesocket(ListenSocket);
+        WSACleanup();
+        return -1;
+    }
+    cout << "bind() returned " << iResult << endl; cout.flush();
+
+    freeaddrinfo(result);
+
+    if ( listen( ListenSocket, SOMAXCONN ) == SOCKET_ERROR ) {
+        printf( "Listen failed with error: %ld\n", WSAGetLastError() );
+        closesocket(ListenSocket);
+        WSACleanup();
+        return -1;
+    }
+    cout << "listen()-ing" << endl; cout.flush();
+
+    // Accept a client socket
+    /* SOCKET */ ClientSocket = accept(ListenSocket, NULL, NULL);
+    if (ClientSocket == INVALID_SOCKET) {
+        printf("accept failed: %d\n", WSAGetLastError());
+        closesocket(ListenSocket);
+        WSACleanup();
+        return -1;
+    }
+    cout << "accept() returned " << ClientSocket << endl; cout.flush();
+
+#define DEFAULT_BUFLEN 4096
+
+    char recvbuf[DEFAULT_BUFLEN];
+    int recvbuflen = DEFAULT_BUFLEN;
+
+    // Receive until the peer shuts down the connection
+    do {
+        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+        if (iResult > 0) {
+//            printf("Bytes received: %d\n", iResult);
+//
+//            // Echo the buffer back to the sender
+//            int iSendResult = send(ClientSocket, recvbuf, iResult, 0);
+//            if (iSendResult == SOCKET_ERROR) {
+//                printf("send failed: %d\n", WSAGetLastError());
+//                closesocket(ClientSocket);
+//                WSACleanup();
+//                return ;
+//            }
+//            printf("Bytes sent: %d\n", iSendResult);
+
+            printf("msg = %s\n", recvbuf);
+            if( strcmp( recvbuf, "PAUSE" ) == 0 )
+            {
+                printf( "Pausing...\n" );
+                playback = paused;
+            }
+            else if( strcmp( recvbuf, "PLAY" ) == 0 )
+            {
+                printf( "Playing...\n" );
+                playback = playing;
+            }
+            else if( strcmp( recvbuf, "STEP" ) == 0 )
+            {
+                printf( "Playing 1 timestep...\n" );
+                playback = stepping;
+            }
+            else if( strcmp( recvbuf, "STEP_RELOAD" ) == 0 )
+            {
+                printf( "Playing 1 timestep and re-upping campaign...\n" );
+                playback = stepping_and_reloading;
+            }
+
+            memset( recvbuf, 0, DEFAULT_BUFLEN );
+
+        } else if (iResult == 0) {
+            printf("Connection closing...\n");
+        }
+        else {
+            printf("recv failed: %d\n", WSAGetLastError());
+            closesocket(ClientSocket);
+            WSACleanup();
+            return -1;
+        }
+    } while (iResult > 0);
+
+    // shutdown the send half of the connection since no more data will be sent
+    iResult = shutdown(ClientSocket, SD_SEND);
+    if (iResult == SOCKET_ERROR) {
+        printf("shutdown failed: %d\n", WSAGetLastError());
+        closesocket(ClientSocket);
+        WSACleanup();
+        return -1;
+    }
+
+    // cleanup
+    closesocket(ClientSocket);
+    WSACleanup();
+
+    return 0;
+}
+
+#else
 
 /*
     C socket server example
@@ -1048,3 +1252,5 @@ void * start_routine(void* args )
      
     return; // 0
 }
+
+#endif

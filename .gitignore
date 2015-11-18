@@ -49,7 +49,7 @@ dlldata.c
 *.sbr
 *.tlb
 *.tli
-*.tlh
+#*.tlh # We, IDM want these.
 *.tmp
 *.tmp_proj
 *.log

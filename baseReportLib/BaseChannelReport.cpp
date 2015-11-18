@@ -73,7 +73,11 @@ void BaseChannelReport::EndTimestep( float currentTime, float dt )
 
     //std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
 
+#ifdef WIN32
+    _putenv_s( "JSON_SER_REPORT", jsonSerializer->ToString() );
+#else
     setenv( "JSON_SER_REPORT", jsonSerializer->ToString(), 1 );
+#endif
     delete jsonSerializer;
 #endif
 }
