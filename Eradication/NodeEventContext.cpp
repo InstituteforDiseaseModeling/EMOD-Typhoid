@@ -579,19 +579,9 @@ namespace Kernel
         uint32_t nodeId = node->GetExternalID();
         return nodeId;
     }
-
-    /*template void NodeEventContextHost::serialize(boost::archive::binary_oarchive &ar, unsigned int);
-    template void NodeEventContextHost::serialize(boost::archive::binary_iarchive &ar, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_skeleton_iarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_skeleton_oarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::detail::content_oarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_iarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_oarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::detail::mpi_datatype_oarchive&, unsigned int);*/
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeEventContextHost) // try to get rid of this, bloats bin size, but apparently needed for serialization
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, NodeEventContextHost& nec, const unsigned int v)

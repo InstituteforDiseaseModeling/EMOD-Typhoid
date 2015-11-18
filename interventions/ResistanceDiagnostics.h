@@ -33,13 +33,5 @@ namespace Kernel
     protected:
 
         float treatment_fraction_neg;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, MDRDiagnostic &obj, const unsigned int v);
-#endif
     };
 }

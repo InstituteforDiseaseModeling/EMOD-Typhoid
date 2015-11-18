@@ -128,12 +128,6 @@ namespace Kernel
                 std::string constraints;
                 tStringSet * constraint_param;
                 std::string parameter_name;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-                friend class boost::serialization::access;
-                template<class Archive>
-                friend void serialize(Archive &ar, ConstrainedString& obj, const unsigned int v);
-#endif
         };
 
         typedef std::map< std::string, ConstrainedString * > tConStringConfigTypeMapType;

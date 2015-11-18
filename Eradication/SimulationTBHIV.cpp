@@ -79,24 +79,4 @@ namespace Kernel
     }
 }
 
-#if 1
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationTBHIV)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationTBHIV &sim, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<NodeTBHIV>();
-        //ar.template register_type<NodeTBHIVFlags>();
-        //ar.template register_type<SusceptibilityTBHIVFlags>();
-        //ar.template register_type<InfectionTBHIVFlags>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<SimulationAirborne>(sim);
-    }
-}
-#endif
-#endif
-
 #endif // ENABLE_TBHIV

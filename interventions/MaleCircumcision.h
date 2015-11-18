@@ -48,14 +48,5 @@ namespace Kernel
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
         virtual void SetContextTo(IIndividualHumanContext *context);
         virtual void Update(float dt);
-
-    protected:
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, MaleCircumcision& obj, unsigned int version );
-#endif
     };
 }

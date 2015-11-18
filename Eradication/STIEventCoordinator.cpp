@@ -164,24 +164,4 @@ namespace Kernel
         }
         return ret;
     }
-
-
 }
-#if USE_BOOST_SERIALIZATION
-// TODO: Consolidate with serialization code in header.
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::STIInterventionDistributionEventCoordinator);
-namespace Kernel
-{
-
-    template<class Archive>
-    void serialize(Archive &ar, STIInterventionDistributionEventCoordinator &ec, const unsigned int v)
-    {
-        //ar & ec.coverage;
-
-        // need to save the list of suids and restore from them, rather than saving the context pointers
-        //ar & cached_nodes;
-    }
-}
-
-#endif

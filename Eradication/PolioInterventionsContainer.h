@@ -71,13 +71,7 @@ namespace Kernel
         float infection_duration_efficacy;
 
         DECLARE_SERIALIZABLE(PolioInterventionsContainer);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        void serialize(Archive &ar, PolioInterventionsContainer& cont, const unsigned int v);
-#endif
     };
 }
+
 #endif

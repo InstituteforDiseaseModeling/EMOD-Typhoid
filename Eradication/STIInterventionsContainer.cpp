@@ -193,15 +193,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::STIInterventionsContainer)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, STIInterventionsContainer& container, const unsigned int v)
     {
-        static const char * _module = "STIInterventionsContainer";
-        LOG_DEBUG("(De)serializing STIInterventionsContainer\n");
-
         ar & container.is_circumcised;
 
         ar & boost::serialization::base_object<InterventionsContainer>(container);

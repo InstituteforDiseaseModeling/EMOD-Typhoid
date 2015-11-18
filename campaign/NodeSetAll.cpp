@@ -9,14 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "NodeSet.h"
-#if USE_BOOST_SERIALIZATION
-#include <boost/serialization/export.hpp>
-#endif
-
-#if USE_BOOST_SERIALIZATION
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:INodeSet);
-BOOST_CLASS_EXPORT(Kernel::NodeSetAll) 
-#endif
 
 static const char* _module = "NodeSetAll";
 

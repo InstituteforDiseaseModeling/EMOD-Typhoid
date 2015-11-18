@@ -25,11 +25,5 @@ namespace Kernel
     public:
         SimpleImmunoglobulin();
         bool Configure( const Configuration* pConfig );
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleImmunoglobulin &vacc, const unsigned int v);
-#endif
     };
 }

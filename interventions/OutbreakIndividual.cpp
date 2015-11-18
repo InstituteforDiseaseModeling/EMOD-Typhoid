@@ -120,13 +120,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::OutbreakIndividual)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, OutbreakIndividual &ob, const unsigned int v)
     {
-        boost::serialization::void_cast_register<OutbreakIndividual, IDistributableIntervention>();
         ar & ob.antigen;
         ar & ob.genome;
         ar & ob.incubation_period_override;

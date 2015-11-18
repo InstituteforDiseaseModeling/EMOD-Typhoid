@@ -118,8 +118,6 @@ namespace Kernel
         int  getInitialRankFromNodeId(node_id_t node_id); // Needed in MPI implementation
 
         // Migration
-        boost::mpi::request sendHuman(IndividualHuman *ind_human, int dest_rank);
-        IndividualHuman*    receiveHuman(int src_rank);
         virtual void resolveMigration(); // derived classes override this...
 
         // Campaign input file parsing
@@ -233,30 +231,5 @@ namespace Kernel
         // Handling of passing "contexts" down to nodes, individuals, etc.
         virtual ISimulationContext *GetContextPointer();
         virtual void PropagateContextToDependents();
-
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
-        // non-persistent, cached memory for optimizations for resolveMigration
-        std::vector<boost::mpi::request >    pending_sends;
-        std::vector<MPI_Request         >    pending_sends_plain;
-
-        // Create a vector of individual counts to be sent. 
-        // This is necessary because I cannot reuse the same memory location
-        // in subsequent calls to MPI_Isend (and MPI_Bsend incurs even uglier syntax) 
-        // (but still hack-y and possibly slower than it needs to be)
-        std::vector<int> individual_count_send_buffers;
-#pragma warning( pop )
-
-#if USE_BOOST_SERIALIZATION
-    private: // Serialization
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, Simulation &sim, const unsigned int /* file_version */);
-#endif
     };
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel::ISimulationContext)
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel::SimulationEventContextHost) // ???
-#endif

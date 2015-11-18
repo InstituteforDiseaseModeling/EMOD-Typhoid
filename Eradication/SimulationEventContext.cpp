@@ -255,14 +255,6 @@ namespace Kernel
             event_coordinator->SetContextTo(this);
         }
     }
-    
-
- 
-#if USE_BOOST_SERIALIZATION
-
-    template void serialize(boost::archive::binary_oarchive &ar, SimulationEventContextHost& sech, unsigned int);
-    template void serialize(boost::archive::binary_iarchive &ar, SimulationEventContextHost& sech, unsigned int);
-#endif
 
     bool SimulationEventContextHost::campaign_event_comparison::operator()(const CampaignEvent* _Left, const CampaignEvent* _Right) const
     {    // Apply operator< to operands:
@@ -271,7 +263,6 @@ namespace Kernel
         return ( (_Left->GetStartDay() > _Right->GetStartDay()) || 
                  (_Left->GetStartDay() == _Right->GetStartDay() && _Left->GetEventIndex() > _Right->GetEventIndex()) );
     }
-
 }
 
 namespace Kernel {
@@ -288,6 +279,7 @@ namespace Kernel {
                  (_Left->GetStartDay() == _Right->GetStartDay() && _Left->GetEventIndex() > _Right->GetEventIndex()) );
     }
 
+#if 0
     template<class Archive>
     void serialize(Archive &ar, SimulationEventContextHost& sech, const unsigned int v)
     {
@@ -299,4 +291,5 @@ namespace Kernel {
             sech.LoadCampaignFromFile(sech.campaign_filename);
         }
     }
+#endif
 }

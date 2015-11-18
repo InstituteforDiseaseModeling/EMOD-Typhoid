@@ -45,15 +45,5 @@ namespace Kernel
     protected:
         virtual bool positiveTestResult();
         CD4Thresholds cd4_thresholds;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, CD4Diagnostic &obj, const unsigned int v);
-#endif
     };
 }
-
-

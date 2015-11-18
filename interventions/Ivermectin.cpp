@@ -87,15 +87,11 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(Ivermectin)
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::Ivermectin)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, Ivermectin& ivm, const unsigned int v)
     {
-        static const char * _module = "Ivermectin";
-        LOG_DEBUG("(De)serializing Ivermectin\n");
-
         ar & ivm.killing_effect;
         ar & boost::serialization::base_object<BaseIntervention>(ivm);
     }

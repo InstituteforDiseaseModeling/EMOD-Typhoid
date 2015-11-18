@@ -1101,28 +1101,17 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::jsonConfigurable::ConstrainedString)
+#if 0
 namespace Kernel
 {
     namespace jsonConfigurable
     {
-          template <class Archive>
-          void serialize( Archive &ar, Kernel::jsonConfigurable::ConstrainedString& cs, const unsigned int file_version )
-          {
-              ar & cs.constraints;
-              ar & cs.constraint_param;
-          }
-
-          template void serialize(boost::mpi::packed_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-          template void serialize(boost::mpi::packed_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-          template void serialize(boost::archive::binary_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-          template void serialize(boost::archive::binary_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-          template void serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-          template void serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-        //  template void serialize(boost::mpi::detail::content_iarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-          template void serialize(boost::mpi::detail::content_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
-          template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::jsonConfigurable::ConstrainedString&, unsigned int);
+        template <class Archive>
+        void serialize( Archive &ar, Kernel::jsonConfigurable::ConstrainedString& cs, const unsigned int file_version )
+        {
+          ar & cs.constraints;
+          ar & cs.constraint_param;
+        }
     }
 }
 #endif

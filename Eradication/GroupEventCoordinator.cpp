@@ -120,18 +120,12 @@ namespace Kernel
 
 }
 
-#if USE_BOOST_SERIALIZATION
-// TODO: Consolidate with serialization code in header.
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::GroupInterventionDistributionEventCoordinator);
-
+#if 0
 namespace Kernel
 {
-
     template<class Archive>
     void serialize(Archive &ar, GroupInterventionDistributionEventCoordinator &ec, const unsigned int v)
     {
-        boost::serialization::void_cast_register<GroupInterventionDistributionEventCoordinator, IEventCoordinator>();
         ar & ec.target_disease_state;
 
         ar & ec.node_suids;
@@ -139,5 +133,4 @@ namespace Kernel
         ar & boost::serialization::base_object<StandardInterventionDistributionEventCoordinator>(ec);
     }
 }
-
 #endif

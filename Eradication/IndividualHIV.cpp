@@ -266,28 +266,3 @@ namespace Kernel
 #endif
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanHIV)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanHIV& human, const unsigned int  file_version )
-    {
-#if 0
-        // Register derived types
-        ar.template register_type<InfectionHIV>();
-        ar.template register_type<SusceptibilityHIV>();
-
-        // Serialize fields - N/A
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::IndividualHumanSTI>(human);
-#endif
-    }
-}
-template void Kernel::serialize(boost::mpi::packed_iarchive &ar, IndividualHumanHIV& node, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_oarchive &ar, IndividualHumanHIV& node, unsigned int);
-
-#endif

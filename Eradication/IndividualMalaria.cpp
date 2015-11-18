@@ -683,30 +683,19 @@ namespace Kernel
         ar.labelElement("m_female_gametocytes") & individual.m_female_gametocytes;
         ar.labelElement("m_male_gametocytes_by_strain"); Kernel::serialize(ar, individual.m_male_gametocytes_by_strain);
         ar.labelElement("m_female_gametocytes_by_strain"); Kernel::serialize(ar, individual.m_female_gametocytes_by_strain);
-///        ar.labelElement("m_parasites_detected_by_blood_smear") & individual.m_parasites_detected_by_blood_smear;
-///        ar.labelElement("m_parasites_detected_by_new_diagnostic") & individual.m_parasites_detected_by_new_diagnostic;
-///        ar.labelElement("m_gametocytes_detected") & individual.m_gametocytes_detected;
-///        ar.labelElement("m_clinical_symptoms"); ::serialize(ar, individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
+// Boost serialization didn't include this element.        ar.labelElement("m_parasites_detected_by_blood_smear") & individual.m_parasites_detected_by_blood_smear;
+// Boost serialization didn't include this element.        ar.labelElement("m_parasites_detected_by_new_diagnostic") & individual.m_parasites_detected_by_new_diagnostic;
+// Boost serialization didn't include this element.        ar.labelElement("m_gametocytes_detected") & individual.m_gametocytes_detected;
+// Boost serialization didn't include this element.        ar.labelElement("m_clinical_symptoms"); ::serialize(ar, individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
 // shared pointer        ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, individual.m_CSP_antibody);
         ar.labelElement("m_initial_infected_hepatocytes") & individual.m_initial_infected_hepatocytes;
         ar.endObject();
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-#include "InfectionMalaria.h" // for serialization only
-#include "MalariaInterventionsContainer.h" // for serialization only
-
-template void Kernel::serialize(boost::mpi::packed_iarchive &ar, IndividualHumanMalaria& node, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_oarchive &ar, IndividualHumanMalaria& node, unsigned int);
-template void Kernel::serialize(boost::archive::binary_iarchive &ar, IndividualHumanMalaria& node, unsigned int);
-template void Kernel::serialize(boost::archive::binary_oarchive &ar, IndividualHumanMalaria& node, unsigned int);
-template void Kernel::serialize(boost::archive::binary_iarchive &ar, IndividualHumanFlagsMalaria& node, unsigned int);
-template void Kernel::serialize(boost::archive::binary_oarchive &ar, IndividualHumanFlagsMalaria& node, unsigned int);
-#endif
+#if 0
 namespace Kernel
 {
-#if USE_BOOST_SERIALIZATION
     template<class Archive>
     void serialize(Archive & ar, IndividualHumanFlagsMalaria& flags, const unsigned int  file_version )
     {
@@ -717,36 +706,6 @@ namespace Kernel
         ar & flags.cytokine_gametocyte_inactivation;
         ar & flags.feverDetectionThreshold;
         ar & boost::serialization::base_object<Kernel::IndividualHumanFlagsVector>(flags);
-    }
-#endif
-}
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI   
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanMalaria)
-namespace Kernel {
-
-    template void serialize(boost::mpi::packed_iarchive &ar, IndividualHumanMalaria& node, unsigned int);
-    template void serialize(boost::mpi::packed_oarchive &ar, IndividualHumanMalaria& node, unsigned int);
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanMalaria& human, const unsigned int  file_version )
-    {
-        LOG_DEBUG("(De)serializing IndividualHumanMalaria\n");
-
-        ar.template register_type<Kernel::InfectionMalaria>();
-        ar.template register_type<Kernel::SusceptibilityMalaria>();
-        ar.template register_type<Kernel::MalariaInterventionsContainer>();
-            
-        // Serialize fields - N/A
-
-        // Serialize base class
-        ar & human.m_male_gametocytes;
-        ar & human.m_female_gametocytes;
-        ar & human.m_male_gametocytes_by_strain;
-        ar & human.m_female_gametocytes_by_strain;
-        ar & human.m_CSP_antibody;
-        ar & human.m_initial_infected_hepatocytes;
-        ar & human.m_inv_microliters_blood;   // 1/current blood volume (microliters) based on age
-        ar & boost::serialization::base_object<Kernel::IndividualHumanVector>(human);
     }
 }
 #endif

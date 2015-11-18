@@ -73,13 +73,5 @@ namespace Kernel
         int32_t population;
 
         DECLARE_SERIALIZABLE(VectorCohort);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, VectorCohort &obj, const unsigned int  file_version );
-#endif
     };
 }

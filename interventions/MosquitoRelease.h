@@ -67,12 +67,5 @@ namespace Kernel
 
         void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
         void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        void serialize_inner(Archive &ar, const unsigned int v);
-#endif
     };
 }

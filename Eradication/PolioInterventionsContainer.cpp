@@ -154,21 +154,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::PolioInterventionsContainer)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive &ar, PolioInterventionsContainer& cont, const unsigned int v)
-    {
-        static const char * _module = "PolioInterventionsContainer";
-        LOG_DEBUG("(De)serializing PolioInterventionsContainer\n");
-
-        //ar & cont.new_vaccines;  // SusceptibilityPolio update based on new vaccines done in same time step?
-        boost::serialization::void_cast_register<PolioInterventionsContainer, InterventionsContainer>();
-        ar & boost::serialization::base_object<Kernel::InterventionsContainer>(cont);
-    }
-}
-#endif
-
 #endif // ENABLE_POLIO

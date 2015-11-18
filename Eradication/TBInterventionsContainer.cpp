@@ -264,8 +264,8 @@ namespace Kernel
         ar.labelElement("clearance_rate") & effects.clearance_rate;
         ar.labelElement("inactivation_rate") & effects.inactivation_rate;
         ar.labelElement("resistance_rate") & effects.resistance_rate;
-        ar.labelElement("relapse_rate") & effects.relapse_rate;
-        ar.labelElement("mortality_rate") & effects.mortality_rate;
+        ar.labelElement("relapse_rate") & effects.relapse_rate;     // Boost serialization didn't include this member.
+        ar.labelElement("mortality_rate") & effects.mortality_rate; // Boost serialization didn't include this member.
         ar.endObject();
     }
 
@@ -311,43 +311,5 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::TBInterventionsContainer)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, TBInterventionsContainer& container, const unsigned int v)
-    {
-        static const char * _module = "TBInterventionsContainer";
-        LOG_DEBUG("(De)serializing TBInterventionsContainer\n");
-
-        //ar & container.TB_drug_inactivation_rate;
-        //ar & container.TB_drug_clearance_rate;
-        ar & container.TB_drug_effects;
-        ar & container.m_is_tb_tx_naive_TBIVC;
-        ar & container.m_failed_tx_TBIVC;
-        ar & container.m_ever_relapsed_TBIVC;
-        ar & boost::serialization::base_object<InterventionsContainer>(container);
-    }
-    template void serialize( boost::archive::binary_oarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::TBInterventionsContainer&, unsigned int);
-}
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, TBDrugEffects_t& drugeffects, const unsigned int v)
-    {
-        ar & drugeffects.clearance_rate;
-        ar & drugeffects.inactivation_rate;
-        ar & drugeffects.resistance_rate;
-    }
-}
-#endif // BOOST
 
 #endif // ENABLE_TB

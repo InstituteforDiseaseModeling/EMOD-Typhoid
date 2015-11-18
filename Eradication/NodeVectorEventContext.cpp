@@ -296,22 +296,14 @@ namespace Kernel
         pNV->AddVectors( species, genetics, number );
         return;
     }
-
-
-    //template void NodeVectorEventContextHost::serialize(boost::archive::binary_oarchive &ar, unsigned int);
-    //template void NodeVectorEventContextHost::serialize(boost::archive::binary_iarchive &ar, unsigned int);
 }
 
-#if USE_BOOST_SERIALIZATION
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::NodeVectorEventContextHost)
-
+#if 0
 namespace Kernel
 {
     template<class Archive>
     void serialize(Archive &ar, NodeVectorEventContextHost &context, const unsigned int v)
     {
-#if 1
         // Serialize base class
         ar & context.pLarvalKilling; // by habitat???
         ar & context.pLarvalHabitatReduction; // by habitat???
@@ -343,7 +335,6 @@ namespace Kernel
         ar & context.pOutdoorRestKilling;
 
         ar & boost::serialization::base_object<Kernel::NodeEventContextHost>(context);
-#endif
     }
 }
 #endif

@@ -166,13 +166,11 @@ namespace Kernel
 }
 
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::AntiTBPropDepDrug)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, AntiTBPropDepDrug& drug, const unsigned int v)
     {
-        boost::serialization::void_cast_register<AntiTBPropDepDrug, IDrug>();
         ar & drug.enable_state_specific_tx;
         ar & boost::serialization::base_object<AntiTBDrug>(drug);
     }

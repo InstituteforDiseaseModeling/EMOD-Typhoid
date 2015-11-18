@@ -302,14 +302,11 @@ namespace Kernel
 
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVDelayedIntervention)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HIVDelayedIntervention& obj, const unsigned int v)
     {
-        boost::serialization::void_cast_register<HIVDelayedIntervention, IDistributableIntervention>();
         //ar & obj.year2DelayMap;     // todo: serialize this!
         //ar & obj.abortStates;
         ar & obj.cascadeState;

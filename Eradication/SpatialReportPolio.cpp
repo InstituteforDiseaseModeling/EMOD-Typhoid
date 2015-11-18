@@ -187,12 +187,10 @@ SpatialReportPolio::postProcessAccumulatedData()
         normalizeChannel(vrpv3_prevalence_info.name, population_info.name);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(SpatialReport)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, SpatialReportPolio& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReportPolio,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

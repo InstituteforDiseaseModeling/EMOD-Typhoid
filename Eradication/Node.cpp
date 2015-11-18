@@ -2586,19 +2586,7 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-
-template void Kernel::serialize(boost::mpi::packed_skeleton_oarchive &ar, Node& node, unsigned int);
-template void Kernel::serialize(boost::mpi::detail::content_oarchive &ar, Node& node, unsigned int);
-template void Kernel::serialize(boost::archive::binary_oarchive &ar, Node& node, unsigned int);
-template void Kernel::serialize(boost::archive::binary_iarchive &ar, Node& node, unsigned int);
-//template void Kernel::serialize(boost::archive::text_oarchive &ar, Node& node, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_oarchive &ar, Node& node, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_skeleton_iarchive &ar, Node& node, unsigned int);
-template void Kernel::serialize(boost::mpi::detail::mpi_datatype_oarchive &ar, Node& node, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_iarchive &ar, Node& node, unsigned int);
-//template void Kernel::serialize(boost::archive::text_iarchive &ar, Node& node, unsigned int);
-
+#if 0
 namespace Kernel
 {
     template<class Archive>

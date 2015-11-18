@@ -53,15 +53,6 @@ namespace Kernel
     protected:
         float new_probability_of_seeking;
         IHealthSeekingBehaviorUpdateEffectsApply *ihsbuea;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, HealthSeekingBehaviorUpdate& bn, unsigned int version );
-#endif
     };
 }
 

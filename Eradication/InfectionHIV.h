@@ -107,19 +107,10 @@ namespace Kernel
         float m_hetero_infectivity_multiplier;
 
         IIndividualHumanHIV * hiv_parent;
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, InfectionHIV& inf, const unsigned int file_version );
-#endif
     };
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+#if 0
 namespace Kernel
 {
     template<class Archive>

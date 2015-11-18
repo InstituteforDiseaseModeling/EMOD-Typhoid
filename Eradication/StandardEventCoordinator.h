@@ -90,12 +90,5 @@ namespace Kernel
         virtual void validateInterventionConfig( const json::Element& rElement );
         virtual bool TargetedIndividualIsCovered(IIndividualHumanEventContext *ihec);
         bool property_restrictions_verified;
-
-#if USE_BOOST_SERIALIZATION
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, StandardInterventionDistributionEventCoordinator &ec, const unsigned int v);
-#endif
     };
 }

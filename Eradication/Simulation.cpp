@@ -943,6 +943,12 @@ namespace Kernel
         static const char * _module = "MpiMigration";
         LOG_DEBUG("resolveMigration\n");
 
+/* clorton
+        std::vector<boost::mpi::request >    pending_sends;
+        std::vector<MPI_Request         >    pending_sends_plain;
+        std::vector<int> individual_count_send_buffers;
+*/
+
         std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
         std::list< MPI_Request > outbound_requests( EnvPtr->MPI.NumTasks );     // requests for each outbound message
         std::list< JsonRawWriter* > outbound_messages( EnvPtr->MPI.NumTasks );  // buffers for outbound messages
@@ -1094,28 +1100,6 @@ namespace Kernel
         migratingIndividualQueues[nodeRankMap.GetRankFromNodeSuid(i->GetMigrationDestination())].push_back(i);
     }
 
-    boost::mpi::request Simulation::sendHuman(IndividualHuman *ind_human, int dest_rank)
-    {
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        boost::mpi::request request = EnvPtr->MPI.World->isend(dest_rank, 0, *ind_human);
-#else
-        boost::mpi::request request;
-#endif
-        return request;
-    }
-
-    IndividualHuman* Simulation::receiveHuman(int src_rank)
-    {
-        IndividualHuman* newHuman = IndividualHuman::CreateHuman();
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        boost::mpi::request request   = EnvPtr->MPI.World->irecv(src_rank, 0, *newHuman); 
-        request.wait();
-#endif
-
-        // TODO: handle errors by returning NULL
-        return newHuman;
-    }
-
     //------------------------------------------------------------------
     //   Assorted getters and setters
     //-----------------------------------------------------------------
@@ -1200,7 +1184,7 @@ namespace Kernel
         return m_interventionFactoryObj;
     }
 
-#if USE_BOOST_SERIALIZATION
+#if 0
     template<class Archive>
     void serialize(Archive & ar, Simulation &sim, const unsigned int  file_version )
     {
@@ -1233,115 +1217,4 @@ namespace Kernel
     }
 #endif
 
-
-    void
-    Simulation::doJsonDeserializeReceive()
-    {
-
-        for (int src_rank = 0; src_rank < EnvPtr->MPI.NumTasks; src_rank++)
-        {
-            if (src_rank == EnvPtr->MPI.Rank) continue; // we'll never receive a message from our own process
-
-            int receiving_humans;
-            MPI_Status status;
-            MPI_Request mpi_request;
-            MPI_Irecv(&receiving_humans, 1, MPI_INT, src_rank, 0, MPI_COMM_WORLD, &mpi_request); // receive number of humans I need to receive
-            MPI_Wait(&mpi_request, &status);
-            LOG_DEBUG_F( "mpi receiving %d humans from src_rank=%d\n", receiving_humans, src_rank );
-            if (receiving_humans > 0) 
-            {
-                //if (ENABLE_DEBUG_MPI_TIMING)
-                //    LOG_INFO_F("syncDistributedState(): Rank %d receiving %d individuals from %d.\n", EnvPtr->MPI.Rank, receiving_humans, src_rank);
-
-                // receive the whole list structure
-                //typed_migration_queue_storage.receive_queue.resize(receiving_humans);
-
-                LOG_DEBUG( "rapidjson receiving!\n" );
-                std::string receive_buffer;
-                boost::mpi::request request = EnvPtr->MPI.World->irecv(src_rank, 0, receive_buffer);                 
-
-                request.wait();
-                
-                LOG_DEBUG( "rapidjson Parsing!\n" );
-                std::list< IndividualHuman* > immigrants;
-                try
-                {
-                    //json::Reader::Read( serialPplJsonArray, serialPpl );
-                    rapidjson::Document document;
-                    document.Parse<0>( receive_buffer.c_str() );
-                    LOG_DEBUG( "rapidjson Parsed!\n" );
-                    LOG_DEBUG_F( "Creating & deserializing %d humans.\n", document.Size() );
-                    //for( unsigned int idx = 0; idx < ppl_array.Size(); idx ++ )
-                    for( unsigned int idx = 0; idx < document.Size(); idx ++ )
-                    {
-
-                        // Check if this is base class IndividualHuman, or the derived one
-                        int mig_dest_data;
-                        if (document[ idx ]["IndividualHuman"].IsObject())
-                        {
-                            // derived class
-                            mig_dest_data = document[ idx ]["IndividualHuman"][ "migration_destination" ][ "data" ].GetInt();
-                        }
-                        else
-                        {
-                            // it is base class
-                            mig_dest_data = document[ idx ][ "migration_destination" ][ "data" ].GetInt();
-                        }
-                       
-                        suids::suid node_id;
-                        //LOG_DEBUG( "Getting migration_destination\n" );
-                        node_id.data = mig_dest_data;
-                        Node * targetNode = nodes[ node_id ];
-                        if( targetNode == nullptr )
-                        {
-                            LOG_WARN( "Weird, node pointer is null. We get sent to the wrong place????\n" );
-                            continue;
-                        }
-                        //IndividualHuman * new_individual = targetNode->addNewIndividual(0.0/*mc weight*/, 0.0 /*age*/, 0, 0 /*(int)(rand()%20)/18.0*//*infs*/, (float)0.0 /*imm*/, (float)0.0/*risk*/, (float)0.0f/*mighet*/, (float)0.0f /*poverty*/);
-                        IndividualHuman * new_individual = targetNode->addNewIndividualFromSerialization();
-
-                        LOG_DEBUG_F( "new_individual ImmigrateTo to targetNode: %d\n", node_id.data );
-                        new_individual->ImmigrateTo( targetNode ); // this causes crashes for some inexplicable reason: memory corruption???
-
-                        //infected_migrant |= ( document[ idx ][ "infections" ].Size() > 0 ? true : false );
-                    }
-
-                    //LOG_INFO_F("Receive from src rank %d humans %d for %d bytes\n", src_rank, receiving_humans, receive_buffer.size()); 
-#if 0
-                    if( infected_migrant )
-                    {
-                        std::ostringstream msgFileName;
-                        msgFileName << "message_received" << EnvPtr->MPI.Rank << ".json";
-
-                        std::ofstream msgReceived( msgFileName.str(), std::ios::out );
-                        msgReceived << receive_buffer;
-                        msgReceived.close();
-                    }
-#endif
-
-                }
-                catch( json::Exception &e )
-                {
-                    throw Kernel::GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() );
-                }
-
-                //typed_migration_queue_storage.receive_queue.clear();
-
-            } // if (receiving_humans > 0) 
-
-        } // for (int src_rank = 0; src_rank < EnvPtr->MPI.NumTasks; src_rank++)
-        LOG_DEBUG( "Done receiving.\n" );
-
-    } 
 }
-
-
-#if USE_BOOST_SERIALIZATION
-template void Kernel::serialize( boost::archive::binary_oarchive & ar, Simulation& sim, const unsigned int file_version);
-template void Kernel::serialize( boost::archive::binary_iarchive & ar, Simulation& sim, const unsigned int file_version);
-#endif
-
-#ifdef _DLLS_
-// hack because of weird build error on dll, just seeing if this works, will use as data to solve problem
-//Environment* EnvPtr = nullptr;
-#endif

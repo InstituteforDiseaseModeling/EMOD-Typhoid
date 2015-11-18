@@ -255,7 +255,7 @@ namespace Kernel
             bool has_strain = ar.IsWriter() ? (cohort.m_strain != nullptr) : false; // We put false here, but this is just a placeholder since we're reading from the archive.
             ar.labelElement("__has_strain__");
             ar & has_strain;
-            // TODO - perhaps the cohort should always have a non-null m_strain, just use a dummy StrainIdentity when there's no infection.
+            // clorton TODO - perhaps the cohort should always have a non-null m_strain, just use a dummy StrainIdentity when there's no infection.
             if (has_strain)
             {
                 ar.labelElement("m_strain"); Kernel::serialize(ar, cohort.m_strain);
@@ -263,48 +263,4 @@ namespace Kernel
 
         ar.endObject();
     }
-
-#if 0
-    template<class Archive>
-    void VectorCohortIndividual::serialize_inner( Archive & ar, const unsigned int file_version )
-    {
-        // Register derived types - N/A
-
-        // Serialize fields
-        typemap.serialize(this, ar, file_version);
-        ar & m_strain;
-
-        // Serialize base class
-        ar & boost::serialization::base_object<VectorCohortAging>(*this);
-    }
-
-    template void VectorCohortIndividual::serialize_inner( boost::archive::binary_iarchive & ar, const unsigned int file_version );
-    template void VectorCohortIndividual::serialize_inner( boost::archive::binary_oarchive & ar, const unsigned int file_version );
-#endif
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::VectorCohortIndividual)
-namespace Kernel {
-    template< typename Archive >
-    void serialize( Archive& ar, VectorCohortIndividual &obj, unsigned int file_version )
-    {
-        ar & obj.state;
-        ar & obj.additional_mortality;
-        ar & obj.oviposition_timer;
-        ar & obj.parity;
-        ar & obj.neweggs;
-        ar & obj.migration_destination;
-        ar & obj.species;
-        ar & obj.m_strain;
-        ar & boost::serialization::base_object<Kernel::VectorCohortAging>(obj);
-    }
-    template void serialize( boost::archive::binary_iarchive&, VectorCohortIndividual &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, VectorCohortIndividual &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, VectorCohortIndividual &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, VectorCohortIndividual &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, VectorCohortIndividual &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, VectorCohortIndividual &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, VectorCohortIndividual &obj, unsigned int file_version );
-}
-#endif

@@ -66,14 +66,5 @@ namespace Kernel
         float max_duration;
         float action_timer;
         float reversion_timer;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, PropertyValueChanger& bn, unsigned int version );
-#endif
     };
 }

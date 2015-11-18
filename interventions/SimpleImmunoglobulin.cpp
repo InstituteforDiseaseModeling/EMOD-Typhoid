@@ -46,15 +46,3 @@ namespace Kernel
         return JsonConfigurable::Configure( inputJson );
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleImmunoglobulin)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SimpleImmunoglobulin &vacc, const unsigned int v)
-    {
-        ar & boost::serialization::base_object<SimpleVaccine>(vacc);
-    }
-}
-
-#endif

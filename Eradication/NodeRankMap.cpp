@@ -243,7 +243,7 @@ namespace Kernel {
     }
 }
 
-#if USE_BOOST_SERIALIZATION
+#if 0
 namespace Kernel
 {
     template<typename Archive>

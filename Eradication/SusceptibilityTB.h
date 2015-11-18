@@ -83,13 +83,5 @@ namespace Kernel
         float m_cough_infectiousness;
 
         DECLARE_SERIALIZABLE(SusceptibilityTB);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityTB &sus, const unsigned int  file_version );
-#endif
     };
 }

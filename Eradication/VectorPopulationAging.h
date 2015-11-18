@@ -41,12 +41,5 @@ namespace Kernel
 
     protected:
         virtual void InitializeVectorQueues(unsigned int adults, unsigned int _infectious);
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize( Archive& ar, VectorPopulationAging &obj, unsigned int file_version );
-#endif
     };
 }

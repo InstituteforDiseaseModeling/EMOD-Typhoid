@@ -140,13 +140,7 @@ namespace Kernel
         float m_duration_since_init_infection; //for reporting only
 
         DECLARE_SERIALIZABLE(InfectionTB);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, InfectionTB& inf, const unsigned int file_version );
-#endif
     };
 }
+
 #endif

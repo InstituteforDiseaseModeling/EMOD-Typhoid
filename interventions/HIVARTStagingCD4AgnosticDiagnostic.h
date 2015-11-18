@@ -44,13 +44,5 @@ namespace Kernel
         InterpolatedValueMap adultByPregnant;
         InterpolatedValueMap childTreatUnderAgeThreshold;
 #pragma warning( pop )
-
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVARTStagingCD4AgnosticDiagnostic &obj, const unsigned int v);
-#endif
     };
 }

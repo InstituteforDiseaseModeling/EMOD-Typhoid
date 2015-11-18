@@ -293,8 +293,6 @@ if os.sys.platform.startswith("linux"):
     platform = "linux"
 
     env.Append( LIBS=['m'] )
-    #env.Append( CPPDEFINES={'USE_BOOST_MPI' : '0'})
-    env.Append( CPPDEFINES={'USE_BOOST_MPI' : '1'})
 
     if os.uname()[4] == "x86_64":
         linux64 = True

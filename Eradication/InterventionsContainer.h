@@ -92,13 +92,5 @@ namespace Kernel
         IIndividualHumanContext *parent;    // context for this interventions container
 
         DECLARE_SERIALIZABLE(InterventionsContainer);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, InterventionsContainer &cont, const unsigned int v);
-#endif
     };
 }

@@ -163,12 +163,8 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::BirthTriggeredIV)
-
+#if 0
 namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(BirthTriggeredIV, INodeDistributableIntervention)
-    REGISTER_SERIALIZATION_VOID_CAST(BirthTriggeredIV, IIndividualEventObserver)
     template<class Archive>
     void serialize(Archive &ar, BirthTriggeredIV& iv, const unsigned int v)
     {

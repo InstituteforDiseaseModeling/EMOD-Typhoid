@@ -93,12 +93,5 @@ namespace Kernel
         StrainIdentity* m_strain;
 
         DECLARE_SERIALIZABLE(VectorCohortIndividual);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, VectorCohortIndividual& cohort, const unsigned int  file_version );
-#endif
     };
 }

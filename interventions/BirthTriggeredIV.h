@@ -55,11 +55,5 @@ namespace Kernel
         float demographic_coverage;
 
         IndividualInterventionConfig actual_intervention_config;
-
-#if USE_BOOST_SERIALIZATION
-    private:
-        template<class Archive>
-        friend void serialize(Archive &ar, BirthTriggeredIV& iv, const unsigned int v);
-#endif
     };
 }

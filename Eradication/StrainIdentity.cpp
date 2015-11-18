@@ -66,28 +66,3 @@ namespace Kernel
         return ar;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::StrainIdentity)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, StrainIdentity& strain, unsigned int  file_version )
-    {
-        static const char * _module = "StrainIdentity";
-        LOG_DEBUG("(De)serializing StrainIdentity\n");
-
-        ar & strain.antigenID;
-        ar & strain.geneticID;
-    }
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::StrainIdentity&, unsigned int);
-    template void serialize( boost::archive::binary_oarchive&, Kernel::StrainIdentity&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::StrainIdentity&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::StrainIdentity&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::StrainIdentity&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::StrainIdentity&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::StrainIdentity&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::StrainIdentity&, unsigned int);
-
-}
-#endif

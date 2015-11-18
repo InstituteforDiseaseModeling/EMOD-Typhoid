@@ -154,20 +154,3 @@ namespace Kernel
         return relationshipSuidGenerator();
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationSTI)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationSTI &sim, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<NodeSTI>();
-        ar.template register_type<NodeSTIFlags>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Simulation>(sim);
-    }
-}
-#endif
-

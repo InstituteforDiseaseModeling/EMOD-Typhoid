@@ -95,14 +95,6 @@ namespace Kernel
     private:
 
         bool Configure( const Configuration * config );
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, MigrationInfo& info, const unsigned int file_version);
-        FORCE_POLYMORPHIC()
-#endif
     };
 
     class MigrationInfoFactory : public JsonConfigurable

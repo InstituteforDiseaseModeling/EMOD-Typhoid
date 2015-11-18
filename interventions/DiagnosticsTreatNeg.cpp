@@ -274,16 +274,11 @@ namespace Kernel
 }
 
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::DiagnosticTreatNeg)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, DiagnosticTreatNeg& obj, const unsigned int v)
     {
-
-        boost::serialization::void_cast_register<DiagnosticTreatNeg, IDistributableIntervention>();
-
         ar & obj.defaulters_config;
         ar & (std::string) obj.defaulters_event;
         ar & obj.negative_diagnosis_config;

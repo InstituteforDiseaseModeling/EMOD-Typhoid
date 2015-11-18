@@ -99,23 +99,16 @@ namespace Kernel
 
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVPiecewiseByYearAndSexDiagnostic)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HIVPiecewiseByYearAndSexDiagnostic& obj, const unsigned int v)
     {
-        static const char * _module = "HIVPiecewiseByYearAndSexDiagnostic";
-        LOG_DEBUG("(De)serializing HIVPiecewiseByYearAndSexDiagnostic\n");
-
-        boost::serialization::void_cast_register<HIVPiecewiseByYearAndSexDiagnostic, IDistributableIntervention>();
         ar & obj.interpolation_order;
         ar & obj.female_multiplier;
         ar & obj.default_value;
         //ar & obj.year2ValueMap;     // todo: serialize this!
         ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVPiecewiseByYearAndSexDiagnostic&, unsigned int);
 }
 #endif

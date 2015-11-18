@@ -91,11 +91,5 @@ namespace Kernel
                 unsigned int              : 4; // pad to 16 bits
             };
         } vector_mating;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, VectorMatingStructure &obj, const unsigned int  file_version );
-#endif
     };
 }

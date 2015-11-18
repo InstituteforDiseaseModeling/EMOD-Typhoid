@@ -300,33 +300,3 @@ namespace Kernel
         return ar;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanVector)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanVector& human, const unsigned int  file_version )
-    {
-        ar.template register_type<Kernel::InfectionVector>();
-        ar.template register_type<Kernel::SusceptibilityVector>();
-        ar.template register_type<Kernel::VectorInterventionsContainer>();
-            
-        // Serialize fields - N/A
-        ar & human.m_strain_exposure;
-        ar & human.m_total_exposure;
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::IndividualHuman>(human);
-    }
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::IndividualHumanVector&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::IndividualHumanVector&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::IndividualHumanVector&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::IndividualHumanVector&, unsigned int);
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::IndividualHumanVector&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::IndividualHumanVector&, unsigned int);
-    template void serialize( boost::archive::binary_oarchive&, Kernel::IndividualHumanVector&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::IndividualHumanVector&, unsigned int);
-}
-#endif
-

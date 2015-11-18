@@ -61,12 +61,5 @@ namespace Kernel
 
         DECLARE_SERIALIZABLE(SimpleHealthSeekingBehavior);
 #pragma warning( pop )
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleHealthSeekingBehavior &obj, const unsigned int v);
-#endif
     };
 }

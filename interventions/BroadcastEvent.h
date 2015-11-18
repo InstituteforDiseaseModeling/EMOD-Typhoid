@@ -50,12 +50,5 @@ namespace Kernel
         IIndividualHumanContext *parent;
         jsonConfigurable::ConstrainedString broadcast_event;
 #pragma warning( pop )
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, BroadcastEvent &obj, const unsigned int v);
-#endif
     };
 }

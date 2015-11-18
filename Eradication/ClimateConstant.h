@@ -38,18 +38,5 @@ namespace Kernel
         ClimateConstant(ClimateUpdateResolution::Enum update_resolution, INodeContext * _parent);
 
         virtual bool IsPlausible();
-
-    private:
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, ClimateConstant& climate, const unsigned int file_version);
-        FORCE_POLYMORPHIC()
-#endif
-        ///////////////////////////////////////////////////////////////////////////
     };
 }
-

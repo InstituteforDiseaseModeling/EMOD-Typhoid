@@ -161,24 +161,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityVector)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityVector& sus, const unsigned int file_version )
-    {
-        ar & sus.m_relative_biting_rate;
-        ar & sus.m_age_dependent_biting_risk;
-        ar & boost::serialization::base_object<Susceptibility>(sus);
-    }
-    template void serialize( boost::archive::binary_iarchive&, SusceptibilityVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, SusceptibilityVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, SusceptibilityVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, SusceptibilityVector &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, SusceptibilityVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, SusceptibilityVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, SusceptibilityVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, SusceptibilityVector &obj, unsigned int file_version );
-}
-#endif

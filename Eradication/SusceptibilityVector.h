@@ -63,12 +63,5 @@ namespace Kernel
         float m_age_dependent_biting_risk;
 
         DECLARE_SERIALIZABLE(SusceptibilityVector);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityVector& sus, const unsigned int file_version );
-#endif
     };
 }

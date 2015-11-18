@@ -38,13 +38,5 @@ namespace Kernel
         // helpers
         virtual float getDemographicCoverageForIndividual( const IIndividualHumanEventContext *pInd ) const;
         BssTargetingType::Enum bss_targeting;
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, STIInterventionDistributionEventCoordinator &ec, const unsigned int v);
-#endif
     };
 }

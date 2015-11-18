@@ -48,24 +48,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityAirborne)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityAirborne& sus, const unsigned int file_version )
-    {
-        ar & sus.demographic_risk;
-        ar & boost::serialization::base_object<Susceptibility>(sus);
-    }
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-    template void serialize( boost::archive::binary_oarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::SusceptibilityAirborne&, unsigned int);
-}
-#endif
-
 #endif // ENABLE_TB

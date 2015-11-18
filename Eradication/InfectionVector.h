@@ -26,12 +26,5 @@ namespace Kernel
         /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
 
         DECLARE_SERIALIZABLE(InfectionVector);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, InfectionVector& inf, unsigned int  file_version );
-#endif
     };
 }

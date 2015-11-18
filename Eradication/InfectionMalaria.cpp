@@ -847,24 +847,6 @@ namespace Kernel
             }
         }
     }
-#if 0
-    template<class Archive>
-    void InfectionMalaria::serialize(Archive &ar, const unsigned int file_version)
-    {
-        // Register derived types
-
-        // Serialize fields
-        typemap.serialize(this, ar, file_version);
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::InfectionVector>(*this);
-    }
-
-    template void InfectionMalaria::serialize(boost::archive::binary_iarchive &ar, const unsigned int file_version);
-    template void InfectionMalaria::serialize(boost::archive::binary_oarchive &ar, const unsigned int file_version);
-    template void InfectionMalaria::serialize(boost::mpi::packed_iarchive &ar, const unsigned int file_version);
-    template void InfectionMalaria::serialize(boost::mpi::packed_oarchive &ar, const unsigned int file_version);
-#endif
 
     void InfectionMalaria::SetContextTo(IIndividualHumanContext *context)
     {
@@ -937,48 +919,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionMalaria)
-
-namespace Kernel
-{
-    template<class Archive>
-
-    void serialize(Archive & ar, InfectionMalaria& inf, const unsigned int file_version )
-    {
-        static const char * _module = "InfectionMalaria";
-        LOG_DEBUG("(De)serializing InfectionMalaria\n");
-
-        ar & inf.m_IRBCtimer;
-        ar & inf.m_hepatocytes;
-        ar & inf.m_asexual_phase;
-        ar & inf.m_asexual_cycle_count;
-
-        ar & inf.m_MSPtype;        // allow variation in MSP from clone to clone
-        ar & inf.m_nonspectype;    // what is the set of minor_epitope_types
-        ar & inf.m_minor_epitope_type;
-        ar & inf.m_IRBCtype;
-
-        ar & inf.m_MSP_antibody;
-        //ar & inf.m_PfEMP1_antibodies; // test recreating this in SetContextTo after load
-
-        ar & inf.m_IRBC_count;
-        ar & inf.m_malegametocytes;
-        ar & inf.m_femalegametocytes;
-
-        // govern distribution of next merozoites
-        ar & inf.m_gametorate;
-        ar & inf.m_gametosexratio;
-
-        ar & inf.m_measured_duration;
-        ar & inf.m_start_measuring;
-        ar & inf.m_temp_duration;
-        ar & inf.m_max_parasites;
-        ar & inf.m_inv_microliters_blood;   // tracks blood volume based on age
-        ar & inf.drugResistanceFlag;
-
-        ar & boost::serialization::base_object<Kernel::InfectionVector>(inf);
-    }
-}
-#endif

@@ -120,18 +120,3 @@ namespace Kernel
 
     }*/
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::STIBarrier)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, STIBarrier& bn, const unsigned int v)
-    {
-        //LOG_DEBUG("(De)serializing SimpleHousingSTIBarrier\n");
-
-        boost::serialization::void_cast_register<STIBarrier, IDistributableIntervention>();
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(bn);
-    }
-}
-#endif

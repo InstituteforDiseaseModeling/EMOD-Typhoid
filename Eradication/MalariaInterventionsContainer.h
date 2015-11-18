@@ -88,11 +88,5 @@ namespace Kernel
         bool GiveDrug(IDrug* drug); //do some special stuff for drugs.
 
         DECLARE_SERIALIZABLE(MalariaInterventionsContainer);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, MalariaInterventionsContainer& mic, const unsigned int v);
-#endif
     };
 }

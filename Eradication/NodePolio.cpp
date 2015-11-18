@@ -201,13 +201,11 @@ NodePolio::params()
     return GET_CONFIGURABLE(SimulationConfig);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodePolio)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, NodePolio& node, const unsigned int /* file_version */)
     { 
-        ar.template register_type<IndividualHumanPolio>();
         ar & boost::serialization::base_object<NodeEnvironmental>(node);
         ar & node.mean_age_infection;
         ar & node.n_people_age_infection;

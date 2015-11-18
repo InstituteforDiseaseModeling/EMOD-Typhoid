@@ -46,20 +46,3 @@ namespace Kernel
         return true;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVSetCascadeState)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVSetCascadeState& obj, const unsigned int v)
-    {
-        static const char * _module = "HIVSetCascadeState";
-        LOG_DEBUG("(De)serializing HIVSetCascadeState\n");
-
-        boost::serialization::void_cast_register<HIVSetCascadeState, IDistributableIntervention>();
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVSetCascadeState&, unsigned int);
-}
-#endif

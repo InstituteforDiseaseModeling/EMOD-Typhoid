@@ -224,32 +224,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::VectorInterventionsContainer)
-namespace Kernel {
-    template< typename Archive >
-    void serialize( Archive& ar, VectorInterventionsContainer &obj, unsigned int file_version )
-    {
-        ar & obj.pDieBeforeFeeding;
-        ar & obj.pHostNotAvailable;
-        ar & obj.pDieDuringFeeding;
-        ar & obj.pDiePostFeeding;
-        ar & obj.pSuccessfulFeedHuman;
-        ar & obj.pSuccessfulFeedAD;
-        ar & obj.pOutdoorDieBeforeFeeding;
-        ar & obj.pOutdoorHostNotAvailable;
-        ar & obj.pOutdoorDieDuringFeeding;
-        ar & obj.pOutdoorDiePostFeeding;
-        ar & obj.pOutdoorSuccessfulFeedHuman;
-        ar & obj.blockIndoorVectorAcquire;
-        ar & obj.blockIndoorVectorTransmit;
-        ar & obj.blockOutdoorVectorAcquire;
-        ar & obj.blockOutdoorVectorTransmit;
-        ar & boost::serialization::base_object<Kernel::InterventionsContainer>(obj);
-    }
-
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::VectorInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::VectorInterventionsContainer&, unsigned int);
-}
-#endif

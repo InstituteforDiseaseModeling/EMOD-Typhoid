@@ -38,12 +38,5 @@ protected:
         IHIVMTCTEffects * ivc; // interventions container
         NonNegativeFloat timer;
         float efficacy;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, PMTCT &obj, const unsigned int v);
-#endif
     };
 }

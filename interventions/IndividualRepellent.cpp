@@ -164,18 +164,11 @@ namespace Kernel
     }*/
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleIndividualRepellent)
-
+#if 0
 namespace Kernel {
-
     template<class Archive>
     void serialize(Archive &ar, SimpleIndividualRepellent& obj, const unsigned int v)
     {
-        static const char * _module = "SimpleIndividualRepellent";
-        LOG_DEBUG("(De)serializing SimpleIndividualRepellent\n");
-
-        boost::serialization::void_cast_register<SimpleIndividualRepellent, IDistributableIntervention>();
         ar & obj.durability_time_profile;
         ar & obj.current_blockingrate;
         ar & obj.current_killingrate;

@@ -201,12 +201,10 @@ SpatialReportTB::postProcessAccumulatedData()
         normalizeChannel(tb_immune_fraction_info.name, population_info.name);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(SpatialReport)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, SpatialReportTB& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReportTB,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

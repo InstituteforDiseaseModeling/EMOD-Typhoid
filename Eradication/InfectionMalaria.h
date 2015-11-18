@@ -150,11 +150,5 @@ namespace Kernel
 
         // drug resistance flag
         int drugResistanceFlag;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, InfectionMalaria& inf, const unsigned int file_version );
-#endif
     };
 }

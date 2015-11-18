@@ -77,11 +77,5 @@ namespace Kernel
         void Initialize();
 
         virtual INodeContext *getContextPointer() { return (INodeContext*)this; }
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeMalaria& node, const unsigned int  file_version );
-#endif
     };
 }

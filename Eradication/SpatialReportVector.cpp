@@ -128,12 +128,10 @@ void SpatialReportVector::postProcessAccumulatedData()
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(SpatialReport)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, SpatialReport& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReportVector,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

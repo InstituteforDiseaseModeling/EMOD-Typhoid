@@ -43,13 +43,5 @@ namespace Kernel
         bool report_relationship_end;
         bool report_relationship_consummated;
         bool report_transmission;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationSTI &sim, const unsigned int  file_version );
-#endif
     };
 }
-
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationSTI)

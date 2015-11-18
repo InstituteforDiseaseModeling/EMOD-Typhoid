@@ -23,19 +23,5 @@ namespace Kernel
 
         CampaignEventByYear();
         virtual ~CampaignEventByYear();
-
-    protected:
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive &ar, CampaignEvent& event, const unsigned int v);
-#endif
     };
 }
-

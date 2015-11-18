@@ -113,16 +113,6 @@ namespace Kernel
         virtual void CreateInfectionStrain(StrainIdentity* infstrain);
         virtual void EvolveStrain(ISusceptibilityContext* immunity, float dt);
 
-    private:
-
         DECLARE_SERIALIZABLE(Infection);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, Infection &inf, const unsigned int  file_version );
-
-#endif
     };
 }

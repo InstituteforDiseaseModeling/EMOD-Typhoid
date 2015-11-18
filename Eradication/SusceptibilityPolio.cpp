@@ -1028,30 +1028,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityPolio)
-namespace Kernel {
-
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityPolio &sus, const unsigned int  file_version )
-    {
-        ar & sus.shedding_titer; // (TCID50/g feces) amount of each virus by type currently being shed
-        ar & sus.humoralNAb; // (reciprocal titer, linear units)
-        ar & sus.mucosalNAb; // (reciprocal titer, linear units)
-        ar & sus.maternalSerumNAb; // (reciprocal titer, linear units)
-        ar & sus.humoralMemoryNAb; // (reciprocal titer, linear units)
-        ar & sus.mucosalMemoryNAb; // (reciprocal titer, linear units)
-        ar & sus.humoral_fastDecayCompartment; // (reciprocal titer, linear units)
-        ar & sus.mucosal_fastDecayCompartment; // (reciprocal titer, linear units)
-        ar & sus.time_since_last_infection; // (days) time elapsed from exposure
-        ar & sus.time_since_last_IPV; // (days) time elapsed from exposure
-        ar & sus.individual_acquire_risk; // (dimensionless) demographic- and age-dependent acquisition risk, multiplies with contact_acquire_polio to give the individual's contact acquisition
-        ar & sus.vaccine_doses_received; // {tOPV bOPV mOPV1 mOPV2 mOPV3 IPV} counters for number of doses already received
-        ar & sus.vaccine_doses_received_by_type;
-        ar & sus.infectionStrains; // number of current infections of each virus type
-        ar & boost::serialization::base_object<SusceptibilityEnvironmental>(sus);
-    }
-}
-#endif
-
 #endif // ENABLE_POLIO

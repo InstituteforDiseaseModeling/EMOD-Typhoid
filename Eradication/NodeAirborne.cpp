@@ -69,20 +69,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-#include "IndividualAirborne.h"
-BOOST_CLASS_EXPORT(Kernel::NodeAirborne)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, NodeAirborne& node, const unsigned int file_version)
-    {
-        // Register derived types
-        //ar.template register_type<IndividualHumanAirborne>();
-
-        // Serialize base class
-        ar &boost::serialization::base_object<Node>(node);    
-    }
-}
-#endif
-
 #endif // ENABLE_TB

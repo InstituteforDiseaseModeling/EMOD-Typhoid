@@ -285,22 +285,3 @@ namespace Kernel
         ar & structure.vector_mating.index;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::VectorMatingStructure)
-namespace Kernel {
-    template< typename Archive >
-    void serialize( Archive& ar, VectorMatingStructure &obj, unsigned int file_version )
-    {
-        ar & obj.vector_mating.index;
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, VectorMatingStructure &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_iarchive&, VectorMatingStructure &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, VectorMatingStructure &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, VectorMatingStructure &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, VectorMatingStructure &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, VectorMatingStructure &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, VectorMatingStructure &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, VectorMatingStructure &obj, unsigned int file_version );
-}
-#endif

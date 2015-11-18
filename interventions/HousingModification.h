@@ -44,13 +44,6 @@ namespace Kernel
         IHousingModificationConsumer *ihmc; // aka individual or individual vector interventions container
 
         DECLARE_SERIALIZABLE(SimpleHousingModification);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleHousingModification& hm, const unsigned int v);
-#endif
     };
 
     class IRSHousingModification : public SimpleHousingModification
@@ -58,13 +51,6 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, IRSHousingModification, IDistributableIntervention)
 
         DECLARE_SERIALIZABLE(IRSHousingModification);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, IRSHousingModification& hm, const unsigned int v);
-#endif
     };
 
     class ScreeningHousingModification : public SimpleHousingModification
@@ -72,13 +58,6 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, ScreeningHousingModification, IDistributableIntervention)
 
         DECLARE_SERIALIZABLE(ScreeningHousingModification);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, ScreeningHousingModification& hm, const unsigned int v);
-#endif
     };
 
     class SpatialRepellentHousingModification : public SimpleHousingModification
@@ -86,13 +65,6 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SpatialRepellentHousingModification, IDistributableIntervention)
 
         DECLARE_SERIALIZABLE(SpatialRepellentHousingModification);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, SpatialRepellentHousingModification& hm, const unsigned int v);
-#endif
     };
 
     class ArtificialDietHousingModification : public SimpleHousingModification
@@ -100,13 +72,6 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, ArtificialDietHousingModification, IDistributableIntervention)
 
         DECLARE_SERIALIZABLE(ArtificialDietHousingModification);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, ArtificialDietHousingModification& hm, const unsigned int v);
-#endif
     };
 
     class InsectKillingFenceHousingModification : public SimpleHousingModification
@@ -114,12 +79,5 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, InsectKillingFenceHousingModification, IDistributableIntervention)
 
         DECLARE_SERIALIZABLE(InsectKillingFenceHousingModification);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, InsectKillingFenceHousingModification& hm, const unsigned int v);
-#endif
     };
 }

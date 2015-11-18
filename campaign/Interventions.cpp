@@ -171,11 +171,8 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::BaseIntervention)
-
+#if 0
 namespace Kernel {
-
     template<class Archive>
     void serialize(Archive &ar, BaseIntervention &bi, const unsigned int v)
     {

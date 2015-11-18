@@ -122,16 +122,11 @@ namespace Kernel
 }
 
 // TODO: move to single serialization block
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::AntipoliovirusDrug)
+#if 0
 namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(AntipoliovirusDrug, IDrug)
-
     template <typename Archive>
     void serialize(Archive &ar, AntipoliovirusDrug& drug, const unsigned int v)
     {
-        //boost::serialization::void_cast_register<AntipoliovirusDrug, IDrug>();
-
         ar & drug.adherence_rate;
         ar & drug.titer_efficacy;
         ar & drug.infection_duration_efficacy;

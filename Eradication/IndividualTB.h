@@ -72,13 +72,5 @@ namespace Kernel
         virtual void onInfectionMDRIncidence() override;
 
         DECLARE_SERIALIZABLE(IndividualHumanTB);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanTB& human, const unsigned int  file_version );
-#endif
     };
 }

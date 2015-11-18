@@ -42,14 +42,5 @@ namespace Kernel
     private:
 
         friend class Kernel::SimulationFactory; // allow them to create us
-
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationPolio& sim, const unsigned int  file_version );
-#endif
     };
 }
-
-#ifndef WIN32
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPolio)
-#endif

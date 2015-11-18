@@ -164,23 +164,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationPolio)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationPolio& sim, const unsigned int  file_version )
-    {
-        // must register all derived type serialized through base class pointer members
-        ar.template register_type<NodePolio>();
-        ar.template register_type<SimulationPolioFlags>();
-        ar.template register_type<NodePolioFlags>();
-        ar.template register_type<IndividualHumanPolioFlags>();
-        ar.template register_type<InfectionPolioFlags>();
-        ar.template register_type<SusceptibilityPolioFlags>();
-
-        ar & boost::serialization::base_object<Simulation>(sim);
-    }
-}
-#endif
-
 #endif // ENABLE_POLIO

@@ -35,15 +35,5 @@ namespace Kernel
 
     private:
         friend class Kernel::SimulationFactory; // allow them to create us
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationEnvironmental& sim, const unsigned int  file_version );
-#endif
     };
 }
-
-#ifndef WIN32
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationEnvironmental)
-#endif

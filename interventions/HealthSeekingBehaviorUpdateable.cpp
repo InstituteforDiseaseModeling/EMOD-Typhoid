@@ -30,28 +30,4 @@ namespace Kernel
         LOG_DEBUG_F("old probability of seeking is %f, new probability of seeking is %f\n", probability_of_seeking, new_probability_of_seeking);
         probability_of_seeking = new_probability_of_seeking;
     }
-
-    
-    
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HealthSeekingBehaviorUpdateable)
-
-namespace Kernel {
-    // Would like to put all serialization stuff here but having these in headers
-    // is posing a problem due to multiple subclasses. :(
-    //REGISTER_SERIALIZATION_VOID_CAST(SimpleHealthSeekingBehaviour, IDistributableIntervention);
-
-    template<class Archive>
-    void serialize(Archive &ar, HealthSeekingBehaviorUpdateable& obj, const unsigned int v)
-    {
-        static const char * _module = "HealthSeekingBehaviorUpdateable";
-        LOG_DEBUG("(De)serializing HealthSeekingBehaviorUpdateable\n");
-
-        boost::serialization::void_cast_register<HealthSeekingBehaviorUpdateable, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleHealthSeekingBehavior>(obj);
-    }
-}
-#endif

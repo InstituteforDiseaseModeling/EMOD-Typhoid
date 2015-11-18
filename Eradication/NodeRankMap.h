@@ -113,13 +113,5 @@ namespace Kernel
         {
             RankMap_t operator()(const RankMap_t& x, const RankMap_t& y) const;
         };
-
-#if USE_BOOST_SERIALIZATION
-    private:
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeRankMap& nrm, const unsigned int file_version);
-#endif
-        ///////////////////////////////////////////////////////////////////////////
     };
 }

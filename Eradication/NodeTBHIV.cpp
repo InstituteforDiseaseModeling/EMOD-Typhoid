@@ -54,19 +54,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeTBHIV)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, NodeTBHIV& node, const unsigned int  file_version )
-    {
-        // Register derived types // Really????
-        ar.template register_type<IndividualHumanTB>();
-
-        ar &boost::serialization::base_object<NodeTB>(node);    
-    }
-}
-#endif
-
 #endif // ENABLE_TB

@@ -60,11 +60,5 @@ namespace Kernel
 
     private:
         std::string _species;
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template< class Archive >
-        friend void serialize(Archive & ar, VectorSpeciesParameters& pars, const unsigned int  file_version );
-#endif
     };
 }

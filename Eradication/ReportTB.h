@@ -62,12 +62,6 @@ protected:
     float mdr_active_sx_evolved;
 
     float infectiousness_fast;
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, ReportTB& report, const unsigned int v);
-#endif
 };
 
 }

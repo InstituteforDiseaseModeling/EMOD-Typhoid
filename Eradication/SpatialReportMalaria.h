@@ -45,12 +45,5 @@ protected:
     ChannelInfo fever_prevalence_info;
     ChannelInfo new_clinical_cases_info;
     ChannelInfo new_severe_cases_info;
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, SpatialReportMalaria& report, const unsigned int v);
-#endif
 };
 }

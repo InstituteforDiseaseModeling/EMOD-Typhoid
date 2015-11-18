@@ -61,13 +61,6 @@ namespace Kernel
         void Initialize( MalariaAntibodyType::Enum type, int variant, float capacity = 0, float concentration = 0 );
 
         DECLARE_SERIALIZABLE(MalariaAntibody);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, MalariaAntibody &ab, const unsigned int v);
-#endif
     };
 
     // -----------------------------------------------------------
@@ -81,13 +74,6 @@ namespace Kernel
 
     protected:
         DECLARE_SERIALIZABLE(MalariaAntibodyCSP);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, MalariaAntibodyCSP &ab, const unsigned int v);
-#endif
     };
 
     class MalariaAntibodyMSP : public MalariaAntibody
@@ -97,13 +83,6 @@ namespace Kernel
 
     protected:
         DECLARE_SERIALIZABLE(MalariaAntibodyMSP);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, MalariaAntibodyMSP &ab, const unsigned int v);
-#endif
     };
 
     class MalariaAntibodyPfEMP1Minor : public MalariaAntibody
@@ -114,13 +93,6 @@ namespace Kernel
 
     protected:
         DECLARE_SERIALIZABLE(MalariaAntibodyPfEMP1Minor);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, MalariaAntibodyPfEMP1Minor &ab, const unsigned int v);
-#endif
     };
 
     class MalariaAntibodyPfEMP1Major : public MalariaAntibody
@@ -131,12 +103,5 @@ namespace Kernel
 
     protected:
         DECLARE_SERIALIZABLE(MalariaAntibodyPfEMP1Major);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, MalariaAntibodyPfEMP1Major &ab, const unsigned int v);
-#endif
     };
 }

@@ -71,16 +71,6 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
         
         virtual bool Contains(INodeEventContext *ndc);
-
-#if USE_BOOST_SERIALIZATION
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        void serialize(Archive &ar, NodeSetAll& nodeset, const unsigned int v)
-        {
-            boost::serialization::void_cast_register<NodeSetAll, INodeSet>();
-        }
-#endif
     };
 
     class IDMAPI NodeSetPolygon : public INodeSet, public JsonConfigurable
@@ -105,13 +95,11 @@ namespace Kernel
         std::string vertices_raw;
 #pragma warning( pop )
 
-#if USE_BOOST_SERIALIZATION
+#if 0
     private:
-        friend class ::boost::serialization::access;
         template<class Archive>
         void serialize(Archive &ar, NodeSetPolygon& nodeset, const unsigned int v)
         {
-            boost::serialization::void_cast_register<NodeSetPolygon, INodeSet>();
             ar & vertices_raw;
             ar & num_points;
             ar & polygon_format;
@@ -146,12 +134,5 @@ namespace Kernel
 
     protected:
         NodeListConfig nodelist_config;
-
-#if USE_BOOST_SERIALIZATION
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, NodeSetNodeList& nodeset, const unsigned int v);
-#endif
     };
 };

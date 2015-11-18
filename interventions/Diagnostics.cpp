@@ -257,17 +257,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleDiagnostic)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, SimpleDiagnostic& obj, const unsigned int v)
     {
-        static const char * _module = "SimpleDiagnostic";
-        LOG_DEBUG("(De)serializing SimpleDiagnostic\n");
-
-        boost::serialization::void_cast_register<SimpleDiagnostic, IDistributableIntervention>();
         ar & obj.positive_diagnosis_config;
 //        ar & (std::string) obj.positive_diagnosis_event;
         ar & obj.positive_diagnosis_event;
@@ -278,6 +272,5 @@ namespace Kernel {
         ar & (float&) obj.days_to_diagnosis;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::SimpleDiagnostic&, unsigned int);
 }
 #endif

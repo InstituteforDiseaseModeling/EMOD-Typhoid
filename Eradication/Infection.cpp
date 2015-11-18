@@ -397,38 +397,10 @@ namespace Kernel
         ar.labelElement("incubation_timer") & infection.incubation_timer;
         ar.labelElement("infectious_timer") & infection.infectious_timer;
         ar.labelElement("infectiousness") & infection.infectiousness;
-// see below        ar.labelElement("contact_shedding_fraction") & infection.contact_shedding_fraction;
+// Boost serialization didn't include this member        ar.labelElement("contact_shedding_fraction") & infection.contact_shedding_fraction;
         ar.labelElement("infectiousnessByRoute") & infection.infectiousnessByRoute;
         ar.labelElement("StateChange") & (uint32_t&)infection.StateChange;
         ar.labelElement("infection_strain"); Kernel::serialize(ar, infection.infection_strain);
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, Infection &inf, const unsigned int file_version )
-    {
-        static const char * _module = "Infection";
-        LOG_DEBUG("(De)serializing Infection\n");
-
-        ar & inf.infection_strain;
-        ar & inf.suid; // unique id of this infection within the system
-
-        // Local parameters
-        ar & inf.duration;//local timer
-        ar & inf.total_duration;
-        ar & inf.incubation_timer;
-        ar & inf.infectious_timer;
-        ar & inf.infectiousness;
-        ar & inf.infectiousnessByRoute;
-        //  Lets individual know something has happened
-        ar & inf.StateChange;
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::Infection&, unsigned int);
-}
-BOOST_CLASS_EXPORT(Kernel::Infection)
-BOOST_CLASS_IMPLEMENTATION(Kernel::Infection, boost::serialization::object_serializable);
-BOOST_CLASS_TRACKING(Kernel::Infection, boost::serialization::track_never);
-#endif

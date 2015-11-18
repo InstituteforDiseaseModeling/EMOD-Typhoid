@@ -217,7 +217,7 @@ namespace Kernel
         SusceptibilityAirborne::serialize(ar, obj);
         SusceptibilityTB& susceptibility = *obj;
         ar.startObject();
-            ar.labelElement("Flag_use_CD4_for_act") & susceptibility.Flag_use_CD4_for_act;
+            ar.labelElement("Flag_use_CD4_for_act") & susceptibility.Flag_use_CD4_for_act;  // Boost serialization didn't include this member.
             ar.labelElement("m_is_immune_competent") & susceptibility.m_is_immune_competent;
             ar.labelElement("m_is_immune") & susceptibility.m_is_immune;
             ar.labelElement("m_current_infections") & susceptibility.m_current_infections;
@@ -225,32 +225,5 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    BOOST_CLASS_EXPORT(Kernel::SusceptibilityTB)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityTB &sus, const unsigned int  file_version )
-    {
-        // Serialize fields
-        ar & sus.m_is_immune_competent;
-        ar & sus.m_is_immune;
-        ar & sus.m_current_infections;  
-        ar & sus.m_cough_infectiousness;  
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::SusceptibilityAirborne>(sus);
-    }
-    template void serialize( boost::archive::binary_oarchive&, Kernel::SusceptibilityTB&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::SusceptibilityTB&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::SusceptibilityTB&, unsigned int);
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::SusceptibilityTB&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::SusceptibilityTB&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::SusceptibilityTB&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::SusceptibilityTB&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::SusceptibilityTB&, unsigned int);
-
-}
-#endif
 
 #endif // ENABLE_TB

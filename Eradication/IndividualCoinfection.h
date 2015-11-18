@@ -194,35 +194,17 @@ namespace Kernel
         bool m_is_on_ART;
         bool m_has_ever_been_onART;
         bool m_has_ever_tested_positive_for_HIV;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanCoinfection& human, const unsigned int  file_version );
-#endif
     };
-
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+#if 0
 namespace Kernel
 {
     template<class Archive>
     void serialize(Archive & ar, IndividualHumanCoinfection& human, const unsigned int  file_version )
     {
-        ar.template register_type<InfectionTB>();
-        ar.template register_type<SusceptibilityTB>();
-        ar.template register_type<TBInterventionsContainer>();
-
-        ar.template register_type<InfectionHIV>();
-        ar.template register_type<SusceptibilityHIV>();
-        ar.template register_type<HIVInterventionsContainer>();
-            
         // Serialize fields - N/A
 
-        // Serialize base class
         ar & boost::serialization::base_object<IndividualHumanAirborne>(human);
     }
 }

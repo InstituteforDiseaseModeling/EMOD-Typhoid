@@ -54,12 +54,6 @@ namespace Kernel
         float secondary_decay_time_constant;
          
         INodeVectorInterventionEffectsApply *invic;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleVectorControlNode& vcn, const unsigned int v);
-#endif
     };
 
     class Larvicides : public SimpleVectorControlNode

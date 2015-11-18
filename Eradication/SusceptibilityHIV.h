@@ -90,14 +90,5 @@ namespace Kernel
         float sqrtCD4_AtDiseaseDeath;   // sqrt of CD4 count at HIV-cause death
 
         float CD4count_at_ART_start;    // CD4 count at start of ART, if any
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityHIV& sus, const unsigned int  file_version );
-#endif
     };
 }

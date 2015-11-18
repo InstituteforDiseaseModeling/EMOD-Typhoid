@@ -88,14 +88,6 @@ namespace Kernel
 
         /* clorton virtual */ const SimulationConfig* params() /* clorton override */;
 
-    private:
-
         DECLARE_SERIALIZABLE(Susceptibility);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, Susceptibility& sus, const unsigned int file_version );
-#endif
     };
 }

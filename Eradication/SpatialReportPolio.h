@@ -53,12 +53,5 @@ protected:
     // counters for LogIndividualData stuff
     float new_paralytic_cases;
     unsigned int node_infection_total;
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, SpatialReportPolio& report, const unsigned int v);
-#endif
 };
 }

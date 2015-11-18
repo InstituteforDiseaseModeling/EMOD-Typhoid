@@ -62,24 +62,14 @@ namespace Kernel
         virtual void Update(float dt);
     private:
         std::list <InterventionsContainer* > InterventionsContainerList;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, MasterInterventionsContainer& container, const unsigned int v);
-#endif
     };
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, MasterInterventionsContainer& container, const unsigned int v)
     {
-        static const char * _module = "MasterInterventionsContainer";
-        LOG_DEBUG("(De)serializing MasterInterventionsContainer\n");
-
         ar & boost::serialization::base_object<InterventionsContainer>(container);
     }
 }

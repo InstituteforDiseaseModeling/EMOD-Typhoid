@@ -42,13 +42,5 @@ namespace Kernel
         inline static float mortalityFromAge(float age) { return (0.006f * exp(0.2f * age) / (1.0f + (0.006f * 1.5f / 0.2f * (exp(0.2f * age) - 1.0f)))); }
 
         DECLARE_SERIALIZABLE(VectorCohortAging);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, VectorCohortAging& cohort, const unsigned int  file_version );
-#endif
     };
 }

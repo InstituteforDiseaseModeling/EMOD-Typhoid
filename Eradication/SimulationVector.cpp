@@ -333,20 +333,11 @@ namespace Kernel
 
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationVector)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, SimulationVector& sim, const unsigned int  file_version )
     {
-        static const char * _module = "SimulationVector";
-        LOG_DEBUG("(De)serializing SimulationVector\n");
-
-        // Register derived types (um these aren't derived...)
-        ar.template register_type<Kernel::NodeVector>();
-        ar.template register_type<Kernel::SusceptibilityVector>();
-        ar.template register_type<Kernel::VectorCohort>();
-
         ar & sim.vaccinedefaultcost;
         ar & sim.housingmoddefaultcost;
         ar & sim.awarenessdefaultcost;
@@ -357,8 +348,6 @@ namespace Kernel {
 
         // Serialize base class
         ar & boost::serialization::base_object<Kernel::Simulation>(sim);
-
     }
 }
 #endif
-

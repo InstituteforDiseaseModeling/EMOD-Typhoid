@@ -84,13 +84,5 @@ namespace Kernel
         float fraction_defaulters;
 
         DECLARE_SERIALIZABLE(GenericDrug);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, GenericDrug& drug, const unsigned int v);
-#endif
     };
 }

@@ -79,13 +79,5 @@ namespace Kernel
 
     protected:
         VectorProbabilities();
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template< class Archive >
-        friend void serialize(Archive & ar, VectorProbabilities& probs, const unsigned int  file_version );
-#endif
     };
 }

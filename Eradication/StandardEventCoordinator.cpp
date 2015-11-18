@@ -563,18 +563,12 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-// TODO: Consolidate with serialization code in header.
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::StandardInterventionDistributionEventCoordinator);
+#if 0
 namespace Kernel
 {
-
     template<class Archive>
     void serialize(Archive &ar, StandardInterventionDistributionEventCoordinator &ec, const unsigned int v)
     {
-        boost::serialization::void_cast_register<StandardInterventionDistributionEventCoordinator, IEventCoordinator>();
-        boost::serialization::void_cast_register<StandardInterventionDistributionEventCoordinator, ITravelLinkedDistributionSource>();
         ar & ec.coverage;
         ar & ec.distribution_complete;
         ar & ec.num_repetitions;

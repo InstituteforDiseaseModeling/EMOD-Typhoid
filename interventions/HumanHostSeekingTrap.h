@@ -52,12 +52,5 @@ namespace Kernel
         float secondary_decay_time_constant;
         InterventionDurabilityProfile::Enum durability_time_profile;
         IVectorInterventionEffectsSetter *ivies;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, HumanHostSeekingTrap& obj, unsigned int version );
-#endif
     };
 }

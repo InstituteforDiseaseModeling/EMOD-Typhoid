@@ -59,16 +59,5 @@ namespace Kernel
         IBednetConsumer *ibc;
 
         DECLARE_SERIALIZABLE(SimpleBednet);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        void save(Archive& ar, const unsigned int version) const;
-        template<class Archive>
-        void load(Archive& ar, const unsigned int version);
-        template<typename Archive>
-        friend void serialize( Archive &ar, SimpleBednet& bn, unsigned int version );
-#endif
     };
 }

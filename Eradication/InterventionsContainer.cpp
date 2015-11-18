@@ -289,30 +289,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InterventionsContainer)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive &ar, InterventionsContainer &cont, const unsigned int v)
-    {
-        //ar.template register_type<Kernel::PolioInterventionsContainer>();
-        ar & cont.drugVaccineReducedAcquire;
-        ar & cont.drugVaccineReducedTransmit;
-        ar & cont.drugVaccineReducedMortality;
-        ar & cont.interventions;
-    }
-
-// Stupid boost serialization crap that suddenly is needed when you move code around!
-template void serialize(boost::archive::binary_iarchive & ar, InterventionsContainer&, const unsigned int file_version);
-template void serialize(boost::archive::binary_oarchive & ar, InterventionsContainer&, const unsigned int file_version);
-template void serialize(boost::mpi::packed_skeleton_oarchive&, InterventionsContainer&, unsigned int);
-template void serialize(boost::mpi::detail::content_oarchive&, InterventionsContainer&, unsigned int);
-template void serialize(boost::mpi::packed_skeleton_iarchive&, InterventionsContainer&, unsigned int);
-template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, InterventionsContainer&, unsigned int);
-template void serialize(boost::mpi::packed_oarchive&, InterventionsContainer&, unsigned int);
-template void serialize(boost::mpi::packed_iarchive&, InterventionsContainer&, unsigned int);
-
-}
-#endif

@@ -34,12 +34,6 @@ namespace Kernel
 
         friend class Kernel::NodeDemographicsFactory;
         friend struct Kernel::NodeDemographics;
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, DemographicsContext& nd, const unsigned int /* file_version */); // { ar & stringTable; }
-#endif
     };
 
     struct IDMAPI NodeDemographics
@@ -129,13 +123,6 @@ namespace Kernel
 #pragma warning( pop )
 
         friend struct NodeDemographicsDistribution;
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeDemographics &nd, const unsigned int /* file_version */);
-#endif
     };
 
     class IDMAPI NodeDemographicsFactory : public JsonConfigurable
@@ -378,11 +365,5 @@ namespace Kernel
         std::vector<double> result_values;
         std::vector< std::vector<double> > dist_values;
 #pragma warning( pop )
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeDemographicsDistribution &ndd, const unsigned int /* file_version */);
-#endif
     };
 }

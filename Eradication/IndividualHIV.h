@@ -71,13 +71,5 @@ namespace Kernel
         // variables for reporting
         unsigned int pos_num_partners_while_CD4500plus;
         unsigned int neg_num_partners_while_CD4500plus;
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanHIV& human, const unsigned int  file_version );
-#endif
     };
 }

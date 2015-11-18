@@ -493,15 +493,11 @@ namespace Kernel {
     Climate::SetContextTo(INodeContext* _parent) { parent = _parent; }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::Climate)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, Climate& climate, const unsigned int file_version)
     {
-        static const char * _module = "Climate";
-        LOG_DEBUG("(De)serializing Climate\n");
-
         ar & climate.m_airtemperature;
         ar & climate.m_landtemperature;
         ar & climate.m_accumulated_rainfall;

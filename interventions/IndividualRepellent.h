@@ -53,12 +53,5 @@ namespace Kernel
         float primary_decay_time_constant;
         float secondary_decay_time_constant;
         IIndividualRepellentConsumer *ihmc; // aka individual or individual vector interventions container
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleIndividualRepellent& obj, const unsigned int v);
-#endif
     };
 }

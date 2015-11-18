@@ -39,13 +39,5 @@ namespace Kernel
         VectorCohortWithHabitat();
         VectorCohortWithHabitat(VectorHabitat* _habitat, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics);
         void Initialize();
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, VectorCohortWithHabitat& cohort, const unsigned int  file_version );
-#endif
     };
 }

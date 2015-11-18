@@ -90,10 +90,6 @@ json::Object Kernel::EventCoordinatorFactory::ecSchema;
 
     */
 
-#if USE_BOOST_SERIALIZATION
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel::IEventCoordinator);
-#endif
-
 namespace Kernel
 {
 

@@ -58,11 +58,5 @@ namespace Kernel
 
     private:
         StrainIdentity* GetNewStrainIdentity(INodeEventContext *context);
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, OutbreakIndividual &ob, const unsigned int v);
-#endif
     };
 }

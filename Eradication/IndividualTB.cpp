@@ -417,24 +417,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanTB)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanTB& human, const unsigned int  file_version )
-    {
-                LOG_DEBUG("(De)serializing IndividualTB\n");
-        ar.template register_type<InfectionTB>();
-        ar.template register_type<SusceptibilityTB>();
-        ar.template register_type<TBInterventionsContainer>();
-            
-        // Serialize base class
-        ar & boost::serialization::base_object<IndividualHumanAirborne>(human);
-    }
-    template void serialize(boost::mpi::packed_iarchive&, Kernel::IndividualHumanTB&, unsigned int);
-    template void serialize(boost::mpi::packed_oarchive&, Kernel::IndividualHumanTB&, unsigned int);
-}
-#endif
-
 #endif // ENABLE_TB

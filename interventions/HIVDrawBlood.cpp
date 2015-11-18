@@ -74,20 +74,13 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVDrawBlood)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HIVDrawBlood& obj, const unsigned int v)
     {
-        static const char * _module = "HIVDrawBlood";
-        LOG_DEBUG("(De)serializing HIVDrawBlood\n");
-
-        boost::serialization::void_cast_register<HIVDrawBlood, IDistributableIntervention>();
         //ar & obj.event2ProbabilityMap;     // todo: serialize this!
         ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVDrawBlood&, unsigned int);
 }
 #endif

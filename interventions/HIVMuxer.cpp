@@ -137,14 +137,11 @@ namespace Kernel
 
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVMuxer)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HIVMuxer& obj, const unsigned int v)
     {
-        boost::serialization::void_cast_register<HIVMuxer, IDistributableIntervention>();
         ar & obj.max_entries;
         ar & obj.muxer_name;
         ar & boost::serialization::base_object<Kernel::DelayedIntervention>(obj);

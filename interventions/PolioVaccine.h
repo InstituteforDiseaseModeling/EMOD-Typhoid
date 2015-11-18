@@ -53,11 +53,5 @@ namespace Kernel
         IVaccineConsumer *ivc;
 
         DECLARE_SERIALIZABLE(PolioVaccine);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, PolioVaccine& vacc, const unsigned int v);
-#endif    
     };
 }

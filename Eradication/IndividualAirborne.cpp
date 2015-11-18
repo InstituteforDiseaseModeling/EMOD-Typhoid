@@ -63,31 +63,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanAirborne)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanAirborne& human, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<InfectionAirborne>();
-        ar.template register_type<SusceptibilityAirborne>();
-            
-        // Serialize fields - N/A
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::IndividualHuman>(human);
-    }
-    template void serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-    template void serialize(boost::mpi::detail::content_oarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-    template void serialize(boost::archive::binary_oarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-    template void serialize(boost::mpi::packed_oarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-    template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-    template void serialize(boost::mpi::packed_iarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-    template void serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-    template void serialize(boost::archive::binary_iarchive&, Kernel::IndividualHumanAirborne&, unsigned int);
-}
-#endif
-
 #endif // ENABLE_TB

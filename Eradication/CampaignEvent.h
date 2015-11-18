@@ -81,17 +81,5 @@ namespace Kernel
         IEventCoordinator *event_coordinator; // TODO: eventually try to instantiate and then serialize just this, once a solution for global type registration is worked out
         NodeSetConfig nodeset_config;
         EventConfig event_coordinator_config;
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive &ar, CampaignEvent& event, const unsigned int v);
-#endif
     };
-
 }

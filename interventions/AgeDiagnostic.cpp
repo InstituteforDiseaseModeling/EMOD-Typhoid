@@ -156,18 +156,3 @@ namespace Kernel
         return positiveTest;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::AgeDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, AgeDiagnostic& obj, const unsigned int v)
-    {
-
-        boost::serialization::void_cast_register<AgeDiagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
-    }
-}
-#endif

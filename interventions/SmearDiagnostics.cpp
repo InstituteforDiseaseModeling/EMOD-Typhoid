@@ -71,21 +71,4 @@ namespace Kernel
         else
         { return false;}
     }
-
-
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SmearDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SmearDiagnostic& obj, const unsigned int v)
-    {
-
-        boost::serialization::void_cast_register<SmearDiagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
-    }
-}
-#endif

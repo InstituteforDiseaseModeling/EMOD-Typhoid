@@ -318,35 +318,4 @@ namespace Kernel
                     VectorAllele::pairs::lookup_key(_vector_genetics.GetHEG().first),
                     VectorAllele::pairs::lookup_key(_vector_genetics.GetHEG().second) );
     }
-
-#if 0
-    template<class Archive>
-    void VectorPopulationAging::serialize_inner(Archive & ar, const unsigned int file_version)
-    { 
-        // Register derived types - N/A
-
-        // Serialize fields - N/A
-
-        // Serialize base class - N/A
-        ar & boost::serialization::base_object<Kernel::VectorPopulation>(*this);
-    }
-
-    template void VectorPopulationAging::serialize(boost::archive::binary_iarchive & ar, const unsigned int file_version);
-    template void VectorPopulationAging::serialize(boost::archive::binary_oarchive & ar, const unsigned int file_version);
-#endif
 }
-
-#if USE_BOOST_SERIALIZATION
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::VectorPopulationAging)
-
-namespace Kernel {
-    template< typename Archive >
-    void serialize( Archive& ar, VectorPopulationAging &obj, unsigned int file_version )
-    {
-        ar & boost::serialization::base_object<VectorPopulation>(obj);
-    }
-    template void serialize(boost::archive::binary_iarchive & ar, VectorPopulationAging&, const unsigned int file_version);
-    template void serialize(boost::archive::binary_oarchive & ar, VectorPopulationAging&, const unsigned int file_version);
-}
-#endif

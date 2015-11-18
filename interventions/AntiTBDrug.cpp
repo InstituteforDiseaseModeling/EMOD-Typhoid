@@ -190,13 +190,13 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+#if 0
+// clorton TODO - these fields don't match fields above.
 BOOST_CLASS_EXPORT(Kernel::AntiTBDrug)
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, AntiTBDrug& drug, const unsigned int v)
     {
-        boost::serialization::void_cast_register<AntiTBDrug, IDrug>();
         ar & drug.TB_drug_inactivation_rate;
         ar & drug.TB_drug_clearance_rate;
         ar & drug.drug_type;

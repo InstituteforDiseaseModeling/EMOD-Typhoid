@@ -188,11 +188,5 @@ namespace Kernel
         SusceptibilityMalaria();
         SusceptibilityMalaria(IIndividualHumanContext *context);
         /* clorton virtual */ void Initialize(float _age, float immmod, float riskmod) /* clorton override */;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityMalaria& sus, const unsigned int file_version );
-#endif
     };
 }

@@ -44,12 +44,6 @@ private:
 
     json::Element* pElement; // maintain the backing string containing the original data also
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI // N.B. CalendarIV, HealthSeekingBehavior serialize their "actual_intervention_config" when individuals migrate via MPI
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive &ar, const unsigned int v);
-#endif
-
     Configuration() : QuickInterpreter(json::Element()), pElement(nullptr) {} // this ctor only for serialization, the base class will be initialized to an invalid state which deserialization must repair
 };
 
@@ -59,16 +53,6 @@ public:
     static void logJsonException( const json::ParseException &pe, std::string& err_msg );
     static void logJsonException( const json::ScanException &pe, std::string& err_msg );
 };
-
-
-
-#if USE_BOOST_SERIALIZATION
-#ifdef WIN32
-template void Configuration::serialize(boost::archive::binary_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::archive::binary_iarchive &ar, unsigned int);
-#endif
-#endif
-
 
 Configuration IDMAPI *Configuration_Load( const std::string& rFilename ) ;
 

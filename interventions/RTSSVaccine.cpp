@@ -74,14 +74,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::RTSSVaccine)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, RTSSVaccine& obj, const unsigned int v)
     {
-        boost::serialization::void_cast_register<RTSSVaccine, IDistributableIntervention>();
         ar & obj.antibody_type;
         ar & obj.antibody_variant;
         ar & obj.boosted_antibody_concentration;

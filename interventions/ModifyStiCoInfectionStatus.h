@@ -34,13 +34,5 @@ namespace Kernel
 
     protected:
         bool set_flag_to;
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, ModifyStiCoInfectionStatus &ob, const unsigned int v);
-#endif
     };
 }

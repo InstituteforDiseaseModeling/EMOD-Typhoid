@@ -47,23 +47,3 @@ namespace Kernel
         Infection::serialize(ar, obj);
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionVector)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionVector& inf, unsigned int file_version )
-    {
-        ar & boost::serialization::base_object<Kernel::Infection>(inf);
-    }
-    template void serialize( boost::archive::binary_iarchive&, InfectionVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, InfectionVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, InfectionVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, InfectionVector &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, InfectionVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, InfectionVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, InfectionVector &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, InfectionVector &obj, unsigned int file_version );
-}
-#endif

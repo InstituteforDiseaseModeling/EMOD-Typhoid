@@ -86,21 +86,13 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::BroadcastEvent)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, BroadcastEvent& obj, const unsigned int v)
     {
-        static const char * _module = "BroadcastEvent";
-        LOG_DEBUG("(De)serializing BroadcastEvent\n");
-
-        boost::serialization::void_cast_register<BroadcastEvent, IDistributableIntervention>();
         ar & /*(std::string)*/ obj.broadcast_event;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
-        //ar & boost::serialization::base_object<Kernel::SimpleHealthSeekingBehavior>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::BroadcastEvent&, unsigned int);
 }
 #endif

@@ -58,13 +58,5 @@ namespace Kernel
         IVectorCohortIndividual * current_vci; // added this since we have it, then call a function, and function re-qi's for it, which is unnecessary.
 
         DECLARE_SERIALIZABLE(VectorPopulationIndividual);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        // Serialization
-        template<class Archive>
-        friend void serialize(Archive & ar, VectorPopulationIndividual &vpi, const unsigned int  file_version );
-#endif
     };
 }

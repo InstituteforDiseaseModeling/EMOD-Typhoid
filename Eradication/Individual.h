@@ -234,21 +234,5 @@ namespace Kernel
         virtual IIndividualHumanContext* GetContextPointer();
 
         DECLARE_SERIALIZABLE(IndividualHuman);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-
-        // From http://www.boost.org/doc/libs/1_59_0/libs/serialization/doc/tutorial.html
-        friend class boost::serialization::access;
-        template<class Archive>
-        void save(Archive& ar, const unsigned int version) const;
-        template<class Archive>
-        void load(Archive& ar, const unsigned int version);
-
-        template<class Archive>
-        friend void serialize(Archive& ar, IndividualHuman& human, const unsigned int version);
-
-        std::string toJson();
-        void fromJson(std::string& json);
-#endif
     };
 }

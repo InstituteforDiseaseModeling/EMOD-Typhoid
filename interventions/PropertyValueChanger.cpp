@@ -173,14 +173,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::PropertyValueChanger)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, PropertyValueChanger& pc, const unsigned int v)
     {
-        boost::serialization::void_cast_register<PropertyValueChanger, IDistributableIntervention>();
         //ar & (std::string)pc.target_property_key;
         //ar & (std::string)pc.target_property_value;
         ar & pc.target_property_key;

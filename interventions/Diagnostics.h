@@ -67,12 +67,5 @@ namespace Kernel
         IndividualInterventionConfig positive_diagnosis_config;
         jsonConfigurable::ConstrainedString positive_diagnosis_event;
 #pragma warning( pop )
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleDiagnostic &obj, const unsigned int v);
-#endif
     };
 }

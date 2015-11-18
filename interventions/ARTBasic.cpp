@@ -97,17 +97,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::ARTBasic)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, ARTBasic& drug, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<ARTBasic, IDrug>();
-        //ar & drug.drug_type;
-        ar & boost::serialization::base_object<GenericDrug>(drug);
-    }
-}
-#endif
-
 //#endif // ENABLE_STI

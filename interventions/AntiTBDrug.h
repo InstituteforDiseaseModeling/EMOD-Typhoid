@@ -62,13 +62,5 @@ namespace Kernel
         ICampaignCostObserver * m_pCCO;
 
         DECLARE_SERIALIZABLE(AntiTBDrug);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, AntiTBDrug& drug, const unsigned int v);
-#endif
     };
 }

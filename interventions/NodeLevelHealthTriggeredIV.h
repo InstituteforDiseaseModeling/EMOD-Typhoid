@@ -81,11 +81,5 @@ namespace Kernel
         virtual void onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv );
 
         bool m_disqualified_by_coverage_only;
-
-#if USE_BOOST_SERIALIZATION
-    private:
-        template<class Archive>
-        friend void serialize(Archive &ar, NodeLevelHealthTriggeredIV& iv, const unsigned int v);
-#endif
     };
 }

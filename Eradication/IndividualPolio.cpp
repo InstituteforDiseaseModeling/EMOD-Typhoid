@@ -311,41 +311,4 @@ Kernel::Infection* Kernel::IndividualHumanPolio::createInfection( suids::suid _s
     return ip;
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-// clorton #include "InfectionPolio.h"
-// clorton #include "SusceptibilityPolio.h"
-// clorton #include "PolioInterventionsContainer.h"
-
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanPolio)
-
-namespace Kernel
-{
-    /*template<class Archive>
-    void serialize(Archive & ar, IndividualHumanFlagsPolio& flags, const unsigned int  file_version )
-    {
-        ar & flags.age_most_recent_infection;
-        ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmentalFlags>(flags);
-    }*/
-
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanPolio& human, const unsigned int  file_version )
-    {
-        LOG_DEBUG("(De)serializing IndividualHumanPolio\n");
-
-        ar.template register_type<Kernel::InfectionPolio>();
-        ar.template register_type<Kernel::SusceptibilityPolio>();
-        ar.template register_type<Kernel::PolioInterventionsContainer>();
-            
-        // Serialize fields - N/A
-        ar & human.paralysisVirusTypeMask;
-
-        // Serialize base class
-        ar & human.age_most_recent_infection;
-        ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
-    }
-}
-
-#endif
-
 #endif // ENABLE_POLIO

@@ -54,32 +54,3 @@ namespace Kernel
         Infection::Update( dt, immunity );
     }
 }
- 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionSTI)
-namespace Kernel
-{
-    template void serialize( boost::mpi::packed_oarchive& ar, InfectionSTI& inf, const unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive& ar, InfectionSTI& inf, const unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::InfectionSTI&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionSTI&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::InfectionSTI&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::InfectionSTI&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::InfectionSTI&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::InfectionSTI&, unsigned int);
-
-    template<class Archive>
-    void serialize(Archive & ar, InfectionSTI& inf, const unsigned int file_version )
-    {
-        ar & boost::serialization::base_object<Kernel::Infection>(inf);
-    }
-}
-template void Kernel::serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionSTI&, unsigned int);
-template void Kernel::serialize(boost::archive::binary_iarchive&, Kernel::InfectionSTI&, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_iarchive&, Kernel::InfectionSTI&, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::InfectionSTI&, unsigned int);
-template void Kernel::serialize(boost::mpi::detail::content_oarchive&, Kernel::InfectionSTI&, unsigned int);
-template void Kernel::serialize(boost::mpi::packed_oarchive&, Kernel::InfectionSTI&, unsigned int);
-template void Kernel::serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::InfectionSTI&, unsigned int);
-template void Kernel::serialize(boost::archive::binary_oarchive&, Kernel::InfectionSTI&, unsigned int);
-#endif

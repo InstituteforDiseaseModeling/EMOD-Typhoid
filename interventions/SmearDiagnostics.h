@@ -29,15 +29,5 @@ namespace Kernel
         virtual bool Configure( const Configuration* pConfig );
         virtual ~SmearDiagnostic();// { }
         virtual bool positiveTestResult();
-
-    protected:
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, SmearDiagnostic &obj, const unsigned int v);
-#endif
     };
 }

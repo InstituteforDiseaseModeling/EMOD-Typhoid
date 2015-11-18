@@ -97,10 +97,8 @@ namespace Kernel
             /*uint8_t data[static_size()];*/
             suid_data_t data;
 
+#if 0
         private:
-            ///////////////////////////////////////////////////////////////////////////
-            // Serialization
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
             friend class boost::serialization::access;
             template<class Archive>
             void serialize(Archive & ar, const unsigned int /* file_version */)
@@ -108,8 +106,6 @@ namespace Kernel
                 ar & data;
             }
 #endif
-
-            ///////////////////////////////////////////////////////////////////////////
         };
 
         // standard operators
@@ -172,9 +168,8 @@ namespace Kernel
             int rank;
             int numtasks;
 
-#if USE_BOOST_SERIALIZATION
+#if 0
         private:
-            friend class boost::serialization::access;
             template<class Archive>
             void serialize(Archive & ar, const unsigned int /* file_version */)
             {
@@ -183,7 +178,6 @@ namespace Kernel
                 ar & numtasks;
             }
 #endif
-            ///////////////////////////////////////////////////////////////////////////
         };
     } // namespace Kernel::suids
 }
@@ -198,10 +192,4 @@ namespace boost {
 
 } // namespace boost
 
-#endif
-
-#if USE_BOOST_SERIALIZATION
-BOOST_IS_MPI_DATATYPE(Kernel::suids::suid)
-BOOST_CLASS_TRACKING(Kernel::suids::suid,track_never)
-BOOST_IS_BITWISE_SERIALIZABLE(Kernel::suids::suid)
 #endif

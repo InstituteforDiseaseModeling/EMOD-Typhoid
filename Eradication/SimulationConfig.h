@@ -374,12 +374,5 @@ namespace Kernel
     private: // for serialization to work
 
         const Configuration* m_jsonConfig;
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationConfig& configs, const unsigned int /* file_version */);
-        FORCE_POLYMORPHIC()
-#endif
     };
 }

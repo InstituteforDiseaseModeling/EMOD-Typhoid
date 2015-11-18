@@ -273,7 +273,7 @@ bool DefaultController::execute_internal()
 
 // clorton                state_filename = (boost::format("SimulationStateProc%04dCycle%04d.txt") % EnvPtr->MPI.Rank % j).str();
 
-#if USE_BOOST_SERIALIZATION
+#if 0
                 REPORT_TIME(false,(boost::format("SaveCycle%d") % k).str(),
                     save_sim<boost::archive::binary_oarchive>(sim.get(), state_filename.c_str()));
 
@@ -387,7 +387,7 @@ bool DefaultController::execute_internal()
 
 // clorton                state_filename = (boost::format("SimulationStateProc%04dCycle%04d.txt") % EnvPtr->MPI.Rank % j).str();
 
-#if USE_BOOST_SERIALIZATION
+#if 0
                 REPORT_TIME(false,(boost::format("SaveCycle%d") % k).str(),
                     save_sim<boost::archive::binary_oarchive>(sim.get(), state_filename.c_str()));
 
@@ -436,14 +436,7 @@ bool DefaultController::execute_internal()
 
 bool DefaultController::Execute()
 {
-
-#if USE_BOOST_SERIALIZATION
-    ControllerExecuteFunctor<DefaultController> cef(this);
-    return call_templated_functor_with_sim_type_hack(cef);
-#else
     return execute_internal();
-#endif
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -737,7 +730,8 @@ std::function<bool(SimulationT&,float)>
                 }
             }
 
-            boost::mpi::broadcast(*EnvPtr->MPI.World, terminate, 0); // all processes need to return the result of the decision on rank zero
+// clorton            boost::mpi::broadcast(*EnvPtr->MPI.World, terminate, 0); // all processes need to return the result of the decision on rank zero
+            MPI_Bcast( (void*)&terminate, 1, MPI_INTEGER4, 0, MPI_COMM_WORLD );
             return terminate;
         };
     }
@@ -772,7 +766,8 @@ std::function<bool(SimulationT&,float)>
                     terminate = (sim.GetSimulationTimestep() >= simulation_steps);
                 }
             }
-            boost::mpi::broadcast(*EnvPtr->MPI.World, terminate, 0);
+// clorton            boost::mpi::broadcast(*EnvPtr->MPI.World, terminate, 0);
+            MPI_Bcast( (void*)&terminate, 1, MPI_INTEGER4, 0, MPI_COMM_WORLD );
             return terminate;
         };
     }
@@ -781,104 +776,3 @@ std::function<bool(SimulationT&,float)>
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Burnin" );
     }
 }
-
-
-#if USE_BOOST_SERIALIZATION
-
-// R: Note: this could probably be obviated with use of BOOST_CLASS_EXPORT for these top level classes
-template <class Archive>
-void registerSimTypes(Archive &ar)
-{
-#ifndef _DLLS_
-    ar.template register_type<Simulation>();
-    ar.template register_type<SimulationEnvironmental>();  // IF ONLY THIS WORKED
-    ar.template register_type<SimulationPolio>();       // IF ONLY THIS WORKED
-    ar.template register_type<SimulationVector>();
-    ar.template register_type<SimulationMalaria>();
-#ifdef ENABLE_TB
-    ar.template register_type<SimulationAirborne>();
-    ar.template register_type<SimulationTB>();
-#endif
-#endif
-}
-
-template<class OArchiveT, class SimulationT>
-bool save_sim(/*const breaks if I cant make serialize() const?*/ SimulationT *sim, const char * filename)
-{
-    // make an archive
-    std::ofstream ofs(filename, std::ios::binary);
-    if (!ofs.is_open()) 
-    {
-        // ERROR ("save_sim() failed to open file %s for writing.\n", filename);
-        throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Saving" );
-    }
-
-    OArchiveT oa(ofs);
-    registerSimTypes(oa);
-    oa << (*sim);
-    return true;
-}
-
-
-/* R: TODO: experiment with better boost class registration to clean up serialization mess <ERAD-326>
-
-Noticed this gem in the boost docs:
-(see: http://www.boost.org/doc/libs/1_42_0/libs/serialization/doc/special.html#plugins)
-
-Plugins
-
-In order to implement the library, various facilities for runtime manipulation of types are runtime were required. These are extended_type_info for associating classes with external identifying strings (GUID) and void_cast for casting between pointers of related types. To complete the functionality of extended_type_info the ability to construct and destroy corresponding types has been added. In order to use this functionality, one must specify how each type is created. This should be done at the time a class is exported. So, a more complete example of the code above would be:
-
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-... // other archives
-
-#include "a.hpp" // header declaration for class a
-
-// this class has a default constructor
-BOOST_SERIALIZATION_FACTORY_0(a)
-// as well as one that takes one integer argument
-BOOST_SERIALIZATION_FACTORY_1(a, int)
-
-// specify the GUID for this class
-BOOST_CLASS_EXPORT(a)
-... // other class headers and exports
-
----> With this in place, one can construct, serialize and destroy about which only is know the GUID and a base class. <---
-
-If this actually works, a lot of the templates in this file can go away!
-
-*/
-
-template<class IArchiveT, class SimulationT>
-ISimulation* load_sim(const char * filename)
-{
-    // open the archive
-    std::ifstream ifs(filename, std::ios::binary);
-    if (!ifs.is_open())
-    {
-        // ERROR: ("load_sim() failed to open file %s for reading.\n", filename);
-        throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Loading" );
-        return nullptr;
-    }
-
-    IArchiveT ia(ifs);
-    registerSimTypes(ia);
-
-    // restore the schedule from the archive
-#ifdef _DLLS_
-    return nullptr; // just testing
-#else
-    return SimulationFactory::CreateSimulationFromArchive<IArchiveT, SimulationT>(ia);
-#endif
-}
-
-#endif // end of USE_BOOST_SERIALIZATION
-
-
-
-// for DLL build
-#if USE_BOOST_SERIALIZATION
-template void Kernel::serialize( boost::archive::binary_oarchive & ar, Simulation& sim, const unsigned int file_version);
-template void Kernel::serialize( boost::archive::binary_iarchive & ar, Simulation& sim, const unsigned int file_version);
-#endif

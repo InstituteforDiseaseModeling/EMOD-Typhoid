@@ -54,16 +54,3 @@ namespace Kernel
         // Nothing to do for this intervention
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::MaleCircumcision)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, MaleCircumcision& obj, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<MaleCircumcision, IDistributableIntervention>();
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
-    }
-}
-#endif

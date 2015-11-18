@@ -29,14 +29,5 @@ namespace Kernel
         // HIVSimpleDiagnostic
         virtual bool positiveTestResult();
         virtual void positiveTestDistribute();
-
-    protected:
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVDrawBlood &obj, const unsigned int v);
-#endif
     };
 }

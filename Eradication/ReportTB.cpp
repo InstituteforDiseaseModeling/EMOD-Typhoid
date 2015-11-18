@@ -357,16 +357,6 @@ ReportTB::LogNodeData(
     
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(ReportTB)
-template<class Archive>
-void serialize(Archive &ar, ReportTB& report, const unsigned int v)
-{
-    boost::serialization::void_cast_register<ReportTB,IReport>();
-    ar &boost::serialization::base_object<Report>(report);
-}
-#endif
-
 }
 
 #endif // ENABLE_TB

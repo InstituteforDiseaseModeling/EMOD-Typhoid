@@ -63,13 +63,5 @@ namespace Kernel
         static const bodyweight_map_t bodyweight_map_;
 
         DECLARE_SERIALIZABLE(AntimalarialDrug);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, AntimalarialDrug& drug, const unsigned int v);
-#endif
     };
 }

@@ -914,28 +914,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionTB)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionTB& inf, const unsigned int file_version )
-    {
-        LOG_DEBUG("(De)serializing InfectionTB\n");
-        ar & inf.m_is_active;
-        ar & inf.m_recover_fraction;
-        ar & inf.m_death_fraction;
-        ar & inf.m_is_smear_positive;
-        ar & inf.m_is_extrapulmonary;
-        ar & inf.m_is_fast_progressor;
-        ar & inf.m_evolved_resistance;
-        ar & inf.m_is_pending_relapse;
-        ar & inf.m_shows_symptoms;
-        ar & inf.m_duration_since_init_infection;
-        ar & boost::serialization::base_object<Kernel::InfectionAirborne>(inf);
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionTB&, unsigned int);
-}
-#endif
-
 #endif // ENABLE_TB

@@ -57,11 +57,5 @@ namespace Kernel
 
     private:
         float pfa_burnin_duration;
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeSTI& node, const unsigned int file_version);
-#endif
     };
 }

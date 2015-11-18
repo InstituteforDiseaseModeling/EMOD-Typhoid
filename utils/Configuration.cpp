@@ -212,9 +212,7 @@ Configuration* Configuration::CopyFromElement( const json::Element &elem )
     return _new_ Configuration(elem_copy);
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-
-BOOST_CLASS_EXPORT(Configuration)
+#if 0
 template<class Archive>
 void Configuration::serialize( Archive &ar, const unsigned int v )
 {
@@ -237,7 +235,8 @@ void Configuration::serialize( Archive &ar, const unsigned int v )
 #warning "code commented out to get linux build to work"
 #endif
 
-    } else
+    }
+    else
     {
         ostringstream oss(ostringstream::out);
         Writer::Write(*pElement, oss);
@@ -245,24 +244,7 @@ void Configuration::serialize( Archive &ar, const unsigned int v )
         std::string stringToSerialize = oss.str();
         ar & stringToSerialize;
     }
-
-
 }
-
-
-template void Configuration::serialize(boost::archive::binary_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::archive::binary_iarchive &ar, unsigned int);
-
-// Commenting these out (everywhere) saves 1.2M in release build. :) 
-//template void Configuration::serialize(boost::archive::text_oarchive &ar, unsigned int);
-//template void Configuration::serialize(boost::archive::text_iarchive &ar, unsigned int);
-
-template void Configuration::serialize(boost::mpi::detail::content_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::detail::mpi_datatype_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_iarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_skeleton_iarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_skeleton_oarchive &ar, unsigned int);
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////

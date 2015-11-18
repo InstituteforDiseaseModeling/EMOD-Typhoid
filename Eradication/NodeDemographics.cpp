@@ -1558,17 +1558,7 @@ const std::string Kernel::NodeDemographicsDistribution::MSP_variance_antibody_di
 const std::string Kernel::NodeDemographicsDistribution::nonspec_variance_antibody_distribution = "nonspec_variance_antibody_distribution";
 const std::string Kernel::NodeDemographicsDistribution::PfEMP1_variance_antibody_distribution  = "PfEMP1_variance_antibody_distribution";
 
-/*INSTANTIATE_BOOST_SERIALIZATION_HACKS(Kernel::NodeDemographicsDistribution);
-INSTANTIATE_SERIALIZER(Kernel::NodeDemographicsDistribution, boost::mpi::packed_iarchive);
-INSTANTIATE_SERIALIZER(Kernel::NodeDemographicsDistribution, boost::mpi::packed_oarchive);
-INSTANTIATE_SERIALIZER(Kernel::NodeDemographicsDistribution, boost::mpi::packed_skeleton_oarchive);
-INSTANTIATE_SERIALIZER(Kernel::NodeDemographicsDistribution, boost::mpi::packed_skeleton_iarchive);
-INSTANTIATE_SERIALIZER(Kernel::NodeDemographicsDistribution, boost::mpi::detail::content_oarchive);
-INSTANTIATE_SERIALIZER(Kernel::NodeDemographicsDistribution, boost::mpi::detail::mpi_datatype_oarchive);*/
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeDemographics)
-BOOST_CLASS_EXPORT(Kernel::DemographicsContext)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, DemographicsContext& dc, const unsigned int /* file_version */)

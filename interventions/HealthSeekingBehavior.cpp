@@ -201,21 +201,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleHealthSeekingBehavior)
-
+#if 0
 namespace Kernel {
-    // Would like to put all serialization stuff here but having these in headers
-    // is posing a problem due to multiple subclasses. :(
-    //REGISTER_SERIALIZATION_VOID_CAST(SimpleHealthSeekingBehavior, IDistributableIntervention);
-
     template<class Archive>
     void serialize(Archive &ar, SimpleHealthSeekingBehavior& obj, const unsigned int v)
     {
-        static const char * _module = "SimpleHealthSeekingBehavior";
-        LOG_DEBUG("(De)serializing SimpleHealthSeekingBehavior\n");
-
-        boost::serialization::void_cast_register<SimpleHealthSeekingBehavior, IDistributableIntervention>();
         ar & /*(std::string)*/ obj.actual_intervention_event;
         ar & obj.actual_intervention_config;
         ar & obj.probability_of_seeking;

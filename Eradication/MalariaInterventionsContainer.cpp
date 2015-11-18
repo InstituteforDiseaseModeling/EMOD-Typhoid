@@ -197,30 +197,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::MalariaInterventionsContainer)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, MalariaInterventionsContainer& mic, const unsigned int v)
-    {
-        ar & mic.drug_IRBC_killrate;
-        ar & mic.drug_hepatocyte;
-        ar & mic.drug_gametocyte02;
-        ar & mic.drug_gametocyte34;
-        ar & mic.drug_gametocyteM;
-
-        // this works only because this class is bound uniquely to a node which owns these pointers
-        ar & boost::serialization::base_object<Kernel::VectorInterventionsContainer>(mic);
-    }
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-    template void serialize( boost::archive::binary_oarchive&, Kernel::MalariaInterventionsContainer&, unsigned int);
-}
-#endif

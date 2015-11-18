@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IHIVMedicalHistory ;
+    struct IHIVMedicalHistory;
 
     class HIVRapidHIVDiagnostic : public HIVSimpleDiagnostic
     {
@@ -33,12 +33,6 @@ namespace Kernel
         virtual void positiveTestDistribute();
         virtual void onReceivedResult( IHIVMedicalHistory* pMedHistory, bool resultIsHivPositive );
 
-        float m_ProbReceivedResults ;
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVRapidHIVDiagnostic &obj, const unsigned int v);
-#endif
+        float m_ProbReceivedResults;
     };
 }

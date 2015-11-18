@@ -43,16 +43,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::WaningEffectConstant)
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:IWaningEffect);
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, WaningEffectConstant& we, const unsigned int v)
     {
-        boost::serialization::void_cast_register<WaningEffectConstant, IWaningEffect>();
         ar & we.currentEffect;
     }
 }

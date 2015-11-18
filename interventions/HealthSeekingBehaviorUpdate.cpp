@@ -82,15 +82,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HealthSeekingBehaviorUpdate)
-    namespace Kernel {
+#if 0
+namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HealthSeekingBehaviorUpdate& bn, const unsigned int v)
     {
-        static const char * _module = "HealthSeekingBehaviorUpdate";
-        LOG_DEBUG("(De)serializing HealthSeekingBehaviorUpdate\n");
-
         ar & bn.new_probability_of_seeking;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(bn);
     }

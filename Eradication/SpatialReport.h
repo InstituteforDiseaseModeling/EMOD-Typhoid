@@ -135,12 +135,5 @@ protected:
     typedef std::map<std::string, std::ofstream *> channel_file_map_t;
     channel_file_map_t channel_file_map;
     jsonConfigurable::tFixedStringSet spatial_output_channels;
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, SpatialReport& report, const unsigned int v);
-#endif
 };
 }

@@ -124,15 +124,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::HumanHostSeekingTrap)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HumanHostSeekingTrap& obj, const unsigned int v)
     {
-        boost::serialization::void_cast_register<HumanHostSeekingTrap, IDistributableIntervention>();
         ar & obj.current_attractrate;
         ar & obj.current_killingrate;
         ar & obj.primary_decay_time_constant;

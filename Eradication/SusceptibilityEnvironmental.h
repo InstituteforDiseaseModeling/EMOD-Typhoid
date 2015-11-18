@@ -26,12 +26,5 @@ namespace Kernel
         /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
 
         DECLARE_SERIALIZABLE(SusceptibilityEnvironmental);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityEnvironmental& sus, const unsigned int file_version );
-#endif
     };
 }

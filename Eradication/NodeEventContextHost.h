@@ -116,12 +116,5 @@ namespace Kernel
 
         virtual void PropagateContextToDependents(); // pass context to interventions if they need it
         void IncrementCampaignCost(float cost);
-
-#if USE_BOOST_SERIALIZATION
-    private:
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, NodeEventContextHost& nec, const unsigned int v);
-#endif
     };
 }

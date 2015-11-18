@@ -198,8 +198,7 @@ namespace Kernel
     CampaignEvent::SetEventIndex(int index) { event_index = index; }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::CampaignEvent)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, CampaignEvent& event, const unsigned int v)

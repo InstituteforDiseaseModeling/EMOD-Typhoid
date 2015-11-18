@@ -101,19 +101,6 @@ namespace Kernel
         virtual void AddStochasticity(float airtemp_variance, float landtemp_variance, bool rainfall_variance, float humidity_variance);
 
         virtual bool IsPlausible() = 0;
-
-    private:
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, Climate& climate, const unsigned int file_version);       
-        FORCE_POLYMORPHIC()
-#endif 
-        ///////////////////////////////////////////////////////////////////////////
     };
 
 

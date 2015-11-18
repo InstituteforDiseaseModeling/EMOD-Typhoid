@@ -41,26 +41,6 @@ private:
     float m_TB_active_500_350;
     float m_TB_active_below_350;
     float m_TB_active_above_500;
-    
-#if USE_BOOST_SERIALIZATION
-    ///////////////////////////////////////////////////////////////////////////
-    // Serialization
-    friend class ::boost::serialization::access;
-
-    template<class Archive>
-    friend void serialize(Archive &ar, ReportTBHIV& report, const unsigned int v);
-    ///////////////////////////////////////////////////////////////////////////
-#endif
 };
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(ReportTBHIV)
-template<class Archive>
-void serialize(Archive &ar, ReportTBHIV& report, const unsigned int v)
-{
-    boost::serialization::void_cast_register<ReportTBHIV,IReport>();
-    ar &boost::serialization::base_object<Report>(report);
-}
-#endif
 
 }

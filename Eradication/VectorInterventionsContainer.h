@@ -138,12 +138,5 @@ namespace Kernel
         float blockOutdoorVectorTransmit;
 
         DECLARE_SERIALIZABLE(VectorInterventionsContainer);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize( Archive& ar, VectorInterventionsContainer &obj, unsigned int file_version );
-#endif
     };
 }

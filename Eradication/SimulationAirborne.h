@@ -28,12 +28,6 @@ namespace Kernel
 
         // Allows correct type of Node to be added by classes derived from Simulation
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationAirborne &sim, const unsigned int  file_version );
-#endif
     };
 }
 

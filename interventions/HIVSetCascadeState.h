@@ -27,14 +27,5 @@ namespace Kernel
 
         // IDistributingDistributableIntervention
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-
-    protected:
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVSetCascadeState &obj, const unsigned int v);
-#endif
     };
 }

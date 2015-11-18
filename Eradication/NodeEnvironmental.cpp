@@ -177,15 +177,13 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeEnvironmental)
+#if 0
 namespace Kernel {
     template <typename Archive>
     void serialize(Archive & ar, NodeEnvironmental& node, const unsigned int /* file_version */)
     {
         ar & node.contagion;
         ar & node.node_contagion_decay_fraction;
-        //ar.template register_type<IndividualHumanEnvironmental>();
         ar & boost::serialization::base_object<Node>(node);
     }
 }

@@ -146,37 +146,7 @@ namespace Kernel
     template<class Archive>
     void VectorCohort::serialize_inner( Archive & ar, const unsigned int file_version )
     {
-        // Register derived types - N/A
-
-        // Serialize fields
         typemap.serialize(this, ar, file_version);
-
-        // Serialize base class - N/A
     }
-
-    template void VectorCohort::serialize_inner( boost::archive::binary_iarchive & ar, const unsigned int file_version );
-    template void VectorCohort::serialize_inner( boost::archive::binary_oarchive & ar, const unsigned int file_version );
 #endif
 }
-
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::VectorCohort)
-namespace Kernel {
-    template< typename Archive >
-    void serialize( Archive& ar, VectorCohort &obj, unsigned int file_version )
-    {
-        ar & obj.progress;
-        ar & obj.population;
-        ar & obj.vector_genetics;
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, VectorCohort &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_iarchive&, VectorCohort &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, VectorCohort &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, VectorCohort &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, VectorCohort &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, VectorCohort &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, VectorCohort &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, VectorCohort &obj, unsigned int file_version );
-}
-#endif

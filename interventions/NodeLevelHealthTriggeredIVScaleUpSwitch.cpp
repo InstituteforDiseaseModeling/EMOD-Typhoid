@@ -141,16 +141,3 @@ namespace Kernel
          }       
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeLevelHealthTriggeredIVScaleUpSwitch)
-
-namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(NodeLevelHealthTriggeredIVScaleUpSwitch, INodeDistributableIntervention)
-    REGISTER_SERIALIZATION_VOID_CAST(NodeLevelHealthTriggeredIVScaleUpSwitch, IIndividualEventObserver)
-    template<class Archive>
-    void serialize(Archive &ar, NodeLevelHealthTriggeredIVScaleUpSwitch& iv, const unsigned int v)
-    {
-    }
-}
-#endif

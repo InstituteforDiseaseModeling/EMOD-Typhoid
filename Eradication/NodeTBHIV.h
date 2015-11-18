@@ -46,12 +46,5 @@ namespace Kernel
         virtual IndividualHuman *createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
 
         //const SimulationConfig* params();
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeTBHIV& node, const unsigned int  file_version );
-#endif
     };
 }

@@ -72,43 +72,4 @@ namespace Kernel
             ar.labelElement("age") & cohort.age;
         ar.endObject();
     }
-
-#if 0
-    template<class Archive>
-    void VectorCohortAging::serialize_inner( Archive & ar, const unsigned int file_version )
-    {
-        // Register derived types - N/A
-
-        // Serialize fields
-        typemap.serialize(this, ar, file_version);
-
-        // Serialize base class
-        ar & boost::serialization::base_object<VectorCohort>(*this);
-    }
-#endif
-
-    //template void VectorCohortAging::serialize( boost::archive::binary_iarchive & ar, const unsigned int file_version );
-    //template void VectorCohortAging::serialize( boost::archive::binary_oarchive & ar, const unsigned int file_version );
-
 }
-
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::VectorCohortAging)
-namespace Kernel {
-    template< typename Archive >
-    void serialize( Archive& ar, VectorCohortAging &obj, unsigned int file_version )
-    {
-        ar & obj.age;
-        ar & boost::serialization::base_object<Kernel::VectorCohort>(obj);
-    }
-    template void serialize(boost::mpi::packed_iarchive&, Kernel::VectorCohortAging&, unsigned int);
-    template void serialize(boost::archive::binary_iarchive&, Kernel::VectorCohortAging&, unsigned int);
-    template void serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::VectorCohortAging&, unsigned int);
-    template void serialize(boost::archive::binary_oarchive&, Kernel::VectorCohortAging&, unsigned int);
-    template void serialize(boost::mpi::detail::content_oarchive&, Kernel::VectorCohortAging&, unsigned int);
-    template void serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::VectorCohortAging&, unsigned int);
-    template void serialize(boost::mpi::packed_oarchive&, Kernel::VectorCohortAging&, unsigned int);
-    template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::VectorCohortAging&, unsigned int);
-}
-#endif

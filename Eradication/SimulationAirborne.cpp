@@ -71,20 +71,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationAirborne)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationAirborne &sim, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<NodeAirborne>();
-        ar.template register_type<NodeAirborneFlags>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Simulation>(sim);
-    }
-}
-#endif
-
 #endif // ENABLE_TB

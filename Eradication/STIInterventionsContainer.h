@@ -67,12 +67,5 @@ namespace Kernel
         bool is_circumcised;
 
         std::map< RelationshipType::Enum, SigmoidConfig > STI_blocking_overrides;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, STIInterventionsContainer& container, const unsigned int v);
-#endif
     };
 }

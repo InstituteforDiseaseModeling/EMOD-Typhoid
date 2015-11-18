@@ -91,25 +91,5 @@ namespace Kernel
         uint32_t m_nodeId;
         int m_humanIndex;
         SurveyResults *m_surveyResults;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, PolioNodeSurvey &pns, const unsigned int v);
-#endif
     };
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::PolioNodeSurvey)
-
-namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(PolioNodeSurvey, INodeDistributableIntervention);
-    template<class Archive>
-    void serialize(Archive &ar, PolioNodeSurvey& obj, const unsigned int v)
-    {
-        // no fields yet
-    }
-}
-#endif

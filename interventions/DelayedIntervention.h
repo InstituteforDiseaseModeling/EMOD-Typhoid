@@ -52,12 +52,5 @@ namespace Kernel
         float delay_period_std_dev;
 
         IndividualInterventionConfig actual_intervention_config;
-
-    private:
-        // Serialization
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, DelayedIntervention &obj, const unsigned int v);
-#endif
     };
 }

@@ -89,14 +89,4 @@ ReportVector::LogNodeData(
     Accumulate(_daily_bites_per_human_label, daily_hbr);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(ReportVector)
-template<class Archive>
-void serialize(Archive &ar, ReportVector& report, const unsigned int v)
-{
-    boost::serialization::void_cast_register<ReportVector,IReport>();
-    ar &boost::serialization::base_object<Report>(report);
-}
-#endif
-
 }

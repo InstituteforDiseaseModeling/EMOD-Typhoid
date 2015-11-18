@@ -633,22 +633,11 @@ namespace Kernel
     }
 } // end namespace Kernel
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeVector)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, NodeVector& node, const unsigned int  file_version )
     {
-        static const char * _module = "NodeVector";
-        LOG_DEBUG("(De)serializing NodeVector\n");
-
-        // Register derived types
-        ar.template register_type<Kernel::IndividualHumanVector>();
-        // Just commenting these out to see if it gets stuff to build
-        //ar.template register_type<Kernel::VectorPopulationAging>();
-        //ar.template register_type<Kernel::VectorPopulationIndividual>();
-        ar.template register_type<Kernel::NodeEventContextHost>();
-
         // Serialize fields
         ar & node.m_vectorpopulations;
         ar & node.m_larval_habitats;

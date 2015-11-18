@@ -44,13 +44,5 @@ namespace Kernel
         virtual void ApplyEffects();
         virtual void ResetForNextDose(float dt);
         IPolioDrugEffectsApply * ipda;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, AntipoliovirusDrug& drug, const unsigned int v);
-#endif
     };
 }

@@ -28,12 +28,5 @@ namespace Kernel
         float demographic_risk;
 
         DECLARE_SERIALIZABLE(SusceptibilityAirborne);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityAirborne& sus, const unsigned int file_version );
-#endif
     };
 }

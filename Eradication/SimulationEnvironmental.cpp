@@ -98,18 +98,4 @@ void Kernel::SimulationEnvironmental::InitializeFlags( const ::Configuration *co
 {
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationEnvironmental)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationEnvironmental &sim, const unsigned int  file_version )
-    {
-        ar.template register_type<NodeEnvironmental>();
-        ar.template register_type<NodeEnvironmentalFlags>();
-
-        ar & boost::serialization::base_object<Simulation>(sim);
-    }
-}
-#endif
-
 #endif // ENABLE_POLIO

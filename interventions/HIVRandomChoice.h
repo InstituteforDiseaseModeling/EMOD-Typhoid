@@ -43,12 +43,5 @@ namespace Kernel
     protected:
 
         Event2ProbabilityMapType event2ProbabilityMap;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVRandomChoice &obj, const unsigned int v);
-#endif
     };
 }

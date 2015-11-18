@@ -390,24 +390,4 @@ namespace Kernel
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
         { }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityHIV &sus, const unsigned int  file_version )
-    {
-        // Serialize fields
-//        ar & sus.m_is_immune_competent;
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::SusceptibilitySTI>(sus);
-    }
-
-    INSTANTIATE_BOOST_SERIALIZATION_HACKS(SusceptibilityHIV);
-    //INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::mpi::packed_iarchive);
-    //INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::mpi::packed_oarchive);
-    template void serialize( boost::mpi::packed_iarchive&, SusceptibilityHIV &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, SusceptibilityHIV &obj, unsigned int file_version );
-    INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::archive::binary_iarchive);
-    INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::archive::binary_oarchive);
-#endif
 }

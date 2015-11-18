@@ -85,11 +85,4 @@ protected:
     static const std::string Report::_log_prev_label;
     static const std::string Report::_prob_new_infection_label;
     static const std::string Report::_aoi_label;
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, Report& report, const unsigned int v);
-#endif
 };

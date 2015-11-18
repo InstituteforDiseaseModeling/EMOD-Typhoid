@@ -232,14 +232,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::IVCalendar)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, IVCalendar& cal, const unsigned int v)
     {
-        boost::serialization::void_cast_register<IVCalendar, IDistributableIntervention>();
         ar & cal.actual_intervention_config;
         ar & cal.scheduleAges;
         ar & cal.target_age_array;

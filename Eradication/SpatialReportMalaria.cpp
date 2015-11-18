@@ -144,12 +144,10 @@ SpatialReportMalaria::postProcessAccumulatedData()
 }
 
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(SpatialReport)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, SpatialReportMalaria& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReportMalaria,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

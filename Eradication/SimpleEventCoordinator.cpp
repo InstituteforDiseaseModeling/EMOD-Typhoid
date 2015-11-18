@@ -150,8 +150,3 @@ namespace Kernel
     float SimpleInterventionDistributionEventCoordinator::GetMinimumAge() const { return 0.0f; }
     float SimpleInterventionDistributionEventCoordinator::GetMaximumAge() const { return 116.0f; }
 }
-
-#if USE_BOOST_SERIALIZATION
-
-BOOST_CLASS_EXPORT(Kernel::SimpleInterventionDistributionEventCoordinator);
-#endif

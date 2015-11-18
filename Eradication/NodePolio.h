@@ -83,13 +83,6 @@ namespace Kernel
 
         virtual void LoadImmunityDemographicsDistribution();
         virtual float drawInitialImmunity(float ind_init_age);
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodePolio &node, const unsigned int  file_version );
-#endif
     };
 
     class NodePolioTest : public NodePolio

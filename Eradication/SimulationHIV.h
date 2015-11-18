@@ -68,12 +68,5 @@ namespace Kernel
         void CheckState( const std::string& rClassName,
                          const char* pVarName,
                          const std::string& rState );
-
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationHIV &sim, const unsigned int  file_version );
-#endif
     };
 }
-
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationHIV)

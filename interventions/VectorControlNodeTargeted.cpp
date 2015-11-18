@@ -370,24 +370,18 @@ namespace Kernel
     }
 }
 
-// This shows how to do serialization from outside the class.
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimpleVectorControlNode)
-
+#if 0
 namespace Kernel {
-
-REGISTER_SERIALIZATION_VOID_CAST(SimpleVectorControlNode, INodeDistributableIntervention);
-
-template<class Archive>
-void serialize(Archive &ar, SimpleVectorControlNode& vcn, const unsigned int v)
-{
-    ar & vcn.durability_time_profile;
-    ar & vcn.killing;
-    ar & vcn.reduction;
-    ar & vcn.habitat_target;
-    ar & vcn.primary_decay_time_constant;
-    ar & vcn.secondary_decay_time_constant;
-    // TODO: if we put some functionality into a BaseNodeIntervention, then we may need to serialize that here
-}
+    template<class Archive>
+    void serialize(Archive &ar, SimpleVectorControlNode& vcn, const unsigned int v)
+    {
+        ar & vcn.durability_time_profile;
+        ar & vcn.killing;
+        ar & vcn.reduction;
+        ar & vcn.habitat_target;
+        ar & vcn.primary_decay_time_constant;
+        ar & vcn.secondary_decay_time_constant;
+        // TODO: if we put some functionality into a BaseNodeIntervention, then we may need to serialize that here
+    }
 }
 #endif

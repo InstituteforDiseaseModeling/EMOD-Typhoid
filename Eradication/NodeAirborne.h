@@ -28,12 +28,5 @@ namespace Kernel
 
         // Effect of climate on infectivity in airborne disease
         virtual float getClimateInfectivityCorrection()  const;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeAirborne& node, const unsigned int file_version);
-#endif
     };
 }

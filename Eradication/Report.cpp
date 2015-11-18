@@ -271,8 +271,7 @@ void Report::NormalizeSEIRWChannels()
     normalizeChannel(_waning_pop_label,      _stat_pop_label);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Report)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, Report& report, const unsigned int v)
 {

@@ -86,20 +86,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:INodeSet);
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::NodeSetNodeList)
-
+#if 0
 namespace Kernel {
     template<class Archive>
-    void serialize(
-        Archive &ar,
-        NodeSetNodeList& nodeset,
-        const unsigned int v
-    )
+    void serialize( Archive &ar, NodeSetNodeList& nodeset, const unsigned int v )
     {
-        boost::serialization::void_cast_register<NodeSetNodeList, INodeSet>();
         ar & nodeset.nodelist_config;
     }
 }

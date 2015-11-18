@@ -82,24 +82,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionEnvironmental)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionEnvironmental& inf, const unsigned int file_version )
-    {
-        ar & boost::serialization::base_object<Kernel::Infection>(inf);
-    }
-    template void serialize( boost::archive::binary_iarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-}
-#endif
-
 #endif // ENABLE_POLIO

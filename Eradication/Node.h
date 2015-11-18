@@ -356,13 +356,5 @@ namespace Kernel
         float birth_rate_boxcar_end_time;               // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
 
 #pragma warning( pop )
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, Node&, const unsigned int v);
-#endif
     };
 }

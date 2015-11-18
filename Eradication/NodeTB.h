@@ -78,12 +78,5 @@ namespace Kernel
         float MDR_incident_counter;
         float MDR_evolved_incident_counter;
         float MDR_fast_incident_counter;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeTB& node, const unsigned int  file_version );
-#endif
     };
 }

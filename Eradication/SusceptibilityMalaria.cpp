@@ -1050,7 +1050,7 @@ namespace Kernel
         SusceptibilityVector::serialize(ar, obj);
         SusceptibilityMalaria& susceptibility = *obj;
         ar.startObject();
-//            ar.labelElement("m_antigenic_flag") & susceptibility.m_antigenic_flag;
+// Boost serialiation didn't include this member.            ar.labelElement("m_antigenic_flag") & susceptibility.m_antigenic_flag;
             ar.labelElement("m_maternal_antibody_strength") & susceptibility.m_maternal_antibody_strength;
             ar.labelElement("m_CSP_antibody") & susceptibility.m_CSP_antibody;
             ar.labelElement("m_active_MSP_antibodies") & susceptibility.m_active_MSP_antibodies;
@@ -1076,46 +1076,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityMalaria)
-namespace Kernel {
-
-
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityMalaria& sus, const unsigned int file_version )
-    {
-        static const char * _module = "SusceptibilityMalaria";
-        LOG_DEBUG("(De)serializing SusceptibilityMalaria\n");
-        //ar & sus.m_antigenic_flag;
-
-        ar & sus.m_maternal_antibody_strength;
-        ar & sus.m_CSP_antibody;
-        ar & sus.m_active_MSP_antibodies;
-        ar & sus.m_active_PfEMP1_minor_antibodies;
-        ar & sus.m_active_PfEMP1_major_antibodies;
-
-        ar & sus.m_RBC;
-        ar & sus.m_RBCcapacity;
-        ar & sus.m_RBCproduction;   // how many RBC's a person should have /120 (AVERAGE_RBC_LIFESPAN)
-        ar & sus.m_inv_microliters_blood; // ==/(age dependent estimate of blood volume)
-
-        ar & sus.m_cytokines;
-        ar & sus.m_ind_pyrogenic_threshold;
-        ar & sus.m_ind_fever_kill_rate;
-        ar & sus.m_cytokine_stimulation;
-        ar & sus.m_parasite_density;
-        ar & sus.m_antibodies_to_n_variations; // how many variations of each antigen type does an individual have antibodies to
-        ar & sus.m_max_fever_in_tstep; 
-        ar & sus.m_max_parasite_density_in_tstep;
-        ar & sus.severetype;
-
-        // state variables for whether the individual is in clinical disease, severe disease, or dead
-        ar & sus.cumulative_days_of_clinical_incident;
-        ar & sus.cumulative_days_of_severe_incident;
-        ar & sus.cumulative_days_of_severe_anemia_incident;
-        ar & sus.days_between_incidents;
-        ar & boost::serialization::base_object<SusceptibilityVector>(sus);
-    }
-}
-#endif

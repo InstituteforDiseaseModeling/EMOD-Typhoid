@@ -32,13 +32,5 @@ namespace Kernel
         virtual void ReportInfectionState() override;
 
         DECLARE_SERIALIZABLE(IndividualHumanAirborne);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanAirborne& human, const unsigned int  file_version );
-#endif
     };
 }

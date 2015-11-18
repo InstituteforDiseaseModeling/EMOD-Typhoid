@@ -77,16 +77,6 @@ namespace Kernel
 
     private:
 
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationVector& sim, const unsigned int  file_version );
-#endif
-
         virtual ISimulationContext *GetContextPointer();
     };
 }
-
-#ifndef WIN32
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationVector)
-#endif

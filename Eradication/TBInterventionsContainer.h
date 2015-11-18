@@ -28,14 +28,6 @@ namespace Kernel
         float resistance_rate;
         float relapse_rate;
         float mortality_rate;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    // Serialization
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, TBDrugEffects_t& drugeffects, const unsigned int v);
-#endif // BOOST
-
     };
 
     typedef std::map <TBDrugType::Enum, TBDrugEffects_t> TBDrugEffectsMap_t;
@@ -117,13 +109,6 @@ namespace Kernel
         bool m_ever_relapsed_TBIVC;
 
         DECLARE_SERIALIZABLE(TBInterventionsContainer);
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, TBInterventionsContainer& container, const unsigned int v);
-#endif
     };
 }
 #endif

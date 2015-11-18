@@ -179,13 +179,6 @@ namespace Kernel
         virtual const int* GetNewInfectionsByStrain()                    const override;
         virtual float GetIndividualAcquireRisk()                         const override;
         virtual bool IsSeropositive( unsigned char serotype)             const override;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityPolio&, const unsigned int  file_version );
-#endif
     };
 }
 

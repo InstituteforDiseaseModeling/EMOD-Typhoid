@@ -192,13 +192,6 @@ namespace Kernel
 
         float cost_per_unit;
         bool expired;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        void serialize_inner(Archive &ar, const unsigned int v);
-#endif
     };
 
     struct BaseNodeIntervention : IBaseIntervention, JsonConfigurable, INodeDistributableIntervention
@@ -216,9 +209,8 @@ namespace Kernel
         float cost_per_unit;
         bool expired;
 
-#if USE_BOOST_SERIALIZATION
+#if 0
     private:
-        friend class ::boost::serialization::access;
         template<class Archive>
         void serialize_inner(Archive &ar, const unsigned int v)
         {

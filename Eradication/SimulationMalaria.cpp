@@ -164,20 +164,11 @@ namespace Kernel
     SimulationMalaria::GetContextPointer() { return (ISimulationContext*)this; }
 } // end namespace Kernel
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationMalaria)
+#if 0
 namespace Kernel {
-
     template<class Archive>
     void serialize(Archive & ar, SimulationMalaria &sim, const unsigned int  file_version )
     {
-        // Register derived types - N/A
-        ar.template register_type<Kernel::NodeMalaria>();
-        ar.template register_type<Kernel::NodeFlagsMalaria>();
-        ar.template register_type<Kernel::IndividualHumanFlagsMalaria>();
-        ar.template register_type<Kernel::SusceptibilityFlagsMalaria>();
-        ar.template register_type<Kernel::InfectionFlagsMalaria>();
-
         ar & sim.m_strain_identity_flags;
 
         ar & boost::serialization::base_object<Kernel::SimulationVector>(sim);

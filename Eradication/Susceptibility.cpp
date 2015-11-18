@@ -213,35 +213,3 @@ namespace Kernel
         ar.endObject();
     }
 } // namespace Kernel
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::Susceptibility)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, Susceptibility& sus, const unsigned int file_version )
-    {
-        // current status
-        ar & sus.age;
-
-        // immune modifiers
-        ar & sus.mod_acquire;
-        ar & sus.mod_transmit;
-        ar & sus.mod_mortality;
-
-        ar & sus.acqdecayoffset;
-        ar & sus.trandecayoffset;
-        ar & sus.mortdecayoffset;
-    }
-    template void serialize( boost::archive::binary_oarchive&, Kernel::Susceptibility&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::Susceptibility&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::Susceptibility&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::Susceptibility&, unsigned int);
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::Susceptibility&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::Susceptibility&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::Susceptibility&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::Susceptibility&, unsigned int);
-}
-
-BOOST_CLASS_IMPLEMENTATION(Kernel::Susceptibility, boost::serialization::object_serializable);
-BOOST_CLASS_TRACKING(Kernel::Susceptibility, boost::serialization::track_never);
-#endif

@@ -71,22 +71,5 @@ namespace Kernel
         IVaccineConsumer * ivc; // interventions container
 
         DECLARE_SERIALIZABLE(SimpleVaccine);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-//        template<class Archive>
-//        friend void serialize(Archive &ar, SimpleVaccine& vacc, const unsigned int v);
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        void save(Archive& ar, const unsigned int version) const;
-        template<class Archive>
-        void load(Archive& ar, const unsigned int version);
-        template<typename Archive>
-        friend void serialize( Archive &ar, SimpleVaccine& vaccine, const unsigned int version );
-#endif
     };
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT_KEY(Kernel::SimpleVaccine)
-#endif

@@ -54,24 +54,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityEnvironmental)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityEnvironmental& sus, const unsigned int file_version )
-    {
-        ar & sus.demographic_risk;
-        ar & boost::serialization::base_object<Susceptibility>(sus);
-    }
-    template void serialize( boost::archive::binary_iarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, SusceptibilityEnvironmental &obj, unsigned int file_version );
-}
-#endif
-
 #endif // ENABLE_POLIO

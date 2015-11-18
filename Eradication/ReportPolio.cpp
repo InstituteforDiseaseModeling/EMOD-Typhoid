@@ -299,16 +299,6 @@ ReportPolio::LogNodeData(
     total_infections = 0;
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(ReportPolio)
-template<class Archive>
-void serialize(Archive &ar, ReportPolio& report, const unsigned int v)
-{
-    boost::serialization::void_cast_register<ReportPolio,IReport>();
-    ar &boost::serialization::base_object<Report>(report);
-}
-#endif
-
 }
 
 #endif // ENABLE_POLIO

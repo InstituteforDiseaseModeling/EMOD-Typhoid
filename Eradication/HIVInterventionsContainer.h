@@ -159,25 +159,14 @@ namespace Kernel
         float last_recorded_CD4;        // replaces cd4_at_last_ART_monitoring_visit
         unsigned int num_times_started_ART ;
         ReceivedTestResultsType::Enum received_HIV_test_results ;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVInterventionsContainer& container, const unsigned int v);
-#endif
     };
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HIVInterventionsContainer& container, const unsigned int v)
     {
-        static const char * _module = "HIVInterventionsContainer";
-        LOG_DEBUG("(De)serializing HIVInterventionsContainer\n");
-
         ar & container.HIV_drug_inactivation_rate;
         ar & container.HIV_drug_clearance_rate;
 

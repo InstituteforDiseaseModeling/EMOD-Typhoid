@@ -16,12 +16,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 #include "NodeEventContext.h"
 
-#if USE_BOOST_SERIALIZATION
-#include <boost/serialization/export.hpp>
-
-BOOST_CLASS_EXPORT(Kernel::NodeSetPolygon) 
-#endif
-
 static const char * _module = "NodeSetPolygon";
 
 namespace Kernel
@@ -147,17 +141,15 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeSetPolygon)
+#if 0
 namespace Kernel {
-        template<class Archive>
-        void serialize(Archive &ar, NodeSetPolygon& nodeset, const unsigned int v)
-        {
-            boost::serialization::void_cast_register<NodeSetPolygon, INodeSet>();
-            ar & vertices_raw;
-            //ar & points_array;
-            ar & num_points;
-            ar & polygon_format;
-        }
+    template<class Archive>
+    void serialize(Archive &ar, NodeSetPolygon& nodeset, const unsigned int v)
+    {
+        ar & vertices_raw;
+        //ar & points_array;
+        ar & num_points;
+        ar & polygon_format;
+    }
 }
 #endif

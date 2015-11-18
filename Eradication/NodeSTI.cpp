@@ -306,19 +306,3 @@ namespace Kernel
         return retVal;
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-#include "IndividualSTI.h"
-BOOST_CLASS_EXPORT(Kernel::NodeSTI)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, NodeSTI& node, const unsigned int file_version)
-    {
-        // Register derived types
-        //ar.template register_type<IndividualHumanSTI>();
-
-        // Serialize base class
-        ar &boost::serialization::base_object<Node>(node);    
-    }
-}
-#endif

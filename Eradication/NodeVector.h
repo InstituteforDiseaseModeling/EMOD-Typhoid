@@ -108,11 +108,5 @@ namespace Kernel
     private:
         virtual INodeContext *getContextPointer() { return (INodeContext*)this; }
         virtual void propagateContextToDependents();
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeVector& node, const unsigned int  file_version );
-#endif
     };
 } // end namespace Kernel

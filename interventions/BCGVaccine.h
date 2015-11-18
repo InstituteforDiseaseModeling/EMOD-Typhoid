@@ -27,11 +27,5 @@ namespace Kernel
 
     protected:
         float vaccine_take_age_decay_rate;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, BCGVaccine& vacc, const unsigned int v);
-#endif    
     };
 }

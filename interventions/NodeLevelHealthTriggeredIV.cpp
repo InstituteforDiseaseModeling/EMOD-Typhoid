@@ -425,12 +425,8 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeLevelHealthTriggeredIV)
-
+#if 0
 namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(NodeLevelHealthTriggeredIV, INodeDistributableIntervention)
-    REGISTER_SERIALIZATION_VOID_CAST(NodeLevelHealthTriggeredIV, IIndividualEventObserver)
     template<class Archive>
     void serialize(Archive &ar, NodeLevelHealthTriggeredIV& iv, const unsigned int v)
     {

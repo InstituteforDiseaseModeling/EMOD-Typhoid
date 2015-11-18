@@ -56,12 +56,5 @@ namespace Kernel
         float rate;
         RelationshipType::Enum rel_type;
         ISTIBarrierConsumer *ibc;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, STIBarrier& bn, unsigned int version );
-#endif
     };
 }

@@ -58,12 +58,5 @@ namespace Kernel
 
         jsonConfigurable::ConstrainedString broadcast_event;
         jsonConfigurable::ConstrainedString broadcast_on_expiration_event;
-
-    private:
-        // Serialization
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVDelayedIntervention &obj, const unsigned int v);
-#endif
     };
 }

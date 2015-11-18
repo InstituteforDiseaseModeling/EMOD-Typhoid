@@ -239,18 +239,3 @@ namespace Kernel
         event_context_host = _new_ NodeMalariaEventContextHost(this);
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeMalaria)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, NodeMalaria& node, const unsigned int file_version )
-    {
-        // Register derived types - N/A
-        ar.template register_type<Kernel::IndividualHumanMalaria>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::NodeVector>(node);
-    }
-}
-#endif

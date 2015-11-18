@@ -67,18 +67,15 @@ namespace Kernel
 }
 
 // Boo-hoo, would rather have in main serialization block.
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::BCGVaccine)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, BCGVaccine& vacc, const unsigned int v)
     {
-        boost::serialization::void_cast_register<BCGVaccine, IDistributableIntervention>();
         ar & vacc.vaccine_take_age_decay_rate;
         ar & boost::serialization::base_object<SimpleVaccine>(vacc);
     }
 }
-
 #endif
 
 #endif // ENABLE_TB

@@ -35,8 +35,7 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilitySTI)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, SusceptibilitySTI& sus, const unsigned int file_version )
@@ -44,14 +43,5 @@ namespace Kernel {
         ar & sus.demographic_risk;
         ar & boost::serialization::base_object<Susceptibility>(sus);
     }
-    template void serialize(boost::archive::binary_iarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_iarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::detail::content_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::archive::binary_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
 }
 #endif
-

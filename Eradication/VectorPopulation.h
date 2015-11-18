@@ -203,16 +203,9 @@ namespace Kernel
         ITransmissionGroups           *m_transmissionGroups;
 
         DECLARE_SERIALIZABLE(VectorPopulation);
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize( Archive& ar, VectorPopulation &obj, unsigned int file_version );
-#endif    
     };
 
+    // clorton TODO - move these into IArchive
     void serialize(IArchive&, std::pair<float, float>&);
     void serialize(IArchive&, std::map<uint32_t, int>&);
 }

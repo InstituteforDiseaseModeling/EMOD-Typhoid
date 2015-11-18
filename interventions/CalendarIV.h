@@ -69,11 +69,5 @@ namespace Kernel
     private:
         std::list<float> scheduleAges;
         std::string dumpCalendar();
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, IVCalendar& cal, const unsigned int v);
-#endif
     };
 }

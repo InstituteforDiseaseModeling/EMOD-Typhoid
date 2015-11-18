@@ -75,14 +75,3 @@ namespace Kernel
     {
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::ModifyStiCoInfectionStatus)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, ModifyStiCoInfectionStatus &ob, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<ModifyStiCoInfectionStatus, IDistributableIntervention>();
-    }
-}
-#endif

@@ -64,14 +64,7 @@ namespace Kernel
 
         virtual bool Configure( const Configuration* config ) override;
 
-    private:
         DECLARE_SERIALIZABLE(IndividualHumanVector);
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanVector& human, const unsigned int  file_version );
-#endif
     };
 
     IArchive& serialize(IArchive&, std::vector<strain_exposure_t>&);

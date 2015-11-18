@@ -30,15 +30,5 @@ namespace Kernel
 
     protected:
         virtual bool positiveTestResult();
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, ActiveDiagnostic &obj, const unsigned int v);
-#endif
     };
 }
-
-

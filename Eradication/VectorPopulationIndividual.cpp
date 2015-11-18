@@ -766,24 +766,9 @@ namespace Kernel
         VectorPopulationIndividual& population = *obj;
         ar.startObject();
             ar.labelElement("m_mosquito_weight") & population.m_mosquito_weight;
-//            ar.labelElement("m_average_oviposition_killing") & population.m_average_oviposition_killing;
-////          ar.labelElement("IndoorExposedQueues"); serialize(ar, population.IndoorExposedQueues);
-////          ar.labelElement("OutdoorExposedQueues"); serialize(ar, population.OutdoorExposedQueues);
+// Boost serialization implementation didn't include this member.            ar.labelElement("m_average_oviposition_killing") & population.m_average_oviposition_killing;
+// Boost serialization implementation didn't include this member.            ar.labelElement("IndoorExposedQueues"); serialize(ar, population.IndoorExposedQueues);
+// Boost serialization implementation didn't include this member.            ar.labelElement("OutdoorExposedQueues"); serialize(ar, population.OutdoorExposedQueues);
         ar.endObject();
     }
-
-    //template void VectorPopulationIndividual::serialize(boost::archive::binary_iarchive & ar, const unsigned int file_version);
-    //template void VectorPopulationIndividual::serialize(boost::archive::binary_oarchive & ar, const unsigned int file_version);
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::VectorPopulationIndividual)
-namespace Kernel {
-    template<typename Archive>
-    void serialize( Archive & ar, VectorPopulationIndividual& vpi, unsigned int version )
-    {
-        ar & vpi.m_mosquito_weight;
-        ar & boost::serialization::base_object<Kernel::VectorPopulation>(vpi);
-    }
-}
-#endif

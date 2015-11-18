@@ -59,12 +59,5 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         jsonConfigurable::ConstrainedString negative_diagnosis_event;
 #pragma warning( pop )
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVSimpleDiagnostic &obj, const unsigned int v);
-#endif
     };
 }

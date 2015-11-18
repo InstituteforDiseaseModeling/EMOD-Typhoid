@@ -255,19 +255,3 @@ namespace Kernel
         pIJsonObj->Insert("Base_Year", base_year);
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationHIV)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationHIV &sim, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<NodeHIV>();
-        ar.template register_type<NodeHIVFlags>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<SimulationSTI>(sim);
-    }
-}
-#endif

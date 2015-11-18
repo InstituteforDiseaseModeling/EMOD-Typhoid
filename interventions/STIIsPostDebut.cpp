@@ -95,17 +95,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::STIIsPostDebut)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, STIIsPostDebut& obj, const unsigned int v)
     {
-        static const char * _module = "STIIsPostDebut";
-        LOG_DEBUG("(De)serializing STIIsPostDebut\n");
-
-        boost::serialization::void_cast_register<STIIsPostDebut, IDistributableIntervention>();
         ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
     }
     template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::STIIsPostDebut&, unsigned int);

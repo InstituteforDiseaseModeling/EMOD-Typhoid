@@ -37,11 +37,5 @@ namespace Kernel
         virtual void onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv );
 		IndividualInterventionConfig not_covered_intervention_configs; // TBD
         bool campaign_contains_not_covered_config;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive &ar, NodeLevelHealthTriggeredIVScaleUpSwitch& iv, const unsigned int v);
-#endif
     };
 }

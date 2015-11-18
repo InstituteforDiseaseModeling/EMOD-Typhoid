@@ -150,17 +150,17 @@ namespace Kernel
             ar.labelElement("paralysis_reported") & infection.paralysis_reported;
             ar.labelElement("paralysis_time") & infection.paralysis_time;
             ar.labelElement("initial_infectiousness") & infection.initial_infectiousness;
-// see below            ar.labelElement("cached_mucosal_immunity") & infection.cached_mucosal_immunity;
-// see below            ar.labelElement("cached_humoral_immunity") & infection.cached_humoral_immunity;
+// Boost serialization didn't include this member            ar.labelElement("cached_mucosal_immunity") & infection.cached_mucosal_immunity;
+// Boost serialization didn't include this member            ar.labelElement("cached_humoral_immunity") & infection.cached_humoral_immunity;
             ar.labelElement("host_mc_weight") & infection.host_mc_weight;
             ar.labelElement("peakFecalLog10VirusTiter") & infection.peakFecalLog10VirusTiter;
             ar.labelElement("peakOralLog10VirusTiter") & infection.peakOralLog10VirusTiter;
             ar.labelElement("durationFecalInfection") & infection.durationFecalInfection;
             ar.labelElement("durationOralInfection") & infection.durationOralInfection;
             ar.labelElement("paralysis_probability") & infection.paralysis_probability;
-// see below            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
-// see below            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
-// see below            ar.labelElement("drug_flag") & infection.drug_flag;
+// Boost serialization didn't include this member            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
+// Boost serialization didn't include this member            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
+// Boost serialization didn't include this member            ar.labelElement("drug_flag") & infection.drug_flag;
         ar.endObject();
     }
 }
@@ -553,29 +553,5 @@ float Kernel::InfectionPolio::GetMusocalImmunity() const
     LOG_DEBUG_F( "Individual %lu returning %f for (cached) mucosal immunity.\n", parent->GetSuid().data, cached_mucosal_immunity );
     return cached_mucosal_immunity;
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionPolio)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionPolio& inf, const unsigned int file_version )
-    {
-        ar & inf.shed_genome_traceContactMode; // genomeID that is shed for contact tracing purposes
-        ar & inf.immunity_updated; // takes values 0,1
-        ar & inf.paralysis_reported; // takes values 0,1
-        ar & inf.paralysis_time; // delay from infection to paralysis. individual will be paralyzed if this value is greater than 0
-        ar & inf.initial_infectiousness; // base value of infectiousness based on antibody titer before infection
-        ar & inf.host_mc_weight; // (days) stores the MC weight of the individual, use for reporting infections only
-        ar & inf.peakFecalLog10VirusTiter; // (TCID50 at the base infectivity pinf of the virus type) the true TCID50 is found by multiplying by relative infectivity for the genome being shed
-        ar & inf.peakOralLog10VirusTiter; //
-        ar & inf.durationFecalInfection; //
-        ar & inf.durationOralInfection; //
-        ar & inf.paralysis_probability; // Probability of paralysis. This was in InitInfectionImmunology, moved to Update, but still only want to calc one time.
-        ar & boost::serialization::base_object<Kernel::InfectionEnvironmental>(inf);
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionPolio&, unsigned int);
-}
-#endif
 
 #endif // ENABLE_POLIO

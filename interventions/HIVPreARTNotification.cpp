@@ -81,16 +81,3 @@ namespace Kernel
         expired = true;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVPreARTNotification)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVPreARTNotification& obj, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<HIVPreARTNotification, IDistributableIntervention>();
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
-    }
-}
-#endif

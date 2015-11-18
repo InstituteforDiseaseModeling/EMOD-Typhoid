@@ -47,12 +47,5 @@ namespace Kernel
         MalariaAntibodyType::Enum antibody_type;
         int antibody_variant;
         float boosted_antibody_concentration;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, RTSSVaccine& obj, unsigned int version );
-#endif
     };
 }

@@ -312,24 +312,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-// TODO: move to single serialization block
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::AntimalarialDrug)
-namespace Kernel {
-     REGISTER_SERIALIZATION_VOID_CAST(AntimalarialDrug, IDrug)
-    template <typename Archive>
-    void serialize(Archive &ar, AntimalarialDrug& drug, const unsigned int v)
-    {
-        ar & drug.drug_IRBC_killrate;
-        ar & drug.drug_hepatocyte;
-        ar & drug.drug_gametocyte02;
-        ar & drug.drug_gametocyte34;
-        ar & drug.drug_gametocyteM;
-//        ar & (std::string) drug.drug_type;
-        ar & drug.drug_type;
-        ar & boost::serialization::base_object<GenericDrug>(drug);
-    }
-}
-
-#endif

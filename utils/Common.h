@@ -226,17 +226,12 @@ public:
         return temp;
     }
 
-#if USE_BOOST_SERIALIZATION
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        void serialize(Archive &ar, const unsigned int v)
-        {
-            ar & data;
-        };
-        ///////////////////////////////////////////////////////////////////////////
+#if 0
+    template<class Archive>
+    void serialize(Archive &ar, const unsigned int v)
+    {
+        ar & data;
+    };
 #endif
 };
 

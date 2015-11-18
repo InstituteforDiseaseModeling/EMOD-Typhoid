@@ -81,16 +81,11 @@ namespace Kernel
 
 }
 
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::MDRDiagnostic)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, MDRDiagnostic& obj, const unsigned int v)
     {
-
-        boost::serialization::void_cast_register<MDRDiagnostic, IDistributableIntervention>();
         ar & obj.treatment_fraction_neg;
 
         ar & boost::serialization::base_object<Kernel::DiagnosticTreatNeg>(obj);

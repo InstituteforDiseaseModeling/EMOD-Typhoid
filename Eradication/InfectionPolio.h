@@ -99,8 +99,6 @@ namespace Kernel
 
         bool drug_flag;
 
-        //END_PERSIST()
-
         virtual void  evolveStrain(ISusceptibilityPolio* _immunity, float dt);
         virtual float getCurrentTiterFromProfile(float peak_Log10Titer, float infectiousTime, float mu, float sigma); // (TCID50 per volume excretion at time from infection)
         virtual void  setCurrentInfectivity(float relative_infectivity, float infectionTimeFecal, float InfectionTimeOral);// (TCID50 virus per day excreted)
@@ -129,13 +127,6 @@ namespace Kernel
         virtual const int   GetAntigenID() const { return infection_strain->GetAntigenID(); }
         virtual const int   GetGeneticID() const { return infection_strain->GetGeneticID(); }
 */
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, InfectionPolio& inf, const unsigned int file_version );
-#endif
     };
 }
 

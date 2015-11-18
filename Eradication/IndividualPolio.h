@@ -93,14 +93,5 @@ namespace Kernel
 /*    private:
         SusceptibilityPolio * polio_susceptibility;
 */
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanPolio& flags, const unsigned int  file_version );
-
-        ////////////////////////////////////////////////////////////////////////////
-#endif
     };
 }

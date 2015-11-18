@@ -1151,14 +1151,9 @@ namespace Kernel
 }
 
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-// clorton #include "InfectionSTI.h"
-// clorton #include "SusceptibilitySTI.h"
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanSTI)
+#if 0
 namespace Kernel
 {
-    template void serialize( boost::mpi::packed_skeleton_oarchive & ar, IndividualHumanSTI& human, const unsigned int  file_version );
-
     template<class Archive>
     void serialize(Archive & ar, IndividualHumanSTI& human, const unsigned int  file_version )
     {
@@ -1192,4 +1187,3 @@ namespace Kernel
     }
 }
 #endif
-

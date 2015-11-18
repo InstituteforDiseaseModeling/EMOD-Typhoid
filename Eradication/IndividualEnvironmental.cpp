@@ -124,34 +124,4 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanEnvironmental)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanEnvironmental& human, const unsigned int  file_version )
-    {
-        static const char * _module = "IndividualHumanEnvironmental";
-        LOG_DEBUG("(De)serializing IndividualHumanEnvironmental\n");
-
-        // Register derived types
-        ar.template register_type<InfectionEnvironmental>();
-        ar.template register_type<SusceptibilityEnvironmental>();
-
-        // Serialize fields - N/A
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::IndividualHuman>(human);
-    }
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-    template void serialize( boost::archive::binary_oarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-    template void serialize( boost::mpi::detail::content_oarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-    template void serialize( boost::mpi::packed_oarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-    template void serialize( boost::mpi::packed_iarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-    template void serialize( boost::archive::binary_iarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::IndividualHumanEnvironmental&, unsigned int);
-}
-#endif
-
 #endif // ENABLE_POLIO

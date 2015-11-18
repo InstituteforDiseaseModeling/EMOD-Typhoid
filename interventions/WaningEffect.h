@@ -71,13 +71,6 @@ namespace Kernel
 
     protected:
         float currentEffect;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectConstant& we, const unsigned int v);
-#endif
     };
 
     // --------------------------- WaningEffectExponential ---------------------------
@@ -96,13 +89,6 @@ namespace Kernel
     protected:
         float currentEffect;
         float decayTimeConstant;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectExponential& we, const unsigned int v);
-#endif
     };
 
     // --------------------------- WaningEffectBox ---------------------------
@@ -121,13 +107,6 @@ namespace Kernel
     protected:
         float currentEffect;
         float boxDuration;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectBox& we, const unsigned int v);
-#endif
     };
 
     // --------------------------- WaningEffectBoxExponential ---------------------------
@@ -147,12 +126,5 @@ namespace Kernel
         float currentEffect;
         float boxDuration;
         float decayTimeConstant;
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectBoxExponential& we, const unsigned int v);
-#endif
     };
 }

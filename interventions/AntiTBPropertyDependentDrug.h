@@ -43,14 +43,6 @@ namespace Kernel
     protected:
         DrugTypeByProperty drug_type_by_property;
         bool enable_state_specific_tx;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, AntiTBPropDepDrug& drug, const unsigned int v);
-#endif
     };
 }
 

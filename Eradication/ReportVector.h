@@ -31,13 +31,6 @@ protected:
     virtual void UpdateSEIRW( const Kernel::IndividualHuman * individual, float monte_carlo_weight ) {}
     virtual void AccumulateSEIRW() {}
     virtual void NormalizeSEIRWChannels() {}
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, ReportVector& report, const unsigned int v);
-#endif
 };
 
 }
