@@ -925,7 +925,7 @@ namespace Kernel
         errno = 0;
         if ( fopen_s( &f, filename, "w" ) != 0)
         {
-//            LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
+            // LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
             LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
             return;
         }
@@ -943,12 +943,6 @@ namespace Kernel
         static const char * _module = "MpiMigration";
         LOG_DEBUG("resolveMigration\n");
 
-/* clorton
-        std::vector<boost::mpi::request >    pending_sends;
-        std::vector<MPI_Request         >    pending_sends_plain;
-        std::vector<int> individual_count_send_buffers;
-*/
-
         std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
         std::list< MPI_Request > outbound_requests( EnvPtr->MPI.NumTasks );     // requests for each outbound message
         std::list< JsonRawWriter* > outbound_messages( EnvPtr->MPI.NumTasks );  // buffers for outbound messages
@@ -959,7 +953,7 @@ namespace Kernel
             {
 #ifndef _DEBUG
                 // Don't bother to serialize locally
-//                for (auto individual : migratingIndividualQueues[destination_rank])
+                // for (auto individual : migratingIndividualQueues[destination_rank]) // Note the direction of iteration below!
                 for (auto iterator = migratingIndividualQueues[destination_rank].rbegin(); iterator != migratingIndividualQueues[destination_rank].rend(); ++iterator)
                 {
                     auto individual = *iterator;

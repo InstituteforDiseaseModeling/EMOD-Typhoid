@@ -48,11 +48,6 @@ namespace Kernel
         virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
         virtual std::string GetTriggerCondition() const;
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-        void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
     protected:
         float  m_timer;
         float  m_reporting_interval;

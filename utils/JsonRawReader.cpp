@@ -15,24 +15,11 @@ namespace Kernel
 
     IArchive& JsonRawReader::startObject()
     {
-// clorton        assert((*m_json)[m_index].IsArray());
-// clorton        m_value_stack.push(m_json);
-// clorton        m_json = &(*m_json)[m_index];
-// clorton        m_index_stack.push(m_index);
-// clorton        m_index = 0;
-
         return *this;
     }
 
     IArchive& JsonRawReader::endObject()
     {
-// clorton        m_json = m_value_stack.top();
-// clorton        m_value_stack.pop();
-// clorton        m_index = m_index_stack.top();
-// clorton        m_index_stack.pop();
-// clorton
-// clorton        m_index++;
-
         return *this;
     }
 
@@ -49,8 +36,6 @@ namespace Kernel
 
     IArchive& JsonRawReader::labelElement(char*)
     {
-    //    ++m_index;
-
         return *this;
     }
 

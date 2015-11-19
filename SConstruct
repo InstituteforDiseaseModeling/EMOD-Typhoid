@@ -282,9 +282,6 @@ def findVersion( root , choices ):
 #env.Append( CPPDEFINES=["ENABLE_TB" ] )
 #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
 
-#if has_option('Dlls'):
-#    env.Append( CPPDEFINES=["USE_JSON_MPI" ] )
-
 boostLibs = ["system", "filesystem" , "program_options", "serialization" ]
 
 if os.sys.platform.startswith("linux"):

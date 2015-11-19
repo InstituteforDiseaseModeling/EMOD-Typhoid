@@ -23,23 +23,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <boost/format.hpp>
 #endif
 
-#if USE_BOOST_ARCHIVE
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#endif
-
-#if USE_BOOST_MPI
-#include <boost/mpi/packed_iarchive.hpp>
-#include <boost/mpi/packed_oarchive.hpp>
-#include <boost/mpi/operations.hpp>
-#include <boost/mpi/skeleton_and_content.hpp>
-#include <boost/mpi/collectives/broadcast.hpp>
-
-#include <boost/serialization/list.hpp>
-#include <boost/serialization/map.hpp>
-#include <boost/serialization/export.hpp>
-#endif
-
 #if USE_BOOST_ALGORITHM
 #include <boost/algorithm/string.hpp>
 #endif

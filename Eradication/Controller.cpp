@@ -730,7 +730,6 @@ std::function<bool(SimulationT&,float)>
                 }
             }
 
-// clorton            boost::mpi::broadcast(*EnvPtr->MPI.World, terminate, 0); // all processes need to return the result of the decision on rank zero
             MPI_Bcast( (void*)&terminate, 1, MPI_INTEGER4, 0, MPI_COMM_WORLD );
             return terminate;
         };
@@ -766,7 +765,7 @@ std::function<bool(SimulationT&,float)>
                     terminate = (sim.GetSimulationTimestep() >= simulation_steps);
                 }
             }
-// clorton            boost::mpi::broadcast(*EnvPtr->MPI.World, terminate, 0);
+
             MPI_Bcast( (void*)&terminate, 1, MPI_INTEGER4, 0, MPI_COMM_WORLD );
             return terminate;
         };

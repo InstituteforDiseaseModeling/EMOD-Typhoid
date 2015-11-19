@@ -13,15 +13,11 @@ namespace Kernel
 
     IArchive& JsonRawWriter::startObject()
     {
-// clorton        m_writer->StartArray();
-
         return *this;
     }
 
     IArchive& JsonRawWriter::endObject()
     {
-// clorton        m_writer->EndArray();
-
         return *this;
     }
 

@@ -204,13 +204,6 @@ namespace Kernel
 
         void MergeNodeIdSuidBimaps( nodeid_suid_map_t&, nodeid_suid_map_t& );
 
-        //------------------------------------------------------------------------------------
-        // N.B. Entire implementation of "resolveMigrationInternal" appears here in header file
-        //      as a (necessary?) step towards disease-specific DLLs (because of the template)
-        //------------------------------------------------------------------------------------
-
-        void doJsonDeserializeReceive();    // clorton, delete?
-
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         map<void*, Kernel::ISimulation::callback_t> new_node_observers;

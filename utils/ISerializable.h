@@ -6,7 +6,6 @@
 #include <string>
 
 #include <stack>        // for _pool declaration/implementation
-// clorton #include "IArchive.h"   // for serialization declaration
 
 namespace Kernel {
 

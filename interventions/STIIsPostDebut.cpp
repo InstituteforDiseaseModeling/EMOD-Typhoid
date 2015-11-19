@@ -102,6 +102,5 @@ namespace Kernel {
     {
         ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::STIIsPostDebut&, unsigned int);
 }
 #endif

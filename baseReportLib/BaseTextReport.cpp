@@ -86,23 +86,34 @@ namespace Kernel {
     
     void BaseTextReport::GetDataFromOtherCores()
     {
-        std::string receive_buffer;
         std::string to_send = output_stream.str();
+        // clorton TODO - consolidate versions of this reduce code in one place.
+        int32_t length = (int32_t)to_send.size();
 
-        receive_buffer.resize(to_send.length());
+        if (EnvPtr->MPI.Rank > 0)
+        {
+            MPI_Gather((void*)&length, 1, MPI_INTEGER4, nullptr, EnvPtr->MPI.NumTasks, MPI_INTEGER4, 0, MPI_COMM_WORLD);
+            MPI_Gatherv((void*)to_send.c_str(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD);
+        }
+        else
+        {
+            std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
+            MPI_Gather((void*)&length, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, 0, MPI_COMM_WORLD);
+            int32_t total = 0;
+            std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
+            for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
+            {
+                displs[i] = total;
+                total += lengths[i];
+            }
+            std::vector<char> buffer(total + 1);
+            MPI_Gatherv((void*)to_send.c_str(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
+            buffer[total] = '\0';
 
-        boost::mpi::reduce(
-            *(EnvPtr->MPI.World),
-            to_send,
-            receive_buffer,
-            std::plus<std::string>(),
-            0);
+            reduced_stream << std::string(buffer.data());
+        }
 
-        // Clear output_stream
-        output_stream.str(std::string());
-
-        if( EnvPtr->MPI.Rank == 0 )
-            reduced_stream << receive_buffer;
+        output_stream.str(std::string());   // Clear the output stream.
     }
 
     void BaseTextReport::WriteData( const std::string& rStringData )
