@@ -36,6 +36,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
+#include "BinaryArchiveWriter.h"
+#include "BinaryArchiveReader.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -945,7 +947,7 @@ namespace Kernel
 
         std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
         std::list< MPI_Request > outbound_requests( EnvPtr->MPI.NumTasks );     // requests for each outbound message
-        std::list< JsonRawWriter* > outbound_messages( EnvPtr->MPI.NumTasks );  // buffers for outbound messages
+        std::list< BinaryArchiveWriter* > outbound_messages( EnvPtr->MPI.NumTasks );  // buffers for outbound messages
 
         for (int destination_rank = 0; destination_rank < EnvPtr->MPI.NumTasks; ++destination_rank)
         {
@@ -963,7 +965,7 @@ namespace Kernel
 #else
                 if ( migratingIndividualQueues[destination_rank].size() > 0 )
                 {
-                    auto writer = make_shared<JsonRawWriter>();
+                    auto writer = make_shared<BinaryArchiveWriter>();
                     (*static_cast<IArchive*>(writer.get())) & migratingIndividualQueues[destination_rank];
 
                     for (auto& individual : migratingIndividualQueues[destination_rank])
@@ -975,7 +977,7 @@ namespace Kernel
                         _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "self", static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize() );
                     }
 
-                    auto reader = make_shared<JsonRawReader>(static_cast<IArchive*>(writer.get())->GetBuffer());
+                    auto reader = make_shared<BinaryArchiveReader>(static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize());
                     (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[destination_rank];
                     for (auto individual : migratingIndividualQueues[destination_rank])
                     {
@@ -989,7 +991,7 @@ namespace Kernel
             {
                 if ( migratingIndividualQueues[destination_rank].size() > 0 )
                 {
-                    auto writer = new JsonRawWriter();
+                    auto writer = new BinaryArchiveWriter();
                     // section = "resolveMigration() - remote migration, serialize::write";
                     (*static_cast<IArchive*>(writer)) & migratingIndividualQueues[destination_rank];
                     if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
@@ -1049,7 +1051,7 @@ namespace Kernel
                 }
 
                 // section = "resolveMigration() - remote migration, instantiate reader";
-                auto reader = make_shared<JsonRawReader>(buffer.get());
+                auto reader = make_shared<BinaryArchiveReader>(buffer.get(), size);
 
                 if ( static_cast<IArchive*>(reader.get())->HasError() )
                 {

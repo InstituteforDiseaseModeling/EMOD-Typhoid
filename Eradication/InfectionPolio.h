@@ -19,7 +19,7 @@ namespace Kernel
         virtual float GetInitialInfectiousness() const = 0;
         virtual float GetInfectiousness() const = 0;
         virtual float GetParalysisTime() const = 0;
-        virtual float GetMusocalImmunity() const = 0;
+        virtual float GetMucosalImmunity() const = 0;
         virtual float GetHumoralImmunity() const = 0;
         virtual int   GetAntigenID() const = 0;
         virtual int   GetGeneticID() const = 0;
@@ -69,7 +69,7 @@ namespace Kernel
         virtual float GetInitialInfectiousness() const override { return initial_infectiousness; }
         virtual float GetInfectiousness() const override { return infectiousness; }
         virtual float GetParalysisTime() const override { return paralysis_time; }
-        virtual float GetMusocalImmunity() const override;
+        virtual float GetMucosalImmunity() const override;
         virtual float GetHumoralImmunity() const override { return cached_humoral_immunity; }
         virtual int   GetAntigenID() const override { return infection_strain->GetAntigenID(); }
         virtual int   GetGeneticID() const override { return infection_strain->GetGeneticID(); }
@@ -122,7 +122,7 @@ namespace Kernel
         virtual const float GetInitialInfectiousness() const { return initial_infectiousness; }
         virtual const float GetInfectiousness() const { return infectiousness; }
         virtual const float GetParalysisTime() const { return paralysis_time; }
-        virtual const float GetMusocalImmunity() const { return cached_mucosal_immunity; }
+        virtual const float GetMucosalImmunity() const { return cached_mucosal_immunity; }
         virtual const float GetHumoralImmunity() const { return cached_humoral_immunity; }
         virtual const int   GetAntigenID() const { return infection_strain->GetAntigenID(); }
         virtual const int   GetGeneticID() const { return infection_strain->GetGeneticID(); }

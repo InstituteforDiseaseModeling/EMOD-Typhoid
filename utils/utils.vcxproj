@@ -90,6 +90,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\rapidjson\modp\modp_numtoa.cpp" />
+    <ClCompile Include="BinaryArchiveReader.cpp" />
+    <ClCompile Include="BinaryArchiveWriter.cpp" />
     <ClCompile Include="Configuration.cpp">
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PreprocessToFile>
     </ClCompile>
@@ -145,6 +147,8 @@
     <ClInclude Include="..\rapidjson\include\rapidjson\stringbuffer.h" />
     <ClInclude Include="..\rapidjson\include\rapidjson\writer.h" />
     <ClInclude Include="..\rapidjson\modp\modp_numtoa.h" />
+    <ClInclude Include="BinaryArchiveReader.h" />
+    <ClInclude Include="BinaryArchiveWriter.h" />
     <ClInclude Include="BoostLibWrapper.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Configuration.h" />

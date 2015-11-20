@@ -232,7 +232,7 @@ ReportPolio::LogIndividualData(
         infectionStrainIdCounts[ ((InfectionPolio*)infection)->GetGeneticID() ] += mc_weight;
         if( tmpNewInfFlag == NewInfectionState::NewInfection )
         {
-            float immunity = ((InfectionPolio*)infection)->GetMusocalImmunity(); // (sic!)
+            float immunity = ((InfectionPolio*)infection)->GetMucosalImmunity();
             if( immunity )
             {
                 immunityAtInfection += log( immunity ) * mc_weight;

@@ -548,7 +548,7 @@ void Kernel::InfectionPolio::CacheMCWeightOfHost(float ind_mc_weight)
     host_mc_weight = ind_mc_weight;
 }
 
-float Kernel::InfectionPolio::GetMusocalImmunity() const
+float Kernel::InfectionPolio::GetMucosalImmunity() const
 {
     LOG_DEBUG_F( "Individual %lu returning %f for (cached) mucosal immunity.\n", parent->GetSuid().data, cached_mucosal_immunity );
     return cached_mucosal_immunity;
