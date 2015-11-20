@@ -75,7 +75,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         os.putenv( "GAME_PORT", str(self.game_port) )
         #exec_string = "../../build/Eradication_game --config config.json -I . -O testing &"
         #exec_string = "/home2/jbloedow/trunk/build/Eradication_game --config config.json -I . -O testing &"
-        exec_string = "/home2/jbloedow/trunk/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
+        #exec_string = "/home2/jbloedow/trunk/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
+        exec_string = "/home2/jbloedow/DtkTrunk-IDM/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
         dtk_run = os.system( exec_string )
         time.sleep(2)
         self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -103,7 +104,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         data = self.dtk_socket.recv( 2000 )
         data_json = json.loads(data)
 
-        data_json["New Severe Cases Averted"] = self.ref_json["New Severe Cases"]["Data"][self.timestep] - data_json["New Severe Cases"]
+        print( "Not including averted cases yet since move to Binned Report. TBD. Pls be patient." )
+        #data_json["New Severe Cases Averted"] = self.ref_json["New Severe Cases"]["Data"][self.timestep] - data_json["New Severe Cases"]
 
         data_json["Timestep"] = self.timestep
         self.timestep = self.timestep + 1
