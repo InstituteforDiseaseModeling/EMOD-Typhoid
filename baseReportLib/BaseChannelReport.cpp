@@ -56,7 +56,7 @@ void BaseChannelReport::LogNodeData(
 
 void BaseChannelReport::EndTimestep( float currentTime, float dt )
 {
-#if 1
+#if 0
     // This is experimental for sending data via stdout. Don't check in without config option.
     auto * jsonSerializer = Kernel::CreateJsonObjAdapter();
     jsonSerializer->CreateNewWriter();

@@ -158,6 +158,41 @@ void BinnedReport::EndTimestep( float currentTime, float dt )
     Accumulate(_disease_deaths_label, disease_deaths_bins);
 
     clearChannelsBins();
+#if 1
+    // This is experimental for sending data via stdout. Don't check in without config option.
+    Kernel::JSerializer js;
+    auto * jsonSerializer = Kernel::CreateJsonObjAdapter();
+    jsonSerializer->CreateNewWriter();
+    jsonSerializer->BeginObject();
+    for (auto& entry : channelDataMap.channel_data_map)
+    {
+        auto vector_of_data = entry.second;
+        // OK, for binned report, this is an array of some length, and we want the last N values, where N is number of age bins.
+        const auto channel_name = entry.first.c_str();
+        auto last = vector_of_data.size() - _num_age_bins;
+        vector<float> segment;
+        for( int idx=last; idx<last+_num_age_bins; idx++ )
+        {
+            segment.push_back( vector_of_data[ idx ] );
+        }
+        // Populate last 5 values from vector_of_data
+        jsonSerializer->Insert(channel_name);
+        jsonSerializer->BeginArray();
+        js.JSerialize( segment, jsonSerializer );
+        //jsonSerializer->Insert( , last );
+        jsonSerializer->EndArray();
+    }
+    jsonSerializer->EndObject();
+
+    std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
+
+#ifdef WIN32
+    _putenv_s( "JSON_SER_REPORT", jsonSerializer->ToString() );
+#else
+    setenv( "JSON_SER_REPORT", jsonSerializer->ToString(), 1 );
+#endif
+    delete jsonSerializer;
+#endif
 }
 
 void BinnedReport::Accumulate(std::string channel_name, float bin_data[])

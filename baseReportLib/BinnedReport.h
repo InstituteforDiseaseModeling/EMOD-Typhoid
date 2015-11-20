@@ -81,7 +81,7 @@ protected:
     float *disease_deaths_bins;
     IChannelDataMapOutputAugmentor* p_output_augmentor ;
     int _num_age_bins;
-    int _num_bins_per_axis[2];
+    int _num_bins_per_axis[1];
     //float _age_bin_upper_values[5];
     float * _age_bin_upper_values;
     //std::string _age_bin_friendly_names[100];
