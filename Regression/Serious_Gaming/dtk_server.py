@@ -110,7 +110,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         data_json["Timestep"] = self.timestep
         self.timestep = self.timestep + 1
 
-        return (str(data_json) + "\n").replace( "u'", "'" )
+        return (str(data_json).replace( "[[", "[" ).replace( "]]", "]") + "\n").replace( "u'", "'" )
 
     def insert_new_camp_event_and_step_reload( self, new_event_params ):
         """
@@ -148,7 +148,11 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         return (str(data_json) + "\n").replace( "u'", "'" )
         
     def create_event_from_json( self, epj ):
-        camp_event = json.loads( '{"Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "StandardInterventionDistributionEventCoordinator" }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }' )
+        reference_campaign_string = """
+        { "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "StandardInterventionDistributionEventCoordinator" }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
+        """
+        #{ "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "ReferenceTrackingEventCoordinator", "Update_Period": 1, "Duration": 1, "Time_Value_Map": { "Times": [ 0 ], "Values": [ 0 ] } }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
+        camp_event = json.loads( reference_campaign_string.strip()  )
         camp_event["Start_Day"] = self.timestep + epj["Timesteps_From_Now"]
 
         if not (epj["Intervention"] == "DRUG" and epj["Intervention_Quality"] == "Low"):
@@ -161,7 +165,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Distribution"] = "UNIFORM_DURATION"
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Min"] = 0
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Max"] = epj["Length_Of_Rollout_In_Days"]
-            if epj["Rollout_Distribution"] == "GAUSSIAN":
+            elif epj["Rollout_Distribution"] == "GAUSSIAN":
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Distribution"] = "GAUSSIAN_DURATION"
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Mean"] = epj["Length_Of_Rollout_In_Days"]/2
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Std_Dev"] = epj["Length_Of_Rollout_In_Days"]/4
@@ -184,6 +188,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                 actual_intervention_config[ "Killing_Rate" ] = 0.0
                 actual_intervention_config[ "Blocking_Rate" ] = 0.9
             camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Actual_IndividualIntervention_Configs"].append( actual_intervention_config )
+            # FUTURE camp_event["Event_Coordinator_Config"]["Time_Value_Map"]["Values"][0] = epj["Percentage_Of_Target_Population_Reached"]
 
         elif epj["Intervention"] == "IRS":
             actual_intervention_config = {}
