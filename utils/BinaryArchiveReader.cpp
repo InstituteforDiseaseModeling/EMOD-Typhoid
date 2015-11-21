@@ -11,6 +11,13 @@ namespace Kernel
     {
     }
 
+    IArchive& BinaryArchiveReader::startClass(std::string& class_name)
+    {
+        return (*this) & class_name;
+    }
+
+    IArchive& BinaryArchiveReader::endClass() { return *this; }
+
     IArchive& BinaryArchiveReader::startObject() { return *this; }
     IArchive& BinaryArchiveReader::endObject()   { return *this; }
 
@@ -23,8 +30,8 @@ namespace Kernel
         return *this;
     }
 
-    IArchive& BinaryArchiveReader::endArray()          { return *this; }
-    IArchive& BinaryArchiveReader::labelElement(char*) { return *this; }
+    IArchive& BinaryArchiveReader::endArray() { return *this; }
+    IArchive& BinaryArchiveReader::labelElement(const char*) { return *this; }
 
     IArchive& BinaryArchiveReader::operator&(bool& b)
     {

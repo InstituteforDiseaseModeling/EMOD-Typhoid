@@ -286,14 +286,12 @@ namespace Kernel
     void MalariaAntibody::serialize(IArchive& ar, MalariaAntibody* obj)
     {
         MalariaAntibody& antibody = *obj;
-        ar.startObject();
-            ar.labelElement("m_antibody_capacity") & antibody.m_antibody_capacity;
-            ar.labelElement("m_antibody_concentration") & antibody.m_antibody_concentration;
-            ar.labelElement("m_antigen_count") & antibody.m_antigen_count;
-            ar.labelElement("m_antigen_present") & antibody.m_antigen_present;
-            ar.labelElement("m_antibody_type") & (uint32_t&)antibody.m_antibody_type;
-            ar.labelElement("m_antibody_variant") & antibody.m_antibody_variant;
-        ar.endObject();
+        ar.labelElement("m_antibody_capacity") & antibody.m_antibody_capacity;
+        ar.labelElement("m_antibody_concentration") & antibody.m_antibody_concentration;
+        ar.labelElement("m_antigen_count") & antibody.m_antigen_count;
+        ar.labelElement("m_antigen_present") & antibody.m_antigen_present;
+        ar.labelElement("m_antibody_type") & (uint32_t&)antibody.m_antibody_type;
+        ar.labelElement("m_antibody_variant") & antibody.m_antibody_variant;
     }
 
     void serialize(IArchive& ar, pfemp1_antibody_t& antibodies)

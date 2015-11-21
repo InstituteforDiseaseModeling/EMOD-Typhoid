@@ -303,12 +303,10 @@ namespace Kernel
     {
         InterventionsContainer::serialize(ar, obj);
         TBInterventionsContainer& interventions = *obj;
-        ar.startObject();
-            ar.labelElement("TB_drug_effects"); Kernel::serialize(ar, interventions.TB_drug_effects);
-            ar.labelElement("m_is_tb_tx_naive_TBIVC") & interventions.m_is_tb_tx_naive_TBIVC;
-            ar.labelElement("m_failed_tx_TBIVC") & interventions.m_failed_tx_TBIVC;
-            ar.labelElement("m_ever_relapsed_TBIVC") & interventions.m_ever_relapsed_TBIVC;
-        ar.endObject();
+        ar.labelElement("TB_drug_effects"); Kernel::serialize(ar, interventions.TB_drug_effects);
+        ar.labelElement("m_is_tb_tx_naive_TBIVC") & interventions.m_is_tb_tx_naive_TBIVC;
+        ar.labelElement("m_failed_tx_TBIVC") & interventions.m_failed_tx_TBIVC;
+        ar.labelElement("m_ever_relapsed_TBIVC") & interventions.m_ever_relapsed_TBIVC;
     }
 }
 

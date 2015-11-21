@@ -188,12 +188,10 @@ namespace Kernel
     {
         MalariaInterventionsContainer& container = *obj;
         VectorInterventionsContainer::serialize(ar, obj);
-        ar.startObject();
-            ar.labelElement("drug_IRBC_killrate") & container.drug_IRBC_killrate;
-            ar.labelElement("drug_hepatocyte")    & container.drug_hepatocyte;
-            ar.labelElement("drug_gametocyte02")  & container.drug_gametocyte02;
-            ar.labelElement("drug_gametocyte34")  & container.drug_gametocyte34;
-            ar.labelElement("drug_gametocyteM")   & container.drug_gametocyteM;
-        ar.endObject();
+        ar.labelElement("drug_IRBC_killrate") & container.drug_IRBC_killrate;
+        ar.labelElement("drug_hepatocyte")    & container.drug_hepatocyte;
+        ar.labelElement("drug_gametocyte02")  & container.drug_gametocyte02;
+        ar.labelElement("drug_gametocyte34")  & container.drug_gametocyte34;
+        ar.labelElement("drug_gametocyteM")   & container.drug_gametocyteM;
     }
 }

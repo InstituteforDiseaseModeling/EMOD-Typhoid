@@ -272,12 +272,9 @@ namespace Kernel
         IndividualHumanVector& individual = *obj;
 
         IndividualHuman::serialize(ar, obj);
-        ar.startObject();
-            ar.labelElement("m_strain_exposure");
-                Kernel::serialize(ar, individual.m_strain_exposure);
-            ar.labelElement("m_total_exposure") & individual.m_total_exposure;
-
-        ar.endObject();
+        ar.labelElement("m_strain_exposure");
+            Kernel::serialize(ar, individual.m_strain_exposure);
+        ar.labelElement("m_total_exposure") & individual.m_total_exposure;
     }
 
     IArchive& serialize(IArchive& ar, std::vector<strain_exposure_t>& vec)

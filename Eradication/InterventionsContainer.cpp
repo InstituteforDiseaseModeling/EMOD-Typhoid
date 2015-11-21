@@ -281,11 +281,9 @@ namespace Kernel
     void InterventionsContainer::serialize(IArchive& ar, InterventionsContainer* obj)
     {
         InterventionsContainer& container = *obj;
-        ar.startObject();
-            ar.labelElement("drugVaccineReducedAcquire") & container.drugVaccineReducedAcquire;
-            ar.labelElement("drugVaccineReducedTransmit") & container.drugVaccineReducedTransmit;
-            ar.labelElement("drugVaccineReducedMortality") & container.drugVaccineReducedMortality;
-            ar.labelElement("interventions") & container.interventions;
-        ar.endObject();
+        ar.labelElement("drugVaccineReducedAcquire") & container.drugVaccineReducedAcquire;
+        ar.labelElement("drugVaccineReducedTransmit") & container.drugVaccineReducedTransmit;
+        ar.labelElement("drugVaccineReducedMortality") & container.drugVaccineReducedMortality;
+        ar.labelElement("interventions") & container.interventions;
     }
 }

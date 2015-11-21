@@ -677,7 +677,6 @@ namespace Kernel
     {
         IndividualHumanVector::serialize(ar, obj);
         IndividualHumanMalaria& individual = *obj;
-        ar.startObject();
         ar.labelElement("m_inv_microliters_blood") & individual.m_inv_microliters_blood;
         ar.labelElement("m_male_gametocytes") & individual.m_male_gametocytes;
         ar.labelElement("m_female_gametocytes") & individual.m_female_gametocytes;
@@ -689,7 +688,6 @@ namespace Kernel
 // Boost serialization didn't include this element.        ar.labelElement("m_clinical_symptoms"); ::serialize(ar, individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
 // shared pointer        ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, individual.m_CSP_antibody);
         ar.labelElement("m_initial_infected_hepatocytes") & individual.m_initial_infected_hepatocytes;
-        ar.endObject();
     }
 }
 

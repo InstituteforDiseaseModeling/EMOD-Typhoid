@@ -136,10 +136,8 @@ namespace Kernel
     void PolioVaccine::serialize(IArchive& ar, PolioVaccine* obj)
     {
         PolioVaccine& vaccine = *obj;
-        ar.startObject();
-            ar.labelElement("vaccine_type") & (uint32_t&)vaccine.vaccine_type;
-            ar.labelElement("time_since_vaccination") & vaccine.time_since_vaccination;
-        ar.endObject();
+        ar.labelElement("vaccine_type") & (uint32_t&)vaccine.vaccine_type;
+        ar.labelElement("time_since_vaccination") & vaccine.time_since_vaccination;
     }
 }
 

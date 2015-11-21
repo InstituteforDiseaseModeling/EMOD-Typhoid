@@ -134,12 +134,10 @@ namespace Kernel
     void VectorCohort::serialize(IArchive& ar, VectorCohort* obj)
     {
         VectorCohort& cohort = *obj;
-        ar.startObject();
-            ar.labelElement("vector_genetics");
-            VectorMatingStructure::serialize(ar, cohort.vector_genetics);
-            ar.labelElement("progress") & cohort.progress;
-            ar.labelElement("population") & cohort.population;
-        ar.endObject();
+        ar.labelElement("vector_genetics");
+        VectorMatingStructure::serialize(ar, cohort.vector_genetics);
+        ar.labelElement("progress") & cohort.progress;
+        ar.labelElement("population") & cohort.population;
     }
 
 #if 0

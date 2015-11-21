@@ -180,13 +180,11 @@ namespace Kernel
     {
         GenericDrug::serialize(ar, obj);
         AntiTBDrug& drug = *obj;
-        ar.startObject();
-            ar.labelElement("TB_drug_inactivation_rate") & drug.TB_drug_inactivation_rate;
-            ar.labelElement("TB_drug_clearance_rate") & drug.TB_drug_clearance_rate;
-            ar.labelElement("TB_drug_resistance_rate") & drug.TB_drug_resistance_rate;
-            ar.labelElement("TB_drug_relapse_rate") & drug.TB_drug_relapse_rate;
-            ar.labelElement("TB_drug_mortality_rate") & drug.TB_drug_mortality_rate;
-        ar.endObject();
+        ar.labelElement("TB_drug_inactivation_rate") & drug.TB_drug_inactivation_rate;
+        ar.labelElement("TB_drug_clearance_rate") & drug.TB_drug_clearance_rate;
+        ar.labelElement("TB_drug_resistance_rate") & drug.TB_drug_resistance_rate;
+        ar.labelElement("TB_drug_relapse_rate") & drug.TB_drug_relapse_rate;
+        ar.labelElement("TB_drug_mortality_rate") & drug.TB_drug_mortality_rate;
     }
 }
 

@@ -39,13 +39,11 @@ namespace Kernel
     void SimpleHousingModification::serialize(IArchive& ar, SimpleHousingModification* obj)
     {
         SimpleHousingModification& mod = *obj;
-        ar.startObject();
-            ar.labelElement("durability_time_profile") & (uint32_t&)mod.durability_time_profile;
-            ar.labelElement("current_blockingrate") & mod.current_blockingrate;
-            ar.labelElement("current_killingrate") & mod.current_killingrate;
-            ar.labelElement("primary_decay_time_constant") & mod.primary_decay_time_constant;
-            ar.labelElement("secondary_decay_time_constant") & mod.secondary_decay_time_constant;
-        ar.endObject();
+        ar.labelElement("durability_time_profile") & (uint32_t&)mod.durability_time_profile;
+        ar.labelElement("current_blockingrate") & mod.current_blockingrate;
+        ar.labelElement("current_killingrate") & mod.current_killingrate;
+        ar.labelElement("primary_decay_time_constant") & mod.primary_decay_time_constant;
+        ar.labelElement("secondary_decay_time_constant") & mod.secondary_decay_time_constant;
     }
 
     void IRSHousingModification::serialize(IArchive& ar, IRSHousingModification* obj)

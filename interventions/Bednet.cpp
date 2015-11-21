@@ -159,13 +159,11 @@ namespace Kernel
     void SimpleBednet::serialize(IArchive& ar, SimpleBednet* obj)
     {
         SimpleBednet& bednet = *obj;
-        ar.startObject();
-            ar.labelElement("current_blockingrate") & bednet.current_blockingrate;
-            ar.labelElement("current_killingrate") & bednet.current_killingrate;
-            ar.labelElement("primary_decay_time_constant") & bednet.primary_decay_time_constant;
-            ar.labelElement("secondary_decay_time_constant") & bednet.secondary_decay_time_constant;
-            ar.labelElement("durability_time_profile") & (uint32_t&)bednet.durability_time_profile;
-            ar.labelElement("bednet_type") & (uint32_t&)bednet.bednet_type;
-        ar.endObject();
+        ar.labelElement("current_blockingrate") & bednet.current_blockingrate;
+        ar.labelElement("current_killingrate") & bednet.current_killingrate;
+        ar.labelElement("primary_decay_time_constant") & bednet.primary_decay_time_constant;
+        ar.labelElement("secondary_decay_time_constant") & bednet.secondary_decay_time_constant;
+        ar.labelElement("durability_time_profile") & (uint32_t&)bednet.durability_time_profile;
+        ar.labelElement("bednet_type") & (uint32_t&)bednet.bednet_type;
     }
 }

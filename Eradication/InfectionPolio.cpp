@@ -144,24 +144,22 @@ namespace Kernel
     {
         InfectionEnvironmental::serialize(ar, obj);
         InfectionPolio& infection = *obj;
-        ar.startObject();
-            ar.labelElement("shed_genome_traceContactMode") & infection.shed_genome_traceContactMode;
-            ar.labelElement("immunity_updated") & infection.immunity_updated;
-            ar.labelElement("paralysis_reported") & infection.paralysis_reported;
-            ar.labelElement("paralysis_time") & infection.paralysis_time;
-            ar.labelElement("initial_infectiousness") & infection.initial_infectiousness;
+        ar.labelElement("shed_genome_traceContactMode") & infection.shed_genome_traceContactMode;
+        ar.labelElement("immunity_updated") & infection.immunity_updated;
+        ar.labelElement("paralysis_reported") & infection.paralysis_reported;
+        ar.labelElement("paralysis_time") & infection.paralysis_time;
+        ar.labelElement("initial_infectiousness") & infection.initial_infectiousness;
 // Boost serialization didn't include this member            ar.labelElement("cached_mucosal_immunity") & infection.cached_mucosal_immunity;
 // Boost serialization didn't include this member            ar.labelElement("cached_humoral_immunity") & infection.cached_humoral_immunity;
-            ar.labelElement("host_mc_weight") & infection.host_mc_weight;
-            ar.labelElement("peakFecalLog10VirusTiter") & infection.peakFecalLog10VirusTiter;
-            ar.labelElement("peakOralLog10VirusTiter") & infection.peakOralLog10VirusTiter;
-            ar.labelElement("durationFecalInfection") & infection.durationFecalInfection;
-            ar.labelElement("durationOralInfection") & infection.durationOralInfection;
-            ar.labelElement("paralysis_probability") & infection.paralysis_probability;
+        ar.labelElement("host_mc_weight") & infection.host_mc_weight;
+        ar.labelElement("peakFecalLog10VirusTiter") & infection.peakFecalLog10VirusTiter;
+        ar.labelElement("peakOralLog10VirusTiter") & infection.peakOralLog10VirusTiter;
+        ar.labelElement("durationFecalInfection") & infection.durationFecalInfection;
+        ar.labelElement("durationOralInfection") & infection.durationOralInfection;
+        ar.labelElement("paralysis_probability") & infection.paralysis_probability;
 // Boost serialization didn't include this member            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
 // Boost serialization didn't include this member            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
 // Boost serialization didn't include this member            ar.labelElement("drug_flag") & infection.drug_flag;
-        ar.endObject();
     }
 }
 

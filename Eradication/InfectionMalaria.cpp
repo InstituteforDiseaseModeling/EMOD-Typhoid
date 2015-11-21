@@ -894,7 +894,6 @@ namespace Kernel
     {
         InfectionVector::serialize(ar, obj);
         InfectionMalaria& infection = *obj;
-        ar.startObject();
         ar.labelElement("m_IRBCtimer") & infection.m_IRBCtimer;
         ar.labelElement("m_hepatocytes") & infection.m_hepatocytes;
         ar.labelElement("m_asexual_phase") & (uint32_t&)infection.m_asexual_phase;
@@ -916,6 +915,5 @@ namespace Kernel
         ar.labelElement("m_max_parasites") & infection.m_max_parasites;
         ar.labelElement("m_inv_microliters_blood") & infection.m_inv_microliters_blood;
         ar.labelElement("drugResistanceFlag") & infection.drugResistanceFlag;
-        ar.endObject();
     }
 }

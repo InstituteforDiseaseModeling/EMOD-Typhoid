@@ -1179,37 +1179,35 @@ namespace Kernel
     void IndividualHuman::serialize(IArchive& ar, IndividualHuman* obj)
     {
         IndividualHuman& individual = *obj;
-        ar.startObject();
-            ar.labelElement("suid_data") & individual.suid.data;
-            ar.labelElement("m_age") & individual.m_age;
-            ar.labelElement("m_gender") & individual.m_gender;
-            ar.labelElement("m_mc_weight") & individual.m_mc_weight;
-            ar.labelElement("m_daily_mortality_rate") & individual.m_daily_mortality_rate;
-            ar.labelElement("above_poverty") & individual.above_poverty;
-            ar.labelElement("is_pregnant") & individual.is_pregnant;
-            ar.labelElement("pregnancy_timer") & individual.pregnancy_timer;
-            ar.labelElement("susceptibility") & individual.susceptibility;
-            ar.labelElement("infections") & individual.infections;
-            ar.labelElement("interventions") & individual.interventions;
-            // don't serialize transmissionGroupMembership, it will be reconstituted on deserialization
-            // don't serialize transmissionGroupMembershipByRoute, it will be reconstituted on deserialization
-            ar.labelElement("m_is_infected") & individual.m_is_infected;
-            ar.labelElement("infectiousness") & individual.infectiousness;
-            ar.labelElement("Inf_Sample_Rate") & individual.Inf_Sample_Rate;
-            ar.labelElement("cumulativeInfs") & individual.cumulativeInfs;
-            ar.labelElement("m_new_infection_state") & (uint32_t&)individual.m_new_infection_state;
-            ar.labelElement("StateChange") & (uint32_t&)individual.StateChange;
-            ar.labelElement("migration_mod") & individual.migration_mod;
-            ar.labelElement("migration_type") & individual.migration_type;
-            ar.labelElement("migration_destination_data") & individual.migration_destination.data;
-            ar.labelElement("time_to_next_migration") & individual.time_to_next_migration;
-            ar.labelElement("will_return") & individual.will_return;
-            ar.labelElement("outbound") & individual.outbound;
-            ar.labelElement("max_waypoints") & individual.max_waypoints;
-            ar.labelElement("waypoints") & individual.waypoints;
-            ar.labelElement("waypoints_trip_type") & individual.waypoints_trip_type;
-            ar.labelElement("Properties") & individual.Properties;
-        ar.endObject();
+        ar.labelElement("suid_data") & individual.suid.data;
+        ar.labelElement("m_age") & individual.m_age;
+        ar.labelElement("m_gender") & individual.m_gender;
+        ar.labelElement("m_mc_weight") & individual.m_mc_weight;
+        ar.labelElement("m_daily_mortality_rate") & individual.m_daily_mortality_rate;
+        ar.labelElement("above_poverty") & individual.above_poverty;
+        ar.labelElement("is_pregnant") & individual.is_pregnant;
+        ar.labelElement("pregnancy_timer") & individual.pregnancy_timer;
+        ar.labelElement("susceptibility") & individual.susceptibility;
+        ar.labelElement("infections") & individual.infections;
+        ar.labelElement("interventions") & individual.interventions;
+        // don't serialize transmissionGroupMembership, it will be reconstituted on deserialization
+        // don't serialize transmissionGroupMembershipByRoute, it will be reconstituted on deserialization
+        ar.labelElement("m_is_infected") & individual.m_is_infected;
+        ar.labelElement("infectiousness") & individual.infectiousness;
+        ar.labelElement("Inf_Sample_Rate") & individual.Inf_Sample_Rate;
+        ar.labelElement("cumulativeInfs") & individual.cumulativeInfs;
+        ar.labelElement("m_new_infection_state") & (uint32_t&)individual.m_new_infection_state;
+        ar.labelElement("StateChange") & (uint32_t&)individual.StateChange;
+        ar.labelElement("migration_mod") & individual.migration_mod;
+        ar.labelElement("migration_type") & individual.migration_type;
+        ar.labelElement("migration_destination_data") & individual.migration_destination.data;
+        ar.labelElement("time_to_next_migration") & individual.time_to_next_migration;
+        ar.labelElement("will_return") & individual.will_return;
+        ar.labelElement("outbound") & individual.outbound;
+        ar.labelElement("max_waypoints") & individual.max_waypoints;
+        ar.labelElement("waypoints") & individual.waypoints;
+        ar.labelElement("waypoints_trip_type") & individual.waypoints_trip_type;
+        ar.labelElement("Properties") & individual.Properties;
     }
 
     REGISTER_SERIALIZABLE(IndividualHuman);

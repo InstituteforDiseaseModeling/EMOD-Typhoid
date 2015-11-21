@@ -343,26 +343,24 @@ namespace Kernel
     void GenericDrug::serialize(IArchive& ar, GenericDrug* obj)
     {
         GenericDrug& drug = *obj;
-        ar.startObject();
-            ar.labelElement("drug_type") & drug.drug_type;
-            ar.labelElement("dosing_type") & (uint32_t&)drug.dosing_type;
-            ar.labelElement("durability_time_profile") & (uint32_t&)drug.durability_time_profile;
-            ar.labelElement("fast_decay_time_constant") & drug.fast_decay_time_constant;
-            ar.labelElement("slow_decay_time_constant") & drug.slow_decay_time_constant;
-            ar.labelElement("dosing_timer") & drug.dosing_timer;
-            ar.labelElement("remaining_doses") & drug.remaining_doses;
-            ar.labelElement("time_between_doses") & drug.time_between_doses;
-            ar.labelElement("fast_component") & drug.fast_component;
-            ar.labelElement("slow_component") & drug.slow_component;
-            ar.labelElement("current_efficacy") & drug.current_efficacy;
-            ar.labelElement("current_concentration") & drug.current_concentration;
-            ar.labelElement("current_reducedacquire") & drug.current_reducedacquire;
-            ar.labelElement("current_reducedtransmit") & drug.current_reducedtransmit;
-            ar.labelElement("pk_rate_mod") & drug.pk_rate_mod;
-            ar.labelElement("Cmax") & drug.Cmax;
-            ar.labelElement("Vd") & drug.Vd;
-            ar.labelElement("drug_c50") & drug.drug_c50;
-            ar.labelElement("fraction_defaulters") & drug.fraction_defaulters;
-        ar.endObject();
+        ar.labelElement("drug_type") & drug.drug_type;
+        ar.labelElement("dosing_type") & (uint32_t&)drug.dosing_type;
+        ar.labelElement("durability_time_profile") & (uint32_t&)drug.durability_time_profile;
+        ar.labelElement("fast_decay_time_constant") & drug.fast_decay_time_constant;
+        ar.labelElement("slow_decay_time_constant") & drug.slow_decay_time_constant;
+        ar.labelElement("dosing_timer") & drug.dosing_timer;
+        ar.labelElement("remaining_doses") & drug.remaining_doses;
+        ar.labelElement("time_between_doses") & drug.time_between_doses;
+        ar.labelElement("fast_component") & drug.fast_component;
+        ar.labelElement("slow_component") & drug.slow_component;
+        ar.labelElement("current_efficacy") & drug.current_efficacy;
+        ar.labelElement("current_concentration") & drug.current_concentration;
+        ar.labelElement("current_reducedacquire") & drug.current_reducedacquire;
+        ar.labelElement("current_reducedtransmit") & drug.current_reducedtransmit;
+        ar.labelElement("pk_rate_mod") & drug.pk_rate_mod;
+        ar.labelElement("Cmax") & drug.Cmax;
+        ar.labelElement("Vd") & drug.Vd;
+        ar.labelElement("drug_c50") & drug.drug_c50;
+        ar.labelElement("fraction_defaulters") & drug.fraction_defaulters;
     }
 }

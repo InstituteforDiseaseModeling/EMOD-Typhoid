@@ -390,7 +390,6 @@ namespace Kernel
     void Infection::serialize(IArchive& ar, Infection* obj)
     {
         Infection& infection = *obj;
-        ar.startObject();
         ar.labelElement("suid") & infection.suid.data;
         ar.labelElement("duration") & infection.duration;
         ar.labelElement("total_duration") & infection.total_duration;
@@ -401,6 +400,5 @@ namespace Kernel
         ar.labelElement("infectiousnessByRoute") & infection.infectiousnessByRoute;
         ar.labelElement("StateChange") & (uint32_t&)infection.StateChange;
         ar.labelElement("infection_strain"); Kernel::serialize(ar, infection.infection_strain);
-        ar.endObject();
     }
 }

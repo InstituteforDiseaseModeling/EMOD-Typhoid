@@ -764,11 +764,9 @@ namespace Kernel
         VectorPopulation::serialize(ar, obj);
 
         VectorPopulationIndividual& population = *obj;
-        ar.startObject();
-            ar.labelElement("m_mosquito_weight") & population.m_mosquito_weight;
+        ar.labelElement("m_mosquito_weight") & population.m_mosquito_weight;
 // Boost serialization implementation didn't include this member.            ar.labelElement("m_average_oviposition_killing") & population.m_average_oviposition_killing;
 // Boost serialization implementation didn't include this member.            ar.labelElement("IndoorExposedQueues"); serialize(ar, population.IndoorExposedQueues);
 // Boost serialization implementation didn't include this member.            ar.labelElement("OutdoorExposedQueues"); serialize(ar, population.OutdoorExposedQueues);
-        ar.endObject();
     }
 }

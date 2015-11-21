@@ -1008,23 +1008,21 @@ namespace Kernel
     {
         SusceptibilityEnvironmental::serialize(ar, obj);
         SusceptibilityPolio& susceptibility = *obj;
-        ar.startObject();
-            ar.labelElement("shedding_titer"); ar.serialize(susceptibility.shedding_titer, N_POLIO_VIRUS_TYPES);
-            ar.labelElement("humoralNAb"); ar.serialize(susceptibility.humoralNAb, N_POLIO_SEROTYPES);
-            ar.labelElement("mucosalNAb"); ar.serialize(susceptibility.mucosalNAb, N_POLIO_SEROTYPES);
-            ar.labelElement("maternalSerumNAb"); ar.serialize(susceptibility.maternalSerumNAb, N_POLIO_SEROTYPES);
-            ar.labelElement("humoralMemoryNAb"); ar.serialize(susceptibility.humoralMemoryNAb, N_POLIO_SEROTYPES);
-            ar.labelElement("mucosalMemoryNAb"); ar.serialize(susceptibility.mucosalMemoryNAb, N_POLIO_SEROTYPES);
-            ar.labelElement("humoral_fastDecayCompartment"); ar.serialize(susceptibility.humoral_fastDecayCompartment, N_POLIO_SEROTYPES);
-            ar.labelElement("mucosal_fastDecayCompartment"); ar.serialize(susceptibility.mucosal_fastDecayCompartment, N_POLIO_SEROTYPES);
-            ar.labelElement("time_since_last_infection"); ar.serialize(susceptibility.time_since_last_infection, N_POLIO_SEROTYPES);
-            ar.labelElement("time_since_last_IPV"); ar.serialize(susceptibility.time_since_last_IPV, N_POLIO_SEROTYPES);
-            ar.labelElement("vaccine_doses_received"); ar.serialize(susceptibility.vaccine_doses_received, N_POLIO_VACCINES);
-            ar.labelElement("vaccine_doses_received_by_type"); ar.serialize(susceptibility.vaccine_doses_received_by_type, N_POLIO_VIRUS_TYPES);
-            ar.labelElement("infectionStrains"); ar.serialize(susceptibility.infectionStrains, N_POLIO_VIRUS_TYPES);
+        ar.labelElement("shedding_titer"); ar.serialize(susceptibility.shedding_titer, N_POLIO_VIRUS_TYPES);
+        ar.labelElement("humoralNAb"); ar.serialize(susceptibility.humoralNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("mucosalNAb"); ar.serialize(susceptibility.mucosalNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("maternalSerumNAb"); ar.serialize(susceptibility.maternalSerumNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("humoralMemoryNAb"); ar.serialize(susceptibility.humoralMemoryNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("mucosalMemoryNAb"); ar.serialize(susceptibility.mucosalMemoryNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("humoral_fastDecayCompartment"); ar.serialize(susceptibility.humoral_fastDecayCompartment, N_POLIO_SEROTYPES);
+        ar.labelElement("mucosal_fastDecayCompartment"); ar.serialize(susceptibility.mucosal_fastDecayCompartment, N_POLIO_SEROTYPES);
+        ar.labelElement("time_since_last_infection"); ar.serialize(susceptibility.time_since_last_infection, N_POLIO_SEROTYPES);
+        ar.labelElement("time_since_last_IPV"); ar.serialize(susceptibility.time_since_last_IPV, N_POLIO_SEROTYPES);
+        ar.labelElement("vaccine_doses_received"); ar.serialize(susceptibility.vaccine_doses_received, N_POLIO_VACCINES);
+        ar.labelElement("vaccine_doses_received_by_type"); ar.serialize(susceptibility.vaccine_doses_received_by_type, N_POLIO_VIRUS_TYPES);
+        ar.labelElement("infectionStrains"); ar.serialize(susceptibility.infectionStrains, N_POLIO_VIRUS_TYPES);
 // Boost implementation didn't serialize this            ar.labelElement("newInfectionByStrain"); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
-            ar.labelElement("individual_acquire_risk") & susceptibility.individual_acquire_risk;
-        ar.endObject();
+        ar.labelElement("individual_acquire_risk") & susceptibility.individual_acquire_risk;
     }
 }
 

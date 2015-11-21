@@ -12,13 +12,16 @@ namespace Kernel
     {
         virtual ~IArchive() {}
 
+        virtual IArchive& startClass(std::string&) = 0;
+        virtual IArchive& endClass() = 0;
+
         virtual IArchive& startObject() = 0;
         virtual IArchive& endObject() = 0;
 
         virtual IArchive& startArray(size_t&) = 0;
         virtual IArchive& endArray() = 0;
 
-        virtual IArchive& labelElement(char*) = 0;
+        virtual IArchive& labelElement(const char*) = 0;
 
         virtual IArchive& operator & (bool&) = 0;
         virtual IArchive& operator & (int32_t&) = 0;

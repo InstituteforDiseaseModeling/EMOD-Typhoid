@@ -216,13 +216,11 @@ namespace Kernel
     {
         SusceptibilityAirborne::serialize(ar, obj);
         SusceptibilityTB& susceptibility = *obj;
-        ar.startObject();
-            ar.labelElement("Flag_use_CD4_for_act") & susceptibility.Flag_use_CD4_for_act;  // Boost serialization didn't include this member.
-            ar.labelElement("m_is_immune_competent") & susceptibility.m_is_immune_competent;
-            ar.labelElement("m_is_immune") & susceptibility.m_is_immune;
-            ar.labelElement("m_current_infections") & susceptibility.m_current_infections;
-            ar.labelElement("m_cough_infectiousness") & susceptibility.m_cough_infectiousness;
-        ar.endObject();
+        ar.labelElement("Flag_use_CD4_for_act") & susceptibility.Flag_use_CD4_for_act;  // Boost serialization didn't include this member.
+        ar.labelElement("m_is_immune_competent") & susceptibility.m_is_immune_competent;
+        ar.labelElement("m_is_immune") & susceptibility.m_is_immune;
+        ar.labelElement("m_current_infections") & susceptibility.m_current_infections;
+        ar.labelElement("m_cough_infectiousness") & susceptibility.m_cough_infectiousness;
     }
 }
 

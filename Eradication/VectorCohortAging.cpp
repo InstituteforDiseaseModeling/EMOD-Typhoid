@@ -68,8 +68,6 @@ namespace Kernel
     {
         VectorCohort::serialize(ar, obj);
         VectorCohortAging& cohort = *obj;
-        ar.startObject();
-            ar.labelElement("age") & cohort.age;
-        ar.endObject();
+        ar.labelElement("age") & cohort.age;
     }
 }

@@ -11,15 +11,15 @@ namespace Kernel
         m_writer->StartArray();
     }
 
-    IArchive& JsonRawWriter::startObject()
+    IArchive& JsonRawWriter::startClass(std::string& class_name)
     {
-        return *this;
+        return (*this) & class_name;
     }
 
-    IArchive& JsonRawWriter::endObject()
-    {
-        return *this;
-    }
+    IArchive& JsonRawWriter::endClass() { return *this; }
+
+    IArchive& JsonRawWriter::startObject() { return *this; }
+    IArchive& JsonRawWriter::endObject() { return *this; }
 
     IArchive& JsonRawWriter::startArray(size_t& count)
     {
@@ -27,27 +27,18 @@ namespace Kernel
         return *this;
     }
 
-    IArchive& JsonRawWriter::endArray()
-    {
-        return *this;
-    }
-
-    IArchive& JsonRawWriter::labelElement(char*)
-    {
-        return *this;
-    }
+    IArchive& JsonRawWriter::endArray() { return *this; }
+    IArchive& JsonRawWriter::labelElement(const char*) { return *this; }
 
     IArchive& JsonRawWriter::operator&(bool& b)
     {
         m_writer->Bool(b);
-
         return *this;
     }
 
     IArchive& JsonRawWriter::operator&(int32_t& i32)
     {
         m_writer->Int(i32);
-
         return *this;
     }
 
@@ -60,35 +51,30 @@ namespace Kernel
     IArchive& JsonRawWriter::operator&(uint32_t& u32)
     {
         m_writer->Uint(u32);
-
         return *this;
     }
 
     IArchive& JsonRawWriter::operator&(uint64_t& u64)
     {
         m_writer->Uint64(u64);
-
         return *this;
     }
 
     IArchive& JsonRawWriter::operator&(float& f)
     {
         m_writer->Double(double(f));
-
         return *this;
     }
 
     IArchive& JsonRawWriter::operator&(double& d)
     {
         m_writer->Double(d);
-
         return *this;
     }
 
     IArchive& JsonRawWriter::operator&(std::string& s)
     {
         m_writer->String(s.c_str(), rapidjson::SizeType(s.size()), true);
-
         return *this;
     }
 

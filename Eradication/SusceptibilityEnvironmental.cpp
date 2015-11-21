@@ -48,9 +48,7 @@ namespace Kernel
     {
         Susceptibility::serialize(ar, obj);
         SusceptibilityEnvironmental& susceptibility = *obj;
-        ar.startObject();
-            ar.labelElement("demographic_risk") & susceptibility.demographic_risk;
-        ar.endObject();
+        ar.labelElement("demographic_risk") & susceptibility.demographic_risk;
     }
 }
 

@@ -302,13 +302,11 @@ namespace Kernel
     {
         GenericDrug::serialize(ar, obj);
         AntimalarialDrug& drug = *obj;
-        ar.startObject();
-            ar.labelElement("drug_IRBC_killrate") & drug.drug_IRBC_killrate;
-            ar.labelElement("drug_hepatocyte") & drug.drug_hepatocyte;
-            ar.labelElement("drug_gametocyte02") & drug.drug_gametocyte02;
-            ar.labelElement("drug_gametocyte34") & drug.drug_gametocyte34;
-            ar.labelElement("drug_gametocyteM") & drug.drug_gametocyteM;
-            ar.labelElement("drug_type") & (std::string&)drug.drug_type;
-        ar.endObject();
+        ar.labelElement("drug_IRBC_killrate") & drug.drug_IRBC_killrate;
+        ar.labelElement("drug_hepatocyte") & drug.drug_hepatocyte;
+        ar.labelElement("drug_gametocyte02") & drug.drug_gametocyte02;
+        ar.labelElement("drug_gametocyte34") & drug.drug_gametocyte34;
+        ar.labelElement("drug_gametocyteM") & drug.drug_gametocyteM;
+        ar.labelElement("drug_type") & (std::string&)drug.drug_type;
     }
 }

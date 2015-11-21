@@ -13,15 +13,15 @@ namespace Kernel
         m_document->Parse<0>(data);
     }
 
-    IArchive& JsonRawReader::startObject()
+    IArchive& JsonRawReader::startClass(std::string& class_name)
     {
-        return *this;
+        return (*this) & class_name;
     }
 
-    IArchive& JsonRawReader::endObject()
-    {
-        return *this;
-    }
+    IArchive& JsonRawReader::endClass() { return *this; }
+
+    IArchive& JsonRawReader::startObject() { return *this; }
+    IArchive& JsonRawReader::endObject() { return *this; }
 
     IArchive& JsonRawReader::startArray(size_t& count)
     {
@@ -29,27 +29,18 @@ namespace Kernel
         return *this;
     }
 
-    IArchive& JsonRawReader::endArray()
-    {
-        return *this;
-    }
-
-    IArchive& JsonRawReader::labelElement(char*)
-    {
-        return *this;
-    }
+    IArchive& JsonRawReader::endArray() { return *this; }
+    IArchive& JsonRawReader::labelElement(const char*) { return *this; }
 
     IArchive& JsonRawReader::operator&(bool& b)
     {
         b = (*m_json)[m_index++].GetBool();
-
         return *this;
     }
 
     IArchive& JsonRawReader::operator&(int32_t& i32)
     {
         i32 = (*m_json)[m_index++].GetInt();
-
         return *this;
     }
 
@@ -62,28 +53,24 @@ namespace Kernel
     IArchive& JsonRawReader::operator&(uint32_t& u32)
     {
         u32 = (*m_json)[m_index++].GetUint();
-
         return *this;
     }
 
     IArchive& JsonRawReader::operator&(uint64_t& u64)
     {
         u64 = (*m_json)[m_index++].GetUint64();
-
         return *this;
     }
 
     IArchive& JsonRawReader::operator&(float& f)
     {
         f = float((*m_json)[m_index++].GetDouble());
-
         return *this;
     }
 
     IArchive& JsonRawReader::operator&(double& d)
     {
         d = (*m_json)[m_index++].GetDouble();
-
         return *this;
     }
 
@@ -91,7 +78,6 @@ namespace Kernel
     {
         s.assign((*m_json)[m_index].GetString(), (*m_json)[m_index].GetStringLength());
         ++m_index;
-
         return *this;
     }
 

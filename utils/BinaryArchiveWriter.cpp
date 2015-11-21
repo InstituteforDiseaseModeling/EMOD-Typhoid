@@ -10,6 +10,13 @@ namespace Kernel
     {
     }
 
+    IArchive& BinaryArchiveWriter::startClass(std::string& class_name)
+    {
+        return (*this) & class_name;
+    }
+
+    IArchive& BinaryArchiveWriter::endClass() { return *this; }
+
     IArchive& BinaryArchiveWriter::startObject() { return *this; }
     IArchive& BinaryArchiveWriter::endObject()   { return *this; }
 
@@ -22,7 +29,7 @@ namespace Kernel
     }
 
     IArchive& BinaryArchiveWriter::endArray() { return *this; }
-    IArchive& BinaryArchiveWriter::labelElement(char*) { return *this; }
+    IArchive& BinaryArchiveWriter::labelElement(const char*) { return *this; }
 
     IArchive& BinaryArchiveWriter::operator&(bool& b)
     {
@@ -36,7 +43,6 @@ namespace Kernel
     IArchive& BinaryArchiveWriter::operator&(int32_t& i32)
     {
         push(i32);
-
         return *this;
     }
 
@@ -49,28 +55,24 @@ namespace Kernel
     IArchive& BinaryArchiveWriter::operator&(uint32_t& u32)
     {
         push(u32);
-
         return *this;
     }
 
     IArchive& BinaryArchiveWriter::operator&(uint64_t& u64)
     {
         push(u64);
-
         return *this;
     }
 
     IArchive& BinaryArchiveWriter::operator&(float& f)
     {
         push(f);
-
         return *this;
     }
 
     IArchive& BinaryArchiveWriter::operator&(double& d)
     {
         push(d);
-
         return *this;
     }
 

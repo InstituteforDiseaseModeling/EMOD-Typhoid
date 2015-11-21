@@ -107,10 +107,8 @@ namespace Kernel
     {
         IndividualHumanEnvironmental::serialize(ar, obj);
         IndividualHumanPolio& individual = *obj;
-        ar.startObject();
-            ar.labelElement("age_most_recent_infection") & individual.age_most_recent_infection;
-            ar.labelElement("paralysisVirusTypeMask") & individual.paralysisVirusTypeMask;
-        ar.endObject();
+        ar.labelElement("age_most_recent_infection") & individual.age_most_recent_infection;
+        ar.labelElement("paralysisVirusTypeMask") & individual.paralysisVirusTypeMask;
     }
 }
 

@@ -205,22 +205,20 @@ namespace Kernel
     {
         VectorInterventionsContainer& container = *obj;
         InterventionsContainer::serialize(ar, obj);
-        ar.startObject();
-            ar.labelElement("pDieBeforeFeeding")           & container.pDieBeforeFeeding;
-            ar.labelElement("pHostNotAvailable")           & container.pHostNotAvailable;
-            ar.labelElement("pDieDuringFeeding")           & container.pDieDuringFeeding;
-            ar.labelElement("pDiePostFeeding")             & container.pDiePostFeeding;
-            ar.labelElement("pSuccessfulFeedHuman")        & container.pSuccessfulFeedHuman;
-            ar.labelElement("pSuccessfulFeedAD")           & container.pSuccessfulFeedAD;
-            ar.labelElement("pOutdoorDieBeforeFeeding")    & container.pOutdoorDieBeforeFeeding;
-            ar.labelElement("pOutdoorHostNotAvailable")    & container.pOutdoorHostNotAvailable;
-            ar.labelElement("pOutdoorDieDuringFeeding")    & container.pOutdoorDieDuringFeeding;
-            ar.labelElement("pOutdoorDiePostFeeding")      & container.pOutdoorDiePostFeeding;
-            ar.labelElement("pOutdoorSuccessfulFeedHuman") & container.pOutdoorSuccessfulFeedHuman;
-            ar.labelElement("blockIndoorVectorAcquire")    & container.blockIndoorVectorAcquire;
-            ar.labelElement("blockIndoorVectorTransmit")   & container.blockIndoorVectorTransmit;
-            ar.labelElement("blockOutdoorVectorAcquire")   & container.blockOutdoorVectorAcquire;
-            ar.labelElement("blockOutdoorVectorTransmit")  & container.blockOutdoorVectorTransmit;
-        ar.endObject();
+        ar.labelElement("pDieBeforeFeeding")           & container.pDieBeforeFeeding;
+        ar.labelElement("pHostNotAvailable")           & container.pHostNotAvailable;
+        ar.labelElement("pDieDuringFeeding")           & container.pDieDuringFeeding;
+        ar.labelElement("pDiePostFeeding")             & container.pDiePostFeeding;
+        ar.labelElement("pSuccessfulFeedHuman")        & container.pSuccessfulFeedHuman;
+        ar.labelElement("pSuccessfulFeedAD")           & container.pSuccessfulFeedAD;
+        ar.labelElement("pOutdoorDieBeforeFeeding")    & container.pOutdoorDieBeforeFeeding;
+        ar.labelElement("pOutdoorHostNotAvailable")    & container.pOutdoorHostNotAvailable;
+        ar.labelElement("pOutdoorDieDuringFeeding")    & container.pOutdoorDieDuringFeeding;
+        ar.labelElement("pOutdoorDiePostFeeding")      & container.pOutdoorDiePostFeeding;
+        ar.labelElement("pOutdoorSuccessfulFeedHuman") & container.pOutdoorSuccessfulFeedHuman;
+        ar.labelElement("blockIndoorVectorAcquire")    & container.blockIndoorVectorAcquire;
+        ar.labelElement("blockIndoorVectorTransmit")   & container.blockIndoorVectorTransmit;
+        ar.labelElement("blockOutdoorVectorAcquire")   & container.blockOutdoorVectorAcquire;
+        ar.labelElement("blockOutdoorVectorTransmit")  & container.blockOutdoorVectorTransmit;
     }
 }

@@ -155,9 +155,7 @@ namespace Kernel
     {
         SusceptibilityVector& susceptibility = *obj;
         Susceptibility::serialize(ar, obj);
-        ar.startObject();
-            ar.labelElement("m_relative_biting_rate") & susceptibility.m_relative_biting_rate;
-            ar.labelElement("m_age_dependent_biting_risk") & susceptibility.m_age_dependent_biting_risk;
-        ar.endObject();
+        ar.labelElement("m_relative_biting_rate") & susceptibility.m_relative_biting_rate;
+        ar.labelElement("m_age_dependent_biting_risk") & susceptibility.m_age_dependent_biting_risk;
     }
 }
