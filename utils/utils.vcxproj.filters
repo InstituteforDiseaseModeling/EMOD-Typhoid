@@ -201,6 +201,12 @@
     <ClInclude Include="BinaryArchiveReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonFullWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonFullReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -285,6 +291,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BinaryArchiveReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonFullWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonFullReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

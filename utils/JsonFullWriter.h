@@ -1,15 +1,16 @@
 #pragma once
 #include "IArchive.h"
-#include "rapidjson/document.h"
-#include <stack>
+
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 
 namespace Kernel
 {
-    class JsonRawReader : public IArchive
+    class JsonFullWriter : public IArchive
     {
     public:
-        explicit JsonRawReader(const char*);
-        virtual ~JsonRawReader();
+        explicit JsonFullWriter();
+        virtual ~JsonFullWriter();
 
     private:
         virtual IArchive& startClass(std::string&) override;
@@ -33,10 +34,8 @@ namespace Kernel
         virtual uint32_t GetBufferSize() override;
         virtual const char* GetBuffer() override;
 
-        rapidjson::Document* m_document;
-        rapidjson::GenericValue<rapidjson::UTF8<>>* m_json;
-        uint32_t m_index;
-        std::stack<uint32_t> m_index_stack;
-        std::stack<rapidjson::GenericValue<rapidjson::UTF8<>>*> m_value_stack;
+        rapidjson::StringBuffer* m_buffer;
+        rapidjson::Writer<rapidjson::StringBuffer>* m_writer;
+        bool m_closed;
     };
 }

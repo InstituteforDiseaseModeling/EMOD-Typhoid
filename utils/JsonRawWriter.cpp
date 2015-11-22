@@ -82,7 +82,7 @@ namespace Kernel
 
     bool JsonRawWriter::IsWriter() { return true; }
 
-    size_t JsonRawWriter::GetBufferSize()
+    uint32_t JsonRawWriter::GetBufferSize()
     {
         return strlen(GetBuffer()) + 1;
     }

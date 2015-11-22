@@ -28,7 +28,7 @@ namespace Kernel
 
         virtual bool HasError() override;
         virtual bool IsWriter() override;
-        virtual size_t GetBufferSize() override;
+        virtual uint32_t GetBufferSize() override;
         virtual const char* GetBuffer() override;
 
         const char* buffer;

@@ -85,7 +85,7 @@ namespace Kernel
 
     bool JsonRawReader::IsWriter() { return false; }
 
-    size_t JsonRawReader::GetBufferSize()
+    uint32_t JsonRawReader::GetBufferSize()
     {
         throw "JsonRawReader doesn't implement GetBufferSize().";
     }

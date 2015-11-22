@@ -98,7 +98,7 @@ namespace Kernel
 
     bool BinaryArchiveWriter::IsWriter() { return true; }
 
-    size_t BinaryArchiveWriter::GetBufferSize()
+    uint32_t BinaryArchiveWriter::GetBufferSize()
     {
         return count;
     }

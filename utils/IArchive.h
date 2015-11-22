@@ -111,7 +111,7 @@ namespace Kernel
 
         virtual bool HasError() = 0;
         virtual bool IsWriter() = 0;
-        virtual size_t GetBufferSize() = 0;
+        virtual uint32_t GetBufferSize() = 0;
         virtual const char* GetBuffer() = 0;
     };
 }

@@ -104,7 +104,7 @@ namespace Kernel
     bool BinaryArchiveReader::HasError() { return error; }
     bool BinaryArchiveReader::IsWriter() { return false; }
 
-    size_t BinaryArchiveReader::GetBufferSize()
+    uint32_t BinaryArchiveReader::GetBufferSize()
     {
         throw "BinaryArchiveReader doesn't implement GetBufferSize().";
     }

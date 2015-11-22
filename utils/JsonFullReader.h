@@ -5,11 +5,11 @@
 
 namespace Kernel
 {
-    class JsonRawReader : public IArchive
+    class JsonFullReader : public IArchive
     {
     public:
-        explicit JsonRawReader(const char*);
-        virtual ~JsonRawReader();
+        explicit JsonFullReader(const char*);
+        virtual ~JsonFullReader();
 
     private:
         virtual IArchive& startClass(std::string&) override;
@@ -36,6 +36,8 @@ namespace Kernel
         rapidjson::Document* m_document;
         rapidjson::GenericValue<rapidjson::UTF8<>>* m_json;
         uint32_t m_index;
+        bool isObject;
+        std::string label;
         std::stack<uint32_t> m_index_stack;
         std::stack<rapidjson::GenericValue<rapidjson::UTF8<>>*> m_value_stack;
     };
