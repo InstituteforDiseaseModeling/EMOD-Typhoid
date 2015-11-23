@@ -47,7 +47,6 @@ namespace Kernel
     // ctor
     StandardInterventionDistributionEventCoordinator::StandardInterventionDistributionEventCoordinator()
     : parent(NULL)
-    , coverage(0)
     , distribution_complete(false)
     , num_repetitions(-1)
     , tsteps_between_reps(-1)
@@ -193,14 +192,11 @@ namespace Kernel
         }
     }
 
-    /*
-    float StandardInterventionDistributionEventCoordinator::getDemographicCoverage
-    const
-    ()
+    void StandardInterventionDistributionEventCoordinator::preDistribute()
     {
-        return demographic_coverage;
+        return;
     }
-    */
+
     void StandardInterventionDistributionEventCoordinator::UpdateNodes( float dt )
     {
         // Only call VisitNodes on first call and if countdown == 0
@@ -209,7 +205,6 @@ namespace Kernel
             return;
         }
 
-        int grandTotal = 0;
         int limitPerNode = -1;
 
         // intervention class names for informative logging
@@ -245,9 +240,10 @@ namespace Kernel
             }
             else
             {
+                preDistribute();
+
                 // For now, distribute evenly across nodes. 
                 int totalIndivGivenIntervention = event_context->VisitIndividuals( this, limitPerNode );
-                grandTotal += totalIndivGivenIntervention;
 
                 // Create log message 
                 std::stringstream ss;
@@ -316,6 +312,14 @@ namespace Kernel
                 property_restrictions_verified = true;
             }
             LOG_DEBUG("Individual meets demographic targeting criteria\n");
+
+            // optionally filter out individuals who already have this intervention
+            bool already_has_this = ( ihec->GetInterventionsContext()->GetInterventionsByType( typeid( *_di ).name() ).size() > 0 ? true : false );
+            if( already_has_this  )
+            {
+                LOG_DEBUG_F( "Individual already has intervention, skipping.\n" );
+                return false;
+            }
 
             if (!TargetedIndividualIsCovered(ihec))
             {
@@ -569,7 +573,6 @@ namespace Kernel
     {
         root->BeginObject();
 
-        root->Insert("coverage", coverage);
         root->Insert("distribution_complete", distribution_complete);
         root->Insert("num_repetitions", num_repetitions);
         root->Insert("tsteps_between_reps", tsteps_between_reps);
@@ -632,5 +635,5 @@ namespace Kernel
         ar & ec.node_suids;
     }
 }
-
 #endif
+

@@ -149,14 +149,14 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         
     def create_event_from_json( self, epj ):
         reference_campaign_string = """
-        { "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "StandardInterventionDistributionEventCoordinator" }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
+        { "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "ReferenceTrackingEventCoordinator", "Update_Period": 1, "Duration": 1, "Time_Value_Map": { "Times": [ 0 ], "Values": [ 0 ] } }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
         """
-        #{ "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "ReferenceTrackingEventCoordinator", "Update_Period": 1, "Duration": 1, "Time_Value_Map": { "Times": [ 0 ], "Values": [ 0 ] } }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
+        #{ "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "StandardInterventionDistributionEventCoordinator" }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
         camp_event = json.loads( reference_campaign_string.strip()  )
         camp_event["Start_Day"] = self.timestep + epj["Timesteps_From_Now"]
 
         if not (epj["Intervention"] == "DRUG" and epj["Intervention_Quality"] == "Low"):
-            camp_event["Event_Coordinator_Config"]["Demographic_Coverage"] = epj["Percentage_Of_Target_Population_Reached"]
+            #camp_event["Event_Coordinator_Config"]["Demographic_Coverage"] = epj["Percentage_Of_Target_Population_Reached"]
             camp_event["Event_Coordinator_Config"]["Target_Age_Min"] = epj["Target_Population_Min_Age_In_Years"]
             camp_event["Event_Coordinator_Config"]["Target_Age_Max"] = epj["Target_Population_Max_Age_In_Years"]
             camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Actual_IndividualIntervention_Configs"] = []
@@ -188,7 +188,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                 actual_intervention_config[ "Killing_Rate" ] = 0.0
                 actual_intervention_config[ "Blocking_Rate" ] = 0.9
             camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Actual_IndividualIntervention_Configs"].append( actual_intervention_config )
-            # FUTURE camp_event["Event_Coordinator_Config"]["Time_Value_Map"]["Values"][0] = epj["Percentage_Of_Target_Population_Reached"]
+            camp_event["Event_Coordinator_Config"]["Time_Value_Map"]["Values"][0] = epj["Percentage_Of_Target_Population_Reached"]
 
         elif epj["Intervention"] == "IRS":
             actual_intervention_config = {}

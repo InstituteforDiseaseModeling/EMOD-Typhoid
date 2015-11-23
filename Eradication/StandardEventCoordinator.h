@@ -61,8 +61,8 @@ namespace Kernel
     protected:
         ISimulationEventContext  *parent;
         virtual float getDemographicCoverageForIndividual( const IIndividualHumanEventContext *pInd ) const;
+        virtual void preDistribute();
 
-        float coverage;
         bool distribution_complete;
         int num_repetitions;
         int tsteps_between_reps;

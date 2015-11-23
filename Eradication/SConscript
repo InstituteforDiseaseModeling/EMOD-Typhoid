@@ -81,6 +81,7 @@ else:
                             "SimpleEventCoordinator.cpp",
                             "SimulationEventContext.cpp",
                             "StandardEventCoordinator.cpp",
+                            "ReferenceTrackingEventCoordinator.cpp",
                             "CoverageByNodeEventCoordinator.cpp",
                             "../interventions/IndividualRepellent.cpp",
                             
