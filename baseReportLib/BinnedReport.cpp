@@ -184,12 +184,12 @@ void BinnedReport::EndTimestep( float currentTime, float dt )
     }
     jsonSerializer->EndObject();
 
-    std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
+    //std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
 
 #ifdef WIN32
-    _putenv_s( "JSON_SER_REPORT", jsonSerializer->ToString() );
+    _putenv_s( "JSON_SER_REPORT2", jsonSerializer->ToString() );
 #else
-    setenv( "JSON_SER_REPORT", jsonSerializer->ToString(), 1 );
+    setenv( "JSON_SER_REPORT2", jsonSerializer->ToString(), 1 );
 #endif
     delete jsonSerializer;
 #endif

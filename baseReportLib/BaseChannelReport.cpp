@@ -56,7 +56,7 @@ void BaseChannelReport::LogNodeData(
 
 void BaseChannelReport::EndTimestep( float currentTime, float dt )
 {
-#if 0
+#if 1
     // This is experimental for sending data via stdout. Don't check in without config option.
     auto * jsonSerializer = Kernel::CreateJsonObjAdapter();
     jsonSerializer->CreateNewWriter();
@@ -74,9 +74,9 @@ void BaseChannelReport::EndTimestep( float currentTime, float dt )
     //std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
 
 #ifdef WIN32
-    _putenv_s( "JSON_SER_REPORT", jsonSerializer->ToString() );
+    _putenv_s( "JSON_SER_REPORT1", jsonSerializer->ToString() );
 #else
-    setenv( "JSON_SER_REPORT", jsonSerializer->ToString(), 1 );
+    setenv( "JSON_SER_REPORT1", jsonSerializer->ToString(), 1 );
 #endif
     delete jsonSerializer;
 #endif

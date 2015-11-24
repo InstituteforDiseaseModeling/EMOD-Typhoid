@@ -102,20 +102,26 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
     def pass_through(self, msg):
         self.dtk_socket.sendall( msg )
         data = self.dtk_socket.recv( 2000 )
-        data_json = json.loads(data)
+        ic_json = json.loads(data.split('\n')[0])
+        binned_json = json.loads(data.split('\n')[1])
 
         #print( "Not including averted cases yet since move to Binned Report. TBD. Pls be patient." )
         #pdb.set_trace()
-        cur = data_json["New Clinical Cases"][0]
+        cur = binned_json["New Clinical Cases"][0]
         ref = self.ref_json["New Clinical Cases"]["Data"]
-        data_json["New Clinical Cases Averted"] = []
+        binned_json["New Clinical Cases Averted"] = []
         for idx in range(0,5):
-            data_json["New Clinical Cases Averted"].append( ref[idx][self.timestep] )
+            binned_json["New Clinical Cases Averted"].append( ref[idx][self.timestep] )
 
-        data_json["Timestep"] = self.timestep
+        return_packet = {}
+        return_packet["InsetChart"] = ic_json
+        return_packet["Binned"] = str(binned_json).replace( "[[", "[" ).replace( "]]", "]")
+        return_packet["Timestep"] = self.timestep
+
+        return_string = (str(return_packet) + "\n").replace( "u'", "'" )
         self.timestep = self.timestep + 1
 
-        return (str(data_json).replace( "[[", "[" ).replace( "]]", "]") + "\n").replace( "u'", "'" )
+        return return_string
 
     def insert_new_camp_event_and_step_reload( self, new_event_params ):
         """

@@ -207,12 +207,17 @@ void RunSimulation(SimulationT &sim, int steps, float dt)
 #ifdef WIN32
             size_t required;
             char status_message[1024];
-            auto ret = getenv_s( &required, status_message, 1024, "JSON_SER_REPORT" );
+            auto ret = getenv_s( &required, status_message, 1024, "JSON_SER_REPORT1" );
             int iSendResult = send(ClientSocket, status_message, required + 1, 0);
-            cout << "send() returned " << iSendResult << endl; cout.flush();
+            ret = getenv_s( &required, status_message, 1024, "JSON_SER_REPORT2" );
+            int iSendResult = send(ClientSocket, status_message, required + 1, 0);
+            //cout << "send() returned " << iSendResult << endl; cout.flush();
 #else
             //auto status_message = timestep_report_json.str().c_str();
-            auto status_message = getenv( "JSON_SER_REPORT" );
+            auto status_message = getenv( "JSON_SER_REPORT1" );
+            write(client_sock, status_message, strlen(status_message));
+            write(client_sock, "\n", 1);
+            status_message = getenv( "JSON_SER_REPORT2" );
             write(client_sock, status_message, strlen(status_message));
 #endif
 
