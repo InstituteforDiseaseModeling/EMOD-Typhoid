@@ -35,7 +35,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
         self.running = True
         self.request.sendall( "hello!\nType \"RUN\", \"STEP\", \"KILL\", \"NEW_EVENT\", or \"NEW_EVENT_COST\".\n" )
-        self.ref_json = json.loads( open( "output/InsetChart.json" ).read() )["Channels"]
+        self.ref_json = json.loads( open( "output/BinnedReport.json" ).read() )["Channels"]
         #self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
             # self.request is the TCP socket connected to the client
@@ -76,7 +76,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         #exec_string = "../../build/Eradication_game --config config.json -I . -O testing &"
         #exec_string = "/home2/jbloedow/trunk/build/Eradication_game --config config.json -I . -O testing &"
         #exec_string = "/home2/jbloedow/trunk/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
-        exec_string = "/home2/jbloedow/DtkTrunk-IDM/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
+        exec_string = "/home/jbloedow/EMOD/DtkTrunk-IDM/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
         dtk_run = os.system( exec_string )
         time.sleep(2)
         self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -104,8 +104,13 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         data = self.dtk_socket.recv( 2000 )
         data_json = json.loads(data)
 
-        print( "Not including averted cases yet since move to Binned Report. TBD. Pls be patient." )
-        #data_json["New Severe Cases Averted"] = self.ref_json["New Severe Cases"]["Data"][self.timestep] - data_json["New Severe Cases"]
+        #print( "Not including averted cases yet since move to Binned Report. TBD. Pls be patient." )
+        #pdb.set_trace()
+        cur = data_json["New Clinical Cases"][0]
+        ref = self.ref_json["New Clinical Cases"]["Data"]
+        data_json["New Clinical Cases Averted"] = []
+        for idx in range(0,5):
+            data_json["New Clinical Cases Averted"].append( ref[idx][self.timestep] )
 
         data_json["Timestep"] = self.timestep
         self.timestep = self.timestep + 1
@@ -124,7 +129,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                      "Intervention": "BEDNET",
                      "Length_Of_Rollout_In_Days": 21
                    }
-        NEW_EVENT: { "Rollout_Distribution": "BOX", "Percentage_Of_Target_Population_Reached": 1.0, "Target_Population_Min_Age_In_Years": 0, "Target_Population_Max_Age_In_Years": 125, "Timesteps_From_Now": 10, "Intervention_Quality": "High", "Intervention": "DRUG", "Length_Of_Rollout_In_Days": 1 }
+        NEW_EVENT: { "Rollout_Distribution": "BOX", "Percentage_Of_Target_Population_Reached": 1.0, "Target_Population_Min_Age_In_Years": 0, "Target_Population_Max_Age_In_Years": 125, "Timesteps_From_Now": 1, "Intervention_Quality": "High", "Intervention": "BEDNET", "Length_Of_Rollout_In_Days": 1 }
         """
         print( "json?: " + new_event_params )
         event_params_json = json.loads( new_event_params )
