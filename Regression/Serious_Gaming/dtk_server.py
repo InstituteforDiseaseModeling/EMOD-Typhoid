@@ -84,9 +84,10 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         self.dtk_socket.connect(("localhost", self.game_port))
         status_report = json.loads( "{}" )
         status_report["status"] = "running"
+        status_report["Age_Bins_Max_Ages"] = [ 5*365.0, 12*365.0, 20*365.0, 55*365.0, 999999.0 ]
         self.state = "RUNNING"
         self.timestep = 0
-        return str( status_report )
+        return json.dumps( status_report )
 
     def kill_dtk(self):
         print( "Terminating all DTK instances." )
@@ -97,7 +98,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         status_report["status"] = "stopped"
         self.running = False
         self.state = "STOPPED"
-        return str( status_report )
+        return json.dumps( status_report )
 
     def pass_through(self, msg):
         self.dtk_socket.sendall( msg )
@@ -115,10 +116,10 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
         return_packet = {}
         return_packet["InsetChart"] = ic_json
-        return_packet["Binned"] = str(binned_json).replace( "[[", "[" ).replace( "]]", "]")
+        return_packet["Binned"] = json.dumps(binned_json).replace( "[[", "[" ).replace( "]]", "]")
         return_packet["Timestep"] = self.timestep
 
-        return_string = (str(return_packet) + "\n").replace( "u'", "'" )
+        return_string = (json.dumps(return_packet) + "\n").replace( "u'", "'" )
         self.timestep = self.timestep + 1
 
         return return_string
@@ -155,8 +156,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         data_json = json.loads(data)
         data_json["Timestep"] = self.timestep
         self.timestep = self.timestep + 1
-        print( "Returning: " + str(data_json) )
-        return (str(data_json) + "\n").replace( "u'", "'" )
+        print( "Returning: " + json.dumps(data_json) )
+        return (json.dumps(data_json) + "\n").replace( "u'", "'" )
         
     def create_event_from_json( self, epj ):
         reference_campaign_string = """
