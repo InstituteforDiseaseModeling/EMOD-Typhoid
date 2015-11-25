@@ -34,7 +34,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             return
 
         self.running = True
-        self.request.sendall( "hello!\nType \"RUN\", \"STEP\", \"KILL\", \"NEW_EVENT\", or \"NEW_EVENT_COST\".\n" )
+        self.request.sendall( "hello!\nType \"RUN\", \"STEP\", \"KILL\", \"NEW_EVENT\", \"NEW_EVENT_COST\", or \"GET_BASELINE\".\n" )
         self.ref_json = json.loads( open( "output/BinnedReport.json" ).read() )["Channels"]
         #self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
@@ -53,6 +53,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                     msg = self.kill_dtk() + "\n"
                 elif self.data == "STEP":
                     msg = self.pass_through( self.data )
+                elif self.data == "GET_BASELINE":
+                    msg = self.get_baseline( self.data )
                 elif self.data.startswith( "NEW_EVENT:" ):
                     print( "Received NEW_EVENT. Everything after colon better be valid json." )
                     msg = self.insert_new_camp_event_and_step_reload( self.data.strip( "NEW_EVENT:" ) )
@@ -100,14 +102,18 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         self.state = "STOPPED"
         return json.dumps( status_report )
 
+    def get_baseline(self, msg):
+        # open and read BinnedReport.json and send it back
+        return json.dumps( self.ref_json )
+
     def pass_through(self, msg):
+        #pdb.set_trace()
         self.dtk_socket.sendall( msg )
         data = self.dtk_socket.recv( 2000 )
         ic_json = json.loads(data.split('\n')[0])
         binned_json = json.loads(data.split('\n')[1])
 
         #print( "Not including averted cases yet since move to Binned Report. TBD. Pls be patient." )
-        #pdb.set_trace()
         cur = binned_json["New Clinical Cases"][0]
         ref = self.ref_json["New Clinical Cases"]["Data"]
         binned_json["New Clinical Cases Averted"] = []
@@ -150,14 +156,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             handle.write( json.dumps( campaign_json, indent=4, sort_keys=True ) )
 
         print( "Tell DTK to STEP_RELOAD" )
-        self.dtk_socket.sendall( "STEP_RELOAD"  )
-        data = self.dtk_socket.recv( 2000 )
-        print( "DTK returned: " + data )
-        data_json = json.loads(data)
-        data_json["Timestep"] = self.timestep
-        self.timestep = self.timestep + 1
-        print( "Returning: " + json.dumps(data_json) )
-        return (json.dumps(data_json) + "\n").replace( "u'", "'" )
+        return self.pass_through( "STEP_RELOAD" )
         
     def create_event_from_json( self, epj ):
         reference_campaign_string = """
