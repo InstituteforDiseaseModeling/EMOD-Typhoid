@@ -32,7 +32,7 @@ namespace Kernel
     //INodeSetFactory * NodeSetFactory::_instance = NULL;
 
     // NodeSetPolygon
-    IMPLEMENT_FACTORY_REGISTERED(NodeSetPolygon)
+    //IMPLEMENT_FACTORY_REGISTERED(NodeSetPolygon)
 
     IMPL_QUERY_INTERFACE2(NodeSetPolygon, INodeSet, IConfigurable)
 

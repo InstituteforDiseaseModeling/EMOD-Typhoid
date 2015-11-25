@@ -23,7 +23,7 @@ namespace Kernel
     //INodeSetFactory * NodeSetFactory::_instance = NULL;
 
     // NodeSetNodeList
-    IMPLEMENT_FACTORY_REGISTERED(NodeSetNodeList)
+    //IMPLEMENT_FACTORY_REGISTERED(NodeSetNodeList)
 
     IMPL_QUERY_INTERFACE2(NodeSetNodeList, INodeSet, IConfigurable)
 

@@ -26,11 +26,9 @@ namespace Kernel
         // but with special 'don't error out' mode.
         //json::Object returnVal;
         support_spec_map_t& registrants = getRegisteredClasses();
-#ifdef WIN32
+
         JsonConfigurable::_dryrun = true;
-#else
-        setenv( "DRYRUN", "1", 1 );
-#endif
+
         json::Object nodeSetsJsonArray;
         for (auto& entry : registrants)
         {
@@ -40,7 +38,7 @@ namespace Kernel
             fakeJson["class"] = json::String(class_name);
             Configuration * fakeConfig = Configuration::CopyFromElement( fakeJson );
             instantiator_function_t creator = entry.second;
-#if 1
+
             try
             {
                 // TBD: Handle Node-targeted interventions
@@ -71,7 +69,7 @@ namespace Kernel
                     << std::endl;
                 LOG_INFO( msg.str().c_str() );
             }
-#endif
+
             LOG_DEBUG( "Done with that class....\n" );
         }
         campaignSchema[ "schema" ] = nodeSetsJsonArray;

@@ -26,7 +26,7 @@ static const char* _module = "NodeSetAll";
 namespace Kernel
 {
     // NodeSetAll
-    IMPLEMENT_FACTORY_REGISTERED(NodeSetAll)
+    //IMPLEMENT_FACTORY_REGISTERED(NodeSetAll)
 
     IMPL_QUERY_INTERFACE2(NodeSetAll, INodeSet, IConfigurable)
 
