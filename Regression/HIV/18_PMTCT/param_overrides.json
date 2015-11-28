@@ -14,7 +14,7 @@
         ], 
         "Config_Name": "18_PMTCT", 
         "Enable_Demographics_Reporting": 0, 
-        "Demographics_Filenames": ["../input/SA_UN_demographics.json","../input/PFA_Overlay.json"], 
+        "Demographics_Filenames": ["../input/SA_UN_demographics.json","../input/PFA_overlay.json"], 
         "Report_HIV_Event_Channels_List": [
             "NewInfectionEvent", 
             "HIVNeedsHIVTest", 
