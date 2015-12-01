@@ -1,4 +1,4 @@
-Simple GIT Commands:
+##Simple GIT Commands:
      1. download dtk master code set
          git clone https://github.com/InstituteforDiseaseModeling/DtkTrunk
      2. switch to the IHME branch (ensure you use caps for IHME)
@@ -9,10 +9,10 @@ Simple GIT Commands:
            master
            
            
-Software Documentation:
+##Software Documentation:
     http://idmod.org/idmdoc/
     
-Targeted Linux Enviornment:
+##Targeted Linux Enviornment:
     CentOS Linux release 7.1.1503 (Core)
     SVN (subversion.x86_64, 1.8.11-1)
     Python:
@@ -32,7 +32,7 @@ Targeted Linux Enviornment:
     SCons (scons.noarch, 2.3.4-1)
    
 
-Installation of key software components:
+##Installation of key software components:
     sudo yum install python-2.7.5
     sudo yum install python-devel-2.7.5
     sudo curl -O https://bootstrap.pypa.io/get-pip.py
@@ -53,27 +53,27 @@ Installation of key software components:
      
     export PATH=$PATH:/usr/lib/mpich/bin/
 
-Building with scons:
+##Building with scons:
     Go to the root of the git branch.
     
     To build
        scons --jobs=4
-       
-   To clean 
-       scons --clean
-    
-   Build Release
+
+    To clean
+      scons --clean
+
+    Build Release
        scons --Release --jobs==4
-   
-   Build Debug
+       
+     Build Debug
        scons --Debug --jobs==4
    
 
-Executable Location:
+##Executable Location:
     ../build/x64/Release/Eradication      
     ../build/x64/Debug/Eradication
 
-Running regressions:
+##Running regressions:
     
     Note: you need the set of input files to run the regressions. Ensure
           the files are in a directory that you will identify for 
