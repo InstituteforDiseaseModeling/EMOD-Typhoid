@@ -82,7 +82,7 @@
     EDIT the Regression/regression_test.cfg
         vi regression_test.cfg
         
-        1, edit the ENVIRONMENT section modifying the input_root to match the POSIX section local_input_root
+        1. edit the ENVIRONMENT section modifying the input_root to match the POSIX section local_input_root
 
         
         [ENVIRONMENT]
