@@ -82,7 +82,13 @@
     EDIT the Regression/regression_test.cfg
         vi regression_test.cfg
         
-        change the three locations to a path accessible with your account permissions
+        1, edit the ENVIRONMENT section modifying the input_root to match the POSIX section local_input_root
+
+        
+        [ENVIRONMENT]
+        input_root = /geneShare/Eradication/emod_input/
+
+        2. change the three locations to a path accessible with your account permissions
         
         [POSIX]
         local_sim_root = /geneShare/Eradication/simulations/
