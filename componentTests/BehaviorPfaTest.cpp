@@ -551,8 +551,6 @@ SUITE(BehaviorPfaTest)
         unique_ptr<IPairFormationAgent> pfa( BehaviorPfa::CreatePfa( p_config.get(), from_data.get(), 0.0f, 0.0f, &fake_rng,
                 [this](IIndividualHumanSTI* male, IIndividualHumanSTI* female) { AddRelationship( male, female ); } ) );
 
-        BehaviorPfa* bpfa = dynamic_cast<BehaviorPfa*>( pfa.get() );
-
         CHECK_EQUAL( 0, m_relationship_list.size() );
 
         pfa->Update( date_time_2000, 1.0f );
@@ -645,7 +643,7 @@ SUITE(BehaviorPfaTest)
             // --- [0, initial_value).  The test logic assumed giving the initial value put it
             // --- in that bin.
             // ---------------------------------------------------------------------------------------------
-            float male_age_years = from_data->GetInitialMaleAge() + (from_data->GetMaleAgeIncrement() * (float)male_bin_index) - 0.1;
+            float male_age_years = from_data->GetInitialMaleAge() + (from_data->GetMaleAgeIncrement() * float(male_bin_index)) - 0.1;
             float male_age_days = male_age_years * DAYSPERYEAR ;
             for( int m = 0 ; m < NUM_MALES ; m++ )
             {
@@ -654,7 +652,7 @@ SUITE(BehaviorPfaTest)
 
             for( int female_bin_index = 0 ; female_bin_index < from_data->GetFemaleAgeBinCount() ; female_bin_index++ )
             {
-                float female_age_years = from_data->GetInitialFemaleAge() + (from_data->GetFemaleAgeIncrement() * (float)female_bin_index) - 0.1 ; // see note above
+                float female_age_years = from_data->GetInitialFemaleAge() + (from_data->GetFemaleAgeIncrement() * float(female_bin_index)) - 0.1 ; // see note above
                 float female_age_days = female_age_years * DAYSPERYEAR ;
                 for( int f = 0 ; f < NUM_FEMALES_PER_BIN ; f++ )
                 {
@@ -680,7 +678,7 @@ SUITE(BehaviorPfaTest)
             {
                 int act_in_relationship = NUM_FEMALES_PER_BIN - bpfa->GetNumFemalesInBin( female_bin_index ) ;
 
-                float exp_in_relationship = (float)(NUM_MALES)*from_data->JointProbabilityTable()[ male_bin_index ][ female_bin_index ] ;
+                float exp_in_relationship = float(NUM_MALES)*from_data->JointProbabilityTable()[ male_bin_index ][ female_bin_index ] ;
 
                 actual.push_back( act_in_relationship );
                 expected.push_back( exp_in_relationship );

@@ -66,7 +66,7 @@ namespace Kernel {
         // --- so that it is 1.  Other objects will be AddRef'ing and Release'ing this report/observer
         // --- so it needs to start with a refcount of 1.
         // ------------------------------------------------------------------------------------------------
-        AddRef();
+        AddRef();   // TODO - this should be virtual, but isn't because the constructor isn't finished yet...
     }
 
     ReportHIV::~ReportHIV()
@@ -231,7 +231,6 @@ namespace Kernel {
 
                 default:
                     throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "hiv_individual->GetHIVInfection()->GetStage()", hiv_individual->GetHIVInfection()->GetStage() );
-                break;
             }
 
             if( hiv_individual->GetHIVInterventionsContainer()->GetArtStatus() == ARTStatus::OFF_BY_DROPOUT )

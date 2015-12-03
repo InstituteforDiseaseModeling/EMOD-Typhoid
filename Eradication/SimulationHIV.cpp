@@ -11,15 +11,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "SimulationHIV.h"
 
-#include "InfectionHIV.h"
 #include "NodeHIV.h"
 #include "ReportHIV.h"
-#include "SusceptibilityHIV.h"
 #include "SimulationConfig.h"
 #include "HivObjectFactory.h"
 #include "IHIVCascadeStateIntervention.h"
 #include "HIVReportEventRecorder.h"
-#include "CampaignEventByYear.h"
 #include "IndividualHIV.h"
 
 static const float DEFAULT_BASE_YEAR = 2015.0f ;
@@ -36,10 +33,10 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(SimulationHIV)
 
     SimulationHIV::SimulationHIV()
-    : report_hiv_mortality(false)
-    , report_hiv_by_age_and_gender(false)
+    : report_hiv_by_age_and_gender(false)
     , report_hiv_ART(false)
     , report_hiv_infection(false)
+    , report_hiv_mortality(false)
     , report_hiv_period(DAYSPERYEAR)
     , valid_cascade_states()
     {
@@ -71,9 +68,7 @@ namespace Kernel
 
     SimulationHIV *SimulationHIV::CreateSimulation(const ::Configuration *config)
     {
-        SimulationHIV *newsimulation = nullptr;
-
-        newsimulation = _new_ SimulationHIV();
+        SimulationHIV *newsimulation = _new_ SimulationHIV();
         if (newsimulation)
         {
             InterventionValidator::SetDiseaseSpecificValidator( newsimulation );

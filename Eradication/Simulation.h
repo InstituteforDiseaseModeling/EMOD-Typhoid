@@ -12,12 +12,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <list>
 #include <map>
 #include <unordered_map>
-#include <string>
 #include "suids.hpp"
 
 #include "BoostLibWrapper.h"
 #include "Contexts.h"
-#include "Environment.h"
 #include "IdmDateTime.h"
 #include "Individual.h"
 #include "Infection.h"

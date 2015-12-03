@@ -597,6 +597,7 @@ namespace Kernel
     {
         char filename[256];
         GenerateFilename( filename, sizeof filename, time_step );
+        LOG_INFO_F( "Writing state to '%s'\n", filename );
         FILE* f = nullptr;
         if ( OpenFileForWriting( filename, &f ) )
         {

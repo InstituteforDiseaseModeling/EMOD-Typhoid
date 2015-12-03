@@ -13,8 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "ReportHIVByAgeAndGender.h"
 #include "NodeHIV.h"
-#include "SusceptibilityHIV.h"
-#include "InfectionHIV.h"
 #include "HIVInterventionsContainer.h"
 #include "NodeLevelHealthTriggeredIV.h"
 #include "ISimulation.h"
@@ -212,11 +210,10 @@ namespace Kernel
         }
 
         float mc_weight = individual->GetMonteCarloWeight();
-        int age_bin = (int)floor( (std::min)((double) MAX_AGE-1, individual->GetAge()/(float)DAYSPERYEAR) );
+        int age_bin = int(floor( (std::min)(double(MAX_AGE-1), individual->GetAge()/float(DAYSPERYEAR)) ));
 
         int gender = individual->GetGender() == Gender::MALE ? 0 : 1;
         bool isInfected = hiv_individual->HasHIV();
-        bool isNewlyInfected = false;
         bool isOnART = hiv_individual->GetHIVInterventionsContainer()->OnArtQuery();
 
         bool testedPastYear = med_parent->EverTestedPastYear();
@@ -246,7 +243,7 @@ namespace Kernel
 
         float mc_weight = context->GetMonteCarloWeight();
         int gender = context->GetGender() == Gender::MALE ? 0 : 1;
-        int age_bin = (int)floor( (std::min)((double) MAX_AGE-1, context->GetAge()/(float)DAYSPERYEAR) );
+        int age_bin = int(floor( (std::min)(double(MAX_AGE-1), context->GetAge()/float(DAYSPERYEAR)) ));
 
         if( StateChange == "DiseaseDeaths" ) 
         {

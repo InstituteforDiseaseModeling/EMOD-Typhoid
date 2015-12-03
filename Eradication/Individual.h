@@ -143,7 +143,7 @@ namespace Kernel
         virtual void SetInitialInfections(int init_infs) override;
         virtual void SetParameters(float infsample, float imm_mod, float risk_mod, float mig_mod) override; // specify each parameter, default version of SetParams()
         virtual void CreateSusceptibility(float imm_mod=1.0, float risk_mod=1.0);
-        virtual void setupMaternalAntibodies(IIndividualHumanContext* mother, INodeContext* node);
+        virtual void setupMaternalAntibodies(IIndividualHumanContext* mother, INodeContext* node) override;
 
         // Infections
         virtual void ExposeToInfectivity(float dt, const TransmissionGroupMembership_t* transmissionGroupMembership);
