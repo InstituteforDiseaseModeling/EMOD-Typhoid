@@ -15,10 +15,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SusceptibilityHIV.h"
 #include "InfectionHIV.h"
 #include "HIVInterventionsContainer.h"
-#include "NodeLevelHealthTriggeredIV.h"
 #include "ISimulation.h"
-#include "SimulationConfig.h"
-#include "FileSystem.h"
+#include "IIndividualHumanHIV.h"
 
 static const char* _module = "ReportHIVMortalityEvents";
 
@@ -131,9 +129,17 @@ namespace Kernel {
                      context->GetSuid().data,
                      StateChange.c_str()
                    );
-        auto hiv_individual = dynamic_cast<IIndividualHumanHIV*>(context);
+        IIndividualHumanHIV* hiv_individual = nullptr;
+        if ( context->QueryInterface( GET_IID(IIndividualHumanHIV), (void**)&hiv_individual ) != s_OK )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IIndividualHumanEventContext", "IIndividualHumanHIV" );
+        }
         release_assert( hiv_individual );
-        auto sti_individual = dynamic_cast<IIndividualHumanSTI*>(context);
+        IIndividualHumanSTI* sti_individual = nullptr;
+        if (context->QueryInterface( GET_IID(IIndividualHumanSTI), (void**)&sti_individual ) != s_OK )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IIndividualHumanEventContext", "IIndividualHumanSTI" );
+        }
         release_assert( sti_individual );
 
         MortalityInfo info;

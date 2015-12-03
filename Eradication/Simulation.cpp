@@ -38,6 +38,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "JsonRawReader.h"
 #include "BinaryArchiveWriter.h"
 #include "BinaryArchiveReader.h"
+#include "JsonFullWriter.h"
+#include "JsonFullReader.h"
+
+#include "snappy.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -491,7 +495,7 @@ namespace Kernel
         }
     }
 
-    void Simulation::Reports_LogNodeData( Node* n )
+    void Simulation::Reports_LogNodeData( INodeContext* n )
     {
         for (auto report : reports)
         {
@@ -505,7 +509,7 @@ namespace Kernel
         int stat_pop = 0, infected = 0;
         for (auto& entry : nodes)
         {
-            Node *n = entry.second;
+            INodeContext* n = entry.second;
             stat_pop += n->GetStatPop();
             infected += n->GetInfected();
         }
@@ -561,8 +565,89 @@ namespace Kernel
 //        return EXCEPTION_EXECUTE_HANDLER;
 //    }
 
+    void GenerateFilename( char* filename, size_t length, uint32_t time_step )
+    {
+    #ifdef WIN32
+        sprintf_s( filename, MAX_PATH, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
+    #else
+        sprintf( filename, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
+    #endif
+    }
+
+    bool OpenFileForWriting( const char* filename, FILE** pf )
+    {
+        bool opened; // = true;
+        errno = 0;
+    #ifdef WIN32
+        opened = (fopen_s( pf, filename, "wb") == 0);
+    #else
+        *pf = fopen( filename, "wb");
+        opened = (*pf != nullptr);
+    #endif
+
+        if ( !opened )
+        {
+            LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
+        }
+
+        return opened;
+    }
+
+    void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool compress)
+    {
+        char filename[256];
+        GenerateFilename( filename, sizeof filename, time_step );
+        FILE* f = nullptr;
+        if ( OpenFileForWriting( filename, &f ) )
+        {
+            // "IDTK"
+            fwrite( "IDTK", 1, 4, f );
+            // header size/offset to data
+            std::ostringstream temp_stream;
+            std::time_t now = std::time(nullptr);
+            struct tm gmt;
+            gmtime_s( &gmt, &now );
+            char asc_time[256];
+            strftime( asc_time, sizeof asc_time, "%a %b %d %H:%M:%S %Y", &gmt );
+            temp_stream << '{'
+                   << "\"metadata\":{"
+                   << "\"version\":" << 1 << ','
+                   << "\"date\":" << '"' << asc_time << "\","
+                   << "\"compressed\":" << (compress ? "true" : "false")
+                   << '}'
+                   << '}';
+            std::string header = temp_stream.str();
+            uint32_t header_size = header.size();
+            fwrite( &header_size, sizeof(header_size), 1, f );
+            // header (uncompressed JSON)
+            fwrite( header.c_str(), 1, header_size, f );
+            // data
+            if (!compress)
+            {
+                fwrite( data, 1, length, f );
+            }
+            else
+            {
+                std::string compressed;
+                snappy::Compress( data, length, &compressed );
+                fwrite( compressed.c_str(), 1, compressed.size(), f );
+            }
+            fflush( f );
+            fclose( f );
+        }
+    }
+
+
     void Simulation::Update(float dt)
     {
+        if (currentTime.time == 0)
+        {
+            IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
+            (*writer).labelElement( "simulation" ) & const_cast<Simulation*>(this);
+            WriteIdtkFile( (*writer).GetBuffer(), (*writer).GetBufferSize(), currentTime.time, true );
+            delete writer;
+        }
+
         Reports_UpdateEventRegistration( currentTime.time, dt );
         Reports_FindReportsCollectingIndividualData( currentTime.time, dt );
 
@@ -579,7 +664,7 @@ namespace Kernel
         // -----------------
         for (auto iterator = nodes.rbegin(); iterator != nodes.rend(); ++iterator)
         {
-            Node *n = iterator->second;
+            INodeContext* n = iterator->second;
             release_assert(n);
             n->Update(dt);
 
@@ -683,16 +768,16 @@ namespace Kernel
                     const char* buffer = writer_archive.GetBuffer();
                     uint32_t byte_count = writer_archive.GetBufferSize();
                     LOG_VALID_F( "Broadcasting serialized bimap (%d bytes)\n", byte_count );
-                    MPI_Bcast( (void*)&byte_count, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
-                    MPI_Bcast( (void*)const_cast<char*>(buffer), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
+                    MPI_Bcast( static_cast<void*>(&byte_count), 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
+                    MPI_Bcast( static_cast<void*>(const_cast<char*>(buffer)), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
                 }
                 else
                 {
                     uint32_t byte_count;
-                    MPI_Bcast( (void*)&byte_count, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
+                    MPI_Bcast( static_cast<void*>(&byte_count), 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
                     char* buffer = new char[byte_count];
                     LOG_VALID_F( "Receiving bimap (%d bytes) from rank %d\n", byte_count, rank );
-                    MPI_Bcast( (void*)buffer, byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
+                    MPI_Bcast( static_cast<void*>(buffer), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
                     auto json_reader = new JsonRawReader( buffer );
                     IArchive& reader_archive = *static_cast<IArchive*>(json_reader);
                     size_t entry_count;
@@ -1091,7 +1176,7 @@ namespace Kernel
         }
     }
 
-    void Simulation::PostMigratingIndividualHuman(IndividualHuman *i)
+    void Simulation::PostMigratingIndividualHuman(IIndividualHuman *i)
     {
         migratingIndividualQueues[nodeRankMap.GetRankFromNodeSuid(i->GetMigrationDestination())].push_back(i);
     }
@@ -1178,6 +1263,83 @@ namespace Kernel
     const IInterventionFactory* Simulation::GetInterventionFactory() const
     {
         return m_interventionFactoryObj;
+    }
+
+    REGISTER_SERIALIZABLE(Simulation);
+
+    void Simulation::serialize(IArchive& ar, Simulation* obj)
+    {
+        Simulation& sim = *obj;
+        ar.labelElement("serializationMask") & sim.serializationMask;
+        ar.labelElement("nodes"); serialize(ar, sim.nodes);
+// clorton        ar.labelElement("nodeRankMap") & sim.nodeRankMap;
+// clorton        ar.labelElement("node_event_context_list") & sim.node_event_context_list;
+// clorton        ar.labelElement("nodeid_suid_map") & sim.nodeid_suid_map;
+// clorton        ar.labelElement("migratingIndividualQueues") & sim.migratingIndividualQueues;
+// clorton        ar.labelElement("m_simConfigObj") & sim.m_simConfigObj;
+// clorton        ar.labelElement("m_interventionFactoryObj") & sim.m_interventionFactoryObj;
+// clorton        ar.labelElement("demographicsContext") & sim.demographicsContext;
+// clorton        ar.labelElement("infectionSuidGenerator") & sim.infectionSuidGenerator;
+// clorton        ar.labelElement("individualHumanSuidGenerator") & sim.individualHumanSuidGenerator;
+// clorton        ar.labelElement("nodeSuidGenerator") & sim.nodeSuidGenerator;
+        ar.labelElement("campaignFilename") & sim.campaignFilename;
+        ar.labelElement("loadBalanceFilename") & sim.loadBalanceFilename;
+// clorton        ar.labelElement("rng") & sim.rng;
+// clorton        ar.labelElement("reports") & sim.reports;
+// clorton        ar.labelElement("individual_data_reports") & sim.individual_data_reports;
+// clorton        ar.labelElement("reportClassCreator") & sim.reportClassCreator;
+// clorton        ar.labelElement("binnedReportClassCreator") & sim.binnedReportClassCreator;
+// clorton        ar.labelElement("spatialReportClassCreator") & sim.spatialReportClassCreator;
+// clorton        ar.labelElement("propertiesReportClassCreator") & sim.propertiesReportClassCreator;
+// clorton        ar.labelElement("demographicsReportClassCreator") & sim.demographicsReportClassCreator;
+// clorton        ar.labelElement("eventReportClassCreator") & sim.eventReportClassCreator;
+// clorton        ar.labelElement("event_coordinators") & sim.event_coordinators;
+// clorton        ar.labelElement("campaign_events") & sim.campaign_events;
+// clorton        ar.labelElement("event_context_host") & sim.event_context_host;
+        ar.labelElement("Ind_Sample_Rate") & sim.Ind_Sample_Rate;
+// clorton        ar.labelElement("currentTime") & sim.currentTime;
+        ar.labelElement("random_type") & (uint32_t&)sim.random_type;
+        ar.labelElement("sim_type") & (uint32_t&)sim.sim_type;
+        ar.labelElement("demographic_tracking") & sim.demographic_tracking;
+        ar.labelElement("enable_spatial_output") & sim.enable_spatial_output;
+        ar.labelElement("enable_property_output") & sim.enable_property_output;
+        ar.labelElement("enable_default_report") & sim.enable_default_report;
+        ar.labelElement("enable_event_report") & sim.enable_event_report;
+        ar.labelElement("campaign_filename") & sim.campaign_filename;
+        ar.labelElement("loadbalance_filename") & sim.loadbalance_filename;
+        ar.labelElement("Run_Number") & sim.Run_Number;
+// clorton        ar.labelElement("demographics_factory") & sim.demographics_factory;
+// clorton        ar.labelElement("new_node_observers") & sim.new_node_observers;
+    }
+
+    void Simulation::serialize(IArchive& ar, NodeMap_t& node_map)
+    {
+        size_t count = (ar.IsWriter() ? node_map.size() : -1);
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto& entry : node_map)
+            {
+                ar.startObject();
+                ar.labelElement("suid_data") & (uint32_t&)(entry.first.data);
+                ar.labelElement("node") & entry.second;
+                ar.endObject();
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                ar.startObject();
+                suids::suid suid;
+                ISerializable* obj;
+                ar.labelElement("suid_data") & suid.data;
+                ar.labelElement("node") & obj;
+                ar.endObject();
+                node_map[suid] = static_cast<Node*>(obj);
+            }
+        }
+        ar.endArray();
     }
 
 #if 0

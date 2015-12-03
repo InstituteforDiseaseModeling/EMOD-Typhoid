@@ -81,12 +81,12 @@ namespace Kernel
         // vectorpopulation deletion handled at _Vector level
     }
 
-    IndividualHuman *NodeMalaria::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float poverty_level)
+    IIndividualHuman* NodeMalaria::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float poverty_level)
     {
         return IndividualHumanMalaria::CreateHuman(getContextPointer(), suid, monte_carlo_weight, initial_age, gender,  poverty_level);
     }
 
-    IndividualHuman *NodeMalaria::addNewIndividual(float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
+    IIndividualHuman* NodeMalaria::addNewIndividual(float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
     {
         //VALIDATE(boost::format("NodeMalaria::addNewIndividual(%f, %f, %d, %d, %f)") % monte_carlo_weight % initial_age % gender % initial_infection_count % init_poverty);
 
@@ -126,7 +126,7 @@ namespace Kernel
         return 1.0f;
     }
 
-    void NodeMalaria::accumulateIndividualPopulationStatistics(float dt, IndividualHuman* basic_individual)
+    void NodeMalaria::accumulateIndividualPopulationStatistics(float dt, IIndividualHuman* basic_individual)
     {
         // Do base-class behavior, e.g. UpdateInfectiousness, statPop, Possible_Mothers
         Node::accumulateIndividualPopulationStatistics(dt, basic_individual);
@@ -191,7 +191,7 @@ namespace Kernel
         }
     }
 
-    void NodeMalaria::updateNodeStateCounters(IndividualHuman *ih)
+    void NodeMalaria::updateNodeStateCounters(IIndividualHuman *ih)
     {
         float weight = ih->GetMonteCarloWeight();
         IMalariaHumanContext *malaria_human = nullptr;
@@ -237,5 +237,24 @@ namespace Kernel
     void NodeMalaria::setupEventContextHost()
     {
         event_context_host = _new_ NodeMalariaEventContextHost(this);
+    }
+
+    REGISTER_SERIALIZABLE(NodeMalaria);
+
+    void NodeMalaria::serialize(IArchive& ar, NodeMalaria* obj)
+    {
+        NodeVector::serialize(ar, obj);
+        NodeMalaria& node = *obj;
+        ar.labelElement("m_Parasite_positive") & node.m_Parasite_positive;
+        ar.labelElement("m_Log_parasites") & node.m_Log_parasites;
+        ar.labelElement("m_Fever_positive") & node.m_Fever_positive;
+        ar.labelElement("m_New_Clinical_Cases") & node.m_New_Clinical_Cases;
+        ar.labelElement("m_New_Severe_Cases") & node.m_New_Severe_Cases;
+        ar.labelElement("m_Parasite_Prevalence") & node.m_Parasite_Prevalence;
+        ar.labelElement("m_New_Diagnostic_Positive") & node.m_New_Diagnostic_Positive;
+        ar.labelElement("m_New_Diagnostic_Prevalence") & node.m_New_Diagnostic_Prevalence;
+        ar.labelElement("m_Geometric_Mean_Parasitemia") & node.m_Geometric_Mean_Parasitemia;
+        ar.labelElement("m_Fever_Prevalence") & node.m_Fever_Prevalence;
+        ar.labelElement("m_Maternal_Antibody_Fraction") & node.m_Maternal_Antibody_Fraction;
     }
 }

@@ -56,7 +56,7 @@ namespace Kernel
         return _new_ StrainIdentity();
     }
 
-    void VectorCohort::ImmigrateTo(Node* destination_node)
+    void VectorCohort::ImmigrateTo(INodeContext* destination_node)
     {
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
     }

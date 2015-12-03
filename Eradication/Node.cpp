@@ -1204,7 +1204,7 @@ namespace Kernel
         // If individual has migrated or died -- HAPPENS AT THE END OF TIME STEP -- he/she still contributes to the infectivity
         for( int iHuman = 0 ; iHuman < individualHumans.size() ; /* control in loop */ )
         {
-            IndividualHuman *individual = individualHumans[iHuman];
+            IIndividualHuman* individual = individualHumans[iHuman];
             release_assert( individual );
 
             auto state_change = individual->GetStateChange();
@@ -1316,7 +1316,7 @@ namespace Kernel
         LOG_DEBUG_F("[updateInfectivity] final infectionrate = %f\n", infectionrate);
     }
 
-    void Node::accumulateIndividualPopulationStatistics(float dt, IndividualHuman* individual)
+    void Node::accumulateIndividualPopulationStatistics(float dt, IIndividualHuman* individual)
     {
         float mc_weight = float(individual->GetMonteCarloWeight());
 
@@ -1597,7 +1597,7 @@ namespace Kernel
         ExtractDataFromDemographics();
 
         // Loop over 'count_new_individuals' initial statistical population
-        for (int i = 1; i <= count_new_individuals; i++)
+        for (int i = 1; i <= count_new_individuals; ++i)
         {
             // For age-dependent adaptive sampling, we need to draw an individual age before adjusting the sampling rate
             if ( ind_sampling_type == IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP || ind_sampling_type == IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE )
@@ -1617,7 +1617,7 @@ namespace Kernel
             if ( ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP && ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE )
                 temp_age = calculateInitialAge(default_age);
 
-            IndividualHuman* tempind = configureAndAddNewIndividual(1.0F / temp_sampling_rate, float(temp_age), float(initial_prevalence), float(female_ratio));
+            IIndividualHuman* tempind = configureAndAddNewIndividual(1.0F / temp_sampling_rate, float(temp_age), float(initial_prevalence), float(female_ratio));
             
             if(tempind->GetAge() == 0)
             {
@@ -1739,7 +1739,7 @@ namespace Kernel
 
             // Configure and/or add new individual (EAW: there doesn't appear to be any significant difference between the two cases below)
             auto prob_maternal_transmission = GET_CONFIGURABLE(SimulationConfig)->prob_maternal_transmission;
-            IndividualHuman* child = nullptr;
+            IIndividualHuman* child = nullptr;
             if (demographics_birth)
             {
                 child = configureAndAddNewIndividual(1.0F / temp_sampling_rate, 0, float(temp_prevalence) * prob_maternal_transmission, float(female_ratio)); // N.B. temp_prevalence=0 without maternal_transmission flag
@@ -1762,7 +1762,7 @@ namespace Kernel
 
     // Populate with an Individual as an argument
     // This individual is the mother, and will give birth to a child under vital_birth_dependence==INDIVIDUAL_PREGNANCIES
-    void Node::populateNewIndividualFromPregnancy(IndividualHuman *mother)
+    void Node::populateNewIndividualFromPregnancy(IIndividualHuman* mother)
     {
         //  holds parameters for new birth
         int child_infections = 0;
@@ -1772,7 +1772,7 @@ namespace Kernel
         float child_poverty  = float(mother->GetAbovePoverty()); //same poverty as mother //note, child's financial level independent of mother, may be important for diseases with a social network structure
         float female_ratio   = 0.5;
 
-        IndividualHuman *child;
+        IIndividualHuman *child;
 
         if (randgen->e() < female_ratio) { child_gender = Gender::FEMALE; }
 
@@ -1790,7 +1790,8 @@ namespace Kernel
         }
 
         child = addNewIndividual(mc_weight, child_age, child_gender, child_infections, 1.0, 1.0, 1.0, child_poverty);
-        child->setupMaternalAntibodies(mother, this);
+        auto context = dynamic_cast<IIndividualHumanContext*>(mother);
+        child->setupMaternalAntibodies(context, this);
         Births += mc_weight;//  Born with age=0 and no infections and added to sim with same sampling weight as mother
     }
 
@@ -1813,7 +1814,7 @@ namespace Kernel
         return prevalence;
     }
 
-    void Node::conditionallyInitializePregnancy(IndividualHuman* individual)
+    void Node::conditionallyInitializePregnancy(IIndividualHuman* individual)
     {
         float duration;
         float temp_birthrate = birthrate;
@@ -1844,7 +1845,7 @@ namespace Kernel
         }
     }
 
-    IndividualHuman* Node::createHuman(suids::suid id, float monte_carlo_weight, float initial_age, int gender, float isabovepoverty)
+    IIndividualHuman* Node::createHuman(suids::suid id, float monte_carlo_weight, float initial_age, int gender, float isabovepoverty)
     {
         return IndividualHuman::CreateHuman(this, id, monte_carlo_weight, initial_age, gender, isabovepoverty);
     }
@@ -1883,7 +1884,7 @@ namespace Kernel
         return temp_immunity;
     }
 
-    IndividualHuman* Node::configureAndAddNewIndividual(float ind_MCweight, float ind_init_age, float comm_init_prev, float comm_female_ratio)
+    IIndividualHuman* Node::configureAndAddNewIndividual(float ind_MCweight, float ind_init_age, float comm_init_prev, float comm_female_ratio)
     {
         //  Holds draws from demographic distribution
         int   temp_infs      = 0;
@@ -1925,7 +1926,7 @@ namespace Kernel
             temp_poverty = 1.0; 
         }
 
-        IndividualHuman* tempind = addNewIndividual(ind_MCweight, ind_init_age, temp_gender, temp_infs, temp_immunity, temp_risk, temp_migration, temp_poverty);
+        IIndividualHuman* tempind = addNewIndividual(ind_MCweight, ind_init_age, temp_gender, temp_infs, temp_immunity, temp_risk, temp_migration, temp_poverty);
 
         // Now if tracking individual pregnancies, need to see if this new Individual is pregnant to begin the simulation
         if ( vital_birth_dependence == VitalBirthDependence::INDIVIDUAL_PREGNANCIES ||
@@ -1938,13 +1939,13 @@ namespace Kernel
         return tempind;
     }
 
-    IndividualHuman* Node::addNewIndividual(float mc_weight, float initial_age, 
+    IIndividualHuman* Node::addNewIndividual(float mc_weight, float initial_age, 
         int gender, int initial_infections, float immunity_parameter, float risk_parameter, 
         float migration_heterogeneity, float poverty_parameter)
     {
 
         // new creation process
-        IndividualHuman* new_individual = createHuman(parent->GetNextIndividualHumanSuid(), mc_weight, initial_age, gender, poverty_parameter); // initial_infections isn't needed here if SetInitialInfections function is used
+        IIndividualHuman* new_individual = createHuman(parent->GetNextIndividualHumanSuid(), mc_weight, initial_age, gender, poverty_parameter); // initial_infections isn't needed here if SetInitialInfections function is used
 
         // EAW: is there a reason that the contents of the two functions below aren't absorbed into CreateHuman?  this whole process seems very convoluted.
         new_individual->SetParameters(1.0, immunity_parameter, risk_parameter, migration_heterogeneity);// default values being used except for total number of communities
@@ -1968,10 +1969,10 @@ namespace Kernel
         return new_individual;
     }
 
-    IndividualHuman* Node::addNewIndividualFromSerialization()
+    IIndividualHuman* Node::addNewIndividualFromSerialization()
     {
         LOG_DEBUG_F( "1. %s\n", __FUNCTION__ );
-        IndividualHuman* new_individual = createHuman( suids::nil_suid(), 0, 0, 0, 0);
+        IIndividualHuman* new_individual = createHuman( suids::nil_suid(), 0, 0, 0, 0);
         new_individual->SetParameters(1.0, 0, 0, 0);// default values being used except for total number of communities
 
 #if 0
@@ -1995,7 +1996,7 @@ namespace Kernel
 #endif
         //processImmigratingIndividual( new_individual );
         LOG_DEBUG_F( "addNewIndividualFromSerialization,individualHumans size: %d, ih context=%p\n",individualHumans.size(), new_individual->GetParent() );
-           
+
         return new_individual;
     }
 
@@ -2102,7 +2103,7 @@ namespace Kernel
     //   Individual migration methods
     //------------------------------------------------------------------
 
-    void Node::processEmigratingIndividual(IndividualHuman *individual)
+    void Node::processEmigratingIndividual(IIndividualHuman* individual)
     {
         release_assert( individual );
 
@@ -2113,12 +2114,12 @@ namespace Kernel
         postIndividualMigration(individual);
     }
 
-    void Node::postIndividualMigration(IndividualHuman *individual)
+    void Node::postIndividualMigration(IIndividualHuman* individual)
     {
         parent->PostMigratingIndividualHuman(individual);
     }
 
-    void Node::resolveEmigration(IndividualHuman *individual)
+    void Node::resolveEmigration(IIndividualHuman* individual)
     {
         LOG_DEBUG_F( "individual %lu is leaving node %lu\n", individual->GetSuid().data, GetSuid().data );
         // Do emigration logic here
@@ -2129,7 +2130,7 @@ namespace Kernel
         }
     }
 
-    IndividualHuman* Node::processImmigratingIndividual(IndividualHuman* movedind)
+    IIndividualHuman* Node::processImmigratingIndividual(IIndividualHuman* movedind)
     {
         individualHumans.push_back(movedind);
         movedind->SetContextTo(getContextPointer());
@@ -2160,7 +2161,7 @@ namespace Kernel
         newInfectedPeopleAgeProduct = 0;
     }
 
-    void Node::updateNodeStateCounters(IndividualHuman *ih)
+    void Node::updateNodeStateCounters(IIndividualHuman* ih)
     {
         switch(ih->GetNewInfectionState()) 
         { 
@@ -2187,7 +2188,7 @@ namespace Kernel
         ih->ClearNewInfectionState();
     }
 
-    void Node::reportNewInfection(IndividualHuman *ih)
+    void Node::reportNewInfection(IIndividualHuman *ih)
     {
         float monte_carlo_weight = float(ih->GetMonteCarloWeight());
 
@@ -2205,13 +2206,12 @@ namespace Kernel
         newInfectedPeopleAgeProduct += monte_carlo_weight * float(ih->GetAge());
     }
 
-    void Node::reportDetectedInfection(IndividualHuman *ih)
+    void Node::reportDetectedInfection(IIndividualHuman *ih)
     {
         float monte_carlo_weight = float(ih->GetMonteCarloWeight());
 
         new_reportedinfections += monte_carlo_weight; 
         Cumulative_Reported_Infections += monte_carlo_weight; 
-
     }
 
     void Node::finalizeNodeStateCounters(void)
@@ -2583,6 +2583,96 @@ namespace Kernel
             LOG_WARN("HINT Configuration: heterogeneous intranode transmission is enabled, but no transmission matrices were found in the demographics file(s).\n");
             // TODO throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "HINT Configuration: No transmission matrices were found in the demographics file(s).");
         }
+    }
+
+    REGISTER_SERIALIZABLE(Node);
+
+    void Node::serialize(IArchive& ar, Node* obj)
+    {
+        Node& node = *obj;
+        ar.labelElement("serializationMask") & node.serializationMask;
+        ar.labelElement("individualHumans") & node.individualHumans;
+        ar.labelElement("_latitude") & node._latitude;
+        ar.labelElement("_longitude") & node._longitude;
+// clorton        ar.labelElement("distribs") & node.distribs;
+        ar.labelElement("ind_sampling_type") & (uint32_t&)node.ind_sampling_type;
+        ar.labelElement("population_density_infectivity_correction") & (uint32_t&)node.population_density_infectivity_correction;
+        ar.labelElement("suid_data") & node.suid.data;
+        ar.labelElement("urban") & node.urban;
+        ar.labelElement("birthrate") & node.birthrate;
+        ar.labelElement("Above_Poverty") & node.Above_Poverty;
+        ar.labelElement("Ind_Sample_Rate") & node.Ind_Sample_Rate;
+// clorton        ar.labelElement("transmissionGroups") & node.transmissionGroups;
+        ar.labelElement("susceptibility_dynamic_scaling") & node.susceptibility_dynamic_scaling;
+// clorton        ar.labelElement("localWeather") & node.localWeather;
+// clorton        ar.labelElement("migration_info") & node.migration_info;
+// clorton        ar.labelElement("demographics") & node.demographics;
+// clorton        ar.labelElement("demographic_distributions") & node.demographic_distributions;
+        ar.labelElement("externalId") & node.externalId;
+// clorton        ar.labelElement("event_context_host") & node.event_context_host;
+        ar.labelElement("statPop") & node.statPop;
+        ar.labelElement("Infected") & node.Infected;
+        ar.labelElement("Births") & node.Births;
+        ar.labelElement("Disease_Deaths") & node.Disease_Deaths;
+        ar.labelElement("new_infections") & node.new_infections;
+        ar.labelElement("new_reportedinfections") & node.new_reportedinfections;
+        ar.labelElement("Cumulative_Infections") & node.Cumulative_Infections;
+        ar.labelElement("Cumulative_Reported_Infections") & node.Cumulative_Reported_Infections;
+        ar.labelElement("Campaign_Cost") & node.Campaign_Cost;
+// clorton        ar.labelElement("Possible_Mothers") & node.Possible_Mothers;
+        ar.labelElement("mean_age_infection") & node.mean_age_infection;
+        ar.labelElement("newInfectedPeopleAgeProduct") & node.newInfectedPeopleAgeProduct;
+// clorton        ar.labelElement("infected_people_prior") & node.infected_people_prior;
+// clorton        ar.labelElement("infected_age_people_prior") & node.infected_age_people_prior;
+        ar.labelElement("infectionrate") & node.infectionrate;
+        ar.labelElement("mInfectivity") & node.mInfectivity;
+        ar.labelElement("demographics_birth") & node.demographics_birth;
+        ar.labelElement("demographics_gender") & node.demographics_gender;
+        ar.labelElement("demographics_other") & node.demographics_other;
+        ar.labelElement("max_sampling_cell_pop") & node.max_sampling_cell_pop;
+        ar.labelElement("sample_rate_birth") & node.sample_rate_birth;
+        ar.labelElement("sample_rate_0_18mo") & node.sample_rate_0_18mo;
+        ar.labelElement("sample_rate_18mo_4yr") & node.sample_rate_18mo_4yr;
+        ar.labelElement("sample_rate_5_9") & node.sample_rate_5_9;
+        ar.labelElement("sample_rate_10_14") & node.sample_rate_10_14;
+        ar.labelElement("sample_rate_15_19") & node.sample_rate_15_19;
+        ar.labelElement("sample_rate_20_plus") & node.sample_rate_20_plus;
+        ar.labelElement("sample_rate_immune") & node.sample_rate_immune;
+        ar.labelElement("immune_threshold_for_downsampling") & node.immune_threshold_for_downsampling;
+        ar.labelElement("prob_maternal_transmission") & node.prob_maternal_transmission;
+        ar.labelElement("population_density_c50") & node.population_density_c50;
+        ar.labelElement("population_scaling_factor") & node.population_scaling_factor;
+        ar.labelElement("maternal_transmission") & node.maternal_transmission;
+        ar.labelElement("vital_birth") & node.vital_birth;
+        ar.labelElement("vital_birth_dependence") & (uint32_t&)node.vital_birth_dependence;
+        ar.labelElement("vital_birth_time_dependence") & (uint32_t&)node.vital_birth_time_dependence;
+        ar.labelElement("x_birth") & node.x_birth;
+        ar.labelElement("immunity_dist_type") & (uint32_t&)node.immunity_dist_type;
+        ar.labelElement("immunity_dist1") & node.immunity_dist1;
+        ar.labelElement("immunity_dist2") & node.immunity_dist2;
+        ar.labelElement("risk_dist_type") & (uint32_t&)node.risk_dist_type;
+        ar.labelElement("risk_dist1") & node.risk_dist1;
+        ar.labelElement("risk_dist2") & node.risk_dist2;
+        ar.labelElement("migration_dist_type") & (uint32_t&)node.migration_dist_type;
+        ar.labelElement("migration_dist1") & node.migration_dist1;
+        ar.labelElement("migration_dist2") & node.migration_dist2;
+// clorton        ar.labelElement("new_infection_observers") & node.new_infection_observers;
+        ar.labelElement("animal_reservoir_type") & (uint32_t&)node.animal_reservoir_type;
+        ar.labelElement("infectivity_scaling") & (uint32_t&)node.infectivity_scaling;
+        ar.labelElement("zoonosis_rate") & node.zoonosis_rate;
+        ar.labelElement("routes") & node.routes;
+        ar.labelElement("whitelist_enabled") & node.whitelist_enabled;
+// clorton        ar.labelElement("ipkeys_whitelist") & node.ipkeys_whitelist;
+        ar.labelElement("infectivity_sinusoidal_forcing_amplitude") & node.infectivity_sinusoidal_forcing_amplitude;
+        ar.labelElement("infectivity_sinusoidal_forcing_phase") & node.infectivity_sinusoidal_forcing_phase;
+        ar.labelElement("infectivity_boxcar_forcing_amplitude") & node.infectivity_boxcar_forcing_amplitude;
+        ar.labelElement("infectivity_boxcar_start_time") & node.infectivity_boxcar_start_time;
+        ar.labelElement("infectivity_boxcar_end_time") & node.infectivity_boxcar_end_time;
+        ar.labelElement("birth_rate_sinusoidal_forcing_amplitude") & node.birth_rate_sinusoidal_forcing_amplitude;
+        ar.labelElement("birth_rate_sinusoidal_forcing_phase") & node.birth_rate_sinusoidal_forcing_phase;
+        ar.labelElement("birth_rate_boxcar_forcing_amplitude") & node.birth_rate_boxcar_forcing_amplitude;
+        ar.labelElement("birth_rate_boxcar_start_time") & node.birth_rate_boxcar_start_time;
+        ar.labelElement("birth_rate_boxcar_end_time") & node.birth_rate_boxcar_end_time;
     }
 }
 

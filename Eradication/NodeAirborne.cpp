@@ -40,7 +40,7 @@ namespace Kernel
         return newnode;
     }
 
-    IndividualHuman *NodeAirborne::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+    IIndividualHuman* NodeAirborne::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
     {
         return IndividualHumanAirborne::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -66,6 +66,13 @@ namespace Kernel
         LOG_DEBUG_F( "Infectivity scale factor = %f at relative humidity = %f.\n", correction, humidity );
 
         return correction;
+    }
+
+    REGISTER_SERIALIZABLE(NodeAirborne);
+
+    void NodeAirborne::serialize(IArchive& ar, NodeAirborne* obj)
+    {
+        Node::serialize(ar, obj);
     }
 }
 

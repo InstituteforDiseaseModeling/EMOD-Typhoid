@@ -12,15 +12,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <string>
 #include <map>
 
-#include "BoostLibWrapper.h"
-#include "ISupports.h"
+#include "ISerializable.h"
 #include "Configuration.h"
 #include "Configure.h"
 #include "FactorySupport.h"
 
 namespace Kernel
 {
-    struct IWaningEffect : public ISupports
+    struct IWaningEffect : ISerializable
     {
         virtual void  Update(float dt) = 0;
         virtual float Current() const  = 0;
@@ -89,6 +88,8 @@ namespace Kernel
     protected:
         float currentEffect;
         float decayTimeConstant;
+
+        DECLARE_SERIALIZABLE(WaningEffectExponential);
     };
 
     // --------------------------- WaningEffectBox ---------------------------

@@ -95,7 +95,7 @@ namespace Kernel
 
         static IndividualHuman *CreateHuman();
         static IndividualHuman *CreateHuman(INodeContext *context, suids::suid id, float MCweight = 1.0f, float init_age = 0.0f, int gender = 0, float init_poverty = 0.5f);
-        virtual void InitializeHuman();
+        virtual void InitializeHuman() override;
         virtual ~IndividualHuman();
 
         virtual void Update(float currenttime, float dt) override;
@@ -114,24 +114,24 @@ namespace Kernel
         virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string key) const override;
 
         // IIndividualHumanEventContext methods
-        inline  bool   IsPregnant()           const { return is_pregnant; };
-        inline  int    GetAbovePoverty()      const { return above_poverty; } // financially secure = 1, less financially secure = 0
-        inline  double GetAge()               const { return m_age; }
-        inline  int    GetGender()            const { return m_gender; }
-        inline  double GetMonteCarloWeight()  const { return m_mc_weight; }
-        virtual bool   IsPossibleMother()     const;
-        inline  bool   IsInfected()           const { return m_is_infected; }
-        virtual float  GetAcquisitionImmunity()          const;  // KM: For downsampling based on immune status.  For now, just takes perfect immunity; can be updated to include a threshold.  Unclear how to work with multiple strains or waning immunity.
-        inline HumanStateChange GetStateChange() const { return StateChange; }
+        virtual bool   IsPregnant()           const override { return is_pregnant; };
+        virtual inline int GetAbovePoverty()  const override { return above_poverty; } // financially secure = 1, less financially secure = 0
+        virtual double GetAge()               const override { return m_age; }
+        virtual int    GetGender()            const override { return m_gender; }
+        virtual double GetMonteCarloWeight()  const override { return m_mc_weight; }
+        virtual bool   IsPossibleMother()     const override;
+        virtual bool   IsInfected()           const override { return m_is_infected; }
+        virtual float  GetAcquisitionImmunity() const override; // KM: For downsampling based on immune status.  For now, just takes perfect immunity; can be updated to include a threshold.  Unclear how to work with multiple strains or waning immunity.
+        virtual HumanStateChange GetStateChange() const override { return StateChange; }
         virtual void Die( HumanStateChange ) override;
         virtual INodeEventContext   * GetNodeEventContext() override; // for campaign cost reporting in e.g. HealthSeekingBehavior
         virtual tProperties* GetProperties() override;
 
         // Migration
-        virtual void ImmigrateTo(Node* destination_node) override;
+        virtual void ImmigrateTo(INodeContext* destination_node) override;
         virtual const suids::suid& GetMigrationDestination() override;
-        void SetMigrationDestination(suids::suid destination);
-        bool IsMigrating();
+        /* clorton virtual */ void SetMigrationDestination(suids::suid destination) /* clorton override */;
+        virtual bool IsMigrating() override;
         virtual void CheckForMigration(float currenttime, float dt);
         void SetNextMigration();
 
@@ -140,8 +140,8 @@ namespace Kernel
         virtual void UpdateGroupPopulation(float size_changes) override;
 
         // Initialization
-        virtual void SetInitialInfections(int init_infs);
-        virtual void SetParameters(float infsample, float imm_mod, float risk_mod, float mig_mod); // specify each parameter, default version of SetParams()
+        virtual void SetInitialInfections(int init_infs) override;
+        virtual void SetParameters(float infsample, float imm_mod, float risk_mod, float mig_mod) override; // specify each parameter, default version of SetParams()
         virtual void CreateSusceptibility(float imm_mod=1.0, float risk_mod=1.0);
         virtual void setupMaternalAntibodies(IIndividualHumanContext* mother, INodeContext* node);
 
@@ -150,27 +150,27 @@ namespace Kernel
         virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route = TransmissionRoute::TRANSMISSIONROUTE_ALL ) override;
         virtual void AcquireNewInfection(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1) override;
         virtual const infection_list_t &GetInfections() const override;
-        virtual void UpdateInfectiousness(float dt);
+        virtual void UpdateInfectiousness(float dt) override;
         virtual bool InfectionExistsForThisStrain(StrainIdentity* check_strain_id);
-        virtual void ClearNewInfectionState();
-        inline NewInfectionState::_enum GetNewInfectionState() const { return m_new_infection_state; }
-        virtual inline float GetInfectiousness() const { return infectiousness; }
+        virtual void ClearNewInfectionState() override;
+        virtual NewInfectionState::_enum GetNewInfectionState() const override { return m_new_infection_state; }
+        virtual inline float GetInfectiousness() const override { return infectiousness; }
 
-        virtual float GetImmunityReducedAcquire() const;
+        virtual float GetImmunityReducedAcquire() const override;
         virtual float GetInterventionReducedAcquire() const override;
 
         // Births and deaths
-        virtual bool  UpdatePregnancy(float dt=1); // returns true if birth happens this time step and resets is_pregnant to false
-        void InitiatePregnancy(float duration = (DAYSPERWEEK * WEEKS_FOR_GESTATION));
+        virtual bool UpdatePregnancy(float dt=1) override; // returns true if birth happens this time step and resets is_pregnant to false
+        virtual void InitiatePregnancy(float duration = (DAYSPERWEEK * WEEKS_FOR_GESTATION)) override;
         virtual void CheckVitalDynamics(float currenttime, float dt=1.0); // non-disease mortality
         // update and set dynamic MC weight
-        void UpdateMCSamplingRate(float current_sampling_rate);
+        virtual void UpdateMCSamplingRate(float current_sampling_rate) override;
 
         // Assorted getters and setters
-        virtual void SetContextTo(INodeContext* context);
+        virtual void SetContextTo(INodeContext* context) override;
         virtual INodeContext* GetParent() const override;
-        inline Kernel::suids::suid GetParentSuid() const { return parent->GetSuid(); }
-        virtual ProbabilityNumber getProbMaternalTransmission() const;
+        virtual inline Kernel::suids::suid GetParentSuid() const override { return parent->GetSuid(); }
+        virtual ProbabilityNumber getProbMaternalTransmission() const override;
 
     protected:
 

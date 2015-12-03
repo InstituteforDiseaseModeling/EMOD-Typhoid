@@ -32,7 +32,7 @@ namespace Kernel
         virtual float GetMortality( uint32_t addition ) const = 0;
     };
 
-    class Node;
+    struct INodeContext;
     class StrainIdentity;
 
     struct VectorCohort;
@@ -50,7 +50,7 @@ namespace Kernel
         virtual const StrainIdentity* GetStrainIdentity() const;
 
         // IMigrate interfaces
-        virtual void ImmigrateTo(Node* destination_node);
+        virtual void ImmigrateTo(INodeContext* destination_node);
         virtual void SetMigrationDestination(suids::suid destination);
         virtual const suids::suid & GetMigrationDestination();
 

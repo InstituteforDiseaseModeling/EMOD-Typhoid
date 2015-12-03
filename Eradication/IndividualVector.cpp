@@ -288,9 +288,12 @@ namespace Kernel
 
         for (auto& entry : vec)
         {
+            ar.startObject();
             StrainIdentity* strain = &entry.first;
+            ar.labelElement("strain");
             Kernel::serialize(ar, strain);
-            ar & entry.second;
+            ar.labelElement("weight") & entry.second;
+            ar.endObject();
         }
         ar.endArray();
 

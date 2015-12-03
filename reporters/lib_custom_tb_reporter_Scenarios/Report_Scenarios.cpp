@@ -462,7 +462,7 @@ int Report_Scenarios::calcBinIndex(const IndividualHuman * individual)
 
 void 
 Report_Scenarios::LogIndividualData(
-    IndividualHuman * individual
+    IIndividualHuman* individual
 )
 {
     // get monte carlo weight

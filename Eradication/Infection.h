@@ -11,8 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <string>
 #include <map>
 
-#include "BoostLibWrapper.h"
-
 #include "suids.hpp"
 #include "Contexts.h"
 
@@ -32,7 +30,7 @@ namespace Kernel
     class InfectionConfig : public JsonConfigurable
     {
     public:
-        bool Configure( const Configuration* config );
+        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
 
     protected:
         static float incubation_period;
@@ -67,7 +65,7 @@ namespace Kernel
         static Infection *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
         virtual ~Infection();
 
-        virtual void SetContextTo(IIndividualHumanContext* context);
+        virtual void SetContextTo(IIndividualHumanContext* context) override;
         IIndividualHumanContext* GetParent();
 
         virtual suids::suid GetSuid() const;
@@ -106,9 +104,9 @@ namespace Kernel
 
         Infection();
         Infection(IIndividualHumanContext *context);
-        void Initialize(suids::suid _suid);
+        /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
 
-        const SimulationConfig* params();
+        /* clorton virtual */ const SimulationConfig* params() /* clorton override */;
 
         virtual void CreateInfectionStrain(StrainIdentity* infstrain);
         virtual void EvolveStrain(ISusceptibilityContext* immunity, float dt);

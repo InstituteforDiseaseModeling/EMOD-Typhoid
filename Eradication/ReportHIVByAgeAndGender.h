@@ -40,7 +40,7 @@ namespace Kernel {
         virtual bool notifyOnEvent(IIndividualHumanEventContext *context, const std::string& StateChange);
 
         virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
-        virtual void LogIndividualData( IndividualHuman* individual );
+        virtual void LogIndividualData( IIndividualHuman* individual );
         virtual void LogNodeData( INodeContext* pNC );
 
     protected:

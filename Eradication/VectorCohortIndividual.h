@@ -53,7 +53,7 @@ namespace Kernel
         virtual const StrainIdentity* GetStrainIdentity() const override;
 
         // IMigrate interfaces
-        virtual void ImmigrateTo(Node* destination_node) override;
+        virtual void ImmigrateTo(INodeContext* destination_node) override;
         virtual void SetMigrationDestination(suids::suid destination) override;
         virtual const suids::suid& GetMigrationDestination() override;
 

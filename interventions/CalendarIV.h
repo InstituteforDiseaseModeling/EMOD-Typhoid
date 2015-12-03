@@ -28,7 +28,6 @@ namespace Kernel
 {
     class TargetAgeArrayConfig : public JsonConfigurable
     {
-        friend class ::boost::serialization::access;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
 
@@ -38,6 +37,8 @@ namespace Kernel
             virtual json::QuickBuilder GetSchema();
             std::map< float, float > age2ProbabilityMap;
             bool dropout;
+
+            static void serialize(IArchive&, TargetAgeArrayConfig&);
     };
 
     class IVCalendar : public BaseIntervention
@@ -65,6 +66,8 @@ namespace Kernel
         TargetAgeArrayConfig target_age_array; // json list of floats
         IndividualInterventionConfig actual_intervention_config;
         bool dropout;
+
+        DECLARE_SERIALIZABLE(IVCalendar);
 
     private:
         std::list<float> scheduleAges;

@@ -9,16 +9,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include <list>
 #include <map>
-#include <vector>
-#include <string>
-#include <fstream>
 #include <time.h>
 
-#include "Log.h"
 #include "BaseChannelReport.h"
-#include "BoostLibWrapper.h"
 
 /*
 Flexible aggregator for simulation-wide numeric values. Intended to serve as the mechanism for reporting inset charts.
@@ -39,20 +33,20 @@ public:
     static IReport* CreateReport();
     virtual ~Report() { }
 
-    virtual void BeginTimestep();
-    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
-    virtual void LogNodeData( Kernel::INodeContext * pNC );
-    virtual void EndTimestep( float currentTime, float dt );
+    virtual void BeginTimestep() override;
+    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override { return true ; };
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
+    virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
+    virtual void EndTimestep( float currentTime, float dt ) override;
 
 protected:
     Report();
 
-    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
-    virtual void postProcessAccumulatedData();
+    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) override;
+    virtual void postProcessAccumulatedData() override;
 
     virtual void AddSEIRWUnits( std::map<std::string, std::string> &units_map );
-    virtual void UpdateSEIRW( const Kernel::IndividualHuman * individual, float monte_carlo_weight );
+    virtual void UpdateSEIRW( const Kernel::IIndividualHuman* individual, float monte_carlo_weight );
     virtual void AccumulateSEIRW();
     virtual void NormalizeSEIRWChannels();
 

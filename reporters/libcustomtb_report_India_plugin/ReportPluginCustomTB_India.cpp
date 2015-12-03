@@ -136,7 +136,7 @@ void CustomTBReportIndiaMATLAB::EndTimestep( float currentTime, float dt )
     Report::EndTimestep( currentTime, dt );
 }
 
-void  CustomTBReportIndiaMATLAB::LogIndividualData( Kernel::IndividualHuman * individual )
+void  CustomTBReportIndiaMATLAB::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 

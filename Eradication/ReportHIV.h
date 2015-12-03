@@ -31,7 +31,7 @@ namespace Kernel {
                                               float dt, 
                                               std::vector<INodeEventContext*>& rNodeEventContextList ) override;
 
-        virtual void LogIndividualData( IndividualHuman* individual ) override;
+        virtual void LogIndividualData( IIndividualHuman* individual ) override;
         virtual void EndTimestep( float currentTime, float dt ) override;
         virtual void Reduce() override;
 

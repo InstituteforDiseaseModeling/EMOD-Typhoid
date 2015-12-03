@@ -143,7 +143,7 @@ ReportPolioIndividualInfections::LogNodeData( INodeContext * pNC )
 }
 
 void 
-ReportPolioIndividualInfections::LogIndividualData( IndividualHuman * individual )
+ReportPolioIndividualInfections::LogIndividualData( IIndividualHuman* individual )
 {
     const IndividualHumanPolio* individual_polio = static_cast<const IndividualHumanPolio*>(individual);
 

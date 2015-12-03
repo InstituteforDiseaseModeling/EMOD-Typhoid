@@ -42,7 +42,7 @@ namespace Kernel
                                               std::vector<INodeEventContext*>& rNodeEventContextList ) override;
         virtual void BeginTimestep() override;
         virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override;
-        virtual void LogIndividualData( Kernel::IndividualHuman * individual ) override;
+        virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
         virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
         virtual void EndTimestep( float currentTime, float dt ) override;
 

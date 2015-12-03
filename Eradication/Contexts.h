@@ -68,7 +68,7 @@ namespace Kernel
         virtual RANDOMBASE* GetRng() = 0;
 
         // migration
-        virtual void PostMigratingIndividualHuman(IndividualHuman *i) = 0;
+        virtual void PostMigratingIndividualHuman(IIndividualHuman *i) = 0;
 
         // reporting
         virtual std::vector<IReport*>& GetReports() = 0;

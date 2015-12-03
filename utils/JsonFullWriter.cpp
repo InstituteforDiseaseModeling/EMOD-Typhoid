@@ -110,7 +110,7 @@ namespace Kernel
     uint32_t JsonFullWriter::GetBufferSize()
     {
         GetBuffer(); // RapidJson will ensure that there's a terminating null ('\0')
-        return uint32_t(m_buffer->Size() + 1);
+        return uint32_t(m_buffer->Size());
     }
 
     const char* JsonFullWriter::GetBuffer()

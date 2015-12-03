@@ -77,6 +77,31 @@ namespace Kernel
         }
 
         template <typename T>
+        void operator & (std::list<T>& list)
+        {
+            size_t count = this->IsWriter() ? list.size() : -1;
+
+            this->startArray(count);
+            if (this->IsWriter())
+            {
+                for (auto& entry : list)
+                {
+                    (*this) & entry;
+                }
+            }
+            else
+            {
+                for (size_t i = 0; i < count; ++i)
+                {
+                    T entry;
+                    (*this) & entry;
+                    list.push_back(entry);
+                }
+            }
+            this->endArray();
+        }
+
+        template <typename T>
         void operator & (std::vector<T>& vec)
         {
             size_t count = this->IsWriter() ? vec.size() : -1;
@@ -93,6 +118,7 @@ namespace Kernel
         }
 
         /* virtual */ IArchive& operator & (std::map<std::string, float>&);
+        /* virtual */ IArchive& operator & (std::map<float, float>&);
 
         // IDM specific types
         /* virtual */ IArchive& operator & (std::vector<Kernel::suids::suid>&);

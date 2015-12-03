@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <numeric> // for std::accumulate
 #include "ReportPolio.h" // for base class
 #include "NodePolio.h" // for base class
-#include "Debug.h" // for base class
+#include "IndividualPolio.h"
 
 static const char * _module = "ReportPolio";
 
@@ -197,7 +197,7 @@ ReportPolio::populateSummaryDataUnitsMap(
 
 void
 ReportPolio::LogIndividualData(
-    IndividualHuman * individual
+    IIndividualHuman* individual
 )
 {
     ReportEnvironmental::LogIndividualData( individual );

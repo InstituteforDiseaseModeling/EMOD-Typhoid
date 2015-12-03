@@ -161,7 +161,7 @@ namespace Kernel
         return false ;
     }
 
-    void BaseEventReport::LogIndividualData( IndividualHuman * individual )
+    void BaseEventReport::LogIndividualData( IIndividualHuman* individual )
     {
     }
 

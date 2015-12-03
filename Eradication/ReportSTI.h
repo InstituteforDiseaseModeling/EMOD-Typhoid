@@ -22,7 +22,7 @@ namespace Kernel {
         static IReport* ReportSTI::CreateReport() { return new ReportSTI(); }
 
         virtual void LogNodeData( INodeContext* pNC );
-        virtual void LogIndividualData( IndividualHuman* individual );
+        virtual void LogIndividualData( IIndividualHuman* individual );
         virtual void EndTimestep( float currentTime, float dt );
 
     protected:

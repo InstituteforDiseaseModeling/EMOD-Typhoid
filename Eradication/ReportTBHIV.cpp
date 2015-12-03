@@ -112,7 +112,7 @@ namespace Kernel
     }
 
     void
-        ReportTBHIV::LogIndividualData( IndividualHuman * individual )
+        ReportTBHIV::LogIndividualData( IIndividualHuman* individual )
     {
 
         // Cast from IndividualHuman to IndividualHumanCoinfection

@@ -173,7 +173,7 @@ KML_Demo_Reporter::LogNodeData(
 
 void 
 KML_Demo_Reporter::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
 }

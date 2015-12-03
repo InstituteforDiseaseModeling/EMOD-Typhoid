@@ -13,8 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "NodeEnvironmental.h"
 #include "IndividualEnvironmental.h"
-#include "SusceptibilityEnvironmental.h"
-#include "InfectionEnvironmental.h"
 #include "TransmissionGroupsFactory.h"
 #include "SimulationConfig.h"
 
@@ -53,7 +51,7 @@ namespace Kernel
         return Node::Configure( config );
     }
 
-    IndividualHuman* NodeEnvironmental::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty )
+    IIndividualHuman* NodeEnvironmental::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty )
     {
         return IndividualHumanEnvironmental::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -138,7 +136,7 @@ namespace Kernel
 
                         for (int iSink = 0; iSink < valueCount; iSink++)
                         {
-                            matrixRow.push_back((float)scalingMatrixRow[iSink].AsDouble());
+                            matrixRow.push_back(float(scalingMatrixRow[iSink].AsDouble()));
                         }
 
                         scalingMatrix.push_back(matrixRow);
@@ -174,6 +172,16 @@ namespace Kernel
     void NodeEnvironmental::ValidateIntranodeTransmissionConfiguration()
     {
         Node::ValidateIntranodeTransmissionConfiguration();
+    }
+
+    REGISTER_SERIALIZABLE(NodeEnvironmental);
+
+    void NodeEnvironmental::serialize(IArchive& ar, NodeEnvironmental* obj)
+    {
+        Node::serialize(ar, obj);
+        NodeEnvironmental& node = *obj;
+        ar.labelElement("contagion") & node.contagion;
+        ar.labelElement("node_contagion_decay_fraction") & node.node_contagion_decay_fraction;
     }
 }
 

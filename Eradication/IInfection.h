@@ -6,9 +6,7 @@
 
 namespace Kernel
 {
-    struct IInfection;
-
-    typedef std::list<IInfection*> infection_list_t;
+    struct IIndividualHumanContext;
 
     struct IInfection : ISerializable
     {
@@ -20,7 +18,10 @@ namespace Kernel
         virtual void GetInfectiousStrainID(StrainIdentity*) = 0;
         virtual bool IsActive() const = 0;
         virtual NonNegativeFloat GetDuration() const = 0;
+        virtual void SetContextTo(IIndividualHumanContext*) = 0;
 
         virtual ~IInfection() {}
     };
+
+    typedef std::list<IInfection*> infection_list_t;
 }

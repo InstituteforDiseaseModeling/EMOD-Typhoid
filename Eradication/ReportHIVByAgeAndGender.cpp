@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeLevelHealthTriggeredIV.h"
 #include "ISimulation.h"
 #include "SimulationHIV.h" // for base_year
+#include "IIndividualHumanHIV.h"
 
 static const char* _module = "ReportHIVByAgeAndGender";
 
@@ -191,7 +192,7 @@ namespace Kernel
         ZERO_ARRAY( tested_past_year_or_onART );
     }
 
-    void ReportHIVByAgeAndGender::LogIndividualData( IndividualHuman* individual )
+    void ReportHIVByAgeAndGender::LogIndividualData( IIndividualHuman* individual )
     {
         LOG_DEBUG_F( "%s: doReport = %d\n", __FUNCTION__, doReport );
 

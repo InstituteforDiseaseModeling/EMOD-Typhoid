@@ -17,6 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HIVInterventionsContainer.h"
 #include "NodeEventContext.h"
 #include "SimulationConfig.h" // to iterate over listed_events
+#include "IIndividualHumanHIV.h"
 
 static const char* _module = "ReportHIV";
 
@@ -47,10 +48,10 @@ namespace Kernel {
         : num_acute(0)
         , num_latent(0)
         , num_aids(0)
-        , num_hiv_cd4_hi_non_ART(0)
-        , num_hiv_cd4_hi_on_ART(0)
         , num_hiv_cd4_lo_non_ART(0)
+        , num_hiv_cd4_hi_non_ART(0)
         , num_hiv_cd4_lo_on_ART(0)
+        , num_hiv_cd4_hi_on_ART(0)
         , num_on_ART(0)
         , num_ART_dropouts(0)
         , num_events(0)
@@ -173,7 +174,7 @@ namespace Kernel {
 
     void
     ReportHIV::LogIndividualData(
-        IndividualHuman* individual
+        IIndividualHuman* individual
     )
     {
         ReportSTI::LogIndividualData( individual );

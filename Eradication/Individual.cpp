@@ -28,7 +28,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "suids.hpp"
 #include "Susceptibility.h"
 
-#include "Serializer.h"
 #include "RapidJsonImpl.h" // Once JSON lib wrapper is completely done, this underlying JSON library specific include can be taken out
 #include <IArchive.h>
 
@@ -398,7 +397,6 @@ namespace Kernel
         IIndividualHumanContext *indcontext = GetContextPointer();
         interventions->SetContextTo(indcontext); //TODO: fix this when init pattern standardized <ERAD-291>  PE: See comment above
 
-
         Inf_Sample_Rate = infsample; // EAW: currently set to 1 by Node::addNewIndividual
         migration_mod   = migration_modifier;
 
@@ -477,7 +475,7 @@ namespace Kernel
         // fix up child pointers
         for (auto infection : infections)
         {
-            ((Infection*)infection)->SetContextTo(context);
+            infection->SetContextTo(context);
         }
 
         if (susceptibility) susceptibility->SetContextTo(context);
@@ -688,7 +686,7 @@ namespace Kernel
     //   Migration methods
     //------------------------------------------------------------------
 
-    void IndividualHuman::ImmigrateTo(Node* destination_node)
+    void IndividualHuman::ImmigrateTo(INodeContext* destination_node)
     {
         if( destination_node == nullptr )
         {

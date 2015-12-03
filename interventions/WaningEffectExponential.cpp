@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "WaningEffect.h"
 #include "CajunIncludes.h"
 #include "ConfigurationImpl.h"
+#include "IArchive.h"
 
 static const char* _module = "WaningEffectExponential";
 
@@ -48,6 +49,15 @@ namespace Kernel
     float WaningEffectExponential::Current() const
     {
         return currentEffect;
+    }
+
+    REGISTER_SERIALIZABLE(WaningEffectExponential);
+
+    void WaningEffectExponential::serialize(IArchive& ar, WaningEffectExponential* obj)
+    {
+        WaningEffectExponential& effect = *obj;
+        ar.labelElement("currentEffect") & effect.currentEffect;
+        ar.labelElement("decayTimeConstant") & effect.decayTimeConstant;
     }
 }
 

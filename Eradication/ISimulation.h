@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include <string>
-#include "ISupports.h"
+#include "ISerializable.h"
 #include "IdmDateTime.h"
 #include "IdmApi.h"
 
@@ -18,7 +18,7 @@ namespace Kernel
 {
     struct INodeContext;
 
-    struct IDMAPI ISimulation : public ISupports
+    struct IDMAPI ISimulation : ISerializable
     {
         virtual bool  Populate() = 0;
         virtual void  Update(float time_step) = 0;

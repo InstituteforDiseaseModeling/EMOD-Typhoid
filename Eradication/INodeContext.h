@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "IdmApi.h"
-#include "ISupports.h"
+#include "ISerializable.h"
 #include "suids.hpp"
 #include "RANDOM.h"
 #include "IdmDateTime.h"
@@ -19,6 +19,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class  MigrationInfoFactory;
+    struct ISimulationContext;
     class  MigrationInfo;
     struct NodeDemographics;
     struct NodeDemographicsDistribution;
@@ -26,7 +28,7 @@ namespace Kernel
     struct INodeEventContext;
     struct IIndividualHuman;
 
-    struct IDMAPI INodeContext : public ISupports // information and services related to the context in the simulation environment provided exposed by a node for its contained objects
+    struct IDMAPI INodeContext : ISerializable
     {
         // TODO/OPTION:
         // could have an PostMigratingIndividual interface too if individuals will call back to do migration....
@@ -45,8 +47,14 @@ namespace Kernel
         //individual can get an id of their parent to compare against, for instance, their home node id
         virtual suids::suid GetSuid() const = 0;
 
+        virtual void SetupMigration( MigrationInfoFactory* ) = 0;
+        virtual void SetContextTo( ISimulationContext* ) = 0;
+
         virtual suids::suid GetNextInfectionSuid() = 0;
         virtual ::RANDOMBASE* GetRng() = 0; 
+
+        virtual void Update(float dt) = 0;
+        virtual IIndividualHuman* processImmigratingIndividual( IIndividualHuman* ) = 0;
 
         // heterogeneous intra-node transmission
         virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) = 0;

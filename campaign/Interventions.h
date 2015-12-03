@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <list>
 
 #include "IdmApi.h"
-#include "BoostLibWrapper.h"
 
 #include "ISupports.h"
 #include "Configure.h"                 // for JsonConfigurable
@@ -61,10 +60,6 @@ namespace Kernel
         virtual IDistributableIntervention * Clone()  = 0;
 
         virtual ~IDistributableIntervention() { }
-
-    private:
-        static void save(IArchive&, IDistributableIntervention*&);
-        static void load(IArchive&, IDistributableIntervention*&);
     };
 #pragma warning(pop)
 
@@ -180,15 +175,15 @@ namespace Kernel
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
-        virtual float GetCostPerUnit() const { return cost_per_unit; }
-        virtual bool Expired();
-        virtual void ValidateSimType( const std::string& simTypeStr );
+        virtual float GetCostPerUnit() const override { return cost_per_unit; }
+        virtual bool Expired() override ;
+        virtual void ValidateSimType( const std::string& simTypeStr ) override;
 
     protected:
         BaseIntervention();
         BaseIntervention( const BaseIntervention& );
         virtual ~BaseIntervention();
-        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pICCO );
+        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pICCO ) override;
 
         float cost_per_unit;
         bool expired;
@@ -198,13 +193,13 @@ namespace Kernel
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
-        virtual float GetCostPerUnit() const { return cost_per_unit; }
+        virtual float GetCostPerUnit() const override { return cost_per_unit; }
         virtual bool Expired();
-        virtual void ValidateSimType( const std::string& simTypeStr );
+        virtual void ValidateSimType( const std::string& simTypeStr ) override;
 
     protected:
         BaseNodeIntervention();
-        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC = nullptr );
+        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC = nullptr ) override;
 
         float cost_per_unit;
         bool expired;

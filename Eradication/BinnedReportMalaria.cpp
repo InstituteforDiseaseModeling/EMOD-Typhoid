@@ -125,7 +125,7 @@ void BinnedReportMalaria::EndTimestep( float currentTime, float dt )
     clearChannelsBins();
 }
 
-void BinnedReportMalaria::LogIndividualData( Kernel::IndividualHuman * individual )
+void BinnedReportMalaria::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "BinnedReportMalaria::LogIndividualData\n" );
 

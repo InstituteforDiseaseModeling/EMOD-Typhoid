@@ -24,7 +24,7 @@ namespace Kernel {
 
         virtual bool Configure( const Configuration* inputJson );
         virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
-        virtual void LogIndividualData( IndividualHuman* individual );
+        virtual void LogIndividualData( IIndividualHuman* individual );
 
     protected:
         virtual std::string GetHeader() const ;

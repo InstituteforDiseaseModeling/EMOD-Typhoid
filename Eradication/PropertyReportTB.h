@@ -20,7 +20,7 @@ namespace Kernel {
         static IReport* CreateReport();
         virtual ~PropertyReportTB() { }
 
-        virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+        virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
 
         virtual void LogNodeData( Kernel::INodeContext * pNC );
 

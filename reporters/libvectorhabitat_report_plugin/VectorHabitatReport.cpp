@@ -199,7 +199,7 @@ void VectorHabitatReport::EndTimestep( float currentTime, float dt )
     clearChannelsBins();
 }
 
-void VectorHabitatReport::LogIndividualData( IndividualHuman * individual )
+void VectorHabitatReport::LogIndividualData( IIndividualHuman* individual )
 {
 }
 

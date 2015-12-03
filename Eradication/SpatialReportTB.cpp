@@ -75,7 +75,7 @@ void SpatialReportTB::populateChannelInfos(tChanInfoMap &channel_infos)
 
 void
 SpatialReportTB::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     LOG_DEBUG( "LogIndividualData in SpatialReportTB\n" );

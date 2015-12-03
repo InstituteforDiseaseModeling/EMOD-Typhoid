@@ -144,7 +144,7 @@ void TBPatientJSONReport::LogNodeData( Kernel::INodeContext * pNC )
     //pNode->GetTime();
 }
 
-void TBPatientJSONReport::LogIndividualData( Kernel::IndividualHuman * individual )
+void TBPatientJSONReport::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 

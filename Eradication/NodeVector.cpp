@@ -29,7 +29,6 @@ static const char * _module = "NodeVector";
 #ifdef randgen
 #undef randgen
 #endif
-#include "RANDOM.h"
 #define randgen (parent->GetRng())
 
 using namespace std;
@@ -168,19 +167,19 @@ namespace Kernel
         m_larval_habitats.clear();
     }
 
-    IndividualHuman *NodeVector::createHuman(suids::suid id, float MCweight, float init_age, int gender, float init_poverty)
+    IIndividualHuman* NodeVector::createHuman(suids::suid id, float MCweight, float init_age, int gender, float init_poverty)
     {
         return IndividualHumanVector::CreateHuman(getContextPointer(), id, MCweight, init_age, gender, init_poverty);
     }
 
-    IndividualHuman* NodeVector::processImmigratingIndividual(IndividualHumanVector* movedind)
+    IIndividualHuman* NodeVector::processImmigratingIndividual(IIndividualHuman* movedind)
     {
         Node::processImmigratingIndividual(movedind);
 
         return movedind;
     }
 
-    IndividualHuman *NodeVector::addNewIndividual(float MCweight, float init_age, int gender, int init_infs, float immparam, float riskparam, float mighet, float init_poverty)
+    IIndividualHuman* NodeVector::addNewIndividual(float MCweight, float init_age, int gender, int init_infs, float immparam, float riskparam, float mighet, float init_poverty)
     {
         // just the base class for now
         return Node::addNewIndividual(MCweight, init_age, gender, init_infs, immparam, riskparam, mighet, init_poverty);
@@ -630,6 +629,23 @@ namespace Kernel
     VectorPopulationList_t& NodeVector::GetVectorPopulations()
     {
         return m_vectorpopulations;
+    }
+
+    REGISTER_SERIALIZABLE(NodeVector);
+
+    void NodeVector::serialize(IArchive& ar, NodeVector* obj)
+    {
+        Node::serialize(ar, obj);
+        NodeVector& node = *obj;
+// clorton        ar.labelElement("m_larval_habitats") & node.m_larval_habitats;
+// clorton        ar.labelElement("m_vectorpopulations") & node.m_vectorpopulations;
+// clorton        ar.labelElement("m_vector_lifecycle_probabilities") & node.m_vector_lifecycle_probabilities;
+// clorton        ar.labelElement("larval_habitat_multiplier") & node.larval_habitat_multiplier;
+        ar.labelElement("vector_migration") & node.vector_migration;
+        ar.labelElement("vector_migration_wind") & node.vector_migration_wind;
+        ar.labelElement("vector_migration_human") & node.vector_migration_human;
+        ar.labelElement("vector_migration_local") & node.vector_migration_local;
+        ar.labelElement("mosquito_weight") & node.mosquito_weight;
     }
 } // end namespace Kernel
 

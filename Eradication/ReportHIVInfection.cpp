@@ -14,9 +14,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ReportHIVInfection.h"
 #include "NodeHIV.h"
 #include "SusceptibilityHIV.h"
-#include "InfectionHIV.h"
-#include "HIVInterventionsContainer.h"
 #include "ISimulation.h"
+#include "IIndividualHumanHIV.h"
+#include "IInfectionHIV.h"
+#include "IHIVInterventionsContainer.h"
 
 static const char* _module = "ReportHIVInfection";
 
@@ -104,7 +105,7 @@ namespace Kernel
 
     void
     ReportHIVInfection::LogIndividualData(
-        IndividualHuman* individual
+        IIndividualHuman* individual
     )
     {
         IIndividualHumanHIV* hiv_individual = nullptr;

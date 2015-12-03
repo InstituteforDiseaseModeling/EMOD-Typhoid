@@ -367,7 +367,7 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
         return is_collecting_data && doReport; 
     }
 
-    void Report_HIV_WHO2015::LogIndividualData( Kernel::IndividualHuman* individual )
+    void Report_HIV_WHO2015::LogIndividualData( Kernel::IIndividualHuman* individual )
     {
         if( individual->GetAge() < FIFTEEN_YEARS )
             return;

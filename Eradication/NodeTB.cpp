@@ -55,7 +55,7 @@ namespace Kernel
         NodeAirborne::Initialize();
     }
 
-    IndividualHuman *NodeTB::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+    IIndividualHuman* NodeTB::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
     {
         return IndividualHumanTB::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -242,7 +242,7 @@ namespace Kernel
         }
     }
 
-    IndividualHuman *NodeTB::addNewIndividual( float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
+    IIndividualHuman* NodeTB::addNewIndividual( float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
     {
         auto tempind = NodeAirborne::addNewIndividual(monte_carlo_weight, initial_age, gender, initial_infection_count, immparam, riskparam, mighet, init_poverty);
         dynamic_cast<IndividualHumanTB*>(tempind)->RegisterInfectionIncidenceObserver( this );
@@ -256,7 +256,7 @@ namespace Kernel
 
     }
 
-    IndividualHuman* NodeTB::processImmigratingIndividual(IndividualHuman* movedind)
+    IIndividualHuman* NodeTB::processImmigratingIndividual(IIndividualHuman* movedind)
     {
         movedind = NodeAirborne::processImmigratingIndividual(movedind);
         dynamic_cast<IndividualHumanTB*>(movedind)->RegisterInfectionIncidenceObserver( this );
@@ -280,6 +280,18 @@ namespace Kernel
     float NodeTB::GetMDRFastIncidentCounter() const 
     {
         return MDR_fast_incident_counter;
+    }
+
+    REGISTER_SERIALIZABLE(NodeTB);
+
+    void NodeTB::serialize(IArchive& ar, NodeTB* obj)
+    {
+        NodeAirborne::serialize(ar, obj);
+        NodeTB& node = *obj;
+        ar.labelElement("incident_counter") & node.incident_counter;
+        ar.labelElement("MDR_incident_counter") & node.MDR_incident_counter;
+        ar.labelElement("MDR_evolved_incident_counter") & node.MDR_evolved_incident_counter;
+        ar.labelElement("MDR_fast_incident_counter") & node.MDR_fast_incident_counter;
     }
 }
 

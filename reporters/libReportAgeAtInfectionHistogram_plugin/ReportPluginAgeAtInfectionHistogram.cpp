@@ -175,7 +175,7 @@ ReportPluginAgeAtInfectionHistogram::LogNodeData(
 
 void 
 ReportPluginAgeAtInfectionHistogram::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     if (individual->GetNewInfectionState() == NewInfectionState::NewAndDetected || individual->GetNewInfectionState() == NewInfectionState::NewInfection)

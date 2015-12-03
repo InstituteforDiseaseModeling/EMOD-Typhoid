@@ -9,9 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "NodeSTI.h"
-#include "IndividualHIV.h" // for serialization only
-#include "TransmissionGroupsFactory.h"
-#include "Relationship.h"
 #include "INodeHIV.h"
 
 namespace Kernel
@@ -32,12 +29,12 @@ namespace Kernel
         // void Initialize();
 
         // Factory methods
-        virtual IndividualHuman *createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
+        virtual IIndividualHuman* createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
 
         //virtual void SetupIntranodeTransmission();
         //virtual void Update( float dt );
         //virtual void processEmigratingIndividual( IndividualHuman *individual );
-        //virtual IndividualHuman* NodeHIV::processImmigratingIndividual( IndividualHuman* movedind );
+        //virtual IIndividualHuman* NodeHIV::processImmigratingIndividual( IIndividualHuman* movedind );
 
         // INodeHIV
         // virtual const vector<RelationshipStartInfo>& GetNewRelationships() const;
@@ -45,5 +42,7 @@ namespace Kernel
 
         // NodeSTI
         // std::multimap< unsigned long, int > migratedIndividualToRelationshipIdMap;
+
+        DECLARE_SERIALIZABLE(NodeHIV);
     };
 }

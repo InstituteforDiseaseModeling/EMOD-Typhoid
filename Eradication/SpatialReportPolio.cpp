@@ -15,8 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <numeric>
 #include <map>
 #include "BoostLibWrapper.h"
-// not in boost wrapper???
-#include <boost/math/special_functions/fpclassify.hpp>
 
 #include "SpatialReportPolio.h"
 #include "NodePolio.h"
@@ -24,8 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Environment.h"
 #include "Exceptions.h"
 #include "Individual.h"
-#include "SimulationConfig.h"
-#include "ProgVersion.h"
+#include "IndividualPolio.h"
 
 using namespace std;
 
@@ -88,11 +85,11 @@ void SpatialReportPolio::populateChannelInfos(tChanInfoMap &channel_infos)
 }
 
 
-void SpatialReportPolio::LogIndividualData( Kernel::IndividualHuman * individual )
+void SpatialReportPolio::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     SpatialReport::LogIndividualData(individual);
 
-    float monte_carlo_weight = (float)individual->GetMonteCarloWeight();
+    float monte_carlo_weight = float(individual->GetMonteCarloWeight());
 
     NewInfectionState::_enum nis = individual->GetNewInfectionState();
 

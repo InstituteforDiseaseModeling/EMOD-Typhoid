@@ -9,7 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include <iostream>
-#include <fstream>
 #include <memory> // unique_ptr
 #include "UnitTest++.h"
 #include "BehaviorPFA.h"
@@ -21,7 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "INodeEventContextFake.h"
 #include "RandomFake.h"
 #include "Relationship.h"
-#include "IdmString.h"
 #include "NoCrtWarnings.h"
 
 
@@ -176,10 +174,10 @@ SUITE(BehaviorPfaTest)
         // --- Upper-tail critical values of chi-square distribution with ? degrees of freedom 
         // --- for v = 0.95, 0.975
         // --------------------------------------------------------------------------------------
-        float chi_sq_crit_val_095[] =  {  3.841f,  5.991f,  7.815f,  9.488f, 11.070f, 
-                                         12.592f, 14.067f, 15.507f, 16.919f, 18.307f,
-                                         19.675f, 21.026f, 22.362f, 23.685f, 24.996f,
-                                         26.296f, 27.587f, 28.869f, 30.144f, 31.410f } ;
+//        float chi_sq_crit_val_095[] =  {  3.841f,  5.991f,  7.815f,  9.488f, 11.070f, 
+//                                         12.592f, 14.067f, 15.507f, 16.919f, 18.307f,
+//                                         19.675f, 21.026f, 22.362f, 23.685f, 24.996f,
+//                                         26.296f, 27.587f, 28.869f, 30.144f, 31.410f } ;
 
         float chi_sq_crit_val_0975[] = {  5.042f,  7.378f,  9.348f, 11.143f, 12.833f,
                                          14.449f, 16.013f, 17.535f, 19.023f, 20.483f, 
@@ -203,7 +201,7 @@ SUITE(BehaviorPfaTest)
         }
 
     protected:
-        virtual ProbabilityNumber getProbabilityUsingCondomThisAct() const { return 1.0f; }
+        virtual ProbabilityNumber getProbabilityUsingCondomThisAct() const override { return 1.0f; }
     };
 
     static int m_NextId = 1 ;

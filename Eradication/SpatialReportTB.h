@@ -28,7 +28,7 @@ public:
     static IReport* CreateReport();
     virtual ~SpatialReportTB() { }
  
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void LogNodeData( Kernel::INodeContext * pNC );
 
 protected:

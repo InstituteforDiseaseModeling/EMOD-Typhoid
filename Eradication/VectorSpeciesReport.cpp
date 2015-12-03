@@ -123,7 +123,7 @@ void VectorSpeciesReport::postProcessAccumulatedData()
     normalizeChannel("Daily HBR",             (float)_nrmSize);
 }
 
-void VectorSpeciesReport::LogIndividualData( Kernel::IndividualHuman * individual )
+void VectorSpeciesReport::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "VectorSpeciesReport::LogIndividualData\n" );
 }

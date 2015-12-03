@@ -637,7 +637,6 @@ namespace Kernel
     // Yes, there is an opportunity to doing something cleverer with base classes.
     class InterventionConfig : public JsonConfigurable
     {
-        friend class ::boost::serialization::access;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }

@@ -32,10 +32,10 @@ namespace Kernel {
         static IReport* CreateReport();
         virtual ~PropertyReport() { }
 
-        virtual void EndTimestep( float currentTime, float dt );
-        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-        virtual void LogIndividualData( Kernel::IndividualHuman * individual );
-        virtual void LogNodeData( Kernel::INodeContext * pNC );
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override { return true; };
+        virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
+        virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
 
     protected:
         PropertyReport();
@@ -45,9 +45,9 @@ namespace Kernel {
         typedef std::set< tKeyValuePair > tPermutations;
         tPermutations permutationsSet;
         std::vector<std::string> permutationsList ;
-        void GenerateAllPermutationsOnce( IndividualHuman * pIndiv, std::set< std::string > keys, tKeyValuePair perm );
+        void GenerateAllPermutationsOnce( IIndividualHuman* pIndiv, std::set< std::string > keys, tKeyValuePair perm );
 
-        virtual void postProcessAccumulatedData();
+        virtual void postProcessAccumulatedData() override;
 
         // counters
         std::map< std::string, float > new_infections;

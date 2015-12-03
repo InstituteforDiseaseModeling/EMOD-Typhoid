@@ -74,7 +74,7 @@
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\utils\;..\campaign\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;C:\python27\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\utils\;..\campaign\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\python27\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -87,7 +87,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;Ws2_32.lib;snappy.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;..\x64\Debug\;c:\python27\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -123,7 +123,7 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;C:\Python27\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\Python27\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
@@ -140,7 +140,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;ws2_32.lib;snappy.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;..\x64\Release\;c:\python27\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>

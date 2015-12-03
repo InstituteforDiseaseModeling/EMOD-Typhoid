@@ -72,8 +72,8 @@ time_t lastProgressUpdateTime = 0;
 StatusReporter::StatusReporter(void) :
     scheduler(nullptr),
     schedulerJob(nullptr),
-    m_pLocalWinsockJunk(nullptr),
-    m_nPort(4444)
+    m_nPort(4444),
+    m_pLocalWinsockJunk(nullptr)
 {
     LOG_DEBUG("Beginning to construct StatusReporter...\n");
 
@@ -378,7 +378,7 @@ void StatusReporter::publish(const std::string &newLogLine) const
 {
     sendto(m_pLocalWinsockJunk->SendSocket,
         newLogLine.c_str(),
-        (int)strlen( newLogLine.c_str() ),
+        int(strlen( newLogLine.c_str() )),
         0,
         (SOCKADDR *) &(m_pLocalWinsockJunk->RecvAddr),
         sizeof(m_pLocalWinsockJunk->RecvAddr));

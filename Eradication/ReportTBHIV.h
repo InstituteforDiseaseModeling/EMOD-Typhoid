@@ -25,7 +25,7 @@ public:
     }
     virtual void EndTimestep( float currentTime, float dt );
     virtual void LogNodeData( INodeContext * pNC );
-    virtual void LogIndividualData( IndividualHuman * individual );
+    virtual void LogIndividualData( IIndividualHuman* individual );
     virtual void BeginTimestep();
 
 protected:

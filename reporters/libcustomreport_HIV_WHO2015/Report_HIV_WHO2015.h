@@ -50,7 +50,7 @@ namespace Kernel
 
         virtual std::string GetHeader() const;
         virtual bool IsCollectingIndividualData( float currentTime, float dt ) const;
-        virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+        virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
         virtual void LogNodeData( Kernel::INodeContext * pNC );
         //virtual void Reduce();
         //virtual void Finalize();

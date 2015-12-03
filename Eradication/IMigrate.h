@@ -13,11 +13,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class Node;
+    struct INodeContext;
 
     struct IMigrate : public ISupports
     {
-        virtual void ImmigrateTo(Node* node) = 0;
+        virtual void ImmigrateTo(INodeContext* node) = 0;
         virtual void SetMigrationDestination(suids::suid destination) = 0;
         virtual const suids::suid & GetMigrationDestination() = 0;
 

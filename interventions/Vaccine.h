@@ -9,17 +9,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include <string>
-#include <list>
-#include <vector>
-
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Contexts.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
-#include "Configure.h"
 
 namespace Kernel
 {
@@ -39,21 +33,21 @@ namespace Kernel
     public:
         SimpleVaccine();
         virtual ~SimpleVaccine();
-        virtual int AddRef() { return BaseIntervention::AddRef(); }
-        virtual int Release() { return BaseIntervention::Release(); }
-        bool Configure( const Configuration* pConfig );
+        virtual int AddRef() override { return BaseIntervention::AddRef(); }
+        virtual int Release() override { return BaseIntervention::Release(); }
+        /* clorton virtual */ bool Configure( const Configuration* pConfig ) /* clorton override */;
 
         // IDistributableIntervention
-        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );
-        virtual void SetContextTo(IIndividualHumanContext *context);
-        virtual void Update(float dt);
+        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
+        virtual void SetContextTo(IIndividualHumanContext *context) override;
+        virtual void Update(float dt) override;
 
         // ISupports
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
         // IVaccine
         virtual int   GetVaccineType()            const;    // clorton - still needed?
-        virtual void  ApplyVaccineTake();
+        virtual void  ApplyVaccineTake() override;
 
     protected:
         // context for this intervention--does not need to be reset upon migration, it is just for GiveVaccine()

@@ -191,7 +191,7 @@ void MalariaPatientJSONReport::LogNodeData( INodeContext * pNC )
     simtime = pNC->GetTime().time;
 }
 
-void MalariaPatientJSONReport::LogIndividualData( IndividualHuman * individual )
+void MalariaPatientJSONReport::LogIndividualData( IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 

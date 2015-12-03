@@ -230,6 +230,24 @@ namespace Kernel
         }
         return msg.str();
     }
+
+    REGISTER_SERIALIZABLE(IVCalendar);
+
+    void IVCalendar::serialize(IArchive& ar, IVCalendar* obj)
+    {
+        IVCalendar& cal = *obj;
+        ar.labelElement("target_age_array"); TargetAgeArrayConfig::serialize( ar, cal.target_age_array );
+// clorton        ar.labelElement("actual_intervention_config") & cal.actual_intervention_config;
+        ar.labelElement("scheduleAges") & cal.scheduleAges;
+    }
+
+    void TargetAgeArrayConfig::serialize(IArchive& ar, TargetAgeArrayConfig& age_array)
+    {
+        ar.startObject();
+            ar.labelElement("age2ProbabilityMap") & age_array.age2ProbabilityMap;
+            ar.labelElement("dropout") & age_array.dropout;
+        ar.endObject();
+    }
 }
 
 #if 0

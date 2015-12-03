@@ -62,13 +62,13 @@ namespace Kernel
 
     private:
 
-        friend class ::boost::serialization::access;
-
+#if 0
         template<class Archive>
         void serialize_inner(Archive &ar, const unsigned int v)
         {
             typemap.serialize(this, ar, v);
             // ar & efficacy; // don't need to persist because this intervention only acts at time of distribution.
         }
+#endif
     };
 }

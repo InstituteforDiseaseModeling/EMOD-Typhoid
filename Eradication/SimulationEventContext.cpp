@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "Log.h"
 #include "Configure.h"
+#include <InterventionFactory.h>
 
 /*
     Notes on extending ECH functionality

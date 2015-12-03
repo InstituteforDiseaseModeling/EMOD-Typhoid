@@ -133,7 +133,7 @@ namespace Kernel
                 break;
             }
             //ret_rdd = (int)year2DelayMap[ map_year ];
-            ret_rdd = (*this).at( (float) map_year );
+            ret_rdd = (*this).at( float(map_year) );
         }
         return ret_rdd;
     }

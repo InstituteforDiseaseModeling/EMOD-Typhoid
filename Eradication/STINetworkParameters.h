@@ -43,7 +43,6 @@ namespace Kernel
 
     class STINetworkParametersMap : public JsonConfigurable
     {
-        friend class ::boost::serialization::access;
     public:
         STINetworkParametersMap();
         ~STINetworkParametersMap();

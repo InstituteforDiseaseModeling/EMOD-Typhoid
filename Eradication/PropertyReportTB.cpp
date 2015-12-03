@@ -42,7 +42,7 @@ PropertyReportTB::PropertyReportTB()
 
 void
 PropertyReportTB::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     PropertyReport::LogIndividualData( individual );

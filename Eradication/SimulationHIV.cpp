@@ -20,6 +20,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IHIVCascadeStateIntervention.h"
 #include "HIVReportEventRecorder.h"
 #include "CampaignEventByYear.h"
+#include "IndividualHIV.h"
 
 static const float DEFAULT_BASE_YEAR = 2015.0f ;
 

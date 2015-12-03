@@ -184,7 +184,7 @@ TajikReporter::LogNodeData(
 
 void 
 TajikReporter::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
 }

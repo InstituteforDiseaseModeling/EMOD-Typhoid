@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "NodeEventContextHost.h"
 #include "Debug.h"
-#include "SimulationEventContext.h"
 #include "NodeDemographics.h"
 #include "Node.h"
 #include "Individual.h"
@@ -192,7 +191,7 @@ namespace Kernel
         return node->suid;
     }
 
-    void NodeEventContextHost::ProcessArrivingIndividual( IndividualHuman *ih )
+    void NodeEventContextHost::ProcessArrivingIndividual( IIndividualHuman* ih )
     {
         for (auto& entry : arrival_distribution_sources)
         {
@@ -201,7 +200,7 @@ namespace Kernel
         }
     }
 
-    void NodeEventContextHost::ProcessDepartingIndividual( IndividualHuman *ih )
+    void NodeEventContextHost::ProcessDepartingIndividual( IIndividualHuman* ih )
     {
         //LOG_DEBUG( "ProcessDepartingIndividual\n" );
         for (auto& entry : departure_distribution_sources)
@@ -525,7 +524,7 @@ namespace Kernel
     {
         for (int i = 0; i < num_cases_per_node; i++)
         {
-            IndividualHuman *new_individual = node->configureAndAddNewIndividual(1.0, import_age, 0.0, 0.5); // using age specified by Oubreak, but otherwise community demographics for import case (e.g. immune history)
+            IIndividualHuman* new_individual = node->configureAndAddNewIndividual(1.0, import_age, 0.0, 0.5); // using age specified by Oubreak, but otherwise community demographics for import case (e.g. immune history)
 
             // 0 = incubation_period_override, outbreaks are instantaneously mature
             new_individual->AcquireNewInfection(outbreak_strainID, 0 ); 
@@ -565,7 +564,7 @@ namespace Kernel
 
     INodeContext* NodeEventContextHost::GetNodeContext()
     {
-        return (INodeContext*) node;
+        return static_cast<INodeContext*>(node);
     }
 
     int NodeEventContextHost::GetIndividualHumanCount() const

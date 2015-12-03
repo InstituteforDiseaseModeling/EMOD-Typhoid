@@ -28,7 +28,7 @@ public:
     virtual bool Configure( const Configuration * inputJson );
     virtual void EndTimestep( float currentTime, float dt );
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual);
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual);
     virtual void LogNodeData( Kernel::INodeContext * pNC );
 
 protected:

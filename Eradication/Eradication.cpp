@@ -12,15 +12,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <iostream>
 #include <fstream>
 #include <sstream> // ostringstream
-#include <cstdlib>
 #include <mpi.h>
 
-#include <iostream>
-#include <fstream>
 #include <math.h>
 #include <stdio.h>
-#include <mpi.h>
-#include <iterator>
 
 #include "Environment.h"
 #include "FileSystem.h"
@@ -32,17 +27,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "ProgramOptions.h"
 #include "Controller.h"
-#include "CajunIncludes.h"
 #include "Debug.h"
-#include "Environment.h"
 #include "ControllerFactory.h"
 #include "StatusReporter.h"
 
-#include "RANDOM.h"
 #include "Exceptions.h"
 
 // Version info extraction for both program and dlls
-#include "SimulationFactory.h"
 #include "ProgVersion.h"
 #include "SimulationConfig.h"
 #include "InterventionFactory.h"
@@ -236,7 +227,7 @@ IdmPyInit(
     // how about we use the config.json python script path by default and if that is missing
 
     //std::cout << "Appending our path to existing python path." << std::endl;
-    PyObject * path = nullptr;
+    PyObject * path; // = nullptr;
     if( python_script_path != "" )
     {
         //std::cout << "Using dtk python path: " << GET_CONFIGURABLE(SimulationConfig)->python_script_path << std::endl;
@@ -313,7 +304,7 @@ postProcessSchemaFiles(
         PyObject * vars = PyTuple_New(1);
         PyObject* py_filename_str = PyString_FromString( schema_path );
         PyTuple_SetItem(vars, 0, py_filename_str);
-        PyObject * returnArgs = PyObject_CallObject( pFunc, vars );
+        /* PyObject * returnArgs = */ PyObject_CallObject( pFunc, vars );
         //std::cout << "Back from python script." << std::endl;
         PyErr_Print();
     }
@@ -418,7 +409,7 @@ void IDMAPI writeInputSchemas(
     fakeECJson["class"] = json::String("StandardInterventionDistributionEventCoordinator");
     auto fakeConfig = Configuration::CopyFromElement( fakeECJson );
     Kernel::StandardInterventionDistributionEventCoordinator * pTempEC = dynamic_cast<Kernel::StandardInterventionDistributionEventCoordinator*>( Kernel::EventCoordinatorFactory::CreateInstance( fakeConfig ) );
-    json::QuickBuilder ec_schema = pTempEC->GetSchema();
+    /* json::QuickBuilder ec_schema = */ pTempEC->GetSchema();
 
     if( !Kernel::InterventionFactory::getInstance() )
     {
@@ -535,8 +526,8 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
                     std::list<string>::iterator iter1;
                     std::list<string>::iterator iter2;
                     for(iter1 = dllNames.begin(),iter2 = dllVersions.begin(); 
-                        iter1 != dllNames.end(); 
-                        iter1++, iter2++)
+                        iter1 != dllNames.end();
+                        ++iter1, ++iter2)
                     {
                         oss << *iter1 << " version: " << *iter2 << std::endl;
                     }
@@ -706,12 +697,10 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
         //LOG_INFO_F( "Name: %s\n", GET_CONFIGURABLE(SimulationConfig)->ConfigName.c_str() );  // can't get ConfigName because we haven't initialized SimulationConfig yet...
         LOG_INFO_F( "%d parameters found.\n", (EnvPtr->Config)->As<json::Object>().Size() );
 
-        IController *controller = nullptr;
-
         // override controller selection if unit tests requested on command line
         LOG_INFO("Initializing Controller...\n");
-        controller = ControllerFactory::CreateController(EnvPtr->Config);
-            
+        IController *controller = ControllerFactory::CreateController(EnvPtr->Config);
+
         if (controller)
         {
             status = controller->Execute();

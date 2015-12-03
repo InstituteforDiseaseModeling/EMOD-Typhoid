@@ -187,7 +187,7 @@ void CustomTBReportMATLAB::EndTimestep( float currentTime, float dt )
     clearChannelsBins();
 }
 
-void  CustomTBReportMATLAB::LogIndividualData( Kernel::IndividualHuman * individual )
+void  CustomTBReportMATLAB::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 

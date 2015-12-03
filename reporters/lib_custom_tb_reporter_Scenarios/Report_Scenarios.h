@@ -26,7 +26,7 @@ public:
 protected:
     virtual void LogNodeData( INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( IndividualHuman * individual );
+    virtual void LogIndividualData( IIndividualHuman* individual );
     virtual void BeginTimestep();
     virtual void EndTimestep( float currentTime, float dt );
     virtual void Finalize();

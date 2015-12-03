@@ -102,7 +102,7 @@ void BinnedReportPolio::EndTimestep( float currentTime, float dt )
     clearChannelsBins();
 }
 
-void  BinnedReportPolio::LogIndividualData( Kernel::IndividualHuman * individual )
+void  BinnedReportPolio::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "BinnedReportPolio::LogIndividualData\n" );
 

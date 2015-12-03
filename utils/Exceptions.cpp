@@ -112,7 +112,7 @@ static inline std::string dump_backtrace()
         // -------------------------------------
         // --- Gets the method name in the stack
         // -------------------------------------
-        if( SymFromAddr( process, (DWORD64)( stack[ i ] ), 0, symbol ) )
+        if( SymFromAddr( process, DWORD64(stack[ i ]), nullptr, symbol ) )
         {
             method_name = symbol->Name ;
             char buff[50] ;
@@ -123,7 +123,7 @@ static inline std::string dump_backtrace()
         // ----------------------------------------------
         // --- Gets the file and line number information
         // ----------------------------------------------
-        if( SymGetLineFromAddr64( process, (DWORD64)( stack[ i ] ), &dwDisplacement, &line ) )
+        if( SymGetLineFromAddr64( process, DWORD64(stack[ i ]), &dwDisplacement, &line ) )
         {
             file_name   = line.FileName ;
             line_number = line.LineNumber ;
@@ -194,8 +194,8 @@ namespace Kernel {
     , _msg()
     , _stackTrace()
     , _fileName( file_name )
-    , _lineNum( line_num )
     , _funcName( func_name )
+    , _lineNum( line_num )
     {
         //std::cout << "DetailedException ctor: msg = " << msg << ", file = " << file_name << ", line_num = " << line_num << std::endl;
         _stackTrace = dump_backtrace();

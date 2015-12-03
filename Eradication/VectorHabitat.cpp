@@ -15,9 +15,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "Interventions.h"
 #include "Log.h"
-#include "NodeVector.h"
 #include "SimulationConfig.h" // TODO: long-term, it seems that lloffset should belong to Node and the larval decay rates and rainfall mortality thresholds to this class.
 #include "Vector.h"
+#include "INodeContext.h"
+#include "NodeEventContext.h"   // for INodeEventContext
 
 static const char * _module = "VectorHabitat";
 
@@ -132,7 +133,7 @@ namespace Kernel
 
             case VectorHabitatType::TEMPORARY_RAINFALL:
                 LOG_DEBUG_F("Habitat type = TEMPORARY_RAINFALL, Max larval capacity = %f\n", m_max_larval_capacity);
-                m_current_larval_capacity += (float)( localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - m_current_larval_capacity * exp(LARVAL_HABITAT_FACTOR1 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * LARVAL_HABITAT_FACTOR2 * params()->tempHabitatDecayScalar * sqrt(LARVAL_HABITAT_FACTOR3 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * (1.0f - localWeather->humidity()) * dt );
+                m_current_larval_capacity += float(localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - m_current_larval_capacity * exp(LARVAL_HABITAT_FACTOR1 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * LARVAL_HABITAT_FACTOR2 * params()->tempHabitatDecayScalar * sqrt(LARVAL_HABITAT_FACTOR3 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * (1.0f - localWeather->humidity()) * dt);
                 break;
 
             case VectorHabitatType::WATER_VEGETATION:
@@ -147,7 +148,7 @@ namespace Kernel
 
             case VectorHabitatType::BRACKISH_SWAMP: 
                 LOG_DEBUG_F("Habitat type = BRACKISH_SWAMP, Max larval capacity = %f\n", m_max_larval_capacity);
-                m_current_larval_capacity += localWeather->accumulated_rainfall() * (float)MM_PER_METER / params()->mmRainfallToFillSwamp * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
+                m_current_larval_capacity += localWeather->accumulated_rainfall() * float(MM_PER_METER) / params()->mmRainfallToFillSwamp * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
                 if(m_current_larval_capacity > m_max_larval_capacity * params()->lloffset * params()->lloffset)
                 {
                     m_current_larval_capacity = m_max_larval_capacity * params()->lloffset * params()->lloffset;

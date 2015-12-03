@@ -193,24 +193,24 @@ void BinnedReport::LogNodeData( Kernel::INodeContext * pNC )
     LOG_DEBUG( "LogNodeData.\n" );
 }
 
-int BinnedReport::calcBinIndex( Kernel::IndividualHuman * individual)
+int BinnedReport::calcBinIndex( Kernel::IIndividualHuman* individual)
 {
-    float age          = (float)individual->GetAge();
+    float age = float(individual->GetAge());
     //bool isFemale      = (individual->GetGender() == FEMALE);
 
     // Calculate bin
-    int agebin   = lower_bound( values_per_axis[0].begin(), values_per_axis[0].end(), age ) - values_per_axis[0].begin();
+    int agebin = lower_bound( values_per_axis[0].begin(), values_per_axis[0].end(), age ) - values_per_axis[0].begin();
     //int bin_index = ( age_bin_upper_edges.size() * isFemale ) + agebin;
     int bin_index = agebin;
 
     return bin_index;
 }
 
-void  BinnedReport::LogIndividualData( Kernel::IndividualHuman * individual )
+void  BinnedReport::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 
-    float mc_weight    = (float)individual->GetMonteCarloWeight();
+    float mc_weight = float(individual->GetMonteCarloWeight());
 
     int bin_index = calcBinIndex(individual);
 

@@ -9,7 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-// test removal #include <functional>
 #include <list>
 #include <map>
 #include <unordered_map>
@@ -26,7 +25,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Node.h"
 #include "NodeRankMap.h"
 #include "IReport.h"
-// test removal #include "Susceptibility.h"
 #include "Configure.h"
 #include "IdmApi.h"
 
@@ -73,7 +71,7 @@ namespace Kernel
         virtual const DemographicsContext* GetDemographicsContext() const override;
 
         // Migration
-        virtual void PostMigratingIndividualHuman(IndividualHuman *i) override;
+        virtual void PostMigratingIndividualHuman(IIndividualHuman *i) override;
 
         // Unique ID services
         virtual suids::suid GetNextNodeSuid() override;
@@ -125,10 +123,12 @@ namespace Kernel
 
         virtual void notifyNewNodeObservers(INodeContext*);
 
+        uint32_t serializationMask;
+
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         // Nodes
-        typedef std::map< suids::suid, Node* > NodeMap_t; // TODO: change to unordered_map for better asymptotic performance
+        typedef std::map< suids::suid, INodeContext* > NodeMap_t; // TODO: change to unordered_map for better asymptotic performance
         typedef NodeMap_t::value_type NodeMapEntry_t;
         NodeMap_t nodes;
         NodeRankMap nodeRankMap;
@@ -192,7 +192,7 @@ namespace Kernel
         bool demographic_tracking;
         bool enable_spatial_output;
         bool enable_property_output;
-        bool enable_default_report ;
+        bool enable_default_report;
         bool enable_event_report;
         std::string campaign_filename;
         std::string loadbalance_filename;
@@ -207,6 +207,9 @@ namespace Kernel
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         map<void*, Kernel::ISimulation::callback_t> new_node_observers;
+
+        DECLARE_SERIALIZABLE(Simulation);
+        static void serialize(IArchive&, NodeMap_t&);
 #pragma warning( pop )
 
     private:
@@ -218,7 +221,7 @@ namespace Kernel
         void Reports_UpdateEventRegistration( float _currentTime, float dt );
         void Reports_BeginTimestep();
         void Reports_EndTimestep( float _currentTime, float dt );
-        void Reports_LogNodeData( Node* n );
+        void Reports_LogNodeData( INodeContext* n );
         void PrintTimeAndPopulation();
 
         // Handling of passing "contexts" down to nodes, individuals, etc.

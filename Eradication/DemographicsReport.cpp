@@ -107,7 +107,7 @@ DemographicsReport::LogNodeData(
 
 void
 DemographicsReport::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     pseudoPop++;

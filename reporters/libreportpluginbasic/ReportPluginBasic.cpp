@@ -160,7 +160,7 @@ CustomReport::LogNodeData(
 
 void 
 CustomReport::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     LOG_DEBUG( "LogIndividualData\n" );

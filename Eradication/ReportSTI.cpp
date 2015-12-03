@@ -103,7 +103,7 @@ static NonNegativeFloat youngFemaleDenom = 0.0f;
 
     void
     ReportSTI::LogIndividualData(
-        IndividualHuman* individual
+        IIndividualHuman* individual
     )
     {
         Report::LogIndividualData( individual );

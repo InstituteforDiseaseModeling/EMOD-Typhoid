@@ -9,9 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include <stdafx.h>
-
-
 #ifdef __GNUC__
 #include <ext/hash_map>
 namespace std
@@ -27,21 +24,14 @@ namespace std
 
 #include "IdmApi.h"
 #include "BoostLibWrapper.h"
-#include "CajunIncludes.h"
 #include "Configure.h"
 #include "Climate.h"
-#include "ClimateKoppen.h"
-#include "ClimateByData.h"
-#include "ClimateConstant.h"
 #include "Common.h"
 #include "Contexts.h"
-#include "Environment.h"
-//#include "NodeEventContext.h"
 #include "Migration.h"
 #include "NodeDemographics.h"
 #include "ITransmissionGroups.h"
 #include "suids.hpp"
-#include "InterventionFactory.h"
 #include "IInfectable.h"
 
 class RANDOMBASE;
@@ -79,7 +69,7 @@ namespace Kernel
         static std::vector<std::string> GetIndividualPropertyValuesList( const std::string& rKey );
         virtual ~Node();
 
-        virtual void Update(float dt);
+        virtual void Update(float dt) override;
 
         // INodeContext
         virtual suids::suid   GetSuid() const override;
@@ -94,12 +84,12 @@ namespace Kernel
         virtual INodeEventContext* GetEventContext() override;
 
         // Migration
-        void SetupMigration(MigrationInfoFactory * migration_factory);
-        virtual IndividualHuman* processImmigratingIndividual( IndividualHuman *immigrant );
+        virtual void SetupMigration(MigrationInfoFactory*) override;
+        virtual IIndividualHuman* processImmigratingIndividual( IIndividualHuman* ) override;
 
         // Initialization
         virtual void PopulateFromDemographics();
-        virtual void SetContextTo(ISimulationContext* context);
+        virtual void SetContextTo(ISimulationContext* context) override;
         virtual void SetMonteCarloParameters(float indsamplerate =.05, int nummininf = 0);
         virtual void SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory);
 
@@ -159,6 +149,8 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         static INodeContext::tDistrib base_distribs;
 
+        uint32_t serializationMask;
+
         // Do not access these directly but use the access methods above.
         float _latitude;
         float _longitude;
@@ -183,7 +175,7 @@ namespace Kernel
         // --- Please the IDM Wiki for more details.
         // --- http://ivlabsdvapp50:8090/pages/viewpage.action?pageId=30015603
         // ----------------------------------------------------------------------------------------
-        std::vector<IndividualHuman*> individualHumans ;
+        std::vector<IIndividualHuman*> individualHumans;
 
         float Ind_Sample_Rate;   // adapted sampling parameter
 
@@ -277,7 +269,7 @@ namespace Kernel
         // Updates
         virtual void updateInfectivity(float dt = 0.0f);
         virtual void updatePopulationStatistics(float=1.0);     // called by updateinfectivity to gather population statistics
-        virtual void accumulateIndividualPopulationStatistics(float dt, IndividualHuman* individual);
+        virtual void accumulateIndividualPopulationStatistics(float dt, IIndividualHuman* individual);
         virtual float getDensityContactScaling(); // calculate correction to infectivity due to lower population density
         virtual float getClimateInfectivityCorrection()  const;
         virtual float getSeasonalInfectivityCorrection();
@@ -287,14 +279,14 @@ namespace Kernel
         // Population Initialization
         virtual void populateNewIndividualsFromDemographics(int count_new_individuals = 100);
         virtual void populateNewIndividualsByBirth(int count_new_individuals = 100);
-        virtual void populateNewIndividualFromPregnancy(IndividualHuman* temp_mother);
-        void  conditionallyInitializePregnancy(IndividualHuman*);
+        virtual void populateNewIndividualFromPregnancy(IIndividualHuman* temp_mother);
+        void  conditionallyInitializePregnancy(IIndividualHuman*);
         float getPrevalenceInPossibleMothers();
         virtual float drawInitialImmunity(float ind_init_age);
 
-        virtual IndividualHuman *createHuman( suids::suid id, float MCweight, float init_age, int gender, float init_poverty);
-        IndividualHuman* configureAndAddNewIndividual(float=1.0, float=(20*DAYSPERYEAR), float= 0, float = 0.5);
-        virtual IndividualHuman* addNewIndividual(
+        virtual IIndividualHuman *createHuman( suids::suid id, float MCweight, float init_age, int gender, float init_poverty);
+        IIndividualHuman* configureAndAddNewIndividual(float=1.0, float=(20*DAYSPERYEAR), float= 0, float = 0.5);
+        virtual IIndividualHuman* addNewIndividual(
             float monte_carlo_weight = 1.0,
             float initial_age = 0,
             int gender = 0,
@@ -306,7 +298,7 @@ namespace Kernel
 
         virtual void RemoveHuman( int index );
 
-        virtual IndividualHuman* addNewIndividualFromSerialization();
+        virtual IIndividualHuman* addNewIndividualFromSerialization();
 
         double calculateInitialAge( double temp_age );
         Fraction adjustSamplingRateByImmuneState( Fraction sampling_rate, bool is_immune ) const;
@@ -315,15 +307,15 @@ namespace Kernel
 
         // Reporting
         virtual void resetNodeStateCounters(void);
-        virtual void updateNodeStateCounters(IndividualHuman *ih);
+        virtual void updateNodeStateCounters(IIndividualHuman *ih);
         virtual void finalizeNodeStateCounters(void);
-        virtual void reportNewInfection(IndividualHuman *ih);
-        virtual void reportDetectedInfection(IndividualHuman *ih);
+        virtual void reportNewInfection(IIndividualHuman *ih);
+        virtual void reportDetectedInfection(IIndividualHuman *ih);
 
         // Migration
-        virtual void processEmigratingIndividual(IndividualHuman *i); // not a public method since decision to emigrate is an internal one;
-        virtual void postIndividualMigration(IndividualHuman* ind);
-        void resolveEmigration(IndividualHuman *tempind);
+        virtual void processEmigratingIndividual(IIndividualHuman* i); // not a public method since decision to emigrate is an internal one;
+        virtual void postIndividualMigration(IIndividualHuman* ind);
+        void resolveEmigration(IIndividualHuman *tempind);
 
         // Fix up child object pointers after deserializing
         virtual INodeContext *getContextPointer();
@@ -354,6 +346,8 @@ namespace Kernel
         float birth_rate_boxcar_forcing_amplitude;      // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
         float birth_rate_boxcar_start_time;             // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
         float birth_rate_boxcar_end_time;               // Only for Birth_Rate_Time_Dependence = ANNUAL_BOXCAR_FUNCTION
+
+        DECLARE_SERIALIZABLE(Node);
 
 #pragma warning( pop )
     };

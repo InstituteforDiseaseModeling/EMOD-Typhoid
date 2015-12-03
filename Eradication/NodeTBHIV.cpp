@@ -12,8 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #ifdef ENABLE_TB
 
 #include "NodeTBHIV.h"
-#include "TransmissionGroupsFactory.h" //for SetupIntranodeTransmission
-#include "NodeEventContext.h" //for node level trigger
 #include "IndividualCoinfection.h"
 
 static const char* _module = "NodeTBHIV";
@@ -48,7 +46,7 @@ namespace Kernel
         NodeTB::Initialize();
     }*/
 
-    IndividualHuman *NodeTBHIV::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
+    IIndividualHuman* NodeTBHIV::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
     {
         return IndividualHumanCoinfection::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }

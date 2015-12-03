@@ -30,7 +30,7 @@ public:
 
     virtual void Initialize( unsigned int nrmSize );
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void LogNodeData( Kernel::INodeContext * pNC );
 
 protected:

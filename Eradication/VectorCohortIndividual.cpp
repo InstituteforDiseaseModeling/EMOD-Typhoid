@@ -82,7 +82,7 @@ namespace Kernel
         return m_strain;
     }
 
-    void VectorCohortIndividual::ImmigrateTo(Node* node)
+    void VectorCohortIndividual::ImmigrateTo(INodeContext* node)
     {
         LOG_DEBUG_F( "Vector immigrating to node #%d\n", (node->GetSuid()).data );
         INodeVector* pNV = nullptr;

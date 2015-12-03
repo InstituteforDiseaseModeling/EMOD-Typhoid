@@ -150,7 +150,7 @@ ReportPolioVirusPopulation::LogNodeData( INodeContext * pNC )
 }
 
 void 
-ReportPolioVirusPopulation::LogIndividualData( IndividualHuman * individual )
+ReportPolioVirusPopulation::LogIndividualData( IIndividualHuman* individual )
 {
 }
 

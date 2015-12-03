@@ -22,17 +22,16 @@ public:
 
     static IReport* ReportTB::CreateReport() { return _new_ ReportTB(); }
 
-    virtual void BeginTimestep();
+    virtual void BeginTimestep() override;
 
-    virtual void LogNodeData( Kernel::INodeContext * pNC );
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
-
+    virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
 
 protected:
-    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
-    virtual void postProcessAccumulatedData();
+    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) override;
+    virtual void postProcessAccumulatedData() override;
 
-    virtual void UpdateSEIRW( const Kernel::IndividualHuman * individual, float monte_carlo_weight );
+    virtual void UpdateSEIRW( const Kernel::IIndividualHuman * individual, float monte_carlo_weight ) override;
 
     //counters
     float latent_TB_persons;

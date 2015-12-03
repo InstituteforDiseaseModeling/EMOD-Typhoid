@@ -123,7 +123,7 @@ ReportPluginAgeAtInfection::LogNodeData(
 
 void 
 ReportPluginAgeAtInfection::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     LOG_DEBUG( "LogIndividualData\n" );

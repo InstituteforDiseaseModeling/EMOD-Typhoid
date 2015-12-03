@@ -51,7 +51,7 @@ PropertyReport::PropertyReport()
 // This is a set of maps?
 void
 PropertyReport::GenerateAllPermutationsOnce(
-    Kernel::IndividualHuman * indiv,
+    Kernel::IIndividualHuman* indiv,
     std::set< std::string > keys,
     tKeyValuePair perm
 )
@@ -110,7 +110,7 @@ static std::set< std::string > getKeys( const T &propMap )
 
 void
 PropertyReport::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     auto permKeys = getKeys( individual->GetParent()->GetIndividualPropertyDistributions() );
@@ -120,7 +120,7 @@ PropertyReport::LogIndividualData(
         tKeyValuePair actualPerm;
         GenerateAllPermutationsOnce( individual, permKeys, actualPerm ); // call this just first time.
     }
-    float monte_carlo_weight = (float)individual->GetMonteCarloWeight();
+    float monte_carlo_weight = float(individual->GetMonteCarloWeight());
     NewInfectionState::_enum nis = individual->GetNewInfectionState();
 
     const auto * pProp = individual->GetProperties();

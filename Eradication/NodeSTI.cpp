@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 
 #include "IndividualSTI.h"
-#include "Relationship.h"
 #include "RelationshipManagerFactory.h"
 #include "RelationshipGroups.h"
 #include "SimulationConfig.h"
@@ -126,7 +125,7 @@ namespace Kernel
         delete p_config ;
     }
 
-    IndividualHuman *NodeSTI::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
+    IIndividualHuman* NodeSTI::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
     {
         return IndividualHumanSTI::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -207,7 +206,7 @@ namespace Kernel
 
     void
     NodeSTI::processEmigratingIndividual(
-        IndividualHuman *individual
+        IIndividualHuman* individual
     )
     {
 #ifdef MIGRATION_SUPPORTED
@@ -256,9 +255,9 @@ namespace Kernel
 #endif
     }
 
-    IndividualHuman*
+    IIndividualHuman*
     NodeSTI::processImmigratingIndividual(
-        IndividualHuman* movedind
+        IIndividualHuman* movedind
     )
     {
         auto retVal = Node::processImmigratingIndividual( movedind );
@@ -304,5 +303,14 @@ namespace Kernel
         release_assert( migratedIndividualToRelationshipIdMap.count( movedId ) == 0);
 
         return retVal;
+    }
+
+    REGISTER_SERIALIZABLE(NodeSTI);
+
+    void NodeSTI::serialize(IArchive& ar, NodeSTI* obj)
+    {
+        Node::serialize(ar, obj);
+        // NodeSTI& node = *obj;
+        // clorton TODO
     }
 }

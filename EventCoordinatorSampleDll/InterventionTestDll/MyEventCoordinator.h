@@ -78,7 +78,6 @@ namespace Kernel
         std::vector<INodeEventContext*> cached_nodes;
         std::vector<suids::suid> node_suids; // to help with serialization
 
-
         // helpers
 
         void regenerateCachedNodeContextPointers();
@@ -87,10 +86,7 @@ namespace Kernel
         int days_since_last;
         int intervention_activated;
 
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
+#if 0
         template<class Archive>
         void serialize_inner(Archive &ar, const unsigned int v)
         {
@@ -111,6 +107,7 @@ namespace Kernel
             ar & node_suids;                
      
         }
+#endif        
 
         bool qualifiesDemographically( const IIndividualHumanEventContext * pIndividual ) const;
     };
