@@ -640,13 +640,13 @@ namespace Kernel
 
     void Simulation::Update(float dt)
     {
-        if (currentTime.time == 0)
-        {
-            IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
-            (*writer).labelElement( "simulation" ) & const_cast<Simulation*>(this);
-            WriteIdtkFile( (*writer).GetBuffer(), (*writer).GetBufferSize(), currentTime.time, true );
-            delete writer;
-        }
+// clorton        if (currentTime.time == 0)
+// clorton        {
+// clorton            IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
+// clorton            (*writer).labelElement( "simulation" ) & const_cast<Simulation*>(this);
+// clorton            WriteIdtkFile( (*writer).GetBuffer(), (*writer).GetBufferSize(), currentTime.time, true );
+// clorton            delete writer;
+// clorton        }
 
         Reports_UpdateEventRegistration( currentTime.time, dt );
         Reports_FindReportsCollectingIndividualData( currentTime.time, dt );
