@@ -39,7 +39,7 @@ protected:
     virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
     virtual void postProcessAccumulatedData();
     
-    virtual int calcBinIndex(const IndividualHuman * individual);
+    virtual int calcBinIndex(const IIndividualHuman* individual);
 
     // for INodeEventObserver
     virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );

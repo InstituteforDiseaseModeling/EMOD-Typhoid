@@ -203,7 +203,7 @@ void VectorHabitatReport::LogIndividualData( IIndividualHuman* individual )
 {
 }
 
-int VectorHabitatReport::calcBinIndex(const IndividualHuman * individual)
+int VectorHabitatReport::calcBinIndex(const IIndividualHuman* individual)
 {
     return 0;
 }

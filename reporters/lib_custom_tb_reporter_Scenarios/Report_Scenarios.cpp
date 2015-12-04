@@ -448,9 +448,9 @@ Report_Scenarios::LogNodeData(
      }
 }
 
-int Report_Scenarios::calcBinIndex(const IndividualHuman * individual)
+int Report_Scenarios::calcBinIndex(const IIndividualHuman* individual)
 {
-    float age = (float)individual->GetAge();
+    float age = float(individual->GetAge());
 
     // Calculate age bin
     int agebin = lower_bound( actual_age_bins.begin(), actual_age_bins.end(), age/DAYSPERYEAR ) - actual_age_bins.begin();
@@ -466,7 +466,7 @@ Report_Scenarios::LogIndividualData(
 )
 {
     // get monte carlo weight
-    float mc_weight = (float)individual->GetMonteCarloWeight();
+    float mc_weight = float(individual->GetMonteCarloWeight());
 
     // get pointer to IIndividualHumanTB2 (full TB interface) and the person's SusceptibilityTB
     IIndividualHumanTB2* individual_tb = nullptr;
@@ -515,7 +515,7 @@ Report_Scenarios::LogIndividualData(
     // --- ".at" will throw an exception if the value is not found in the map.
     // ------------------------------------------------------------------------------
     const tProperties* pProp = individual->GetEventContext()->GetProperties();
-    float age = (float)individual->GetAge();
+    float age = float(individual->GetAge());
     float age_limit = TB_REPORTING_AGE_LIMIT;
 
     // string literals used more than once get a variable
@@ -873,7 +873,7 @@ void
 Report_Scenarios::postProcessAccumulatedData()
 {
     LOG_DEBUG( "getSummaryDataCustomProcessed\n" );
-    normalizeChannel(_prob_new_inf_label, (float)_nrmSize);
+    normalizeChannel(_prob_new_inf_label, float(_nrmSize));
 }
 
 void
@@ -1019,7 +1019,7 @@ Report_Scenarios::notifyOnEvent(
     }
     release_assert( individual_tb );
 
-    float mc_weight = (float)context->GetMonteCarloWeight();
+    float mc_weight = float(context->GetMonteCarloWeight());
 
     LOG_DEBUG_F( "Individual %d with weight %f experienced event %s\n",
                  context->GetSuid().data,

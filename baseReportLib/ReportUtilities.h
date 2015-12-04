@@ -15,15 +15,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class IndividualHuman ;
-    struct IDrug ;
+    class IndividualHuman;
+    struct IDrug;
 }
 
 
 namespace ReportUtilities
 {
-
-    std::list<Kernel::IDrug*> GetDrugList( const Kernel::IndividualHuman * individual, const std::string& rDrugClassName );
-
+    std::list<Kernel::IDrug*> GetDrugList( const Kernel::IIndividualHuman* individual, const std::string& rDrugClassName );
     int GetAgeBin( float age, std::vector<float>& rAges );
 }

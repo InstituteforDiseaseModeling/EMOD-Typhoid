@@ -28,7 +28,7 @@ protected:
     virtual void initChannelBins();
     void clearChannelsBins();
     void Accumulate( const std::string& channel_name, const ChannelDataMap::channel_data_t& binned_data);
-    virtual int calcBinIndex(const Kernel::IndividualHuman * individual);
+    virtual int calcBinIndex(const Kernel::IIndividualHuman* individual);
 
     typedef std::map< std::string, int > habitat_idx_map_t;
     habitat_idx_map_t species_habitat_idx_map;  // e.g. ("arabiensis:CONSTANT", 1)
