@@ -25,6 +25,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IReport.h"
 #include "Configure.h"
 #include "IdmApi.h"
+#include "Serialization.h"
 
 class RANDOMBASE;
 
@@ -121,7 +122,7 @@ namespace Kernel
 
         virtual void notifyNewNodeObservers(INodeContext*);
 
-        uint32_t serializationMask;
+        SerializationFlags serializationMask;
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details

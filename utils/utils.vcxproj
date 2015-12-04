@@ -118,6 +118,7 @@
     <ClCompile Include="ProgVersion.cpp" />
     <ClCompile Include="RANDOM.cpp" />
     <ClCompile Include="RapidJsonImpl.cpp" />
+    <ClCompile Include="Serialization.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StatusReporter.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -182,6 +183,7 @@
     <ClInclude Include="ProgVersion.h" />
     <ClInclude Include="RANDOM.h" />
     <ClInclude Include="RapidJsonImpl.h" />
+    <ClInclude Include="Serialization.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="SimpleTypemapRegistration.h" />
     <ClInclude Include="StatusReporter.h" />

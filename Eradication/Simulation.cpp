@@ -66,19 +66,36 @@ namespace Kernel
     //------------------------------------------------------------------
 
     Simulation::Simulation()
-        : m_simConfigObj(nullptr)
+        : serializationMask(SerializationFlags::PopulationOnly)
+        , nodes()
+        , nodeRankMap()
+        , node_event_context_list()
+        , nodeid_suid_map()
+        , migratingIndividualQueues()
+        , m_simConfigObj(nullptr)
         , m_interventionFactoryObj(nullptr)
         , demographicsContext(nullptr)
         , infectionSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
         , individualHumanSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
         , nodeSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
+        , campaignFilename()
+        , loadBalanceFilename()
         , rng(nullptr)
+        , reports()
+        , individual_data_reports()
         , reportClassCreator(nullptr)
+        , binnedReportClassCreator(nullptr)
+        , spatialReportClassCreator(nullptr)
         , propertiesReportClassCreator(nullptr)
         , demographicsReportClassCreator(nullptr)
         , eventReportClassCreator(nullptr)
+        , event_coordinators()
+        , campaign_events()
         , event_context_host(nullptr)
+        , Ind_Sample_Rate(1.0f)
+        , currentTime()
         , random_type(RandomType::USE_PSEUDO_DES)
+        , sim_type(SimType::GENERIC_SIM)
         , demographic_tracking(false)
         , enable_spatial_output(false)
         , enable_property_output(false)
@@ -641,13 +658,14 @@ namespace Kernel
 
     void Simulation::Update(float dt)
     {
-// clorton        if (currentTime.time == 0)
-// clorton        {
-// clorton            IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
-// clorton            (*writer).labelElement( "simulation" ) & const_cast<Simulation*>(this);
-// clorton            WriteIdtkFile( (*writer).GetBuffer(), (*writer).GetBufferSize(), currentTime.time, true );
-// clorton            delete writer;
-// clorton        }
+        if (currentTime.time == 0)
+        {
+            IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
+//            (*writer).labelElement( "simulation" ) & const_cast<Simulation*>(this);
+            (*writer).labelElement( "nodes" ); serialize(*writer, nodes);
+            WriteIdtkFile( (*writer).GetBuffer(), (*writer).GetBufferSize(), currentTime.time, true );
+            delete writer;
+        }
 
         Reports_UpdateEventRegistration( currentTime.time, dt );
         Reports_FindReportsCollectingIndividualData( currentTime.time, dt );
@@ -1271,7 +1289,7 @@ namespace Kernel
     void Simulation::serialize(IArchive& ar, Simulation* obj)
     {
         Simulation& sim = *obj;
-        ar.labelElement("serializationMask") & sim.serializationMask;
+        ar.labelElement("serializationMask") & (uint32_t&)sim.serializationMask;
         ar.labelElement("nodes"); serialize(ar, sim.nodes);
 // clorton        ar.labelElement("nodeRankMap") & sim.nodeRankMap;
 // clorton        ar.labelElement("node_event_context_list") & sim.node_event_context_list;

@@ -182,7 +182,7 @@ namespace Kernel
                 {
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to IInterventionFactory object is not valid (could be DLL specific)" );
                 }
-                for( int idx=0; idx<interventions_array.Size(); idx++ )
+                for( int idx=0; idx<interventions_array.Size(); ++idx )
                 {
                     const json::Object& actualIntervention = json_cast<const json::Object&>(interventions_array[idx]);
                     Configuration * tmpConfig = Configuration::CopyFromElement(actualIntervention);
