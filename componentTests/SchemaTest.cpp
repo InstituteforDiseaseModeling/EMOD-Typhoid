@@ -36,8 +36,6 @@ SUITE(SchemaTest)
     struct SchemaFixture
     {
         static bool environmentInitialized;
-        static boost::mpi::environment* env;
-        static boost::mpi::communicator* world;
 
         SchemaFixture()
         {
@@ -49,22 +47,19 @@ SUITE(SchemaTest)
                 int argc      = 1;
                 char* exeName = "componentTests.exe";
                 char** argv   = &exeName;
-                env           = new boost::mpi::environment(argc, argv);
-                world         = new boost::mpi::communicator;
                 string configFilename("");
                 string inputPath("");
                 string outputPath("");
                 string statePath("");
                 string dllPath("");
-                Environment::Initialize(env, world, configFilename, inputPath, outputPath, /*statePath, */dllPath, true);
+                Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, true);
                 environmentInitialized = true;
             }
         }
     };
 
     bool                      SchemaFixture::environmentInitialized = false ;
-    boost::mpi::environment*  SchemaFixture::env        = nullptr ;
-    boost::mpi::communicator* SchemaFixture::world      = nullptr ;
+
 #if 1
     TEST_FIXTURE(SchemaFixture, WriteSchema)
     {

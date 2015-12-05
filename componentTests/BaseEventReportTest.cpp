@@ -101,8 +101,6 @@ SUITE(BaseEventReportTest)
     struct ReportFixture
     {
         static bool environmentInitialized;
-        static boost::mpi::environment* env;
-        static boost::mpi::communicator* world;
         SimulationConfig* m_pSimulationConfig ;
 
         ReportFixture()
@@ -117,14 +115,12 @@ SUITE(BaseEventReportTest)
                 int argc      = 1;
                 char* exeName = "componentTests.exe";
                 char** argv   = &exeName;
-                env           = new boost::mpi::environment(argc, argv);
-                world         = new boost::mpi::communicator;
                 string configFilename("testdata/BaseEventReportTest/TestReport.config.json");
                 string inputPath("testdata/BaseEventReportTest");
                 string outputPath("testdata/BaseEventReportTest");
                 string statePath("testdata/BaseEventReportTest");
                 string dllPath("");
-                Environment::Initialize(env, world, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
+                Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
                 environmentInitialized = true;
             }
 
@@ -141,8 +137,6 @@ SUITE(BaseEventReportTest)
     };
 
     bool                      ReportFixture::environmentInitialized = false ;
-    boost::mpi::environment*  ReportFixture::env        = nullptr ;
-    boost::mpi::communicator* ReportFixture::world      = nullptr ;
 
     TEST_FIXTURE(ReportFixture, TestConfigure)
     {

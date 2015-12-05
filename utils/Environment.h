@@ -35,8 +35,6 @@ public:
     {
         int NumTasks;
         int Rank;
-        mutable boost::mpi::communicator *World;
-        mutable boost::mpi::environment *Environment;
     } MPI;
 
     SimpleLogger *Log;
@@ -60,8 +58,6 @@ public:
 
     // Sets up the environment for this process. Returns false if something went wrong
     static bool Initialize(
-        boost::mpi::environment *mpienv,
-        boost::mpi::communicator *world,
         std::string configFileName,
         std::string inputPath,
         std::string outputPath,

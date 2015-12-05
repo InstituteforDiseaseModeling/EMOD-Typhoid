@@ -141,19 +141,18 @@ void setStackSize()
 #endif
 
 
-bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communicator *world, int argc, char *argv[]); // returns false if something broke
+bool ControllerInitWrapper(int argc, char *argv[]); // returns false if something broke
 
 int MPIInitWrapper( int argc, char* argv[])
 {
     try 
     {
         bool fSuccessful = false;
-        boost::mpi::environment env(argc, argv);
-        boost::mpi::communicator world;
+        MPI_Init(nullptr, nullptr);
 
         try 
         {
-            fSuccessful = ControllerInitWrapper(&env, &world, argc, argv);
+            fSuccessful = ControllerInitWrapper(argc, argv);
         }
         catch( std::exception& e) 
         {
@@ -165,8 +164,10 @@ int MPIInitWrapper( int argc, char* argv[])
         if (!fSuccessful)
         {
             EnvPtr->Log->Flush();
-            MPI_Abort(world, -1);
+            MPI_Abort(MPI_COMM_WORLD, -1);
         }
+
+        MPI_Finalize();
 
         // Shouldn't get here unless ControllerInitWrapper() returned true (success).
         // MPI_Abort() implementations generally exit the process. If not, return a
@@ -469,7 +470,7 @@ pythonOnExitHook()
 #endif
 }
 
-bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communicator *world, int argc, char *argv[])
+bool ControllerInitWrapper(int argc, char *argv[])
 {
     using namespace std;
 
@@ -628,8 +629,6 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
         EnvPtr->Log->Flush();
         LOG_INFO("Initializing environment...\n");
         bool env_ok = Environment::Initialize(
-            mpienv,
-            world,
             configFileName,
             po.GetCommandLineValueString( "input-path"  ),
             po.GetCommandLineValueString( "output-path" ),

@@ -41,16 +41,12 @@ Environment::Environment()
 }
 
 bool Environment::Initialize(
-    boost::mpi::environment *mpienv, boost::mpi::communicator *world, 
     string configFileName, 
     string inputPath, string outputPath, /* 2.5 string statePath, */ string dllPath,
     bool get_schema)
 {
-    localEnv->MPI.NumTasks = world->size();
-    localEnv->MPI.Rank = world->rank();
-    localEnv->MPI.World = world;
-    localEnv->MPI.Environment = mpienv;
-
+    MPI_Comm_size(MPI_COMM_WORLD, reinterpret_cast<int*>(&localEnv->MPI.NumTasks));
+    MPI_Comm_rank(MPI_COMM_WORLD, reinterpret_cast<int*>(&localEnv->MPI.Rank));
 
     inputPath = FileSystem::RemoveTrailingChars( inputPath );
     if( !FileSystem::DirectoryExists(inputPath) )

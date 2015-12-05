@@ -1049,9 +1049,9 @@ namespace Kernel
         static const char * _module = "MpiMigration";
         LOG_DEBUG("resolveMigration\n");
 
-        std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
-        std::list< MPI_Request > outbound_requests( EnvPtr->MPI.NumTasks );     // requests for each outbound message
-        std::list< BinaryArchiveWriter* > outbound_messages( EnvPtr->MPI.NumTasks );  // buffers for outbound messages
+        std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );           // "buffers" for size of buffer messages
+        std::vector< MPI_Request > outbound_requests;                                   // requests for each outbound message
+        std::list< BinaryArchiveWriter* > outbound_messages( EnvPtr->MPI.NumTasks );    // buffers for outbound messages
 
         for (int destination_rank = 0; destination_rank < EnvPtr->MPI.NumTasks; ++destination_rank)
         {
@@ -1179,14 +1179,9 @@ namespace Kernel
           }
         }
 
-        // section = "resolveMigration() - clean up";
         {   // Clean up from Isend(s)
-            // TODO clorton - convert outbound_requests into vector and use MPI_Wait_all
-            for (auto& request : outbound_requests)
-            {
-                MPI_Status status;
-                MPI_Wait(&request, &status);
-            }
+            std::vector<MPI_Status> status( outbound_requests.size() );
+            MPI_Waitall( outbound_requests.size(), (MPI_Request*)outbound_requests.data(), (MPI_Status*)status.data() );
 
             for (auto writer : outbound_messages)
             {

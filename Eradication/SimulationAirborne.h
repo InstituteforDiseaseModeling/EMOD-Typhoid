@@ -30,5 +30,3 @@ namespace Kernel
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
     };
 }
-
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationAirborne)

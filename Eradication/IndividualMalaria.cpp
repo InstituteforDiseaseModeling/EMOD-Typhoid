@@ -16,7 +16,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 #include "MathFunctions.h"
 #include "TransmissionGroupMembership.h"
-#include <boost/serialization/map.hpp>
 
 #include "MalariaInterventionsContainer.h"
 #include "SimulationConfig.h"

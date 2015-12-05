@@ -488,9 +488,9 @@ bool BurnInCacheTestController::execute_internal()
 
             REPORT_TIME(false, (boost::format("SaveState") ).str(),
             {
-                if (!save_sim<boost::archive::binary_oarchive>(
-                        sim.get(),
-                        (FileSystem::Concat( EnvPtr->StatePath, state_filename).c_str()))
+// clorton                if (!save_sim<boost::archive::binary_oarchive>(
+// clorton                        sim.get(),
+// clorton                        (FileSystem::Concat( EnvPtr->StatePath, state_filename).c_str()))
                 {
                     // ERROR: ("Failed to save simulation state.");
                     throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Saving" );
@@ -524,9 +524,9 @@ bool BurnInCacheTestController::execute_internal()
 
         LOG_INFO_F("Loading Simulation State from %s ...\n", state_filename.c_str()); EnvPtr->Log->Flush();
 
-        REPORT_TIME(false, (boost::format("LoadState") ).str(),  
-            sim.reset((SimulationT*)load_sim<boost::archive::binary_iarchive, SimulationT>(
-                (FileSystem::Concat( EnvPtr->StatePath, state_filename ).c_str())));
+// clorton        REPORT_TIME(false, (boost::format("LoadState") ).str(),  
+// clorton            sim.reset((SimulationT*)load_sim<boost::archive::binary_iarchive, SimulationT>(
+// clorton                (FileSystem::Concat( EnvPtr->StatePath, state_filename ).c_str())));
 
         if (sim == nullptr)
         {
@@ -603,12 +603,12 @@ bool SimpleBranchController::execute_internal()
     {
         LOG_INFO_F("Loading Simulation State from %s ...\n", start_state_filename.c_str()); EnvPtr->Log->Flush();
 
-        BEGIN_REPORT_TIME(false)
-        {
-            sim = (SimulationT*)load_sim<boost::archive::binary_iarchive, SimulationT>(
-                (FileSystem::Concat( EnvPtr->StatePath, start_state_filename ).c_str());
-        }
-        END_REPORT_TIME(false,"LoadState")
+// clorton        BEGIN_REPORT_TIME(false)
+// clorton        {
+// clorton            sim = (SimulationT*)load_sim<boost::archive::binary_iarchive, SimulationT>(
+// clorton                (FileSystem::Concat( EnvPtr->StatePath, start_state_filename ).c_str());
+// clorton        }
+// clorton        END_REPORT_TIME(false,"LoadState")
 
         if (sim == nullptr)
         {
@@ -646,9 +646,9 @@ bool SimpleBranchController::execute_internal()
 
         REPORT_TIME(false,(boost::format("SaveState")).str(),
         {
-            if (!save_sim<boost::archive::binary_oarchive>(
-                sim,
-                (FileSystem::Concat( EnvPtr->StatePath, end_state_filename ).c_str()))
+// clorton            if (!save_sim<boost::archive::binary_oarchive>(
+// clorton                sim,
+// clorton                (FileSystem::Concat( EnvPtr->StatePath, end_state_filename ).c_str()))
             {
                 throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Saving" );
             }

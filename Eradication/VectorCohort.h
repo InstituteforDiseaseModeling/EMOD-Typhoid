@@ -9,7 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include <boost/serialization/access.hpp>
 #include <list>
 #include "suids.hpp"
 #include "IMigrate.h"

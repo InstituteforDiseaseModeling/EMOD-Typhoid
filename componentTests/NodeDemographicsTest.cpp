@@ -84,8 +84,6 @@ SUITE(NodeDemographicsTest)
     struct NodeDemographicsFactoryFixture
     {
         static bool environmentInitialized;
-        static boost::mpi::environment* env;
-        static boost::mpi::communicator* world;
 
         static SimulationConfig* pSimConfig ;
 
@@ -103,14 +101,12 @@ SUITE(NodeDemographicsTest)
                 int argc      = 1;
                 char* exeName = "componentTests.exe";
                 char** argv   = &exeName;
-                env           = new boost::mpi::environment(argc, argv);
-                world         = new boost::mpi::communicator;
                 string configFilename("testdata/NodeDemographicsTest/config.json");
                 string inputPath("testdata/NodeDemographicsTest");
                 string outputPath("testdata/NodeDemographicsTest/output");
                 string statePath("testdata/NodeDemographicsTest");
                 string dllPath("testdata/NodeDemographicsTest");
-                Environment::Initialize(env, world, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
+                Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
                 environmentInitialized = true;
 
                 pSimConfig = SimulationConfigFactory::CreateInstance(Environment::getInstance()->Config);
@@ -245,8 +241,6 @@ SUITE(NodeDemographicsTest)
     };
 
     bool NodeDemographicsFactoryFixture::environmentInitialized     = false;
-    boost::mpi::environment*  NodeDemographicsFactoryFixture::env   = nullptr;
-    boost::mpi::communicator* NodeDemographicsFactoryFixture::world = nullptr;
     SimulationConfig*  NodeDemographicsFactoryFixture::pSimConfig   = nullptr;
 
 #ifndef INCLUDED  // Use this to control what tests are run during development
@@ -256,11 +250,9 @@ SUITE(NodeDemographicsTest)
         int argc      = 1;
         char* exeName = "componentTests.exe";
         char** argv   = &exeName;
-        boost::mpi::environment* env = new boost::mpi::environment(argc, argv);
-        boost::mpi::communicator* world = new boost::mpi::communicator;
         string configFilename("testdata/NodeDemographicsTest/config_legacy.json");
         string p("testdata/NodeDemographicsTest");
-        Environment::Initialize(env, world, configFilename, p, p, /*p, */p, false);
+        Environment::Initialize(configFilename, p, p, /*p, */p, false);
         SimulationConfig* pSimConfig = SimulationConfigFactory::CreateInstance(Environment::getInstance()->Config);
         CHECK(pSimConfig);
         Environment::setSimulationConfig(pSimConfig);

@@ -21,8 +21,6 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "IdmString.h"
 #include "Log.h"
 
-#include "boost/serialization/set.hpp"
-
 static const char * _module = "JsonConfigurable";
 
 namespace Kernel

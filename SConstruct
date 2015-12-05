@@ -282,7 +282,7 @@ def findVersion( root , choices ):
 #env.Append( CPPDEFINES=["ENABLE_TB" ] )
 #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
 
-boostLibs = ["system", "filesystem" , "program_options", "serialization" ]
+boostLibs = ["system", "filesystem" , "program_options"]
 
 if os.sys.platform.startswith("linux"):
     linux = True
@@ -296,10 +296,7 @@ if os.sys.platform.startswith("linux"):
         nixLibPrefix = "lib64"
         env.Append( EXTRALIBPATH=["/usr/lib64" , "/lib64" ] )
 
-    #env.Append( LIBS=["pthread", "mpichcxx", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
-    env.Append( LIBS=["pthread", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
-    #env.Append( LIBS=["pthread", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "mpi", "dl" ] ) 
-    #env.Append( EXTRALIBPATH="-L/usr/local/lib -L/usr/local/lib -L/usr/lib/mpich2/lib/ -L /usr/lib/mpich2/lib/" )
+    env.Append( LIBS=["pthread", "boost_program_options", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
     env.Append( EXTRALIBPATH=[ "/usr/local/lib", "/usr/lib64/mpich/lib" ] )
 
     if static:
@@ -393,11 +390,9 @@ elif "win32" == os.sys.platform:
         # NOTE: /DEBUG and Dbghelp.lib go together with changes in Exception.cpp which adds
         #       the ability to print a stack trace.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["libboost_mpi-vc110-mt-1_51.lib",
-                          "libboost_program_options-vc110-mt-1_51.lib",
+        env.Append( LIBS=["libboost_program_options-vc110-mt-1_51.lib",
                           "libboost_filesystem-vc110-mt-1_51.lib",
-                          "libboost_system-vc110-mt-1_51.lib",
-                          "libboost_serialization-vc110-mt-1_51.lib"] )
+                          "libboost_system-vc110-mt-1_51.lib"] )
         env.Append( LIBS=["python27.lib"] )
         # For MSVC <= 10.0
         #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
@@ -415,11 +410,9 @@ elif "win32" == os.sys.platform:
         # If you build without --d, no debug PDB will be generated, and 
         # linking will be faster. However, you won't be able to debug your code with the debugger.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["libboost_mpi-vc110-mt-gd-1_51.lib",
-                          "libboost_program_options-vc110-mt-gd-1_51.lib",
+        env.Append( LIBS=["libboost_program_options-vc110-mt-gd-1_51.lib",
                           "libboost_filesystem-vc110-mt-gd-1_51.lib",
-                          "libboost_system-vc110-mt-gd-1_51.lib",
-                          "libboost_serialization-vc110-mt-gd-1_51.lib"] )
+                          "libboost_system-vc110-mt-gd-1_51.lib"] )
         env.Append( LINKFLAGS=["/MACHINE:X64"] )
 
 
