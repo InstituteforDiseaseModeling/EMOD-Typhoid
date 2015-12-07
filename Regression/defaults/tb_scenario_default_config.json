@@ -151,6 +151,16 @@
             ".Enable_Climate_Stochasticity":0,
             ".Enable_Rainfall_Stochasticity":0
         },
+        "FUDGE_FACTORS": {
+            "x_Air_Migration": 1,
+            "x_Birth": 1,
+            "x_Local_Migration": 1,
+            "x_Other_Mortality": 1,
+            "x_Population_Immunity": 1,
+            "x_Regional_Migration": 1,
+            "x_Sea_Migration": 1,
+            "x_Temporary_Larval_Habitat": 1
+        },        
         "MIGRATION": {
             "Migration_Model":"NO_MIGRATION"
         },

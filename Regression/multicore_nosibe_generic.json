@@ -1,0 +1,42 @@
+{
+    "tests": [
+        {
+            "path" : "Multicore_Nosibe/Generic/01_SIR"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/02_SIR_Vaccinations/A_BaselineOutbreak"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/02_SIR_Vaccinations/B_Vaccinations"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/02_SIR_Vaccinations/C_TargetedVaccinations"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/03_SEIR"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/04_SEIR_VitalDynamics"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/05_SIRS"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/06_SEIRS"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/08_SIS"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/09_DensityScaling"
+        },
+        {
+            "path" : "Multicore_Nosibe/Generic/10_Zoonosis"
+        }
+    ],
+    "long tests": [
+        {
+            "path" : "Multicore_Nosibe/Generic/07_SI"
+        }
+    ]
+}

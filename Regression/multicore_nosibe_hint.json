@@ -1,0 +1,30 @@
+{
+    "tests": [
+        {
+            "path" : "Multicore_Nosibe/HINT/01_RiskGroups"
+        },
+        {
+            "path" : "Multicore_Nosibe/HINT/02_SchoolClosure"
+        },
+        {
+            "path" : "Multicore_Nosibe/HINT/03_AgeAndAccess/A_BaselineOutbreak"
+        },
+        {
+            "path" : "Multicore_Nosibe/HINT/03_AgeAndAccess/B_AgeTargetedVaccine"
+        },
+        {
+            "path" : "Multicore_Nosibe/HINT/03_AgeAndAccess/C_AccessTargetedVaccine"
+        },
+        {
+            "path" : "Multicore_Nosibe/HINT/04_WAPertussis/A_BaselineOutbreak"
+        },
+        {
+            "path" : "Multicore_Nosibe/HINT/04_WAPertussis/B_TargetVaccineRefusers"
+        },
+        {
+            "path" : "Multicore_Nosibe/HINT/05_SeattleCommuting"
+        }
+    ],
+    ".tests": [
+    ]
+}

@@ -1,0 +1,45 @@
+{
+    "tests": [
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/01_A_Namawala3Vectors_lowEIR"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/01_B_Namawala3Vectors_highEIR"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/03_A_Namawala_Vector"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/03_B_Muheza_Vector"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/03_C_Garki_single_node_Vector"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/05_Namawala_Vector_ITNs"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/06_Namawala_Vector_ITNsPEV"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/07_Namawala_Vector_SSV"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/09_Namawala_Vector_SugarBaitedTraps"
+        },
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/10_InsectKillingFence"
+        },
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/11_MultipleLarvalHabitats"
+        }
+    ],
+    "long tests": [
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/02_Namawala_Full_Malaria_Model"
+        },        
+        {
+            "path" : "Multicore_Nosibe/VectorAndMalaria/08_Garki_IRSMDA"
+        }
+    ]
+}
