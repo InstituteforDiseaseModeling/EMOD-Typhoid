@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.0.5526.0",
+		"DTK_Version" : "2.0.5633.0",
 		"DTK_Branch" : "trunk",
-		"DTK_Build_Date" : "2015/07/28 13:55:52"
+		"DTK_Build_Date" : "2015/09/23 14:04:15"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -50,7 +50,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -60,7 +60,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -226,7 +226,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -236,7 +236,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -713,7 +713,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -723,7 +723,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -1366,7 +1366,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -1376,7 +1376,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -2261,7 +2261,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -2271,7 +2271,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -2489,7 +2489,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -2499,7 +2499,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -2675,7 +2675,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -2685,7 +2685,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -2947,7 +2947,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
 			"Death_Rate_Dependence" : {
@@ -2957,7 +2957,7 @@
 					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
 					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
 				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NO_NATURAL_DEATHS, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
 				"default" : "NONDISEASE_MORTALITY_OFF"
 			},
 			"Susceptibility_Scale_Type" : {
@@ -5548,7 +5548,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -5676,7 +5676,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -5764,7 +5764,7 @@
 					"STI_SIM",
 					"HIV_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, POLIO_SIM, AIRBORNE_SIM and TB_SIM.",
+				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -7654,7 +7654,7 @@
 						"default" : 1
 					},
 					"Fraction_Defaulters" : {
-						"description" : "fraction defaulters",
+						"description" : "The fraction of individuals who will not finish their drug treatment.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 1,
@@ -7666,7 +7666,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Crug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -7803,7 +7803,7 @@
 						"default" : 1
 					},
 					"Fraction_Defaulters" : {
-						"description" : "fraction defaulters",
+						"description" : "The fraction of individuals who will not finish their drug treatment.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 1,
@@ -7815,7 +7815,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Crug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -7946,7 +7946,7 @@
 						"default" : 1
 					},
 					"Fraction_Defaulters" : {
-						"description" : "fraction defaulters",
+						"description" : "The fraction of individuals who will not finish their drug treatment.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 1,
@@ -7958,7 +7958,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Crug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -8321,7 +8321,7 @@
 						"default" : "NOT_INITIALIZED"
 					},
 					"Delay_Period" : {
-						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specifiy the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
+						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
@@ -8767,7 +8767,7 @@
 						"default" : "NOT_INITIALIZED"
 					},
 					"Delay_Period" : {
-						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specifiy the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
+						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
@@ -8988,7 +8988,7 @@
 						"default" : "NOT_INITIALIZED"
 					},
 					"Delay_Period" : {
-						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specifiy the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
+						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,

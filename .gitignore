@@ -243,3 +243,4 @@ status.txt
 Transitions.json
 
 /Regression/reports/
+componentTests/testdata/NodeDemographicsTest/output/DefaultDemographics.json

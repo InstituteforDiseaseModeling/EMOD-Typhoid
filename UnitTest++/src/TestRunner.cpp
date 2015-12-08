@@ -17,6 +17,12 @@ namespace UnitTest {
         return runner.RunTestsIf(Test::GetTestList(), NULL, True(), 0);
     }
 
+    int RunSuite( const std::string& testSuiteName )
+    {
+        TestReporterStdout reporter;
+        TestRunner runner(reporter);
+        return runner.RunTests( Test::GetTestList(), testSuiteName );
+    }
 
     TestRunner::TestRunner(TestReporter& reporter)
         : m_reporter(&reporter)
@@ -72,4 +78,23 @@ namespace UnitTest {
 
         result->OnTestFinish(curTest->m_details, testTimeInMs/1000.0f);
     }
+
+    int TestRunner::RunTests( TestList const& list, const std::string& testSuiteName )
+    {
+        Test* curTest = list.GetHead();
+
+        while (curTest != 0)
+        {
+            if ( testSuiteName == curTest->m_details.suiteName )
+            {
+                RunTest(m_result, curTest, 0);
+            }
+
+            curTest = curTest->next;
+        }
+
+        return Finish();
+    }    
+
+
 }

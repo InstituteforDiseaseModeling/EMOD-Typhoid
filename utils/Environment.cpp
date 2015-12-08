@@ -30,13 +30,19 @@ static const char * _module = "Environment";
 Environment* Environment::localEnv = nullptr;
 
 Environment::Environment()
-: Config(nullptr)
+: MPI()
+, Log( nullptr )
+, Config(nullptr)
 , SimConfig(nullptr)
+, Status_Reporter(nullptr)
 , InputPath()
 , OutputPath()
 , StatePath()
 , DllPath()
+, RNG( nullptr )
 {
+    MPI.NumTasks = 1;
+    MPI.Rank = 0;
     Report.Validation = nullptr;
 }
 

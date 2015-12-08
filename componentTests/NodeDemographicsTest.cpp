@@ -30,13 +30,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 using namespace Kernel;
 using namespace std;
 
-
-void Print( const std::string& rMessage )
-{
-    std::wostringstream msg ;
-    msg << rMessage.c_str() ;
-    OutputDebugStringW( msg.str().c_str() );
-}
+void PrintDebug( const std::string& rMessage );
 
 
 class Stopwatch
@@ -149,7 +143,7 @@ SUITE(NodeDemographicsTest)
                 bool passed = msg.find( rExpMsg ) != string::npos ;
                 if( !passed )
                 {
-                    Print( msg );
+                    PrintDebug( msg );
                 }
                 CHECK_LN( passed, lineNumber );
             }
@@ -188,7 +182,7 @@ SUITE(NodeDemographicsTest)
                 bool passed = msg.find( rExpMsg ) != string::npos ;
                 if( !passed )
                 {
-                    Print( msg );
+                    PrintDebug( msg );
                 }
                 CHECK_LN( passed, lineNumber );
             }
@@ -231,7 +225,7 @@ SUITE(NodeDemographicsTest)
                 bool passed = msg.find( rExpMsg ) != string::npos ;
                 if( !passed )
                 {
-                    Print( msg );
+                    PrintDebug( msg );
                 }
                 CHECK_LN( passed, lineNumber );
             }
@@ -1599,7 +1593,7 @@ SUITE(NodeDemographicsTest)
         
         ostringstream msg ;
         msg << "Duration (ms) = " << ms << endl ;
-        Print( msg.str() );
+        PrintDebug( msg.str() );
 
 #ifdef _DEBUG
         CHECK( ms < 4000 );
