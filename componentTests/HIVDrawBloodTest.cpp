@@ -46,6 +46,8 @@ SUITE(HivDrawBloodTest)
             , m_Diag()
             , m_pSimulationConfig( new SimulationConfig() )
         {
+            Environment::Finalize();
+            Environment::setLogger( new SimpleLogger() );
             m_InterventionsContext.setCascadeState( "not_set" );
             m_InterventionsContext.SetContextTo( &m_Human );
             m_Diag.SetContextTo( &m_Human );
@@ -60,7 +62,7 @@ SUITE(HivDrawBloodTest)
         {
             m_pSimulationConfig->listed_events.clear();
             delete m_pSimulationConfig;
-            Environment::setSimulationConfig( nullptr );
+            Environment::Finalize();
         }
     };
 

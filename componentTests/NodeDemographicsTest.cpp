@@ -91,6 +91,7 @@ SUITE(NodeDemographicsTest)
 
             if (!environmentInitialized)
             {
+                Environment::Finalize();
                 Environment::setLogger(new SimpleLogger());
                 int argc      = 1;
                 char* exeName = "componentTests.exe";
@@ -241,6 +242,8 @@ SUITE(NodeDemographicsTest)
 
     TEST(LegacyDemographicsFilename)
     {
+        Environment::Finalize();
+        Environment::setLogger(new SimpleLogger());
         int argc      = 1;
         char* exeName = "componentTests.exe";
         char** argv   = &exeName;

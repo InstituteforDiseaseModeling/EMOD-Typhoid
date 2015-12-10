@@ -43,6 +43,7 @@ SUITE(SchemaTest)
 
             if (!environmentInitialized)
             {
+                Environment::Finalize();
                 Environment::setLogger(new SimpleLogger());
                 int argc      = 1;
                 char* exeName = "componentTests.exe";

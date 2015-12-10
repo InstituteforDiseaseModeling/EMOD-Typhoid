@@ -134,8 +134,8 @@ Environment::~Environment()
 
 void Environment::Finalize()
 {
-    if (localEnv)
-        delete localEnv;
+    delete localEnv;
+    localEnv = nullptr;
 }
 
 std::string Environment::FindFileOnPath( const std::string& rFilename )
