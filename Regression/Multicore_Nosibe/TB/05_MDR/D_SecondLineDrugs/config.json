@@ -77,7 +77,7 @@
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 0, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 
         "Node_Grid_Size": 0.009, 
-        "Num_Cores": 1, 
+        "Num_Cores": 8, 
         "Number_Basestrains": 1, 
         "Number_Substrains": 2, 
         "Population_Density_C50": 1, 

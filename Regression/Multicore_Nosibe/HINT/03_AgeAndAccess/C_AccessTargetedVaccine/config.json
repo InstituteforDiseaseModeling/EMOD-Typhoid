@@ -71,7 +71,7 @@
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 90, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 
         "Node_Grid_Size": 0.042, 
-        "Num_Cores": 1, 
+        "Num_Cores": 8, 
         "Number_Basestrains": 1, 
         "Number_Substrains": 1, 
         "PKPD_Model": "FIXED_DURATION_CONSTANT_EFFECT", 
