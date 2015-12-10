@@ -21,8 +21,6 @@ SUITE(SigmoidTest)
 {
     TEST(Test1)
     {
-        std::cout << "Testing Sigmoid functions." << std::endl;
-
         // Start of by checking that basic_sigmoid does what is expected. The reference values are 
         // basically just taken by duplicating the math in the code as of this writing.
         auto val = Sigmoid::basic_sigmoid(); // defaults
