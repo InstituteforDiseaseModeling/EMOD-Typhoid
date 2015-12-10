@@ -67,5 +67,7 @@ namespace Kernel
         IndividualInterventionConfig positive_diagnosis_config;
         jsonConfigurable::ConstrainedString positive_diagnosis_event;
 #pragma warning( pop )
+
+        DECLARE_SERIALIZABLE(SimpleDiagnostic);
     };
 }

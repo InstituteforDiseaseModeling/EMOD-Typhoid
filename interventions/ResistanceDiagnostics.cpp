@@ -79,16 +79,14 @@ namespace Kernel
         return treatment_fraction_neg;
     }
 
-}
+/* clorton
+    REGISTER_SERIALIZABLE(MDRDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, MDRDiagnostic& obj, const unsigned int v)
+    void MDRDiagnostic::serialize(IArchive& ar, MDRDiagnostic* obj)
     {
-        ar & obj.treatment_fraction_neg;
-
-        ar & boost::serialization::base_object<Kernel::DiagnosticTreatNeg>(obj);
+        DiagnosticTreatNeg::serialize(ar, obj);
+        MDRDiagnostic& diagnostic = *obj;
+        ar.labelElement("treatment_fraction_neg") & diagnostic.treatment_fraction_neg;
     }
+*/
 }
-#endif

@@ -11,8 +11,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <cstdint>
 
-enum struct SerializationFlags : uint32_t
+// Bit flags...
+enum SerializationFlags : uint32_t
 {
-    PopulationOnly = 1
+    Population = 1,
+    Parameters = 2,
+    Properties = 4
 };
 

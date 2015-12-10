@@ -171,23 +171,26 @@ namespace Kernel
     {
         return target_property_value.c_str();
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, PropertyValueChanger& pc, const unsigned int v)
+    REGISTER_SERIALIZABLE(PropertyValueChanger);
+
+    void PropertyValueChanger::serialize(IArchive& ar, PropertyValueChanger* obj)
     {
-        //ar & (std::string)pc.target_property_key;
-        //ar & (std::string)pc.target_property_value;
-        ar & pc.target_property_key;
-        ar & pc.target_property_value;
-        ar & pc.probability;
-        ar & pc.revert;
-        ar & pc.max_duration;
-        ar & pc.action_timer;
-        ar & pc.reversion_timer;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(pc);
+// TODO        BaseIntervention::serialize(ar, obj);
+        ar.labelElement("cost_per_unit") & obj->cost_per_unit;
+        ar.labelElement("expired") & obj->expired;
+
+        PropertyValueChanger& changer = *obj;
+
+// clorton        jsonConfigurable::ConstrainedString target_property_key;
+// clorton        jsonConfigurable::ConstrainedString target_property_value;
+
+        ar.labelElement("target_property_key") & (std::string&)(changer.target_property_key);
+        ar.labelElement("target_property_value") & (std::string&)(changer.target_property_value);
+        ar.labelElement("probability") & changer.probability;
+        ar.labelElement("revert") & changer.revert;
+        ar.labelElement("max_duration") & changer.max_duration;
+        ar.labelElement("action_timer") & changer.action_timer;
+        ar.labelElement("reversion_timer") & changer.reversion_timer;
     }
 }
-#endif

@@ -18,7 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class HealthSeekingBehaviorUpdateable :  public IHealthSeekingBehavior, public SimpleHealthSeekingBehavior
+    class HealthSeekingBehaviorUpdateable :  public SimpleHealthSeekingBehavior, public IHealthSeekingBehavior
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -30,5 +30,8 @@ namespace Kernel
 
         //IHealthSeekingBehavior
         virtual void UpdateProbabilityofSeeking(float new_probability_of_seeking); //this function only called by TBInterventions Container
+
+    protected:
+        DECLARE_SERIALIZABLE(HealthSeekingBehaviorUpdateable);
     };
 }

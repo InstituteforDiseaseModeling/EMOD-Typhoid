@@ -15,6 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 
 #include "Exceptions.h"
+#include "IArchive.h"
 
 typedef struct {
     unsigned int num_acts;
@@ -154,11 +155,20 @@ class IDMAPI RangedFloat
         virtual float getMin() const { return _min_value; }
         virtual float getMax() const { return _max_value; }
 
+        void serialize( Kernel::IArchive& ar )
+        {
+            ar.startObject();
+                ar.labelElement("_value") & _value;
+                ar.labelElement("_min_value") & _min_value;
+                ar.labelElement("_max_value") & _max_value;
+            ar.endObject();
+        }
+
     private:
     protected:
         float _value;
-        const float _min_value;
-        const float _max_value;
+        /* const */ float _min_value;
+        /* const */ float _max_value;
 };
 
 class IDMAPI NonNegativeFloat : public RangedFloat
@@ -271,6 +281,11 @@ class IDMAPI NaturalNumber
         }
 
         operator int() const { return _value; }
+
+        void serialize( Kernel::IArchive& ar )
+        {
+            ar & _value;
+        }
 
     private:
         int _value;

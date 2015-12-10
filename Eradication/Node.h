@@ -33,6 +33,7 @@ namespace std
 #include "ITransmissionGroups.h"
 #include "suids.hpp"
 #include "IInfectable.h"
+#include "Serialization.h"
 
 class RANDOMBASE;
 
@@ -149,7 +150,7 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         static INodeContext::tDistrib base_distribs;
 
-        uint32_t serializationMask;
+        SerializationFlags serializationMask;
 
         // Do not access these directly but use the access methods above.
         float _latitude;

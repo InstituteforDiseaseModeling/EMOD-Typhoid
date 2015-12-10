@@ -34,14 +34,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "DllLoader.h"
 
-#include "JsonRawWriter.h"
-#include "JsonRawReader.h"
 #include "BinaryArchiveWriter.h"
 #include "BinaryArchiveReader.h"
-#include "JsonFullWriter.h"
-#include "JsonFullReader.h"
-
-#include "snappy.h"
+#include "JsonRawWriter.h"
+#include "JsonRawReader.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -66,7 +62,7 @@ namespace Kernel
     //------------------------------------------------------------------
 
     Simulation::Simulation()
-        : serializationMask(SerializationFlags::PopulationOnly)
+        : serializationMask(SerializationFlags(uint32_t(SerializationFlags::Population) | uint32_t(SerializationFlags::Parameters)))
         , nodes()
         , nodeRankMap()
         , node_event_context_list()
@@ -582,91 +578,8 @@ namespace Kernel
 //        return EXCEPTION_EXECUTE_HANDLER;
 //    }
 
-    void GenerateFilename( char* filename, size_t length, uint32_t time_step )
-    {
-    #ifdef WIN32
-        sprintf_s( filename, MAX_PATH, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
-    #else
-        sprintf( filename, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
-    #endif
-    }
-
-    bool OpenFileForWriting( const char* filename, FILE** pf )
-    {
-        bool opened; // = true;
-        errno = 0;
-    #ifdef WIN32
-        opened = (fopen_s( pf, filename, "wb") == 0);
-    #else
-        *pf = fopen( filename, "wb");
-        opened = (*pf != nullptr);
-    #endif
-
-        if ( !opened )
-        {
-            LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
-        }
-
-        return opened;
-    }
-
-    void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool compress)
-    {
-        char filename[256];
-        GenerateFilename( filename, sizeof filename, time_step );
-        LOG_INFO_F( "Writing state to '%s'\n", filename );
-        FILE* f = nullptr;
-        if ( OpenFileForWriting( filename, &f ) )
-        {
-            // "IDTK"
-            fwrite( "IDTK", 1, 4, f );
-            // header size/offset to data
-            std::ostringstream temp_stream;
-            std::time_t now = std::time(nullptr);
-            struct tm gmt;
-            gmtime_s( &gmt, &now );
-            char asc_time[256];
-            strftime( asc_time, sizeof asc_time, "%a %b %d %H:%M:%S %Y", &gmt );
-            temp_stream << '{'
-                   << "\"metadata\":{"
-                   << "\"version\":" << 1 << ','
-                   << "\"date\":" << '"' << asc_time << "\","
-                   << "\"compressed\":" << (compress ? "true" : "false")
-                   << '}'
-                   << '}';
-            std::string header = temp_stream.str();
-            uint32_t header_size = header.size();
-            fwrite( &header_size, sizeof(header_size), 1, f );
-            // header (uncompressed JSON)
-            fwrite( header.c_str(), 1, header_size, f );
-            // data
-            if (!compress)
-            {
-                fwrite( data, 1, length, f );
-            }
-            else
-            {
-                std::string compressed;
-                snappy::Compress( data, length, &compressed );
-                fwrite( compressed.c_str(), 1, compressed.size(), f );
-            }
-            fflush( f );
-            fclose( f );
-        }
-    }
-
-
     void Simulation::Update(float dt)
     {
-        if (currentTime.time == 0)
-        {
-            IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
-//            (*writer).labelElement( "simulation" ) & const_cast<Simulation*>(this);
-            (*writer).labelElement( "nodes" ); serialize(*writer, nodes);
-            WriteIdtkFile( (*writer).GetBuffer(), (*writer).GetBufferSize(), currentTime.time, true );
-            delete writer;
-        }
-
         Reports_UpdateEventRegistration( currentTime.time, dt );
         Reports_FindReportsCollectingIndividualData( currentTime.time, dt );
 
@@ -1285,45 +1198,57 @@ namespace Kernel
     {
         Simulation& sim = *obj;
         ar.labelElement("serializationMask") & (uint32_t&)sim.serializationMask;
-        ar.labelElement("nodes"); serialize(ar, sim.nodes);
-// clorton        ar.labelElement("nodeRankMap") & sim.nodeRankMap;
-// clorton        ar.labelElement("node_event_context_list") & sim.node_event_context_list;
-// clorton        ar.labelElement("nodeid_suid_map") & sim.nodeid_suid_map;
-// clorton        ar.labelElement("migratingIndividualQueues") & sim.migratingIndividualQueues;
-// clorton        ar.labelElement("m_simConfigObj") & sim.m_simConfigObj;
-// clorton        ar.labelElement("m_interventionFactoryObj") & sim.m_interventionFactoryObj;
-// clorton        ar.labelElement("demographicsContext") & sim.demographicsContext;
-// clorton        ar.labelElement("infectionSuidGenerator") & sim.infectionSuidGenerator;
-// clorton        ar.labelElement("individualHumanSuidGenerator") & sim.individualHumanSuidGenerator;
-// clorton        ar.labelElement("nodeSuidGenerator") & sim.nodeSuidGenerator;
-        ar.labelElement("campaignFilename") & sim.campaignFilename;
-        ar.labelElement("loadBalanceFilename") & sim.loadBalanceFilename;
-// clorton        ar.labelElement("rng") & sim.rng;
-// clorton        ar.labelElement("reports") & sim.reports;
-// clorton        ar.labelElement("individual_data_reports") & sim.individual_data_reports;
-// clorton        ar.labelElement("reportClassCreator") & sim.reportClassCreator;
-// clorton        ar.labelElement("binnedReportClassCreator") & sim.binnedReportClassCreator;
-// clorton        ar.labelElement("spatialReportClassCreator") & sim.spatialReportClassCreator;
-// clorton        ar.labelElement("propertiesReportClassCreator") & sim.propertiesReportClassCreator;
-// clorton        ar.labelElement("demographicsReportClassCreator") & sim.demographicsReportClassCreator;
-// clorton        ar.labelElement("eventReportClassCreator") & sim.eventReportClassCreator;
-// clorton        ar.labelElement("event_coordinators") & sim.event_coordinators;
-// clorton        ar.labelElement("campaign_events") & sim.campaign_events;
-// clorton        ar.labelElement("event_context_host") & sim.event_context_host;
-        ar.labelElement("Ind_Sample_Rate") & sim.Ind_Sample_Rate;
-// clorton        ar.labelElement("currentTime") & sim.currentTime;
-        ar.labelElement("random_type") & (uint32_t&)sim.random_type;
-        ar.labelElement("sim_type") & (uint32_t&)sim.sim_type;
-        ar.labelElement("demographic_tracking") & sim.demographic_tracking;
-        ar.labelElement("enable_spatial_output") & sim.enable_spatial_output;
-        ar.labelElement("enable_property_output") & sim.enable_property_output;
-        ar.labelElement("enable_default_report") & sim.enable_default_report;
-        ar.labelElement("enable_event_report") & sim.enable_event_report;
-        ar.labelElement("campaign_filename") & sim.campaign_filename;
-        ar.labelElement("loadbalance_filename") & sim.loadbalance_filename;
-        ar.labelElement("Run_Number") & sim.Run_Number;
-// clorton        ar.labelElement("demographics_factory") & sim.demographics_factory;
-// clorton        ar.labelElement("new_node_observers") & sim.new_node_observers;
+
+        if ((sim.serializationMask & SerializationFlags::Population) != 0) {
+            ar.labelElement("nodes"); serialize(ar, sim.nodes);
+        }
+
+        if ((sim.serializationMask & SerializationFlags::Parameters) != 0) {
+            ar.labelElement("campaignFilename") & sim.campaignFilename;
+
+            ar.labelElement("Ind_Sample_Rate") & sim.Ind_Sample_Rate;
+
+            ar.labelElement("sim_type") & (uint32_t&)sim.sim_type;
+            ar.labelElement("demographic_tracking") & sim.demographic_tracking;
+            ar.labelElement("enable_spatial_output") & sim.enable_spatial_output;
+            ar.labelElement("enable_property_output") & sim.enable_property_output;
+            ar.labelElement("enable_default_report") & sim.enable_default_report;
+            ar.labelElement("enable_event_report") & sim.enable_event_report;
+
+            ar.labelElement("loadbalance_filename") & sim.loadbalance_filename;
+            ar.labelElement("Run_Number") & sim.Run_Number;
+        }
+
+        if ((sim.serializationMask & SerializationFlags::Properties) != 0) {
+// clorton          ar.labelElement("nodeRankMap") & sim.nodeRankMap;
+// clorton          ar.labelElement("node_event_context_list") & sim.node_event_context_list;
+// clorton          ar.labelElement("nodeid_suid_map") & sim.nodeid_suid_map;
+// clorton          ar.labelElement("migratingIndividualQueues") & sim.migratingIndividualQueues;
+// clorton          ar.labelElement("m_simConfigObj") & sim.m_simConfigObj;
+// clorton          ar.labelElement("m_interventionFactoryObj") & sim.m_interventionFactoryObj;
+// clorton          ar.labelElement("demographicsContext") & sim.demographicsContext;
+// clorton          ar.labelElement("infectionSuidGenerator") & sim.infectionSuidGenerator;
+// clorton          ar.labelElement("individualHumanSuidGenerator") & sim.individualHumanSuidGenerator;
+// clorton          ar.labelElement("nodeSuidGenerator") & sim.nodeSuidGenerator;
+            ar.labelElement("loadBalanceFilename") & sim.loadBalanceFilename;
+// clorton          ar.labelElement("rng") & sim.rng;
+// clorton          ar.labelElement("reports") & sim.reports;
+// clorton          ar.labelElement("individual_data_reports") & sim.individual_data_reports;
+// clorton          ar.labelElement("reportClassCreator") & sim.reportClassCreator;
+// clorton          ar.labelElement("binnedReportClassCreator") & sim.binnedReportClassCreator;
+// clorton          ar.labelElement("spatialReportClassCreator") & sim.spatialReportClassCreator;
+// clorton          ar.labelElement("propertiesReportClassCreator") & sim.propertiesReportClassCreator;
+// clorton          ar.labelElement("demographicsReportClassCreator") & sim.demographicsReportClassCreator;
+// clorton          ar.labelElement("eventReportClassCreator") & sim.eventReportClassCreator;
+// clorton          ar.labelElement("event_coordinators") & sim.event_coordinators;
+// clorton          ar.labelElement("campaign_events") & sim.campaign_events;
+// clorton          ar.labelElement("event_context_host") & sim.event_context_host;
+// clorton          ar.labelElement("currentTime") & sim.currentTime;
+            ar.labelElement("random_type") & (uint32_t&)sim.random_type;
+            ar.labelElement("campaign_filename") & sim.campaign_filename;
+// clorton          ar.labelElement("demographics_factory") & sim.demographics_factory;
+// clorton          ar.labelElement("new_node_observers") & sim.new_node_observers;
+        }
     }
 
     void Simulation::serialize(IArchive& ar, NodeMap_t& node_map)

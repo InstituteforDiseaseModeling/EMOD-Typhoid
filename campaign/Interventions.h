@@ -171,6 +171,7 @@ namespace Kernel
 
     struct IIndividualHumanEventContext;
 
+    // TODO - BaseInterventions looks concrete, but can't be instantiated. :(
     struct IDMAPI BaseIntervention : IDistributableIntervention, IBaseIntervention, JsonConfigurable
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -187,6 +188,8 @@ namespace Kernel
 
         float cost_per_unit;
         bool expired;
+
+// TODO        DECLARE_SERIALIZABLE(BaseIntervention);
     };
 
     struct BaseNodeIntervention : IBaseIntervention, JsonConfigurable, INodeDistributableIntervention

@@ -30,4 +30,11 @@ namespace Kernel
         LOG_DEBUG_F("old probability of seeking is %f, new probability of seeking is %f\n", probability_of_seeking, new_probability_of_seeking);
         probability_of_seeking = new_probability_of_seeking;
     }
+
+    REGISTER_SERIALIZABLE(HealthSeekingBehaviorUpdateable);
+
+    void HealthSeekingBehaviorUpdateable::serialize(IArchive& ar, HealthSeekingBehaviorUpdateable* obj)
+    {
+        SimpleHealthSeekingBehavior::serialize(ar, obj);
+    }   
 }

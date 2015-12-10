@@ -43,6 +43,8 @@ namespace Kernel
     protected:
         DrugTypeByProperty drug_type_by_property;
         bool enable_state_specific_tx;
+
+        DECLARE_SERIALIZABLE(AntiTBPropDepDrug);
     };
 }
 

@@ -247,20 +247,42 @@ namespace Kernel
     DelayedIntervention::~DelayedIntervention()
     { LOG_DEBUG("Destructing DelayedIntervention\n");
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, DelayedIntervention& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(DelayedIntervention);
+
+    void DelayedIntervention::serialize(IArchive& ar, DelayedIntervention* obj)
     {
-        ar & obj.remaining_delay_days;
+// TODO        BaseIntervention::serialize(ar, obj);
+        ar.labelElement("cost_per_unit") & obj->cost_per_unit;
+        ar.labelElement("expired") & obj->expired;
 
-        // ERAD-1235: Note that an unregistered class exception is thrown when serializing the
-        //            base class, SimpleHealthSeekingBehavior, if we don't call the following two
-        //            lines but instead do serialization::base_object<Kernel::SimpleHealthSeekingBehavior>(obj)
-        ar & obj.actual_intervention_config;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        DelayedIntervention& intervention = *obj;
+
+        ar.labelElement("remaining_delay_days") & intervention.remaining_delay_days;
+
+        /* // These are only used during construction/initialization/distribution
+        ar.labelElement("coverage") & intervention.coverage;
+        ar.labelElement("delay_distribution") & (uint32_t&)intervention.delay_distribution;
+        ar.labelElement("delay_period") & intervention.delay_period;
+        ar.labelElement("delay_period_min") & intervention.delay_period_min;
+        ar.labelElement("delay_period_max") & intervention.delay_period_max;
+        ar.labelElement("delay_period_mean") & intervention.delay_period_mean;
+        ar.labelElement("delay_period_std_dev") & intervention.delay_period_std_dev;
+        */
+
+        ar.labelElement("actual_intervention_config");
+        if ( ar.IsWriter() )
+        {
+            std::ostringstream string_stream;
+            json::Writer::Write( intervention.actual_intervention_config._json, string_stream );
+            ar & string_stream.str();
+        }
+        else
+        {
+            std::string json;
+            ar & json;
+            std::istringstream string_stream( json );
+            json::Reader::Read( intervention.actual_intervention_config._json, string_stream );
+        }
     }
 }
-#endif

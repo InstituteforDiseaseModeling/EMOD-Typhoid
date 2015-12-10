@@ -52,5 +52,7 @@ namespace Kernel
         float delay_period_std_dev;
 
         IndividualInterventionConfig actual_intervention_config;
+
+        DECLARE_SERIALIZABLE(DelayedIntervention);
     };
 }

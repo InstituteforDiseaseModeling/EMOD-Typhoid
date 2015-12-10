@@ -32,7 +32,7 @@ namespace Kernel
         virtual const char * GetTargetPropertyValue() = 0;
     };
 
-    class PropertyValueChanger : public IPropertyValueChanger, public BaseIntervention
+    class PropertyValueChanger : public BaseIntervention, public IPropertyValueChanger
     {
         public:
         bool Configure( const Configuration * config );
@@ -66,5 +66,7 @@ namespace Kernel
         float max_duration;
         float action_timer;
         float reversion_timer;
+
+        DECLARE_SERIALIZABLE(PropertyValueChanger);
     };
 }

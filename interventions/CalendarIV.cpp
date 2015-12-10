@@ -237,7 +237,20 @@ namespace Kernel
     {
         IVCalendar& cal = *obj;
         ar.labelElement("target_age_array"); TargetAgeArrayConfig::serialize( ar, cal.target_age_array );
-// clorton        ar.labelElement("actual_intervention_config") & cal.actual_intervention_config;
+        ar.labelElement("actual_intervention_config"); // clorton & cal.actual_intervention_config;
+        if ( ar.IsWriter() )
+        {
+            std::ostringstream string_stream;
+            json::Writer::Write( cal.actual_intervention_config._json, string_stream );
+            ar & string_stream.str();
+        }
+        else
+        {
+            std::string json;
+            ar & json;
+            std::istringstream string_stream( json );
+            json::Reader::Read( cal.actual_intervention_config._json, string_stream );
+        }
         ar.labelElement("scheduleAges") & cal.scheduleAges;
     }
 

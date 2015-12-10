@@ -27,5 +27,7 @@ namespace Kernel
 
     protected:
         float vaccine_take_age_decay_rate;
+
+        DECLARE_SERIALIZABLE(BCGVaccine);
     };
 }

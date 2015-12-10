@@ -33,6 +33,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IInfectable.h"
 #include "Instrumentation.h"
 #include "FileSystem.h"
+#include "Serialization.h"
 
 static const char* _module = "Node";
 
@@ -333,12 +334,17 @@ namespace Kernel
     //   Initialization methods
     //------------------------------------------------------------------
 
-    // <ERAD-291>
+    static const char* keys_whitelist_tmp[] = { "Accessibility", "Geographic", "Place", "Risk", "QualityOfCare", "HasActiveTB"  };
+
+// <ERAD-291>
     // TODO: Make simulation object initialization more consistent.  Either all pass contexts to constructors or just have empty constructors
     Node::Node(ISimulationContext *_parent_sim, suids::suid _suid)
-        : _latitude(FLT_MAX)
+        : serializationMask(SerializationFlags(uint32_t(SerializationFlags::Population) | uint32_t(SerializationFlags::Parameters)))
+        , _latitude(FLT_MAX)
         , _longitude(FLT_MAX)
+        , distribs()
         , ind_sampling_type( IndSamplingType::TRACK_ALL )
+        , population_density_infectivity_correction(PopulationDensityInfectivityCorrection::CONSTANT_INFECTIVITY)
         , suid(_suid)
         , urban(false)
         , birthrate(DEFAULT_BIRTHRATE)
@@ -349,6 +355,9 @@ namespace Kernel
         , susceptibility_dynamic_scaling(1.0f)
         , localWeather(nullptr)
         , migration_info(nullptr)
+        , demographics()
+        , demographic_distributions()
+        , externalId(0)
         , event_context_host(nullptr)
         , statPop(0)
         , Infected(0)
@@ -360,13 +369,50 @@ namespace Kernel
         , Cumulative_Reported_Infections(0.0f)
         , Campaign_Cost(0.0f)
         , Possible_Mothers(0)           // counters starting with this one were only used for old spatial reporting and can probably now be removed
+        , mean_age_infection(0.0f)
+        , newInfectedPeopleAgeProduct(0.0f)
+        , infected_people_prior()
+        , infected_age_people_prior()
         , infectionrate(0.0f)
         , mInfectivity(0.0f)
         , parent(nullptr)
+        , demographics_birth(false)
+        , demographics_gender(false)
+        , demographics_other(false)
         , max_sampling_cell_pop(0.0f)
+        , sample_rate_birth(0.0f)
+        , sample_rate_0_18mo(0.0f)
+        , sample_rate_18mo_4yr(0.0f)
+        , sample_rate_5_9(0.0f)
+        , sample_rate_10_14(0.0f)
+        , sample_rate_15_19(0.0f)
+        , sample_rate_20_plus(0.0f)
+        , sample_rate_immune(0.0f)
+        , immune_threshold_for_downsampling(0.0f)
+        , prob_maternal_transmission(0.0f)
+        , population_density_c50(0.0f)
+        , population_scaling_factor(0.0f)
+        , maternal_transmission(false)
+        , vital_birth(false)
         , vital_birth_dependence(VitalBirthDependence::FIXED_BIRTH_RATE)
         , vital_birth_time_dependence(VitalBirthTimeDependence::NONE)
+        , x_birth(0.0f)
+        , immunity_dist_type(DistributionFunction::NOT_INITIALIZED)
+        , immunity_dist1(0.0f)
+        , immunity_dist2(0.0f)
+        , risk_dist_type(DistributionFunction::NOT_INITIALIZED)
+        , risk_dist1(0.0f)
+        , risk_dist2(0.0f)
+        , migration_dist_type(DistributionFunction::NOT_INITIALIZED)
+        , migration_dist1(0.0f)
+        , migration_dist2(0.0f)
+        , new_infection_observers()
+        , animal_reservoir_type(AnimalReservoir::NO_ZOONOSIS)
         , infectivity_scaling(InfectivityScaling::CONSTANT_INFECTIVITY)
+        , zoonosis_rate(0.0f)
+        , routes()
+        , whitelist_enabled(true)
+        , ipkeys_whitelist( keys_whitelist_tmp, keys_whitelist_tmp+sizeof_array(keys_whitelist_tmp) )
         , infectivity_sinusoidal_forcing_amplitude( 1.0f )
         , infectivity_sinusoidal_forcing_phase( 0.0f )
         , infectivity_boxcar_forcing_amplitude( 1.0f )
@@ -379,20 +425,98 @@ namespace Kernel
         , birth_rate_boxcar_end_time( 0.0 )
     {
         SetContextTo(_parent_sim);  // TODO - this should be a virtual function call, but it isn't because the constructor isn't finished running yet.
-        const char* keys_whitelist_tmp[] = { "Accessibility", "Geographic", "Place", "Risk", "QualityOfCare", "HasActiveTB"  };
-        ipkeys_whitelist = std::set< std::string> ( keys_whitelist_tmp, keys_whitelist_tmp+sizeof_array(keys_whitelist_tmp) );
-        whitelist_enabled = true;
+// clorton        const char* keys_whitelist_tmp[] = { "Accessibility", "Geographic", "Place", "Risk", "QualityOfCare", "HasActiveTB"  };
+// clorton        ipkeys_whitelist = std::set< std::string> ( keys_whitelist_tmp, keys_whitelist_tmp+sizeof_array(keys_whitelist_tmp) );
+// clorton        whitelist_enabled = true;
     }
 
     Node::Node()
-        : _latitude(FLT_MAX)
+        : serializationMask(SerializationFlags(uint32_t(SerializationFlags::Population) | uint32_t(SerializationFlags::Parameters)))
+        , _latitude(FLT_MAX)
         , _longitude(FLT_MAX)
+        , distribs()
         , ind_sampling_type( IndSamplingType::TRACK_ALL )
+        , population_density_infectivity_correction(PopulationDensityInfectivityCorrection::CONSTANT_INFECTIVITY)
+        , suid(suids::nil_suid())
+        , urban(false)
+        , birthrate(DEFAULT_BIRTHRATE)
+        , Above_Poverty(DEFAULT_POVERTY_THRESHOLD)
+        , individualHumans()
+        , Ind_Sample_Rate(1.0f)
         , transmissionGroups(nullptr)
+        , susceptibility_dynamic_scaling(1.0f)
+        , localWeather(nullptr)
+        , migration_info(nullptr)
+        , demographics()
+        , demographic_distributions()
+        , externalId(0)
         , event_context_host(nullptr)
+        , statPop(0)
+        , Infected(0)
+        , Births(0.0f)
+        , Disease_Deaths(0.0f)
+        , new_infections(0.0f)
+        , new_reportedinfections(0.0f)
+        , Cumulative_Infections(0.0f)
+        , Cumulative_Reported_Infections(0.0f)
+        , Campaign_Cost(0.0f)
+        , Possible_Mothers(0)           // counters starting with this one were only used for old spatial reporting and can probably now be removed
+        , mean_age_infection(0.0f)
+        , newInfectedPeopleAgeProduct(0.0f)
+        , infected_people_prior()
+        , infected_age_people_prior()
+        , infectionrate(0.0f)
+        , mInfectivity(0.0f)
         , parent(nullptr)
+        , demographics_birth(false)
+        , demographics_gender(false)
+        , demographics_other(false)
+        , max_sampling_cell_pop(0.0f)
+        , sample_rate_birth(0.0f)
+        , sample_rate_0_18mo(0.0f)
+        , sample_rate_18mo_4yr(0.0f)
+        , sample_rate_5_9(0.0f)
+        , sample_rate_10_14(0.0f)
+        , sample_rate_15_19(0.0f)
+        , sample_rate_20_plus(0.0f)
+        , sample_rate_immune(0.0f)
+        , immune_threshold_for_downsampling(0.0f)
+        , prob_maternal_transmission(0.0f)
+        , population_density_c50(0.0f)
+        , population_scaling_factor(0.0f)
+        , maternal_transmission(false)
+        , vital_birth(false)
+        , vital_birth_dependence(VitalBirthDependence::FIXED_BIRTH_RATE)
+        , vital_birth_time_dependence(VitalBirthTimeDependence::NONE)
+        , x_birth(0.0f)
+        , immunity_dist_type(DistributionFunction::NOT_INITIALIZED)
+        , immunity_dist1(0.0f)
+        , immunity_dist2(0.0f)
+        , risk_dist_type(DistributionFunction::NOT_INITIALIZED)
+        , risk_dist1(0.0f)
+        , risk_dist2(0.0f)
+        , migration_dist_type(DistributionFunction::NOT_INITIALIZED)
+        , migration_dist1(0.0f)
+        , migration_dist2(0.0f)
+        , new_infection_observers()
+        , animal_reservoir_type(AnimalReservoir::NO_ZOONOSIS)
+        , infectivity_scaling(InfectivityScaling::CONSTANT_INFECTIVITY)
+        , zoonosis_rate(0.0f)
+        , routes()
+        , whitelist_enabled(true)
+        , ipkeys_whitelist( keys_whitelist_tmp, keys_whitelist_tmp+sizeof_array(keys_whitelist_tmp) )
+        , infectivity_sinusoidal_forcing_amplitude( 1.0f )
+        , infectivity_sinusoidal_forcing_phase( 0.0f )
+        , infectivity_boxcar_forcing_amplitude( 1.0f )
+        , infectivity_boxcar_start_time( 0.0 )
+        , infectivity_boxcar_end_time( 0.0 )
+        , birth_rate_sinusoidal_forcing_amplitude( 1.0f )
+        , birth_rate_sinusoidal_forcing_phase( 0.0f )
+        , birth_rate_boxcar_forcing_amplitude( 1.0f )
+        , birth_rate_boxcar_start_time( 0.0 )
+        , birth_rate_boxcar_end_time( 0.0 )
     {
-
+        // No more to do here.
     }
 
     Node::~Node()
@@ -561,6 +685,7 @@ namespace Kernel
         }
 
         bool ret = JsonConfigurable::Configure( config );
+        // TODO - clorton: looks like a duplicate from lines 637 (or so)
         if( vital_birth == true )
         {
             initConfig( "Birth_Rate_Dependence", vital_birth_dependence, config, MetadataDescriptor::Enum(Birth_Rate_Dependence_DESC_TEXT, Birth_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthDependence)) ); // node only (move)
@@ -2590,89 +2715,103 @@ namespace Kernel
     void Node::serialize(IArchive& ar, Node* obj)
     {
         Node& node = *obj;
-        ar.labelElement("serializationMask") & node.serializationMask;
-        ar.labelElement("individualHumans") & node.individualHumans;
-        ar.labelElement("_latitude") & node._latitude;
-        ar.labelElement("_longitude") & node._longitude;
-// clorton        ar.labelElement("distribs") & node.distribs;
-        ar.labelElement("ind_sampling_type") & (uint32_t&)node.ind_sampling_type;
-        ar.labelElement("population_density_infectivity_correction") & (uint32_t&)node.population_density_infectivity_correction;
-        ar.labelElement("suid_data") & node.suid.data;
-        ar.labelElement("urban") & node.urban;
-        ar.labelElement("birthrate") & node.birthrate;
-        ar.labelElement("Above_Poverty") & node.Above_Poverty;
-        ar.labelElement("Ind_Sample_Rate") & node.Ind_Sample_Rate;
-// clorton        ar.labelElement("transmissionGroups") & node.transmissionGroups;
-        ar.labelElement("susceptibility_dynamic_scaling") & node.susceptibility_dynamic_scaling;
-// clorton        ar.labelElement("localWeather") & node.localWeather;
-// clorton        ar.labelElement("migration_info") & node.migration_info;
-// clorton        ar.labelElement("demographics") & node.demographics;
-// clorton        ar.labelElement("demographic_distributions") & node.demographic_distributions;
-        ar.labelElement("externalId") & node.externalId;
-// clorton        ar.labelElement("event_context_host") & node.event_context_host;
-        ar.labelElement("statPop") & node.statPop;
-        ar.labelElement("Infected") & node.Infected;
-        ar.labelElement("Births") & node.Births;
-        ar.labelElement("Disease_Deaths") & node.Disease_Deaths;
-        ar.labelElement("new_infections") & node.new_infections;
-        ar.labelElement("new_reportedinfections") & node.new_reportedinfections;
-        ar.labelElement("Cumulative_Infections") & node.Cumulative_Infections;
-        ar.labelElement("Cumulative_Reported_Infections") & node.Cumulative_Reported_Infections;
-        ar.labelElement("Campaign_Cost") & node.Campaign_Cost;
-// clorton        ar.labelElement("Possible_Mothers") & node.Possible_Mothers;
-        ar.labelElement("mean_age_infection") & node.mean_age_infection;
-        ar.labelElement("newInfectedPeopleAgeProduct") & node.newInfectedPeopleAgeProduct;
-// clorton        ar.labelElement("infected_people_prior") & node.infected_people_prior;
-// clorton        ar.labelElement("infected_age_people_prior") & node.infected_age_people_prior;
-        ar.labelElement("infectionrate") & node.infectionrate;
-        ar.labelElement("mInfectivity") & node.mInfectivity;
-        ar.labelElement("demographics_birth") & node.demographics_birth;
-        ar.labelElement("demographics_gender") & node.demographics_gender;
-        ar.labelElement("demographics_other") & node.demographics_other;
-        ar.labelElement("max_sampling_cell_pop") & node.max_sampling_cell_pop;
-        ar.labelElement("sample_rate_birth") & node.sample_rate_birth;
-        ar.labelElement("sample_rate_0_18mo") & node.sample_rate_0_18mo;
-        ar.labelElement("sample_rate_18mo_4yr") & node.sample_rate_18mo_4yr;
-        ar.labelElement("sample_rate_5_9") & node.sample_rate_5_9;
-        ar.labelElement("sample_rate_10_14") & node.sample_rate_10_14;
-        ar.labelElement("sample_rate_15_19") & node.sample_rate_15_19;
-        ar.labelElement("sample_rate_20_plus") & node.sample_rate_20_plus;
-        ar.labelElement("sample_rate_immune") & node.sample_rate_immune;
-        ar.labelElement("immune_threshold_for_downsampling") & node.immune_threshold_for_downsampling;
-        ar.labelElement("prob_maternal_transmission") & node.prob_maternal_transmission;
-        ar.labelElement("population_density_c50") & node.population_density_c50;
-        ar.labelElement("population_scaling_factor") & node.population_scaling_factor;
-        ar.labelElement("maternal_transmission") & node.maternal_transmission;
-        ar.labelElement("vital_birth") & node.vital_birth;
-        ar.labelElement("vital_birth_dependence") & (uint32_t&)node.vital_birth_dependence;
-        ar.labelElement("vital_birth_time_dependence") & (uint32_t&)node.vital_birth_time_dependence;
-        ar.labelElement("x_birth") & node.x_birth;
-        ar.labelElement("immunity_dist_type") & (uint32_t&)node.immunity_dist_type;
-        ar.labelElement("immunity_dist1") & node.immunity_dist1;
-        ar.labelElement("immunity_dist2") & node.immunity_dist2;
-        ar.labelElement("risk_dist_type") & (uint32_t&)node.risk_dist_type;
-        ar.labelElement("risk_dist1") & node.risk_dist1;
-        ar.labelElement("risk_dist2") & node.risk_dist2;
-        ar.labelElement("migration_dist_type") & (uint32_t&)node.migration_dist_type;
-        ar.labelElement("migration_dist1") & node.migration_dist1;
-        ar.labelElement("migration_dist2") & node.migration_dist2;
-// clorton        ar.labelElement("new_infection_observers") & node.new_infection_observers;
-        ar.labelElement("animal_reservoir_type") & (uint32_t&)node.animal_reservoir_type;
-        ar.labelElement("infectivity_scaling") & (uint32_t&)node.infectivity_scaling;
-        ar.labelElement("zoonosis_rate") & node.zoonosis_rate;
-        ar.labelElement("routes") & node.routes;
-        ar.labelElement("whitelist_enabled") & node.whitelist_enabled;
-// clorton        ar.labelElement("ipkeys_whitelist") & node.ipkeys_whitelist;
-        ar.labelElement("infectivity_sinusoidal_forcing_amplitude") & node.infectivity_sinusoidal_forcing_amplitude;
-        ar.labelElement("infectivity_sinusoidal_forcing_phase") & node.infectivity_sinusoidal_forcing_phase;
-        ar.labelElement("infectivity_boxcar_forcing_amplitude") & node.infectivity_boxcar_forcing_amplitude;
-        ar.labelElement("infectivity_boxcar_start_time") & node.infectivity_boxcar_start_time;
-        ar.labelElement("infectivity_boxcar_end_time") & node.infectivity_boxcar_end_time;
-        ar.labelElement("birth_rate_sinusoidal_forcing_amplitude") & node.birth_rate_sinusoidal_forcing_amplitude;
-        ar.labelElement("birth_rate_sinusoidal_forcing_phase") & node.birth_rate_sinusoidal_forcing_phase;
-        ar.labelElement("birth_rate_boxcar_forcing_amplitude") & node.birth_rate_boxcar_forcing_amplitude;
-        ar.labelElement("birth_rate_boxcar_start_time") & node.birth_rate_boxcar_start_time;
-        ar.labelElement("birth_rate_boxcar_end_time") & node.birth_rate_boxcar_end_time;
+        ar.labelElement("serializationMask") & (uint32_t&)node.serializationMask;
+
+        if ((node.serializationMask & SerializationFlags::Population) != 0) {
+            ar.labelElement("individualHumans") & node.individualHumans;
+        }
+
+        if ((node.serializationMask & SerializationFlags::Parameters) != 0) {
+            ar.labelElement("ind_sampling_type") & (uint32_t&)node.ind_sampling_type;
+            ar.labelElement("population_density_infectivity_correction") & (uint32_t&)node.population_density_infectivity_correction;
+
+            ar.labelElement("demographics_birth") & node.demographics_birth;
+            ar.labelElement("demographics_gender") & node.demographics_gender;
+            ar.labelElement("demographics_other") & node.demographics_other;
+            ar.labelElement("max_sampling_cell_pop") & node.max_sampling_cell_pop;
+            ar.labelElement("sample_rate_birth") & node.sample_rate_birth;
+            ar.labelElement("sample_rate_0_18mo") & node.sample_rate_0_18mo;
+            ar.labelElement("sample_rate_18mo_4yr") & node.sample_rate_18mo_4yr;
+            ar.labelElement("sample_rate_5_9") & node.sample_rate_5_9;
+            ar.labelElement("sample_rate_10_14") & node.sample_rate_10_14;
+            ar.labelElement("sample_rate_15_19") & node.sample_rate_15_19;
+            ar.labelElement("sample_rate_20_plus") & node.sample_rate_20_plus;
+            ar.labelElement("sample_rate_immune") & node.sample_rate_immune;
+            ar.labelElement("immune_threshold_for_downsampling") & node.immune_threshold_for_downsampling;
+
+            ar.labelElement("population_density_c50") & node.population_density_c50;
+            ar.labelElement("population_scaling_factor") & node.population_scaling_factor;
+            ar.labelElement("maternal_transmission") & node.maternal_transmission;
+            ar.labelElement("vital_birth") & node.vital_birth;
+            ar.labelElement("vital_birth_dependence") & (uint32_t&)node.vital_birth_dependence;
+            ar.labelElement("vital_birth_time_dependence") & (uint32_t&)node.vital_birth_time_dependence;
+            ar.labelElement("x_birth") & node.x_birth;
+
+            ar.labelElement("animal_reservoir_type") & (uint32_t&)node.animal_reservoir_type;
+            ar.labelElement("infectivity_scaling") & (uint32_t&)node.infectivity_scaling;
+            ar.labelElement("zoonosis_rate") & node.zoonosis_rate;
+
+            ar.labelElement("whitelist_enabled") & node.whitelist_enabled;
+
+            ar.labelElement("infectivity_sinusoidal_forcing_amplitude") & node.infectivity_sinusoidal_forcing_amplitude;
+            ar.labelElement("infectivity_sinusoidal_forcing_phase") & node.infectivity_sinusoidal_forcing_phase;
+            ar.labelElement("infectivity_boxcar_forcing_amplitude") & node.infectivity_boxcar_forcing_amplitude;
+            ar.labelElement("infectivity_boxcar_start_time") & node.infectivity_boxcar_start_time;
+            ar.labelElement("infectivity_boxcar_end_time") & node.infectivity_boxcar_end_time;
+            ar.labelElement("birth_rate_sinusoidal_forcing_amplitude") & node.birth_rate_sinusoidal_forcing_amplitude;
+            ar.labelElement("birth_rate_sinusoidal_forcing_phase") & node.birth_rate_sinusoidal_forcing_phase;
+            ar.labelElement("birth_rate_boxcar_forcing_amplitude") & node.birth_rate_boxcar_forcing_amplitude;
+            ar.labelElement("birth_rate_boxcar_start_time") & node.birth_rate_boxcar_start_time;
+            ar.labelElement("birth_rate_boxcar_end_time") & node.birth_rate_boxcar_end_time;
+        }
+
+        if ((node.serializationMask & SerializationFlags::Properties) != 0) {
+            ar.labelElement("_latitude") & node._latitude;
+            ar.labelElement("_longitude") & node._longitude;
+// clorton          ar.labelElement("distribs") & node.distribs;
+            ar.labelElement("suid_data") & node.suid.data;
+            ar.labelElement("urban") & node.urban;
+            ar.labelElement("birthrate") & node.birthrate;
+            ar.labelElement("Above_Poverty") & node.Above_Poverty;
+            ar.labelElement("Ind_Sample_Rate") & node.Ind_Sample_Rate;
+// clorton          ar.labelElement("transmissionGroups") & node.transmissionGroups;
+            ar.labelElement("susceptibility_dynamic_scaling") & node.susceptibility_dynamic_scaling;
+// clorton          ar.labelElement("localWeather") & node.localWeather;
+// clorton          ar.labelElement("migration_info") & node.migration_info;
+// clorton          ar.labelElement("demographics") & node.demographics;
+// clorton          ar.labelElement("demographic_distributions") & node.demographic_distributions;
+            ar.labelElement("externalId") & node.externalId;
+// clorton          ar.labelElement("event_context_host") & node.event_context_host;
+            ar.labelElement("statPop") & node.statPop;
+            ar.labelElement("Infected") & node.Infected;
+            ar.labelElement("Births") & node.Births;
+            ar.labelElement("Disease_Deaths") & node.Disease_Deaths;
+            ar.labelElement("new_infections") & node.new_infections;
+            ar.labelElement("new_reportedinfections") & node.new_reportedinfections;
+            ar.labelElement("Cumulative_Infections") & node.Cumulative_Infections;
+            ar.labelElement("Cumulative_Reported_Infections") & node.Cumulative_Reported_Infections;
+            ar.labelElement("Campaign_Cost") & node.Campaign_Cost;
+// clorton          ar.labelElement("Possible_Mothers") & node.Possible_Mothers;
+            ar.labelElement("mean_age_infection") & node.mean_age_infection;
+            ar.labelElement("newInfectedPeopleAgeProduct") & node.newInfectedPeopleAgeProduct;
+// clorton          ar.labelElement("infected_people_prior") & node.infected_people_prior;
+// clorton          ar.labelElement("infected_age_people_prior") & node.infected_age_people_prior;
+            ar.labelElement("infectionrate") & node.infectionrate;
+            ar.labelElement("mInfectivity") & node.mInfectivity;
+            ar.labelElement("prob_maternal_transmission") & node.prob_maternal_transmission;
+            ar.labelElement("immunity_dist_type") & (uint32_t&)node.immunity_dist_type;
+            ar.labelElement("immunity_dist1") & node.immunity_dist1;
+            ar.labelElement("immunity_dist2") & node.immunity_dist2;
+            ar.labelElement("risk_dist_type") & (uint32_t&)node.risk_dist_type;
+            ar.labelElement("risk_dist1") & node.risk_dist1;
+            ar.labelElement("risk_dist2") & node.risk_dist2;
+            ar.labelElement("migration_dist_type") & (uint32_t&)node.migration_dist_type;
+            ar.labelElement("migration_dist1") & node.migration_dist1;
+            ar.labelElement("migration_dist2") & node.migration_dist2;
+// clorton          ar.labelElement("new_infection_observers") & node.new_infection_observers;
+            ar.labelElement("routes") & node.routes;
+// clorton          ar.labelElement("ipkeys_whitelist") & node.ipkeys_whitelist;
+        }
     }
 }
 

@@ -9,6 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include <iostream>
+#include <queue>
 #include <string>
 #include <iomanip> //setw(), setfill()
 
@@ -34,6 +35,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif // TB
 #endif // _DLLS_
 #include "ControllerFactory.h"
+
+#include "JsonFullWriter.h"
+#include "JsonFullReader.h"
+#include "snappy.h"
 
 #pragma warning(disable : 4244)
 
@@ -112,6 +117,79 @@ bool call_templated_functor_with_sim_type_hack(ControllerExecuteFunctorT &cef)
 
 #include <functional>
 
+void GenerateFilename( char* filename, size_t length, uint32_t time_step )
+{
+#ifdef WIN32
+    sprintf_s( filename, MAX_PATH, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
+#else
+    sprintf( filename, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
+#endif
+}
+
+bool OpenFileForWriting( const char* filename, FILE** pf )
+{
+    bool opened; // = true;
+    errno = 0;
+#ifdef WIN32
+    opened = (fopen_s( pf, filename, "wb") == 0);
+#else
+    *pf = fopen( filename, "wb");
+    opened = (*pf != nullptr);
+#endif
+
+    if ( !opened )
+    {
+        LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
+    }
+
+    return opened;
+}
+
+void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool compress)
+{
+    char filename[256];
+    GenerateFilename( filename, sizeof filename, time_step );
+    LOG_INFO_F( "Writing state to '%s'\n", filename );
+    FILE* f = nullptr;
+    if ( OpenFileForWriting( filename, &f ) )
+    {
+        // "IDTK"
+        fwrite( "IDTK", 1, 4, f );
+        // header size/offset to data
+        std::ostringstream temp_stream;
+        std::time_t now = std::time(nullptr);
+        struct tm gmt;
+        gmtime_s( &gmt, &now );
+        char asc_time[256];
+        strftime( asc_time, sizeof asc_time, "%a %b %d %H:%M:%S %Y", &gmt );
+        temp_stream << '{'
+               << "\"metadata\":{"
+               << "\"version\":" << 1 << ','
+               << "\"date\":" << '"' << asc_time << "\","
+               << "\"compressed\":" << (compress ? "true" : "false")
+               << '}'
+               << '}';
+        std::string header = temp_stream.str();
+        uint32_t header_size = header.size();
+        fwrite( &header_size, sizeof(header_size), 1, f );
+        // header (uncompressed JSON)
+        fwrite( header.c_str(), 1, header_size, f );
+        // data
+        if (!compress)
+        {
+            fwrite( data, 1, length, f );
+        }
+        else
+        {
+            std::string compressed;
+            snappy::Compress( data, length, &compressed );
+            fwrite( compressed.c_str(), 1, compressed.size(), f );
+        }
+        fflush( f );
+        fclose( f );
+    }
+}
+
 void StepSimulation(ISimulation* sim, float dt);
 
 // Basic simulation main loop with reporting
@@ -120,8 +198,34 @@ void RunSimulation(SimulationT &sim, int steps, float dt)
 {
     LOG_DEBUG( "RunSimulation\n" );
 
+    std::queue< int > serialization_time_steps;
+    if ( CONFIG_PARAMETER_EXISTS(EnvPtr->Config, "Serialization_Time_Steps") )
+    {
+        // std::string serialization_time_steps = GET_CONFIG_STRING(EnvPtr->Config, "Serialization_Time_Steps");
+        vector< int > specified_time_steps = GET_CONFIG_VECTOR_INT( EnvPtr->Config, "Serialization_Time_Steps" );
+        for (int time_step : specified_time_steps)
+        {
+            serialization_time_steps.push( time_step );
+        }
+    }
+    else
+    {
+        serialization_time_steps.push( -1 );
+    }
+
     for (int t = 0; t < steps; t++)
     {
+        if ( (serialization_time_steps.size() > 0) && (t == serialization_time_steps.front()) )
+        {
+            IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
+            ISerializable* serializable = dynamic_cast<ISerializable*>(&sim);
+            (*writer).labelElement( "simulation" ) & serializable;
+//            (*writer).labelElement( "nodes" ); serialize(*writer, nodes);
+            WriteIdtkFile( (*writer).GetBuffer(), (*writer).GetBufferSize(), t, true );
+            delete writer;
+            serialization_time_steps.pop();
+        }
+
         StepSimulation(&sim, dt);
 
         if (EnvPtr->MPI.Rank == 0)
@@ -151,13 +255,10 @@ void RunSimulation(SimulationT &sim, std::function<bool(SimulationT &, float)> t
 
 void StepSimulation(ISimulation* sim, float dt)
 {
-// clorton    int currentTimestep = sim->GetSimulationTimestep();
-
     sim->Update(dt);
 
     EnvPtr->Log->Flush();
 }
-
 
 // ******** WARNING *********
 // ENTERING MASSIVE HACK ZONE 

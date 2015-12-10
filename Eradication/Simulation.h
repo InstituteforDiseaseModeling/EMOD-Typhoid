@@ -122,10 +122,11 @@ namespace Kernel
 
         virtual void notifyNewNodeObservers(INodeContext*);
 
-        SerializationFlags serializationMask;
-
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
+
+        SerializationFlags serializationMask;
+
         // Nodes
         typedef std::map< suids::suid, INodeContext* > NodeMap_t; // TODO: change to unordered_map for better asymptotic performance
         typedef NodeMap_t::value_type NodeMapEntry_t;

@@ -63,19 +63,16 @@ namespace Kernel
             current_reducedtransmit = 0.0;
         }
     }
-#endif
-}
 
-// Boo-hoo, would rather have in main serialization block.
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, BCGVaccine& vacc, const unsigned int v)
+    REGISTER_SERIALIZABLE(BCGVaccine);
+
+    void BCGVaccine::serialize(IArchive& ar, BCGVaccine* obj)
     {
-        ar & vacc.vaccine_take_age_decay_rate;
-        ar & boost::serialization::base_object<SimpleVaccine>(vacc);
+        SimpleVaccine::serialize(ar, obj);
+        BCGVaccine& vaccine = *obj;
+        ar.labelElement("vaccine_take_age_decay_rate") & vaccine.vaccine_take_age_decay_rate;
     }
-}
 #endif
+}
 
 #endif // ENABLE_TB

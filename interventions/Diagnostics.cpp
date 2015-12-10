@@ -255,22 +255,34 @@ namespace Kernel
         }
         expired = true;
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SimpleDiagnostic& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(SimpleDiagnostic);
+
+    void SimpleDiagnostic::serialize(IArchive& ar, SimpleDiagnostic* obj)
     {
-        ar & obj.positive_diagnosis_config;
-//        ar & (std::string) obj.positive_diagnosis_event;
-        ar & obj.positive_diagnosis_event;
-        ar & obj.diagnostic_type;
-        ar & (float&) obj.base_specificity;
-        ar & (float&) obj.base_sensitivity;
-        ar & (float&) obj.treatment_fraction;
-        ar & (float&) obj.days_to_diagnosis;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        ar.labelElement("cost_per_unit") & obj->cost_per_unit;
+        ar.labelElement("expired") & obj->expired;
+
+        SimpleDiagnostic& diagnostic = *obj;
+        ar.labelElement("diagnostic_type") & diagnostic.diagnostic_type;
+        ar.labelElement("base_specificity"); diagnostic.base_specificity.serialize(ar);
+        ar.labelElement("base_sensitivity"); diagnostic.base_sensitivity.serialize(ar);
+        ar.labelElement("treatment_fraction"); diagnostic.treatment_fraction.serialize(ar);
+        ar.labelElement("days_to_diagnosis") & diagnostic.days_to_diagnosis;
+        ar.labelElement("positive_diagnosis_config");
+        if ( ar.IsWriter() )
+        {
+            std::ostringstream string_stream;
+            json::Writer::Write( diagnostic.positive_diagnosis_config._json, string_stream );
+            ar & string_stream.str();
+        }
+        else
+        {
+            std::string json;
+            ar & json;
+            std::istringstream string_stream( json );
+            json::Reader::Read( diagnostic.positive_diagnosis_config._json, string_stream );
+        }
+        ar.labelElement("positive_diagnosis_event") & (std::string&)diagnostic.positive_diagnosis_event;
     }
 }
-#endif

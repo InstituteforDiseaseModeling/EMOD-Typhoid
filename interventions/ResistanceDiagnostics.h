@@ -33,5 +33,7 @@ namespace Kernel
     protected:
 
         float treatment_fraction_neg;
+
+// clorton        DECLARE_SERIALIZABLE(MDRDiagnostic);
     };
 }

@@ -193,7 +193,20 @@ namespace Kernel
     {
         SimpleHealthSeekingBehavior& intervention = *obj;
         ar.labelElement("probability_of_seeking") & intervention.probability_of_seeking;
-//            ar.labelElement("actual_intervention_config") & intervention.actual_intervention_config;
+        ar.labelElement("actual_intervention_config");
+        if ( ar.IsWriter() )
+        {
+            std::ostringstream string_stream;
+            json::Writer::Write( intervention.actual_intervention_config._json, string_stream );
+            ar & string_stream.str();
+        }
+        else
+        {
+            std::string json;
+            ar & json;
+            std::istringstream string_stream( json );
+            json::Reader::Read( intervention.actual_intervention_config._json, string_stream );
+        }
         ar.labelElement("actual_intervention_event") & intervention.actual_intervention_event;
         ar.labelElement("single_use") & intervention.single_use;
     }

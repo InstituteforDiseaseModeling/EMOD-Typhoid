@@ -60,7 +60,14 @@ namespace Kernel
         // True positive (sensitivity), or False positive (1-specificity)
         bool positiveTest = applySensitivityAndSpecificity( activeinf );
         LOG_DEBUG_F( "Individual %d is %s from human-level.\n", parent->GetSuid().data, ( positiveTest ? "positive" : "negative" ) );
-        return positiveTest;
 
+        return positiveTest;
+    }
+
+    REGISTER_SERIALIZABLE(ActiveDiagnostic);
+
+    void ActiveDiagnostic::serialize(IArchive& ar, ActiveDiagnostic* obj)
+    {
+        SimpleDiagnostic::serialize(ar, obj);
     }
 }

@@ -52,5 +52,7 @@ namespace Kernel
 
     private:
         bool m_gets_positive_test_intervention;
+
+        DECLARE_SERIALIZABLE(DiagnosticTreatNeg);
     };
 }
