@@ -12,7 +12,7 @@
                 "Mortality_Blocking_Immunity_Duration_Before_Decay": 270
             },
             "SAMPLING": {
-                "Base_Individual_Sample_Rate": 0.05,
+                "Base_Individual_Sample_Rate": 1,
                 "Individual_Sampling_Type": "FIXED_SAMPLING",
                 "Max_Node_Population_Samples": 100,
                 "Sample_Rate_Birth": 1

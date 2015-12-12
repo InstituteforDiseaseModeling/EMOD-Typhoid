@@ -6,7 +6,7 @@
         "Air_Migration_Filename": "", 
         "Animal_Reservoir_Type": "NO_ZOONOSIS", 
         "Base_Incubation_Period": 3, 
-        "Base_Individual_Sample_Rate": 0.05, 
+        "Base_Individual_Sample_Rate": 1, 
         "Base_Infectious_Period": 7, 
         "Base_Infectivity": 0.3, 
         "Base_Mortality": 0, 
