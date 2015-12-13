@@ -3,12 +3,13 @@
 #include <vector>
 #include <map>
 #include "suids.hpp"
+#include "IdmApi.h"
 
 #include "ISerializable.h"
 
 namespace Kernel
 {
-    struct IArchive
+    struct IDMAPI IArchive
     {
         virtual ~IArchive() {}
 

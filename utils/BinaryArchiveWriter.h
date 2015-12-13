@@ -3,7 +3,7 @@
 
 namespace Kernel
 {
-    class BinaryArchiveWriter : public IArchive
+    class IDMAPI BinaryArchiveWriter : public IArchive
     {
     public:
         explicit BinaryArchiveWriter();

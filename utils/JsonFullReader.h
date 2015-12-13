@@ -5,7 +5,7 @@
 
 namespace Kernel
 {
-    class JsonFullReader : public IArchive
+    class IDMAPI JsonFullReader : public IArchive
     {
     public:
         explicit JsonFullReader(const char*);
@@ -33,6 +33,8 @@ namespace Kernel
         virtual uint32_t GetBufferSize() override;
         virtual const char* GetBuffer() override;
 
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
         rapidjson::Document* m_document;
         rapidjson::GenericValue<rapidjson::UTF8<>>* m_json;
         uint32_t m_index;
@@ -40,5 +42,6 @@ namespace Kernel
         std::string label;
         std::stack<uint32_t> m_index_stack;
         std::stack<rapidjson::GenericValue<rapidjson::UTF8<>>*> m_value_stack;
+#pragma warning( pop )
     };
 }

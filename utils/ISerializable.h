@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ISupports.h"
+#include "Exceptions.h"
 
 #include <map>
 #include <string>
@@ -13,8 +14,8 @@ namespace Kernel {
 
     struct IDMAPI ISerializable : ISupports
     {
-        virtual const char* GetClassName() { std::cout << "GetClassName() not implemented on this class." << std::endl; std::cout.flush(); throw; }
-        virtual void Recycle() { std::cout << "Recycle() not implemented on this class." << std::endl; std::cout.flush(); throw; }
+        virtual const char* GetClassName() { throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__ ); }
+        virtual void Recycle() { throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__ ); }
         virtual ~ISerializable() {}
 
         static void serialize(IArchive&, ISerializable*&);
