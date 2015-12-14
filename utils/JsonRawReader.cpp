@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "JsonRawReader.h"
+#include "Configure.h"
 
 namespace Kernel
 {
@@ -77,6 +78,15 @@ namespace Kernel
     IArchive& JsonRawReader::operator&(std::string& s)
     {
         s.assign((*m_json)[m_index].GetString(), (*m_json)[m_index].GetStringLength());
+        ++m_index;
+        return *this;
+    }
+
+    IArchive& JsonRawReader::operator&( jsonConfigurable::ConstrainedString& cs )
+    {
+        std::string tmp;
+        tmp.assign((*m_json)[m_index].GetString(), (*m_json)[m_index].GetStringLength());
+        cs = tmp;
         ++m_index;
         return *this;
     }
