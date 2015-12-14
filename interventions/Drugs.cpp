@@ -342,6 +342,7 @@ namespace Kernel
 
     void GenericDrug::serialize(IArchive& ar, GenericDrug* obj)
     {
+        BaseIntervention::serialize( ar, obj );
         GenericDrug& drug = *obj;
         ar.labelElement("drug_type") & drug.drug_type;
         ar.labelElement("dosing_type") & (uint32_t&)drug.dosing_type;

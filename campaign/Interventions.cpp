@@ -170,25 +170,10 @@ namespace Kernel
         return wasDistributed;
     }
 
-/* TODO
-    REGISTER_SERIALIZABLE(BaseIntervention);
-
     void BaseIntervention::serialize(IArchive& ar, BaseIntervention* obj)
     {
         BaseIntervention& intervention = *obj;
         ar.labelElement("cost_per_unit") & intervention.cost_per_unit;
         ar.labelElement("expired") & intervention.expired;
     }
-*/    
 }
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, BaseIntervention &bi, const unsigned int v)
-    {
-        ar & bi.cost_per_unit;
-        ar & bi.expired;
-    }
-}
-#endif

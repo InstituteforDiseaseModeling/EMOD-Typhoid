@@ -74,7 +74,10 @@ namespace Kernel
 
     IVCalendar::IVCalendar()
     : parent(nullptr)
+    , target_age_array()
+    , actual_intervention_config()
     , dropout(false)
+    , scheduleAges()
     {
         initConfigTypeMap("Dropout", &dropout, CAL_Dropout_DESC_TEXT, false);
     }
@@ -235,9 +238,11 @@ namespace Kernel
 
     void IVCalendar::serialize(IArchive& ar, IVCalendar* obj)
     {
+        BaseIntervention::serialize( ar, obj );
         IVCalendar& cal = *obj;
-        ar.labelElement("target_age_array") & cal.target_age_array; // clorton TargetAgeArrayConfig::serialize( ar, cal.target_age_array );
+        ar.labelElement("target_age_array") & cal.target_age_array;
         ar.labelElement("actual_intervention_config") & cal.actual_intervention_config;
+        ar.labelElement("dropout") & cal.dropout;
         ar.labelElement("scheduleAges") & cal.scheduleAges;
     }
 

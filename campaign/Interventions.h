@@ -186,10 +186,10 @@ namespace Kernel
         virtual ~BaseIntervention();
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pICCO ) override;
 
+        static void serialize( IArchive& ar, BaseIntervention* obj );
+
         float cost_per_unit;
         bool expired;
-
-// TODO        DECLARE_SERIALIZABLE(BaseIntervention);
     };
 
     struct BaseNodeIntervention : IBaseIntervention, JsonConfigurable, INodeDistributableIntervention
