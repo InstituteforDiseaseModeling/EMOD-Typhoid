@@ -71,12 +71,17 @@ namespace Kernel
     }
 
     SimpleVaccine::SimpleVaccine()
-    : parent(nullptr)
+    : BaseIntervention()
+    , parent(nullptr)
     , vaccine_type(SimpleVaccineType::Generic)
-    , current_reducedtransmit(0.0)
+    , vaccine_take(0.0)
     , current_reducedacquire(0.0)
+    , current_reducedtransmit(0.0)
     , current_reducedmortality(0.0)
+    , durability_time_profile(InterventionDurabilityProfile::BOXDURABILITY)
+    , primary_decay_time_constant(0.0)
     , secondary_decay_time_constant(0.0)
+    , ivc(nullptr)
     {
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, SV_Cost_To_Consumer_DESC_TEXT, 0, 999999, 10.0);
         initConfigTypeMap("Primary_Decay_Time_Constant", &primary_decay_time_constant, SV_Primary_Decay_Time_Constant_DESC_TEXT, 0, INFINITE_TIME);
@@ -232,6 +237,7 @@ namespace Kernel
 
     void SimpleVaccine::serialize(IArchive& ar, SimpleVaccine* obj)
     {
+        BaseIntervention::serialize( ar, obj );
         SimpleVaccine& vaccine = *obj;
         ar.labelElement("vaccine_type")                  & vaccine.vaccine_type;
         ar.labelElement("vaccine_take")                  & vaccine.vaccine_take;

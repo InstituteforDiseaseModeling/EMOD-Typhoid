@@ -170,7 +170,7 @@ namespace Kernel
     {
         AntiTBDrug::serialize(ar, obj);
         AntiTBPropDepDrug& drug = *obj;
-// This field not included in Boost serialization        ar.labelElement("drug_type_by_property") & drug.drug_type_by_property;
+        ar.labelElement("drug_type_by_property") & drug.drug_type_by_property.prop2drugMap;
         ar.labelElement("enable_state_specific_tx") & drug.enable_state_specific_tx;
     }
 }

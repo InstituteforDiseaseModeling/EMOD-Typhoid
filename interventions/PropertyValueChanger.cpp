@@ -34,12 +34,16 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(PropertyValueChanger)
 
     PropertyValueChanger::PropertyValueChanger()
-        :probability(1.0)
+        : BaseIntervention()
+        , parent(nullptr)
+        , target_property_key()
+        , target_property_value()
+        , ibc(nullptr)
+        , probability(1.0)
         , revert(0.0f)
         , max_duration(0.0f)
         , action_timer(0.0f)
         , reversion_timer(0.0f)
-        , ibc(nullptr)
     {
         expired = false;
         //std::cout << __FUNCTION__ << ":" << __LINE__ << std::endl;
@@ -176,10 +180,7 @@ namespace Kernel
 
     void PropertyValueChanger::serialize(IArchive& ar, PropertyValueChanger* obj)
     {
-// TODO        BaseIntervention::serialize(ar, obj);
-        ar.labelElement("cost_per_unit") & obj->cost_per_unit;
-        ar.labelElement("expired") & obj->expired;
-
+        BaseIntervention::serialize( ar, obj );
         PropertyValueChanger& changer = *obj;
 
 // clorton        jsonConfigurable::ConstrainedString target_property_key;
@@ -192,5 +193,13 @@ namespace Kernel
         ar.labelElement("max_duration") & changer.max_duration;
         ar.labelElement("action_timer") & changer.action_timer;
         ar.labelElement("reversion_timer") & changer.reversion_timer;
+
+        if( !ar.IsWriter() )
+        {
+            changer.target_property_key.constraints = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>";
+            changer.target_property_value.constraints = "<demographics>::Defaults.Individual_Properties.*.Value.<keys>";
+
+            //TODO - Need to actual use the constrained string
+        }
     }
 }

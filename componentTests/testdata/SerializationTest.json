@@ -2,7 +2,10 @@
     "Listed_Events" :
     [
         "Event_1",
-        "Event_2"
+        "Event_2",
+        "Event_3",
+        "Event_4",
+        "Event_5"
     ],
     "Objects" :
     [
@@ -105,6 +108,8 @@
                 [
                     {
                         "__class__" : "AntiTBDrug",
+                        "cost_per_unit"             : 1,
+                        "expired"                   : false,
                         "drug_type"                 : 1,
                         "dosing_type"               : 2,
                         "durability_time_profile"   : 1,
@@ -132,6 +137,8 @@
                     },
                     {
                         "__class__" : "AntiTBPropDepDrug",
+                        "cost_per_unit"             : 2,
+                        "expired"                   : false,
                         "drug_type"                 : 2,
                         "dosing_type"               : 1,
                         "durability_time_profile"   : 2,
@@ -156,10 +163,18 @@
                         "TB_drug_resistance_rate"   : 0.3,
                         "TB_drug_relapse_rate"      : 0.2,
                         "TB_drug_mortality_rate"    : 0.1,
+                        "drug_type_by_property"     :
+                        [
+                            { "key" : "abc", "value" : "123" },
+                            { "key" : "def", "value" : "456" },
+                            { "key" : "ghi", "value" : "789" }
+                        ],
                         "enable_state_specific_tx"  : true
                     },
                     {
                         "__class__" : "BCGVaccine",
+                        "cost_per_unit"                 : 3,
+                        "expired"                       : false,
                         "vaccine_type"                  : 1,
                         "vaccine_take"                  : 0.1,
                         "current_reducedacquire"        : 0.2,
@@ -172,7 +187,7 @@
                     },
                     {
                         "__class__" : "DiagnosticTreatNeg",
-                        "cost_per_unit"   : 6,
+                        "cost_per_unit"   : 4,
                         "expired"         : true,
                         "diagnostic_type" : 1,
                         "base_specificity":
@@ -195,18 +210,20 @@
                         },
                         "days_to_diagnosis"         : 3,
                         "positive_diagnosis_config" : "null",
-                        "positive_diagnosis_event"  : "Event_1",
+                        "positive_diagnosis_event"  : "Event_2",
                         "negative_diagnosis_config" : "null",
-                        "negative_diagnosis_event"  : "Event_2",
+                        "negative_diagnosis_event"  : "Event_3",
                         "defaulters_config"         : "null",
-                        "defaulters_event"          : "Event_3",
+                        "defaulters_event"          : "Event_4",
                         "m_gets_positive_test_intervention" : true
                     },
                     {
                         "__class__" : "HealthSeekingBehaviorUpdateable",
-                        "probability_of_seeking" : 0.1,
+                        "cost_per_unit"              : 5,
+                        "expired"                    : false,
+                        "probability_of_seeking"     : 0.1,
                         "actual_intervention_config" : "null",
-                        "actual_intervention_event" : "Event_4",
+                        "actual_intervention_event"  : "Event_5",
                         "single_use" : true
                     }
                 ],

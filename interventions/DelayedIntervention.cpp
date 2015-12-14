@@ -167,17 +167,17 @@ namespace Kernel
     }
 
     DelayedIntervention::DelayedIntervention( const DelayedIntervention& master )
-        :BaseIntervention( master )
+        : BaseIntervention( master )
+        , remaining_delay_days( master.remaining_delay_days )
+        , coverage( master.coverage )
+        , delay_distribution( master.delay_distribution )
+        , delay_period( master.delay_period )
+        , delay_period_min( master.delay_period_min )
+        , delay_period_max( master.delay_period_max )
+        , delay_period_mean( master.delay_period_mean )
+        , delay_period_std_dev( master.delay_period_std_dev )
+        , actual_intervention_config( master.actual_intervention_config )
     {
-    	remaining_delay_days = master.remaining_delay_days;
-    	coverage = master.coverage;
-    	delay_distribution = master.delay_distribution;
-    	delay_period = master.delay_period;
-    	delay_period_min = master.delay_period_min;
-    	delay_period_max = master.delay_period_max;
-    	delay_period_mean = master.delay_period_mean;
-    	delay_period_std_dev = master.delay_period_std_dev;
-    	actual_intervention_config = master.actual_intervention_config;
     }
 
     void DelayedIntervention::SetContextTo(IIndividualHumanContext *context)
@@ -252,15 +252,11 @@ namespace Kernel
 
     void DelayedIntervention::serialize(IArchive& ar, DelayedIntervention* obj)
     {
-// TODO clorton:        BaseIntervention::serialize(ar, obj);
-        ar.labelElement("cost_per_unit") & obj->cost_per_unit;
-        ar.labelElement("expired") & obj->expired;
+        BaseIntervention::serialize( ar, obj );
 
         DelayedIntervention& intervention = *obj;
 
         ar.labelElement("remaining_delay_days") & intervention.remaining_delay_days;
-
-        /* // These are only used during construction/initialization/distribution
         ar.labelElement("coverage") & intervention.coverage;
         ar.labelElement("delay_distribution") & (uint32_t&)intervention.delay_distribution;
         ar.labelElement("delay_period") & intervention.delay_period;
@@ -268,22 +264,6 @@ namespace Kernel
         ar.labelElement("delay_period_max") & intervention.delay_period_max;
         ar.labelElement("delay_period_mean") & intervention.delay_period_mean;
         ar.labelElement("delay_period_std_dev") & intervention.delay_period_std_dev;
-        */
-
         ar.labelElement("actual_intervention_config") & intervention.actual_intervention_config;
-// Remove after testing (implemented above)
-// clorton        if ( ar.IsWriter() )
-// clorton        {
-// clorton            std::ostringstream string_stream;
-// clorton            json::Writer::Write( intervention.actual_intervention_config._json, string_stream );
-// clorton            ar & string_stream.str();
-// clorton        }
-// clorton        else
-// clorton        {
-// clorton            std::string json;
-// clorton            ar & json;
-// clorton            std::istringstream string_stream( json );
-// clorton            json::Reader::Read( intervention.actual_intervention_config._json, string_stream );
-// clorton        }
     }
 }
