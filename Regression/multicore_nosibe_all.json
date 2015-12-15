@@ -1,6 +1,12 @@
 {
     "tests": [
         {
+            "path" : "Multicore_Nosibe/14_Polio_Bihar_Larger"
+        },
+        {
+            "path" : "Multicore_Nosibe/17_Polio_Bihar_Simplest"
+        },
+        {
             "path" : "Multicore_Nosibe/Scenarios/Generic/01_SIR"
         },
         {
