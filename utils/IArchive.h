@@ -50,6 +50,12 @@ namespace Kernel
             }
         }
 
+        template<typename T>
+        void operator & (T& obj)
+        {
+            T::serialize(*this, obj);
+        }
+
         template <typename I>
         void operator & (std::list<I*>& list)
         {
@@ -137,6 +143,7 @@ namespace Kernel
 
         virtual bool HasError() = 0;
         virtual bool IsWriter() = 0;
+        bool IsReader() { return !IsWriter(); }
         virtual uint32_t GetBufferSize() = 0;
         virtual const char* GetBuffer() = 0;
     };

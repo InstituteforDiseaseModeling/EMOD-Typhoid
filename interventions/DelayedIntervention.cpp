@@ -252,7 +252,7 @@ namespace Kernel
 
     void DelayedIntervention::serialize(IArchive& ar, DelayedIntervention* obj)
     {
-// TODO        BaseIntervention::serialize(ar, obj);
+// TODO clorton:        BaseIntervention::serialize(ar, obj);
         ar.labelElement("cost_per_unit") & obj->cost_per_unit;
         ar.labelElement("expired") & obj->expired;
 
@@ -270,19 +270,20 @@ namespace Kernel
         ar.labelElement("delay_period_std_dev") & intervention.delay_period_std_dev;
         */
 
-        ar.labelElement("actual_intervention_config");
-        if ( ar.IsWriter() )
-        {
-            std::ostringstream string_stream;
-            json::Writer::Write( intervention.actual_intervention_config._json, string_stream );
-            ar & string_stream.str();
-        }
-        else
-        {
-            std::string json;
-            ar & json;
-            std::istringstream string_stream( json );
-            json::Reader::Read( intervention.actual_intervention_config._json, string_stream );
-        }
+        ar.labelElement("actual_intervention_config") & intervention.actual_intervention_config;
+// Remove after testing (implemented above)
+// clorton        if ( ar.IsWriter() )
+// clorton        {
+// clorton            std::ostringstream string_stream;
+// clorton            json::Writer::Write( intervention.actual_intervention_config._json, string_stream );
+// clorton            ar & string_stream.str();
+// clorton        }
+// clorton        else
+// clorton        {
+// clorton            std::string json;
+// clorton            ar & json;
+// clorton            std::istringstream string_stream( json );
+// clorton            json::Reader::Read( intervention.actual_intervention_config._json, string_stream );
+// clorton        }
     }
 }

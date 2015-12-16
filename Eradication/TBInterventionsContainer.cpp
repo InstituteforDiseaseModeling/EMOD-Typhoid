@@ -258,17 +258,18 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(TBInterventionsContainer);
 
-    void serialize(IArchive& ar, TBDrugEffects_t& effects)
+    void TBDrugEffects_t::serialize(IArchive& ar, TBDrugEffects_t& effects)
     {
         ar.startObject();
-        ar.labelElement("clearance_rate") & effects.clearance_rate;
-        ar.labelElement("inactivation_rate") & effects.inactivation_rate;
-        ar.labelElement("resistance_rate") & effects.resistance_rate;
-        ar.labelElement("relapse_rate") & effects.relapse_rate;     // Boost serialization didn't include this member.
-        ar.labelElement("mortality_rate") & effects.mortality_rate; // Boost serialization didn't include this member.
+            ar.labelElement("clearance_rate") & effects.clearance_rate;
+            ar.labelElement("inactivation_rate") & effects.inactivation_rate;
+            ar.labelElement("resistance_rate") & effects.resistance_rate;
+            ar.labelElement("relapse_rate") & effects.relapse_rate;     // Boost serialization didn't include this member.
+            ar.labelElement("mortality_rate") & effects.mortality_rate; // Boost serialization didn't include this member.
         ar.endObject();
     }
 
+    // clorton TODO - could serialize(map<A, B>) be templatized in IArchive.h?
     void serialize(IArchive& ar, TBDrugEffectsMap_t& map)
     {
         size_t count = ar.IsWriter() ? map.size() : -1;
@@ -279,7 +280,7 @@ namespace Kernel
             {
                 ar.startObject();
                     ar.labelElement("key") & (uint32_t&)entry.first;
-                    ar.labelElement("value"); Kernel::serialize(ar, entry.second);
+                    ar.labelElement("value") & entry.second; // clorton Kernel::serialize(ar, entry.second);
                 ar.endObject();
             }
         }
@@ -291,7 +292,7 @@ namespace Kernel
                 TBDrugEffects_t effects;
                 ar.startObject();
                     ar.labelElement("key") & (uint32_t&)type;
-                    ar.labelElement("value"); Kernel::serialize(ar, effects);
+                    ar.labelElement("value") & effects; // clorton Kernel::serialize(ar, effects);
                 ar.endObject();
                 map[type] = effects;
             }

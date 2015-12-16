@@ -647,6 +647,8 @@ namespace Kernel
             virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
             json::Element _json;
             //json::QuickInterpreter _qi;
+
+            static void serialize(IArchive&, InterventionConfig&);
     };
 
     class IndividualInterventionConfig : public InterventionConfig

@@ -236,21 +236,8 @@ namespace Kernel
     void IVCalendar::serialize(IArchive& ar, IVCalendar* obj)
     {
         IVCalendar& cal = *obj;
-        ar.labelElement("target_age_array"); TargetAgeArrayConfig::serialize( ar, cal.target_age_array );
-        ar.labelElement("actual_intervention_config"); // clorton & cal.actual_intervention_config;
-        if ( ar.IsWriter() )
-        {
-            std::ostringstream string_stream;
-            json::Writer::Write( cal.actual_intervention_config._json, string_stream );
-            ar & string_stream.str();
-        }
-        else
-        {
-            std::string json;
-            ar & json;
-            std::istringstream string_stream( json );
-            json::Reader::Read( cal.actual_intervention_config._json, string_stream );
-        }
+        ar.labelElement("target_age_array") & cal.target_age_array; // clorton TargetAgeArrayConfig::serialize( ar, cal.target_age_array );
+        ar.labelElement("actual_intervention_config") & cal.actual_intervention_config;
         ar.labelElement("scheduleAges") & cal.scheduleAges;
     }
 
@@ -262,16 +249,3 @@ namespace Kernel
         ar.endObject();
     }
 }
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, IVCalendar& cal, const unsigned int v)
-    {
-        ar & cal.actual_intervention_config;
-        ar & cal.scheduleAges;
-        ar & cal.target_age_array;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(cal);
-    }
-}
-#endif

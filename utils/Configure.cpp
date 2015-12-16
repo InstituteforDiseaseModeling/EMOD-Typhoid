@@ -148,11 +148,28 @@ namespace Kernel
         return schema;
     }
 
-    template < class Archive >
-    void serialize( Archive &ar, InterventionConfig& config, unsigned int file_version )
+    void InterventionConfig::serialize(IArchive& ar, InterventionConfig& config)
     {
-        ar & config._json;
+        if ( ar.IsWriter() )
+        {
+            std::ostringstream string_stream;
+            json::Writer::Write( config._json, string_stream );
+            ar & string_stream.str();
+        }
+        else
+        {
+            std::string json;
+            ar & json;
+            std::istringstream string_stream( json );
+            json::Reader::Read( config._json, string_stream );
+        }
     }
+
+// clorton    template < class Archive >
+// clorton    void serialize( Archive &ar, InterventionConfig& config, unsigned int file_version )
+// clorton    {
+// clorton        ar & config._json;
+// clorton    }
 
     IndividualInterventionConfig::IndividualInterventionConfig()
     {
