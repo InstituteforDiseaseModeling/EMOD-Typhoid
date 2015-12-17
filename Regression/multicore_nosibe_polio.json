@@ -5,6 +5,9 @@
         },
         {
             "path" : "Multicore_Nosibe/17_Polio_Bihar_Simplest"
+        },
+        {
+            "path" : "Multicore_Nosibe/42_Polio_Default_Geography"
         }
     ],
     ".tests": [
