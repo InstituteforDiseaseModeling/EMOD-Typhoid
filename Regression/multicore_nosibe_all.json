@@ -2,6 +2,7 @@
     "tests": [
         { "path" : "Multicore_Nosibe/14_Polio_Bihar_Larger" },
         { "path" : "Multicore_Nosibe/17_Polio_Bihar_Simplest" },
+        { "path" : "Multicore_Nosibe/42_Polio_Default_Geography" },
         { "path" : "Multicore_Nosibe/Scenarios/Generic/01_SIR" },
         { "path" : "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/A_BaselineOutbreak" },
         { "path" : "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/B_Vaccinations" },
