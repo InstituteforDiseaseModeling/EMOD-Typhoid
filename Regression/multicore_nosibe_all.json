@@ -10,6 +10,12 @@
             "path" : "Multicore_Nosibe/42_Polio_Default_Geography"
         },
         {
+            "path" : "Multicore_Nosibe/49_Environmental_Namawala"
+        },
+        {
+            "path" : "Multicore_Nosibe/50_Airborne_Namawala"
+        },
+        {
             "path" : "Multicore_Nosibe/Scenarios/Generic/01_SIR"
         },
         {
