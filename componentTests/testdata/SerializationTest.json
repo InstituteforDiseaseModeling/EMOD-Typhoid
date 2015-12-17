@@ -2,7 +2,10 @@
     "Listed_Events" :
     [
         "Event_1",
-        "Event_2"
+        "Event_2",
+        "Event_3",
+        "Event_4",
+        "Event_5"
     ],
     "Objects" :
     [
@@ -195,18 +198,18 @@
                         },
                         "days_to_diagnosis"         : 3,
                         "positive_diagnosis_config" : "null",
-                        "positive_diagnosis_event"  : "Event_1",
+                        "positive_diagnosis_event"  : "Event_2",
                         "negative_diagnosis_config" : "null",
-                        "negative_diagnosis_event"  : "Event_2",
+                        "negative_diagnosis_event"  : "Event_3",
                         "defaulters_config"         : "null",
-                        "defaulters_event"          : "Event_3",
+                        "defaulters_event"          : "Event_4",
                         "m_gets_positive_test_intervention" : true
                     },
                     {
                         "__class__" : "HealthSeekingBehaviorUpdateable",
                         "probability_of_seeking" : 0.1,
                         "actual_intervention_config" : "null",
-                        "actual_intervention_event" : "Event_4",
+                        "actual_intervention_event" : "Event_5",
                         "single_use" : true
                     }
                 ],

@@ -124,7 +124,8 @@ namespace Kernel
                 ConstrainedString( std::string &init_str );
                 ConstrainedString( const char *init_str );
 
-                const ConstrainedString& operator=( const std::string& new_value );
+                virtual const ConstrainedString& operator=( const std::string& new_value );
+
                 std::string constraints;
                 tStringSet * constraint_param;
                 std::string parameter_name;
@@ -139,6 +140,7 @@ namespace Kernel
     public:
         typedef std::map< float, float > tFloatFloatMapConfigType;
         typedef std::map< std::string, float > tStringFloatMapConfigType;
+        static const char * default_string;
 
     private:
         typedef std::map< std::string, bool * > tBoolConfigTypeMapType;
@@ -208,7 +210,6 @@ namespace Kernel
         JsonConfigurable() {}
 
         static const char * default_description;
-        static const char * default_string;
 
         void initSimTypes( unsigned int count, ... )
         {

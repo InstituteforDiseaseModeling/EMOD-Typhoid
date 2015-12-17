@@ -23,6 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Interventions.h"
 #include "SimpleTypemapRegistration.h"
 #include "Types.h"
+#include "EventTrigger.h"
 
 namespace Kernel
 {
@@ -52,7 +53,7 @@ namespace Kernel
 
     protected:
 
-        void broadcastEvent(const std::string& event);
+        void broadcastEvent( const EventTrigger& event );
         virtual EventOrConfig::Enum getEventOrConfig( const Configuration* );
 
 #pragma warning( push )
@@ -65,7 +66,7 @@ namespace Kernel
         float days_to_diagnosis; // can go negative if dt is > 1
 
         IndividualInterventionConfig positive_diagnosis_config;
-        jsonConfigurable::ConstrainedString positive_diagnosis_event;
+        EventTrigger positive_diagnosis_event;
 
         DECLARE_SERIALIZABLE(SimpleDiagnostic);
 #pragma warning( pop )

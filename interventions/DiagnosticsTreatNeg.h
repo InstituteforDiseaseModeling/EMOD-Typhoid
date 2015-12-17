@@ -44,10 +44,10 @@ namespace Kernel
         IndividualInterventionConfig negative_diagnosis_config;
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        jsonConfigurable::ConstrainedString negative_diagnosis_event;
+        EventTrigger negative_diagnosis_event;
 
         IndividualInterventionConfig defaulters_config;
-        jsonConfigurable::ConstrainedString defaulters_event;
+        EventTrigger defaulters_event;
 #pragma warning( pop )
 
     private:
