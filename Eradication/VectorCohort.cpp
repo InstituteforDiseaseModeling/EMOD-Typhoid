@@ -139,12 +139,4 @@ namespace Kernel
         ar.labelElement("progress") & cohort.progress;
         ar.labelElement("population") & cohort.population;
     }
-
-#if 0
-    template<class Archive>
-    void VectorCohort::serialize_inner( Archive & ar, const unsigned int file_version )
-    {
-        typemap.serialize(this, ar, file_version);
-    }
-#endif
 }

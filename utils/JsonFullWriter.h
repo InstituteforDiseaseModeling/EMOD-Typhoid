@@ -6,7 +6,7 @@
 
 namespace Kernel
 {
-    class JsonFullWriter : public IArchive
+    class IDMAPI JsonFullWriter : public IArchive
     {
     public:
         explicit JsonFullWriter();
@@ -34,8 +34,11 @@ namespace Kernel
         virtual uint32_t GetBufferSize() override;
         virtual const char* GetBuffer() override;
 
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
         rapidjson::StringBuffer* m_buffer;
         rapidjson::Writer<rapidjson::StringBuffer>* m_writer;
         bool m_closed;
+#pragma warning( pop )
     };
 }

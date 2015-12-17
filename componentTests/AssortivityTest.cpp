@@ -47,6 +47,7 @@ SUITE(AssortivityTest)
             , m_human_list()
             , m_pSimulationConfig( new SimulationConfig() )
         {
+            Environment::Finalize();
             Environment::setLogger( new SimpleLogger() );
             m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
             Environment::setSimulationConfig( m_pSimulationConfig );
@@ -67,7 +68,7 @@ SUITE(AssortivityTest)
             }
             m_human_list.clear();
             Node::TestOnly_ClearProperties();
-            Environment::setInstance( nullptr );
+            Environment::Finalize();
         }
 
         IIndividualHumanSTI* CreateHuman( int gender, 

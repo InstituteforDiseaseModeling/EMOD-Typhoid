@@ -55,6 +55,8 @@ namespace Kernel
         void broadcastEvent(const std::string& event);
         virtual EventOrConfig::Enum getEventOrConfig( const Configuration* );
 
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
         IIndividualHumanContext *parent;
         int   diagnostic_type;
         ProbabilityNumber base_specificity;
@@ -62,12 +64,10 @@ namespace Kernel
         ProbabilityNumber treatment_fraction;
         float days_to_diagnosis; // can go negative if dt is > 1
 
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
         IndividualInterventionConfig positive_diagnosis_config;
         jsonConfigurable::ConstrainedString positive_diagnosis_event;
-#pragma warning( pop )
 
         DECLARE_SERIALIZABLE(SimpleDiagnostic);
+#pragma warning( pop )
     };
 }

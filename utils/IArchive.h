@@ -3,12 +3,13 @@
 #include <vector>
 #include <map>
 #include "suids.hpp"
+#include "IdmApi.h"
 
 #include "ISerializable.h"
 
 namespace Kernel
 {
-    struct IArchive
+    struct IDMAPI IArchive
     {
         virtual ~IArchive() {}
 
@@ -48,6 +49,12 @@ namespace Kernel
                 (*this) & serializable;
                 ptr = dynamic_cast<I*>(serializable);
             }
+        }
+
+        template<typename T>
+        void operator & (T& obj)
+        {
+            T::serialize(*this, obj);
         }
 
         template <typename I>
@@ -137,6 +144,7 @@ namespace Kernel
 
         virtual bool HasError() = 0;
         virtual bool IsWriter() = 0;
+        bool IsReader() { return !IsWriter(); }
         virtual uint32_t GetBufferSize() = 0;
         virtual const char* GetBuffer() = 0;
     };

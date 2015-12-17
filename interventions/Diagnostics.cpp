@@ -269,20 +269,21 @@ namespace Kernel
         ar.labelElement("base_sensitivity"); diagnostic.base_sensitivity.serialize(ar);
         ar.labelElement("treatment_fraction"); diagnostic.treatment_fraction.serialize(ar);
         ar.labelElement("days_to_diagnosis") & diagnostic.days_to_diagnosis;
-        ar.labelElement("positive_diagnosis_config");
-        if ( ar.IsWriter() )
-        {
-            std::ostringstream string_stream;
-            json::Writer::Write( diagnostic.positive_diagnosis_config._json, string_stream );
-            ar & string_stream.str();
-        }
-        else
-        {
-            std::string json;
-            ar & json;
-            std::istringstream string_stream( json );
-            json::Reader::Read( diagnostic.positive_diagnosis_config._json, string_stream );
-        }
+        ar.labelElement("positive_diagnosis_config") & diagnostic.positive_diagnosis_config;
+// Remove after testing (implemented above)
+// clorton        if ( ar.IsWriter() )
+// clorton        {
+// clorton            std::ostringstream string_stream;
+// clorton            json::Writer::Write( diagnostic.positive_diagnosis_config._json, string_stream );
+// clorton            ar & string_stream.str();
+// clorton        }
+// clorton        else
+// clorton        {
+// clorton            std::string json;
+// clorton            ar & json;
+// clorton            std::istringstream string_stream( json );
+// clorton            json::Reader::Read( diagnostic.positive_diagnosis_config._json, string_stream );
+// clorton        }
         ar.labelElement("positive_diagnosis_event") & (std::string&)diagnostic.positive_diagnosis_event;
     }
 }

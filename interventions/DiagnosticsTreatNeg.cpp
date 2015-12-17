@@ -276,36 +276,38 @@ namespace Kernel
     {
         SimpleDiagnostic::serialize(ar, obj);
         DiagnosticTreatNeg& diagnostic = *obj;
-        ar.labelElement("negative_diagnosis_config");
-        if ( ar.IsWriter() )
-        {
-            std::ostringstream string_stream;
-            json::Writer::Write( diagnostic.negative_diagnosis_config._json, string_stream );
-            ar & string_stream.str();
-        }
-        else
-        {
-            std::string json;
-            ar & json;
-            std::istringstream string_stream( json );
-            json::Reader::Read( diagnostic.negative_diagnosis_config._json, string_stream );
-        }
+        ar.labelElement("negative_diagnosis_config") & diagnostic.negative_diagnosis_config;
+// Remove after testing (implemented above)
+// clorton        if ( ar.IsWriter() )
+// clorton        {
+// clorton            std::ostringstream string_stream;
+// clorton            json::Writer::Write( diagnostic.negative_diagnosis_config._json, string_stream );
+// clorton            ar & string_stream.str();
+// clorton        }
+// clorton        else
+// clorton        {
+// clorton            std::string json;
+// clorton            ar & json;
+// clorton            std::istringstream string_stream( json );
+// clorton            json::Reader::Read( diagnostic.negative_diagnosis_config._json, string_stream );
+// clorton        }
 
         ar.labelElement("negative_diagnosis_event") & (std::string&)(diagnostic.negative_diagnosis_event);
-        ar.labelElement("defaulters_config");
-        if ( ar.IsWriter() )
-        {
-            std::ostringstream string_stream;
-            json::Writer::Write( diagnostic.defaulters_config._json, string_stream );
-            ar & string_stream.str();
-        }
-        else
-        {
-            std::string json;
-            ar & json;
-            std::istringstream string_stream( json );
-            json::Reader::Read( diagnostic.defaulters_config._json, string_stream );
-        }
+        ar.labelElement("defaulters_config") & diagnostic.defaulters_config;
+// Remove after testing (implemented above)
+// clorton        if ( ar.IsWriter() )
+// clorton        {
+// clorton            std::ostringstream string_stream;
+// clorton            json::Writer::Write( diagnostic.defaulters_config._json, string_stream );
+// clorton            ar & string_stream.str();
+// clorton        }
+// clorton        else
+// clorton        {
+// clorton            std::string json;
+// clorton            ar & json;
+// clorton            std::istringstream string_stream( json );
+// clorton            json::Reader::Read( diagnostic.defaulters_config._json, string_stream );
+// clorton        }
 
         ar.labelElement("defaulters_event") & (std::string&)(diagnostic.defaulters_event);
         ar.labelElement("m_gets_positive_test_intervention") & diagnostic.m_gets_positive_test_intervention;

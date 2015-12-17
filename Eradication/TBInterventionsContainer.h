@@ -28,6 +28,8 @@ namespace Kernel
         float resistance_rate;
         float relapse_rate;
         float mortality_rate;
+
+        static void serialize(IArchive&, TBDrugEffects_t&);
     };
 
     typedef std::map <TBDrugType::Enum, TBDrugEffects_t> TBDrugEffectsMap_t;

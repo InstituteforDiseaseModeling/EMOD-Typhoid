@@ -193,35 +193,22 @@ namespace Kernel
     {
         SimpleHealthSeekingBehavior& intervention = *obj;
         ar.labelElement("probability_of_seeking") & intervention.probability_of_seeking;
-        ar.labelElement("actual_intervention_config");
-        if ( ar.IsWriter() )
-        {
-            std::ostringstream string_stream;
-            json::Writer::Write( intervention.actual_intervention_config._json, string_stream );
-            ar & string_stream.str();
-        }
-        else
-        {
-            std::string json;
-            ar & json;
-            std::istringstream string_stream( json );
-            json::Reader::Read( intervention.actual_intervention_config._json, string_stream );
-        }
+        ar.labelElement("actual_intervention_config") & intervention.actual_intervention_config;
+// Remove after testing (implemented above)
+// clorton        if ( ar.IsWriter() )
+// clorton        {
+// clorton            std::ostringstream string_stream;
+// clorton            json::Writer::Write( intervention.actual_intervention_config._json, string_stream );
+// clorton            ar & string_stream.str();
+// clorton        }
+// clorton        else
+// clorton        {
+// clorton            std::string json;
+// clorton            ar & json;
+// clorton            std::istringstream string_stream( json );
+// clorton            json::Reader::Read( intervention.actual_intervention_config._json, string_stream );
+// clorton        }
         ar.labelElement("actual_intervention_event") & intervention.actual_intervention_event;
         ar.labelElement("single_use") & intervention.single_use;
     }
 }
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SimpleHealthSeekingBehavior& obj, const unsigned int v)
-    {
-        ar & /*(std::string)*/ obj.actual_intervention_event;
-        ar & obj.actual_intervention_config;
-        ar & obj.probability_of_seeking;
-        ar & obj.single_use;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
-    }
-}
-#endif

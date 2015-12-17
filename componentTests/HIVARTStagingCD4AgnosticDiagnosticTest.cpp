@@ -46,6 +46,8 @@ SUITE(HivArtStagingCD4AgnosticDiagnosticTest)
             , m_Diag()
             , m_pSimulationConfig( new SimulationConfig() )
         {
+            Environment::Finalize();
+            Environment::setLogger( new SimpleLogger() );
             m_InterventionsContext.setCascadeState( "not_set" );
             m_InterventionsContext.SetContextTo( &m_Human );
             m_Diag.SetContextTo( &m_Human );
@@ -67,8 +69,8 @@ SUITE(HivArtStagingCD4AgnosticDiagnosticTest)
         ~DiagnosticFixture()
         {
             delete m_pSimulationConfig;
-            Environment::setSimulationConfig( nullptr );
             Node::TestOnly_ClearProperties();
+            Environment::Finalize();
         }
     };
 

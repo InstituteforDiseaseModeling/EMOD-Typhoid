@@ -5,7 +5,7 @@ namespace Kernel
 {
     JsonFullWriter::JsonFullWriter()
         : m_buffer(new rapidjson::StringBuffer())
-        , m_writer(new rapidjson::Writer<rapidjson::StringBuffer>(*m_buffer))
+        , m_writer(new rapidjson::Writer<rapidjson::StringBuffer>(*m_buffer,false))
         , m_closed(false)
     {
         m_writer->StartObject();

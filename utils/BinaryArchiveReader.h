@@ -3,7 +3,7 @@
 
 namespace Kernel
 {
-    class BinaryArchiveReader : public IArchive
+    class IDMAPI BinaryArchiveReader : public IArchive
     {
     public:
         explicit BinaryArchiveReader(const char*, size_t);

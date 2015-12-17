@@ -27,6 +27,7 @@ SUITE(FlowControllerImplTest)
 {
     TEST(TestGetSetRates)
     {
+        Environment::Finalize();
         Environment::setLogger( new SimpleLogger() );
         SimulationConfig* p_sim_config = new SimulationConfig();
         p_sim_config->sim_type = SimType::HIV_SIM ;

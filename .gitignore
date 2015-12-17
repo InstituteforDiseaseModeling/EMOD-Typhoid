@@ -244,3 +244,4 @@ Transitions.json
 
 /Regression/reports/
 componentTests/testdata/NodeDemographicsTest/output/DefaultDemographics.json
+componentTests/invalid.json

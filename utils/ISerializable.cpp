@@ -15,6 +15,12 @@ namespace Kernel
         if (!ar.IsWriter())
         {
             auto constructor_function = SerializationRegistrar::_get_constructor(class_name);
+            if( constructor_function == nullptr )
+            {
+                std::stringstream msg;
+                msg << "Could not find constructor for class_name='" << class_name << "'";
+                throw SerializationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            }
             obj = constructor_function();
         }
         serialize_function(ar, obj);
