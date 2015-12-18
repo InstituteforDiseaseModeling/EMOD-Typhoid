@@ -28,6 +28,7 @@ namespace Kernel
         virtual IArchive& operator&(float&) override;
         virtual IArchive& operator&(double&) override;
         virtual IArchive& operator&(std::string&) override;
+        virtual IArchive& operator & (jsonConfigurable::ConstrainedString&) override;
 
         virtual bool HasError() override;
         virtual bool IsWriter() override;

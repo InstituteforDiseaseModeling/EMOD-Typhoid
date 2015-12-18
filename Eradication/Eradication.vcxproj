@@ -241,6 +241,7 @@
     <ClCompile Include="BinnedReportTB.cpp" />
     <ClCompile Include="CalendarEventCoordinator.cpp" />
     <ClCompile Include="CoverageByNodeEventCoordinator.cpp" />
+    <ClCompile Include="EventTrigger.cpp" />
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="GroupEventCoordinatorHIV.cpp" />
     <ClCompile Include="HIVRelationshipStartReporter.cpp" />
@@ -529,6 +530,7 @@
     <ClInclude Include="BinnedReportTB.h" />
     <ClInclude Include="..\utils\BoostLibWrapper.h" />
     <ClInclude Include="CalendarEventCoordinator.h" />
+    <ClInclude Include="EventTrigger.h" />
     <ClInclude Include="FerrandAgeDependentDistribution.h" />
     <ClInclude Include="GroupEventCoordinatorHIV.h" />
     <ClInclude Include="HIVEnums.h" />

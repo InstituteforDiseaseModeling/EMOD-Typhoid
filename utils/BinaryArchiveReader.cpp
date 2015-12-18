@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BinaryArchiveReader.h"
+#include "Configure.h"
 
 namespace Kernel
 {
@@ -98,6 +99,14 @@ namespace Kernel
         buffer.push_back('\0');
         s = buffer.data();
 
+        return *this;
+    }
+
+    IArchive& BinaryArchiveReader::operator&( jsonConfigurable::ConstrainedString& cs )
+    {
+        std::string tmp;
+        this->operator&( tmp );
+        cs = tmp;
         return *this;
     }
 

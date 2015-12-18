@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "RANDOM.h"
 #include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
-#include "SimulationConfig.h" // for listed events
 
 static const char * _module = "HIVDelayedIntervention";
 
@@ -33,8 +32,8 @@ namespace Kernel
     , cascadeState("")
     , days_remaining(-1)
     , firstUpdate(true)
-    , broadcast_event(NO_TRIGGER_STR)
-    , broadcast_on_expiration_event(NO_TRIGGER_STR)
+    , broadcast_event()
+    , broadcast_on_expiration_event()
     {
         initSimTypes(1, "HIV_SIM");
     }
@@ -76,19 +75,9 @@ namespace Kernel
         }
 
         //DelayedIntervention::InterventionConfigure(inputJson);
-        initConfigTypeMap( "Broadcast_Event",
-                           &broadcast_event,
-                           HIV_Delayed_Intervention_Broadcast_Event_DESC_TEXT,
-                           NO_TRIGGER_STR );
-        broadcast_event.constraints = "<configuration>:Listed_Events.*";
-        broadcast_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
+        initConfigTypeMap( "Broadcast_Event", &broadcast_event, HIV_Delayed_Intervention_Broadcast_Event_DESC_TEXT );
 
-        initConfigTypeMap( "Broadcast_On_Expiration_Event",
-                           &broadcast_on_expiration_event,
-                           HIV_Delayed_Intervention_Broadcast_On_Expiration_Event_DESC_TEXT,
-                           NO_TRIGGER_STR );
-        broadcast_on_expiration_event.constraints = "<configuration>:Listed_Events.*";
-        broadcast_on_expiration_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
+        initConfigTypeMap( "Broadcast_On_Expiration_Event", &broadcast_on_expiration_event, HIV_Delayed_Intervention_Broadcast_On_Expiration_Event_DESC_TEXT );
 
         bool ret = JsonConfigurable::Configure(inputJson);
         if( ret )
@@ -251,7 +240,7 @@ namespace Kernel
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
             }
-            if( broadcast_on_expiration_event != NO_TRIGGER_STR )
+            if( (broadcast_on_expiration_event != NO_TRIGGER_STR) && !broadcast_on_expiration_event.IsUninitialized() )
             {
                 broadcaster->TriggerNodeEventObserversByString( parent->GetEventContext(), broadcast_on_expiration_event );
             }
@@ -268,7 +257,7 @@ namespace Kernel
             return;
         }
 
-        if (expired || broadcast_event == NO_TRIGGER_STR)
+        if( expired || (broadcast_event == NO_TRIGGER_STR) || broadcast_event.IsUninitialized() )
         {
             LOG_DEBUG_F("expired or event == NoTrigger\n");
             return;

@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "SimulationConfig.h"  // for event strings 
 
 static const char * _module = "SimpleDiagnostic";
 
@@ -48,9 +47,7 @@ namespace Kernel
 
         if( use_event_or_config == EventOrConfig::Event || JsonConfigurable::_dryrun )
         {
-            positive_diagnosis_event.constraints = "<configuration>:Listed_Events.*";
-            positive_diagnosis_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
-            initConfigTypeMap("Positive_Diagnosis_Event", &positive_diagnosis_event, SD_Positive_Diagnosis_Config_Event_DESC_TEXT, NO_TRIGGER_STR );
+            initConfigTypeMap("Positive_Diagnosis_Event", &positive_diagnosis_event, SD_Positive_Diagnosis_Config_Event_DESC_TEXT );
         }
 
         if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
@@ -71,12 +68,29 @@ namespace Kernel
         bool ret = JsonConfigurable::Configure( inputJson );
         LOG_DEBUG_F( "Base_Sensitivity = %f, Base_Specificity = %f\n", (float) base_sensitivity, (float) base_specificity );
         EventOrConfig::Enum use_event_or_config = getEventOrConfig( inputJson );
-        if( ret && (use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun) )
+        if( ret )
         {
-            InterventionValidator::ValidateIntervention( positive_diagnosis_config._json );
+            if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
+            {
+                InterventionValidator::ValidateIntervention( positive_diagnosis_config._json );
+            }
+
+            CheckPostiveEventConfig();
         }
-		return ret;
+        return ret;
     }
+
+    void SimpleDiagnostic::CheckPostiveEventConfig()
+    {
+        if( !JsonConfigurable::_dryrun && 
+            positive_diagnosis_event.IsUninitialized() &&
+            (positive_diagnosis_config._json.Type() == ElementType::NULL_ELEMENT) )
+        {
+            const char* msg = "You must define either Positive_Diagnosis_Event or Positive_Diagnosis_Config";
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+        }
+    }
+
 
     SimpleDiagnostic::SimpleDiagnostic()
     : parent(nullptr)
@@ -85,7 +99,8 @@ namespace Kernel
     , base_sensitivity(0)
     , treatment_fraction(1.0f)
     , days_to_diagnosis(0)
-    , positive_diagnosis_event("UNINITIALIZED")
+    , positive_diagnosis_config()
+    , positive_diagnosis_event()
     {
         initConfigTypeMap("Base_Specificity",   &base_specificity, SD_Base_Specificity_DESC_TEXT,     1.0f );
         initConfigTypeMap("Base_Sensitivity",   &base_sensitivity, SD_Base_Sensitivity_DESC_TEXT,     1.0f );
@@ -197,9 +212,9 @@ namespace Kernel
     }
 
     void
-    SimpleDiagnostic::broadcastEvent( const std::string& event )
+    SimpleDiagnostic::broadcastEvent( const EventTrigger& event )
     {
-        if( event != NO_TRIGGER_STR )
+        if( (event != NO_TRIGGER_STR) && !event.IsUninitialized() )
         {
             INodeTriggeredInterventionConsumer* broadcaster = nullptr;
             if (s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
@@ -217,12 +232,12 @@ namespace Kernel
 
         // Next alternative is that we were configured to broadcast a raw event string. In which case the value will not
         // the "uninitialized" value.
-        if( positive_diagnosis_event != "UNINITIALIZED" )
+        if( !positive_diagnosis_event.IsUninitialized() )
         {
-            broadcastEvent(positive_diagnosis_event);
+            broadcastEvent( positive_diagnosis_event );
         }
         // third alternative is that we were configured to use an actual config, not broadcast an event.
-        else
+        else if( positive_diagnosis_config._json.Type() != ElementType::NULL_ELEMENT )
         {
             // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
             IGlobalContext *pGC = nullptr;
@@ -253,6 +268,11 @@ namespace Kernel
             }
             delete config;
         }
+        // this is the right thing to do but we need to deal with HIVRandomChoice and HIVSetCascadeState
+        //else
+        //{
+        //    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
+        //}
         expired = true;
     }
 
@@ -284,6 +304,6 @@ namespace Kernel
 // clorton            std::istringstream string_stream( json );
 // clorton            json::Reader::Read( diagnostic.positive_diagnosis_config._json, string_stream );
 // clorton        }
-        ar.labelElement("positive_diagnosis_event") & (std::string&)diagnostic.positive_diagnosis_event;
+        ar.labelElement("positive_diagnosis_event") & diagnostic.positive_diagnosis_event;
     }
 }

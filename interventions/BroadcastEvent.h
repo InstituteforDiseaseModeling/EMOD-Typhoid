@@ -22,6 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "Interventions.h"
 #include "SimpleTypemapRegistration.h"
+#include "EventTrigger.h"
 
 namespace Kernel
 {
@@ -43,12 +44,10 @@ namespace Kernel
 
     protected:
 
-        void broadcastEvent(const std::string& event);
-
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         IIndividualHumanContext *parent;
-        jsonConfigurable::ConstrainedString broadcast_event;
+        EventTrigger broadcast_event;
 #pragma warning( pop )
     };
 }

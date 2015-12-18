@@ -36,7 +36,7 @@ namespace Kernel
         initConfig( "Event_Or_Config", use_event_or_config, inputJson, MetadataDescriptor::Enum("EventOrConfig", Event_Or_Config_DESC_TEXT, MDD_ENUM_ARGS( EventOrConfig ) ) );
         if( use_event_or_config == EventOrConfig::Event || JsonConfigurable::_dryrun )
         {
-            initConfigTypeMap( "Actual_IndividualIntervention_Event", &actual_intervention_event, HSB_Actual_Intervention_Config_Event_DESC_TEXT, NO_TRIGGER_STR );
+            initConfigTypeMap( "Actual_IndividualIntervention_Event", &actual_intervention_event, HSB_Actual_Intervention_Config_Event_DESC_TEXT );
         }
 
         if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
@@ -48,9 +48,19 @@ namespace Kernel
         initConfigTypeMap( "Single_Use", &single_use, HSB_Single_Use_DESC_TEXT, true ); //true means it will expire after a single use
 
         bool ret = JsonConfigurable::Configure( inputJson );
-        if( ret && (use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun) )
+        if( ret )
         {
-            InterventionValidator::ValidateIntervention( actual_intervention_config._json );
+            if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
+            {
+                InterventionValidator::ValidateIntervention( actual_intervention_config._json );
+            }
+            if( !JsonConfigurable::_dryrun && 
+                actual_intervention_event.IsUninitialized() &&
+                (actual_intervention_config._json.Type() == ElementType::NULL_ELEMENT) )
+            {
+                const char* msg = "You must define either Actual_IndividualIntervention_Event or Actual_IndividualIntervention_Config";
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+            }
         }
         return ret ;
     }
@@ -60,7 +70,7 @@ namespace Kernel
     , probability_of_seeking(0)
     , m_pCCO(nullptr)
     , single_use(true)
-    , actual_intervention_event( "NoTrigger" )
+    , actual_intervention_event()
     {
     }
 
@@ -92,18 +102,20 @@ namespace Kernel
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to IInterventionFactory object is not valid (could be DLL specific)" );
             }
 
-            if( actual_intervention_event != "NoTrigger" )
+            if( !actual_intervention_event.IsUninitialized() )
             {
-                INodeTriggeredInterventionConsumer* broadcaster = nullptr;
-                if (s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+                if( actual_intervention_event != NO_TRIGGER_STR )
                 {
-                    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
+                    INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+                    if (s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+                    {
+                        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
+                    }
+                    LOG_DEBUG_F("SimpleHealthSeekingBehavior is broadcasting the actual intervention event to individual %d.\n", parent->GetSuid().data );
+                    broadcaster->TriggerNodeEventObserversByString( parent->GetEventContext(), actual_intervention_event );
                 }
-                LOG_DEBUG_F("SimpleHealthSeekingBehavior is broadcasting the actual intervention event to individual %d.\n", parent->GetSuid().data );
-                broadcaster->TriggerNodeEventObserversByString( parent->GetEventContext(), actual_intervention_event );
-
             }
-            else
+            else if( actual_intervention_config._json.Type() != ElementType::NULL_ELEMENT )
             {
                 //auto indiv_id = parent->GetInterventionsContext()->GetParent()->GetSuid().data;
                 LOG_INFO_F("SimpleHealthSeekingBehavior is distributing actual intervention to individual %d.\n", parent->GetSuid().data );
@@ -149,6 +161,10 @@ namespace Kernel
                 {
                     throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext");
                 }
+            }
+            else
+            {
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
             }
             if( single_use )
             {

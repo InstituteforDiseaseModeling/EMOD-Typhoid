@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
-#include "SimulationConfig.h"
 
 static const char * _module = "CD4Diagnostic";
 
@@ -33,9 +32,7 @@ namespace Kernel
         assert( a_qi.As<json::Array>().Size() );
         for( unsigned int idx=0; idx<a_qi.As<json::Array>().Size(); idx++ )
         {
-            jsonConfigurable::ConstrainedString signal = "UNINITIALIZED";
-            signal.constraints = "<configuration>:Listed_Events.*";
-            signal.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
+            EventTrigger signal;
             initConfigTypeMap( "Event", &signal, HIV_CD4_Diagnostic_Event_Name_DESC_TEXT );
             auto obj = Configuration::CopyFromElement((threshJson)[idx]);
             JsonConfigurable::Configure( obj );

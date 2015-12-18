@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
-#include "SimulationConfig.h"
 
 static const char * _module = "HIVRandomChoice";
 
@@ -29,10 +28,8 @@ namespace Kernel
         const std::string& key
     )
     {
-        jsonConfigurable::ConstrainedString event ;
+        EventTrigger event ;
         event.parameter_name = "HIVRandomChoices::Choices::Event" ;
-        event.constraints = "<configuration>:Listed_Events.*";
-        event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
 
         float total = 0.0 ;
         const auto& tvcs_jo = json_cast<const json::Object&>( (*inputJson)[key] );

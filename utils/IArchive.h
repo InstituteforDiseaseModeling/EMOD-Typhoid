@@ -9,6 +9,12 @@
 
 namespace Kernel
 {
+
+    namespace jsonConfigurable
+    {
+        class ConstrainedString;
+    }
+
     struct IDMAPI IArchive
     {
         virtual ~IArchive() {}
@@ -32,6 +38,7 @@ namespace Kernel
         virtual IArchive& operator & (float&) = 0;
         virtual IArchive& operator & (double&) = 0;
         virtual IArchive& operator & (std::string&) = 0;
+        virtual IArchive& operator & (jsonConfigurable::ConstrainedString&) = 0;
 
         IArchive& operator & (ISerializable*&);
 

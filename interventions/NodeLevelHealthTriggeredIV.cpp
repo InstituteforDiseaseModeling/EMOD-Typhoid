@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 #include "Debug.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "SimulationConfig.h"  // for verifying string triggers are 'valid'
+#include "EventTrigger.h"
 
 static const char * _module = "NodeLevelHealthTriggeredIV";
 
@@ -132,7 +132,7 @@ namespace Kernel
         // Either way, we end up with m_trigger_conditions contains 1 or more strings. That's what we use.
 
         IndividualEventTriggerType::Enum trigger_condition = IndividualEventTriggerType::NoTrigger;
-        jsonConfigurable::ConstrainedString trigger_condition_string = NO_TRIGGER_STR;
+        EventTrigger trigger_condition_string = NO_TRIGGER_STR;
         initConfig( "Trigger_Condition", trigger_condition, inputJson, MetadataDescriptor::Enum("Trigger_Condition", HTI_Trigger_Condition_DESC_TEXT, MDD_ENUM_ARGS(IndividualEventTriggerType)) );
         if( trigger_condition == IndividualEventTriggerType::TriggerList || JsonConfigurable::_dryrun )
         {
@@ -141,8 +141,6 @@ namespace Kernel
         // would have else but schema needs to be able to enter both blocks.
         if( trigger_condition == IndividualEventTriggerType::TriggerString || JsonConfigurable::_dryrun )
         {
-            trigger_condition_string.constraints = "<configuration>:Listed_Events.*";
-            trigger_condition_string.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
             initConfigTypeMap( "Trigger_Condition_String", &trigger_condition_string, NLHTI_Trigger_Condition_String_DESC_TEXT  ); // TODO need to add conditionality but not supported in all datatypes yet
         }
         bool retValue = JsonConfigurable::Configure( inputJson );

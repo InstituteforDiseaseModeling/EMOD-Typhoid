@@ -7435,7 +7435,7 @@
 						"default" : "Config"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -8217,7 +8217,7 @@
 						"*"
 					],
 					"Broadcast_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The event that should occur at the end of the delay period.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -8426,16 +8426,16 @@
 						"default" : "Config"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "Specifies what state transition event will occur if an individual tests negative.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Defaulters_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "Specifies what state transition event will occur if an individual receives the test but does not return for the test results.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
@@ -8455,7 +8455,7 @@
 						}
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -8561,13 +8561,13 @@
 						"type" : "idmType:InterpolatedValueMap"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -8695,13 +8695,13 @@
 						"type" : "idmType:InterpolatedValueMap"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -8839,16 +8839,16 @@
 						}
 					},
 					"Broadcast_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The event that should occur at the end of the delay period.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Broadcast_On_Expiration_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "If the delay intervention expires before arriving at the end of the delay period, this specifies the event that should occur. For example, if loss to follow-up occurs at a high rate for the first 6 months of care, and then later transitions to a lower rate, then the Expiration_Period should be set to 183 days and Broadcast_On_Expiration_Event can link to another delay intervention with a longer average delay time until LTFU. If LTFU does not occur in the first 6 months, then the expiration will allow the first rate to give way to the post-6-month rate.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "HIVDelayedIntervention"
@@ -8904,13 +8904,13 @@
 						"type" : "string"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -9060,16 +9060,16 @@
 						}
 					},
 					"Broadcast_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The event that should occur at the end of the delay period.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Broadcast_On_Expiration_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "If the delay intervention expires before arriving at the end of the delay period, this specifies the event that should occur. For example, if loss to follow-up occurs at a high rate for the first 6 months of care, and then later transitions to a lower rate, then the Expiration_Period should be set to 183 days and Broadcast_On_Expiration_Event can link to another delay intervention with a longer average delay time until LTFU. If LTFU does not occur in the first 6 months, then the expiration will allow the first rate to give way to the post-6-month rate.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "HIVMuxer"
@@ -9168,13 +9168,13 @@
 						"type" : "idmType:InterpolatedValueMap"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -9272,13 +9272,13 @@
 						"type" : "idmType:Event2ProbabilityMapType"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -9354,13 +9354,13 @@
 						"default" : 1
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -9429,13 +9429,13 @@
 						"type" : "string"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -9539,13 +9539,13 @@
 						"default" : 1
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -9614,13 +9614,13 @@
 						"type" : "string"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -9666,9 +9666,10 @@
 						"default" : "Config"
 					},
 					"Actual_IndividualIntervention_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The event of an actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
-						"type" : "string"
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
@@ -10166,16 +10167,16 @@
 						"default" : "Config"
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "Specifies what state transition event will occur if an individual tests negative.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Defaulters_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "Specifies what state transition event will occur if an individual receives the test but does not return for the test results.",
 						"type" : "Constrained String",
-						"value_source" : ""
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
@@ -10195,7 +10196,7 @@
 						}
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -11417,7 +11418,7 @@
 						"default" : 1
 					},
 					"Negative_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "Event to broadcast when individual is found to NOT be Post-Debut age.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -11432,7 +11433,7 @@
 						"default" : "Config"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -11644,7 +11645,7 @@
 						"default" : "Config"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -11676,9 +11677,10 @@
 						"default" : "Config"
 					},
 					"Actual_IndividualIntervention_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The event of an actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
-						"type" : "string"
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
@@ -11991,7 +11993,7 @@
 						"default" : "Config"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
@@ -12234,7 +12236,7 @@
 						"default" : "Config"
 					},
 					"Positive_Diagnosis_Event" : {
-						"default" : "NoTrigger",
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
 						"type" : "Constrained String",
 						"value_source" : "<configuration>:Listed_Events.*"
