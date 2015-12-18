@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "JsonFullWriter.h"
+#include "Configure.h"
 
 namespace Kernel
 {
@@ -100,6 +101,12 @@ namespace Kernel
     IArchive& JsonFullWriter::operator&(std::string& s)
     {
         m_writer->String(s.c_str(), rapidjson::SizeType(s.size()), true);
+        return *this;
+    }
+
+    IArchive& JsonFullWriter::operator&( jsonConfigurable::ConstrainedString& cs )
+    {
+        this->operator&( (std::string)cs );
         return *this;
     }
 

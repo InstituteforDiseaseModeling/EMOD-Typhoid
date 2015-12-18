@@ -260,7 +260,7 @@ namespace Kernel
         {
             *((std::string*)(this)) = new_value;
             //release_assert( constraint_param );
-            if( constraint_param && constraint_param->count( new_value ) == 0 )
+            if( constraint_param && (constraint_param->count( new_value ) == 0) && (new_value != JsonConfigurable::default_string)  )
             {
                 std::ostringstream msg;
                 msg << "Constrained String" ;

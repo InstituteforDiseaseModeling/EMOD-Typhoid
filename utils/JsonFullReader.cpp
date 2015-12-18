@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "JsonFullReader.h"
+#include "Configure.h"
 
 namespace Kernel
 {
@@ -133,6 +134,15 @@ namespace Kernel
     {
         auto& element = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]);
         s.assign(element.GetString(), element.GetStringLength());
+        return *this;
+    }
+
+    IArchive& JsonFullReader::operator&( jsonConfigurable::ConstrainedString& cs )
+    {
+        auto& element = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]);
+        std::string tmp;
+        tmp.assign(element.GetString(), element.GetStringLength());
+        cs = tmp;
         return *this;
     }
 

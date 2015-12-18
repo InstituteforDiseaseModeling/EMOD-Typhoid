@@ -32,7 +32,7 @@ namespace Kernel
     protected:
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        jsonConfigurable::ConstrainedString negative_diagnosis_event;
+        EventTrigger negative_diagnosis_event;
 #pragma warning( pop )
     };
 }

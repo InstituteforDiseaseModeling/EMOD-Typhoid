@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "IndividualSTI.h"
-#include "SimulationConfig.h"
 
 static const char * _module = "STIIsPostDebut";
 
@@ -43,11 +42,9 @@ namespace Kernel
 
     STIIsPostDebut::STIIsPostDebut()
     : SimpleDiagnostic()
-    , negative_diagnosis_event(NO_TRIGGER_STR)
+    , negative_diagnosis_event()
     {
-        negative_diagnosis_event.constraints = "<configuration>:Listed_Events.*";
-        negative_diagnosis_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
-        initConfigTypeMap( "Negative_Diagnosis_Event", &negative_diagnosis_event, STI_IPD_Negative_Diagnosis_Event_DESC_TEXT, NO_TRIGGER_STR );
+        initConfigTypeMap( "Negative_Diagnosis_Event", &negative_diagnosis_event, STI_IPD_Negative_Diagnosis_Event_DESC_TEXT );
         initConfigTypeMap( "Days_To_Diagnosis", &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT, 0, FLT_MAX, 0 );
         initSimTypes( 2, "STI_SIM", "HIV_SIM" );
     }
@@ -82,10 +79,10 @@ namespace Kernel
         auto iid = parent->GetSuid().data;
         LOG_DEBUG_F( "Individual %d tested 'negative' in STIIsPostDebut, broadcasting negative event.\n", iid );
         
-        if (negative_diagnosis_event != NO_TRIGGER_STR )
+        if( (negative_diagnosis_event != NO_TRIGGER_STR) && !negative_diagnosis_event.IsUninitialized() )
         {
             LOG_DEBUG_F( "Brodcasting event %s as negative diagnosis event for individual %d.", negative_diagnosis_event.c_str(), iid );
-            broadcastEvent(negative_diagnosis_event);
+            broadcastEvent( negative_diagnosis_event );
         }
         else
         {

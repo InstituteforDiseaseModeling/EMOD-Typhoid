@@ -15,7 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 #include "IIndividualHumanHIV.h"  // for IndividualHIV access
-#include "SimulationConfig.h"  // for checking that event strings are valid
 
 static const char * _module = "HIVSimpleDiagnostic";
 
@@ -34,7 +33,7 @@ namespace Kernel
     , firstUpdate(true)
     , result_of_positive_test(false)
     , original_days_to_diagnosis(0.0)
-    , negative_diagnosis_event(NO_TRIGGER_STR)
+    , negative_diagnosis_event()
     {
         initSimTypes(1, "HIV_SIM");
 
@@ -61,9 +60,7 @@ namespace Kernel
     {
         if( getEventOrConfig( inputJson ) == EventOrConfig::Event || JsonConfigurable::_dryrun )
         {
-            negative_diagnosis_event.constraints = "<configuration>:Listed_Events.*";
-            negative_diagnosis_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
-            initConfigTypeMap( "Negative_Diagnosis_Event", &negative_diagnosis_event, HIV_SD_Negative_Diagnosis_Event_DESC_TEXT, NO_TRIGGER_STR );
+            initConfigTypeMap( "Negative_Diagnosis_Event", &negative_diagnosis_event, HIV_SD_Negative_Diagnosis_Event_DESC_TEXT );
         }
 
         ConfigurePositiveEventOrConfig( inputJson );
@@ -88,7 +85,7 @@ namespace Kernel
                                                         "The Cascade_State cannot be one of the Abort_States." );
             }
 
-
+            //CheckPostiveEventConfig();
         }
         return ret ;
     }
@@ -160,10 +157,10 @@ namespace Kernel
         auto iid = parent->GetSuid().data;
         LOG_DEBUG_F( "Individual %d tested 'negative' in HIVSimpleDiagnostic, receiving actual intervention.\n", iid );
 
-        if (negative_diagnosis_event != NO_TRIGGER_STR )
+        if( (negative_diagnosis_event != NO_TRIGGER_STR) && !negative_diagnosis_event.IsUninitialized() )
         {
             LOG_DEBUG_F( "Brodcasting event %s as negative diagnosis event for individual %d.", negative_diagnosis_event.c_str(), iid );
-            broadcastEvent(negative_diagnosis_event);
+            broadcastEvent( negative_diagnosis_event );
         }
         else
         {

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BinaryArchiveWriter.h"
+#include "Configure.h"
 
 namespace Kernel
 {
@@ -91,6 +92,12 @@ namespace Kernel
             push(c);
         }
 
+        return *this;
+    }
+
+    IArchive& BinaryArchiveWriter::operator&( jsonConfigurable::ConstrainedString& cs )
+    {
+        this->operator&( (std::string)cs );
         return *this;
     }
 

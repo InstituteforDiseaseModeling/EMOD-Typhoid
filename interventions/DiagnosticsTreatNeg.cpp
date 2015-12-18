@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "TBContexts.h"
-#include "SimulationConfig.h" // for listed_events
 
 static const char * _module = "DiagnosticTreatNeg";
 
@@ -32,13 +31,8 @@ namespace Kernel
         initConfig( "Event_Or_Config", use_event_or_config, inputJson, MetadataDescriptor::Enum("EventOrConfig", Event_Or_Config_DESC_TEXT, MDD_ENUM_ARGS( EventOrConfig ) ) );
         if( use_event_or_config == EventOrConfig::Event || JsonConfigurable::_dryrun )
         {
-            initConfigTypeMap( "Negative_Diagnosis_Event", &negative_diagnosis_event, DTN_Negative_Diagnosis_Config_Event_DESC_TEXT, NO_TRIGGER_STR );
-            negative_diagnosis_event.constraints = "<configuration>:Listed_Events.*";
-			//release_assert( GET_CONFIGURABLE(SimulationConfig)->listed_events.size() > 0 );
-            negative_diagnosis_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
-            initConfigTypeMap( "Defaulters_Event", &defaulters_event, DTN_Defaulters_Diagnosis_Config_Event_DESC_TEXT, NO_TRIGGER_STR );
-            defaulters_event.constraints = "<configuration>:Listed_Events.*";
-            defaulters_event.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
+            initConfigTypeMap( "Negative_Diagnosis_Event", &negative_diagnosis_event, DTN_Negative_Diagnosis_Config_Event_DESC_TEXT );
+            initConfigTypeMap( "Defaulters_Event", &defaulters_event, DTN_Defaulters_Diagnosis_Config_Event_DESC_TEXT );
         }
 
         if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
@@ -48,18 +42,37 @@ namespace Kernel
         }
 
         bool ret = SimpleDiagnostic::Configure( inputJson );
-        if( ret && (use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun) )
+        if( ret  )
         {
-            InterventionValidator::ValidateIntervention( negative_diagnosis_config._json );
-            InterventionValidator::ValidateIntervention( defaulters_config._json );
+            if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
+            {
+                InterventionValidator::ValidateIntervention( negative_diagnosis_config._json );
+                InterventionValidator::ValidateIntervention( defaulters_config._json );
+            }
+
+            if( !JsonConfigurable::_dryrun && 
+                negative_diagnosis_event.IsUninitialized() &&
+                (negative_diagnosis_config._json.Type() == ElementType::NULL_ELEMENT) )
+            {
+                const char* msg = "You must define either Negative_Diagnosis_Event or Negative_Diagnosis_Config";
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+            }
+
+            if( !JsonConfigurable::_dryrun && 
+                defaulters_event.IsUninitialized() &&
+                (defaulters_config._json.Type() == ElementType::NULL_ELEMENT) )
+            {
+                const char* msg = "You must define either Defaulters_Event or Defaulters_Config";
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+            }
         }
         return ret ;
     }
 
     DiagnosticTreatNeg::DiagnosticTreatNeg()
     : SimpleDiagnostic()
-    , negative_diagnosis_event("UNINITIALIZED")
-    , defaulters_event("UNINITIALIZED")
+    , negative_diagnosis_event()
+    , defaulters_event()
     {
         initSimTypes( 1, "TB_SIM" );
     }
@@ -178,7 +191,7 @@ namespace Kernel
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionFactoryObj()" );
         }
 
-        if( negative_diagnosis_event != "UNINITIALIZED" )
+        if( !negative_diagnosis_event.IsUninitialized() )
         {
             if( negative_diagnosis_event != NO_TRIGGER_STR )
             { 
@@ -193,7 +206,7 @@ namespace Kernel
                 broadcaster->TriggerNodeEventObserversByString( parent->GetEventContext(), negative_diagnosis_event );
             }
         }
-        else
+        else if( negative_diagnosis_config._json.Type() != ElementType::NULL_ELEMENT )
         {
             // Distribute the test-negative intervention
             IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement(negative_diagnosis_config._json));
@@ -209,6 +222,10 @@ namespace Kernel
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext" );
             }
+        }
+        else
+        {
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
         }
         expired = true;
     }
@@ -231,7 +248,7 @@ namespace Kernel
         }
 
 
-        if( defaulters_event != "UNINITIALIZED" )
+        if( !defaulters_event.IsUninitialized() )
         {
             if( defaulters_event != NO_TRIGGER_STR )
             {
@@ -246,7 +263,7 @@ namespace Kernel
                 broadcaster->TriggerNodeEventObserversByString( parent->GetEventContext(), defaulters_event );
             }
         }
-        else
+        else if( defaulters_config._json.Type() != ElementType::NULL_ELEMENT )
         {            // Distribute the defaulters intervention, right away (do not use the days_to_diagnosis
             IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement(defaulters_config._json));
 
@@ -261,6 +278,10 @@ namespace Kernel
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext" );
             }
+        }
+        else
+        {
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
         }
     }
 
@@ -292,7 +313,7 @@ namespace Kernel
 // clorton            json::Reader::Read( diagnostic.negative_diagnosis_config._json, string_stream );
 // clorton        }
 
-        ar.labelElement("negative_diagnosis_event") & (std::string&)(diagnostic.negative_diagnosis_event);
+        ar.labelElement("negative_diagnosis_event") & diagnostic.negative_diagnosis_event;
         ar.labelElement("defaulters_config") & diagnostic.defaulters_config;
 // Remove after testing (implemented above)
 // clorton        if ( ar.IsWriter() )
@@ -308,8 +329,7 @@ namespace Kernel
 // clorton            std::istringstream string_stream( json );
 // clorton            json::Reader::Read( diagnostic.defaulters_config._json, string_stream );
 // clorton        }
-
-        ar.labelElement("defaulters_event") & (std::string&)(diagnostic.defaulters_event);
+        ar.labelElement("defaulters_event") & diagnostic.defaulters_event;
         ar.labelElement("m_gets_positive_test_intervention") & diagnostic.m_gets_positive_test_intervention;
     }
 }

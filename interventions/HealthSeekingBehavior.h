@@ -23,6 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "Configure.h"
 #include "NodeEventContext.h"    // for INodeEventContext (ICampaignCostObserver)
+#include "EventTrigger.h"
 
 namespace Kernel
 {
@@ -56,7 +57,7 @@ namespace Kernel
         IIndividualHumanContext *parent;
         float probability_of_seeking;
         IndividualInterventionConfig actual_intervention_config;
-        std::string actual_intervention_event;
+        EventTrigger actual_intervention_event;
         bool single_use;
 
         DECLARE_SERIALIZABLE(SimpleHealthSeekingBehavior);

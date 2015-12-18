@@ -27,7 +27,12 @@ namespace Kernel
     )
     {
         ConfigurePositiveEventOrConfig( inputJson );
-        return JsonConfigurable::Configure(inputJson); 
+        bool ret = JsonConfigurable::Configure(inputJson); 
+        if( ret )
+        {
+            CheckPostiveEventConfig();
+        }
+        return ret;
     }
 
     StiCoInfectionDiagnostic::StiCoInfectionDiagnostic() : SimpleDiagnostic()

@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configure.h"
 #include "InterpolatedValueMap.h"
 #include "IHIVCascadeStateIntervention.h"
-#include <string>
+#include "EventTrigger.h"
 
 namespace Kernel
 {
@@ -56,7 +56,7 @@ namespace Kernel
         float days_remaining;
         bool firstUpdate;
 
-        jsonConfigurable::ConstrainedString broadcast_event;
-        jsonConfigurable::ConstrainedString broadcast_on_expiration_event;
+        EventTrigger broadcast_event;
+        EventTrigger broadcast_on_expiration_event;
     };
 }

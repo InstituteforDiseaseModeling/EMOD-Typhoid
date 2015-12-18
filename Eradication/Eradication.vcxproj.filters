@@ -937,6 +937,9 @@
     <ClCompile Include="IInfection.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="EventTrigger.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2032,6 +2035,9 @@
     </ClInclude>
     <ClInclude Include="ISusceptibilityContext.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventTrigger.h">
+      <Filter>Source Files\Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
