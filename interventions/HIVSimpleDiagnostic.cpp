@@ -85,7 +85,7 @@ namespace Kernel
                                                         "The Cascade_State cannot be one of the Abort_States." );
             }
 
-
+            //CheckPostiveEventConfig();
         }
         return ret ;
     }

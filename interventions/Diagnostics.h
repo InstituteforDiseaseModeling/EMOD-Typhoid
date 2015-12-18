@@ -55,6 +55,7 @@ namespace Kernel
 
         void broadcastEvent( const EventTrigger& event );
         virtual EventOrConfig::Enum getEventOrConfig( const Configuration* );
+        void CheckPostiveEventConfig();
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details

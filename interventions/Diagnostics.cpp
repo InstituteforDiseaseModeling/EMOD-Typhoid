@@ -68,12 +68,29 @@ namespace Kernel
         bool ret = JsonConfigurable::Configure( inputJson );
         LOG_DEBUG_F( "Base_Sensitivity = %f, Base_Specificity = %f\n", (float) base_sensitivity, (float) base_specificity );
         EventOrConfig::Enum use_event_or_config = getEventOrConfig( inputJson );
-        if( ret && (use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun) )
+        if( ret )
         {
-            InterventionValidator::ValidateIntervention( positive_diagnosis_config._json );
+            if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
+            {
+                InterventionValidator::ValidateIntervention( positive_diagnosis_config._json );
+            }
+
+            CheckPostiveEventConfig();
         }
         return ret;
     }
+
+    void SimpleDiagnostic::CheckPostiveEventConfig()
+    {
+        if( !JsonConfigurable::_dryrun && 
+            positive_diagnosis_event.IsUninitialized() &&
+            (positive_diagnosis_config._json.Type() == ElementType::NULL_ELEMENT) )
+        {
+            const char* msg = "You must define either Positive_Diagnosis_Event or Positive_Diagnosis_Config";
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+        }
+    }
+
 
     SimpleDiagnostic::SimpleDiagnostic()
     : parent(nullptr)
@@ -251,6 +268,11 @@ namespace Kernel
             }
             delete config;
         }
+        // this is the right thing to do but we need to deal with HIVRandomChoice and HIVSetCascadeState
+        //else
+        //{
+        //    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
+        //}
         expired = true;
     }
 

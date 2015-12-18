@@ -48,9 +48,19 @@ namespace Kernel
         initConfigTypeMap( "Single_Use", &single_use, HSB_Single_Use_DESC_TEXT, true ); //true means it will expire after a single use
 
         bool ret = JsonConfigurable::Configure( inputJson );
-        if( ret && (use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun) )
+        if( ret )
         {
-            InterventionValidator::ValidateIntervention( actual_intervention_config._json );
+            if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
+            {
+                InterventionValidator::ValidateIntervention( actual_intervention_config._json );
+            }
+            if( !JsonConfigurable::_dryrun && 
+                actual_intervention_event.IsUninitialized() &&
+                (actual_intervention_config._json.Type() == ElementType::NULL_ELEMENT) )
+            {
+                const char* msg = "You must define either Actual_IndividualIntervention_Event or Actual_IndividualIntervention_Config";
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+            }
         }
         return ret ;
     }
@@ -151,6 +161,10 @@ namespace Kernel
                 {
                     throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext");
                 }
+            }
+            else
+            {
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
             }
             if( single_use )
             {

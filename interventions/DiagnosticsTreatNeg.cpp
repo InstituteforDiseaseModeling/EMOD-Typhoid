@@ -42,10 +42,29 @@ namespace Kernel
         }
 
         bool ret = SimpleDiagnostic::Configure( inputJson );
-        if( ret && (use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun) )
+        if( ret  )
         {
-            InterventionValidator::ValidateIntervention( negative_diagnosis_config._json );
-            InterventionValidator::ValidateIntervention( defaulters_config._json );
+            if( use_event_or_config == EventOrConfig::Config || JsonConfigurable::_dryrun )
+            {
+                InterventionValidator::ValidateIntervention( negative_diagnosis_config._json );
+                InterventionValidator::ValidateIntervention( defaulters_config._json );
+            }
+
+            if( !JsonConfigurable::_dryrun && 
+                negative_diagnosis_event.IsUninitialized() &&
+                (negative_diagnosis_config._json.Type() == ElementType::NULL_ELEMENT) )
+            {
+                const char* msg = "You must define either Negative_Diagnosis_Event or Negative_Diagnosis_Config";
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+            }
+
+            if( !JsonConfigurable::_dryrun && 
+                defaulters_event.IsUninitialized() &&
+                (defaulters_config._json.Type() == ElementType::NULL_ELEMENT) )
+            {
+                const char* msg = "You must define either Defaulters_Event or Defaulters_Config";
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg );
+            }
         }
         return ret ;
     }
@@ -204,6 +223,10 @@ namespace Kernel
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext" );
             }
         }
+        else
+        {
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
+        }
         expired = true;
     }
     
@@ -255,6 +278,10 @@ namespace Kernel
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext" );
             }
+        }
+        else
+        {
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "neither event or config defined" );
         }
     }
 
