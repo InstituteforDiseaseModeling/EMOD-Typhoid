@@ -34,6 +34,8 @@ namespace Kernel
         virtual uint32_t GetBufferSize() override;
         virtual const char* GetBuffer() override;
 
+        rapidjson::GenericValue<rapidjson::UTF8<>>& GetElement();
+
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         rapidjson::Document* m_document;

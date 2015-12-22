@@ -87,59 +87,98 @@ namespace Kernel
         label = key;
         return *this;
     }
+    
+    rapidjson::GenericValue<rapidjson::UTF8<>>& JsonFullReader::GetElement()
+    {
+        if( isObject )
+        {
+            release_assert( label.size() > 0 );
+
+            if( (*m_json).HasMember( label.c_str() ) )
+            {
+                return (*m_json)[label.c_str()];
+            }
+            else
+            {
+                std::stringstream ss;
+                ss << "The '" << label << "' element is not in this object." ;
+                throw SerializationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+            }
+        }
+        else
+        {
+            if( (*m_json).IsArray() )
+            {
+                if( (*m_json).Size() > m_index )
+                {
+                    return (*m_json)[m_index++];
+                }
+                else
+                {
+                    std::stringstream ss;
+                    ss << "Tried to get the " << m_index << " element when the array only has " << (*m_json).Size() << " elements.";
+                    throw SerializationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                }
+            }
+            else
+            {
+                throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "The element is expected to be an array and is not." );
+            }
+        }
+    }
 
     IArchive& JsonFullReader::operator&(bool& b)
     {
-        b = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]).GetBool();
+        b = GetElement().GetBool();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(int32_t& i32)
     {
-        i32 = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]).GetInt();
+        i32 = GetElement().GetInt();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(int64_t& i64)
     {
-        i64 = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]).GetInt64();
+        i64 = GetElement().GetInt64();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(uint32_t& u32)
     {
-        u32 = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]).GetUint();
+        u32 = GetElement().GetUint();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(uint64_t& u64)
     {
-        u64 = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]).GetUint64();
+        u64 = GetElement().GetUint64();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(float& f)
     {
-        f = float((isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]).GetDouble());
+        f = float(GetElement().GetDouble());
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(double& d)
     {
-        d = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]).GetDouble();
+        d = GetElement().GetDouble();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(std::string& s)
     {
-        auto& element = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]);
+        auto& element = GetElement();
         s.assign(element.GetString(), element.GetStringLength());
         return *this;
     }
 
     IArchive& JsonFullReader::operator&( jsonConfigurable::ConstrainedString& cs )
     {
-        auto& element = (isObject ? (*m_json)[label.c_str()] : (*m_json)[m_index++]);
+        auto& element = GetElement();
         std::string tmp;
         tmp.assign(element.GetString(), element.GetStringLength());
         cs = tmp;
