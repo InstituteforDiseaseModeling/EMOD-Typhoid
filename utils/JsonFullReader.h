@@ -35,6 +35,7 @@ namespace Kernel
         virtual const char* GetBuffer() override;
 
         rapidjson::GenericValue<rapidjson::UTF8<>>& GetElement();
+        rapidjson::GenericValue<rapidjson::UTF8<>>& GetElementForNumber();
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details

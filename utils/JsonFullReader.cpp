@@ -127,6 +127,16 @@ namespace Kernel
         }
     }
 
+    rapidjson::GenericValue<rapidjson::UTF8<>>& JsonFullReader::GetElementForNumber()
+    {
+        rapidjson::GenericValue<rapidjson::UTF8<>>& element = GetElement();
+        if( !element.IsNumber() )
+        {
+            throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Trying to get a number value from something that is not a number." );
+        }
+        return element;
+    }
+
     IArchive& JsonFullReader::operator&(bool& b)
     {
         b = GetElement().GetBool();
@@ -135,37 +145,37 @@ namespace Kernel
 
     IArchive& JsonFullReader::operator&(int32_t& i32)
     {
-        i32 = GetElement().GetInt();
+        i32 = GetElementForNumber().GetInt();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(int64_t& i64)
     {
-        i64 = GetElement().GetInt64();
+        i64 = GetElementForNumber().GetInt64();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(uint32_t& u32)
     {
-        u32 = GetElement().GetUint();
+        u32 = GetElementForNumber().GetUint();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(uint64_t& u64)
     {
-        u64 = GetElement().GetUint64();
+        u64 = GetElementForNumber().GetUint64();
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(float& f)
     {
-        f = float(GetElement().GetDouble());
+        f = float(GetElementForNumber().GetDouble());
         return *this;
     }
 
     IArchive& JsonFullReader::operator&(double& d)
     {
-        d = GetElement().GetDouble();
+        d = GetElementForNumber().GetDouble();
         return *this;
     }
 
