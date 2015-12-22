@@ -23,5 +23,7 @@ namespace Kernel
     protected:
         InfectionSTI();
         InfectionSTI(IIndividualHumanContext *context);
+
+        DECLARE_SERIALIZABLE(InfectionSTI);
     };
 }

@@ -53,4 +53,13 @@ namespace Kernel
     {
         Infection::Update( dt, immunity );
     }
+
+    REGISTER_SERIALIZABLE(InfectionSTI);
+
+    void InfectionSTI::serialize(IArchive& ar, InfectionSTI* obj)
+    {
+        Infection::serialize( ar, obj );
+        InfectionSTI& infection = *obj;
+        ///ar.labelElement("xxx") & infection.xxx;
+    }
 }

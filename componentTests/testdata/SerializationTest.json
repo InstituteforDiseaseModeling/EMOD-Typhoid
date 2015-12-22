@@ -12,6 +12,30 @@
         {
             "Test" :
             {
+                "__class__":"InfectionSTI",
+                "suid": 5,
+                "duration"        : 1.1,
+                "total_duration"  : 2.2,
+                "incubation_timer": 3.3,
+                "infectious_timer": 4.4,
+                "infectiousness"  : 5.5,
+                "infectiousnessByRoute":
+                [
+                    {"key":"abc","value": 4.56},
+                    {"key":"def","value": 7.89},
+                    {"key":"ghi","value": 1.23}
+                ],
+                "StateChange":1,
+                "infection_strain":
+                {
+                    "antigenID":5,
+                    "geneticID":4
+                }
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"SimpleDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
