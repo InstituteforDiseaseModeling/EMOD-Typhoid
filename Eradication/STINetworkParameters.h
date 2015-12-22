@@ -13,11 +13,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HIVEnums.h"
 #include "IRelationship.h"
 #include "SimulationEnums.h"        // For Gender
+#include "ISerializable.h"
+#include "IArchive.h"
 
 namespace Kernel
 {
 
-    class STINetworkParameters : public JsonConfigurable
+    class STINetworkParameters : public JsonConfigurable, public ISerializable
     {
         friend class SimulationConfig;
         friend class IndividualHumanSTI;
@@ -31,12 +33,15 @@ namespace Kernel
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
 
     protected:
+        STINetworkParameters();
 
         std::string key_colon_val;
 
         ExtraRelationalFlagType::Enum extra_relational_flag_type;
         float prob_extra_relational[RelationshipType::COUNT][Gender::COUNT];
         float max_simultaneous_rels[RelationshipType::COUNT][Gender::COUNT];
+
+        DECLARE_SERIALIZABLE(STINetworkParameters);
     };
 
     struct IIndividualHuman ;
