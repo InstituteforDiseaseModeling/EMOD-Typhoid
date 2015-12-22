@@ -14,6 +14,41 @@
         {
             "Test" :
             {
+                "__class__":"MarriageRelationship",
+                "absent_male_partner_id"   : 123,
+                "absent_female_partner_id" : 456,
+                "_id"                      : 789,
+                "_suid"                    : 987,
+                "rel_timer"                : 1.1,
+                "rel_duration"             : 2.2,
+                "start_time"               : 3.3,
+                "scheduled_end_time"       : 4.4,
+                "propertyKey"              : "Risk",
+                "propertyName"             : "HIGH",
+                "force_finish"             : false,
+                "relationship_type"        : 2,
+                "original_node_id"         : 654,
+                "act_prob_vec"             : 
+                [
+                    {
+                        "num_acts"     : 1,
+                        "prob_per_act" : 0.3
+                    },
+                    {
+                        "num_acts"     : 2,
+                        "prob_per_act" : 0.2
+                    },
+                    {
+                        "num_acts"     : 3,
+                        "prob_per_act" : 0.1
+                    }
+                ],
+                "using_condom" : true
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"STINetworkParameters",
                 "key_colon_val" : "Risk:HIGH",
                 "extra_relational_flag_type" : 1,
