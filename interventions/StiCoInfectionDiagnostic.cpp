@@ -68,14 +68,12 @@ namespace Kernel
         return positiveTest;
 
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, StiCoInfectionDiagnostic& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(StiCoInfectionDiagnostic);
+
+    void StiCoInfectionDiagnostic::serialize(IArchive& ar, StiCoInfectionDiagnostic* obj)
     {
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+        BaseIntervention::serialize( ar, obj );
+        StiCoInfectionDiagnostic& diag = *obj;
     }
 }
-#endif
