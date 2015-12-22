@@ -36,6 +36,52 @@
         {
             "Test" :
             {
+                "__class__" : "STIInterventionsContainer",
+                "drugVaccineReducedAcquire"   : 0.1,
+                "drugVaccineReducedTransmit"  : 0.2,
+                "drugVaccineReducedMortality" : 0.3,
+                "interventions":
+                [
+                ],
+                "is_circumcised" : false,
+                "STI_blocking_overrides" :
+                [
+                    {
+                        "key" : "TRANSITORY", 
+                        "value" :
+                        {
+                            "early"   : 0.7,
+                            "late"    : 0.8,
+                            "midyear" : 2003.0,
+                            "rate"    : 0.9
+                        }
+                    },
+                    {
+                        "key" : "INFORMAL", 
+                        "value" :
+                        {
+                            "early"   : 0.1,
+                            "late"    : 0.2,
+                            "midyear" : 2001.0,
+                            "rate"    : 0.3
+                        }
+                    },
+                    {
+                        "key" : "MARITAL", 
+                        "value" :
+                        {
+                            "early"   : 0.4,
+                            "late"    : 0.5,
+                            "midyear" : 2002.0,
+                            "rate"    : 0.6
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"SimpleDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
