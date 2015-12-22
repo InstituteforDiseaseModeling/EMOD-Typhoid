@@ -11,7 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "ModifyStiCoInfectionStatus.h"
 #include "Exceptions.h"
-#include "HIVInterventionsContainer.h"
+#include "ISTIInterventionsContainer.h"
 
 static const char * _module = "ModifyStiCoInfectionStatus";
 
@@ -36,6 +36,7 @@ namespace Kernel
 
     ModifyStiCoInfectionStatus::ModifyStiCoInfectionStatus()
     {
+        initSimTypes( 2, "STI_SIM", "HIV_SIM" );
         initConfigTypeMap( "New_STI_CoInfection_Status", &set_flag_to, MSCIS_New_STI_Co_Status_DESC_TEXT, false );
     }
 

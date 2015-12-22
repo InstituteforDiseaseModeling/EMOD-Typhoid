@@ -876,12 +876,6 @@
     <ClCompile Include="..\interventions\AgeDiagnostic.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClCompile>
-    <ClCompile Include="..\interventions\StiCoInfectionDiagnostic.cpp">
-      <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
-    </ClCompile>
-    <ClCompile Include="..\interventions\ModifyStiCoInfectionStatus.cpp">
-      <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
-    </ClCompile>
     <ClCompile Include="..\interventions\CD4Diagnostic.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClCompile>
@@ -905,9 +899,6 @@
     </ClCompile>
     <ClCompile Include="HIVReportEventRecorder.cpp">
       <Filter>Source Files\Reporting\STI\HIV</Filter>
-    </ClCompile>
-    <ClCompile Include="..\interventions\STIIsPostDebut.cpp">
-      <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClCompile>
     <ClCompile Include="..\interventions\HIVARTStagingAbstract.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
@@ -939,6 +930,15 @@
     </ClCompile>
     <ClCompile Include="EventTrigger.cpp">
       <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\StiCoInfectionDiagnostic.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\STIIsPostDebut.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\ModifyStiCoInfectionStatus.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1912,12 +1912,6 @@
     <ClInclude Include="..\interventions\AgeDiagnostic.h">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClInclude>
-    <ClInclude Include="..\interventions\ModifyStiCoInfectionStatus.h">
-      <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interventions\StiCoInfectionDiagnostic.h">
-      <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
-    </ClInclude>
     <ClInclude Include="..\interventions\CD4Diagnostic.h">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClInclude>
@@ -1944,9 +1938,6 @@
     </ClInclude>
     <ClInclude Include="HIVReportEventRecorder.h">
       <Filter>Source Files\Reporting\STI\HIV</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interventions\STIIsPostDebut.h">
-      <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClInclude>
     <ClInclude Include="..\interventions\HIVARTStagingAbstract.h">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
@@ -2038,6 +2029,15 @@
     </ClInclude>
     <ClInclude Include="EventTrigger.h">
       <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\StiCoInfectionDiagnostic.h">
+      <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\STIIsPostDebut.h">
+      <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\ModifyStiCoInfectionStatus.h">
+      <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
