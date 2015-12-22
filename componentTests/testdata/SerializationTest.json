@@ -42,6 +42,11 @@
                 "drugVaccineReducedMortality" : 0.3,
                 "interventions":
                 [
+                    {
+                        "__class__" : "MaleCircumcision",
+                        "cost_per_unit"             : 1,
+                        "expired"                   : false
+                    }
                 ],
                 "is_circumcised" : false,
                 "STI_blocking_overrides" :

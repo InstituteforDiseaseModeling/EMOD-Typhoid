@@ -53,4 +53,12 @@ namespace Kernel
     {
         // Nothing to do for this intervention
     }
+
+    REGISTER_SERIALIZABLE(MaleCircumcision);
+
+    void MaleCircumcision::serialize(IArchive& ar, MaleCircumcision* obj)
+    {
+        BaseIntervention::serialize( ar, obj );
+        MaleCircumcision& mc = *obj;
+    }
 }
