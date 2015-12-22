@@ -75,4 +75,13 @@ namespace Kernel
     void ModifyStiCoInfectionStatus::Update( float dt )
     {
     }
+
+    REGISTER_SERIALIZABLE(ModifyStiCoInfectionStatus);
+
+    void ModifyStiCoInfectionStatus::serialize(IArchive& ar, ModifyStiCoInfectionStatus* obj)
+    {
+        BaseIntervention::serialize( ar, obj );
+        ModifyStiCoInfectionStatus& modify = *obj;
+        ar.labelElement("set_flag_to") & modify.set_flag_to;
+    }
 }

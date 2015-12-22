@@ -34,5 +34,7 @@ namespace Kernel
 
     protected:
         bool set_flag_to;
+
+        DECLARE_SERIALIZABLE(ModifyStiCoInfectionStatus);
     };
 }

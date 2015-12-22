@@ -44,8 +44,14 @@
                 [
                     {
                         "__class__" : "MaleCircumcision",
-                        "cost_per_unit"             : 1,
-                        "expired"                   : false
+                        "cost_per_unit" : 1,
+                        "expired"       : false
+                    },
+                    {
+                        "__class__" : "ModifyStiCoInfectionStatus",
+                        "cost_per_unit" : 2,
+                        "expired"       : false,
+                        "set_flag_to"   : true
                     }
                 ],
                 "is_circumcised" : false,
