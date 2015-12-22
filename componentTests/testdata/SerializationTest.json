@@ -52,6 +52,16 @@
                         "cost_per_unit" : 2,
                         "expired"       : false,
                         "set_flag_to"   : true
+                    },
+                    {
+                        "__class__" : "STIBarrier",
+                        "cost_per_unit" : 3,
+                        "expired"       : false,
+                        "early"         : 0.1,
+                        "late"          : 0.2,
+                        "midyear"       : 0.3,
+                        "rate"          : 0.4,
+                        "rel_type"      : 1
                     }
                 ],
                 "is_circumcised" : false,
