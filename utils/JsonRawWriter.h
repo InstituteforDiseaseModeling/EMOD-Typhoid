@@ -23,6 +23,7 @@ namespace Kernel
         virtual IArchive& labelElement(const char*) override;
 
         virtual IArchive& operator&(bool&) override;
+        virtual IArchive& operator&(unsigned char&) override;
         virtual IArchive& operator&(int32_t&) override;
         virtual IArchive& operator&(int64_t&) override;
         virtual IArchive& operator&(uint32_t&) override;

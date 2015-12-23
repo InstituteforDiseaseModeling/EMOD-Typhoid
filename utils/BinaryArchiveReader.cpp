@@ -44,6 +44,16 @@ namespace Kernel
         return *this;
     }
 
+    IArchive& BinaryArchiveReader::operator&(unsigned char& uc)
+    {
+        // Use a uint32_t so we stay on a 4-byte boundary.
+        uint32_t value;
+        pop(value);
+        uc = value;
+
+        return *this;
+    }
+
     IArchive& BinaryArchiveReader::operator&(int32_t& i32)
     {
         pop(i32);

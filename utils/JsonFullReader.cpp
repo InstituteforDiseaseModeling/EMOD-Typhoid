@@ -42,6 +42,10 @@ namespace Kernel
             m_json = &(*m_json)[m_index++];
             isObject = true;
         }
+        if( !m_json->IsObject() )
+        {
+            throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Expected to starting reading an object and it is not an object." );
+        }
         return *this;
     }
 
@@ -140,6 +144,12 @@ namespace Kernel
     IArchive& JsonFullReader::operator&(bool& b)
     {
         b = GetElement().GetBool();
+        return *this;
+    }
+
+    IArchive& JsonFullReader::operator&(unsigned char& uc)
+    {
+        uc = GetElement().GetUint();
         return *this;
     }
 
