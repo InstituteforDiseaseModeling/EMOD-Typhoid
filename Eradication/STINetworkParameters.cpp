@@ -95,12 +95,10 @@ namespace Kernel
         throw NotYetImplementedException(  __FILE__, __LINE__, __FUNCTION__ );
     }
 
-
-    REGISTER_SERIALIZABLE(STINetworkParameters);
-
-    void STINetworkParameters::serialize(IArchive& ar, STINetworkParameters* obj)
+    void STINetworkParameters::serialize( Kernel::IArchive& ar, STINetworkParameters& parameters )
     {
-        STINetworkParameters& parameters = *obj;
+        ar.startObject();
+
         ar.labelElement("key_colon_val") & parameters.key_colon_val;
         ar.labelElement("extra_relational_flag_type") & (uint32_t&)parameters.extra_relational_flag_type;
 
@@ -121,6 +119,7 @@ namespace Kernel
             ar.serialize( parameters.max_simultaneous_rels[i], Gender::COUNT );
         }
         ar.endArray();
+        ar.endObject();
     }
 
     // ------------------------------------------------------------------------

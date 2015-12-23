@@ -19,7 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 namespace Kernel
 {
 
-    class STINetworkParameters : public JsonConfigurable, public ISerializable
+    class STINetworkParameters : public JsonConfigurable
     {
         friend class SimulationConfig;
         friend class IndividualHumanSTI;
@@ -32,6 +32,7 @@ namespace Kernel
         virtual bool Configure( const ::Configuration *json );
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
 
+        static void serialize( Kernel::IArchive& ar, STINetworkParameters& params );
     protected:
         STINetworkParameters();
 
@@ -40,8 +41,6 @@ namespace Kernel
         ExtraRelationalFlagType::Enum extra_relational_flag_type;
         float prob_extra_relational[RelationshipType::COUNT][Gender::COUNT];
         float max_simultaneous_rels[RelationshipType::COUNT][Gender::COUNT];
-
-        DECLARE_SERIALIZABLE(STINetworkParameters);
     };
 
     struct IIndividualHuman ;
