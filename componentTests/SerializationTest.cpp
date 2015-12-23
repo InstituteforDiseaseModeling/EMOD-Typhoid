@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BinaryArchiveWriter.h"
 #include "JsonObjectDemog.h"
 #include "Diagnostics.h"
+#include "RandomFake.h"
 
 using namespace Kernel; 
 
@@ -31,6 +32,7 @@ SUITE(SerializationTest)
     struct SerializationFixture
     {
         SimulationConfig* m_pSimulationConfig ;
+        RandomFake fake_rng ;
 
         SerializationFixture()
         :  m_pSimulationConfig( new SimulationConfig() )
@@ -38,6 +40,7 @@ SUITE(SerializationTest)
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger() );
             Environment::setSimulationConfig( m_pSimulationConfig );
+            const_cast<Environment*>(Environment::getInstance())->RNG = &fake_rng;
         }
 
         ~SerializationFixture()

@@ -187,5 +187,7 @@ namespace Kernel
         int transitory_eligibility;
         int informal_eligibility;
         int marital_elibigility;
+
+        DECLARE_SERIALIZABLE(IndividualHumanSTI);
     };
 }
