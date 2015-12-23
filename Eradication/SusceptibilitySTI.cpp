@@ -33,15 +33,13 @@ namespace Kernel
         // initialize members of airborne susceptibility below
         demographic_risk = _riskmod; 
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilitySTI& sus, const unsigned int file_version )
+    REGISTER_SERIALIZABLE(SusceptibilitySTI);
+
+    void SusceptibilitySTI::serialize(IArchive& ar, SusceptibilitySTI* obj)
     {
-        ar & sus.demographic_risk;
-        ar & boost::serialization::base_object<Susceptibility>(sus);
+        Susceptibility::serialize( ar, obj );
+        SusceptibilitySTI& suscep = *obj;
+        ar.labelElement("demographic_risk") & suscep.demographic_risk;
     }
 }
-#endif

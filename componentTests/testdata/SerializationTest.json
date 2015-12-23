@@ -14,6 +14,20 @@
         {
             "Test" :
             {
+                "__class__":"SusceptibilitySTI",
+                "age"              : 3650.0,
+                "mod_acquire"      : 0.1,
+                "mod_transmit"     : 0.2,
+                "mod_mortality"    : 0.3,
+                "acqdecayoffset"   : 0.4,
+                "trandecayoffset"  : 0.5,
+                "mortdecayoffset"  : 0.6,
+                "demographic_risk" : 0.7
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"MarriageRelationship",
                 "absent_male_partner_id"   : 123,
                 "absent_female_partner_id" : 456,
