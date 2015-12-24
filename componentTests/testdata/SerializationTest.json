@@ -14,6 +14,43 @@
         {
             "Test" :
             {
+                "__class__":"RateTableImpl",
+                "rate_table" :
+                [
+                    {
+                        "key" : 0,
+                        "value" :
+                        [
+                            {
+                                "key" : 0,
+                                "value" : [ 1.0, 2.0 ]
+                            },
+                            {
+                                "key" : 1,
+                                "value" : [ 3.0, 4.0, 5.0 ]
+                            }
+                        ]
+                    },
+                    {
+                        "key" : 1,
+                        "value" :
+                        [
+                            {
+                                "key" : 0,
+                                "value" : [ 7.0, 8.0 ]
+                            },
+                            {
+                                "key" : 1,
+                                "value" : [ 9.0, 10.0, 11.0 ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"PairFormationParametersImpl",
                 "rel_type"                       : 2,
                 "male_age_bin_count"             : 2,
