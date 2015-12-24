@@ -16,7 +16,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 static const char * _module = "PairFormationParametersImpl";
 
-namespace Kernel {
+namespace Kernel 
+{
+    BEGIN_QUERY_INTERFACE_BODY(PairFormationParametersImpl)
+    END_QUERY_INTERFACE_BODY(PairFormationParametersImpl)
 
     RelationshipType::Enum PairFormationParametersImpl::GetRelationshipType() const
     {
@@ -133,6 +136,22 @@ namespace Kernel {
         newParameters->Configure(pConfig);
 
         return newParameters;
+    }
+
+    PairFormationParametersImpl::PairFormationParametersImpl()
+        : rel_type(RelationshipType::TRANSITORY)
+        , male_age_bin_count(0)
+        , initial_male_age(0.0f)
+        , male_age_increment(1.0f)
+        , female_age_bin_count(0)
+        , initial_female_age(0.0f)
+        , female_age_increment(1.0f)
+        , age_bins()
+        , joint_probabilities()
+        , cumulative_joint_probabilities()
+        , marginal_values()
+        , base_pair_formation_rate(0.0f)
+    {
     }
 
     PairFormationParametersImpl::PairFormationParametersImpl( RelationshipType::Enum relType,
@@ -323,5 +342,25 @@ namespace Kernel {
                 rArray[i] = rArray[i] / total ;
             }
         }
+    }
+
+    REGISTER_SERIALIZABLE(PairFormationParametersImpl);
+
+    void PairFormationParametersImpl::serialize(IArchive& ar, PairFormationParametersImpl* obj)
+    {
+        PairFormationParametersImpl& parameters = *obj;
+        ar.labelElement("rel_type"                      ) & (uint32_t&)parameters.rel_type;
+        ar.labelElement("male_age_bin_count"            ) & parameters.male_age_bin_count;
+        ar.labelElement("initial_male_age"              ) & parameters.initial_male_age;
+        ar.labelElement("male_age_increment"            ) & parameters.male_age_increment;
+        ar.labelElement("female_age_bin_count"          ) & parameters.female_age_bin_count;
+        ar.labelElement("initial_female_age"            ) & parameters.initial_female_age;
+        ar.labelElement("female_age_increment"          ) & parameters.female_age_increment;
+        ar.labelElement("rate_ratio"                    ); ar.serialize( parameters.rate_ratio, Gender::COUNT );
+        ar.labelElement("age_bins"                      ) & parameters.age_bins;
+        ar.labelElement("joint_probabilities"           ) & parameters.joint_probabilities;
+        ar.labelElement("cumulative_joint_probabilities") & parameters.cumulative_joint_probabilities;
+        ar.labelElement("marginal_values"               ) & parameters.marginal_values;
+        ar.labelElement("base_pair_formation_rate"      ) & parameters.base_pair_formation_rate;
     }
 }
