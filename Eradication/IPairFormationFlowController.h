@@ -9,11 +9,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "IdmApi.h"
-#include "IPairFormationAgent.h"
+#include "ISerializable.h"
 
-namespace Kernel {
-
-    struct IDMAPI IPairFormationFlowController {
+namespace Kernel
+{
+    struct IDMAPI IPairFormationFlowController : ISerializable
+    {
         virtual void UpdateEntryRates() = 0;
         virtual ~IPairFormationFlowController() {}
     };

@@ -9,6 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "IPairFormationFlowController.h"
+#include "IPairFormationAgent.h"
 #include "IPairFormationStats.h"
 #include "IPairFormationRateTable.h"
 #include "IPairFormationParameters.h"
@@ -16,9 +17,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <map>
 #include <vector>
 
-namespace Kernel {
+namespace Kernel 
+{
 
-    class IDMAPI FlowControllerImpl : public IPairFormationFlowController {
+    class IDMAPI FlowControllerImpl : public IPairFormationFlowController 
+    {
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
+        DECLARE_QUERY_INTERFACE();
     public:
 
         virtual void UpdateEntryRates();
@@ -30,7 +35,10 @@ namespace Kernel {
             const IPairFormationParameters*);
 
     protected:
-        FlowControllerImpl(IPairFormationAgent*, IPairFormationStats*, IPairFormationRateTable*, const IPairFormationParameters*);
+        FlowControllerImpl( IPairFormationAgent* agent=nullptr,
+                            IPairFormationStats* stats=nullptr, 
+                            IPairFormationRateTable* table=nullptr,
+                            const IPairFormationParameters* params=nullptr );
         virtual ~FlowControllerImpl();
 
         void UpdateDesiredFlow();
@@ -46,9 +54,9 @@ namespace Kernel {
 
         map<int, vector<float>> desired_flow;
 
-        const map<int, vector<float>>& marginal_values;
-
         float base_pair_formation_rate;
+
+        DECLARE_SERIALIZABLE(FlowControllerImpl);
 #pragma warning( pop )
     };
 }

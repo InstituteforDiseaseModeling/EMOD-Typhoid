@@ -14,6 +14,25 @@
         {
             "Test" :
             {
+                "__class__":"FlowControllerImpl",
+                "rate_ratio"   : [ 1, 1 ],
+                "desired_flow" : 
+                [
+                    {
+                        "key" : 0,
+                        "value" : [ 0.1, 0.2 ]
+                    },
+                    {
+                        "key" : 1,
+                        "value" : [ 0.3, 0.4, 0.5 ]
+                    }
+                ],
+                "base_pair_formation_rate" : 0.9
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"BehaviorPfa",
                 "m_update_period"          : 7,
                 "m_cum_prob_threshold"     : 0.2,
