@@ -14,6 +14,35 @@
         {
             "Test" :
             {
+                "__class__":"RelationshipManager",
+                "nodeRelationships" : [ 2, 4, 7, 9 ],
+                "relationshipListsForMP" :
+                [
+                    {
+                        "key"   : "Relationship00",
+                        "value" : [ "2", "7" ]
+                    },
+                    {
+                        "key"   : "Relationship11",
+                        "value" : [ "4", "9" ]
+                    }
+                ],
+                "dead_relationships_by_type" :
+                [
+                    {
+                        "key"   : "Relationship00",
+                        "value" : [ 7 ]
+                    },
+                    {
+                        "key"   : "Relationship11",
+                        "value" : [ 4 ]
+                    }
+                ]
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"IndividualHumanSTI",
                 "suid_data"                 : 1234,
                 "m_age"                     : 7300,

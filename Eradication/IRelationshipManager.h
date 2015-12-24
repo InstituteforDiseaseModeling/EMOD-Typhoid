@@ -22,7 +22,7 @@ namespace Kernel
     struct IRelationship;
     typedef map< unsigned int, IRelationship* > tNodeRelationshipType;
 
-    struct IDMAPI IRelationshipManager
+    struct IDMAPI IRelationshipManager : ISerializable
     {
         virtual void Update( list<IIndividualHuman*>& humans, ITransmissionGroups* groups, float dt ) = 0;
         virtual IRelationship* GetRelationshipById( unsigned int id ) = 0;

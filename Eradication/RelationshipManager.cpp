@@ -29,6 +29,11 @@ static void
 
 namespace Kernel
 {
+    BEGIN_QUERY_INTERFACE_BODY(RelationshipManager)
+        HANDLE_INTERFACE(IRelationshipManager)
+        HANDLE_ISUPPORTS_VIA(IRelationshipManager)
+    END_QUERY_INTERFACE_BODY(RelationshipManager)
+
     RelationshipManager::RelationshipManager( INodeContext* parent )
         : nodeRelationships()
         , relationshipListsForMP()
@@ -289,5 +294,52 @@ namespace Kernel
     const
     {
         return _node;
+    }
+
+    REGISTER_SERIALIZABLE(RelationshipManager);
+
+    void RelationshipManager::serialize(IArchive& ar, RelationshipManager* obj)
+    {
+        // ---------------------------------------------------------------------------------------
+        // --- NOTE: I'm not really sure that we should be serializing any of these parameters.
+        // --- I think that before we serilize, we should remove all of the dead relationships
+        // --- (this would make dead_relationships_by_type empty).  Then, when we are deserializing 
+        // --- the individuals and their relationships, we should should add them to the 
+        // --- relaitonship manager.
+        // ---------------------------------------------------------------------------------------
+        RelationshipManager& mgr = *obj;
+        ar.labelElement("nodeRelationships");
+        size_t count = ar.IsWriter() ? mgr.nodeRelationships.size() : -1;
+        ar.startArray( count );
+        if( ar.IsWriter() )
+        {
+            for( auto& entry : mgr.nodeRelationships )
+            {
+                unsigned int id = entry.first;
+                ar & id;
+            }
+        }
+        else
+        {
+            for( int i = 0 ; i < count ; i++ )
+            {
+                unsigned int id = 0;
+                ar & id;
+                mgr.nodeRelationships[ id ] = nullptr;
+            }
+        }
+        ar.endArray();
+
+        ar.labelElement("relationshipListsForMP"    ) & mgr.relationshipListsForMP;
+        ar.labelElement("dead_relationships_by_type") & mgr.dead_relationships_by_type;
+
+        //tNodeRelationshipType nodeRelationships;
+        //std::map< std::string, PropertyValueList_t > relationshipListsForMP;
+        //INodeContext* _node;
+        //ITransmissionGroups * nodePools;
+        //std::list<IRelationshipManager::callback_t> new_relationship_observers;
+        //std::list<IRelationshipManager::callback_t> relationship_termination_observers;
+        //std::list<IRelationshipManager::callback_t> relationship_consummation_observers;
+        //std::map< std::string, std::list<unsigned int> > dead_relationships_by_type;
     }
 }
