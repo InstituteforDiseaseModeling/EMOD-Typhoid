@@ -14,6 +14,50 @@
         {
             "Test" :
             {
+                "__class__":"BehaviorPfa",
+                "m_update_period"          : 7,
+                "m_cum_prob_threshold"     : 0.2,
+                "m_time_since_last_update" : 1,
+                "desired_flow"             : 
+                [
+                    {
+                        "key" : 0,
+                        "value" : [ 0.1, 0.2 ]
+                    },
+                    {
+                        "key" : 1,
+                        "value" : [ 0.3, 0.4, 0.5 ]
+                    }
+                ],
+                "m_QueueLengthsBefore" : 
+                [
+                    {
+                        "key" : 0,
+                        "value" : [ 1, 2 ]
+                    },
+                    {
+                        "key" : 1,
+                        "value" : [ 3, 4, 5 ]
+                    }
+                ],
+                "m_QueueLengthsAfter" : 
+                [
+                    {
+                        "key" : 0,
+                        "value" : [ 5, 4 ]
+                    },
+                    {
+                        "key" : 1,
+                        "value" : [ 1, 2, 3 ]
+                    }
+                ],
+                "new_males"   : [ 9, 8 ],
+                "new_females" : [ 7, 6, 5 ]
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"PairFormationStatsImpl",
                 "eligible_population" :
                 [
