@@ -14,6 +14,23 @@
         {
             "Test" :
             {
+                "__class__":"AssortivityHIV",
+                "m_RelType"         : 1,
+                "m_Group"           : 0,
+                "m_PropertyName"    : "Risk",
+                "m_Axes"            : [ "LOW", "HIGH" ],
+                "m_WeightingMatrix" :
+                [
+                    [ 0.85, 0.15 ],
+                    [ 0.15, 0.85 ]
+                ],
+                "m_StartYear" : 2000,
+                "m_StartUsing" : true
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"FlowControllerImpl",
                 "rate_ratio"   : [ 1, 1 ],
                 "desired_flow" : 
