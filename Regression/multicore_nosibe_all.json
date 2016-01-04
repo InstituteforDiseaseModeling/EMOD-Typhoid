@@ -247,7 +247,13 @@
         },
         {
             "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats"
-        }
+        },
+        {
+            "path" : "Multicore_Nosibe/TB_34_GroupCoordinator"
+        },
+        {
+            "path" : "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn"
+        }        
     ],
     "long tests": [
         { "path" : "Multicore_Nosibe/66_Malaria_InputEIR"},            
