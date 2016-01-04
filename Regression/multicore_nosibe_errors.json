@@ -16,7 +16,9 @@
         { "path": "Multicore_Nosibe/Scenarios/TB/05_MDR/C_IneffectiveTreatment" },
         { "path": "Multicore_Nosibe/Scenarios/TB/05_MDR/D_SecondLineDrugs" },
         { "path": "Multicore_Nosibe/Scenarios/TB/06_PopulationBurnIn/A_SteadyState" },
-        { "path": "Multicore_Nosibe/Scenarios/TB/06_PopulationBurnIn/B_PrivateToPublic" }
+        { "path": "Multicore_Nosibe/Scenarios/TB/06_PopulationBurnIn/B_PrivateToPublic" },
+        { "path": "Multicore_Nosibe/TB_34_GroupCoordinator" },
+        { "path" : "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn" }          
     ],
     "good": [
         { "path": "Multicore_Nosibe/Scenarios/Generic/01_SIR" },
