@@ -175,16 +175,4 @@ namespace Kernel
     }
 }
 
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, AntiTBPropDepDrug& drug, const unsigned int v)
-    {
-        ar & drug.enable_state_specific_tx;
-        ar & boost::serialization::base_object<AntiTBDrug>(drug);
-    }
-}
-#endif
-
 #endif

@@ -1599,7 +1599,7 @@ SUITE(NodeDemographicsTest)
         PrintDebug( msg.str() );
 
 #ifdef _DEBUG
-        CHECK( ms < 4000 );
+        CHECK( ms < 5000 );
 #else
         CHECK( ms < 2000 );
 #endif

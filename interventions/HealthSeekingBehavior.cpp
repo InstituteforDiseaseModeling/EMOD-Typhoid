@@ -207,6 +207,7 @@ namespace Kernel
 
     void SimpleHealthSeekingBehavior::serialize(IArchive& ar, SimpleHealthSeekingBehavior* obj)
     {
+        BaseIntervention::serialize(ar, obj);
         SimpleHealthSeekingBehavior& intervention = *obj;
         ar.labelElement("probability_of_seeking") & intervention.probability_of_seeking;
         ar.labelElement("actual_intervention_config") & intervention.actual_intervention_config;
