@@ -63,7 +63,7 @@
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/07_Namawala_Vector_SSV" },        
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/09_Namawala_Vector_SugarBaitedTraps" },
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/10_InsectKillingFence" },
-        { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats" }
+        { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats" },
         { "path" : "Multicore_Nosibe/TB_34_GroupCoordinator" },
         { "path" : "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn" }        
     ],
