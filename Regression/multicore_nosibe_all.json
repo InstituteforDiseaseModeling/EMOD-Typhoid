@@ -2,9 +2,19 @@
     "tests": [
         { "path" : "Multicore_Nosibe/14_Polio_Bihar_Larger" },
         { "path" : "Multicore_Nosibe/17_Polio_Bihar_Simplest" },
+        { "path" : "Multicore_Nosibe/39_Vector_Namawala_HostSeekingTrap" },        
         { "path" : "Multicore_Nosibe/42_Polio_Default_Geography" },
         { "path" : "Multicore_Nosibe/49_Environmental_Namawala" },
         { "path" : "Multicore_Nosibe/50_Airborne_Namawala" },
+        { "path" : "Multicore_Nosibe/64_Vector_ScaleLarvalHabitat" },            
+        { "path" : "Multicore_Nosibe/69_Vector_IRS_Ivermectin" },
+        { "path" : "Multicore_Nosibe/79_Vector_Ivermectin" },    
+        { "path" : "Multicore_Nosibe/86_Vector_SimpleIndividualRepellent" },            
+        { "path" : "Multicore_Nosibe/89_Generic_SimpleImmunoglobulin" },    
+        { "path" : "Multicore_Nosibe/97_Generic_Intervention_ImportPressure" },    
+        { "path" : "Multicore_Nosibe/99_Malaria_Intervention_RTSSVaccine" },    
+        { "path" : "Multicore_Nosibe/104_Vector_DrivingYHEGs" },    
+        { "path" : "Multicore_Nosibe/107_Generic_Intervention_SimpleDiagnostic" },    
         { "path" : "Multicore_Nosibe/Scenarios/Generic/01_SIR" },
         { "path" : "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/A_BaselineOutbreak" },
         { "path" : "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/B_Vaccinations" },
@@ -53,9 +63,12 @@
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/07_Namawala_Vector_SSV" },        
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/09_Namawala_Vector_SugarBaitedTraps" },
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/10_InsectKillingFence" },
-        { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats" }
+        { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats" },
+        { "path" : "Multicore_Nosibe/TB_34_GroupCoordinator" },
+        { "path" : "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn" }        
     ],
     "long tests": [
+        { "path" : "Multicore_Nosibe/66_Malaria_InputEIR"},            
         { "path" : "Multicore_Nosibe/Scenarios/Generic/07_SI" },
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/02_Namawala_Full_Malaria_Model" },        
         { "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/08_Garki_IRSMDA" }    
