@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "FlowControllerFactory.h"
 #include "FlowControllerImpl.h"
+#include "IPairFormationAgent.h"
 
 namespace Kernel {
 

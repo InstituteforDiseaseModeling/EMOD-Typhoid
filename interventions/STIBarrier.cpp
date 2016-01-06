@@ -119,4 +119,19 @@ namespace Kernel
         return status;
 
     }*/
+
+    REGISTER_SERIALIZABLE(STIBarrier);
+
+    void STIBarrier::serialize(IArchive& ar, STIBarrier* obj)
+    {
+        BaseIntervention::serialize( ar, obj );
+        STIBarrier& barrier = *obj;
+        ar.labelElement("early"   ) & barrier.early;
+        ar.labelElement("late"    ) & barrier.late;
+        ar.labelElement("midyear" ) & barrier.midyear;
+        ar.labelElement("rate"    ) & barrier.rate;
+        ar.labelElement("rel_type") & (uint32_t&)barrier.rel_type;
+
+        // ibc is set in SetContextTo()
+    }
 }

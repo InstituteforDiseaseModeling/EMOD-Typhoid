@@ -20,6 +20,7 @@ namespace Kernel
         virtual IArchive& endArray() override;
         virtual IArchive& labelElement(const char*) override;
         virtual IArchive& operator&(bool&) override;
+        virtual IArchive& operator&(unsigned char&) override;
         virtual IArchive& operator&(int32_t&) override;
         virtual IArchive& operator&(int64_t&) override;
         virtual IArchive& operator&(uint32_t&) override;
@@ -33,6 +34,9 @@ namespace Kernel
         virtual bool IsWriter() override;
         virtual uint32_t GetBufferSize() override;
         virtual const char* GetBuffer() override;
+
+        rapidjson::GenericValue<rapidjson::UTF8<>>& GetElement();
+        rapidjson::GenericValue<rapidjson::UTF8<>>& GetElementForNumber();
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details

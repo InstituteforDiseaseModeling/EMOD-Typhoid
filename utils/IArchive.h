@@ -31,6 +31,7 @@ namespace Kernel
         virtual IArchive& labelElement(const char*) = 0;
 
         virtual IArchive& operator & (bool&) = 0;
+        virtual IArchive& operator & (unsigned char&) = 0;
         virtual IArchive& operator & (int32_t&) = 0;
         virtual IArchive& operator & (int64_t&) = 0;
         virtual IArchive& operator & (uint32_t&) = 0;
@@ -116,6 +117,31 @@ namespace Kernel
         }
 
         template <typename T>
+        void operator & (std::set<T>& st)
+        {
+            size_t count = this->IsWriter() ? st.size() : -1;
+
+            this->startArray(count);
+            if (this->IsWriter())
+            {
+                for (auto& entry : st)
+                {
+                    (*this) & entry;
+                }
+            }
+            else
+            {
+                for (size_t i = 0; i < count; ++i)
+                {
+                    T entry;
+                    (*this) & entry;
+                    st.insert( entry );
+                }
+            }
+            this->endArray();
+        }
+
+        template <typename T>
         void operator & (std::vector<T>& vec)
         {
             size_t count = this->IsWriter() ? vec.size() : -1;
@@ -131,12 +157,44 @@ namespace Kernel
             this->endArray();
         }
 
-        /* virtual */ IArchive& operator & (std::map<std::string, float>&);
-        /* virtual */ IArchive& operator & (std::map<float, float>&);
+        template <typename T, typename U>
+        IArchive& operator & (std::map<T, U>& mapping)
+        {
+            size_t count = this->IsWriter() ? mapping.size() : -1;
+
+            this->startArray(count);
+            if (this->IsWriter())
+            {
+                for (auto& entry : mapping)
+                {
+                    T key   = entry.first;
+                    U value = entry.second;
+                    startObject();
+                        labelElement("key"  ) & key;
+                        labelElement("value") & value;
+                    endObject();
+                }
+            }
+            else
+            {
+                for (size_t i = 0; i < count; ++i)
+                {
+                    T key;
+                    U value;
+                    startObject();
+                        labelElement("key"  ) & key;
+                        labelElement("value") & value;
+                    endObject();
+                    mapping[key] = value;
+                }
+            }
+            this->endArray();
+
+            return *this;
+        }
 
         // IDM specific types
         /* virtual */ IArchive& operator & (std::vector<Kernel::suids::suid>&);
-        /* virtual */ IArchive& operator & (std::map<std::string, std::string>&);
 
         template <typename A>
         void serialize(A array[], size_t count)

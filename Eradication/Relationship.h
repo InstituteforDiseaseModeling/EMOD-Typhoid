@@ -19,8 +19,11 @@ namespace Kernel {
 
     class IDMAPI Relationship : public IRelationship
     {
-        friend class IndividualHumanSTI;
-        friend class RelationshipFactory;
+        public:
+            friend class IndividualHumanSTI;
+            friend class RelationshipFactory;
+            DECLARE_QUERY_INTERFACE()
+            IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
         public:
             virtual ~Relationship();
@@ -61,13 +64,14 @@ namespace Kernel {
             static unsigned long int counter; // mpi-node level, maybe not that great an idea
 
         protected:
+            Relationship();
             Relationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner, RelationshipType::Enum type = RelationshipType::TRANSITORY );
 
             IIndividualHumanSTI* male_partner; // change to male_partner and female_partner at some point, but sounds so sterile...
             IIndividualHumanSTI* female_partner;
             suids::suid absent_male_partner_id;
             suids::suid absent_female_partner_id;
-            unsigned long int _id;
+            uint64_t _id;
             suids::suid _suid;
             float rel_timer;
             float rel_duration;
@@ -81,11 +85,11 @@ namespace Kernel {
             RelationshipType::Enum relationship_type;
             suids::suid original_node_id;
             act_prob_vec_t act_prob_vec;
-#pragma warning( pop )
-
             bool using_condom;  // For notifying coital act observers
             IRelationshipManager * relMan;
 
+            DECLARE_SERIALIZABLE(Relationship);
+#pragma warning( pop )
 
     private:
         static void LogRelationship( unsigned int _id, suids::suid _male_partner, suids::suid _female_partner, RelationshipType::Enum _type );
@@ -111,23 +115,44 @@ namespace Kernel {
     {
         public:
             friend class RelationshipFactory;
+            DECLARE_QUERY_INTERFACE()
         protected:
+            TransitoryRelationship();
             TransitoryRelationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner );
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+            DECLARE_SERIALIZABLE(TransitoryRelationship);
+#pragma warning( pop )
     };
 
     class InformalRelationship : public Relationship
     {
         public:
             friend class RelationshipFactory;
+            DECLARE_QUERY_INTERFACE()
         protected:
+            InformalRelationship();
             InformalRelationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner );
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+            DECLARE_SERIALIZABLE(InformalRelationship);
+#pragma warning( pop )
     };
 
     class MarriageRelationship : public Relationship
     {
         public:
             friend class RelationshipFactory;
+            DECLARE_QUERY_INTERFACE()
         protected:
+            MarriageRelationship();
             MarriageRelationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner );
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+            DECLARE_SERIALIZABLE(MarriageRelationship);
+#pragma warning( pop )
     };
 }

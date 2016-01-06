@@ -37,6 +37,12 @@ namespace Kernel
         return *this;
     }
 
+    IArchive& JsonRawWriter::operator&(unsigned char& uc)
+    {
+        m_writer->Uint(uc);
+        return *this;
+    }
+
     IArchive& JsonRawWriter::operator&(int32_t& i32)
     {
         m_writer->Int(i32);

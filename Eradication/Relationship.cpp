@@ -60,9 +60,31 @@ namespace Kernel {
         return false;
     }
 
-#define MALE_PARTNER_ID()             ( male_partner ? male_partner->GetSuid() : absent_male_partner_id )
-#define FEMALE_PARTNER_ID()                ( female_partner    ? female_partner->GetSuid()    : absent_female_partner_id )
+#define MALE_PARTNER_ID()       ( male_partner             ? male_partner->GetSuid() : absent_male_partner_id )
+#define FEMALE_PARTNER_ID()     ( female_partner           ? female_partner->GetSuid()    : absent_female_partner_id )
 #define PARTNERID( individual)  ( GetPartner( individual ) ? GetPartner( individual )->GetSuid() : suids::nil_suid() )
+
+    BEGIN_QUERY_INTERFACE_BODY(Relationship)
+        HANDLE_INTERFACE(IRelationship)
+        HANDLE_ISUPPORTS_VIA(IRelationship)
+    END_QUERY_INTERFACE_BODY(Relationship)
+
+
+    Relationship::Relationship()
+        : male_partner(nullptr)
+        , female_partner(nullptr)
+        , absent_male_partner_id(suids::nil_suid())
+        , absent_female_partner_id(suids::nil_suid())
+        , _suid(suids::nil_suid())
+        , relationship_type()
+        , original_node_id(suids::nil_suid())
+        , rel_duration(0)
+        , rel_timer(0)
+        , start_time(0)
+        , scheduled_end_time(0)
+        , using_condom(false)
+    {
+    }
 
     Relationship::Relationship( IIndividualHumanSTI * male_partnerIn, IIndividualHumanSTI * female_partnerIn, RelationshipType::Enum type )
         : male_partner(male_partnerIn)
@@ -491,6 +513,28 @@ namespace Kernel {
         return prob;
     }
 
+    REGISTER_SERIALIZABLE(Relationship);
+
+    void Relationship::serialize(IArchive& ar, Relationship* obj)
+    {
+        Relationship& rel = *obj;
+        ar.labelElement("absent_male_partner_id"  ) & rel.absent_male_partner_id.data;
+        ar.labelElement("absent_female_partner_id") & rel.absent_female_partner_id.data;
+        ar.labelElement("_id"                     ) & rel._id;
+        ar.labelElement("_suid"                   ) & rel._suid.data;
+        ar.labelElement("rel_timer"               ) & rel.rel_timer;
+        ar.labelElement("rel_duration"            ) & rel.rel_duration;
+        ar.labelElement("start_time"              ) & rel.start_time;
+        ar.labelElement("scheduled_end_time"      ) & rel.scheduled_end_time;
+        ar.labelElement("propertyKey"             ) & rel.propertyKey;
+        ar.labelElement("propertyName"            ) & rel.propertyName;
+        ar.labelElement("force_finish"            ) & rel.force_finish;
+        ar.labelElement("relationship_type"       ) & (uint32_t&)rel.relationship_type;
+        ar.labelElement("original_node_id"        ) & rel.original_node_id.data;
+        ar.labelElement("act_prob_vec"            ) & rel.act_prob_vec;
+        ar.labelElement("using_condom"            ) & rel.using_condom;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // SPECIFIC TYPES OF RELATIONSHIPS HERE //
     ///////////////////////////////////////////////////////////////////////////
@@ -521,6 +565,16 @@ namespace Kernel {
         return p_rel ;
     }
 
+    // ------------------------------------------------------------------------
+    // --- TransitoryRelationship
+    // ------------------------------------------------------------------------
+    BEGIN_QUERY_INTERFACE_DERIVED(TransitoryRelationship, Relationship)
+    END_QUERY_INTERFACE_DERIVED(TransitoryRelationship, Relationship)
+
+    TransitoryRelationship::TransitoryRelationship()
+    : Relationship()
+    {
+    }
 
     TransitoryRelationship::TransitoryRelationship( IIndividualHumanSTI * male_partnerIn, IIndividualHumanSTI * female_partnerIn )
         : Relationship( male_partnerIn, female_partnerIn, RelationshipType::TRANSITORY )
@@ -545,6 +599,24 @@ namespace Kernel {
                 );
     }
 
+    REGISTER_SERIALIZABLE(TransitoryRelationship);
+
+    void TransitoryRelationship::serialize(IArchive& ar, TransitoryRelationship* obj)
+    {
+        Relationship::serialize( ar, obj );
+        TransitoryRelationship& rel = *obj;
+    }
+
+    // ------------------------------------------------------------------------
+    // --- InformalRelationship
+    // ------------------------------------------------------------------------
+    BEGIN_QUERY_INTERFACE_DERIVED(InformalRelationship, Relationship)
+    END_QUERY_INTERFACE_DERIVED(InformalRelationship, Relationship)
+
+    InformalRelationship::InformalRelationship()
+    : Relationship()
+    {
+    }
 
     InformalRelationship::InformalRelationship( IIndividualHumanSTI * male_partnerIn, IIndividualHumanSTI * female_partnerIn )
         : Relationship( male_partnerIn, female_partnerIn, RelationshipType::INFORMAL )
@@ -569,7 +641,24 @@ namespace Kernel {
                   );
     }
 
+    REGISTER_SERIALIZABLE(InformalRelationship);
 
+    void InformalRelationship::serialize(IArchive& ar, InformalRelationship* obj)
+    {
+        Relationship::serialize( ar, obj );
+        InformalRelationship& rel = *obj;
+    }
+
+    // ------------------------------------------------------------------------
+    // --- MarriageRelationship
+    // ------------------------------------------------------------------------
+    BEGIN_QUERY_INTERFACE_DERIVED(MarriageRelationship, Relationship)
+    END_QUERY_INTERFACE_DERIVED(MarriageRelationship, Relationship)
+
+    MarriageRelationship::MarriageRelationship()
+    : Relationship()
+    {
+    }
 
     MarriageRelationship::MarriageRelationship( IIndividualHumanSTI * male_partnerIn, IIndividualHumanSTI * female_partnerIn )
         : Relationship( male_partnerIn, female_partnerIn, RelationshipType::MARITAL )
@@ -592,6 +681,14 @@ namespace Kernel {
                     female_partnerIn->toString().c_str(),
                     rel_timer
                   );
+    }
+
+    REGISTER_SERIALIZABLE(MarriageRelationship);
+
+    void MarriageRelationship::serialize(IArchive& ar, MarriageRelationship* obj)
+    {
+        Relationship::serialize( ar, obj );
+        MarriageRelationship& rel = *obj;
     }
 }
 

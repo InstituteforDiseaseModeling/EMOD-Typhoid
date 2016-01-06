@@ -67,5 +67,7 @@ namespace Kernel
         bool is_circumcised;
 
         std::map< RelationshipType::Enum, SigmoidConfig > STI_blocking_overrides;
+
+        DECLARE_SERIALIZABLE(STIInterventionsContainer);
     };
 }

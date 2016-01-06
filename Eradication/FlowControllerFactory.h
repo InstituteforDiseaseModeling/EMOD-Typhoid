@@ -14,7 +14,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IPairFormationStats.h"
 #include "IPairFormationParameters.h"
 
-namespace Kernel {
+namespace Kernel
+{
+    struct IPairFormationAgent;
 
     class FlowControllerFactory {
     public:

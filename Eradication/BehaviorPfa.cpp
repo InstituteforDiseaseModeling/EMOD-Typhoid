@@ -18,7 +18,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 static const char * _module = "BehaviorPfa";
 
-namespace Kernel {
+namespace Kernel 
+{
+    BEGIN_QUERY_INTERFACE_BODY(BehaviorPfa)
+    END_QUERY_INTERFACE_BODY(BehaviorPfa)
 
     void BehaviorPfa::SetUpdatePeriod( float update_period )
     {
@@ -260,6 +263,27 @@ namespace Kernel {
         return pfa ;
     }
 
+    BehaviorPfa::BehaviorPfa()
+        : m_update_period(0.0f)
+        , m_cum_prob_threshold(0.0f)
+        , m_time_since_last_update(0.0f)
+        , m_all_males()
+        , m_male_population()
+        , m_female_population()
+        , m_population_map()
+        , preference()
+        , desired_flow()
+        , parameters(nullptr)
+        , m_rng(nullptr)
+        , relationship_fn(nullptr)
+        , m_pAssortivity( nullptr )
+        , m_QueueLengthsBefore()
+        , m_QueueLengthsAfter()
+        , new_males()
+        , new_females()
+    {
+    }
+
     BehaviorPfa::BehaviorPfa( const IPairFormationParameters* params, 
                               float updatePeriod, 
                               float selectionThreshold, 
@@ -377,5 +401,43 @@ namespace Kernel {
         {
             rQueueLengths[ Gender::FEMALE ][age_bin_index] = m_female_population.at( age_bin_index ).size() ;
         }
+    }
+
+    REGISTER_SERIALIZABLE(BehaviorPfa);
+
+    void BehaviorPfa::serialize(IArchive& ar, BehaviorPfa* obj)
+    {
+        BehaviorPfa& pfa = *obj;
+        ar.labelElement("m_update_period"         ) & pfa.m_update_period;
+        ar.labelElement("m_cum_prob_threshold"    ) & pfa.m_cum_prob_threshold;
+        ar.labelElement("m_time_since_last_update") & pfa.m_time_since_last_update;
+
+        // preference is a member variable only so we don't allocate the lenght of the vector every time.
+        //ar.labelElement("preference"              ) & pfa.preference;
+
+        ar.labelElement("desired_flow"            ) & pfa.desired_flow;
+        ar.labelElement("m_QueueLengthsBefore"    ) & pfa.m_QueueLengthsBefore;
+        ar.labelElement("m_QueueLengthsAfter"     ) & pfa.m_QueueLengthsAfter;
+        ar.labelElement("new_males"               ) & pfa.new_males;
+        ar.labelElement("new_females"             ) & pfa.new_females;
+
+        //typedef list<IIndividualHumanSTI*> human_list_t;
+        //typedef vector<human_list_t> population_t;
+        //typedef pair<int, human_list_t::iterator> map_entry_t;
+        //typedef map<IIndividualHumanSTI*, map_entry_t> population_map_t;
+
+        //human_list_t m_all_males;
+        //population_t m_male_population;
+        //population_t m_female_population;
+        //population_map_t m_population_map;
+
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // !!! Needs to be set during serialization
+        //const IPairFormationParameters* parameters;
+        //RANDOMBASE* m_rng;
+        //RelationshipCreator relationship_fn;
+        //IAssortivity* m_pAssortivity ;
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 }

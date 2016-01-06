@@ -17,10 +17,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "IArchive.h"
 
-typedef struct {
+struct act_prob_t
+{
+    act_prob_t();
+    static void serialize( Kernel::IArchive& ar, act_prob_t& ap );
+
     unsigned int num_acts;
     float prob_per_act;
-} act_prob_t;
+};
 
 typedef std::vector<act_prob_t> act_prob_vec_t;
 

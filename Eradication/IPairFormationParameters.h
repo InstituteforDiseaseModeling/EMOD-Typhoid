@@ -14,13 +14,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IRelationship.h"
 #include <map>
 #include <vector>
+#include "ISerializable.h"
 
 using namespace std;
 
-namespace Kernel {
+namespace Kernel 
+{
 
-    struct IDMAPI IPairFormationParameters {
-
+    struct IDMAPI IPairFormationParameters : virtual ISerializable
+    {
         virtual RelationshipType::Enum GetRelationshipType() const = 0;
 
         virtual int GetMaleAgeBinCount() const = 0;

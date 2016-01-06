@@ -136,7 +136,6 @@ namespace Kernel
         , incubation_timer(0.0f)
         , infectious_timer(0.0f)
         , infectiousness(0.0f)
-        , contact_shedding_fraction(0.0f)
         , infectiousnessByRoute()
         , StateChange(InfectionStateChange::None)
         , infection_strain(nullptr)
@@ -156,7 +155,6 @@ namespace Kernel
         , incubation_timer(0.0f)
         , infectious_timer(0.0f)
         , infectiousness(0.0f)
-        , contact_shedding_fraction(0.0f)
         , infectiousnessByRoute()
         , StateChange(InfectionStateChange::None)
         , infection_strain(nullptr)
@@ -396,7 +394,6 @@ namespace Kernel
         ar.labelElement("incubation_timer") & infection.incubation_timer;
         ar.labelElement("infectious_timer") & infection.infectious_timer;
         ar.labelElement("infectiousness") & infection.infectiousness;
-// Boost serialization didn't include this member        ar.labelElement("contact_shedding_fraction") & infection.contact_shedding_fraction;
         ar.labelElement("infectiousnessByRoute") & infection.infectiousnessByRoute;
         ar.labelElement("StateChange") & (uint32_t&)infection.StateChange;
         ar.labelElement("infection_strain"); Kernel::serialize(ar, infection.infection_strain);

@@ -26,5 +26,7 @@ namespace Kernel
 
         // additional members of airborne susceptibility
         float demographic_risk;
+
+        DECLARE_SERIALIZABLE(SusceptibilitySTI);
     };
 }

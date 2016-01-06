@@ -39,6 +39,12 @@ namespace Kernel
         return *this;
     }
 
+    IArchive& JsonRawReader::operator&(unsigned char& uc)
+    {
+        uc = (*m_json)[m_index++].GetUint();
+        return *this;
+    }
+
     IArchive& JsonRawReader::operator&(int32_t& i32)
     {
         i32 = (*m_json)[m_index++].GetInt();

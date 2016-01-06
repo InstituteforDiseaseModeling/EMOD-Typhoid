@@ -30,9 +30,7 @@ namespace Kernel
     {
     };
 
-    class MaleCircumcision : 
-        public ICircumcision
-        , public BaseIntervention
+    class MaleCircumcision : public BaseIntervention, public ICircumcision
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, MaleCircumcision, IDistributableIntervention)
@@ -41,12 +39,14 @@ namespace Kernel
         MaleCircumcision();
         virtual ~MaleCircumcision() { }
 
-        bool Configure( const Configuration * config );
-
+        virtual bool Configure( const Configuration * config );
 
         // IDistributableIntervention
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
         virtual void SetContextTo(IIndividualHumanContext *context);
         virtual void Update(float dt);
+
+    protected:
+        DECLARE_SERIALIZABLE(MaleCircumcision);
     };
 }

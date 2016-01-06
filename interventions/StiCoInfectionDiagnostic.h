@@ -27,5 +27,7 @@ namespace Kernel
 
     protected:
         virtual bool positiveTestResult();
+
+        DECLARE_SERIALIZABLE(StiCoInfectionDiagnostic);
     };
 }

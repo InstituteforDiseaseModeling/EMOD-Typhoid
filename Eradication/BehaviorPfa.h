@@ -22,6 +22,8 @@ namespace Kernel {
 
     class IDMAPI BehaviorPfa : public IPairFormationAgent 
     {
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
+        DECLARE_QUERY_INTERFACE();
     public:
         static IPairFormationAgent* CreatePfa( const Configuration* pConfig,
                                                const IPairFormationParameters* params,
@@ -57,13 +59,8 @@ namespace Kernel {
         // ---------------------------
         virtual bool Configure(const Configuration *config) override;
 
-        // ---------------------
-        // --- ISupport Methods
-        // ---------------------
-        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) override { return Kernel::e_NOINTERFACE; }
-        virtual int32_t AddRef()  override { return -1 ; }
-        virtual int32_t Release() override { return -1 ; }
     protected:
+        BehaviorPfa();
         BehaviorPfa( const IPairFormationParameters*, 
                      float updatePeriod, 
                      float selectionThreshold,
@@ -110,6 +107,8 @@ namespace Kernel {
         // DEBUGGING/VALIDATION
         vector<int> new_males;
         vector<int> new_females;
+
+        DECLARE_SERIALIZABLE(BehaviorPfa);
 #pragma warning( pop )
     };
 }

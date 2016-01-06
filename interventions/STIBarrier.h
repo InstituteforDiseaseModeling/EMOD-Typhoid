@@ -56,5 +56,7 @@ namespace Kernel
         float rate;
         RelationshipType::Enum rel_type;
         ISTIBarrierConsumer *ibc;
+
+        DECLARE_SERIALIZABLE(STIBarrier);
     };
 }

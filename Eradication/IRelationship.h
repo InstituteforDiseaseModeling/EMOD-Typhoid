@@ -30,7 +30,7 @@ namespace Kernel
 
     struct IRelationshipManager;
 
-    struct IDMAPI IRelationship
+    struct IDMAPI IRelationship : ISerializable
     {
         virtual IIndividualHumanSTI* MalePartner() const = 0;
         virtual IIndividualHumanSTI* FemalePartner() const = 0;

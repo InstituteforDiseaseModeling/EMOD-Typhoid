@@ -13,6 +13,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HIVEnums.h"
 #include "IRelationship.h"
 #include "SimulationEnums.h"        // For Gender
+#include "ISerializable.h"
+#include "IArchive.h"
 
 namespace Kernel
 {
@@ -30,7 +32,9 @@ namespace Kernel
         virtual bool Configure( const ::Configuration *json );
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
 
+        static void serialize( Kernel::IArchive& ar, STINetworkParameters& params );
     protected:
+        STINetworkParameters();
 
         std::string key_colon_val;
 

@@ -10258,7 +10258,8 @@
 				},
 				"ModifyStiCoInfectionStatus" : {
 					"Sim_Types" : [
-						"*"
+						"STI_SIM",
+						"HIV_SIM"
 					],
 					"New_STI_CoInfection_Status" : {
 						"description" : "Determines whether to apply STI co-infection, or cure/remove STI co-infection.When called with 1, it sets the co-infection status to true. When called with 0, it sets the co-infection status to false.",

@@ -18,7 +18,8 @@ namespace Kernel {
     class IDMAPI PairFormationParametersImpl : public IPairFormationParameters,
                                                public JsonConfigurable
     {
-
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
+        DECLARE_QUERY_INTERFACE();
     public:
         static IPairFormationParameters* CreateParameters( RelationshipType::Enum relType,
                                                            const Configuration* pConfig,
@@ -56,11 +57,9 @@ namespace Kernel {
         // --- ISupport Methods
         // ---------------------
         virtual bool Configure( const Configuration* inputJson );
-        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) { return Kernel::e_NOINTERFACE; }
-        virtual int32_t AddRef()  { return -1 ; }
-        virtual int32_t Release() { return -1 ; }
 
     protected:
+        PairFormationParametersImpl();
         PairFormationParametersImpl( RelationshipType::Enum relType, float base_rate, float rate_ratio_male, float rate_ratio_female );
 
         virtual ~PairFormationParametersImpl();
@@ -98,6 +97,8 @@ namespace Kernel {
         map<int, vector<float>> marginal_values;
 
         float base_pair_formation_rate;
+
+        DECLARE_SERIALIZABLE(PairFormationParametersImpl);
 #pragma warning( pop )
     };
 }

@@ -1148,42 +1148,63 @@ namespace Kernel
         //LOG_DEBUG_F( "%s: returning %f from Sigmoid::vWAHS( %f, %f, %f, %f, %f )\n", __FUNCTION__, (float) prob, year, probs.midyear, probs.rate, probs.early, probs.late );
         return prob;
     }
-}
 
+    REGISTER_SERIALIZABLE(IndividualHumanSTI);
 
-#if 0
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanSTI& human, const unsigned int  file_version )
+    void serialize_relationships( IArchive& ar, RelationshipSet_t& rel_set )
     {
-        // Register derived types
-        ar.template register_type<InfectionSTI>();
-        ar.template register_type<SusceptibilitySTI>();
+        size_t count = ar.IsWriter() ? rel_set.size() : -1;
 
-        // Serialize fields - N/A
-        ar & human.max_relationships;
-        ar & human.queued_relationships;
-        ar & human.active_relationships;
-        ar & human.remote_relationships;
-        ar & human.promiscuity_flags;
-        ar & human.sexual_debut_age;
-        //ar & human.coInfectiveFactor;
-        ar & human.transmissionInterventionsDisabled;
-        ar & human.relationshipSlots;
-        ar & human.delay_between_adding_relationships_timer;
-        ar & human.num_lifetime_relationships;
-        ar & human.last_6_month_relationships;
-        //ar & humna.slot2RelationshipDebugMap; // for debug only
-        ar & human.age_for_transitory_stats;
-        ar & human.age_for_informal_stats;
-        ar & human.age_for_marital_stats;
-        ar & human.transitory_eligibility;
-        ar & human.informal_eligibility;
-        ar & human.marital_elibigility;
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for( IRelationship* p_rel : rel_set )
+            {
+                ar & p_rel;
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                IRelationship* p_rel = nullptr;
+                ar & p_rel;
+                rel_set.insert( p_rel );
+            }
+        }
+        ar.endArray();
+    }
 
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::IndividualHuman>(human);
+    void IndividualHumanSTI::serialize(IArchive& ar, IndividualHumanSTI* obj)
+    {
+        size_t rel_count = RelationshipType::COUNT;
+
+        IndividualHuman::serialize( ar, obj );
+        IndividualHumanSTI& human_sti = *obj;
+
+        ar.labelElement("net_params"                              ) & human_sti.net_params;
+        ar.labelElement("relationships"                           ); serialize_relationships( ar, human_sti.relationships );
+        ar.labelElement("max_relationships"                       ); ar.serialize( human_sti.max_relationships,    rel_count );
+        ar.labelElement("queued_relationships"                    ); ar.serialize( human_sti.queued_relationships, rel_count );
+        ar.labelElement("active_relationships"                    ); ar.serialize( human_sti.active_relationships, rel_count );
+        ar.labelElement("remote_relationships"                    ); ar.serialize( human_sti.remote_relationships, rel_count );
+        ar.labelElement("promiscuity_flags"                       ) & human_sti.promiscuity_flags;
+        ar.labelElement("sexual_debut_age"                        ) & human_sti.sexual_debut_age;
+        ar.labelElement("co_infective_factor"                     ) & human_sti.co_infective_factor;
+        ar.labelElement("has_other_sti_co_infection"              ) & human_sti.has_other_sti_co_infection;
+        ar.labelElement("transmissionInterventionsDisabled"       ) & human_sti.transmissionInterventionsDisabled;
+        ar.labelElement("relationshipSlots"                       ) & human_sti.relationshipSlots;
+        ar.labelElement("delay_between_adding_relationships_timer") & human_sti.delay_between_adding_relationships_timer;
+        ar.labelElement("potential_exposure_flag"                 ) & human_sti.potential_exposure_flag;
+        ar.labelElement("relationships_at_death"                  ); serialize_relationships( ar, human_sti.relationships_at_death );
+        ar.labelElement("num_lifetime_relationships"              ) & human_sti.num_lifetime_relationships;
+        ar.labelElement("last_6_month_relationships"              ) & human_sti.last_6_month_relationships;
+        ar.labelElement("slot2RelationshipDebugMap"               ) & human_sti.slot2RelationshipDebugMap;
+        ar.labelElement("age_for_transitory_stats"                ) & human_sti.age_for_transitory_stats;
+        ar.labelElement("age_for_informal_stats"                  ) & human_sti.age_for_informal_stats;
+        ar.labelElement("age_for_marital_stats"                   ) & human_sti.age_for_marital_stats;
+        ar.labelElement("transitory_eligibility"                  ) & human_sti.transitory_eligibility;
+        ar.labelElement("informal_eligibility"                    ) & human_sti.informal_eligibility;
+        ar.labelElement("marital_elibigility"                     ) & human_sti.marital_elibigility;
     }
 }
-#endif

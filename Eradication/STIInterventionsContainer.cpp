@@ -191,6 +191,59 @@ namespace Kernel
         }
         ihsti->ClearStiCoInfectionState();
     }
+
+    REGISTER_SERIALIZABLE(STIInterventionsContainer);
+
+    void serialize_sigmoid( IArchive& ar, SigmoidConfig& sigmoid )
+    {
+        ar.startObject();
+            ar.labelElement("early"  ) & sigmoid.early;
+            ar.labelElement("late"   ) & sigmoid.late;
+            ar.labelElement("midyear") & sigmoid.midyear;
+            ar.labelElement("rate"   ) & sigmoid.rate;
+        ar.endObject();
+    }
+
+    void serialize_overrides( IArchive& ar, std::map< RelationshipType::Enum, SigmoidConfig >& blocking_overrides )
+    {
+        size_t count = ar.IsWriter() ? blocking_overrides.size() : -1;
+
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto& entry : blocking_overrides)
+            {
+                std::string key = RelationshipType::pairs::lookup_key( entry.first );
+                ar.startObject();
+                    ar.labelElement("key") & key;
+                    ar.labelElement("value"); serialize_sigmoid( ar, entry.second );
+                ar.endObject();
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                std::string key;
+                SigmoidConfig value;
+                ar.startObject();
+                    ar.labelElement("key") & key;
+                    ar.labelElement("value"); serialize_sigmoid( ar, value );
+                ar.endObject();
+                RelationshipType::Enum rt = (RelationshipType::Enum)RelationshipType::pairs::lookup_value( key.c_str() );
+                blocking_overrides[ rt ] = value;
+            }
+        }
+        ar.endArray();
+    }
+
+    void STIInterventionsContainer::serialize(IArchive& ar, STIInterventionsContainer* obj)
+    {
+        InterventionsContainer::serialize( ar, obj );
+        STIInterventionsContainer& container = *obj;
+        ar.labelElement("is_circumcised") & container.is_circumcised;
+        ar.labelElement("STI_blocking_overrides"); serialize_overrides( ar, container.STI_blocking_overrides );
+    }
 }
 
 #if 0

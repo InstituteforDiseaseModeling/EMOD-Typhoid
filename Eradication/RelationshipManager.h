@@ -18,9 +18,12 @@ namespace Kernel
     class ReportSTI;
     class RelationshipManager : public IRelationshipManager
     {
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
+        DECLARE_QUERY_INTERFACE();
+
         friend class ReportSTI;
     public:
-        RelationshipManager( INodeContext* parent );
+        RelationshipManager( INodeContext* parent = nullptr );
         void Update( list<IIndividualHuman*>& individualHumans, ITransmissionGroups* groups, float dt ); 
         IRelationship * GetRelationshipById( unsigned int relId );
         const tNodeRelationshipType& GetNodeRelationships() const;
@@ -36,7 +39,7 @@ namespace Kernel
 
     protected:
         tNodeRelationshipType nodeRelationships;
-        std::map< const std::string, PropertyValueList_t > relationshipListsForMP;
+        std::map< std::string, PropertyValueList_t > relationshipListsForMP;
         INodeContext* _node;
         ITransmissionGroups * nodePools;
         std::list<IRelationshipManager::callback_t> new_relationship_observers;
@@ -45,5 +48,7 @@ namespace Kernel
         std::map< std::string, std::list<unsigned int> > dead_relationships_by_type;
 
         void notifyObservers(std::list<IRelationshipManager::callback_t>&, IRelationship*);
+
+        DECLARE_SERIALIZABLE(RelationshipManager);
     };
 }

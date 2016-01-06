@@ -33,6 +33,8 @@ namespace Kernel
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         EventTrigger negative_diagnosis_event;
+
+        DECLARE_SERIALIZABLE(STIIsPostDebut);
 #pragma warning( pop )
     };
 }

@@ -280,9 +280,7 @@ namespace Kernel
 
     void SimpleDiagnostic::serialize(IArchive& ar, SimpleDiagnostic* obj)
     {
-        ar.labelElement("cost_per_unit") & obj->cost_per_unit;
-        ar.labelElement("expired") & obj->expired;
-
+        BaseIntervention::serialize( ar, obj );
         SimpleDiagnostic& diagnostic = *obj;
         ar.labelElement("diagnostic_type") & diagnostic.diagnostic_type;
         ar.labelElement("base_specificity"); diagnostic.base_specificity.serialize(ar);

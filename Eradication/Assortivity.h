@@ -33,8 +33,10 @@ namespace Kernel
 
     class IDMAPI Assortivity : public IAssortivity
     {
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
+        DECLARE_QUERY_INTERFACE();
     public:
-        Assortivity( RelationshipType::Enum relType, RANDOMBASE *prng );
+        Assortivity( RelationshipType::Enum relType=RelationshipType::TRANSITORY, RANDOMBASE *prng=nullptr );
         virtual ~Assortivity();
 
         std::string GetPropertyName() const { return m_PropertyName ; }
@@ -42,25 +44,19 @@ namespace Kernel
         // -------------------------
         // --- IAssortivity Methods
         // -------------------------
-        virtual bool Configure(const Configuration *config) ;
+        virtual bool Configure(const Configuration *config) override;
 
         // Update assortivity parameters/controls.
-        virtual void Update( const IdmDateTime& rCurrentTime, float dt ) {};
+        virtual void Update( const IdmDateTime& rCurrentTime, float dt ) override {};
 
         // Using the attributes of pPartnerA and the attributes of the potential partners, 
         // select a partner from the potentialPartnerList.
         // Return nullptr if a suitable partner was not found.
         // nullptr can be returned even if the list is not empty.
         virtual IIndividualHumanSTI* SelectPartner( const IIndividualHumanSTI* pPartnerA,
-                                                    const list<IIndividualHumanSTI*>& potentialPartnerList );
+                                                    const list<IIndividualHumanSTI*>& potentialPartnerList ) override;
 
-        // ---------------------
-        // --- ISupport Methods
-        // ---------------------
-        virtual Kernel::QueryResult QueryInterface(Kernel::iid_t iid, void **ppvObject) { return Kernel::e_NOINTERFACE; }
-        virtual int32_t AddRef()  { return -1 ; }
-        virtual int32_t Release() { return -1 ; }
-
+        virtual void SetParameters( RANDOMBASE* prng ) override;
     protected:
         typedef std::function<std::string( const Assortivity*, const IIndividualHumanSTI*)> tGetStringValueFunc ;
 
@@ -105,6 +101,8 @@ namespace Kernel
         std::string                     m_PropertyName ;
         std::vector<std::string>        m_Axes ;
         std::vector<std::vector<float>> m_WeightingMatrix ;
+
+        DECLARE_SERIALIZABLE(Assortivity);
 #pragma warning( pop )
     };
 }

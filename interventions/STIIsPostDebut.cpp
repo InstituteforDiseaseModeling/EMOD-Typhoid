@@ -90,14 +90,13 @@ namespace Kernel
         }
         expired = true;
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, STIIsPostDebut& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(STIIsPostDebut);
+
+    void STIIsPostDebut::serialize(IArchive& ar, STIIsPostDebut* obj)
     {
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+        SimpleDiagnostic::serialize( ar, obj );
+        STIIsPostDebut& debut = *obj;
+        ar.labelElement("negative_diagnosis_event") & debut.negative_diagnosis_event;
     }
 }
-#endif

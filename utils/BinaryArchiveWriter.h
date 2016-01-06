@@ -20,6 +20,7 @@ namespace Kernel
         virtual IArchive& labelElement(const char*) override;
 
         virtual IArchive& operator&(bool&) override;
+        virtual IArchive& operator&(unsigned char&) override;
         virtual IArchive& operator&(int32_t&) override;
         virtual IArchive& operator&(int64_t&) override;
         virtual IArchive& operator&(uint32_t&) override;
@@ -27,7 +28,7 @@ namespace Kernel
         virtual IArchive& operator&(float&) override;
         virtual IArchive& operator&(double&) override;
         virtual IArchive& operator&(std::string&) override;
-        virtual IArchive& operator & (jsonConfigurable::ConstrainedString&) override;
+        virtual IArchive& operator&(jsonConfigurable::ConstrainedString&) override;
 
         virtual bool HasError() override;
         virtual bool IsWriter() override;

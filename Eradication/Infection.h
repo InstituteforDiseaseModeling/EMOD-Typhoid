@@ -94,8 +94,6 @@ namespace Kernel
         float infectious_timer;
         float infectiousness;
 
-        float contact_shedding_fraction;            // fraction of viral shedding to contact type groups, currently only used for polio
-
         map<string, float> infectiousnessByRoute; //used in multi-route simulations (e.g. environmental, polio)
         
         InfectionStateChange::_enum StateChange;    //  Lets individual know something has happened

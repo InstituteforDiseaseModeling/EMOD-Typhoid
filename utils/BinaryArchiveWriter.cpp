@@ -41,6 +41,15 @@ namespace Kernel
         return *this;
     }
 
+    IArchive& BinaryArchiveWriter::operator&(unsigned char& uc)
+    {
+        // Use a uint32_t so we stay on a 4-byte boundary.
+        uint32_t value = uc;
+        push(value);
+
+        return *this;
+    }
+
     IArchive& BinaryArchiveWriter::operator&(int32_t& i32)
     {
         push(i32);
