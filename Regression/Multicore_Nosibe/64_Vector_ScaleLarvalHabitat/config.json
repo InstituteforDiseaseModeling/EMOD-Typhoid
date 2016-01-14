@@ -29,6 +29,8 @@
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
         "Config_Name": "64_Vector_ScaleLarvalHabitat -- multicore -- Madagascar_Nosibe", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
+        "Default_Geography_Initial_Node_Population": 1000, 
+        "Default_Geography_Torus_Size": 10, 
         "Demographics_Filename": "NO_DEFAULT_DEMOGRAPHICS_FILENAME", 
         "Demographics_Filenames": [
             "Madagascar_Nosibe_2.5arcmin_demographics.json", 

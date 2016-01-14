@@ -48,6 +48,8 @@
         "Config_Name": "99_Malaria_Intervention_RTSSVaccine -- multicore -- Madagascar_Nosibe", 
         "Cytokine_Gametocyte_Inactivation": 0.05, 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
+        "Default_Geography_Initial_Node_Population": 1000, 
+        "Default_Geography_Torus_Size": 10, 
         "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json", 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "SATURATION_AT_OVIPOSITION", 
