@@ -36,7 +36,7 @@ namespace Kernel
         virtual void InitializeFlags(const ::Configuration *config);  // override in derived classes to instantiate correct flag classes
 
     private:
-        /* clorton virtual */ void Initialize(const ::Configuration *config) /* clorton override */;
+        virtual void Initialize(const ::Configuration *config) override;
 
         virtual ISimulationContext *GetContextPointer() override;
     };

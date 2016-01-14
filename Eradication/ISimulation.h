@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <string>
 #include "ISerializable.h"
+#include "Configuration.h"
 #include "IdmDateTime.h"
 #include "IdmApi.h"
 
@@ -20,6 +21,7 @@ namespace Kernel
 
     struct IDMAPI ISimulation : ISerializable
     {
+        virtual void Initialize(const ::Configuration *config) = 0;
         virtual bool  Populate() = 0;
         virtual void  Update(float time_step) = 0;
         virtual int  GetSimulationTimestep() const = 0;

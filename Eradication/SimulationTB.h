@@ -21,7 +21,7 @@ namespace Kernel
     public:
         static   SimulationTB *CreateSimulation();
         static   SimulationTB *CreateSimulation(const ::Configuration *config);
-        virtual void Initialize( const ::Configuration *config );
+        virtual void Initialize( const ::Configuration *config ) override;
         virtual ~SimulationTB(void);
 
     protected:

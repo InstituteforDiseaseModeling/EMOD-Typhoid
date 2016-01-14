@@ -27,8 +27,8 @@ namespace Kernel
 
     protected:
 
-        virtual void Initialize();
-        virtual void Initialize(const ::Configuration *config);
+        virtual void Initialize() override;
+        virtual void Initialize(const ::Configuration *config) override;
         virtual bool Configure( const ::Configuration *json );
         virtual void Reports_CreateBuiltIn();
 

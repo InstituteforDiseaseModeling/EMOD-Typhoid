@@ -47,8 +47,8 @@ namespace Kernel
         static float base_year;
 
     protected:
-        virtual void Initialize();
-        virtual void Initialize(const ::Configuration *config);
+        virtual void Initialize() override;
+        virtual void Initialize(const ::Configuration *config) override;
         static bool ValidateConfiguration(const ::Configuration *config);
 
         // Allows correct type of Node to be added by classes derived from Simulation

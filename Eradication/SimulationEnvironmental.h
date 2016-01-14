@@ -23,8 +23,8 @@ namespace Kernel
 
     protected:
         SimulationEnvironmental();
-        /* clorton virtual */ void Initialize() /* clorton override */;
-        /* clorton virtual */ void Initialize(const ::Configuration *config) /* clorton override */;
+        virtual void Initialize() override;
+        virtual void Initialize(const ::Configuration *config) override;
 
         static bool ValidateConfiguration(const ::Configuration *config);
 

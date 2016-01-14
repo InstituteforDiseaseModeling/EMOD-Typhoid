@@ -67,7 +67,7 @@ namespace Kernel
         float awarenessdefaultcost[AWARENESS_ARRAY_LENGTH];
         float netdefaultcost[BEDNET_ARRAY_LENGTH];
 
-        void Initialize(const ::Configuration *config);
+        virtual void Initialize(const ::Configuration *config) override;
 
         SimulationVector();
         static bool ValidateConfiguration(const ::Configuration *config);

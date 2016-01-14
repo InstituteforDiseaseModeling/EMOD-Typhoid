@@ -117,77 +117,91 @@ bool call_templated_functor_with_sim_type_hack(ControllerExecuteFunctorT &cef)
 
 #include <functional>
 
-void GenerateFilename( char* filename, size_t length, uint32_t time_step )
+char* GenerateFilename( uint32_t time_step )
 {
+    size_t length = EnvPtr->OutputPath.size() + 32;
+    char* filename = (char*)malloc( length );
+    release_assert( filename );
 #ifdef WIN32
-    sprintf_s( filename, MAX_PATH, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
+    sprintf_s( filename, length, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
 #else
     sprintf( filename, "%s\\state-%04d.dtk", EnvPtr->OutputPath.c_str(), time_step );
 #endif
+
+    return filename;
 }
 
-bool OpenFileForWriting( const char* filename, FILE** pf )
+FILE* OpenFileForWriting( const char* filename )
 {
-    bool opened; // = true;
+    FILE* f = nullptr;
+    bool opened;
     errno = 0;
 #ifdef WIN32
-    opened = (fopen_s( pf, filename, "wb") == 0);
+    opened = (fopen_s( &f, filename, "wb") == 0);
 #else
-    *pf = fopen( filename, "wb");
-    opened = (*pf != nullptr);
+    f = fopen( filename, "wb");
+    opened = (f != nullptr);
 #endif
 
     if ( !opened )
     {
         LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
+        // TODO clorton - throw exception here
+        release_assert( opened );
     }
 
-    return opened;
+    return f;
 }
 
 void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool compress)
 {
-    char filename[256];
-    GenerateFilename( filename, sizeof filename, time_step );
+    char* filename = GenerateFilename( time_step );
     LOG_INFO_F( "Writing state to '%s'\n", filename );
-    FILE* f = nullptr;
-    if ( OpenFileForWriting( filename, &f ) )
+    FILE* f = OpenFileForWriting( filename );
+
+    // "IDTK"
+    fwrite( "IDTK", 1, 4, f );
+    // header size/offset to data
+    std::ostringstream temp_stream;
+    std::time_t now = std::time(nullptr);
+    struct tm gmt;
+    gmtime_s( &gmt, &now );
+    char asc_time[256];
+    strftime( asc_time, sizeof asc_time, "%a %b %d %H:%M:%S %Y", &gmt );
+
+    std::string compressed;
+    if ( compress )
     {
-        // "IDTK"
-        fwrite( "IDTK", 1, 4, f );
-        // header size/offset to data
-        std::ostringstream temp_stream;
-        std::time_t now = std::time(nullptr);
-        struct tm gmt;
-        gmtime_s( &gmt, &now );
-        char asc_time[256];
-        strftime( asc_time, sizeof asc_time, "%a %b %d %H:%M:%S %Y", &gmt );
-        temp_stream << '{'
-               << "\"metadata\":{"
-               << "\"version\":" << 1 << ','
-               << "\"date\":" << '"' << asc_time << "\","
-               << "\"compressed\":" << (compress ? "true" : "false")
-               << '}'
-               << '}';
-        std::string header = temp_stream.str();
-        uint32_t header_size = header.size();
-        fwrite( &header_size, sizeof(header_size), 1, f );
-        // header (uncompressed JSON)
-        fwrite( header.c_str(), 1, header_size, f );
-        // data
-        if (!compress)
-        {
-            fwrite( data, 1, length, f );
-        }
-        else
-        {
-            std::string compressed;
-            snappy::Compress( data, length, &compressed );
-            fwrite( compressed.c_str(), 1, compressed.size(), f );
-        }
-        fflush( f );
-        fclose( f );
+        snappy::Compress( data, length, &compressed );
     }
+
+    temp_stream << '{'
+           << "\"metadata\":{"
+           << "\"version\":" << 1 << ','
+           << "\"date\":" << '"' << asc_time << "\","
+           << "\"compressed\":" << (compress ? "true" : "false") << ','
+           << "\"bytecount\":" << (compress ? compressed.size() : length)
+           << '}'
+           << '}';
+    std::string header = temp_stream.str();
+    uint32_t header_size = header.size();
+    fwrite( &header_size, sizeof header_size, 1, f );
+    // header (uncompressed JSON)
+    fwrite( header.c_str(), 1, header_size, f );
+    // data
+    if ( !compress )
+    {
+        fwrite( data, 1, length, f );
+    }
+    else
+    {
+        fwrite( compressed.c_str(), 1, compressed.size(), f );
+    }
+
+    fflush( f );
+    fclose( f );
+
+    free( filename );
 }
 
 void StepSimulation(ISimulation* sim, float dt);

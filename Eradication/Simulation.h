@@ -85,12 +85,12 @@ namespace Kernel
         virtual std::vector<IReport*>& GetReports() override;
         virtual std::vector<IReport*>& GetReportsNeedingIndividualData() override;
 
+        virtual void Initialize(const ::Configuration *config);
 
     protected:
 
         Simulation();
         virtual void Initialize();  // for serialization
-        virtual void Initialize(const ::Configuration *config);
 
         static bool ValidateConfiguration(const ::Configuration *config);
 

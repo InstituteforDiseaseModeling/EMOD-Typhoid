@@ -31,8 +31,8 @@ namespace Kernel
     protected:
         static bool ValidateConfiguration(const ::Configuration *config);
 
-        void Initialize();
-        void Initialize(const ::Configuration *config);
+        virtual void Initialize() override;
+        virtual void Initialize(const ::Configuration *config) override;
 
         // Allows correct type of community to be added by derived class Simulations
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory) override;

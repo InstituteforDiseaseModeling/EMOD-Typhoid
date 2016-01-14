@@ -40,16 +40,181 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #endif
 
+#include "JsonObject.h"     // for CreateJsonObjAdapter and interface declarations for .dtk file header
+#include "snappy.h"         // snappy Uncompress()
+#include "JsonFullReader.h" // for serialized population de-serialization
+
 #include "DllLoader.h"
 
-static const char * _module = "SimulationFactory";
+static const char* _module = "SimulationFactory";
+
+FILE* OpenFileForReading( const char* filename )
+{
+    FILE* f = nullptr;
+    bool opened;
+    errno = 0;
+#ifdef WIN32
+    opened = (fopen_s( &f, filename, "rb" ) == 0);
+#else
+    f = fopen( filename, "rb" );
+    opened = (f != nullptr);
+#endif
+
+    if ( !opened )
+    {
+        LOG_ERR_F( "Couldn't open serialized population file '%s' for reading (%d).\n", filename, errno );
+        // TODO clorton - throw exception here, couldn't open specified serialized population file for reading
+        release_assert( opened );
+    }
+
+    return f;
+}
+
+uint32_t ReadMagicNumber( FILE* f )
+{
+    uint32_t magic;
+    size_t count = 1;
+    size_t size = sizeof magic;
+    size_t bytes_read = fread( &magic, count, size, f );
+    if ( bytes_read != (count * size) )
+    {
+        LOG_ERR_F( "Only read %d bytes from serialized population file reading magic number. Wanted %d.\n", bytes_read, (count * size) );
+        // TODO clorton - throw exception here
+        magic = 0x0BADF00D;
+        release_assert( bytes_read == (count * size) );
+    }
+
+    return magic;
+}
+
+void CheckMagicNumber( FILE* f )
+{
+    uint32_t magic = ReadMagicNumber( f );
+    bool valid = (magic == *(uint32_t*)"IDTK");
+    if (!valid)
+    {
+        LOG_ERR_F( "Serialized population file has wrong magic number, expected 0x%08X, got %08X.\n", *(uint32_t*)"IDTK", magic );
+        // TODO clorton - throw exception here
+        release_assert( valid );
+    }
+}
+
+uint32_t ReadHeaderSize( FILE* f )
+{
+    uint32_t header_size;
+    size_t count = 1;
+    size_t size = sizeof header_size;
+    size_t bytes_read = fread( &header_size, count, size, f );
+    if ( bytes_read != (count * size) )
+    {
+        LOG_ERR_F( "Only read %d bytes from serialized population file reading header size. Wanted %d.\n", bytes_read, (count * size) );
+        // TODO clorton - throw exception here
+        header_size = 0;
+        release_assert( bytes_read == (count * size) );
+    }
+
+    return header_size;
+}
+
+void CheckHeaderSize( uint32_t header_size )
+{
+    if ( header_size == 0 )
+    {
+        LOG_ERR("Serialized population header size is 0, which is not valid.\n");
+        // TODO clorton - throw execption here
+        release_assert( header_size );
+    }
+}
+
+void ReadHeader( FILE* f, uint32_t& byte_count, bool& is_compressed )
+{
+    uint32_t count = ReadHeaderSize( f );
+    CheckHeaderSize( count );
+    char* header = (char*)malloc( count + 1 );
+    release_assert( header );
+    size_t size = 1;
+    size_t bytes_read = fread( header, size, count, f );
+    if ( bytes_read != (count * size) )
+    {
+        LOG_ERR_F( "Only read %d bytes from serialized population file reading header. Wanted %d.\n", bytes_read, (count * size ) );
+        // TODO clorton - throw exception here
+        release_assert( bytes_read == (count * size) );
+    }
+    header[count] = '\0';
+
+    Kernel::IJsonObjectAdapter* adapter = Kernel::CreateJsonObjAdapter();
+    adapter->Parse( header );
+    // TODO clorton - wrap this with try/catch for JSON errors
+    auto metadata = (*adapter)["metadata"];
+    byte_count = (*metadata).GetUint( "bytecount" );
+    is_compressed = (*metadata).GetBool( "compressed" );
+
+    delete adapter;
+    free( header );
+}
+
+char* ReadPayload( FILE* f, uint32_t byte_count )
+{
+    char* payload = (char*)malloc( byte_count );
+    release_assert( payload );
+    size_t bytes_read = fread( payload, 1, byte_count, f );
+    if ( bytes_read != byte_count )
+    {
+        LOG_ERR_F( "Only read %d bytes from serialized population file reading payload. Wanted %d.\n", bytes_read, byte_count );
+        // TODO clorton - throw exception here
+        release_assert( bytes_read == byte_count );
+    }
+
+    return payload;
+}
+
+Kernel::ISimulation* LoadIdtkFile( const char* filename )
+{
+    Kernel::ISimulation* newsim = nullptr;
+
+    FILE* f = OpenFileForReading( filename );
+    CheckMagicNumber( f );
+    uint32_t byte_count;
+    bool is_compressed;
+    ReadHeader( f, byte_count, is_compressed );
+
+    char* payload = ReadPayload( f, byte_count );
+
+    const char* data;
+    std::string uncompressed;
+    if ( is_compressed )
+    {
+        snappy::Uncompress( payload, byte_count, &uncompressed );
+        data = uncompressed.c_str();
+    }
+    else
+    {
+        data = payload;
+    }
+
+    Kernel::IArchive* reader = static_cast<Kernel::IArchive*>(new Kernel::JsonFullReader( data ));
+    (*reader).labelElement( "simulation" ) & newsim;
+
+    delete reader;
+    delete payload;
+
+    return newsim;
+}
 
 namespace Kernel
 {
-    ISimulation * SimulationFactory::CreateSimulation()
+    ISimulation* SimulationFactory::CreateSimulation()
     {
+        ISimulation* newsim = nullptr;
 
-        ISimulation * newsim = nullptr;
+        if ( CONFIG_PARAMETER_EXISTS( EnvPtr->Config, "Serialized_Population_Filename" ) )
+        {
+            std::string filename = GET_CONFIG_STRING( EnvPtr->Config, "Serialized_Population_Filename" );
+            newsim = LoadIdtkFile( filename.c_str() );
+            newsim->Initialize( EnvPtr->Config );
+            return newsim;
+        }
+
         std::string sSimType;
 
         try

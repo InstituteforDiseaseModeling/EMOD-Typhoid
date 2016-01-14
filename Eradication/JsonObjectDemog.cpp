@@ -9,9 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <stdafx.h>
 #include <cstdio>
 #include <string>
-#include <vector>
-#include <iostream>
-#include <time.h>
 #include <assert.h>
 
 #include <sstream>
@@ -23,13 +20,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "JsonObjectDemog.h"
 
 #include "rapidjson/prettywriter.h" // for stringify JSON
-#include "rapidjson/filestream.h"   // wrapper of C stream for prettywriter as output
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 
-
 #pragma warning(disable : 4996) //ignore depracation warning about strcpy
-
 
 static const char* _module = "JsonObjectDemog";
 
@@ -315,7 +309,7 @@ namespace Kernel {
         }
     }
 
-    JsonObjectDemog JsonObjectDemog::GetObject(const char* key) const
+    JsonObjectDemog JsonObjectDemog::GetJsonObject(const char* key) const
     {
         assert(m_pValue);
         rapidjson::Value& r_value = *((rapidjson::Value*)m_pValue);
@@ -329,7 +323,7 @@ namespace Kernel {
         return obj;
     }
 
-    JsonObjectDemog JsonObjectDemog::GetArray(const char* key) const
+    JsonObjectDemog JsonObjectDemog::GetJsonArray(const char* key) const
     {
         assert(m_pValue);
         rapidjson::Value& r_value = *((rapidjson::Value*)m_pValue);

@@ -74,6 +74,7 @@ namespace Kernel
     void
     SimulationSTI::Initialize()
     {
+        Simulation::Initialize();
     }
 
     void
