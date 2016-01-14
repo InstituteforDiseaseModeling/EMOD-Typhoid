@@ -75,6 +75,7 @@ class IDMAPI SimpleLogger
 {
 public:
     SimpleLogger();
+    SimpleLogger( Logger::tLevel syslevel );
     void Init( const json::QuickInterpreter * configJson );
     bool CheckLogLevel( Logger::tLevel log_level, const char* module );
     void Log(Logger::tLevel log_level, const char* module, const char* msg);

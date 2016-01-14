@@ -89,6 +89,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportAgeAtInfection_plu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportAgeAtInfectionHistogram_plugin", "libReportAgeAtInfectionHistogram_plugin\libReportAgeAtInfectionHistogram_plugin.vcxproj", "{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libstirelationshipmigrationtracking", "libstirelationshipmigrationtracking\libstirelationshipmigrationtracking.vcxproj", "{312309F1-6A69-4B6D-A13A-46743F8199EF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportNodeDemographics", "libReportNodeDemographics\libReportNodeDemographics.vcxproj", "{92EECB80-CA36-4066-A1B9-C14E061EEB14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -167,6 +171,14 @@ Global
 		{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}.Debug|x64.Build.0 = Debug|x64
 		{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}.Release|x64.ActiveCfg = Release|x64
 		{ADD546B9-D8C2-4FD3-9614-2A7B99AC14D7}.Release|x64.Build.0 = Release|x64
+		{312309F1-6A69-4B6D-A13A-46743F8199EF}.Debug|x64.ActiveCfg = Debug|x64
+		{312309F1-6A69-4B6D-A13A-46743F8199EF}.Debug|x64.Build.0 = Debug|x64
+		{312309F1-6A69-4B6D-A13A-46743F8199EF}.Release|x64.ActiveCfg = Release|x64
+		{312309F1-6A69-4B6D-A13A-46743F8199EF}.Release|x64.Build.0 = Release|x64
+		{92EECB80-CA36-4066-A1B9-C14E061EEB14}.Debug|x64.ActiveCfg = Debug|x64
+		{92EECB80-CA36-4066-A1B9-C14E061EEB14}.Debug|x64.Build.0 = Debug|x64
+		{92EECB80-CA36-4066-A1B9-C14E061EEB14}.Release|x64.ActiveCfg = Release|x64
+		{92EECB80-CA36-4066-A1B9-C14E061EEB14}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

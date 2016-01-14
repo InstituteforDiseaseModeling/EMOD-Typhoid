@@ -137,6 +137,7 @@ namespace Kernel
     class IDMAPI JsonConfigurable : public IConfigurable
     {
         friend class InterventionFactory;
+        friend class DemographicRestrictions;
     public:
         typedef std::map< float, float > tFloatFloatMapConfigType;
         typedef std::map< std::string, float > tStringFloatMapConfigType;
@@ -159,6 +160,7 @@ namespace Kernel
         typedef std::map< std::string, tStringFloatMapConfigType * > tStringFloatMapConfigTypeMapType;
         typedef std::map< std::string, RangedFloat * > tRangedFloatConfigTypeMapType;
         typedef std::map< std::string, NaturalNumber * > tNNConfigTypeMapType;
+        typedef std::map< std::string, JsonConfigurable * > tJsonConfigurableMapType;
 
     public:
 
@@ -202,6 +204,7 @@ namespace Kernel
         tStringFloatMapConfigTypeMapType sfMapConfigTypeMap;
         tRangedFloatConfigTypeMapType rangedFloatConfigTypeMap;
         tNNConfigTypeMapType naturalNumberConfigTypeMap;
+        tJsonConfigurableMapType jcTypeMap;
 
         json::Object jsonSchemaBase;
         static std::set< std::string > empty_set;
@@ -350,6 +353,14 @@ namespace Kernel
            unsigned int max = INT_MAX,
            NaturalNumber defaultvalue = 1,
            const char* condition_key = nullptr, const char* condition_value = nullptr
+       );
+
+       void
+       initConfigTypeMap(
+            const char* paramName,
+            JsonConfigurable * pVariable,
+            const char* defaultDesc,
+            const char* condition_key=nullptr, const char* condition_value=nullptr
        );
 
         template< typename T >

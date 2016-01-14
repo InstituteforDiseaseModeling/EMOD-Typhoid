@@ -38,9 +38,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Report.h"
 #include "Sugar.h"
 #include "Environment.h"
-#include "Node.h"
+#include "INodeContext.h"
 #include "NodePolio.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "IndividualPolio.h"
 #include "suids.hpp"
 #include <stdio.h> // for sscanf

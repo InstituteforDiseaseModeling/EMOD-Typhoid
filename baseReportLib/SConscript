@@ -1,0 +1,58 @@
+# -*- mode: python; -*-
+# This Python script, SConscript, invoked by the SConscript in the upper directory,
+#
+# 1. builds baseReportlib static library
+import os
+
+#SVN_REV = os.popen("svn info | grep 'Last Changed Rev' | awk '{ print $4; }'").read()
+
+Import("env")
+if os.sys.platform != 'win32':
+    svn_url_define = "-DSVN_BRANCH_FROM_SCONS=\""
+    svn_url_define += env["SVN_BRANCH"]
+    svn_url_define += "'\""
+    #svn_url_define = svn_url_define.replace( "/", "&ampps" )
+    #svn_url_define = "-DSVN_URL="+env["SVN_URL"]
+    env.Append( CCFLAGS=[ svn_url_define ] )
+    #env.Append( CCFLAGS=[ "-save-temps" ] )
+
+
+reportSrcFiles = [
+    "BaseChannelReport.cpp",
+    "BaseEventReport.cpp",
+    "BaseEventReportIntervalOutput.cpp",
+    "BaseTextReport.cpp",
+    "BaseTextReportEvents.cpp",
+    "BinnedReport.cpp",
+    "ChannelDataMap.cpp",
+    "ReportUtilities.cpp"
+]
+
+reportIncFiles = [
+    'BaseChannelReport.h',
+    'BaseEventReport.h',
+    'BaseEventReportIntervalOutput.h',
+    'BaseTextReport.h',
+    'BaseTextReportEvents.h',
+    'BinnedReport.h',
+    'ChannelDataMap.h',
+    "ReportUtilities.h"
+]
+
+reportLocalInc = ['stdafx.h']
+
+reportLib = env.StaticLibrary('baseReportLib', reportSrcFiles)
+
+msvc = GetOption( "MSVC" )
+if msvc is not None and msvc != False and msvc != "":
+
+    bvar = env['BUILD_VARIANT'] + '|x64'
+    print "baseReportLib: Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
+    
+    env.MSVSProject(target = 'BaseReportLibScons' + env['MSVSPROJECTSUFFIX'],
+        srcs = reportSrcFiles,
+        incs = reportIncFiles,
+        localincs = reportLocalInc,
+        buildtarget = baseReportLib,
+                auto_build_solution = 0,
+                variant = bvar)

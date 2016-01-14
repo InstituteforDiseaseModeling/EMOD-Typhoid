@@ -19,8 +19,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Report.h"
 #include "Sugar.h"
 #include "Environment.h"
-#include "Node.h"
-#include "Individual.h"
+#include "INodeContext.h"
+#include "IIndividualHuman.h"
 
 #include "DllInterfaceHelper.h"
 #include "DllDefs.h"
@@ -142,11 +142,11 @@ ReportPluginAgeAtInfectionHistogram::EndTimestep( float currentTime, float dt)
 bool ReportPluginAgeAtInfectionHistogram::Configure(const Configuration* config)
 {
 
-    initConfigTypeMap( "Age_At_Infection_Histogram_Report_Reporting_Interval_In_Years", &reporting_interval_in_years, Age_At_Infection_Histogram_Report_Reporting_Interval_In_Years_DESC_TEXT, 0.0f, FLT_MAX, 1.0f);
+    initConfigTypeMap( "Age_At_Infection_Histogram_Report_Reporting_Interval_In_Years", &reporting_interval_in_years, "TBD"/*Age_At_Infection_Histogram_Report_Reporting_Interval_In_Years_DESC_TEXT*/, 0.0f, FLT_MAX, 1.0f);
 
     if(config->Exist( "Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years" ) )
     {
-        initConfigTypeMap( "Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years", &age_bin_upper_edges_in_years, Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years_DESC_TEXT);
+        initConfigTypeMap( "Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years", &age_bin_upper_edges_in_years, "TBD"/*Age_At_Infection_Histogram_Report_Age_Bin_Upper_Edges_In_Years_DESC_TEXT*/);
     }
     else
     {

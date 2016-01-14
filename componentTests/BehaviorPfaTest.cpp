@@ -20,6 +20,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "INodeEventContextFake.h"
 #include "RandomFake.h"
 #include "Relationship.h"
+#include "RelationshipParameters.h"
+#include "IdmString.h"
 #include "NoCrtWarnings.h"
 
 
@@ -190,8 +192,11 @@ SUITE(BehaviorPfaTest)
     class FakeRelationship : public Relationship
     {
     public:
-        FakeRelationship::FakeRelationship( IIndividualHumanSTI * husbandIn, IIndividualHumanSTI * wifeIn )
-            : Relationship( husbandIn, wifeIn, RelationshipType::TRANSITORY )
+        FakeRelationship::FakeRelationship( const suids::suid& rRelId, 
+                                            IRelationshipParameters* pRelParams, 
+                                            IIndividualHumanSTI * husbandIn, 
+                                            IIndividualHumanSTI * wifeIn )
+            : Relationship( rRelId, nullptr, pRelParams, husbandIn, wifeIn )
         {
             release_assert( husbandIn->GetSuid().data != wifeIn->GetSuid().data );
         }
@@ -214,6 +219,8 @@ SUITE(BehaviorPfaTest)
         vector< Relationship* > m_relationship_list ;
         vector< IndividualHumanInterventionsContextFake* > m_hic_list ;
         vector< IndividualHumanContextFake*              > m_human_list ;
+        RelationshipParameters m_RelParams ;
+        suids::suid m_NextSuid;
 
         PfaFixture()
             : m_num_rel(0)
@@ -222,13 +229,25 @@ SUITE(BehaviorPfaTest)
             , m_relationship_list()
             , m_hic_list()
             , m_human_list()
+            , m_RelParams( RelationshipType::TRANSITORY )
+            , m_NextSuid()
         {
-            Environment::setInstance( nullptr );
+            m_NextSuid.data = 1;
+            Environment::Finalize();
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
         }
 
         ~PfaFixture()
         {
             ClearData();
+            Environment::Finalize();
+        }
+
+        suids::suid GetNextSuid()
+        {
+            suids::suid next = m_NextSuid;
+            m_NextSuid.data++;
+            return next;
         }
 
         void ClearData()
@@ -257,7 +276,8 @@ SUITE(BehaviorPfaTest)
 
         void AddRelationship( IIndividualHumanSTI* male, IIndividualHumanSTI* female )
         {
-            Relationship* p_rel = new FakeRelationship( male, female );
+            suids::suid rel_id = GetNextSuid();
+            Relationship* p_rel = new FakeRelationship( rel_id, &m_RelParams, male, female );
             male->AddRelationship( p_rel );
             female->AddRelationship( p_rel );
             m_relationship_list.push_back( p_rel );
@@ -292,15 +312,13 @@ SUITE(BehaviorPfaTest)
 
     TEST_FIXTURE(PfaFixture, TestAddRemoveIndividual)
     {
-        float transitory_rate = 0.0013699f ;
-
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/BehaviorPfaTest.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), transitory_rate, 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
 
         RandomFake fake_rng ;
 
-        unique_ptr<IPairFormationAgent> pfa( BehaviorPfa::CreatePfa( p_config.get(), from_data.get(), 0.0f, 0.0f, &fake_rng,
+        unique_ptr<IPairFormationAgent> pfa( BehaviorPfa::CreatePfa( p_config.get(), from_data.get(), 0.0f, &fake_rng,
                 [this](IIndividualHumanSTI* male,IIndividualHumanSTI* female) { AddRelationship( male, female ); } ) );
 
         BehaviorPfa* bpfa = dynamic_cast<BehaviorPfa*>( pfa.get() );
@@ -540,16 +558,17 @@ SUITE(BehaviorPfaTest)
     TEST_FIXTURE(PfaFixture, TestUpdateBasic)
     {
         IdmDateTime date_time_2000( 2000.0f * 365.0f ) ;
-        float transitory_rate = 0.0013699f ;
 
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/BehaviorPfaTest.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), transitory_rate, 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
 
         RandomFake fake_rng ;
 
-        unique_ptr<IPairFormationAgent> pfa( BehaviorPfa::CreatePfa( p_config.get(), from_data.get(), 0.0f, 0.0f, &fake_rng,
+        unique_ptr<IPairFormationAgent> pfa( BehaviorPfa::CreatePfa( p_config.get(), from_data.get(), 0.0f, &fake_rng,
                 [this](IIndividualHumanSTI* male, IIndividualHumanSTI* female) { AddRelationship( male, female ); } ) );
+
+        BehaviorPfa* bpfa = dynamic_cast<BehaviorPfa*>( pfa.get() );
 
         CHECK_EQUAL( 0, m_relationship_list.size() );
 
@@ -602,11 +621,9 @@ SUITE(BehaviorPfaTest)
 
     TEST_FIXTURE(PfaFixture, TestDistributions)
     {
-        float transitory_rate = 0.0013699f ;
-
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/BehaviorPfaTest.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), transitory_rate, 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
 
         PSEUDO_DES rng ;
 
@@ -629,7 +646,7 @@ SUITE(BehaviorPfaTest)
         std::vector<int> num_passed_list ;
         for( int male_bin_index = 0 ; male_bin_index < from_data->GetMaleAgeBinCount() ; male_bin_index++ )
         {
-            unique_ptr<IPairFormationAgent> pfa( BehaviorPfa::CreatePfa( p_config.get(), from_data.get(), 0.0f, 0.0f, &rng,
+            unique_ptr<IPairFormationAgent> pfa( BehaviorPfa::CreatePfa( p_config.get(), from_data.get(), 0.0f, &rng,
                     [this](IIndividualHumanSTI* male, IIndividualHumanSTI* female) { AddRelationship( male, female ); } ) );
 
             BehaviorPfa* bpfa = dynamic_cast<BehaviorPfa*>( pfa.get() );

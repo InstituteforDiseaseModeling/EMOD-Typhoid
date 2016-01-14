@@ -23,6 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "Configuration.h"
 #include "Simulation.h"
+#include "Node.h"
 #include "SimulationConfig.h"
 
 using namespace Kernel;
@@ -47,12 +48,14 @@ SUITE(HivArtStagingCD4AgnosticDiagnosticTest)
             , m_pSimulationConfig( new SimulationConfig() )
         {
             Environment::Finalize();
-            Environment::setLogger( new SimpleLogger() );
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
+            Environment::setSimulationConfig( m_pSimulationConfig );
+
             m_InterventionsContext.setCascadeState( "not_set" );
             m_InterventionsContext.SetContextTo( &m_Human );
             m_Diag.SetContextTo( &m_Human );
+
             m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
-            Environment::setSimulationConfig( m_pSimulationConfig );
             m_pSimulationConfig->listed_events.insert("Births"          );
             m_pSimulationConfig->listed_events.insert("NonDiseaseDeaths");
 
@@ -69,8 +72,8 @@ SUITE(HivArtStagingCD4AgnosticDiagnosticTest)
         ~DiagnosticFixture()
         {
             delete m_pSimulationConfig;
-            Node::TestOnly_ClearProperties();
             Environment::Finalize();
+            Node::TestOnly_ClearProperties();
         }
     };
 

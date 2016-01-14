@@ -12,7 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <fstream>
 #include <memory> // unique_ptr
 #include "UnitTest++.h"
-#include "MathFunctions.h"
+#include "Sigmoid.h"
 
 using namespace std; 
 using namespace Kernel; 

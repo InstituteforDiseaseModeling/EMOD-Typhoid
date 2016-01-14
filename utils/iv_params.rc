@@ -40,13 +40,10 @@ AD_OutsideVillage"
 #define BT_Duration_DESC_TEXT "The number of days to continue this intervention."
 #define DRUG_Cost_To_Consumer_DESC_TEXT "Unit cost per drug (unamortized)."
 #define DRUG_Durability_Profile_DESC_TEXT "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows: \
- \
-Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000 \
- \
-Drug_Vd - Volume of distribution for the drug is 0 to 10000 \
- \
-Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 \
-"
+ Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000 \
+ Drug_Vd - Volume of distribution for the drug is 0 to 10000 \
+ Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000"
+
 #define DRUG_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile."
 #define DRUG_Remaining_Doses_DESC_TEXT "The remaining doses in an intervention, enter a negative number for unlimited doses."
 #define DRUG_Secondary_Decay_Time_Constant_DESC_TEXT "The secondary decay time constant of the decay profile."

@@ -253,7 +253,7 @@ double RANDOMBASE::time_varying_rate_dist( std::vector <float> v_rate, float tim
     double e_log = -log(e());
     double tempsum = 0.0f;
     int temp_break_step = 0;
-    double ret;
+    double ret= 0.0f;
 
     for ( auto rit = v_rate.begin(); rit!= v_rate.end()-1; ++rit )
     {

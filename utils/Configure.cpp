@@ -1,17 +1,11 @@
-/*****************************************************************************
+/***************************************************************************************************
 
-Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
+Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
-Except for any rights expressly granted to you in a separate license with the
-Global Good Fund (GGF), GGF reserves all rights, title and interest in the
-software and documentation.  GGF grants recipients of this software and
-documentation no other rights either expressly, impliedly or by estoppel.
+EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 
-THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
-ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
-
-*****************************************************************************/
+***************************************************************************************************/
 
 #include "stdafx.h"
 #include "Configuration.h"
@@ -660,6 +654,53 @@ namespace Kernel
         jsonSchemaBase[paramName] = newNNSchema;
     }
 
+    void
+    JsonConfigurable::initConfigTypeMap(
+        const char* paramName,
+        JsonConfigurable * pVariable,
+        const char* defaultDesc,
+        const char* condition_key, const char* condition_value
+    )
+    {
+        LOG_DEBUG_F( "initConfigTypeMap<JsonConfigurable>: %s\n", paramName);
+
+        // --------------------------------------------------------
+        // --- Get the type of variable and declare it an "idmType"
+        // --------------------------------------------------------
+        std::string variable_type = typeid(*pVariable).name() ;
+        if( variable_type.find( "class Kernel::" ) == 0 )
+        {
+            variable_type = variable_type.substr( 14 );
+        }
+        else if( variable_type.find( "struct Kernel::" ) == 0 )
+        {
+            variable_type = variable_type.substr( 15 );
+        }
+        variable_type = std::string("idmType:") + variable_type ;
+
+        // ------------------------------------------------------
+        // --- Put the schema for the special type into map first
+        // --- so that its definition appears before it is used.
+        // ------------------------------------------------------
+        bool tmp = _dryrun ;
+        _dryrun = true ;
+        pVariable->Configure( nullptr );
+        _dryrun = tmp ;
+        jsonSchemaBase[ variable_type ] = pVariable->GetSchema();
+
+        jcTypeMap[ paramName ] = pVariable;
+        json::Object newNestedSchema;
+        newNestedSchema["description"] = json::String(defaultDesc);
+        newNestedSchema["type"] = json::String(variable_type);
+        if( condition_key && condition_value )
+        {
+            json::Object condition;
+            condition[ condition_key ] = json::String( condition_value );
+            newNestedSchema["depends-on"] = condition;
+        }
+        jsonSchemaBase[paramName] = newNestedSchema;
+    }
+
     bool JsonConfigurable::Configure( const Configuration* inputJson )
     {
         //if( getenv( "DRYRUN" ) )
@@ -1090,6 +1131,20 @@ namespace Kernel
                 LOG_DEBUG_F( "Inserting string %s and value %f into map.\n", data->name.c_str(), value );
                 pSFMap->insert( std::make_pair( data->name, value ) );
             }
+        }
+
+        // ---------------------------------- JsonConfigurable MAP ------------------------------------
+        for (auto& entry : jcTypeMap)
+        {
+            // NOTE that this could be used for general float to float, but right now hard-coding year-as-int to float
+            const auto & key = entry.first;
+            JsonConfigurable * pJc = entry.second;
+
+            Configuration * p_config = Configuration::CopyFromElement( (*inputJson)[key] );
+
+            pJc->Configure( p_config );
+
+            delete p_config ;
         }
 
         return true;

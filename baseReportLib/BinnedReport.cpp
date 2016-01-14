@@ -19,7 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "Exceptions.h"
 #include "Sugar.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "ProgVersion.h"
 #include "RapidJsonImpl.h"
 

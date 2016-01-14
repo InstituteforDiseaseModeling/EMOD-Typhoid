@@ -31,40 +31,6 @@ struct Gamma
     }
 };
 
-struct Sigmoid
-{
-    inline static double basic_sigmoid ( double threshold = 100.0, double variable = 0.0 )
-    {
-        return (variable > 0) ? (variable / (threshold + variable)) : 0.0;
-    }
-
-    inline static float variableWidthSigmoid( float variable, float threshold, float invwidth )
-    {
-        if ( invwidth > 0 )
-        {
-            return 1.0f / ( 1.0f + exp( (threshold-variable) / (threshold/invwidth) ) );
-        }
-        else
-        {
-            throw Kernel::OutOfRangeException( __FILE__, __LINE__, __FUNCTION__, "invwidth", invwidth, 0 );
-        }
-    }
-
-    inline static float variableWidthAndHeightSigmoid( float variable, float center, float rate, float min_val, float max_val)
-    {
-        // max_val must be >= min_val, however rate can be negative.
-        // A positive (negative) rate creates a sigmoid that increases (decreases) with variable
-        if ( max_val - min_val >= 0 )
-        {
-            return min_val + (max_val-min_val) / ( 1 + exp(-rate * (variable-center)) );
-        }
-        else
-        {
-            throw Kernel::ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__, "max_val - min_val", max_val - min_val, 0);
-        }
-    }
-};
-
 namespace Kernel {
 
 class Probability

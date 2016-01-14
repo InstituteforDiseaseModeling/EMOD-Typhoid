@@ -43,15 +43,13 @@
                         "key" : 1,
                         "value" : [ 0.3, 0.4, 0.5 ]
                     }
-                ],
-                "base_pair_formation_rate" : 0.9
+                ]
             }
         },
         {
             "Test" :
             {
                 "__class__":"BehaviorPfa",
-                "m_update_period"          : 7,
                 "m_cum_prob_threshold"     : 0.2,
                 "m_time_since_last_update" : 1,
                 "desired_flow"             : 
@@ -209,7 +207,19 @@
                         "value" : [ 0.6, 0.3, 0.1 ]
                     }
                 ],
-                "base_pair_formation_rate"       : 0.9
+                "update_period"           : 30,
+                "formation_rate_type"     : 0,
+                "formation_rate_constant" : 0.1,
+                "formation_rate_sigmoid" :
+                {
+                    "m_Min"  : 0,
+                    "m_Max"  : 0,
+                    "m_Mid"  : 0,
+                    "m_Rate" : 0
+                },
+                "formation_rate_value_map" :
+                [
+                ]
             }
         },
         {
@@ -337,30 +347,30 @@
                             "key" : "TRANSITORY", 
                             "value" :
                             {
-                                "early"   : 0.1,
-                                "late"    : 0.2,
-                                "midyear" : 2003.0,
-                                "rate"    : 0.3
+                                "m_Min"  : 0.1,
+                                "m_Max"  : 0.2,
+                                "m_Mid"  : 2003.0,
+                                "m_Rate" : 0.3
                             }
                         },
                         {
                             "key" : "INFORMAL", 
                             "value" :
                             {
-                                "early"   : 0.4,
-                                "late"    : 0.5,
-                                "midyear" : 2001.0,
-                                "rate"    : 0.6
+                                "m_Min"  : 0.4,
+                                "m_Max"  : 0.5,
+                                "m_Mid"  : 2001.0,
+                                "m_Rate" : 0.6
                             }
                         },
                         {
                             "key" : "MARITAL", 
                             "value" :
                             {
-                                "early"   : 0.7,
-                                "late"    : 0.8,
-                                "midyear" : 2002.0,
-                                "rate"    : 0.9
+                                "m_Min"  : 0.7,
+                                "m_Max"  : 0.8,
+                                "m_Mid"  : 2002.0,
+                                "m_Rate" : 0.9
                             }
                         }
                     ]
@@ -412,18 +422,17 @@
                 [
                     {
                         "__class__":"MarriageRelationship",
+                        "_suid"                    : 123,
+                        "state"                    : 0,
+                        "relationship_type"        : 2,
                         "absent_male_partner_id"   : 123,
                         "absent_female_partner_id" : 456,
-                        "_id"                      : 789,
-                        "_suid"                    : 987,
                         "rel_timer"                : 1.1,
                         "rel_duration"             : 2.2,
                         "start_time"               : 3.3,
                         "scheduled_end_time"       : 4.4,
                         "propertyKey"              : "Risk",
                         "propertyName"             : "HIGH",
-                        "force_finish"             : false,
-                        "relationship_type"        : 2,
                         "original_node_id"         : 654,
                         "act_prob_vec" : 
                         [
@@ -440,22 +449,23 @@
                                 "prob_per_act" : 0.1
                             }
                         ],
-                        "using_condom" : true
+                        "using_condom"      : true,
+                        "total_coital_acts" : 5,
+                        "has_migrated"      : true
                     },
                     {
                         "__class__":"InformalRelationship",
+                        "_suid"                    : 222,
+                        "state"                    : 1,
+                        "relationship_type"        : 1,
                         "absent_male_partner_id"   : 555,
                         "absent_female_partner_id" : 333,
-                        "_id"                      : 888,
-                        "_suid"                    : 222,
                         "rel_timer"                : 41.1,
                         "rel_duration"             : 42.2,
                         "start_time"               : 43.3,
                         "scheduled_end_time"       : 44.4,
                         "propertyKey"              : "Risk",
                         "propertyName"             : "LOW",
-                        "force_finish"             : false,
-                        "relationship_type"        : 1,
                         "original_node_id"         : 333,
                         "act_prob_vec" : 
                         [
@@ -472,22 +482,23 @@
                                 "prob_per_act" : 0.31
                             }
                         ],
-                        "using_condom" : true
+                        "using_condom"      : true,
+                        "total_coital_acts" : 4,
+                        "has_migrated"      : false
                     },
                     {
                         "__class__":"TransitoryRelationship",
+                        "_suid"                    : 789,
+                        "state"                    : 2,
+                        "relationship_type"        : 0,
                         "absent_male_partner_id"   : 321,
                         "absent_female_partner_id" : 654,
-                        "_id"                      : 987,
-                        "_suid"                    : 789,
                         "rel_timer"                : 21.1,
                         "rel_duration"             : 22.2,
                         "start_time"               : 23.3,
                         "scheduled_end_time"       : 24.4,
                         "propertyKey"              : "Risk",
                         "propertyName"             : "LOW",
-                        "force_finish"             : false,
-                        "relationship_type"        : 0,
                         "original_node_id"         : 456,
                         "act_prob_vec" : 
                         [
@@ -504,22 +515,23 @@
                                 "prob_per_act" : 0.11
                             }
                         ],
-                        "using_condom" : false
+                        "using_condom"      : false,
+                        "total_coital_acts" : 3,
+                        "has_migrated"      : true
                     },
                     {
                         "__class__":"TransitoryRelationship",
+                        "_suid"                    : 888,
+                        "state"                    : 0,
+                        "relationship_type"        : 0,
                         "absent_male_partner_id"   : 654,
                         "absent_female_partner_id" : 321,
-                        "_id"                      : 999,
-                        "_suid"                    : 777,
                         "rel_timer"                : 31.1,
                         "rel_duration"             : 32.2,
                         "start_time"               : 33.3,
                         "scheduled_end_time"       : 34.4,
                         "propertyKey"              : "Risk",
                         "propertyName"             : "MEDIUM",
-                        "force_finish"             : false,
-                        "relationship_type"        : 0,
                         "original_node_id"         : 444,
                         "act_prob_vec" : 
                         [
@@ -536,13 +548,15 @@
                                 "prob_per_act" : 0.21
                             }
                         ],
-                        "using_condom" : false
+                        "using_condom"      : false,
+                        "total_coital_acts" : 2,
+                        "has_migrated"      : true
                     }
                 ],
                 "max_relationships"                        : [ 4, 2, 1 ],
                 "queued_relationships"                     : [ 1, 1, 0 ],
                 "active_relationships"                     : [ 2, 1, 1 ],
-                "remote_relationships"                     : [ 0, 0, 0 ],
+                "migrating_because_of_partner"             : false,
                 "promiscuity_flags"                        : 5,
                 "sexual_debut_age"                         : 14.5,
                 "co_infective_factor"                      : 0.5,
@@ -601,18 +615,17 @@
             "Test" :
             {
                 "__class__":"MarriageRelationship",
+                "_suid"                    : 987,
+                "state"                    : 0,
+                "relationship_type"        : 2,
                 "absent_male_partner_id"   : 123,
                 "absent_female_partner_id" : 456,
-                "_id"                      : 789,
-                "_suid"                    : 987,
                 "rel_timer"                : 1.1,
                 "rel_duration"             : 2.2,
                 "start_time"               : 3.3,
                 "scheduled_end_time"       : 4.4,
                 "propertyKey"              : "Risk",
                 "propertyName"             : "HIGH",
-                "force_finish"             : false,
-                "relationship_type"        : 2,
                 "original_node_id"         : 654,
                 "act_prob_vec"             : 
                 [
@@ -629,7 +642,9 @@
                         "prob_per_act" : 0.1
                     }
                 ],
-                "using_condom" : true
+                "using_condom"      : false,
+                "total_coital_acts" : 2,
+                "has_migrated"      : true
             }
         },
         {
@@ -727,30 +742,30 @@
                         "key" : "TRANSITORY", 
                         "value" :
                         {
-                            "early"   : 0.7,
-                            "late"    : 0.8,
-                            "midyear" : 2003.0,
-                            "rate"    : 0.9
+                            "m_Min"  : 0.7,
+                            "m_Max"  : 0.8,
+                            "m_Mid"  : 2003.0,
+                            "m_Rate" : 0.9
                         }
                     },
                     {
                         "key" : "INFORMAL", 
                         "value" :
                         {
-                            "early"   : 0.1,
-                            "late"    : 0.2,
-                            "midyear" : 2001.0,
-                            "rate"    : 0.3
+                            "m_Min"  : 0.1,
+                            "m_Max"  : 0.2,
+                            "m_Mid"  : 2001.0,
+                            "m_Rate" : 0.3
                         }
                     },
                     {
                         "key" : "MARITAL", 
                         "value" :
                         {
-                            "early"   : 0.4,
-                            "late"    : 0.5,
-                            "midyear" : 2002.0,
-                            "rate"    : 0.6
+                            "m_Min"  : 0.4,
+                            "m_Max"  : 0.5,
+                            "m_Mid"  : 2002.0,
+                            "m_Rate" : 0.6
                         }
                     }
                 ]

@@ -17,11 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISupports.h"
 #include "Configure.h"                 // for JsonConfigurable
 #include "InterventionEnums.h"         // for IndividualEventTriggerType enum
-#include "VectorEnums.h"               // for larval habitat targets
 #include "InterventionValidator.h"
-#ifdef ENABLE_TB
-#include "TBDrugTypeParameters.h" //Copying the malariadrugtypeparameters
-#endif
 
 #include "ISerializable.h"
 #include "IArchive.h"
@@ -89,71 +85,6 @@ namespace Kernel
         virtual ~INodeDistributableIntervention() { }
     };
 
-    struct IVectorInterventionsEffects : ISupports
-    {
-        virtual float GetDieBeforeFeeding() = 0;
-        virtual float GetHostNotAvailable() = 0;
-        virtual float GetDieDuringFeeding() = 0;
-        virtual float GetDiePostFeeding() = 0;
-        virtual float GetSuccessfulFeedHuman() = 0;
-        virtual float GetSuccessfulFeedAD() = 0;
-        virtual float GetOutdoorDieBeforeFeeding() = 0;
-        virtual float GetOutdoorHostNotAvailable() = 0;
-        virtual float GetOutdoorDieDuringFeeding() = 0;
-        virtual float GetOutdoorDiePostFeeding() = 0;
-        virtual float GetOutdoorSuccessfulFeedHuman() = 0;
-        virtual float GetblockIndoorVectorAcquire() = 0;
-        virtual float GetblockIndoorVectorTransmit() = 0;
-        virtual float GetblockOutdoorVectorAcquire() = 0;
-        virtual float GetblockOutdoorVectorTransmit() = 0;
-        virtual ~IVectorInterventionsEffects() { }
-    };
-
-    struct INodeVectorInterventionEffects : ISupports
-    {
-        virtual float GetLarvalKilling(VectorHabitatType::Enum) = 0;
-        virtual float GetLarvalHabitatReduction(VectorHabitatType::Enum) = 0;
-        virtual float GetVillageSpatialRepellent() = 0;
-        virtual float GetADIVAttraction() = 0;
-        virtual float GetADOVAttraction() = 0;
-        virtual float GetPFVKill() = 0;
-        virtual float GetOutdoorKilling() = 0;
-        virtual float GetOutdoorKillingMale() = 0;
-        virtual float GetSugarFeedKilling() = 0;
-        virtual float GetOviTrapKilling(VectorHabitatType::Enum) = 0;
-        virtual float GetAnimalFeedKilling() = 0;
-        virtual float GetOutdoorRestKilling() = 0;
-    };
-
-
-//#ifdef ENABLE_HIV
-    struct IHIVDrugEffects : ISupports
-    {
-        virtual float GetDrugInactivationRate() = 0;
-        virtual float GetDrugClearanceRate() = 0;
-        virtual ~IHIVDrugEffects() { }
-    };
-//#endif
-
-#ifdef ENABLE_POLIO
-    struct IPolioVaccine;
-
-    struct IPolioVaccineEffects : ISupports
-    {
-        virtual std::list<IPolioVaccine*>& GetNewVaccines() = 0;
-        virtual void ClearNewVaccines() = 0;
-        virtual ~IPolioVaccineEffects() { }
-    };
-
-    struct IPolioDrugEffects : ISupports
-    {
-        virtual float get_titer_efficacy() const = 0;
-        virtual float get_infection_duration_efficacy() const = 0;
-
-        virtual ~IPolioDrugEffects() { }
-    };
-#endif
-
     struct IInterventionConsumer : ISupports
     {
         virtual bool GiveIntervention( IDistributableIntervention * pIV ) = 0;
@@ -196,6 +127,7 @@ namespace Kernel
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
+    public:
         virtual float GetCostPerUnit() const override { return cost_per_unit; }
         virtual bool Expired();
         virtual void ValidateSimType( const std::string& simTypeStr ) override;
