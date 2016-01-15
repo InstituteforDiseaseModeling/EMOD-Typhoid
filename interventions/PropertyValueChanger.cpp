@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "RANDOM.h"
 #include "Common.h"             // for INFINITE_TIME
 #include "InterventionEnums.h"  // for InterventionDurabilityProfile, ImmunoglobulinType, etc.
-#include "Individual.h"  // has to go?
+#include "IIndividualHuman.h"
 #include "InterventionsContainer.h"  // for IPropertyValueChangerEffects
 #include "MathFunctions.h"  // for IPropertyValueChangerEffects
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)

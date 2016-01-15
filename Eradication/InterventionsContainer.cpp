@@ -9,20 +9,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 
-#include "SimpleTypemapRegistration.h"
 #include "Debug.h"
 #include "Exceptions.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "InterventionsContainer.h"
-#include "Individual.h"                // for implementation of IIndividualHumanContext functions e.g. GetEventContext()
+#include "IIndividualHuman.h"                // for IIndividualHumanContext functions e.g. GetEventContext()
 #include <typeinfo>
 #include "NodeEventContext.h"
 #include "INodeContext.h"
-
-// TBD: currently included for JDeserialize only. Once we figure out how to wrap the deserialize
-// into rapidjsonimpl class, then this is not needed
-#include "RapidJsonImpl.h"
 
 static const char* _module = "InterventionsContainer";
 

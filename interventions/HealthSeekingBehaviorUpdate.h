@@ -16,7 +16,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"

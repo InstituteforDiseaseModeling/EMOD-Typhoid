@@ -17,6 +17,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HIVInterventionsContainer.h"
 #include "ISimulation.h"
 #include "IIndividualHumanHIV.h"
+#include "INodeContext.h"
+#include "NodeEventContext.h"
 
 static const char* _module = "ReportHIVMortalityEvents";
 
@@ -26,6 +28,7 @@ namespace Kernel {
     {
         float             death_time;
         bool              death_by_HIV;
+        ExternalNodeId_t  node_id;
         int               individual_id;
         int               gender;
         float             age;
@@ -90,7 +93,8 @@ namespace Kernel {
     std::string ReportHIVMortalityEvents::GetHeader() const
     {
         std::stringstream header ;
-        header << "id,"
+        header << "Node_ID,"
+               << "id,"
                << "Death_time,"
                << "Death_was_HIV_cause,"
                << "Gender,"
@@ -143,6 +147,13 @@ namespace Kernel {
         release_assert( sti_individual );
 
         MortalityInfo info;
+
+        // --------------------------------------------------------
+        // --- Assuming that the individuals in a relationship
+        // --- must be in the same node.
+        //release_assert( false );
+        // --------------------------------------------------------
+        info.node_id = context->GetNodeEventContext()->GetNodeContext()->GetExternalID();
 
         info.death_time = _parent->GetSimulationTime().time;
         info.death_by_HIV = false;
@@ -225,7 +236,8 @@ namespace Kernel {
 
         std::string art_status = ARTStatus::pairs::lookup_key( info.ART_status_at_death );
                  
-        GetOutputStream() << info.individual_id                << ","
+        GetOutputStream() << info.node_id                      << ","
+                          << info.individual_id                << ","
                           << info.death_time                   << ','
                           << info.death_by_HIV                 << ','
                           << info.gender                       << ','

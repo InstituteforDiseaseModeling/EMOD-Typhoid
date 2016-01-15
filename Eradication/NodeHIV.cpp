@@ -44,7 +44,7 @@ namespace Kernel
         return newnode;
     }
 
-    IIndividualHuman* NodeHIV::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+    IIndividualHuman* NodeHIV::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
     {
         return IndividualHumanHIV::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender,  above_poverty);
     }

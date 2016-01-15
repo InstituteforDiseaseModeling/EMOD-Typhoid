@@ -87,7 +87,7 @@ namespace Kernel
         int m_initial_infected_hepatocytes;
 
         virtual void setupInterventionsContainer() override;
-        virtual Infection* createInfection(suids::suid _suid) override;
+        virtual IInfection* createInfection(suids::suid _suid) override;
 
         virtual void ApplyTotalBitingExposure() override;
         int  CalculateInfectiousBites();

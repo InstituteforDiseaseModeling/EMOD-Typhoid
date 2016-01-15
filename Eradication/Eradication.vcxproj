@@ -241,6 +241,7 @@
     <ClCompile Include="BinnedReportTB.cpp" />
     <ClCompile Include="CalendarEventCoordinator.cpp" />
     <ClCompile Include="CoverageByNodeEventCoordinator.cpp" />
+    <ClCompile Include="DemographicRestrictions.cpp" />
     <ClCompile Include="EventTrigger.cpp" />
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="GroupEventCoordinatorHIV.cpp" />
@@ -250,6 +251,7 @@
     <ClCompile Include="IdmInitialize.cpp" />
     <ClCompile Include="IIndividualHuman.cpp" />
     <ClCompile Include="IInfection.cpp" />
+    <ClCompile Include="IMigrationInfo.cpp" />
     <ClCompile Include="ISusceptibilityContext.cpp" />
     <ClCompile Include="JsonObjectDemog.cpp" />
     <ClCompile Include="MalariaBarcode.cpp" />
@@ -257,6 +259,7 @@
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
     <ClCompile Include="NodeEventCoordinator.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
+    <ClCompile Include="RelationshipParameters.cpp" />
     <ClCompile Include="ReportEventRecorder.cpp" />
     <ClCompile Include="ReportHIVART.cpp" />
     <ClCompile Include="ReportHIVByAgeAndGender.cpp" />
@@ -518,7 +521,6 @@
     <ClInclude Include="..\utils\RANDOM.h" />
     <ClInclude Include="..\utils\RapidJsonImpl.h" />
     <ClInclude Include="..\utils\Serializer.h" />
-    <ClInclude Include="..\utils\SimpleTypemapRegistration.h" />
     <ClInclude Include="..\utils\StatusReporter.h" />
     <ClInclude Include="..\utils\stdafx.h" />
     <ClInclude Include="..\utils\Sugar.h" />
@@ -530,6 +532,7 @@
     <ClInclude Include="BinnedReportTB.h" />
     <ClInclude Include="..\utils\BoostLibWrapper.h" />
     <ClInclude Include="CalendarEventCoordinator.h" />
+    <ClInclude Include="DemographicRestrictions.h" />
     <ClInclude Include="EventTrigger.h" />
     <ClInclude Include="FerrandAgeDependentDistribution.h" />
     <ClInclude Include="GroupEventCoordinatorHIV.h" />
@@ -543,11 +546,14 @@
     <ClInclude Include="IIndividualHumanHIV.h" />
     <ClInclude Include="IInfection.h" />
     <ClInclude Include="IInfectionHIV.h" />
+    <ClInclude Include="IMigrationInfo.h" />
     <ClInclude Include="INodeContext.h" />
     <ClInclude Include="INodeHIV.h" />
     <ClInclude Include="INodeSTI.h" />
     <ClInclude Include="IntranodeTransmissionTypes.h" />
     <ClInclude Include="IRelationshipManager.h" />
+    <ClInclude Include="IRelationshipParameters.h" />
+    <ClInclude Include="IIdGeneratorSTI.h" />
     <ClInclude Include="ISTIInterventionsContainer.h" />
     <ClInclude Include="ISusceptibilityContext.h" />
     <ClInclude Include="JsonObjectDemog.h" />
@@ -555,9 +561,11 @@
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />
     <ClInclude Include="NodeTBHIV.h" />
+    <ClInclude Include="PolioContexts.h" />
     <ClInclude Include="PropertyReportTB.h" />
     <ClInclude Include="RelationshipManager.h" />
     <ClInclude Include="RelationshipManagerFactory.h" />
+    <ClInclude Include="RelationshipParameters.h" />
     <ClInclude Include="RelationshipReporting.h" />
     <ClInclude Include="ReportEventRecorder.h" />
     <ClInclude Include="ReportHIVART.h" />

@@ -177,7 +177,7 @@ namespace Kernel {
     : num_ranked(0) { }
 
     int
-    CheckerboardInitialLoadBalanceScheme::GetInitialRankFromNodeId(node_id_t node_id)
+    CheckerboardInitialLoadBalanceScheme::GetInitialRankFromNodeId(ExternalNodeId_t node_id)
     { return (num_ranked++) % EnvPtr->MPI.NumTasks; }
 
     StripedInitialLoadBalanceScheme::StripedInitialLoadBalanceScheme()
@@ -188,10 +188,10 @@ namespace Kernel {
     void StripedInitialLoadBalanceScheme::Initialize(uint32_t in_num_nodes) { num_nodes = in_num_nodes; }
 
     int
-    StripedInitialLoadBalanceScheme::GetInitialRankFromNodeId(node_id_t node_id)
+    StripedInitialLoadBalanceScheme::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
     { return int((float(num_ranked++) / num_nodes) * EnvPtr->MPI.NumTasks); }
 
-    int LegacyFileInitialLoadBalanceScheme::GetInitialRankFromNodeId(node_id_t node_id)
+    int LegacyFileInitialLoadBalanceScheme::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
     { return initialNodeRankMapping[node_id]; }
 
     NodeRankMap::NodeRankMap() : initialLoadBalanceScheme(nullptr) { }
@@ -207,7 +207,7 @@ namespace Kernel {
     const NodeRankMap::RankMap_t&
     NodeRankMap::GetRankMap() const { return rankMap; }
 
-    int NodeRankMap::GetInitialRankFromNodeId(node_id_t node_id)
+    int NodeRankMap::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
     {
         if (initialLoadBalanceScheme) { return initialLoadBalanceScheme->GetInitialRankFromNodeId(node_id); }
         else { return node_id % EnvPtr->MPI.NumTasks; }

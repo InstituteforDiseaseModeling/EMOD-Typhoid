@@ -23,6 +23,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SusceptibilitySTI.h"
 #include "STIInterventionsContainer.h"
 #include "NodeSTI.h"
+#include "Sigmoid.h"
+#include "IPairFormationStats.h"
+#include "IPairFormationRateTable.h"
+#include "IPairFormationAgent.h"
 
 static const char* _module = "IndividualSTI";
 
@@ -56,18 +60,6 @@ namespace Kernel
 
     float IndividualHumanSTIConfig::min_days_between_adding_relationships = 60.0f;
 
-    float IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_midyear = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_rate = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_early = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_late = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_midyear = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_rate = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_early = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_late = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_midyear = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_rate = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_early = 0.0f;
-    float IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_late = 0.0f;
     float IndividualHumanSTIConfig::condom_transmission_blocking_probability = 0.0f;
 
     std::vector<float> IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityAges;
@@ -99,21 +91,6 @@ namespace Kernel
 
         initConfigTypeMap( "Condom_Transmission_Blocking_Probability", &condom_transmission_blocking_probability, STI_Condom_Transmission_Blocking_Probability_DESC_TEXT, 0.0f, 1.0f, 0.9f );
 
-        initConfigTypeMap( "Condom_Usage_Probability_in_Marital_Relationships_Early", &condom_usage_probability_in_marital_relationships_early, CUPMRE_TEXT, 0.0f, 1.0f, 0.5f );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Marital_Relationships_Late", &condom_usage_probability_in_marital_relationships_late, CUPMRL_TEXT, 0.0f, 1.0f, 0.5f );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Marital_Relationships_Midyear", &condom_usage_probability_in_marital_relationships_midyear, CUPMRM_TEXT, 0.0f, 100000, 365 );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Marital_Relationships_Rate", &condom_usage_probability_in_marital_relationships_rate, CUPMRR_TEXT, 0.0f, 10.0f, 1.0f );
-
-        initConfigTypeMap( "Condom_Usage_Probability_in_Informal_Relationships_Early", &condom_usage_probability_in_informal_relationships_early, CUPIRE_TEXT, 0.0f, 1.0f, 0.5f );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Informal_Relationships_Late", &condom_usage_probability_in_informal_relationships_late, CUPIRL_TEXT, 0.0f, 1.0f, 0.5f );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Informal_Relationships_Midyear", &condom_usage_probability_in_informal_relationships_midyear, CUPIRM_TEXT, 0.0f, 100000.0f, 365 );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Informal_Relationships_Rate", &condom_usage_probability_in_informal_relationships_rate, CUPIRR_TEXT, 0.0f, 10.0f, 1.0f );
-        
-        initConfigTypeMap( "Condom_Usage_Probability_in_Transitory_Relationships_Early", &condom_usage_probability_in_transitory_relationships_early, CUPTRE_TEXT, 0.0f, 1.0f, 0.5f );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Transitory_Relationships_Late", &condom_usage_probability_in_transitory_relationships_late, CUPTRL_TEXT, 0.0f, 1.0f, 0.5f );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Transitory_Relationships_Midyear", &condom_usage_probability_in_transitory_relationships_midyear, CUPTRM_TEXT, 0.0f, 100000.0f, 365 );
-        initConfigTypeMap( "Condom_Usage_Probability_in_Transitory_Relationships_Rate", &condom_usage_probability_in_transitory_relationships_rate, CUPTRR_TEXT, 0.0f, 10.0f, 1.0f ); 
-
         initConfigComplexType( "STI_Network_Params_By_Property", &net_param_map, STI_Network_Params_By_Property_DESC_TEXT );
 
         bool ret = JsonConfigurable::Configure( config );
@@ -123,7 +100,7 @@ namespace Kernel
 
     bool RelationshipSetSorter::operator()(const IRelationship *rel1, const IRelationship *rel2) const
     {
-        return rel1->GetId() < rel2->GetId();
+        return rel1->GetSuid().data < rel2->GetSuid().data;
     }
 
     // The reason for this explicit QI (instead of macro) is to let us resolve 
@@ -143,8 +120,6 @@ namespace Kernel
             foundInterface = static_cast<IIndividualHuman*>(this);
         else if ( iid == GET_IID(IIndividualHumanSTI)) 
             foundInterface = static_cast<IIndividualHumanSTI*>(this);
-//        else if ( iid == GET_IID(IJsonSerializable)) 
-//            foundInterface = static_cast<IJsonSerializable*>(static_cast<IndividualHuman*>(this));
         else if ( iid == GET_IID(ISupports)) 
             foundInterface = static_cast<ISupports*>(static_cast<IIndividualHumanSTI*>(this));
         else if( IndividualHuman::QueryInterface( iid, (void**)&foundInterface ) != s_OK )
@@ -346,6 +321,7 @@ namespace Kernel
         : IndividualHuman(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
         , net_params( "<NONE>" )
         , relationships()
+        , migrating_because_of_partner(false)
         , promiscuity_flags(0)
         , sexual_debut_age(0.0f)
         , has_other_sti_co_infection(false)
@@ -365,12 +341,11 @@ namespace Kernel
     {
         ZERO_ARRAY( queued_relationships );
         ZERO_ARRAY( active_relationships );
-        ZERO_ARRAY( remote_relationships );
 
         // Sexual debut
         float min_age_sexual_debut_in_days = debutAgeYrsMin * DAYSPERYEAR;
-        float debut_lambda;
-        float debut_inv_kappa;
+        float debut_lambda = 0;
+        float debut_inv_kappa = 0;
         if( GetGender() == Gender::MALE ) 
         {
             debut_inv_kappa = debutAgeYrsMale_inv_kappa;
@@ -392,6 +367,18 @@ namespace Kernel
         }
 
         LOG_DEBUG_F( "Individual ? will debut at age %f (yrs)f.\n", sexual_debut_age/DAYSPERYEAR );
+    }
+
+    suids::suid IndividualHumanSTI::GetNodeSuid() const
+    {
+        if( parent == nullptr )
+        {
+            return suids::nil_suid();
+        }
+        else
+        {
+            return parent->GetSuid();
+        }
     }
 
     void IndividualHumanSTI::Update(
@@ -446,7 +433,7 @@ namespace Kernel
         for (auto iterator = relationships.begin(); iterator != relationships.end(); /**/ )
         {
             auto relationship = *iterator++;
-            relationship->terminate( manager );
+            relationship->Terminate();
             relationships_at_death.insert( relationship );
             LOG_DEBUG_F("Relationship with %d terminated at time %f due to death\n", GetSuid().data, (float) GetParent()->GetTime().time );
         }
@@ -465,7 +452,7 @@ namespace Kernel
         relationships_at_death.clear();
     }
 
-    Infection* IndividualHumanSTI::createInfection( suids::suid _suid )
+    IInfection* IndividualHumanSTI::createInfection( suids::suid _suid )
     {
         return InfectionSTI::CreateInfection(this, _suid);
     }
@@ -546,11 +533,6 @@ namespace Kernel
         }
 
         LOG_DEBUG_F( "Individual %lu Updating infectiousness on %d relationships\n", GetSuid().data, relationships.size() );
-        if( !AtHome() )
-        {
-            return; // DJK BUG: No consummation while away! <ERAD-1904>
-        }
-
         // DJK: Why only consummate relationships of males?  What about MSM?  Designate one "consummator" per rel?  <ERAD-1868>
         if( GetGender() == Gender::MALE )
         {
@@ -739,8 +721,8 @@ namespace Kernel
         relationshipSlots |= bitmask;
         release_assert(relationshipSlots < 0x400);
         LOG_DEBUG_F( "%s: relationshipSlots = %d, individual = %d\n", __FUNCTION__, relationshipSlots, GetSuid().data );
-        slot2RelationshipDebugMap[ slot ] = pNewRelationship->GetId();
-        LOG_DEBUG_F( "%s: Individual %d gave slot %d to relationship %d\n", __FUNCTION__, GetSuid().data, slot, pNewRelationship->GetId() );
+        slot2RelationshipDebugMap[ slot ] = pNewRelationship->GetSuid().data;
+        LOG_DEBUG_F( "%s: Individual %d gave slot %d to relationship %d\n", __FUNCTION__, GetSuid().data, slot, pNewRelationship->GetSuid().data );
 
         if( min_days_between_adding_relationships > 0)
         {
@@ -780,67 +762,11 @@ namespace Kernel
         relationshipSlots &= (~bitmask);
         release_assert(relationshipSlots < 0x400);
         LOG_DEBUG_F( "%s: relationshipSlots = %d, individual=%d\n", __FUNCTION__, relationshipSlots, GetSuid().data );
-        LOG_DEBUG_F( "%s: individual %d freed up slot %d for relationship %d\n", __FUNCTION__, GetSuid().data, slotNumber, pRelationship->GetId() );
-        release_assert( slot2RelationshipDebugMap[ slotNumber ] == pRelationship->GetId() );
+        LOG_DEBUG_F( "%s: individual %d freed up slot %d for relationship %d\n", __FUNCTION__, GetSuid().data, slotNumber, pRelationship->GetSuid().data );
+        release_assert( slot2RelationshipDebugMap[ slotNumber ] == pRelationship->GetSuid().data );
         slot2RelationshipDebugMap[ slotNumber ] = -1;
 
         delay_between_adding_relationships_timer = 0.0f;
-    }
-
-    void IndividualHumanSTI::VacateRelationship( IRelationship* relationship )
-    {
-        LOG_DEBUG_F( "%s: individual %lu vacating relationship %d\n", __FUNCTION__, suid.data, relationship->GetId() );
-        relationship->pause( this );
-        release_assert( relationships.find( relationship ) != relationships.end() );
-        relationships.erase( relationship );
-        Properties.erase( relationship->GetPropertyKey() );
-        RelationshipType::Enum relationship_type = relationship->GetType();
-
-        // TODO - do we even need to note a ONS left behind?
-        // If not, don't allow restoration in RestoreRelationship().
-        --active_relationships[RelationshipType::TRANSITORY] ;
-        release_assert( active_relationships[RelationshipType::TRANSITORY] < max_relationships[RelationshipType::TRANSITORY]);
-        if( relationship_type != RelationshipType::TRANSITORY )
-        {
-            remote_relationships[relationship_type]++;
-            release_assert( (active_relationships[relationship_type] + remote_relationships[relationship_type]) <= max_relationships[relationship_type] );
-        }
-    }
-
-    void IndividualHumanSTI::RejoinRelationship( IRelationship* relationship )
-    {
-        LOG_DEBUG_F( "%s: individual %lu rejoining relationship %d\n", __FUNCTION__, suid.data, relationship->GetId() );
-        release_assert( relationships.find( relationship ) == relationships.end() );
-
-        relationships.insert( relationship );
-        if( Properties.find( relationship->GetPropertyKey() ) != Properties.end() )
-        {
-            std::ostringstream msg;
-            msg << "Individual "
-                << GetSuid().data
-                << "found existing relationship in the same slot, key ("
-                << relationship->GetPropertyKey().c_str()
-                << "): "
-                << Properties[ relationship->GetPropertyKey() ].c_str()
-                << std::endl;
-            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
-        }
-        Properties[ relationship->GetPropertyKey() ] = relationship->GetPropertyName();
-
-        RelationshipType::Enum relationship_type = relationship->GetType();
-        // TODO - should we expect to resume a ONS?
-        // See PauseRelationship().
-
-        if( relationship_type != RelationshipType::TRANSITORY )
-        {
-            // These are unsigned quantities, so we'll loop for wrap-around.
-            --remote_relationships[relationship_type] ;
-            release_assert( remote_relationships[relationship_type] < max_relationships[relationship_type] );
-        }
-        active_relationships[relationship_type]++;
-        release_assert( (active_relationships[relationship_type] + remote_relationships[relationship_type]) <= max_relationships[relationship_type]);
-
-        relationship->resume( this );
     }
 
     bool
@@ -890,7 +816,7 @@ namespace Kernel
 
     bool IndividualHumanSTI::IsCircumcised() const
     {
-        ISTICircumcisionConsumer *ic = nullptr;
+        ISTICircumcisionConsumer *ic = NULL;
         if (s_OK != interventions->QueryInterface(GET_IID( ISTICircumcisionConsumer ), (void**)&ic) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTICircumcisionConsumer", "interventions" );
@@ -902,21 +828,39 @@ namespace Kernel
     void
     IndividualHumanSTI::onEmigrating()
     {
-        LOG_DEBUG_F( "%s()\n", __FUNCTION__ );
-        if (m_age >= sexual_debut_age)
-        {
-            LOG_DEBUG_F( "%s: individual %lu is of age.\n", __FUNCTION__, suid.data );
-            disengageFromSociety();
-        }
+        disengageFromSociety();
     }
 
     void
-    IndividualHumanSTI::onImmigratingToNode()
+    IndividualHumanSTI::onImmigrating()
     {
         LOG_DEBUG_F( "%s()\n", __FUNCTION__ );
-        if (m_age >= sexual_debut_age)
+        migrating_because_of_partner = false;
+
+        INodeSTI* sti_node = nullptr;
+        if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_node) != s_OK)
         {
-            // Do something here?
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "INodeContext" );
+        }
+        auto society = sti_node->GetSociety();
+        auto manager = sti_node->GetRelationshipManager();
+
+        for( auto p_rel : GetRelationships() )
+        {
+            IRelationship* p_existing_rel = manager->Immigrate( p_rel );
+            p_existing_rel->Resume( manager, society, this );
+
+            // ------------------------------------------------------------------------
+            // --- If the two relationship objects are not the same object, then
+            // --- the objects are from serialization and we need to get it down to one
+            // ------------------------------------------------------------------------
+            if( p_rel != p_existing_rel )
+            {
+                // MULTI-CORE:  this is what we want to do but let's think about this more
+                release_assert( false );
+                RemoveRelationship( p_rel );
+                AddRelationship( p_existing_rel );
+            }
         }
     }
 
@@ -927,7 +871,7 @@ namespace Kernel
         bool no_relationships_or_allowed_extra = true ;
         for( int type = 0; type < RelationshipType::COUNT; type++ )
         {
-            effective_rels[ type ] = active_relationships[type] + remote_relationships[type];
+            effective_rels[ type ] = active_relationships[type];
             no_queued_relationships &= (queued_relationships[ type ] == 0) ;
             no_relationships_or_allowed_extra &= ( (effective_rels[ type ] == 0) || 
                                                    ( (effective_rels[ type ] > 0) && IS_EXTRA_ALLOWED(type))) ;
@@ -1059,10 +1003,6 @@ namespace Kernel
     {
         LOG_DEBUG_F( "%s: individual %d setting context to 0x%08X.\n", __FUNCTION__, suid.data, context );
         IndividualHuman::SetContextTo(context);
-        if (context)
-        {
-            onImmigratingToNode();
-        }
     }
 
     void
@@ -1070,7 +1010,85 @@ namespace Kernel
         float currenttime, float dt
     )
     {
-        IndividualHuman::CheckForMigration( currenttime, dt );
+        if( migrating_because_of_partner )
+        {
+            StateChange = HumanStateChange::Migrating;
+        }
+        else
+        {
+            IndividualHuman::CheckForMigration( currenttime, dt );
+            if( StateChange == HumanStateChange::Migrating )
+            {
+                INodeSTI* sti_node = nullptr;
+                if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_node) != s_OK)
+                {
+                    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "Node*" );
+                }
+                auto manager = sti_node->GetRelationshipManager();
+
+                // NOTE: This for loop is done this way since terminate() will remove relationships
+                // from the set.  If you use range-based loops, you will get an errlr.
+                for( auto iterator = relationships.begin(); iterator != relationships.end(); /**/)
+                {
+                    auto rel = *iterator++;
+                    RelationshipMigrationAction::Enum migration_action = rel->GetMigrationAction( GetNodeEventContext()->GetRng() );
+                    if( migration_action == RelationshipMigrationAction::MIGRATE )
+                    {
+                        // -------------------------------
+                        // --- Migrating the relationship 
+                        // -------------------------------
+
+                        IIndividualHumanSTI* ipartner = rel->GetPartner( this );
+                        IndividualHumanSTI* partner = dynamic_cast<IndividualHumanSTI*>(ipartner);
+                        release_assert( partner );
+
+                        rel->Migrate();
+
+                        partner->migrating_because_of_partner = true ;
+                        partner->StateChange                  = HumanStateChange::Migrating;
+                        partner->migration_destination        = this->migration_destination ;
+                        partner->migration_type               = this->migration_type;
+                        partner->time_to_next_migration       = this->time_to_next_migration;
+                        partner->will_return                  = this->will_return;
+                        partner->outbound                     = this->outbound;
+                        partner->waypoints                    = this->waypoints;
+                        partner->waypoints_trip_type          = this->waypoints_trip_type;
+
+                        for( auto partner_iterator = partner->relationships.begin(); partner_iterator != partner->relationships.end(); /**/)
+                        {
+                            auto partner_rel = *partner_iterator++;
+                            if( partner_rel != rel )
+                            {
+                                partner_rel->Terminate();
+                            }
+                        }
+                    }
+                    else if( migration_action == RelationshipMigrationAction::TERMINATE )
+                    {
+                        // -------------------------------------------------------------------
+                        // --- Relationship ends permanently when the person leaves the Node.
+                        // -------------------------------------------------------------------
+                        rel->Terminate();
+                        delete rel;
+                    }
+                    else if( migration_action == RelationshipMigrationAction::PAUSE )
+                    {
+                        // --------------------------------------------------------------------------------
+                        // --- More permanent relationships can last/stay open until the person comes back
+                        // --------------------------------------------------------------------------------
+                        rel->Pause( this );
+                        manager->Emigrate( rel );
+                    }
+                    else
+                    {
+                        throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, 
+                            "migration_action", 
+                            migration_action, 
+                            RelationshipMigrationAction::pairs::lookup_key( migration_action ) );
+                    }
+                }
+            }
+        }
     }
 
     unsigned char IndividualHumanSTI::GetProbExtraRelationalBitMask(Gender::Enum gender)
@@ -1087,13 +1105,10 @@ namespace Kernel
         }
         else
         {
-            float prob_extrarelational;
-            float draw;
-
             for( int rel = 0; rel < RelationshipType::COUNT; rel++ )
             {
-                prob_extrarelational = net_params.prob_extra_relational[rel][gender];
-                draw = Environment::getInstance()->RNG->e();
+                float prob_extrarelational = net_params.prob_extra_relational[rel][gender];
+                float draw = Environment::getInstance()->RNG->e();
 
                 if( draw < prob_extrarelational )
                 {
@@ -1135,16 +1150,16 @@ namespace Kernel
         }
     }
     
-    ProbabilityNumber IndividualHumanSTI::getProbabilityUsingCondomThisAct( RelationshipType::Enum relationship_type ) const
+    ProbabilityNumber IndividualHumanSTI::getProbabilityUsingCondomThisAct( const IRelationshipParameters* pRelParams ) const
     {
         ISTIBarrierConsumer* p_barrier = nullptr;
         if (interventions->QueryInterface(GET_IID(ISTIBarrierConsumer), (void**)&p_barrier) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTIBarrierConsumer", "InterventionsContainer" );
         }
-        auto probs = p_barrier->GetSTIBarrierProbabilitiesByRelType( relationship_type );
+        auto probs = p_barrier->GetSTIBarrierProbabilitiesByRelType( pRelParams );
         float year = float(GetParent()->GetTime().Year());
-        ProbabilityNumber prob = Sigmoid::variableWidthAndHeightSigmoid( year, probs.midyear, probs.rate, probs.early, probs.late );
+        ProbabilityNumber prob = probs.variableWidthAndHeightSigmoid( year );
         //LOG_DEBUG_F( "%s: returning %f from Sigmoid::vWAHS( %f, %f, %f, %f, %f )\n", __FUNCTION__, (float) prob, year, probs.midyear, probs.rate, probs.early, probs.late );
         return prob;
     }
@@ -1187,7 +1202,7 @@ namespace Kernel
         ar.labelElement("max_relationships"                       ); ar.serialize( human_sti.max_relationships,    rel_count );
         ar.labelElement("queued_relationships"                    ); ar.serialize( human_sti.queued_relationships, rel_count );
         ar.labelElement("active_relationships"                    ); ar.serialize( human_sti.active_relationships, rel_count );
-        ar.labelElement("remote_relationships"                    ); ar.serialize( human_sti.remote_relationships, rel_count );
+        ar.labelElement("migrating_because_of_partner"            ) & human_sti.migrating_because_of_partner;
         ar.labelElement("promiscuity_flags"                       ) & human_sti.promiscuity_flags;
         ar.labelElement("sexual_debut_age"                        ) & human_sti.sexual_debut_age;
         ar.labelElement("co_infective_factor"                     ) & human_sti.co_infective_factor;

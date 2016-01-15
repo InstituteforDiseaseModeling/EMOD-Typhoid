@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "EventCoordinator.h"
 #include "Configure.h"
 #include "NodeEventContext.h"
+#include "DemographicRestrictions.h"
 
 namespace Kernel
 {
@@ -56,23 +57,17 @@ namespace Kernel
         virtual float GetMinimumAge() const;
         virtual float GetMaximumAge() const;
 
-        virtual bool qualifiesDemographically( const IIndividualHumanEventContext * pIndividual ) const;
+        virtual bool qualifiesDemographically( const IIndividualHumanEventContext * pIndividual );
 
     protected:
         ISimulationEventContext  *parent;
         virtual float getDemographicCoverageForIndividual( const IIndividualHumanEventContext *pInd ) const;
+        virtual void preDistribute();
+        virtual bool HasNodeLevelIntervention() const;
 
-        float coverage;
         bool distribution_complete;
         int num_repetitions;
         int tsteps_between_reps;
-        float demographic_coverage;
-        jsonConfigurable::tDynamicStringSet property_restrictions;
-        std::map< std::string, std::string > property_restrictions_map;
-        TargetDemographicType::Enum target_demographic;
-        float target_age_min;
-        float target_age_max;
-        TargetGender::Enum target_gender;
         int travel_linked; // should be bool
         int include_emigrants;
         int include_immigrants;
@@ -82,6 +77,7 @@ namespace Kernel
         std::vector<INodeEventContext*> cached_nodes;
         std::vector<suids::suid> node_suids; // to help with serialization
         IDistributableIntervention *_di;
+        DemographicRestrictions demographic_restrictions;
 
         // helpers
         void regenerateCachedNodeContextPointers();
@@ -89,6 +85,6 @@ namespace Kernel
         virtual void initializeInterventionConfig( const Configuration * inputJson );
         virtual void validateInterventionConfig( const json::Element& rElement );
         virtual bool TargetedIndividualIsCovered(IIndividualHumanEventContext *ihec);
-        bool property_restrictions_verified;
+
     };
 }

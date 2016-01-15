@@ -41,6 +41,11 @@ public:
         return true ;
     }
 
+    virtual ISimulationContext* GetParent() override
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
+
     virtual suids::suid GetSuid() const override
     {
         return m_suid ;
@@ -96,7 +101,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual const MigrationInfo* GetMigrationInfo() const override
+    virtual IMigrationInfo* GetMigrationInfo() override
     {
         throw std::exception("The method or operation is not implemented.");
     }
@@ -217,13 +222,34 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual int GetExternalID() const override
+    virtual std::vector<bool> GetMigrationTypeEnabledFromDemographics() const override
+    {
+        std::vector<bool> enabled_list;
+
+        enabled_list.push_back( true );
+        enabled_list.push_back( true );
+        enabled_list.push_back( true );
+        enabled_list.push_back( true );
+
+        return enabled_list;
+    }
+
+    virtual ExternalNodeId_t GetExternalID() const
     {
         return m_suid.data ;
     }
 
-    virtual void SetupMigration(MigrationInfoFactory*) override { throw std::exception("The method is not implemented."); }
-    virtual void SetContextTo(ISimulationContext*) override { throw std::exception("The method is not implemented."); }
-    virtual void Update(float) override { throw std::exception("The method is not implemented."); }
-    virtual IIndividualHuman* processImmigratingIndividual(IIndividualHuman*) override { throw std::exception("The method is not implemented."); }
+    virtual void SetupMigration( IMigrationInfoFactory * migration_factory, 
+                                 MigrationStructure::Enum ms,
+                                 const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override
+    { 
+        throw std::exception("The method is not implemented.");
+    }
+
+    virtual void SetContextTo(ISimulationContext*)                                                             override { throw std::exception("The method is not implemented."); }
+    virtual void SetMonteCarloParameters(float indsamplerate =.05, int nummininf = 0)                          override { throw std::exception("The method is not implemented."); }
+    virtual void SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory) override { throw std::exception("The method is not implemented."); }
+    virtual void PopulateFromDemographics()                                                                    override { throw std::exception("The method is not implemented."); }
+    virtual void Update(float)                                                                                 override { throw std::exception("The method is not implemented."); }
+    virtual IIndividualHuman* processImmigratingIndividual(IIndividualHuman*)                                  override { throw std::exception("The method is not implemented."); }
 };

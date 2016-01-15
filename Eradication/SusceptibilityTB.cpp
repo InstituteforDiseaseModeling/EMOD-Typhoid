@@ -11,12 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifdef ENABLE_TB
 
-//for age dependent mod_mortality, defined as piecewise function of base mod_mortalty up to the MOD_MORTALITY_MIN_AGE
-// then for older adults defined as a sigmoid using threshold and invwidth
-#define MOD_MORTALITY_MIN_AGE (50)
-#define MOD_MORTALITY_THRESHOLD (55)
-#define MOD_MORTALITY_INVWIDTH (15)
-
 //Define child age
 #define CHILD_AGE_YEARS (15.0f)
 
@@ -118,7 +112,7 @@ namespace Kernel
 
     float SusceptibilityTB::GetFastProgressorFraction() 
     {
-        float fast_fraction;
+        float fast_fraction = 0;
 
         if(age < CHILD_AGE_YEARS * DAYSPERYEAR)
             fast_fraction = TB_fast_progressor_fraction_child;
@@ -130,7 +124,7 @@ namespace Kernel
 
     float SusceptibilityTB::GetSmearPositiveFraction() 
     {
-        float smear_positive_fraction;
+        float smear_positive_fraction = 0;
 
         if(age < CHILD_AGE_YEARS * DAYSPERYEAR)
             smear_positive_fraction = TB_smear_positive_fraction_child;
@@ -142,7 +136,7 @@ namespace Kernel
 
     float SusceptibilityTB::GetExtraPulmonaryFraction() 
     {
-        float extrapulmonary_fraction;
+        float extrapulmonary_fraction = 0;
 
         if(age < CHILD_AGE_YEARS* DAYSPERYEAR)
             extrapulmonary_fraction = TB_extrapulmonary_fraction_child;

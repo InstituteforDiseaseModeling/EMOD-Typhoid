@@ -39,7 +39,7 @@ namespace Kernel
     public:
         virtual ~NodeTB(void);
         static NodeTB *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
 
         virtual void SetupIntranodeTransmission() override;
         virtual void notifyOnInfectionIncidence ( IndividualHumanTB * pIncident ) override;

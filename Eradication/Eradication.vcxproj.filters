@@ -918,7 +918,6 @@
     <ClCompile Include="CalendarEventCoordinator.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
-    <ClCompile Include="CampaignEventByYear.cpp" />
     <ClCompile Include="IIndividualHuman.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
@@ -931,6 +930,15 @@
     <ClCompile Include="EventTrigger.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="DemographicRestrictions.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClCompile>
+    <ClCompile Include="RelationshipParameters.cpp">
+      <Filter>Source Files\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMigrationInfo.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
     <ClCompile Include="..\interventions\StiCoInfectionDiagnostic.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
     </ClCompile>
@@ -939,6 +947,9 @@
     </ClCompile>
     <ClCompile Include="..\interventions\ModifyStiCoInfectionStatus.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="CampaignEventByYear.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1363,9 +1374,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\utils\Serializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utils\SimpleTypemapRegistration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\utils\StatusReporter.h">
@@ -2020,7 +2028,6 @@
     <ClInclude Include="..\utils\RANDOM.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CampaignEventByYear.h" />
     <ClInclude Include="IInfection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2038,6 +2045,27 @@
     </ClInclude>
     <ClInclude Include="..\interventions\ModifyStiCoInfectionStatus.h">
       <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="DemographicRestrictions.h">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClInclude>
+    <ClInclude Include="IRelationshipParameters.h">
+      <Filter>Source Files\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="RelationshipParameters.h">
+      <Filter>Source Files\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="IIdGeneratorSTI.h">
+      <Filter>Source Files\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMigrationInfo.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="CampaignEventByYear.h">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClInclude>
+    <ClInclude Include="PolioContexts.h">
+      <Filter>Source Files\Environmental\Polio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

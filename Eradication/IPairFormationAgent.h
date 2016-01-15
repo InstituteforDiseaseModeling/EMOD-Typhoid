@@ -23,7 +23,6 @@ namespace Kernel
 {
     struct IDMAPI IPairFormationAgent : virtual ISerializable, JsonConfigurable
     {
-        virtual void SetUpdatePeriod(float) = 0;
         virtual void AddIndividual(IIndividualHumanSTI*) = 0;
         virtual void RemoveIndividual(IIndividualHumanSTI*) = 0;
         virtual void Update( const IdmDateTime& rCurrentTime, float dt ) = 0;

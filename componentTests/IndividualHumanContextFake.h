@@ -145,6 +145,28 @@ public:
         return m_pNodeContext ;
     }
 
+    virtual void setupMaternalAntibodies(Kernel::IIndividualHumanContext *,Kernel::INodeContext *) override { throw std::exception("The method or operation is not implemented."); }
+    virtual void AcquireNewInfection(Kernel::StrainIdentity *,int)                                 override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetInitialInfections(int)                                                         override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetParameters(float,float,float,float)                                            override { throw std::exception("The method or operation is not implemented."); }
+    virtual void InitializeHuman(void)                                                             override { throw std::exception("The method or operation is not implemented."); }
+    virtual void UpdateInfectiousness(float)                                                       override { throw std::exception("The method or operation is not implemented."); }
+    virtual float GetAcquisitionImmunity(void) const                                               override { throw std::exception("The method or operation is not implemented."); }
+    virtual void UpdateMCSamplingRate(float)                                                       override { throw std::exception("The method or operation is not implemented."); }
+    virtual bool UpdatePregnancy(float)                                                            override { throw std::exception("The method or operation is not implemented."); }
+    virtual void InitiatePregnancy(float)                                                          override { throw std::exception("The method or operation is not implemented."); }
+    virtual ProbabilityNumber getProbMaternalTransmission(void) const                              override { throw std::exception("The method or operation is not implemented."); }
+    virtual suids::suid GetParentSuid(void) const                                                  override { throw std::exception("The method or operation is not implemented."); }
+    virtual bool IsMigrating(void)                                                                 override { throw std::exception("The method or operation is not implemented."); }
+    virtual void ClearNewInfectionState(void)                                                      override { throw std::exception("The method or operation is not implemented."); }
+    virtual const infection_list_t& GetInfections(void) const                                      override { throw std::exception("The method or operation is not implemented."); }
+    virtual float GetImmunityReducedAcquire(void) const                                            override { throw std::exception("The method or operation is not implemented."); }
+    virtual float GetInterventionReducedAcquire(void) const                                        override { throw std::exception("The method or operation is not implemented."); }
+    virtual const suids::suid& GetMigrationDestination(void)                                       override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetContextTo(Kernel::INodeContext *)                                              override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetMigrationModifier( float modifier )                                            override { throw std::exception("The method or operation is not implemented."); }
+
+
     // --------------------------------
     // --- IIndividualHumanHIV Methods
     // --------------------------------
@@ -227,6 +249,7 @@ public:
     virtual float            GetInfectiousness()   const override { throw std::exception("The method or operation is not implemented."); }
     virtual HumanStateChange GetStateChange(void)  const override { throw std::exception("The method or operation is not implemented."); }
     virtual void             Die( HumanStateChange )     override { throw std::exception("The method or operation is not implemented."); }
+    virtual bool             AtHome()              const override { throw std::exception("The method or operation is not implemented."); }
 
     virtual tProperties* GetProperties() override
     {
@@ -276,16 +299,17 @@ public:
     virtual void UpdateEligibility()                                    override { throw std::exception("The method or operation is not implemented."); }
     virtual void ConsiderRelationships(float dt)                        override { throw std::exception("The method or operation is not implemented."); }
     virtual void RemoveRelationship( IRelationship* pNewRelationship )  override { throw std::exception("The method or operation is not implemented."); }
-    virtual void VacateRelationship( IRelationship* relationship )      override { throw std::exception("The method or operation is not implemented."); }
-    virtual void RejoinRelationship( IRelationship* relationship )      override { throw std::exception("The method or operation is not implemented."); }
     //virtual std::string toString() const = 0 ;
     virtual unsigned int GetOpenRelationshipSlot() const       override { throw std::exception("The method or operation is not implemented."); }
     virtual NaturalNumber GetLast6MonthRels() const            override { throw std::exception("The method or operation is not implemented."); }
     virtual NaturalNumber GetLifetimeRelationshipCount() const override { throw std::exception("The method or operation is not implemented."); }
     virtual NaturalNumber GetNumRelationshipsAtDeath() const   override { throw std::exception("The method or operation is not implemented."); }
     virtual void NotifyPotentialExposure()                     override { throw std::exception("The method or operation is not implemented."); }
+    virtual void onEmigrating()                                override { throw std::exception("The method or operation is not implemented."); }
+    virtual void onImmigrating()                               override { throw std::exception("The method or operation is not implemented."); }
+    virtual suids::suid GetNodeSuid() const                    override { throw std::exception("The method or operation is not implemented."); }
 
-    virtual ProbabilityNumber getProbabilityUsingCondomThisAct( RelationshipType::Enum ) const override { throw std::exception("The method or operation is not implemented."); }
+    virtual ProbabilityNumber getProbabilityUsingCondomThisAct( const IRelationshipParameters* pRelParams ) const override { throw std::exception("The method or operation is not implemented."); }
 
     virtual RelationshipSet_t& GetRelationshipsAtDeath() override { throw std::exception("The method or operation is not implemented."); }
 
@@ -348,26 +372,6 @@ public:
         m_HasHIV = hasHIV ;
         release_assert( !(m_HasSTI && (m_HasCoSTI || m_HasHIV)) );
     }
-
-    virtual void setupMaternalAntibodies(Kernel::IIndividualHumanContext *,Kernel::INodeContext *) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void AcquireNewInfection(Kernel::StrainIdentity *,int) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void SetInitialInfections(int) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void SetParameters(float,float,float,float) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void InitializeHuman(void) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void UpdateInfectiousness(float) override { throw std::exception("The method or operation is not implemented."); }
-    virtual float GetAcquisitionImmunity(void) const override { throw std::exception("The method or operation is not implemented."); }
-    virtual void UpdateMCSamplingRate(float) override { throw std::exception("The method or operation is not implemented."); }
-    virtual bool UpdatePregnancy(float) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void InitiatePregnancy(float) override { throw std::exception("The method or operation is not implemented."); }
-    virtual ProbabilityNumber getProbMaternalTransmission(void) const override { throw std::exception("The method or operation is not implemented."); }
-    virtual suids::suid GetParentSuid(void) const override { throw std::exception("The method or operation is not implemented."); }
-    virtual bool IsMigrating(void) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void ClearNewInfectionState(void) override { throw std::exception("The method or operation is not implemented."); }
-    virtual const infection_list_t& GetInfections(void) const override { throw std::exception("The method or operation is not implemented."); }
-    virtual float GetImmunityReducedAcquire(void) const override { throw std::exception("The method or operation is not implemented."); }
-    virtual float GetInterventionReducedAcquire(void) const override { throw std::exception("The method or operation is not implemented."); }
-    virtual const suids::suid& GetMigrationDestination(void) override { throw std::exception("The method or operation is not implemented."); }
-    virtual void SetContextTo(Kernel::INodeContext *) override { throw std::exception("The method or operation is not implemented."); }
 
 private:
     int m_RefCount ;

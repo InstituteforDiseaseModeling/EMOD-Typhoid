@@ -46,14 +46,17 @@ SUITE(HivSimpleDiagnosticTest)
             , m_pSimulationConfig( new SimulationConfig() )
         {
             Environment::Finalize();
-            Environment::setLogger( new SimpleLogger() );
-            m_InterventionsContext.setCascadeState( "not_set" );
-            m_InterventionsContext.SetContextTo( &m_Human );
-            m_Diag.SetContextTo( &m_Human );
-            m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
             Environment::setSimulationConfig( m_pSimulationConfig );
+
+            m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
             m_pSimulationConfig->listed_events.insert("Births"          );
             m_pSimulationConfig->listed_events.insert("NonDiseaseDeaths");
+
+            m_InterventionsContext.setCascadeState( "not_set" );
+            m_InterventionsContext.SetContextTo( &m_Human );
+
+            m_Diag.SetContextTo( &m_Human );
 
             m_Human.SetHasHIV( true );
         }

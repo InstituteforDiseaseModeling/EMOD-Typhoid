@@ -116,6 +116,20 @@
 				"type" : "bool",
 				"default" : 1
 			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
+			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
 				"type" : "bool",
@@ -394,6 +408,20 @@
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
 				"default" : 1
+			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
 			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -890,6 +918,20 @@
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
 				"default" : 1
+			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
 			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -1462,6 +1504,20 @@
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
 				"default" : 1
+			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
 			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -2327,6 +2383,20 @@
 				"type" : "bool",
 				"default" : 1
 			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
+			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
 				"type" : "bool",
@@ -2555,6 +2625,20 @@
 				"type" : "bool",
 				"default" : 1
 			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
+			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
 				"type" : "bool",
@@ -2741,6 +2825,20 @@
 				"type" : "bool",
 				"default" : 1
 			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
+			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
 				"type" : "bool",
@@ -2836,69 +2934,6 @@
 				"type" : "float",
 				"min" : 1.19209e-007,
 				"max" : 1,
-				"default" : 1
-			},
-			"Coital_Act_Rate_Transitory" : {
-				"description" : "Rate for coital acts in Transitory Relationships.",
-				"type" : "float",
-				"min" : 1.19209e-007,
-				"max" : 20,
-				"default" : 0.33
-			},
-			"Coital_Act_Rate_Informal" : {
-				"description" : "Rate for coital acts in Informal Relationships.",
-				"type" : "float",
-				"min" : 1.19209e-007,
-				"max" : 20,
-				"default" : 0.33
-			},
-			"Coital_Act_Rate_Marital" : {
-				"description" : "Rate for coital acts in Marriage Relationships.",
-				"type" : "float",
-				"min" : 1.19209e-007,
-				"max" : 20,
-				"default" : 0.33
-			},
-			"Relationships_Transitory_Weibull_Heterogeneity" : {
-				"description" : "Inverse of Weibull shape (1/kappa) parameter of Transitory relationship duration (in years).",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100,
-				"default" : 1
-			},
-			"Relationships_Transitory_Weibull_Scale" : {
-				"description" : "Weibull scale parameter of Transitory relationship duration (in years).",
-				"type" : "float",
-				"min" : 0.002739,
-				"max" : 3.40282e+038,
-				"default" : 1
-			},
-			"Relationships_Informal_Weibull_Heterogeneity" : {
-				"description" : "Inverse of Weibull shape (1/kappa) parameter of Informal relationship duration (in years).",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100,
-				"default" : 1
-			},
-			"Relationships_Informal_Weibull_Scale" : {
-				"description" : "Weibull scale parameter of Informal relationship duration (in years).",
-				"type" : "float",
-				"min" : 0.002739,
-				"max" : 3.40282e+038,
-				"default" : 1
-			},
-			"Relationships_Marital_Weibull_Heterogeneity" : {
-				"description" : "Inverse of Weibull shape (1/kappa) parameter of Marital relationship duration (in years).",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100,
-				"default" : 1
-			},
-			"Relationships_Marital_Weibull_Scale" : {
-				"description" : "Weibull scale parameter of Marital relationship duration (in years).",
-				"type" : "float",
-				"min" : 0.002739,
-				"max" : 3.40282e+038,
 				"default" : 1
 			}
 		},
@@ -3013,6 +3048,20 @@
 				"type" : "bool",
 				"default" : 1
 			},
+			"Default_Geography_Torus_Size" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"min" : 3,
+				"max" : 100,
+				"default" : 10
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"min" : 0,
+				"max" : 2.14748e+009,
+				"default" : 1000
+			},
 			"Enable_Vital_Dynamics" : {
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
 				"type" : "bool",
@@ -3108,69 +3157,6 @@
 				"type" : "float",
 				"min" : 1.19209e-007,
 				"max" : 1,
-				"default" : 1
-			},
-			"Coital_Act_Rate_Transitory" : {
-				"description" : "Rate for coital acts in Transitory Relationships.",
-				"type" : "float",
-				"min" : 1.19209e-007,
-				"max" : 20,
-				"default" : 0.33
-			},
-			"Coital_Act_Rate_Informal" : {
-				"description" : "Rate for coital acts in Informal Relationships.",
-				"type" : "float",
-				"min" : 1.19209e-007,
-				"max" : 20,
-				"default" : 0.33
-			},
-			"Coital_Act_Rate_Marital" : {
-				"description" : "Rate for coital acts in Marriage Relationships.",
-				"type" : "float",
-				"min" : 1.19209e-007,
-				"max" : 20,
-				"default" : 0.33
-			},
-			"Relationships_Transitory_Weibull_Heterogeneity" : {
-				"description" : "Inverse of Weibull shape (1/kappa) parameter of Transitory relationship duration (in years).",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100,
-				"default" : 1
-			},
-			"Relationships_Transitory_Weibull_Scale" : {
-				"description" : "Weibull scale parameter of Transitory relationship duration (in years).",
-				"type" : "float",
-				"min" : 0.002739,
-				"max" : 3.40282e+038,
-				"default" : 1
-			},
-			"Relationships_Informal_Weibull_Heterogeneity" : {
-				"description" : "Inverse of Weibull shape (1/kappa) parameter of Informal relationship duration (in years).",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100,
-				"default" : 1
-			},
-			"Relationships_Informal_Weibull_Scale" : {
-				"description" : "Weibull scale parameter of Informal relationship duration (in years).",
-				"type" : "float",
-				"min" : 0.002739,
-				"max" : 3.40282e+038,
-				"default" : 1
-			},
-			"Relationships_Marital_Weibull_Heterogeneity" : {
-				"description" : "Inverse of Weibull shape (1/kappa) parameter of Marital relationship duration (in years).",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100,
-				"default" : 1
-			},
-			"Relationships_Marital_Weibull_Scale" : {
-				"description" : "Weibull scale parameter of Marital relationship duration (in years).",
-				"type" : "float",
-				"min" : 0.002739,
-				"max" : 3.40282e+038,
 				"default" : 1
 			},
 			"Maternal_Transmission_ART_Multiplier" : {
@@ -3804,90 +3790,6 @@
 				"max" : 1,
 				"default" : 0.9
 			},
-			"Condom_Usage_Probability_in_Marital_Relationships_Early" : {
-				"description" : "Left-asymptote of the sigmoidally-varying condom usage probability for marital-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.5
-			},
-			"Condom_Usage_Probability_in_Marital_Relationships_Late" : {
-				"description" : "Right-asymptote of the sigmoidally-varying condom usage probability for marital-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.5
-			},
-			"Condom_Usage_Probability_in_Marital_Relationships_Midyear" : {
-				"description" : "Year in which the sigmoidally-varying condom usage probability is half way between the early and late values for marital-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100000,
-				"default" : 365
-			},
-			"Condom_Usage_Probability_in_Marital_Relationships_Rate" : {
-				"description" : "Governs the speed of transition between early and late values of the condom usage sigmoid for marital relationships. The slope at the mid-year is proportional to the rate.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 10,
-				"default" : 1
-			},
-			"Condom_Usage_Probability_in_Informal_Relationships_Early" : {
-				"description" : "Left-asymptote of the sigmoidally-varying condom usage probability for informal-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.5
-			},
-			"Condom_Usage_Probability_in_Informal_Relationships_Late" : {
-				"description" : "Right-asymptote of the sigmoidally-varying condom usage probability for informal-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.5
-			},
-			"Condom_Usage_Probability_in_Informal_Relationships_Midyear" : {
-				"description" : "Year in which the sigmoidally-varying condom usage probability reaches an inflection point half way between the early and late values for informal-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100000,
-				"default" : 365
-			},
-			"Condom_Usage_Probability_in_Informal_Relationships_Rate" : {
-				"description" : "Governs the speed of transition between early and late values of the condom usage sigmoid for informal relationships. The slope at the mid-year is proportional to the rate.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 10,
-				"default" : 1
-			},
-			"Condom_Usage_Probability_in_Transitory_Relationships_Early" : {
-				"description" : "Left-asymptote of the sigmoidally-varying condom usage probability for transitory-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.5
-			},
-			"Condom_Usage_Probability_in_Transitory_Relationships_Late" : {
-				"description" : "Right-asymptote of the sigmoidally-varying condom usage probability for transitory-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.5
-			},
-			"Condom_Usage_Probability_in_Transitory_Relationships_Midyear" : {
-				"description" : "Year in which the sigmoidally-varying condom usage probability is half way between the early and late values for transitory-type relationships.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 100000,
-				"default" : 365
-			},
-			"Condom_Usage_Probability_in_Transitory_Relationships_Rate" : {
-				"description" : "Governs the speed of transition between early and late values of the condom usage sigmoid for transitory relationships. The slope at the mid-year is proportional to the rate.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 10,
-				"default" : 1
-			},
 			"idmType:STINetworkParametersMap" : {
 				"Individual_Property_Name" : {
 					"type" : "Constrained String",
@@ -4511,7 +4413,7 @@
 				"default" : 0.15
 			}
 		},
-		"Migration" : {
+		"Migration.Default" : {
 			"Enable_Migration_Heterogeneity" : {
 				"description" : "Set to 1 to use migration rate distribution in the demographics file. Set to 0 to assume by default that the same migration rate applies for all individuals.",
 				"type" : "bool",
@@ -4523,9 +4425,56 @@
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 1
+			}
+		},
+		"Migration.File" : {
+			"Enable_Migration_Heterogeneity" : {
+				"description" : "Set to 1 to use migration rate distribution in the demographics file. Set to 0 to assume by default that the same migration rate applies for all individuals.",
+				"type" : "bool",
+				"default" : 1
 			},
-			"x_Sea_Migration" : {
-				"description" : "Multiplier for rate of migration by sea.",
+			"Enable_Local_Migration" : {
+				"description" : "Set to 1 to enable local migration, the diffusion of people in and out of nearby nodes by foot travel. Set to 0 to disable local migration.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Air_Migration" : {
+				"description" : "Set to 1 to account for migration by airplane in and out of cities with airports. Set to 0 to assume by default that no migration occurs by air travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Regional_Migration" : {
+				"description" : "Set to 1 to account for migration by road vehicle in and out of nodal cities in the road network. Set to 0 to assume by default that no migration occurs by road travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Sea_Migration" : {
+				"description" : "Set to 1 to account for migration on ships in and out of coastal cities with seaports. Set to 0 to assume by default that no migration occurs by sea travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Local_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration to adjacent nodes by foot travel.",
+				"type" : "string"
+			},
+			"Air_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by airplane.",
+				"type" : "string"
+			},
+			"Regional_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by vehicle via road or rail network. If the node is not on a road or rail network, regional migration focuses on the closest hub city in the network.",
+				"type" : "string"
+			},
+			"Sea_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by ship.",
+				"type" : "string"
+			},
+			"x_Local_Migration" : {
+				"description" : "Multiplier for rate of migration by foot travel.",
 				"type" : "float",
 				"min" : 0,
 				"max" : 3.40282e+038,
@@ -4544,48 +4493,13 @@
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 1
-			}
-		},
-		"Migration.General" : {
-			"Enable_Air_Migration" : {
-				"description" : "Set to 1 to account for migration by airplane in and out of cities with airports. Set to 0 to assume by default that no migration occurs by air travel.",
-				"type" : "bool",
-				"default" : 0
 			},
-			"Enable_Regional_Migration" : {
-				"description" : "Set to 1 to account for migration by road vehicle in and out of nodal cities in the road network. Set to 0 to assume by default that no migration occurs by road travel.",
-				"type" : "bool",
+			"x_Sea_Migration" : {
+				"description" : "Multiplier for rate of migration by sea.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
 				"default" : 1
-			},
-			"Enable_Sea_Migration" : {
-				"description" : "Set to 1 to account for migration on ships in and out of coastal cities with seaports. Set to 0 to assume by default that no migration occurs by sea travel.",
-				"type" : "bool",
-				"default" : 1
-			},
-			"Enable_Local_Migration" : {
-				"description" : "Set to 1 to enable local migration, the diffusion of people in and out of nearby nodes by foot travel. Set to 0 to disable local migration.",
-				"type" : "bool",
-				"default" : 1
-			},
-			"Air_Migration_Filename" : {
-				"default" : "UNINITIALIZED STRING",
-				"description" : "Path of input file defining patterns of migration by airplane.",
-				"type" : "string"
-			},
-			"Local_Migration_Filename" : {
-				"default" : "UNINITIALIZED STRING",
-				"description" : "Path of input file defining patterns of migration to adjacent nodes by foot travel.",
-				"type" : "string"
-			},
-			"Regional_Migration_Filename" : {
-				"default" : "UNINITIALIZED STRING",
-				"description" : "Path of input file defining patterns of migration by vehicle via road or rail network. If the node is not on a road or rail network, regional migration focuses on the closest hub city in the network.",
-				"type" : "string"
-			},
-			"Sea_Migration_Filename" : {
-				"default" : "UNINITIALIZED STRING",
-				"description" : "Path of input file defining patterns of migration by ship.",
-				"type" : "string"
 			}
 		},
 		"Node" : {
@@ -5435,6 +5349,21 @@
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 3.40282e+038
+			},
+			"Report_HIV_ByAgeAndGender_Collect_Circumcision_Data" : {
+				"description" : "TBD",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Report_HIV_ByAgeAndGender_Collect_IP_Data" : {
+				"description" : "TBD",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4" : {
+				"description" : "TBD",
+				"type" : "bool",
+				"default" : 0
 			}
 		},
 		"ReportHIVInfection" : {
@@ -5656,7 +5585,7 @@
 				"possible_values" : []
 			},
 			"Base_Year" : {
-				"description" : "Absolute time in years when the simulation begins, e.g. 1990.  This can be combined with ABSOLUTE_TIME in campaigns to trigger events.",
+				"description" : "Absolute time in years when the simulation begins, e.g. 1990.  This can be combined with CampaignEventByYear to trigger campaign events.",
 				"type" : "float",
 				"min" : 1800,
 				"max" : 2100,
@@ -5769,48 +5698,6 @@
 			}
 		},
 		"SocietyImpl" : {
-			"Transitory_Formation_Rate_Heterosexual" : {
-				"description" : "Transitory_Formation_Rate_HeterosexualThe rate at which transitory relationships form in eligible individuals, on average. The transitory PFA adjusts this rate by age bin while maintaining the expected number of relationships formed per unit time.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.0013699
-			},
-			"Informal_Formation_Rate_Heterosexual" : {
-				"description" : "The rate at which informal relationships form in eligible individuals, on average. The informal PFA adjusts this rate by age bin while maintaining the expected number of relationships formed per unit time.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.001442
-			},
-			"Marriage_Formation_Rate_Heterosexual" : {
-				"description" : "The rate at which marital relationships form in eligible individuals, on average. The marital PFA adjusts this rate by age bin while maintaining the expected number of relationships formed per unit time.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 9.1324e-005
-			},
-			"PFA_Update_Period_Transitory" : {
-				"description" : "Individuals flow continually into each PFA. This parameter determines how often individuals in the transitory PFA should be paired up. Higher numbers reduce the time required to complete a simulation and can increase the fidelity to the joint_probabilities matrix.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 0
-			},
-			"PFA_Update_Period_Informal" : {
-				"description" : "Individuals flow continually into each PFA. This parameter determines how often individuals in the informal PFA should be paired up. Higher numbers reduce the time required to complete a simulation and can increase the fidelity to the joint_probabilities matrix.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 0
-			},
-			"PFA_Update_Period_Marital" : {
-				"description" : "Individuals flow continually into each PFA. This parameter determines how often individuals in the marital PFA should be paired up. Higher numbers reduce the time required to complete a simulation and can increase the fidelity to the joint_probabilities matrix.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 0
-			},
 			"Extra_Relational_Rate_Ratio_Male" : {
 				"description" : "The ratio of relationship formation rates, for a particular relationship type, between individuals having an extra-relational flag (numerator) and those without a flag (denominator). This parameter applies to males.",
 				"type" : "float",
@@ -6357,16 +6244,6 @@
 						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
 						"type" : "idmType:Intervention"
 					},
-					"Demographic_Coverage" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Number_Repetitions" : {
 						"description" : "Number of times intervention given, used with tsteps_between_reps.",
 						"type" : "integer",
@@ -6412,6 +6289,16 @@
 						"default" : 0,
 						"depends-on" : {
 							"Travel_Linked" : "true"
+						}
+					},
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
 					"Target_Demographic" : {
@@ -6471,6 +6358,26 @@
 						"type" : "Dynamic String Set",
 						"default" : [],
 						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
@@ -6505,16 +6412,6 @@
 						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
 						"type" : "idmType:Intervention"
 					},
-					"Demographic_Coverage" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Number_Repetitions" : {
 						"description" : "Number of times intervention given, used with tsteps_between_reps.",
 						"type" : "integer",
@@ -6560,6 +6457,16 @@
 						"default" : 0,
 						"depends-on" : {
 							"Travel_Linked" : "true"
+						}
+					},
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
 					"Target_Demographic" : {
@@ -6623,9 +6530,93 @@
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
 					"class" : "CoverageByNodeEventCoordinator"
 				},
 				"GroupInterventionDistributionEventCoordinator" : {
+					"idmType:Intervention" : {
+						"base" : "interventions.idmAbstractType.Intervention"
+					},
+					"Intervention_Config" : {
+						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
+						"type" : "idmType:Intervention"
+					},
+					"Number_Repetitions" : {
+						"description" : "Number of times intervention given, used with tsteps_between_reps.",
+						"type" : "integer",
+						"min" : -1,
+						"max" : 1000,
+						"default" : -1
+					},
+					"Timesteps_Between_Repetitions" : {
+						"description" : "Repetition interval.",
+						"type" : "integer",
+						"min" : -1,
+						"max" : 10000,
+						"default" : -1,
+						"depends-on" : {
+							"Number_Repetitions" : "<>0"
+						}
+					},
+					"Travel_Linked" : {
+						"description" : "travel_linked (1=yes, 0=no.)",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 1,
+						"default" : 0,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Include_Departures" : {
+						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 1,
+						"default" : 0,
+						"depends-on" : {
+							"Travel_Linked" : "true"
+						}
+					},
+					"Include_Arrivals" : {
+						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 1,
+						"default" : 0,
+						"depends-on" : {
+							"Travel_Linked" : "true"
+						}
+					},
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
 					"Target_Demographic" : {
 						"type" : "enum",
 						"enum" : [
@@ -6644,6 +6635,65 @@
 						],
 						"description" : "The demographic group (from a list of possibles) targeted by this intervention (e.g., Infants)",
 						"default" : "Everyone",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Age_Min" : {
+						"description" : "Lower end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Age_Max" : {
+						"description" : "Upper end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Gender" : {
+						"type" : "enum",
+						"enum" : [
+							"All",
+							"Male",
+							"Female"
+						],
+						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
+						"default" : "All"
+					},
+					"Property_Restrictions" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "Dynamic String Set",
+						"default" : [],
+						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
@@ -6664,109 +6714,6 @@
 						"description" : "The disease state group (from a list of possibles) targeted by this intervention (e.g., Infected)",
 						"default" : "Everyone"
 					},
-					"idmType:Intervention" : {
-						"base" : "interventions.idmAbstractType.Intervention"
-					},
-					"Intervention_Config" : {
-						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
-						"type" : "idmType:Intervention"
-					},
-					"Demographic_Coverage" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
-					"Number_Repetitions" : {
-						"description" : "Number of times intervention given, used with tsteps_between_reps.",
-						"type" : "integer",
-						"min" : -1,
-						"max" : 1000,
-						"default" : -1
-					},
-					"Timesteps_Between_Repetitions" : {
-						"description" : "Repetition interval.",
-						"type" : "integer",
-						"min" : -1,
-						"max" : 10000,
-						"default" : -1,
-						"depends-on" : {
-							"Number_Repetitions" : "<>0"
-						}
-					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
-					"Include_Departures" : {
-						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
-					},
-					"Include_Arrivals" : {
-						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
-					},
-					"Target_Age_Min" : {
-						"description" : "Lower end of age targeted for intervention, in years.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 0,
-						"depends-on" : {
-							"Target_Demographic" : "ExplicitAgeRanges"
-						}
-					},
-					"Target_Age_Max" : {
-						"description" : "Upper end of age targeted for intervention, in years.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
-						"depends-on" : {
-							"Target_Demographic" : "ExplicitAgeRanges"
-						}
-					},
-					"Target_Gender" : {
-						"type" : "enum",
-						"enum" : [
-							"All",
-							"Male",
-							"Female"
-						],
-						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
-						"default" : "All"
-					},
-					"Property_Restrictions" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "Dynamic String Set",
-						"default" : [],
-						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"class" : "GroupInterventionDistributionEventCoordinator"
 				},
 				"GroupInterventionDistributionEventCoordinatorHIV" : {
@@ -6786,36 +6733,6 @@
 						"description" : "TBD",
 						"default" : "Everyone"
 					},
-					"Target_Gender" : {
-						"type" : "enum",
-						"enum" : [
-							"All",
-							"Male",
-							"Female"
-						],
-						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
-						"default" : "All"
-					},
-					"Target_Age_Min" : {
-						"description" : "Lower end of age targeted for intervention, in years.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 0,
-						"depends-on" : {
-							"Target_Demographic" : "ExplicitAgeRanges"
-						}
-					},
-					"Target_Age_Max" : {
-						"description" : "Upper end of age targeted for intervention, in years.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
-						"depends-on" : {
-							"Target_Demographic" : "ExplicitAgeRanges"
-						}
-					},
 					"Time_Offset" : {
 						"description" : "time used in demographic file for intervention is simulation time - time_offset",
 						"type" : "float",
@@ -6830,16 +6747,6 @@
 						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
 						"type" : "idmType:Intervention"
 					},
-					"Demographic_Coverage" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Number_Repetitions" : {
 						"description" : "Number of times intervention given, used with tsteps_between_reps.",
 						"type" : "integer",
@@ -6887,47 +6794,6 @@
 							"Travel_Linked" : "true"
 						}
 					},
-					"Target_Demographic" : {
-						"type" : "enum",
-						"enum" : [
-							"Everyone",
-							"ExplicitAgeRanges",
-							"ExplicitAgeRangesAndGender",
-							"ExplicitGender",
-							"PossibleMothers",
-							"ArrivingAirTravellers",
-							"DepartingAirTravellers",
-							"ArrivingRoadTravellers",
-							"DepartingRoadTravellers",
-							"AllArrivingTravellers",
-							"AllDepartingTravellers",
-							"ExplicitDiseaseState"
-						],
-						"description" : "The demographic group (from a list of possibles) targeted by this intervention (e.g., Infants)",
-						"default" : "Everyone",
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
-					"Property_Restrictions" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "Dynamic String Set",
-						"default" : [],
-						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
-					"class" : "GroupInterventionDistributionEventCoordinatorHIV"
-				},
-				"MultiInterventionEventCoordinator" : {
-					"idmType:Intervention" : {
-						"base" : "interventions.idmAbstractType.Intervention"
-					},
-					"Intervention_Configs" : {
-						"description" : "The array of nested json parameters for the interventions to be distributed by this event coordinator.",
-						"type" : "idmType:Intervention"
-					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
 						"type" : "float",
@@ -6936,53 +6802,6 @@
 						"default" : 1,
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
-					"Number_Repetitions" : {
-						"description" : "Number of times intervention given, used with tsteps_between_reps.",
-						"type" : "integer",
-						"min" : -1,
-						"max" : 1000,
-						"default" : -1
-					},
-					"Timesteps_Between_Repetitions" : {
-						"description" : "Repetition interval.",
-						"type" : "integer",
-						"min" : -1,
-						"max" : 10000,
-						"default" : -1,
-						"depends-on" : {
-							"Number_Repetitions" : "<>0"
-						}
-					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
-					"Include_Departures" : {
-						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
-					},
-					"Include_Arrivals" : {
-						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
 						}
 					},
 					"Target_Demographic" : {
@@ -7042,6 +6861,174 @@
 						"type" : "Dynamic String Set",
 						"default" : [],
 						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"class" : "GroupInterventionDistributionEventCoordinatorHIV"
+				},
+				"MultiInterventionEventCoordinator" : {
+					"idmType:Intervention" : {
+						"base" : "interventions.idmAbstractType.Intervention"
+					},
+					"Intervention_Configs" : {
+						"description" : "The array of nested json parameters for the interventions to be distributed by this event coordinator.",
+						"type" : "idmType:Intervention"
+					},
+					"Number_Repetitions" : {
+						"description" : "Number of times intervention given, used with tsteps_between_reps.",
+						"type" : "integer",
+						"min" : -1,
+						"max" : 1000,
+						"default" : -1
+					},
+					"Timesteps_Between_Repetitions" : {
+						"description" : "Repetition interval.",
+						"type" : "integer",
+						"min" : -1,
+						"max" : 10000,
+						"default" : -1,
+						"depends-on" : {
+							"Number_Repetitions" : "<>0"
+						}
+					},
+					"Travel_Linked" : {
+						"description" : "travel_linked (1=yes, 0=no.)",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 1,
+						"default" : 0,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Include_Departures" : {
+						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 1,
+						"default" : 0,
+						"depends-on" : {
+							"Travel_Linked" : "true"
+						}
+					},
+					"Include_Arrivals" : {
+						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 1,
+						"default" : 0,
+						"depends-on" : {
+							"Travel_Linked" : "true"
+						}
+					},
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Demographic" : {
+						"type" : "enum",
+						"enum" : [
+							"Everyone",
+							"ExplicitAgeRanges",
+							"ExplicitAgeRangesAndGender",
+							"ExplicitGender",
+							"PossibleMothers",
+							"ArrivingAirTravellers",
+							"DepartingAirTravellers",
+							"ArrivingRoadTravellers",
+							"DepartingRoadTravellers",
+							"AllArrivingTravellers",
+							"AllDepartingTravellers",
+							"ExplicitDiseaseState"
+						],
+						"description" : "The demographic group (from a list of possibles) targeted by this intervention (e.g., Infants)",
+						"default" : "Everyone",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Age_Min" : {
+						"description" : "Lower end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Age_Max" : {
+						"description" : "Upper end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Gender" : {
+						"type" : "enum",
+						"enum" : [
+							"All",
+							"Male",
+							"Female"
+						],
+						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
+						"default" : "All"
+					},
+					"Property_Restrictions" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "Dynamic String Set",
+						"default" : [],
+						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
@@ -7079,16 +7066,6 @@
 						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
 						"type" : "idmType:Intervention"
 					},
-					"Demographic_Coverage" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Number_Repetitions" : {
 						"description" : "Number of times intervention given, used with tsteps_between_reps.",
 						"type" : "integer",
@@ -7134,6 +7111,16 @@
 						"default" : 0,
 						"depends-on" : {
 							"Travel_Linked" : "true"
+						}
+					},
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
 					"Target_Demographic" : {
@@ -7193,6 +7180,26 @@
 						"type" : "Dynamic String Set",
 						"default" : [],
 						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
@@ -7224,16 +7231,6 @@
 						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
 						"type" : "idmType:Intervention"
 					},
-					"Demographic_Coverage" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Number_Repetitions" : {
 						"description" : "Number of times intervention given, used with tsteps_between_reps.",
 						"type" : "integer",
@@ -7279,6 +7276,16 @@
 						"default" : 0,
 						"depends-on" : {
 							"Travel_Linked" : "true"
+						}
+					},
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
 					"Target_Demographic" : {
@@ -7338,6 +7345,26 @@
 						"type" : "Dynamic String Set",
 						"default" : [],
 						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
@@ -7666,7 +7693,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -7815,7 +7842,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -7958,7 +7985,7 @@
 							"FIXED_DURATION_CONSTANT_EFFECT",
 							"CONCENTRATION_VERSUS_TIME"
 						],
-						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000 ",
+						"description" : "The PKPD (pharmacokinetic) model type (FIXED_DURATION_CONSTANT_EFFECT or CONCENTRATION_VERSUS_TIME).  The latter conditionally loads some parameters as follows:  Drug_Cmax - Drug maximum concentration for a dosing is 0 to 10000  Drug_Vd - Volume of distribution for the drug is 0 to 10000  Drug_PKPD_c50 - Drug PKPD c50 for killing effects is 0 to 5000",
 						"default" : "FIXED_DURATION_CONSTANT_EFFECT"
 					},
 					"Secondary_Decay_Time_Constant" : {
@@ -8203,11 +8230,95 @@
 						"default" : -1
 					},
 					"Demographic_Coverage" : {
-						"description" : "The fraction of newborns who receive an actual intervention. ",
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 1,
-						"default" : 1
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Demographic" : {
+						"type" : "enum",
+						"enum" : [
+							"Everyone",
+							"ExplicitAgeRanges",
+							"ExplicitAgeRangesAndGender",
+							"ExplicitGender",
+							"PossibleMothers",
+							"ArrivingAirTravellers",
+							"DepartingAirTravellers",
+							"ArrivingRoadTravellers",
+							"DepartingRoadTravellers",
+							"AllArrivingTravellers",
+							"AllDepartingTravellers",
+							"ExplicitDiseaseState"
+						],
+						"description" : "The demographic group (from a list of possibles) targeted by this intervention (e.g., Infants)",
+						"default" : "Everyone",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Age_Min" : {
+						"description" : "Lower end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Age_Max" : {
+						"description" : "Upper end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Gender" : {
+						"type" : "enum",
+						"enum" : [
+							"All",
+							"Male",
+							"Female"
+						],
+						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
+						"default" : "All"
+					},
+					"Property_Restrictions" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "Dynamic String Set",
+						"default" : [],
+						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
 					},
 					"iv_type" : "NodeTargeted",
 					"class" : "BirthTriggeredIV"
@@ -10394,25 +10505,75 @@
 						"default" : -1
 					},
 					"Demographic_Coverage" : {
-						"description" : "The fraction of newborns who receive an actual intervention. ",
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 1,
-						"default" : 1
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Demographic" : {
+						"type" : "enum",
+						"enum" : [
+							"Everyone",
+							"ExplicitAgeRanges",
+							"ExplicitAgeRangesAndGender",
+							"ExplicitGender",
+							"PossibleMothers",
+							"ArrivingAirTravellers",
+							"DepartingAirTravellers",
+							"ArrivingRoadTravellers",
+							"DepartingRoadTravellers",
+							"AllArrivingTravellers",
+							"AllDepartingTravellers",
+							"ExplicitDiseaseState"
+						],
+						"description" : "The demographic group (from a list of possibles) targeted by this intervention (e.g., Infants)",
+						"default" : "Everyone",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
 					},
 					"Target_Age_Min" : {
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 0
+						"default" : 0,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
 					},
 					"Target_Age_Max" : {
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 3.40282e+038
+						"default" : 3.40282e+038,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Gender" : {
+						"type" : "enum",
+						"enum" : [
+							"All",
+							"Male",
+							"Female"
+						],
+						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
+						"default" : "All"
+					},
+					"Property_Restrictions" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "Dynamic String Set",
+						"default" : [],
+						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
 					},
 					"idmType:PropertyRestrictions" : [
 						{
@@ -10435,243 +10596,10 @@
 						}
 					},
 					"Trigger_Condition" : {
-						"type" : "enum",
-						"enum" : [
-							"NoTrigger",
-							"Births",
-							"EveryUpdate",
-							"EveryTimeStep",
-							"NewInfectionEvent",
-							"TBActivation",
-							"NewClinicalCase",
-							"NewSevereCase",
-							"DiseaseDeaths",
-							"NonDiseaseDeaths",
-							"TBActivationSmearPos",
-							"TBActivationSmearNeg",
-							"TBActivationExtrapulm",
-							"TBActivationPostRelapse",
-							"TBPendingRelapse",
-							"TBActivationPresymptomatic",
-							"TestPositiveOnSmear",
-							"ProviderOrdersTBTest",
-							"TBTestPositive",
-							"TBTestNegative",
-							"TBTestDefault",
-							"TBRestartHSB",
-							"TBMDRTestPositive",
-							"TBMDRTestNegative",
-							"TBMDRTestDefault",
-							"TBFailedDrugRegimen",
-							"TBRelapseAfterDrugRegimen",
-							"TBStartDrugRegimen",
-							"TBStopDrugRegimen",
-							"PropertyChange",
-							"STIDebut",
-							"StartedART",
-							"StoppedART",
-							"CascadeStateAborted",
-							"HIVNewlyDiagnosed",
-							"GaveBirth",
-							"Pregnant",
-							"HIVNeedsHIVTest",
-							"HIVPositiveHIVTest",
-							"HIVNegativeHIVTest",
-							"HIVDiagnosedEligibleForART",
-							"HIVSymptomatic",
-							"HIVLinkToPreART",
-							"HIVPreARTToART",
-							"HIVNonPreARTToART",
-							"TwelveWeeksPregnant",
-							"FourteenWeeksPregnant",
-							"SixWeeksOld",
-							"EighteenMonthsOld",
-							"HIVNeedsMaleCircumcision",
-							"HCTUptakeAtDebut0",
-							"HCTUptakeAtDebut1",
-							"HCTUptakeAtDebut2",
-							"HCTUptakeAtDebut3",
-							"HCTUptakeAtDebut4",
-							"HCTUptakeAtDebut5",
-							"HCTUptakeAtDebut6",
-							"HCTUptakeAtDebut7",
-							"HCTUptakeAtDebut8",
-							"HCTUptakeAtDebut9",
-							"HCTUptakePostDebut0",
-							"HCTUptakePostDebut1",
-							"HCTUptakePostDebut2",
-							"HCTUptakePostDebut3",
-							"HCTUptakePostDebut4",
-							"HCTUptakePostDebut5",
-							"HCTUptakePostDebut6",
-							"HCTUptakePostDebut7",
-							"HCTUptakePostDebut8",
-							"HCTUptakePostDebut9",
-							"HCTTestingLoop0",
-							"HCTTestingLoop1",
-							"HCTTestingLoop2",
-							"HCTTestingLoop3",
-							"HCTTestingLoop4",
-							"HCTTestingLoop5",
-							"HCTTestingLoop6",
-							"HCTTestingLoop7",
-							"HCTTestingLoop8",
-							"HCTTestingLoop9",
-							"TestingOnSymptomatic0",
-							"TestingOnSymptomatic1",
-							"TestingOnSymptomatic2",
-							"TestingOnSymptomatic3",
-							"TestingOnSymptomatic4",
-							"TestingOnSymptomatic5",
-							"TestingOnSymptomatic6",
-							"TestingOnSymptomatic7",
-							"TestingOnSymptomatic8",
-							"TestingOnSymptomatic9",
-							"TestingOnANC0",
-							"TestingOnANC1",
-							"TestingOnANC2",
-							"TestingOnANC3",
-							"TestingOnANC4",
-							"TestingOnANC5",
-							"TestingOnANC6",
-							"TestingOnANC7",
-							"TestingOnANC8",
-							"TestingOnANC9",
-							"TestingOnChild6w0",
-							"TestingOnChild6w1",
-							"TestingOnChild6w2",
-							"TestingOnChild6w3",
-							"TestingOnChild6w4",
-							"TestingOnChild6w5",
-							"TestingOnChild6w6",
-							"TestingOnChild6w7",
-							"TestingOnChild6w8",
-							"TestingOnChild6w9",
-							"ARTStaging0",
-							"ARTStaging1",
-							"ARTStaging2",
-							"ARTStaging3",
-							"ARTStaging4",
-							"ARTStaging5",
-							"ARTStaging6",
-							"ARTStaging7",
-							"ARTStaging8",
-							"ARTStaging9",
-							"ARTStaging10",
-							"ARTStaging11",
-							"ARTStaging12",
-							"ARTStaging13",
-							"ARTStaging14",
-							"ARTStaging15",
-							"ARTStaging16",
-							"ARTStaging17",
-							"ARTStaging18",
-							"ARTStaging19",
-							"LinkingToPreART0",
-							"LinkingToPreART1",
-							"LinkingToPreART2",
-							"LinkingToPreART3",
-							"LinkingToPreART4",
-							"LinkingToPreART5",
-							"LinkingToPreART6",
-							"LinkingToPreART7",
-							"LinkingToPreART8",
-							"LinkingToPreART9",
-							"OnPreART0",
-							"OnPreART1",
-							"OnPreART2",
-							"OnPreART3",
-							"OnPreART4",
-							"OnPreART5",
-							"OnPreART6",
-							"OnPreART7",
-							"OnPreART8",
-							"OnPreART9",
-							"OnPreART10",
-							"OnPreART11",
-							"OnPreART12",
-							"OnPreART13",
-							"OnPreART14",
-							"OnPreART15",
-							"OnPreART16",
-							"OnPreART17",
-							"OnPreART18",
-							"OnPreART19",
-							"LinkingToART0",
-							"LinkingToART1",
-							"LinkingToART2",
-							"LinkingToART3",
-							"LinkingToART4",
-							"LinkingToART5",
-							"LinkingToART6",
-							"LinkingToART7",
-							"LinkingToART8",
-							"LinkingToART9",
-							"OnART0",
-							"OnART1",
-							"OnART2",
-							"OnART3",
-							"OnART4",
-							"OnART5",
-							"OnART6",
-							"OnART7",
-							"OnART8",
-							"OnART9",
-							"LTFU0",
-							"LTFU1",
-							"LTFU2",
-							"LTFU3",
-							"LTFU4",
-							"LTFU5",
-							"LTFU6",
-							"LTFU7",
-							"LTFU8",
-							"LTFU9",
-							"LTFU10",
-							"LTFU11",
-							"LTFU12",
-							"LTFU13",
-							"LTFU14",
-							"LTFU15",
-							"LTFU16",
-							"LTFU17",
-							"LTFU18",
-							"LTFU19",
-							"LostForever0",
-							"LostForever1",
-							"LostForever2",
-							"LostForever3",
-							"LostForever4",
-							"LostForever5",
-							"LostForever6",
-							"LostForever7",
-							"LostForever8",
-							"LostForever9",
-							"CD4Measured0",
-							"CD4Measured1",
-							"CD4Measured2",
-							"CD4Measured3",
-							"CD4Measured4",
-							"CD4Measured5",
-							"CD4Measured6",
-							"CD4Measured7",
-							"CD4Measured8",
-							"CD4Measured9",
-							"AgeMeasured0",
-							"AgeMeasured1",
-							"AgeMeasured2",
-							"AgeMeasured3",
-							"AgeMeasured4",
-							"AgeMeasured5",
-							"AgeMeasured6",
-							"AgeMeasured7",
-							"AgeMeasured8",
-							"AgeMeasured9",
-							"TriggerString",
-							"TriggerList"
-						],
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The condition for triggering a health seeking intervention.",
-						"default" : "NoTrigger"
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Trigger_Condition_List" : {
 						"description" : "Included if Trigger_Condition is set to 'TriggerList'. A list (JSON array) of triggers (strings) drawn from config.json 'Listed_Events' or from built-in events.",
@@ -10704,47 +10632,6 @@
 						"max" : 3.40282e+038,
 						"default" : -1
 					},
-					"Demographic_Coverage" : {
-						"description" : "The fraction of newborns who receive an actual intervention. ",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Target_Age_Min" : {
-						"description" : "Lower end of age targeted for intervention, in years.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 0
-					},
-					"Target_Age_Max" : {
-						"description" : "Upper end of age targeted for intervention, in years.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038
-					},
-					"idmType:PropertyRestrictions" : [
-						{
-							"<key>" : {
-								"type" : "Constrained String",
-								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
-								"description" : "Individual Property Key from demographics file."
-							},
-							"<value>" : {
-								"type" : "String",
-								"description" : "Individual Property Value from demographics file."
-							}
-						}
-					],
-					"Property_Restrictions_Within_Node" : {
-						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
-						"type" : "idmType:PropertyRestrictions",
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Demographic_Coverage_Time_Profile" : {
 						"type" : "enum",
 						"enum" : [
@@ -10773,244 +10660,102 @@
 						"description" : "if you qualify by everything except demographic coverage, you get this array of interventions",
 						"type" : "idmType:IndividualIntervention"
 					},
-					"Trigger_Condition" : {
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Demographic" : {
 						"type" : "enum",
 						"enum" : [
-							"NoTrigger",
-							"Births",
-							"EveryUpdate",
-							"EveryTimeStep",
-							"NewInfectionEvent",
-							"TBActivation",
-							"NewClinicalCase",
-							"NewSevereCase",
-							"DiseaseDeaths",
-							"NonDiseaseDeaths",
-							"TBActivationSmearPos",
-							"TBActivationSmearNeg",
-							"TBActivationExtrapulm",
-							"TBActivationPostRelapse",
-							"TBPendingRelapse",
-							"TBActivationPresymptomatic",
-							"TestPositiveOnSmear",
-							"ProviderOrdersTBTest",
-							"TBTestPositive",
-							"TBTestNegative",
-							"TBTestDefault",
-							"TBRestartHSB",
-							"TBMDRTestPositive",
-							"TBMDRTestNegative",
-							"TBMDRTestDefault",
-							"TBFailedDrugRegimen",
-							"TBRelapseAfterDrugRegimen",
-							"TBStartDrugRegimen",
-							"TBStopDrugRegimen",
-							"PropertyChange",
-							"STIDebut",
-							"StartedART",
-							"StoppedART",
-							"CascadeStateAborted",
-							"HIVNewlyDiagnosed",
-							"GaveBirth",
-							"Pregnant",
-							"HIVNeedsHIVTest",
-							"HIVPositiveHIVTest",
-							"HIVNegativeHIVTest",
-							"HIVDiagnosedEligibleForART",
-							"HIVSymptomatic",
-							"HIVLinkToPreART",
-							"HIVPreARTToART",
-							"HIVNonPreARTToART",
-							"TwelveWeeksPregnant",
-							"FourteenWeeksPregnant",
-							"SixWeeksOld",
-							"EighteenMonthsOld",
-							"HIVNeedsMaleCircumcision",
-							"HCTUptakeAtDebut0",
-							"HCTUptakeAtDebut1",
-							"HCTUptakeAtDebut2",
-							"HCTUptakeAtDebut3",
-							"HCTUptakeAtDebut4",
-							"HCTUptakeAtDebut5",
-							"HCTUptakeAtDebut6",
-							"HCTUptakeAtDebut7",
-							"HCTUptakeAtDebut8",
-							"HCTUptakeAtDebut9",
-							"HCTUptakePostDebut0",
-							"HCTUptakePostDebut1",
-							"HCTUptakePostDebut2",
-							"HCTUptakePostDebut3",
-							"HCTUptakePostDebut4",
-							"HCTUptakePostDebut5",
-							"HCTUptakePostDebut6",
-							"HCTUptakePostDebut7",
-							"HCTUptakePostDebut8",
-							"HCTUptakePostDebut9",
-							"HCTTestingLoop0",
-							"HCTTestingLoop1",
-							"HCTTestingLoop2",
-							"HCTTestingLoop3",
-							"HCTTestingLoop4",
-							"HCTTestingLoop5",
-							"HCTTestingLoop6",
-							"HCTTestingLoop7",
-							"HCTTestingLoop8",
-							"HCTTestingLoop9",
-							"TestingOnSymptomatic0",
-							"TestingOnSymptomatic1",
-							"TestingOnSymptomatic2",
-							"TestingOnSymptomatic3",
-							"TestingOnSymptomatic4",
-							"TestingOnSymptomatic5",
-							"TestingOnSymptomatic6",
-							"TestingOnSymptomatic7",
-							"TestingOnSymptomatic8",
-							"TestingOnSymptomatic9",
-							"TestingOnANC0",
-							"TestingOnANC1",
-							"TestingOnANC2",
-							"TestingOnANC3",
-							"TestingOnANC4",
-							"TestingOnANC5",
-							"TestingOnANC6",
-							"TestingOnANC7",
-							"TestingOnANC8",
-							"TestingOnANC9",
-							"TestingOnChild6w0",
-							"TestingOnChild6w1",
-							"TestingOnChild6w2",
-							"TestingOnChild6w3",
-							"TestingOnChild6w4",
-							"TestingOnChild6w5",
-							"TestingOnChild6w6",
-							"TestingOnChild6w7",
-							"TestingOnChild6w8",
-							"TestingOnChild6w9",
-							"ARTStaging0",
-							"ARTStaging1",
-							"ARTStaging2",
-							"ARTStaging3",
-							"ARTStaging4",
-							"ARTStaging5",
-							"ARTStaging6",
-							"ARTStaging7",
-							"ARTStaging8",
-							"ARTStaging9",
-							"ARTStaging10",
-							"ARTStaging11",
-							"ARTStaging12",
-							"ARTStaging13",
-							"ARTStaging14",
-							"ARTStaging15",
-							"ARTStaging16",
-							"ARTStaging17",
-							"ARTStaging18",
-							"ARTStaging19",
-							"LinkingToPreART0",
-							"LinkingToPreART1",
-							"LinkingToPreART2",
-							"LinkingToPreART3",
-							"LinkingToPreART4",
-							"LinkingToPreART5",
-							"LinkingToPreART6",
-							"LinkingToPreART7",
-							"LinkingToPreART8",
-							"LinkingToPreART9",
-							"OnPreART0",
-							"OnPreART1",
-							"OnPreART2",
-							"OnPreART3",
-							"OnPreART4",
-							"OnPreART5",
-							"OnPreART6",
-							"OnPreART7",
-							"OnPreART8",
-							"OnPreART9",
-							"OnPreART10",
-							"OnPreART11",
-							"OnPreART12",
-							"OnPreART13",
-							"OnPreART14",
-							"OnPreART15",
-							"OnPreART16",
-							"OnPreART17",
-							"OnPreART18",
-							"OnPreART19",
-							"LinkingToART0",
-							"LinkingToART1",
-							"LinkingToART2",
-							"LinkingToART3",
-							"LinkingToART4",
-							"LinkingToART5",
-							"LinkingToART6",
-							"LinkingToART7",
-							"LinkingToART8",
-							"LinkingToART9",
-							"OnART0",
-							"OnART1",
-							"OnART2",
-							"OnART3",
-							"OnART4",
-							"OnART5",
-							"OnART6",
-							"OnART7",
-							"OnART8",
-							"OnART9",
-							"LTFU0",
-							"LTFU1",
-							"LTFU2",
-							"LTFU3",
-							"LTFU4",
-							"LTFU5",
-							"LTFU6",
-							"LTFU7",
-							"LTFU8",
-							"LTFU9",
-							"LTFU10",
-							"LTFU11",
-							"LTFU12",
-							"LTFU13",
-							"LTFU14",
-							"LTFU15",
-							"LTFU16",
-							"LTFU17",
-							"LTFU18",
-							"LTFU19",
-							"LostForever0",
-							"LostForever1",
-							"LostForever2",
-							"LostForever3",
-							"LostForever4",
-							"LostForever5",
-							"LostForever6",
-							"LostForever7",
-							"LostForever8",
-							"LostForever9",
-							"CD4Measured0",
-							"CD4Measured1",
-							"CD4Measured2",
-							"CD4Measured3",
-							"CD4Measured4",
-							"CD4Measured5",
-							"CD4Measured6",
-							"CD4Measured7",
-							"CD4Measured8",
-							"CD4Measured9",
-							"AgeMeasured0",
-							"AgeMeasured1",
-							"AgeMeasured2",
-							"AgeMeasured3",
-							"AgeMeasured4",
-							"AgeMeasured5",
-							"AgeMeasured6",
-							"AgeMeasured7",
-							"AgeMeasured8",
-							"AgeMeasured9",
-							"TriggerString",
-							"TriggerList"
+							"Everyone",
+							"ExplicitAgeRanges",
+							"ExplicitAgeRangesAndGender",
+							"ExplicitGender",
+							"PossibleMothers",
+							"ArrivingAirTravellers",
+							"DepartingAirTravellers",
+							"ArrivingRoadTravellers",
+							"DepartingRoadTravellers",
+							"AllArrivingTravellers",
+							"AllDepartingTravellers",
+							"ExplicitDiseaseState"
 						],
+						"description" : "The demographic group (from a list of possibles) targeted by this intervention (e.g., Infants)",
+						"default" : "Everyone",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Age_Min" : {
+						"description" : "Lower end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Age_Max" : {
+						"description" : "Upper end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Gender" : {
+						"type" : "enum",
+						"enum" : [
+							"All",
+							"Male",
+							"Female"
+						],
+						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
+						"default" : "All"
+					},
+					"Property_Restrictions" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "Dynamic String Set",
+						"default" : [],
+						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Trigger_Condition" : {
+						"default" : "UNINITIALIZED STRING",
 						"description" : "The condition for triggering a health seeking intervention.",
-						"default" : "NoTrigger"
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Trigger_Condition_List" : {
 						"description" : "Included if Trigger_Condition is set to 'TriggerList'. A list (JSON array) of triggers (strings) drawn from config.json 'Listed_Events' or from built-in events.",

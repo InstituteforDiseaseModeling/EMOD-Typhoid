@@ -28,7 +28,7 @@ namespace Kernel
     public:
         virtual ~NodeTBHIV(void);
         static NodeTBHIV *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
 
         //virtual void SetupIntranodeTransmission();
 
@@ -41,7 +41,7 @@ namespace Kernel
         //void Initialize();
 
         // Factory methods
-        virtual IIndividualHuman* createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
+        virtual IIndividualHuman* createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
 
         //const SimulationConfig* params();
     };

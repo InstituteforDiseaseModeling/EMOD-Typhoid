@@ -12,7 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "NodeEventContext.h"  // for INodeEventContext
 #include "SimulationEnums.h"
-#include "MathFunctions.h"
+#include "Sigmoid.h"
 
 static const char * _module = "HIVSigmoidByYearAndSexDiagnostic";
 

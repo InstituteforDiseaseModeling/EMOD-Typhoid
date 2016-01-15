@@ -20,7 +20,6 @@ namespace Kernel {
     public:
         static const IPairFormationParameters* Create( RelationshipType::Enum relType,
                                                        const Configuration* pConfig, 
-                                                       float base_rate, 
                                                        float rate_ratio_male, 
                                                        float rate_ratio_female );
     };

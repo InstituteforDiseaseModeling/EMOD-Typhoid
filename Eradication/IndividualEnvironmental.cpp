@@ -106,7 +106,7 @@ namespace Kernel
         }
     }
 
-    Infection* IndividualHumanEnvironmental::createInfection( suids::suid _suid )
+    IInfection* IndividualHumanEnvironmental::createInfection( suids::suid _suid )
     {
         return InfectionEnvironmental::CreateInfection(this, _suid);
     }

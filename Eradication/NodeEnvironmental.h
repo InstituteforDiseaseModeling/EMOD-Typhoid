@@ -32,7 +32,7 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
         // Factory methods
-        virtual IIndividualHuman* createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
+        virtual IIndividualHuman* createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
 
         // Effect of climate on infectivity in Environmental disease
         virtual float getClimateInfectivityCorrection() const override;

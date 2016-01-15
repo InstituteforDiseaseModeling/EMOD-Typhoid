@@ -52,7 +52,7 @@ namespace Kernel
         adult      = adults;
         infectious = _infectious;
 
-        uint32_t adjusted_population;
+        uint32_t adjusted_population = 0;
 
         if (adult > 0)
         { 
@@ -183,7 +183,7 @@ namespace Kernel
         float outcome = randgen->e();
 
         // Reset counters
-        float cumulative_probability;
+        float cumulative_probability = 0;
         uint32_t newinfected = 0;
 
         if (queue->GetPopulation() <= 0) 

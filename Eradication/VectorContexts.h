@@ -53,4 +53,40 @@ namespace Kernel
     {
         virtual float GetRelativeBitingRate(void) const = 0;
     };
+
+    struct IVectorInterventionsEffects : ISupports
+    {
+        virtual float GetDieBeforeFeeding() = 0;
+        virtual float GetHostNotAvailable() = 0;
+        virtual float GetDieDuringFeeding() = 0;
+        virtual float GetDiePostFeeding() = 0;
+        virtual float GetSuccessfulFeedHuman() = 0;
+        virtual float GetSuccessfulFeedAD() = 0;
+        virtual float GetOutdoorDieBeforeFeeding() = 0;
+        virtual float GetOutdoorHostNotAvailable() = 0;
+        virtual float GetOutdoorDieDuringFeeding() = 0;
+        virtual float GetOutdoorDiePostFeeding() = 0;
+        virtual float GetOutdoorSuccessfulFeedHuman() = 0;
+        virtual float GetblockIndoorVectorAcquire() = 0;
+        virtual float GetblockIndoorVectorTransmit() = 0;
+        virtual float GetblockOutdoorVectorAcquire() = 0;
+        virtual float GetblockOutdoorVectorTransmit() = 0;
+        virtual ~IVectorInterventionsEffects() { }
+    };
+
+    struct INodeVectorInterventionEffects : ISupports
+    {
+        virtual float GetLarvalKilling(VectorHabitatType::Enum) = 0;
+        virtual float GetLarvalHabitatReduction(VectorHabitatType::Enum) = 0;
+        virtual float GetVillageSpatialRepellent() = 0;
+        virtual float GetADIVAttraction() = 0;
+        virtual float GetADOVAttraction() = 0;
+        virtual float GetPFVKill() = 0;
+        virtual float GetOutdoorKilling() = 0;
+        virtual float GetOutdoorKillingMale() = 0;
+        virtual float GetSugarFeedKilling() = 0;
+        virtual float GetOviTrapKilling(VectorHabitatType::Enum) = 0;
+        virtual float GetAnimalFeedKilling() = 0;
+        virtual float GetOutdoorRestKilling() = 0;
+    };
 }

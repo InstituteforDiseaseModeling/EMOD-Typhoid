@@ -52,8 +52,6 @@ namespace Kernel
         virtual void processEmigratingIndividual( IIndividualHuman* individual ) override;
         virtual IIndividualHuman* NodeSTI::processImmigratingIndividual( IIndividualHuman* movedind ) override;
 
-        std::multimap< unsigned long, int > migratedIndividualToRelationshipIdMap;
-
         DECLARE_SERIALIZABLE(NodeSTI);
 
     private:

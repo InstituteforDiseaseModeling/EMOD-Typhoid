@@ -163,7 +163,10 @@ int MPIInitWrapper( int argc, char* argv[])
         // caught, tear everything down, decisively.
         if (!fSuccessful)
         {
-            EnvPtr->Log->Flush();
+            if( EnvPtr != nullptr )
+            {
+                EnvPtr->Log->Flush();
+            }
             MPI_Abort(MPI_COMM_WORLD, -1);
         }
 
@@ -228,7 +231,7 @@ IdmPyInit(
     // how about we use the config.json python script path by default and if that is missing
 
     //std::cout << "Appending our path to existing python path." << std::endl;
-    PyObject * path; // = nullptr;
+    PyObject * path = nullptr;
     if( python_script_path != "" )
     {
         //std::cout << "Using dtk python path: " << GET_CONFIGURABLE(SimulationConfig)->python_script_path << std::endl;
@@ -791,8 +794,8 @@ bool ControllerInitWrapper(int argc, char *argv[])
         {
             ((Kernel::SimulationConfig*)EnvPtr->SimConfig)->Release();
         }
+        EnvPtr->Log->Flush();
     }
-    EnvPtr->Log->Flush();
 
     Environment::Finalize();
     return status;

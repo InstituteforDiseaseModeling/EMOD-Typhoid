@@ -1,7 +1,6 @@
 {
      "Default_Config_Path": "defaults/generic_default_config.json", 
      "parameters": {
-        "logLevel_IndividualHuman": "DEBUG",
           "DEMOGRAPHICS": {
                "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
                "Demographics_Filename": "Seattle_30arcsec_demographics.compiled.json", 

@@ -52,8 +52,6 @@ namespace Kernel {
     )
     {
         LOG_DEBUG_F( "%s: propertyName = %s\n", __FUNCTION__, propertyName.c_str() );
-        static int func_counter = 0;
-        func_counter++;
         clock_t apv = clock();
 
         ValueToIndexMap_t &valueToIndexMap = propertyValueToIndexMap[propertyName] ;
@@ -170,8 +168,8 @@ namespace Kernel {
     {
         (*membershipOut)[0] = (GroupIndex)0; // map route 0 to index 0 // why?
         membershipOut->clear();
-        std::ostringstream* msg = nullptr;
-        /*if (LOG_LEVEL(DEBUG))
+        /*std::ostringstream* msg = nullptr;
+        if (LOG_LEVEL(DEBUG))
         {
             msg = new std::ostringstream();
             *msg << "(fn=GetPoolMembershipForProperties) ";

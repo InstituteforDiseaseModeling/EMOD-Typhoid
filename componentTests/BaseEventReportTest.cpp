@@ -100,7 +100,7 @@ SUITE(BaseEventReportTest)
 {
     struct ReportFixture
     {
-        static bool environmentInitialized;
+
         SimulationConfig* m_pSimulationConfig ;
 
         ReportFixture()
@@ -109,20 +109,17 @@ SUITE(BaseEventReportTest)
             m_pSimulationConfig = new SimulationConfig();
             m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
 
-            if (!environmentInitialized)
-            {
-                Environment::setLogger(new SimpleLogger());
-                int argc      = 1;
-                char* exeName = "componentTests.exe";
-                char** argv   = &exeName;
-                string configFilename("testdata/BaseEventReportTest/TestReport.config.json");
-                string inputPath("testdata/BaseEventReportTest");
-                string outputPath("testdata/BaseEventReportTest");
-                string statePath("testdata/BaseEventReportTest");
-                string dllPath("");
-                Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
-                environmentInitialized = true;
-            }
+            Environment::Finalize();
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
+            int argc      = 1;
+            char* exeName = "componentTests.exe";
+            char** argv   = &exeName;
+            string configFilename("testdata/BaseEventReportTest/TestReport.config.json");
+            string inputPath("testdata/BaseEventReportTest");
+            string outputPath("testdata/BaseEventReportTest");
+            string statePath("testdata/BaseEventReportTest");
+            string dllPath("");
+            Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
 
             Environment::setSimulationConfig( m_pSimulationConfig );
             m_pSimulationConfig->listed_events.insert("Births"          );
@@ -135,8 +132,6 @@ SUITE(BaseEventReportTest)
             Environment::setSimulationConfig( nullptr );
         }
     };
-
-    bool                      ReportFixture::environmentInitialized = false ;
 
     TEST_FIXTURE(ReportFixture, TestConfigure)
     {

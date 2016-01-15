@@ -29,6 +29,8 @@
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
         "Config_Name": "PrimaryScenarios_5_Namawala_Vector_ITNs -- multicore -- Madagascar_Nosibe", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
+        "Default_Geography_Initial_Node_Population": 1000, 
+        "Default_Geography_Torus_Size": 10, 
         "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json", 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "SATURATION_AT_OVIPOSITION", 

@@ -14,8 +14,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEventContext.h"
 #include "Interventions.h"
 
-namespace Kernel {
-
+namespace Kernel 
+{
     class ReportHIV : public ReportSTI, 
                       public IIndividualEventObserver
     {

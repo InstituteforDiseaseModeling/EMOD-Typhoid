@@ -11,7 +11,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "../interventions/IDrug.h"
 #include "Log.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
+#include "Interventions.h"
 #include "ReportUtilities.h"
 
 // Module name for logging

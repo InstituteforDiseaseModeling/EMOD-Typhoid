@@ -12,7 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Report_Scenarios.h"
 #include "TBContexts.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "NodeEventContext.h" //for calling INodeTriggredInterventionConsumer
 #include "Debug.h"
 #include "TBInterventionsContainer.h"

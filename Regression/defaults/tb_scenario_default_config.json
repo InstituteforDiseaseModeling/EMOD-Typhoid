@@ -20,6 +20,8 @@
         },
         "DEMOGRAPHICS": {
             "Demographics_Filename":"../../demog/Single_node_demographics_10000.json",
+            "Default_Geography_Initial_Node_Population":1000,
+            "Default_Geography_Torus_Size":10,
             "Enable_Vital_Dynamics":1,
             "Enable_Aging":1,
             "Age_Initialization_Distribution_Type":"DISTRIBUTION_SIMPLE",

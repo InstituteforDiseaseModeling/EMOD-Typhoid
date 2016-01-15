@@ -13,10 +13,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "DllInterfaceHelper.h"
 
 #include "NodeEventContext.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "IIndividualHumanHIV.h"
 #include "IHIVInterventionsContainer.h"
 #include "SusceptibilityHIV.h"
+#include "FactorySupport.h"
 
 // TODO: 
 // --> Start_Year
@@ -374,8 +375,8 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 
         float mc_weight = individual->GetMonteCarloWeight();
 
-        CD4_Stage::Enum cd4_stage = ComputeCD4Stage(individual);
-        Care_Stage::Enum care_stage = ComputeCareStage(individual);
+        CD4_Stage::Enum cd4_stage = ComputeCD4Stage(individual->GetEventContext());
+        Care_Stage::Enum care_stage = ComputeCareStage(individual->GetEventContext());
 
         // Now increment prevalence counters
         Population[cd4_stage][care_stage] += mc_weight;

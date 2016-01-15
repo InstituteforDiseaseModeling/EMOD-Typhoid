@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IdmApi.h"
 #include "SimulationEnums.h"
 #include "IRelationship.h"
+#include "IdmDateTime.h"
 #include <map>
 #include <vector>
 #include "ISerializable.h"
@@ -48,7 +49,8 @@ namespace Kernel
 
         virtual const vector<float>& SingularValues() const = 0;                          // female age bins count
 
-        virtual float BasePairFormationRate() const = 0;
+        virtual float FormationRate( const IdmDateTime& rCurrentTime, float dt ) const = 0;
+        virtual float UpdatePeriod() const = 0;
 
         virtual ~IPairFormationParameters() {}
     };

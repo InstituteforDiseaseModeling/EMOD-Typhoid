@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 #include "ReportPolioIndividualInfections.h"
 #include "Environment.h"
-#include "Node.h"
+#include "INodeContext.h"
 #include "IndividualPolio.h"
 #include "InfectionPolio.h"
 #include "Log.h"

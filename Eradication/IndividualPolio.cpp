@@ -301,7 +301,7 @@ float Kernel::IndividualHumanPolio::GetAgeOfMostRecentInfection(void)
     return age_most_recent_infection;
 }
 
-Kernel::Infection* Kernel::IndividualHumanPolio::createInfection( suids::suid _suid )
+Kernel::IInfection* Kernel::IndividualHumanPolio::createInfection( suids::suid _suid )
 {
     InfectionPolio *ip = InfectionPolio::CreateInfection(this, _suid);
     ip->CacheMCWeightOfHost(float(m_mc_weight));

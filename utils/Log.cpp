@@ -64,6 +64,17 @@ SimpleLogger::SimpleLogger()
     _initTime = time(nullptr);
 }
 
+SimpleLogger::SimpleLogger( Logger::tLevel syslevel )
+    : _systemLogLevel(syslevel),
+      _throttle(false),
+      _initialized(false),
+      _flush_all(false),
+      _warnings_are_fatal(false),
+      _rank(0)
+{
+    _initTime = time(nullptr);
+}
+
 void
 SimpleLogger::Init(
     const json::QuickInterpreter * configJson

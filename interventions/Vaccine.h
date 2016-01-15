@@ -13,10 +13,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Contexts.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
-#include "InterventionEnums.h"
 
 namespace Kernel
 {
+    ENUM_DEFINE(SimpleVaccineType,
+        ENUM_VALUE_SPEC(Generic              , 1)
+        ENUM_VALUE_SPEC(TransmissionBlocking , 2)
+        ENUM_VALUE_SPEC(AcquisitionBlocking  , 3)
+        ENUM_VALUE_SPEC(MortalityBlocking    , 4))
+
     struct IVaccineConsumer;
     struct ICampaignCostObserver;
 
@@ -35,7 +40,7 @@ namespace Kernel
         virtual ~SimpleVaccine();
         virtual int AddRef() override { return BaseIntervention::AddRef(); }
         virtual int Release() override { return BaseIntervention::Release(); }
-        /* clorton virtual */ bool Configure( const Configuration* pConfig ) /* clorton override */;
+        virtual bool Configure( const Configuration* pConfig ) override;
 
         // IDistributableIntervention
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
@@ -46,7 +51,6 @@ namespace Kernel
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
         // IVaccine
-        virtual int   GetVaccineType()            const;    // clorton - still needed?
         virtual void  ApplyVaccineTake() override;
 
     protected:

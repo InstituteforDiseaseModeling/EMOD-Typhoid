@@ -36,7 +36,8 @@ namespace Kernel {
         virtual IPairFormationAgent* GetPFA(RelationshipType::Enum) override;
         virtual IPairFormationStats* GetStats(RelationshipType::Enum) override;
 
-        virtual void SetParameters( const Configuration* config ) override;
+        virtual void SetParameters( IIdGeneratorSTI* pIdGen, const Configuration* config ) override;
+        virtual IRelationshipParameters* GetRelationshipParameters( RelationshipType::Enum type ) override;
 
         // ---------------------------
         // --- JsonConfiurable Methods
@@ -49,13 +50,12 @@ namespace Kernel {
 
         IRelationshipManager* relationship_manager;
 
-        const IPairFormationParameters* parameters[    RelationshipType::COUNT ];
+        IRelationshipParameters*        rel_params[    RelationshipType::COUNT ];
+        const IPairFormationParameters* form_params[   RelationshipType::COUNT ];
         IPairFormationRateTable*        rates[         RelationshipType::COUNT ];
         IPairFormationStats*            stats[         RelationshipType::COUNT ];
         IPairFormationAgent*            pfa[           RelationshipType::COUNT ];
         IPairFormationFlowController*   controller[    RelationshipType::COUNT ];
-        float                           base_rate[     RelationshipType::COUNT ];
-        float                           update_period[ RelationshipType::COUNT ];
 
         float extra_relational_rate_ratio_male;
         float extra_relational_rate_ratio_female;

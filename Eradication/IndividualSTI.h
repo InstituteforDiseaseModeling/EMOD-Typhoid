@@ -48,18 +48,6 @@ namespace Kernel
         static float min_days_between_adding_relationships;
     public:
         static float condom_transmission_blocking_probability;
-        static float condom_usage_probability_in_marital_relationships_midyear;
-        static float condom_usage_probability_in_marital_relationships_rate;
-        static float condom_usage_probability_in_marital_relationships_early;
-        static float condom_usage_probability_in_marital_relationships_late;
-        static float condom_usage_probability_in_informal_relationships_midyear;
-        static float condom_usage_probability_in_informal_relationships_rate;
-        static float condom_usage_probability_in_informal_relationships_early;
-        static float condom_usage_probability_in_informal_relationships_late;
-        static float condom_usage_probability_in_transitory_relationships_midyear;
-        static float condom_usage_probability_in_transitory_relationships_rate;
-        static float condom_usage_probability_in_transitory_relationships_early;
-        static float condom_usage_probability_in_transitory_relationships_late;
 
         static std::vector<float> maleToFemaleRelativeInfectivityAges;
         static std::vector<float> maleToFemaleRelativeInfectivityMultipliers;
@@ -92,6 +80,7 @@ namespace Kernel
 
         virtual suids::suid GetSuid() const override { return IndividualHuman::GetSuid(); }
         virtual bool IsInfected() const override { return IndividualHuman::IsInfected(); }
+        virtual suids::suid GetNodeSuid() const override;
 
         virtual void Die( HumanStateChange ) override;
 
@@ -111,8 +100,6 @@ namespace Kernel
         virtual void ConsiderRelationships(float dt) override;
         virtual void AddRelationship( IRelationship * pNewRelationship ) override;
         virtual void RemoveRelationship( IRelationship * pNewRelationship ) override;
-        virtual void VacateRelationship( IRelationship* relationship ) override;
-        virtual void RejoinRelationship( IRelationship* relationship ) override;
         virtual RelationshipSet_t& GetRelationships() override;
         virtual RelationshipSet_t& GetRelationshipsAtDeath() override;
 
@@ -124,11 +111,11 @@ namespace Kernel
         virtual bool  HasSTICoInfection() const override;
         virtual bool IsCircumcised() const override;
         virtual void onEmigrating();
+        virtual void onImmigrating();
 
         void disengageFromSociety();
-        virtual ProbabilityNumber getProbabilityUsingCondomThisAct( RelationshipType::Enum ) const override;
+        virtual ProbabilityNumber getProbabilityUsingCondomThisAct( const IRelationshipParameters* pRelParams ) const;
 
-        virtual void onImmigratingToNode();
         virtual void SetContextTo(INodeContext* context) override;
 
         virtual unsigned int GetOpenRelationshipSlot() const override;
@@ -152,7 +139,7 @@ namespace Kernel
                             int gender = 0,
                             float initial_poverty = 0.5f);
 
-        virtual Infection* createInfection(suids::suid _suid) override;
+        virtual IInfection* createInfection(suids::suid _suid) override;
         virtual void setupInterventionsContainer() override;
         virtual void ReportInfectionState() override;
 
@@ -163,8 +150,8 @@ namespace Kernel
         unsigned int max_relationships[RelationshipType::Enum::COUNT];
         unsigned int queued_relationships[RelationshipType::Enum::COUNT];
         unsigned int active_relationships[RelationshipType::Enum::COUNT];
-        unsigned int remote_relationships[RelationshipType::Enum::COUNT];
 
+        bool migrating_because_of_partner;
         unsigned char promiscuity_flags;
         float sexual_debut_age;
         float co_infective_factor;

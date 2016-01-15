@@ -16,7 +16,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Drugs.h"
 #include "Interventions.h"
 #include "InterventionsContainer.h"
-#include "SimpleTypemapRegistration.h"
 
 namespace Kernel
 {

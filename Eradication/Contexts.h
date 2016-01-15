@@ -27,7 +27,6 @@ namespace Kernel
     class SimulationConfig;
     class IInterventionFactory;
     struct DemographicsContext;
-    class MigrationInfo;
     struct NodeDemographics;
     struct NodeDemographicsDistribution;
 
@@ -63,6 +62,7 @@ namespace Kernel
         virtual suids::suid GetNextNodeSuid() = 0;
         virtual suids::suid GetNextIndividualHumanSuid() = 0;
         virtual suids::suid GetNextInfectionSuid() = 0;
+        virtual ExternalNodeId_t GetNodeExternalID( const suids::suid& rNodeSuid ) = 0;
 
         // random number services
         virtual RANDOMBASE* GetRng() = 0;

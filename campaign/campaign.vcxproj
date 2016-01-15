@@ -168,7 +168,6 @@
     <ClInclude Include="..\utils\Profile.h" />
     <ClInclude Include="..\utils\RapidJsonImpl.h" />
     <ClInclude Include="..\utils\Serializer.h" />
-    <ClInclude Include="..\utils\SimpleTypemapRegistration.h" />
     <ClInclude Include="..\utils\stdafx.h" />
     <ClInclude Include="..\utils\Sugar.h" />
     <ClInclude Include="..\utils\suids.hpp" />

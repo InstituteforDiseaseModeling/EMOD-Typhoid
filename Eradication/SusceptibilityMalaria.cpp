@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEventContext.h" // for Die() interface
 #include "InterventionsContainer.h"
 #include "MalariaAntibody.h" // for CreateAntibody etc.
-#include "MathFunctions.h"   // for Sigmoid::basic_sigmoid
+#include "Sigmoid.h"   // for Sigmoid::basic_sigmoid
 #include "NodeDemographics.h" // for static strings e.g. MSP_mean_antibody_distribution
 #include "SimulationConfig.h"
 
@@ -891,7 +891,7 @@ namespace Kernel
 
     float SusceptibilityMalaria::get_fraction_of_variants_with_antibodies(MalariaAntibodyType::Enum type) const
     {
-        float fraction;
+        float fraction = 0.0f;
         switch( int(type) )
         {
         case MalariaAntibodyType::CSP:

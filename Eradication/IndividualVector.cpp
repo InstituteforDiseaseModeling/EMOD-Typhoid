@@ -253,7 +253,7 @@ namespace Kernel
         }
     }
 
-    Infection *IndividualHumanVector::createInfection(suids::suid _suid)
+    IInfection *IndividualHumanVector::createInfection(suids::suid _suid)
     {
         return InfectionVector::CreateInfection(this, _suid);
     }

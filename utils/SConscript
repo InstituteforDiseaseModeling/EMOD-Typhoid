@@ -36,6 +36,7 @@ utilsSrcFiles = [
     "RANDOM.cpp",
     "RapidJsonImpl.cpp",
     "Serializer.cpp",
+    "Sigmoid.cpp",
     "StatusReporter.cpp",
     "stdafx.cpp",
     "suids.cpp",

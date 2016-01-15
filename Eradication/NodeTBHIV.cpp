@@ -46,9 +46,9 @@ namespace Kernel
         NodeTB::Initialize();
     }*/
 
-    IIndividualHuman* NodeTBHIV::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
+    IIndividualHuman* NodeTBHIV::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
     {
-        return IndividualHumanCoinfection::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
+        return IndividualHumanCoinfection::CreateHuman( this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
 }
 

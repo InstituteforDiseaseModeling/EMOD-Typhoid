@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "OutbreakIndividual.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "InterventionFactory.h"
 #include "ConfigurationImpl.h"
 #include "NodeEventContext.h"
@@ -61,7 +61,7 @@ namespace Kernel
     {
         bool success = true;
         // TBD: Get individual from context, and infect
-        IndividualHuman* individual = dynamic_cast<IndividualHuman*>(context->GetParent()); // QI in new code
+        IIndividualHuman* individual = dynamic_cast<IIndividualHuman*>(context->GetParent()); // QI in new code
         INodeEventContext * pContext = individual->GetParent()->GetEventContext();
         StrainIdentity* strain_identity = GetNewStrainIdentity(pContext);   // JPS: no need to create strain before we call this if we're calling into node...?
         LOG_DEBUG( "Infecting individual from Outbreak.\n" );

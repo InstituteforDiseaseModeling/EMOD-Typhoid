@@ -121,12 +121,29 @@ namespace Kernel {
         return !(*this == rThat);
     }
 
+    void JsonObjectDemog::WriteToFile( const char* filename )
+    {
+        JsonWriterDemog writer( true ) ;
+        writer << *this ;
+
+        std::string text = writer.PrettyText();
+
+        std::ofstream json_file;
+        json_file.open( filename );
+        if( json_file.fail() )
+        {
+            throw FileIOException( __FILE__, __LINE__, __FUNCTION__, filename );
+        }
+        json_file << text ;
+        json_file.close();
+    }
+
     // ------------------------------------------------------
     // --- Methods for creating an object from a string and
     // --- for creating the string from the object
     // ------------------------------------------------------
 
-    void JsonObjectDemog::Parse(const char* jsBuffer)
+    void JsonObjectDemog::Parse( const char* jsBuffer, const char* filename )
     {
         rapidjson::Document* p_doc = new rapidjson::Document();
         shared_ptr<rapidjson::Document> shared_doc( p_doc ) ;
@@ -146,6 +163,10 @@ namespace Kernel {
             json_file.close();
 
             ostringstream s;
+            if( filename != nullptr )
+            {
+                s << filename << ": ";
+            }
             s << "Failed to parse incoming text. " << p_doc->GetParseError() << " at character=" << p_doc->GetErrorOffset() << " / line number=" << p_doc->GetLineNumber() << endl;
             throw SerializationException( __FILE__, __LINE__, __FUNCTION__, s.str().c_str() );
         }
@@ -156,7 +177,7 @@ namespace Kernel {
         std::string* p_buffer = FileSystem::ReadFile( filename );
         try
         {
-            Parse( p_buffer->c_str() );
+            Parse( p_buffer->c_str(), filename );
         }
         catch( DetailedException& )
         {
@@ -279,6 +300,12 @@ namespace Kernel {
         {
             ostringstream s;
             s << "The '" << m_Key << "' element is not an object.  One cannot get key-based value from something that is not an object." ;
+            throw SerializationException( __FILE__, __LINE__, __FUNCTION__, s.str().c_str() );
+        }
+        else if( !r_value.HasMember( key ) )
+        {
+            ostringstream s;
+            s << "The '" << m_Key << "' element does not contain an element with name '" << key << "'." ;
             throw SerializationException( __FILE__, __LINE__, __FUNCTION__, s.str().c_str() );
         }
 
@@ -651,6 +678,25 @@ namespace Kernel {
     }
 
     void JsonObjectDemog::Add( const char* pKey, double val )
+    {
+        assert(m_pDocument.get());
+        rapidjson::Document& r_doc = *((rapidjson::Document*)m_pDocument.get());
+
+        assert(m_pValue);
+        rapidjson::Value& r_value = *((rapidjson::Value*)m_pValue);
+        assert( r_value.IsObject() );
+
+        rapidjson::Value new_val( val );
+
+        r_value.AddMember( pKey, r_doc.GetAllocator(), new_val, r_doc.GetAllocator() );
+    }
+
+    void JsonObjectDemog::Add( const std::string& rKey, int val )
+    {
+        Add( rKey.c_str(), val );
+    }
+
+    void JsonObjectDemog::Add( const char* pKey, int val )
     {
         assert(m_pDocument.get());
         rapidjson::Document& r_doc = *((rapidjson::Document*)m_pDocument.get());

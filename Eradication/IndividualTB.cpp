@@ -397,10 +397,10 @@ namespace Kernel
     {
     }
 
-    Infection* IndividualHumanTB::createInfection( suids::suid _suid )
+    IInfection* IndividualHumanTB::createInfection( suids::suid _suid )
     {
         InfectionTB* new_inf = InfectionTB::CreateInfection(this, _suid);
-        return static_cast<Infection*>(new_inf);
+        return static_cast<IInfection*>(new_inf);
     }
     
     void IndividualHumanTB::setupInterventionsContainer()

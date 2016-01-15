@@ -40,7 +40,7 @@ bool FileSystem::RemoveFile( const std::string& rFilename )
 
 bool FileSystem::RemoveDirectory( const std::string& rDir )
 {
-    bool success; // = true ;
+    bool success = true ;
 #ifdef WIN32
     success = _rmdir( rDir.c_str() ) == 0 ;
 #else
@@ -127,7 +127,7 @@ std::string FileSystem::GetCurrentWorkingDirectory()
 
 bool FileSystem::MakeDirectory( const std::string& rDirName )
 {
-    bool success; // = true ;
+    bool success = true ;
 
 #ifdef _WIN32
     success =_mkdir( rDirName.c_str() ) == 0 ;

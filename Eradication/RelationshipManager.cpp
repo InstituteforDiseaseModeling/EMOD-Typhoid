@@ -39,6 +39,11 @@ namespace Kernel
         , relationshipListsForMP()
         , _node(parent)
         , nodePools(nullptr)
+        , new_relationship_observers()
+        , relationship_termination_observers()
+        , relationship_consummation_observers()
+        , dead_relationships_by_type()
+        , migrating_relationship_map()
     {
     }
 
@@ -126,17 +131,17 @@ namespace Kernel
             //auto relId = it->first;
             IRelationship* pRel = it->second;
             ++it;
-            LOG_DEBUG_F( "%s: Updating relationship %d at node %lu\n", __FUNCTION__, pRel->GetId(), _node->GetSuid().data );
+            LOG_DEBUG_F( "%s: Updating relationship %d at node %lu\n", __FUNCTION__, pRel->GetSuid().data, _node->GetSuid().data );
             if( pRel->Update( dt ) == false )
             {
                 // Need to notify individuals in relationship and also nodePools should be destroyed
                 // May be false because someone died.
-                pRel->terminate( this );
+                pRel->Terminate();
                 delete pRel;
             }
             else
             {
-                LOG_DEBUG_F( "%s: relationship %d is ongoing. No action.\n", __FUNCTION__, pRel->GetId() );
+                LOG_DEBUG_F( "%s: relationship %d is ongoing. No action.\n", __FUNCTION__, pRel->GetSuid().data );
             }
         }
         //howlong( before_update, "update_rels" );
@@ -150,30 +155,73 @@ namespace Kernel
         howlong( before, "RM::Update" );
     }
 
-    void
-    RelationshipManager::AddRelationship(
-        IRelationship* new_relationship
-    )
+    IRelationship* RelationshipManager::Emigrate( IRelationship* pRel )
     {
-        LOG_INFO_F("%s( 0x%08X )\n", __FUNCTION__, new_relationship);
-        nodeRelationships[ new_relationship->GetId() ] = new_relationship;
-        new_relationship->Initialize( this );
-        const string& propertyKey  = new_relationship->GetPropertyKey();
-        const string& propertyName = new_relationship->GetPropertyName();
-        AddToPrimaryRelationships( propertyKey, propertyName ); 
-        notifyObservers(new_relationship_observers, new_relationship);
+        if( migrating_relationship_map.count( pRel->GetSuid() ) > 0 )
+        {
+            // my partner already left the node or I entered the node and am leaving
+            migrating_relationship_map.erase( pRel->GetSuid() );
+        }
+        else
+        {
+            // I'm leaving the node, but my partner is still here
+            migrating_relationship_map[ pRel->GetSuid() ] = pRel;
+        }
+        // -------------------------------------------------------------------------------------------
+        // --- NOTE: On single-core, if a person dies, Relationship::terminate() will ensure that 
+        // --- both individuals no longer have the relationship.  However, migrating_relationship_map 
+        // --- could have relationships that have been terminated.  The only downside I see is if this 
+        // --- happens a lot and we use too much memory.
+        // -------------------------------------------------------------------------------------------
+        return pRel;
     }
 
-#define MAX_DEAD_REL_QUEUE_SIZE 200 // found by sweeping, might make config param
+    IRelationship* RelationshipManager::Immigrate( IRelationship* pRel )
+    {
+        IRelationship* p_return_rel = pRel;
+        if( migrating_relationship_map.count( pRel->GetSuid() ) > 0 )
+        {
+            IRelationship*p_existing_rel = migrating_relationship_map.at( pRel->GetSuid() );
+            migrating_relationship_map.erase( p_existing_rel->GetSuid() );
+            p_return_rel = p_existing_rel;
+        }
+        else
+        {
+            migrating_relationship_map[ pRel->GetSuid() ] = pRel;
+            p_return_rel = pRel;
+        }
+        return p_return_rel;
+    }
+
+    void
+    RelationshipManager::AddRelationship(
+        IRelationship* relationship
+    )
+    {
+        LOG_INFO_F("%s( 0x%08X )\n", __FUNCTION__, relationship);
+        nodeRelationships[ relationship->GetSuid().data ] = relationship;
+
+        const string& propertyKey  = relationship->GetPropertyKey();
+        const string& propertyName = relationship->GetPropertyName();
+        AddToPrimaryRelationships( propertyKey, propertyName ); 
+
+        notifyObservers(new_relationship_observers, relationship);
+    }
+
+#define MAX_DEAD_REL_QUEUE_SIZE 0 //200 // found by sweeping, might make config param
 
     void
     RelationshipManager::RemoveRelationship(
         IRelationship* relationship
         )
     {
+        if( nodeRelationships.find( relationship->GetSuid().data ) == nodeRelationships.end() )
+        {
+            return;
+        }
         notifyObservers(relationship_termination_observers, relationship);
 
-        nodeRelationships.erase( relationship->GetId() );
+        nodeRelationships.erase( relationship->GetSuid().data );
 
         // Instead of deleting the relationship string from list each time, we batch them up
         // and do a batch delete. This is a big performance gain. We do the batch delete by
@@ -198,7 +246,6 @@ namespace Kernel
             {
                 auto rel_name = current.front();
                 auto rel_name_as_int = atoi( rel_name.c_str() );
-            //    auto next_dead_rel_name = deadRelsThisType.front();
 
                 current.pop_front(); // removed from current, either dead or gets put in newList
                 if( deadRelsThisType.size() > 0 && rel_name_as_int == deadRelsThisType.front() )
@@ -211,6 +258,15 @@ namespace Kernel
                 }
             }
             relationshipListsForMP[ thisRelTypeKey ] = newList;
+
+            // --------------------------------------------------------------------------------------------
+            // ---  Update the transmission group so that this relationship is no longer part of the group
+            // --------------------------------------------------------------------------------------------
+            ScalingMatrix_t scalingMatrix; // { 1 }
+            MatrixRow_t matrixRow;
+            matrixRow.push_back( 1.0f );
+            scalingMatrix.push_back( matrixRow );
+            nodePools->AddProperty( thisRelTypeKey.c_str(), relationshipListsForMP[ thisRelTypeKey ], scalingMatrix, "contact" );
         }
     }
 
@@ -329,17 +385,16 @@ namespace Kernel
             }
         }
         ar.endArray();
-
+ 
         ar.labelElement("relationshipListsForMP"    ) & mgr.relationshipListsForMP;
+        //_node
+        // nodePools
         ar.labelElement("dead_relationships_by_type") & mgr.dead_relationships_by_type;
-
-        //tNodeRelationshipType nodeRelationships;
-        //std::map< std::string, PropertyValueList_t > relationshipListsForMP;
-        //INodeContext* _node;
-        //ITransmissionGroups * nodePools;
         //std::list<IRelationshipManager::callback_t> new_relationship_observers;
         //std::list<IRelationshipManager::callback_t> relationship_termination_observers;
         //std::list<IRelationshipManager::callback_t> relationship_consummation_observers;
-        //std::map< std::string, std::list<unsigned int> > dead_relationships_by_type;
+
+        //release_assert( false );
+        //ar.labelElement("migrating_relationship_map") & mgr.migrating_relationship_map;
     }
 }

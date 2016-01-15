@@ -9,10 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "IPairFormationFlowController.h"
-#include "IPairFormationAgent.h"
-#include "IPairFormationStats.h"
-#include "IPairFormationRateTable.h"
-#include "IPairFormationParameters.h"
+#include "SimulationEnums.h"
 
 #include <map>
 #include <vector>
@@ -20,13 +17,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 namespace Kernel 
 {
 
+    struct IPairFormationAgent;
+    struct IPairFormationStats;
+    struct IPairFormationRateTable;
+    struct IPairFormationParameters;
+
     class IDMAPI FlowControllerImpl : public IPairFormationFlowController 
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
         DECLARE_QUERY_INTERFACE();
     public:
 
-        virtual void UpdateEntryRates();
+        virtual void UpdateEntryRates( const IdmDateTime& rCurrentTime, float dt );
 
         static IPairFormationFlowController* CreateController(
             IPairFormationAgent*,
@@ -41,7 +43,7 @@ namespace Kernel
                             const IPairFormationParameters* params=nullptr );
         virtual ~FlowControllerImpl();
 
-        void UpdateDesiredFlow();
+        void UpdateDesiredFlow( const IdmDateTime& rCurrentTime, float dt );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -53,8 +55,6 @@ namespace Kernel
         float rate_ratio[Gender::COUNT];
 
         map<int, vector<float>> desired_flow;
-
-        float base_pair_formation_rate;
 
         DECLARE_SERIALIZABLE(FlowControllerImpl);
 #pragma warning( pop )

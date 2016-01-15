@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SusceptibilityEnvironmental.h"
 #include "StrainIdentity.h"
 #include "PolioDefs.h"
+#include "PolioContexts.h"
 
 #ifndef N_MAX_POLIO_GENOMES
 #define N_MAX_POLIO_GENOMES 1048576
@@ -45,45 +46,6 @@ namespace Kernel
         static float maternal_log2NAb_std;
         static float maternalAbHalfLife;
         static float excrement_load;
-    };
-
-    class ISusceptibilityPolio : public ISupports
-    {
-    public:
-        virtual void SetNewInfectionByStrain(StrainIdentity* infection_strain) = 0;
-        //immunity
-        virtual float GetFecalInfectiousDuration(StrainIdentity* strain_id) = 0; // (days)
-        virtual float GetOralInfectiousDuration(StrainIdentity* strain_id) = 0; // days
-        virtual float GetPeakFecalLog10VirusTiter(StrainIdentity* strain_id) = 0; // (TCID50 virus per day excreted)
-        virtual float GetPeakOralLog10VirusTiter(StrainIdentity* strain_id) = 0; // (TCID50 virus per day excreted)
-        virtual float GetParalysisTime(StrainIdentity* strain_id, float infect_duration) = 0; // days incubation to paralysis. returns -1 if no paralysis
-        virtual float GetReversionDegree(StrainIdentity* strain_id) = 0; // (on scale from 0 to 1)
-        virtual void DecrementInfection(StrainIdentity* infection_strain) = 0;
-        virtual void IncrementInfection(StrainIdentity* infection_strain) = 0;
-        virtual void ApplyImmumeResponseToInfection(StrainIdentity* infection_strain) = 0;
-        virtual bool GetSusceptibleStatus(int pvType) = 0;
-        virtual float GetRandNBounded(void) = 0;
-        virtual int   GetSerotype(StrainIdentity* strain_id) = 0;
-        virtual float GetMucosalImmunity(StrainIdentity* strain_id) = 0; // (reciprocal titer linear units)
-        virtual float GetHumoralImmunity(StrainIdentity* strain_id) = 0; // (reciprocal titer linear units)
-        virtual void  ResetTimeSinceLastInfection(int serotype) = 0;
-   };
-
-    class ISusceptibilityPolioReportable : public ISupports
-    {
-        public:
-        virtual void GetSheddingTiter(float sheddingTiters[])               const = 0;
-        virtual void GetHumoralNAb(float humoralNAb[])                      const = 0;
-        virtual void GetMucosalNAb(float mucosalNAb[])                      const = 0;
-        virtual void GetMaternalSerumNAb(float maternalSerumNAb[])          const = 0;
-        virtual void GetHumoralMemoryNAb(float humoralMemoryNAb[])          const = 0;
-        virtual void GetMucosalMemoryNAb(float mucosalMemoryNAb[])          const = 0;
-        virtual void GetTimeSinceLastInfection(float times[])               const = 0;
-        virtual void GetVaccineDosesReceived(int vaccineDosesReceived[])    const = 0;
-        virtual const int* GetInfectionStrains()                            const = 0;
-        virtual const int* GetNewInfectionsByStrain()                       const = 0;
-        virtual float GetIndividualAcquireRisk()                            const = 0;
-        virtual bool IsSeropositive( unsigned char serotype)                const = 0;
     };
 
     class SusceptibilityPolio :

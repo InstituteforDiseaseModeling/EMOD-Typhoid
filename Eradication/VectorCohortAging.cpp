@@ -24,9 +24,9 @@ namespace Kernel
     {
     }
 
-    VectorCohortAging::VectorCohortAging(float _age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics) :
-        VectorCohort(float(progress), initial_population, _vector_genetics),
-        age(_age)
+    VectorCohortAging::VectorCohortAging(float _age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics) 
+        : VectorCohort(float(progress), initial_population, _vector_genetics)
+        , age(_age)
     {
     }
 

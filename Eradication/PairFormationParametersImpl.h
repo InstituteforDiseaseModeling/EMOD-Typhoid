@@ -12,8 +12,17 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationEnums.h"
 #include "IPairFormationParameters.h"
 #include "Configure.h"
+#include "EnumSupport.h"
+#include "InterpolatedValueMap.h"
+#include "Sigmoid.h"
 
 namespace Kernel {
+
+    ENUM_DEFINE(FormationRateType,
+        ENUM_VALUE_SPEC(CONSTANT                     , 0)
+        ENUM_VALUE_SPEC(SIGMOID_VARIABLE_WIDTH_HEIGHT, 1)
+        ENUM_VALUE_SPEC(INTERPOLATED_VALUES          , 2))
+
 
     class IDMAPI PairFormationParametersImpl : public IPairFormationParameters,
                                                public JsonConfigurable
@@ -23,44 +32,44 @@ namespace Kernel {
     public:
         static IPairFormationParameters* CreateParameters( RelationshipType::Enum relType,
                                                            const Configuration* pConfig,
-                                                           float base_rate, 
                                                            float rate_ratio_male,
                                                            float rate_ratio_female );
 
-        virtual RelationshipType::Enum GetRelationshipType() const ;
+        virtual RelationshipType::Enum GetRelationshipType() const override;
 
-        virtual int GetMaleAgeBinCount() const;
-        virtual float GetInitialMaleAge() const;
-        virtual float GetMaleAgeIncrement() const;
+        virtual int GetMaleAgeBinCount() const override;
+        virtual float GetInitialMaleAge() const override;
+        virtual float GetMaleAgeIncrement() const override;
 
-        virtual int GetFemaleAgeBinCount() const;
-        virtual float GetInitialFemaleAge() const;
-        virtual float GetFemaleAgeIncrement() const;
+        virtual int GetFemaleAgeBinCount() const override;
+        virtual float GetInitialFemaleAge() const override;
+        virtual float GetFemaleAgeIncrement() const override;
 
-        virtual float GetRateRatio(Gender::Enum gender) const;
+        virtual float GetRateRatio(Gender::Enum gender) const override;
 
-        virtual const map<int, vector<float>>& GetAgeBins() const;
-        virtual const int BinIndexForAgeAndSex( float age_in_days, int sex ) const;
+        virtual const map<int, vector<float>>& GetAgeBins() const override;
+        virtual const int BinIndexForAgeAndSex( float age_in_days, int sex ) const override;
 
-        virtual const vector<vector<float>>& JointProbabilityTable() const;
-        virtual const vector<vector<float>>& CumulativeJointProbabilityTable() const;
+        virtual const vector<vector<float>>& JointProbabilityTable() const override;
+        virtual const vector<vector<float>>& CumulativeJointProbabilityTable() const override;
 
-        virtual const map<int, vector<float>>& MarginalValues() const;
+        virtual const map<int, vector<float>>& MarginalValues() const override;
 
-        virtual const vector<vector<float>>& AperpPseudoInverse() const;
-        virtual const vector<vector<float>>& OrthogonalBasisForATranspose() const;
-        virtual const vector<float>& SingularValues() const;
+        virtual const vector<vector<float>>& AperpPseudoInverse() const override;
+        virtual const vector<vector<float>>& OrthogonalBasisForATranspose() const override;
+        virtual const vector<float>& SingularValues() const override;
 
-        virtual float BasePairFormationRate() const;
+        virtual float FormationRate( const IdmDateTime& rCurrentTime, float dt ) const override;
+        virtual float UpdatePeriod() const override;
 
         // ---------------------
         // --- ISupport Methods
         // ---------------------
-        virtual bool Configure( const Configuration* inputJson );
+        virtual bool Configure( const Configuration* inputJson ) override;
 
     protected:
         PairFormationParametersImpl();
-        PairFormationParametersImpl( RelationshipType::Enum relType, float base_rate, float rate_ratio_male, float rate_ratio_female );
+        PairFormationParametersImpl( RelationshipType::Enum relType, float rate_ratio_male, float rate_ratio_female );
 
         virtual ~PairFormationParametersImpl();
         void Initialize(const string& filename);
@@ -96,7 +105,11 @@ namespace Kernel {
 
         map<int, vector<float>> marginal_values;
 
-        float base_pair_formation_rate;
+        float update_period;
+        FormationRateType::Enum formation_rate_type;
+        float                   formation_rate_constant;
+        InterpolatedValueMap    formation_rate_value_map;
+        Sigmoid                 formation_rate_sigmoid;
 
         DECLARE_SERIALIZABLE(PairFormationParametersImpl);
 #pragma warning( pop )

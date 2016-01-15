@@ -28,6 +28,8 @@
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
         "Config_Name": "83_Vector_ScreeningHousingModification", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
+        "Default_Geography_Initial_Node_Population": 1000, 
+        "Default_Geography_Torus_Size": 10, 
         "Demographics_Filename": "Namawala_single_node_demographics.compiled.json", 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "SATURATION_AT_OVIPOSITION", 

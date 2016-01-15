@@ -49,18 +49,19 @@ namespace Kernel
         virtual const StrainIdentity* GetStrainIdentity() const;
 
         // IMigrate interfaces
-        virtual void ImmigrateTo(INodeContext* destination_node);
-        virtual void SetMigrationDestination(suids::suid destination);
-        virtual const suids::suid & GetMigrationDestination();
+        virtual void ImmigrateTo(INodeContext* destination_node) override;
+        virtual void SetMigrationDestination(suids::suid destination) override;
+        virtual const suids::suid & GetMigrationDestination() override;
+        virtual MigrationType::Enum GetMigrationType() const  override;
 
-        virtual int32_t GetPopulation() const; // used by VPI
-        virtual void SetPopulation( int32_t new_pop ); // used by VPI (1x besides ClearPop)
-        virtual double GetProgress() const; // NOT used by VPI
-        virtual void ClearProgress(); // NOT used by VPI, implicit
-        virtual void IncreaseProgress( double delta ); // used by VPI (2x)
-        virtual VectorMatingStructure& GetVectorGenetics(); // used by VPI
-        virtual void SetVectorGenetics( const VectorMatingStructure& new_value );
-        virtual float GetMortality( uint32_t addition ) const;
+        virtual int32_t GetPopulation() const override; // used by VPI
+        virtual void SetPopulation( int32_t new_pop ) override; // used by VPI (1x besides ClearPop)
+        virtual double GetProgress() const override; // NOT used by VPI
+        virtual void ClearProgress() override; // NOT used by VPI, implicit
+        virtual void IncreaseProgress( double delta ) override; // used by VPI (2x)
+        virtual VectorMatingStructure& GetVectorGenetics() override; // used by VPI
+        virtual void SetVectorGenetics( const VectorMatingStructure& new_value ) override;
+        virtual float GetMortality( uint32_t addition ) const override;
 
     protected:
         VectorCohort();

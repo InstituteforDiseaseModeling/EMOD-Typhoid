@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Common.h"                  // for INFINITE_TIME
 #include "Contexts.h"                // for IIndividualHumanContext, IIndividualHumanInterventionsContext
 #include "InterventionsContainer.h"  // for IVaccineConsumer methods
-#include "InterventionEnums.h"
 #include "RANDOM.h"                  // for ApplyVaccineTake random draw
 
 // TBD: currently included for JDeserialize only. Once we figure out how to wrap the deserialize
@@ -90,13 +89,6 @@ namespace Kernel
     SimpleVaccine::~SimpleVaccine() { }
 
     /////////////////////////////////////////////////////////////////////////////////////
-
-    int
-    SimpleVaccine::GetVaccineType()
-    const
-    {
-        return vaccine_type;
-    }
 
     // context is nothing more than ISupports really, and it's a pointer to the individual's
     // intervention container, not the individual itself. It was gotten by a call to

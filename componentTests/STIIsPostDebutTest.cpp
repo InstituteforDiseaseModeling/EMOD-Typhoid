@@ -42,11 +42,12 @@ SUITE(StiIsPostDebutTest)
             //, m_Diag()
         {
             Environment::Finalize();
-            Environment::setLogger(new SimpleLogger());
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
+            Environment::setSimulationConfig( m_pSimulationConfig );
+
             m_InterventionsContext.setCascadeState( "not_set" );
             m_InterventionsContext.SetContextTo( &m_Human );
 
-            Environment::setSimulationConfig( m_pSimulationConfig );
             m_pSimulationConfig->listed_events.insert( "Births"   );
             m_pSimulationConfig->listed_events.insert( "NonDiseaseDeaths" );
 

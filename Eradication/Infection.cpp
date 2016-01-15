@@ -12,7 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 #include "Infection.h"
 #include "InterventionsContainer.h"
-#include "Susceptibility.h"
+#include "ISusceptibilityContext.h"
 #include "RANDOM.h"
 #include "SimulationConfig.h"
 #include "MathFunctions.h"
@@ -256,7 +256,7 @@ namespace Kernel
         }
     }
 
-    void Infection::InitInfectionImmunology(Susceptibility* _immunity)
+    void Infection::InitInfectionImmunology(ISusceptibilityContext* _immunity)
     {
     }
 

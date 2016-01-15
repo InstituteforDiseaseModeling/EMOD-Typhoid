@@ -25,7 +25,7 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleHousingModification, IDistributableIntervention)
 
     public:
-        /* clorton virtual */ bool Configure( const Configuration * config ) /* clorton override */;
+        virtual bool Configure( const Configuration * config ) override;
         SimpleHousingModification();
         virtual ~SimpleHousingModification() { }
 

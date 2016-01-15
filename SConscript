@@ -38,15 +38,16 @@ if dst_path != "":
     sys.exit(0)
 
 # set the common libraries
-env.Append(LIBPATH = ["$BUILD_DIR/cajun", "$BUILD_DIR/campaign", "$BUILD_DIR/utils"])
+env.Append(LIBPATH = ["$BUILD_DIR/baseReportLib", "$BUILD_DIR/cajun", "$BUILD_DIR/campaign", "$BUILD_DIR/utils"])
 
 print( "Link executable against cajun, campaign, and utils lib's." )
-env.Append(LIBS=["cajun", "campaign", "utils"])
+env.Append(LIBS=["baseReportLib", "cajun", "campaign", "utils"])
 
 #print "builddir is " + env["BUILD_DIR"]
 
 # First static libs
-SConscript( [ 'cajun/SConscript',
+SConscript( [ 'baseReportLib/SConscript',
+              'cajun/SConscript',
               'campaign/SConscript',
               'utils/SConscript' ])
 
@@ -194,3 +195,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
 
 # Finally executable
 SConscript('Eradication/SConscript')
+if os.sys.platform == 'win32':
+    SConscript('reporters/STI_Reports_SConscript')
+    #SConscript('reporters/TB_Reports_SConscript')
+

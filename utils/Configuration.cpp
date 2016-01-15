@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configuration.h"
 #include "ConfigurationImpl.h"
 #include "Sugar.h"
-#include "SimpleTypemapRegistration.h"
 #include "CajunIncludes.h"
 #include "Exceptions.h"
 #include "Configure.h"

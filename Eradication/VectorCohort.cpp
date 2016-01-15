@@ -11,7 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "VectorCohort.h"
 #include "Exceptions.h"
-#include "Node.h"
+#include "INodeContext.h"
 #include "StrainIdentity.h"
 
 static const char * _module = "VectorCohort";
@@ -25,7 +25,10 @@ namespace Kernel
         HANDLE_ISUPPORTS_VIA(IVectorCohort)
     END_QUERY_INTERFACE_BODY(VectorCohort)
 
-    VectorCohort::VectorCohort() : vector_genetics( VectorMatingStructure() ), progress(0.0), population(DEFAULT_VECTOR_COHORT_SIZE)
+    VectorCohort::VectorCohort() 
+        : vector_genetics( VectorMatingStructure() )
+        , progress(0.0)
+        , population(DEFAULT_VECTOR_COHORT_SIZE)
     {
     }
 
@@ -67,6 +70,11 @@ namespace Kernel
     }
 
     const suids::suid& VectorCohort::GetMigrationDestination()
+    {
+        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
+    }
+
+    MigrationType::Enum VectorCohort::GetMigrationType() const
     {
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
     }

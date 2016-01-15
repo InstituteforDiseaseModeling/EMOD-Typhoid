@@ -22,6 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "NodeEventContextHost.h"
 #include "VectorEnums.h"
+#include "VectorContexts.h"
 #include "VectorMatingStructure.h"
 #include "Types.h"
 

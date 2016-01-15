@@ -120,6 +120,7 @@
     <ClCompile Include="RapidJsonImpl.cpp" />
     <ClCompile Include="Serialization.cpp" />
     <ClCompile Include="Serializer.cpp" />
+    <ClCompile Include="Sigmoid.cpp" />
     <ClCompile Include="StatusReporter.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -186,7 +187,7 @@
     <ClInclude Include="RapidJsonImpl.h" />
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="Serializer.h" />
-    <ClInclude Include="SimpleTypemapRegistration.h" />
+    <ClInclude Include="Sigmoid.h" />
     <ClInclude Include="StatusReporter.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Sugar.h" />

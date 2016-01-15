@@ -11,7 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HealthSeekingBehaviorUpdate.h"
 #include "Contexts.h"
 #include "Common.h"             // for INFINITE_TIME
-#include "InterventionEnums.h"  // for InterventionDurabilityProfile, ImmunoglobulinType, etc.
 #include "TBInterventionsContainer.h"  // for IHealthSeekingBehaviorEffectsUpdate
 
 

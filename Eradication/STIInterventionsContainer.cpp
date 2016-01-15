@@ -17,9 +17,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationEnums.h"
 #include "InterventionFactory.h"
 #include "Log.h"
-#include "SimpleTypemapRegistration.h"
 #include "Sugar.h"
 #include "IndividualSTI.h"
+#include "IRelationshipParameters.h"
 
 static const char * _module = "STIInterventionsContainer";
 
@@ -70,52 +70,28 @@ namespace Kernel
     void
     STIInterventionsContainer::UpdateSTIBarrierProbabilitiesByType(
         RelationshipType::Enum rel_type,
-        SigmoidConfig config_overrides
+        const Sigmoid& config_overrides
     )
     {
         STI_blocking_overrides[ rel_type ] = config_overrides;
     }
 
-    SigmoidConfig
+    const Sigmoid&
     STIInterventionsContainer::GetSTIBarrierProbabilitiesByRelType(
-        RelationshipType::Enum rel_type
+        const IRelationshipParameters* pRelParams
     )
     const
     {
-        SigmoidConfig ret;
-
-        if( STI_blocking_overrides.find( rel_type ) != STI_blocking_overrides.end() )
+        if( STI_blocking_overrides.find( pRelParams->GetType() ) != STI_blocking_overrides.end() )
         {
             LOG_DEBUG( "Using override condom config values from campaign.\n" );
-            ret = STI_blocking_overrides.at( rel_type );
+            return STI_blocking_overrides.at( pRelParams->GetType() );
         }
         else
         {
             LOG_DEBUG( "Using static (default/config.json) condom config values.\n" );
-            switch( rel_type )
-            {
-                case RelationshipType::MARITAL:
-                    ret.midyear = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_midyear;
-                    ret.rate = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_rate;
-                    ret.early = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_early;
-                    ret.late = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_late;
-                break;
-                case RelationshipType::INFORMAL:
-                    ret.midyear = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_midyear;
-                    ret.rate = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_rate;
-                    ret.early = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_early;
-                    ret.late = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_late;
-                break;
-                case RelationshipType::TRANSITORY:
-                    ret.midyear = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_midyear;
-                    ret.rate = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_rate;
-                    ret.early = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_early;
-                    ret.late = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_late;
-                break;
-            }
+            return pRelParams->GetCondomUsage();
         }
-        //LOG_DEBUG_F( "%s returning %f for type %s\n", __FUNCTION__, (float)ret, rel_type );
-        return ret;
     }
 
     float
@@ -194,17 +170,7 @@ namespace Kernel
 
     REGISTER_SERIALIZABLE(STIInterventionsContainer);
 
-    void serialize_sigmoid( IArchive& ar, SigmoidConfig& sigmoid )
-    {
-        ar.startObject();
-            ar.labelElement("early"  ) & sigmoid.early;
-            ar.labelElement("late"   ) & sigmoid.late;
-            ar.labelElement("midyear") & sigmoid.midyear;
-            ar.labelElement("rate"   ) & sigmoid.rate;
-        ar.endObject();
-    }
-
-    void serialize_overrides( IArchive& ar, std::map< RelationshipType::Enum, SigmoidConfig >& blocking_overrides )
+    void serialize_overrides( IArchive& ar, std::map< RelationshipType::Enum, Sigmoid >& blocking_overrides )
     {
         size_t count = ar.IsWriter() ? blocking_overrides.size() : -1;
 
@@ -215,8 +181,8 @@ namespace Kernel
             {
                 std::string key = RelationshipType::pairs::lookup_key( entry.first );
                 ar.startObject();
-                    ar.labelElement("key") & key;
-                    ar.labelElement("value"); serialize_sigmoid( ar, entry.second );
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & entry.second;
                 ar.endObject();
             }
         }
@@ -225,10 +191,10 @@ namespace Kernel
             for (size_t i = 0; i < count; ++i)
             {
                 std::string key;
-                SigmoidConfig value;
+                Sigmoid value;
                 ar.startObject();
-                    ar.labelElement("key") & key;
-                    ar.labelElement("value"); serialize_sigmoid( ar, value );
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & value;
                 ar.endObject();
                 RelationshipType::Enum rt = (RelationshipType::Enum)RelationshipType::pairs::lookup_value( key.c_str() );
                 blocking_overrides[ rt ] = value;

@@ -10,14 +10,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "Vaccine.h"
+#include "PolioContexts.h"
 
 namespace Kernel
 {
-    struct IPolioVaccine : ISupports
-    {
-        virtual PolioVaccineType::Enum   GetVaccineType()            const = 0;
-    };
-
     class PolioVaccine : public IVaccine, public BaseIntervention, public IPolioVaccine
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, PolioVaccine, IDistributableIntervention)
@@ -26,7 +22,7 @@ namespace Kernel
         static PolioVaccine* CreateVaccine(PolioVaccineType::Enum type, float days_since_vaccine);
         PolioVaccine();
         virtual ~PolioVaccine();
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
         virtual int AddRef() override { return BaseIntervention::AddRef(); }
         virtual int Release() override { return BaseIntervention::Release(); }
 

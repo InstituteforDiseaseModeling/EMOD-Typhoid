@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISimulation.h"
 #include "SimulationHIV.h" // for base_year
 #include "IIndividualHumanHIV.h"
+#include "SusceptibilityHIV.h"
 
 static const char* _module = "ReportHIVByAgeAndGender";
 
@@ -34,25 +35,38 @@ namespace Kernel
         , startYear(0.0)
         , stopYear(FLT_MAX)
         , is_collecting_data(false)
+        , is_collecting_circumcision_data(false)
+        , is_collecting_ip_data(false)
+        , stratify_infected_by_CD4(false)
+        , ip_key_list()
+        , ip_key_value_list_map()
+        , map_key_constants()
     {
         eventTriggerList.push_back( "DiseaseDeaths" );
         eventTriggerList.push_back( "NonDiseaseDeaths" );
         eventTriggerList.push_back( "NewInfectionEvent" );
-
-        ZERO_ARRAY( population );
-        ZERO_ARRAY( infected );
-        ZERO_ARRAY( newly_infected );
-        ZERO_ARRAY( on_ART );
-        ZERO_ARRAY( newly_died );
-        ZERO_ARRAY( newly_died_from_HIV );
-        ZERO_ARRAY( tested_ever );
-        ZERO_ARRAY( tested_past_year_or_onART );
+        eventTriggerList.push_back( "HIVTestedPositive" );
+        eventTriggerList.push_back( "HIVTestedNegative" );
     }
 
     bool ReportHIVByAgeAndGender::Configure( const Configuration* inputJson )
     {
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Start_Year", &startYear, Report_HIV_ByAgeAndGender_Start_Year_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Stop_Year",  &stopYear,  Report_HIV_ByAgeAndGender_Stop_Year_DESC_TEXT,  0.0f, FLT_MAX, FLT_MAX );
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Collect_Circumcision_Data",  
+                           &is_collecting_circumcision_data,  
+                           "TBD"/*Report_HIV_ByAgeAndGender_Collect_Circumcision_Data_DESC_TEXT*/,
+                           false );
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Collect_IP_Data",
+                           &is_collecting_ip_data,  
+                           "TBD"/*Report_HIV_ByAgeAndGender_Collect_IP_Data_DESC_TEXT*/, 
+                           false );
+
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4",
+                           &stratify_infected_by_CD4,  
+                           "TBD"/*Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT*/, 
+                           false );
+
 
         bool ret = JsonConfigurable::Configure( inputJson );
 
@@ -129,21 +143,84 @@ namespace Kernel
         return is_collecting_data && doReport; 
     }
 
+    void ReportHIVByAgeAndGender::Initialize( unsigned int nrmSize )
+    {
+        // ----------------------------------------------------------------------------
+        // --- Setup the map_key_constant vector to be used when creating the map_key.
+        // --- See GetDataMapKey() for more information
+        // ----------------------------------------------------------------------------
+
+        // age will get zero
+        if( is_collecting_ip_data )
+        {
+            ip_key_list = Node::GetIndividualPropertyKeyList();
+
+            for( int i = 0 ; i < ip_key_list.size() ; i++ )
+            {
+                std::string key = ip_key_list[ i ] ;
+                ip_key_value_list_map[ key ] = Node::GetIndividualPropertyValuesList( key );
+
+                AddConstant() ;
+            }
+        }
+        AddConstant() ; // is_circumcised
+        AddConstant() ; // gender
+
+        BaseTextReportEvents::Initialize( nrmSize );
+    }
+
+    void ReportHIVByAgeAndGender::AddConstant()
+    {
+        // --------------------------------------------------------------------------
+        // --- map_key_constants are used to determine the key used in the data_map.
+        // --- See GetDataMapKey() for more information
+        // --------------------------------------------------------------------------
+        if( map_key_constants.size() == 0 )
+        {
+            map_key_constants.push_back( 100 ) ;
+        }
+        else
+        {
+            map_key_constants.push_back( 100*map_key_constants[ map_key_constants.size()-1 ] ) ;
+        }
+    }
+
     std::string ReportHIVByAgeAndGender::GetHeader() const
     {
         std::stringstream header ;
         header << "Year"             << ", "
                << "NodeId"           << ", "
-               << "Gender"           << ", "
-               << "Age"              << ", "
-               << "Population"       << ", "
-               << "Infected"         << ", "
-               << "Newly Infected"   << ", "
+               << "Gender"           << ", " ;
+        for( auto key : ip_key_list )
+        {
+            header << "IP_Key:" << key << ", " ;
+        }
+        if( is_collecting_circumcision_data )
+        {
+            header << "IsCircumcised" << ", " ;
+        }
+        header << "Age"              << ", "
+               << "Population"       << ", ";
+
+        if( stratify_infected_by_CD4 )
+        {
+            header << "Infected CD4 Under 200 (Not On ART)"     << ", "
+                   << "Infected CD4 200 To 349 (Not On ART)"    << ", "
+                   << "Infected CD4 350 To 499 (Not On ART)"    << ", "
+                   << "Infected CD4 500 Plus (Not On ART)"      << ", ";
+        } else {
+            header << "Infected" << ", ";
+        }
+
+        header << "Newly Infected"   << ", "
                << "On_ART"           << ", "
                << "Died"             << ", "
                << "Died_from_HIV"    << ", "
                << "Tested Past Year or On_ART" << ", "
-               << "Tested Ever";
+               << "Tested Ever HIVPos" << ", "
+               << "Tested Ever HIVNeg" << ", "
+               << "Tested Positive" << ", "
+               << "Tested Negative";
 
         return header.str();
     }
@@ -160,34 +237,94 @@ namespace Kernel
 
         int nodeId = pNC->GetExternalID();
 
-        for( int gender = 0; gender < Gender::Enum::COUNT; gender++ ) 
+        std::vector<int> key_value_index_list ;
+        for( int i = 0 ; i < ip_key_list.size() ; i++ )
         {
-            for( int age_bin = 0; age_bin < MAX_AGE; age_bin++ ) 
-            {
-                GetOutputStream() << year
-                                  << ","<< nodeId 
-                                  << "," << gender    // Kernel::Gender::pairs::lookup_key(gender)
-                                  << "," << age_bin
-                                  << "," << population[gender][age_bin]
-                                  << "," << infected[gender][age_bin]
-                                  << "," << newly_infected[gender][age_bin]
-                                  << "," << on_ART[gender][age_bin]
-                                  << "," << newly_died[gender][age_bin]
-                                  << "," << newly_died_from_HIV[gender][age_bin]
-                                  << "," << tested_past_year_or_onART[gender][age_bin]
-                                  << "," << tested_ever[gender][age_bin]
-                                  << endl;
-            }
+            key_value_index_list.push_back( 0 );
         }
 
-        ZERO_ARRAY( population );
-        ZERO_ARRAY( infected );
-        ZERO_ARRAY( newly_infected );
-        ZERO_ARRAY( on_ART );
-        ZERO_ARRAY( newly_died );
-        ZERO_ARRAY( newly_died_from_HIV );
-        ZERO_ARRAY( tested_ever );
-        ZERO_ARRAY( tested_past_year_or_onART );
+        for( int gender = 0; gender < Gender::Enum::COUNT; gender++ ) 
+        {
+            // ----------------------------------------------------------------------
+            // --- The IP loop will iterate over the values of each key.
+            // --- Since the number of keys and values per key is not known
+            // --- until runtime, we use a 'while' loop and the key_value_index_list
+            // --- to loop for each key and the value of each key.
+            // ----------------------------------------------------------------------
+            bool done_with_ip = false ;
+            while( !done_with_ip )
+            {
+                // -------------------------------------------------------------
+                // --- if we are not collecting circumcision data, then we just
+                // --- want to go through the 'for' loop once.
+                // -------------------------------------------------------------
+                int num_circ = Yes_No::COUNT ;
+                if( !is_collecting_circumcision_data )
+                {
+                    num_circ = 1 ;
+                }
+
+                for( int circumcision_bin = 0; circumcision_bin < num_circ; circumcision_bin++ ) 
+                {
+                    // Do not report data for circumcised women
+                    if( gender == 1 && circumcision_bin == Yes_No::YES )
+                    {
+                        continue;
+                    }
+
+                    for( int age_bin = 0; age_bin < MAX_AGE; age_bin++ ) 
+                    {
+                        uint32_t map_key = GetDataMapKey( gender, age_bin, circumcision_bin, key_value_index_list );
+                        ReportData rd ;
+                        if( data_map.count( map_key ) > 0 )
+                        {
+                            rd = data_map[ map_key ] ;
+                        }
+                        GetOutputStream() << year
+                                          << "," << nodeId 
+                                          << "," << gender ;// Kernel::Gender::pairs::lookup_key(gender)
+                        for( int kvi = 0 ; kvi < key_value_index_list.size() ; kvi++ )
+                        {
+                            std::string key = ip_key_list[ kvi ] ;
+                            std::string value = ip_key_value_list_map[ key ][ key_value_index_list[kvi] ] ;
+                            GetOutputStream() << "," << value ;
+                        }
+                        if( is_collecting_circumcision_data )
+                        {
+                            GetOutputStream() << "," << circumcision_bin ;
+                        }
+                        GetOutputStream() << "," << age_bin
+                                          << "," << rd.population;
+
+                        if( stratify_infected_by_CD4 ) {
+                            GetOutputStream() << "," << rd.infected_noART_cd4_under_200
+                                              << "," << rd.infected_noART_cd4_200_to_350
+                                              << "," << rd.infected_noART_cd4_350_to_500
+                                              << "," << rd.infected_noART_cd4_above_500;
+                        } else {
+                            GetOutputStream() << "," << rd.infected;
+                        }
+
+
+                        GetOutputStream() << "," << rd.newly_infected
+                                          << "," << rd.on_ART
+                                          << "," << rd.newly_died
+                                          << "," << rd.newly_died_from_HIV
+                                          << "," << rd.tested_past_year_or_onART
+                                          << "," << rd.tested_ever_HIVpos
+                                          << "," << rd.tested_ever_HIVneg
+                                          << "," << rd.tested_positive
+                                          << "," << rd.tested_negative
+                                          << endl;
+                    }
+                }
+                // ------------------------------------------------
+                // --- Increment the indexes for the next IP value
+                // ------------------------------------------------
+                done_with_ip = GetNextIP( key_value_index_list );
+            }
+        }
+        data_map.clear();
     }
 
     void ReportHIVByAgeAndGender::LogIndividualData( IIndividualHuman* individual )
@@ -210,28 +347,63 @@ namespace Kernel
         }
 
         float mc_weight = individual->GetMonteCarloWeight();
-        int age_bin = int(floor( (std::min)(double(MAX_AGE-1), individual->GetAge()/float(DAYSPERYEAR)) ));
 
-        int gender = individual->GetGender() == Gender::MALE ? 0 : 1;
         bool isInfected = hiv_individual->HasHIV();
         bool isOnART = hiv_individual->GetHIVInterventionsContainer()->OnArtQuery();
 
         bool testedPastYear = med_parent->EverTestedPastYear();
         bool testedEver = med_parent->EverTested();
-        
-        population[ gender ][ age_bin ] += mc_weight;
+
+        uint32_t map_key = GetDataMapKey( individual->GetEventContext() );
+        if( data_map.count( map_key ) == 0 )
+        {
+            data_map.insert( std::make_pair( map_key, ReportData() ) );
+        }
+
+        data_map[ map_key ].population += mc_weight;
 
         if( isInfected )
-            infected[ gender ][ age_bin ] += mc_weight;
+        {
+            if( stratify_infected_by_CD4 )
+            {
+                // Exclude those on ART as they're necessarily infected and shouldn't be 
+                //  included in HIV burden calculations for which these strata are intended
+                if( !isOnART )
+                {
+                    float cd4 = hiv_individual->GetHIVSusceptibility()->GetCD4count();
+                    if( cd4 < 200 )
+                        data_map[ map_key ].infected_noART_cd4_under_200 += mc_weight;
+                    else if(cd4 < 350 )
+                        data_map[ map_key ].infected_noART_cd4_200_to_350 += mc_weight;
+                    else if(cd4 < 500 )
+                        data_map[ map_key ].infected_noART_cd4_350_to_500 += mc_weight;
+                    else
+                        data_map[ map_key ].infected_noART_cd4_above_500 += mc_weight;
+                }
+            }
+            else
+            {
+                data_map[ map_key ].infected += mc_weight;
+            }
+        }
 
         if( isOnART )
-            on_ART[ gender ][ age_bin ] += mc_weight;
+            data_map[ map_key ].on_ART += mc_weight;
 
         if( testedPastYear || isOnART )
-            tested_past_year_or_onART[ gender ][ age_bin ] += mc_weight;
+            data_map[ map_key ].tested_past_year_or_onART += mc_weight;
 
         if( testedEver )
-            tested_ever[ gender ][ age_bin ] += mc_weight;
+        {
+            if( isInfected )
+            {
+                data_map[ map_key ].tested_ever_HIVpos += mc_weight;
+            }
+            else
+            {
+                data_map[ map_key ].tested_ever_HIVneg += mc_weight;
+            }
+        }
     }
 
     bool ReportHIVByAgeAndGender::notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange )
@@ -241,26 +413,119 @@ namespace Kernel
                      StateChange.c_str()
                    );
 
+        uint32_t map_key = GetDataMapKey( context );
+        if( data_map.count( map_key ) == 0 )
+        {
+            data_map.insert( std::make_pair( map_key, ReportData() ) );
+        }
+
         float mc_weight = context->GetMonteCarloWeight();
-        int gender = context->GetGender() == Gender::MALE ? 0 : 1;
-        int age_bin = int(floor( (std::min)(double(MAX_AGE-1), context->GetAge()/float(DAYSPERYEAR)) ));
 
         if( StateChange == "DiseaseDeaths" ) 
         {
-            newly_died[ gender ][ age_bin ] += mc_weight;
-            newly_died_from_HIV[ gender ][ age_bin ] += mc_weight;
+            data_map[ map_key ].newly_died          += mc_weight;
+            data_map[ map_key ].newly_died_from_HIV += mc_weight;
         }
-
-        if( StateChange == "NonDiseaseDeaths" )
+        else if( StateChange == "NonDiseaseDeaths" )
         {
-            newly_died[ gender ][ age_bin ] += mc_weight;
+            data_map[ map_key ].newly_died += mc_weight;
         }
         else if( StateChange == "NewInfectionEvent" )
         {
-            newly_infected[ gender ][ age_bin ] += mc_weight;
+            data_map[ map_key ].newly_infected += mc_weight;
+        }
+        else if( StateChange == "HIVTestedPositive" )
+        {
+            data_map[ map_key ].tested_positive += mc_weight;
+        }
+        else if( StateChange == "HIVTestedNegative" )
+        {
+            data_map[ map_key ].tested_negative += mc_weight;
         }
  
         return true;
     }
+
+    bool ReportHIVByAgeAndGender::GetNextIP( std::vector<int>& rKeyValueIndexList )
+    {
+        // ----------------------------------------------------
+        // --- Increment the indexes and determine if we are 
+        // --- done looping over all of the values for each key.
+        // ----------------------------------------------------
+        bool is_done = true ;
+        bool increment_next = true ;
+        for( int kvi = rKeyValueIndexList.size() -1 ; increment_next && (kvi >= 0) ; kvi-- )
+        {
+            rKeyValueIndexList[ kvi ]++ ;
+            is_done = false ;
+
+            std::string key = ip_key_list[ kvi ] ;
+            if( rKeyValueIndexList[ kvi ] >= ip_key_value_list_map[ key ].size() )
+            {
+                rKeyValueIndexList[ kvi ] = 0 ;
+                if( kvi == 0 )
+                {
+                    is_done = true ;
+                }
+            }
+            else
+            {
+                increment_next = false ;
+            }
+        }
+        return is_done ;
+    }
+
+    uint32_t ReportHIVByAgeAndGender::GetDataMapKey( IIndividualHumanEventContext* context )
+    {
+        int gender = context->GetGender() == Gender::MALE ? 0 : 1;
+        int age_bin = (int)floor( (std::min)((double) MAX_AGE-1, context->GetAge()/(float)DAYSPERYEAR) );
+
+        IIndividualHumanSTI* sti_individual = NULL;
+        if( context->QueryInterface( GET_IID( IIndividualHumanSTI ), (void**)&sti_individual ) != s_OK )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualSTI", "IndividualHuman" );
+        }
+        int circumcision_bin = (is_collecting_circumcision_data && sti_individual->IsCircumcised()) ? 1 : 0;
+
+        auto* pProp = context->GetProperties();
+
+        // --------------------------------------------------------------------------
+        // --- Based on the individual's values for each Indivdual Property Key find 
+        // --- the indexes of those values in the value list for the key.
+        // --------------------------------------------------------------------------
+        std::vector<int> key_value_list_index ;
+        for( auto key : ip_key_list )
+        {
+            std::string value = pProp->at( key );
+            int index = std::find( ip_key_value_list_map[ key ].begin(), ip_key_value_list_map[ key ].end(), value ) - ip_key_value_list_map[ key ].begin() ;
+            key_value_list_index.push_back( index );
+        }
+
+        uint32_t map_key = GetDataMapKey( gender, age_bin, circumcision_bin, key_value_list_index );
+        return map_key ;
+    }
+
+    uint32_t ReportHIVByAgeAndGender::GetDataMapKey( int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList )
+    {
+        // ------------------------------------------------------------------------------
+        // --- I used factors of 100 in the map_key_constant so that one could look at
+        // --- the decimal value to determine the what the indexing would be if this were 
+        // --- truly a multi-dimensional array.
+        // ------------------------------------------------------------------------------
+
+        uint32_t map_key = 0 ;
+
+        map_key += ageIndex ;
+        for( int kvi = 0 ; kvi < rKeyValueIndexList.size() ; kvi++ )
+        {
+            map_key += map_key_constants[ kvi ] * rKeyValueIndexList[ kvi ] ;
+        }
+        map_key += map_key_constants[ rKeyValueIndexList.size()+0 ] * circIndex ;
+        map_key += map_key_constants[ rKeyValueIndexList.size()+1 ] * genderIndex ;
+
+        return map_key;
+    }
+
 }
 

@@ -82,13 +82,12 @@ SUITE(PairFormationParametersImplTest)
 {
     TEST(TestReadingDataTransitory)
     {
-        float transitory_rate = 0.0013699f ;
-
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/PairFormationParametersTest/TransitoryParameters.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), transitory_rate, 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
 
-        CHECK_EQUAL( transitory_rate, from_data->BasePairFormationRate() );
+        IdmDateTime current_time;
+        CHECK_EQUAL( 0.0013699f, from_data->FormationRate( current_time, 1.0 ) );
 
         CHECK_EQUAL(    20, from_data->GetMaleAgeBinCount()    );
         CHECK_EQUAL(    20, from_data->GetFemaleAgeBinCount()  );
@@ -121,13 +120,12 @@ SUITE(PairFormationParametersImplTest)
 
     TEST(TestReadingDataMarital)
     {
-        float marital_rate = 0.0000914427f ;
-
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/PairFormationParametersTest/MaritalParameters.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::MARITAL, p_config.get(), marital_rate, 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::MARITAL, p_config.get(), 1.0f, 1.0f ) );
 
-        CHECK_EQUAL( marital_rate, from_data->BasePairFormationRate() );
+        IdmDateTime current_time;
+        CHECK_EQUAL( 0.0000914427f, from_data->FormationRate( current_time, 1.0 ) );
 
         CHECK_EQUAL(    20, from_data->GetMaleAgeBinCount()    );
         CHECK_EQUAL(    20, from_data->GetFemaleAgeBinCount()  );
@@ -158,13 +156,41 @@ SUITE(PairFormationParametersImplTest)
         CHECK_ARRAY_CLOSE( Marginal_Values_Female_M, from_data->MarginalValues().at(Gender::FEMALE), 20, 0.00001 );
     }
 
+    TEST(TestSigmoid)
+    {
+        unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/PairFormationParametersTest/TestSigmoid.json" ) );
+
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::MARITAL, p_config.get(), 1.0f, 1.0f ) );
+
+        IdmDateTime current_time;
+        current_time.time = 1990.0 * DAYSPERYEAR;
+        CHECK_CLOSE( 0.0692, from_data->FormationRate( current_time, 1.0 ), 0.0001 );
+        current_time.time = 1995.0 * DAYSPERYEAR;
+        CHECK_CLOSE( 0.4505, from_data->FormationRate( current_time, 1.0 ), 0.0001 );
+        current_time.time = 2000.0 * DAYSPERYEAR;
+        CHECK_CLOSE( 0.8318, from_data->FormationRate( current_time, 1.0 ), 0.0001 );
+    }
+
+    TEST(TestInterpolatedValueMap)
+    {
+        unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/PairFormationParametersTest/TestInterpolatedValueMap.json" ) );
+
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::MARITAL, p_config.get(), 1.0f, 1.0f ) );
+
+        IdmDateTime current_time;
+        current_time.time = 1990.0 * DAYSPERYEAR;
+        CHECK_CLOSE( 0.5, from_data->FormationRate( current_time, 1.0 ), 0.0001 );
+        current_time.time = 2000.0 * DAYSPERYEAR;
+        CHECK_CLOSE( 0.8, from_data->FormationRate( current_time, 1.0 ), 0.0001 );
+        current_time.time = 2010 * DAYSPERYEAR;
+        CHECK_CLOSE( 0.6, from_data->FormationRate( current_time, 1.0 ), 0.0001 );
+    }
+
     TEST(TestBins)
     {
-        float transitory_rate = 0.0013699f ;
-
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/PairFormationParametersTest/TransitoryParameters.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), transitory_rate, 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
 
         CHECK_EQUAL(    20, from_data->GetMaleAgeBinCount()    );
         CHECK_EQUAL(    20, from_data->GetFemaleAgeBinCount()  );
@@ -205,10 +231,9 @@ SUITE(PairFormationParametersImplTest)
     {
         try
         {
-            float transitory_rate = 0.0013699f ;
             unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( rFilename ) );
 
-            unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), transitory_rate, 1.0f, 1.0f ) );
+            unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
 
             CHECK_LN( false, lineNumber ); // should not get here
         }

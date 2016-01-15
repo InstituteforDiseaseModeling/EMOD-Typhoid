@@ -17,10 +17,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 #include "Contexts.h"
 #include "IdmDateTime.h"
-#include "Individual.h"
-#include "Infection.h"
+#include "IIndividualHuman.h"
+#include "IInfection.h"
 #include "ISimulation.h"
-#include "Node.h"
+#include "INodeContext.h"
 #include "NodeRankMap.h"
 #include "IReport.h"
 #include "Configure.h"
@@ -37,8 +37,10 @@ namespace Kernel
     struct IEventCoordinator;
     struct SimulationEventContext;
     class  SimulationEventContextHost;
-
-    typedef uint32_t node_id_t;
+    struct IMigrationInfoFactory;
+    class Node;
+    class Infection;
+    class IndividualHuman;
 
     class IDMAPI Simulation : public ISimulation, public ISimulationContext, public JsonConfigurable
     {
@@ -76,6 +78,7 @@ namespace Kernel
         virtual suids::suid GetNextNodeSuid() override;
         virtual suids::suid GetNextIndividualHumanSuid() override;
         virtual suids::suid GetNextInfectionSuid() override;
+        virtual ExternalNodeId_t GetNodeExternalID( const suids::suid& rNodeSuid );
 
         // Random number handling
         virtual RANDOMBASE* GetRng() override;
@@ -98,21 +101,20 @@ namespace Kernel
         virtual void Reports_CreateCustom();
 
         // Initialization
+        virtual IMigrationInfoFactory* CreateMigrationInfoFactory ( const std::string& idreference,
+                                                                    MigrationStructure::Enum ms,
+                                                                    int torusSize );
         virtual void setupEventContextHost();
         virtual void setupMigrationQueues();
         void setupRng();
         void setParams( const ::Configuration *config );
         void initSimulationState();
 
-        // TODO: this is only here temporarily... should really go in a MigrationFactory class or 
-        // something similar to ClimateFactory::ParseMetadataForFile() when migration gets refactored
-// test removal        bool ParseMetadataForMigrationFile(std::string data_filepath, std::string idreference, hash_map<uint32_t, uint32_t> &node_offsets);
-
         // Node initialization
         int  populateFromDemographics(const char* campaign_filename, const char* loadbalance_filename); // creates nodes from demographics input file data
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory); // For derived Simulation classes to add correct node type
-        void addNode_internal(Node *node, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory); // Helper to add Nodes
-        int  getInitialRankFromNodeId(node_id_t node_id); // Needed in MPI implementation
+        void addNode_internal( INodeContext *node, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory); // Helper to add Nodes
+        int  getInitialRankFromNodeId( ExternalNodeId_t node_id ); // Need in MPI implementation
 
         // Migration
         virtual void resolveMigration(); // derived classes override this...

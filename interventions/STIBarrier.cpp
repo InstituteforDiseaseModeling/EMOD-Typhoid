@@ -17,6 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "STIInterventionsContainer.h"  // for ISTIBarrierConsumer methods
 #include "IRelationship.h"
+#include "Sigmoid.h"
 
 static const char* _module = "STIBarrier";
 
@@ -68,11 +69,7 @@ namespace Kernel
     void STIBarrier::Update( float dt )
     {
         LOG_DEBUG_F( "%s\n", __FUNCTION__ );
-        SigmoidConfig probs;
-        probs.early = early;
-        probs.late = late;
-        probs.midyear = midyear;
-        probs.rate = rate;
+        Sigmoid probs( early, late, midyear, rate );
         ibc->UpdateSTIBarrierProbabilitiesByType( rel_type, probs );
         expired = true;
     }

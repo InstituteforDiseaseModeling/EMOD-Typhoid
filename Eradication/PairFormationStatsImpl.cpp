@@ -59,7 +59,7 @@ namespace Kernel
         {
             for( int risk_group = 0; risk_group < RiskGroup::Enum::COUNT; risk_group++ )    // TODO: Need better way to iterate through an enum
             {
-                eligible_population[risk_group][Gender::MALE].resize(parameters->GetMaleAgeBinCount());
+                eligible_population[risk_group][Gender::MALE  ].resize(parameters->GetMaleAgeBinCount());
                 eligible_population[risk_group][Gender::FEMALE].resize(parameters->GetFemaleAgeBinCount());
             }
         }

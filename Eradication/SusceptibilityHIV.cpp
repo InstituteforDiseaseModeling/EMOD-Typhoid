@@ -14,12 +14,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualCoinfection.h"
 #endif
 #include "IIndividualHumanHIV.h"
-#include "Individual.h" // for GetGender
+#include "IIndividualHuman.h"
 #include "InfectionHIV.h"
 #include "HIVInterventionsContainer.h"
 #include "Common.h"
 #include "Debug.h"
 #include "RANDOM.h"
+#include "MathFunctions.h"
 #include "math.h"
 #include "NodeEventContext.h"
 #include "SimulationConfig.h"
@@ -182,7 +183,8 @@ namespace Kernel
 
         if( hiv_parent->GetHIVInterventionsContainer()->ShouldReconstituteCD4() )
         {
-            float months_since_starting_ART = hiv_parent->GetHIVInterventionsContainer()->GetDurationSinceLastStartingART() / IDEALDAYSPERMONTH;
+            // Adding dt because the interventions container updates after susceptibility.  Fixes rare assertion failure.
+            float months_since_starting_ART = (hiv_parent->GetHIVInterventionsContainer()->GetDurationSinceLastStartingART() + dt) / IDEALDAYSPERMONTH;
             NO_MORE_THAN( months_since_starting_ART, MONTHS_ON_ART_UNTIL_CD4_RECONSTITUTION_SATURATES )
             release_assert( months_since_starting_ART >= 0 );
 

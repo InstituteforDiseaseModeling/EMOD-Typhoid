@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Interventions.h"
 #include "InterventionEnums.h"
 #include "InterventionsContainer.h"
-#include "SimpleTypemapRegistration.h"
+#include "VectorContexts.h"
 
 #include "BoostLibWrapper.h"
 

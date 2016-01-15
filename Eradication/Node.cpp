@@ -33,6 +33,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IInfectable.h"
 #include "Instrumentation.h"
 #include "FileSystem.h"
+#include "IMigrationInfo.h"
+#include "Individual.h"
 #include "Serialization.h"
 
 static const char* _module = "Node";
@@ -90,6 +92,16 @@ namespace Kernel
     void Node::TestOnly_AddPropertyKeyValue( const char* key, const char* value )
     {
         base_distribs[ key ].insert( make_pair( 0.0f, value ) );
+    }
+
+    std::vector<std::string> Node::GetIndividualPropertyKeyList()
+    {
+        std::vector<std::string> key_list ;
+        for( auto entry : base_distribs )
+        {
+            key_list.push_back( entry.first );
+        }
+        return key_list ;
     }
 
     std::vector<std::string> Node::GetIndividualPropertyValuesList( const std::string& rKey )
@@ -219,7 +231,7 @@ namespace Kernel
                 stop_time = trans[idx][ IP_WHEN_KEY ][ "Duration" ].AsDouble();
                 LOG_DEBUG_F( "stop_time = %f\n", stop_time );
             }
-
+            std::string trigger = "";
             float reversion = 0.0f;
             if( trans[idx].Contains( IP_REVERSION_KEY ) )
             {
@@ -246,6 +258,8 @@ namespace Kernel
                     json::QuickBuilder new_bti_qb = json::QuickBuilder( new_bti );
                     new_bti_qb[ "class" ] = json::String( "BirthTriggeredIV" );
                     new_bti_qb[ "Demographic_Coverage" ] = json::Number( 1.0 );
+                    new_bti_qb[ "Target_Demographic" ] = json::String( "Everyone" );
+                    new_bti_qb[ "Property_Restrictions" ] = json::Array();
                     new_bti_qb[ "Duration" ] = json::Number( -1.0 );
                     new_bti_qb[ "Actual_IndividualIntervention_Config" ] = new_ic_qb.As<json::Object>();
                     new_event_birth[ "Event_Coordinator_Config" ][ "Intervention_Config" ] = new_bti; // this is CRAP (TBD)
@@ -260,11 +274,6 @@ namespace Kernel
                 new_ic_qb[ "class" ] = json::String( "IVCalendar" );
                 new_ic_qb[ "Dropout" ] = json::Number( 0 );
                 new_ic_qb[ "Calendar" ][0][ "Age" ] = json::Number( age );
-                new_event_qb[ "Event_Coordinator_Config" ][ "Target_Demographic" ] = json::String( "ExplicitAgeRanges" );
-                double min = 0;
-                double max = age/DAYSPERYEAR;
-                new_event_qb[ "Event_Coordinator_Config" ][ "Target_Age_Min" ] = json::Number( min );
-                new_event_qb[ "Event_Coordinator_Config" ][ "Target_Age_Max" ] = json::Number( max );
                 new_ic_qb[ "Calendar" ][0][ "Probability" ] = json::Number( 1.0 );
                 new_ic_qb[ "Actual_IndividualIntervention_Configs" ][0][ "class" ] = json::String( "PropertyValueChanger" );
                 new_ic_qb[ "Actual_IndividualIntervention_Configs" ][0][ "Target_Property_Key" ] = json::String( prop_key );
@@ -282,15 +291,25 @@ namespace Kernel
                 json::QuickBuilder new_bti_qb = json::QuickBuilder( new_bti );
                 new_bti_qb[ "class" ] = json::String( "BirthTriggeredIV" );
                 new_bti_qb[ "Demographic_Coverage" ] = json::Number( 1.0 );
+                new_bti_qb[ "Target_Demographic" ] = json::String( "Everyone" );
+                new_bti_qb[ "Property_Restrictions" ] = json::Array();
                 new_bti_qb[ "Duration" ] = json::Number( -1.0 );
                 new_bti_qb[ "Actual_IndividualIntervention_Config" ] = new_ic_qb.As<json::Object>();
                 new_event_birth[ "Event_Coordinator_Config" ][ "Intervention_Config" ] = new_bti; // this is CRAP (TBD)
                 ((json::Array&)tx_camp[ "Events" ]).Insert( new_event_birth );
+
+                // Set here after copied for BirthTriggeredIV
+                new_event_qb[ "Event_Coordinator_Config" ][ "Target_Demographic" ] = json::String( "ExplicitAgeRanges" );
+                double min = 0;
+                double max = age/DAYSPERYEAR;
+                new_event_qb[ "Event_Coordinator_Config" ][ "Target_Age_Min" ] = json::Number( min );
+                new_event_qb[ "Event_Coordinator_Config" ][ "Target_Age_Max" ] = json::Number( max );
+
             }
             else if( type == "At_Event" )
             {
                 // TBD: Add Health-Triggered Intervention
-                std::string trigger = trans[idx][ "Trigger" ].AsString();
+                trigger = trans[idx][ "Trigger" ].AsString();
                 new_event[ "Start_Day" ] = json::Number( 100000 );
                 new_ic_qb[ "class" ] = json::String( "HealthTriggeredIntervention" );
             }
@@ -336,7 +355,7 @@ namespace Kernel
 
     static const char* keys_whitelist_tmp[] = { "Accessibility", "Geographic", "Place", "Risk", "QualityOfCare", "HasActiveTB"  };
 
-// <ERAD-291>
+    // <ERAD-291>
     // TODO: Make simulation object initialization more consistent.  Either all pass contexts to constructors or just have empty constructors
     Node::Node(ISimulationContext *_parent_sim, suids::suid _suid)
         : serializationMask(SerializationFlags(uint32_t(SerializationFlags::Population) | uint32_t(SerializationFlags::Parameters)))
@@ -685,11 +704,6 @@ namespace Kernel
         }
 
         bool ret = JsonConfigurable::Configure( config );
-        // TODO - clorton: looks like a duplicate from lines 637 (or so)
-        if( vital_birth == true )
-        {
-            initConfig( "Birth_Rate_Dependence", vital_birth_dependence, config, MetadataDescriptor::Enum(Birth_Rate_Dependence_DESC_TEXT, Birth_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthDependence)) ); // node only (move)
-        }
         return ret;
     }
 
@@ -709,9 +723,34 @@ namespace Kernel
         event_context_host = _new_ NodeEventContextHost(this);
     }
 
-    void Node::SetupMigration(MigrationInfoFactory * migration_factory)
+    void Node::SetupMigration( IMigrationInfoFactory * migration_factory, 
+                               MigrationStructure::Enum ms,
+                               const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap )
     {
-        migration_info = migration_factory->CreateMigrationInfo(this);
+        migration_dist_type = DistributionFunction::NOT_INITIALIZED ;
+        migration_dist1 = 0.0 ;
+        migration_dist2 = 0.0 ;
+
+        if( ms != MigrationStructure::NO_MIGRATION )
+        {
+            migration_info = migration_factory->CreateMigrationInfo( this, rNodeIdSuidMap );
+            release_assert( migration_info != nullptr );
+
+            if( migration_info->IsHeterogeneityEnabled() )
+            {
+                LOG_DEBUG( "Parsing MigrationHeterogeneityDistribution\n" );
+                migration_dist_type = (DistributionFunction::Enum)(demographics["IndividualAttributes"]["MigrationHeterogeneityDistributionFlag"].AsInt());
+                migration_dist1     = (float)                     (demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution1"   ].AsDouble());
+                migration_dist2     = (float)                     (demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution2"   ].AsDouble());
+
+                for( auto ind : this->individualHumans )
+                {
+                    // this is only done during initialization.  During the sim, configureAndAddNewIndividual() will set this
+                    float temp_migration = (float)(Probability::getInstance()->fromDistribution(migration_dist_type, migration_dist1, migration_dist2, 1.0));
+                    ind->SetMigrationModifier( temp_migration );
+                }
+            }                          
+        }
     }
 
     void Node::SetMonteCarloParameters(float indsamplerate, int nummininf)
@@ -977,30 +1016,26 @@ namespace Kernel
                 }
             }
 
-            std::string transitions_file_path = FileSystem::Concat( Environment::getInstance()->OutputPath, std::string(Node::transitions_dot_json_filename) );
-            if( !FileSystem::FileExists( transitions_file_path ) ) // assumes something deletes this at beginning of each run (Simulation.cpp)
+            // This is node-level code but we only want to open this file once regardless how many nodes we have.
+            // An implicit assumption is that all ranks have at least one node.
+            static bool doOnce = false;
+            if( doOnce==false )
             {
+                std::string transitions_file_path = FileSystem::Concat( Environment::getInstance()->OutputPath, std::string(Node::transitions_dot_json_filename) );
+                // Rank 0 creates the transitions json file
                 if( EnvPtr->MPI.Rank == 0 )
                 {
                     LOG_DEBUG_F( "Creating %s file.\n", transitions_file_path.c_str() );
                     std::ofstream tx_camp_json( transitions_file_path.c_str() );
                     json::Writer::Write( tx_camp, tx_camp_json );
                 }
-                // Everybody stops here for a sync-up. Non-rank0 cores stop and wait, doign nothing. Rank0 stops after doing the file write and basically is the last
-                // one to the party. Nobody proceeds until rank0 reports one, having written the file.
-                MPI_Barrier( MPI_COMM_WORLD );
-            }
-            else
-            {
-                LOG_DEBUG_F( "%s file already exists, not creating and loading new one. This better be a multi-node sim.\n", transitions_file_path.c_str() );
-            }
 
-            // This is node-level code but we only want to open this file once regardless how many nodes we have.
-            static bool doOnce = false;
-            if( doOnce==false )
-            {
-                doOnce = true;
+                // Everybody stops here for a sync-up after rank 0 writes transitions.json
+                MPI_Barrier( MPI_COMM_WORLD );
+
                 ((Simulation*)parent)->loadCampaignFromFile( transitions_file_path );
+
+                doOnce = true;
             }
 
             if( base_distribs.size() == 0 && localized == false ) // set base_distribs once we have parsed a node that has no localizations
@@ -1782,9 +1817,6 @@ namespace Kernel
         risk_dist_type = DistributionFunction::NOT_INITIALIZED ;
         risk_dist1 = 0.0 ;
         risk_dist2 = 0.0 ;
-        migration_dist_type = DistributionFunction::NOT_INITIALIZED ;
-        migration_dist1 = 0.0 ;
-        migration_dist2 = 0.0 ;
 
         if (demographics_other)
         {
@@ -1799,14 +1831,6 @@ namespace Kernel
             risk_dist_type = DistributionFunction::Enum(demographics["IndividualAttributes"]["RiskDistributionFlag"].AsInt());
             risk_dist1     =                      float(demographics["IndividualAttributes"]["RiskDistribution1"   ].AsDouble());
             risk_dist2     =                      float(demographics["IndividualAttributes"]["RiskDistribution2"   ].AsDouble());
-        }
-
-        if ( (migration_info != nullptr) && migration_info->IsHeterogeneityEnabled() )
-        {
-            LOG_DEBUG( "Parsing MigrationHeterogeneityDistribution\n" );
-            migration_dist_type = DistributionFunction::Enum(demographics["IndividualAttributes"]["MigrationHeterogeneityDistributionFlag"].AsInt());
-            migration_dist1     =                      float(demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution1"   ].AsDouble());
-            migration_dist2     =                      float(demographics["IndividualAttributes"]["MigrationHeterogeneityDistribution2"   ].AsDouble());
         }
     }
 
@@ -1897,7 +1921,7 @@ namespace Kernel
         float child_poverty  = float(mother->GetAbovePoverty()); //same poverty as mother //note, child's financial level independent of mother, may be important for diseases with a social network structure
         float female_ratio   = 0.5;
 
-        IIndividualHuman *child;
+
 
         if (randgen->e() < female_ratio) { child_gender = Gender::FEMALE; }
 
@@ -1914,7 +1938,7 @@ namespace Kernel
             }
         }
 
-        child = addNewIndividual(mc_weight, child_age, child_gender, child_infections, 1.0, 1.0, 1.0, child_poverty);
+        IIndividualHuman *child = addNewIndividual(mc_weight, child_age, child_gender, child_infections, 1.0, 1.0, 1.0, child_poverty);
         auto context = dynamic_cast<IIndividualHumanContext*>(mother);
         child->setupMaternalAntibodies(context, this);
         Births += mc_weight;//  Born with age=0 and no infections and added to sim with same sampling weight as mother
@@ -2040,8 +2064,9 @@ namespace Kernel
             temp_risk = float(Probability::getInstance()->fromDistribution(risk_dist_type, risk_dist1, risk_dist2, 1.0));
         }
 
-        if ( (migration_info != nullptr) && migration_info->IsHeterogeneityEnabled() )
+        if( (migration_info != nullptr) && migration_info->IsHeterogeneityEnabled() )
         {
+            // This is not done during initialization but other times when the individual is created.           
             temp_migration = float(Probability::getInstance()->fromDistribution(migration_dist_type, migration_dist1, migration_dist2, 1.0));
         }
 
@@ -2246,7 +2271,11 @@ namespace Kernel
 
     void Node::resolveEmigration(IIndividualHuman* individual)
     {
-        LOG_DEBUG_F( "individual %lu is leaving node %lu\n", individual->GetSuid().data, GetSuid().data );
+        LOG_DEBUG_F( "individual %lu is leaving node %lu and going to %lu\n", individual->GetSuid().data, GetSuid().data,
+            individual->GetMigrationDestination().data );
+
+        event_context_host->TriggerNodeEventObservers( individual->GetEventContext(), IndividualEventTriggerType::Emigrating );
+
         // Do emigration logic here
         // Handle departure-linked interventions for individual
         if (params()->interventions ) // && departure_linked_dist)
@@ -2265,9 +2294,11 @@ namespace Kernel
         {
             event_context_host->ProcessArrivingIndividual(movedind);
         }
+        event_context_host->TriggerNodeEventObservers( movedind->GetEventContext(), IndividualEventTriggerType::Immigrating );
 
         movedind->UpdateGroupMembership();
         movedind->UpdateGroupPopulation(1.0f);
+
         return movedind;
     }
 
@@ -2434,8 +2465,8 @@ namespace Kernel
             {
                 //if (ndc->longitude < (vertex_coords[2 * i + 2] - vertex_coords[2 * i]) * (ndc->latitude - vertex_coords[2 * i + 1]) / (vertex_coords[2 * i + 3] - vertex_coords[2 * i + 1]) + vertex_coords[2 * i])
                 // for clarity
-                float curLong  = float(poly_interp[i][0].As<Number>());
-                float curLat   = float(poly_interp[i][1].As<Number>());
+                float curLong  = float(poly_interp[i  ][0].As<Number>());
+                float curLat   = float(poly_interp[i  ][1].As<Number>());
                 float nextLong = float(poly_interp[i+1][0].As<Number>());
                 float nextLat  = float(poly_interp[i+1][1].As<Number>());
                 if (lon < (nextLong - curLong) * (lat - curLat) / (nextLat - curLat) + curLong)
@@ -2485,6 +2516,19 @@ namespace Kernel
         }
     }
 
+    std::vector<bool> Node::GetMigrationTypeEnabledFromDemographics() const
+    {
+        std::vector<bool> demog_enabled ;
+
+        demog_enabled.push_back( true ) ; // local
+        demog_enabled.push_back( demographics["NodeAttributes"]["Airport"].AsUint64() != 0 );
+        demog_enabled.push_back( demographics["NodeAttributes"]["Region" ].AsUint64() != 0 );
+        demog_enabled.push_back( demographics["NodeAttributes"]["Seaport"].AsUint64() != 0 );
+
+        return demog_enabled ;
+    }
+
+
     ::RANDOMBASE* Node::GetRng()
     {
         release_assert(parent);
@@ -2528,10 +2572,11 @@ namespace Kernel
     }
 
     // INodeContext methods
+    ISimulationContext* Node::GetParent() { return parent; }
     suids::suid Node::GetSuid() const { return suid; }
     suids::suid Node::GetNextInfectionSuid() { return parent->GetNextInfectionSuid(); }
 
-    const MigrationInfo* Node::GetMigrationInfo() const { return migration_info; }
+    IMigrationInfo* Node::GetMigrationInfo() { return migration_info; }
     const NodeDemographics* Node::GetDemographics() const { return &demographics; }
 
     // Methods for implementing time dependence in infectivity, birth rate, migration, etc.
@@ -2584,7 +2629,7 @@ namespace Kernel
     float
     Node::GetSusceptDynamicScaling() const { return susceptibility_dynamic_scaling; }
 
-    int
+    ExternalNodeId_t
     Node::GetExternalID()    const { return externalId; }
 
     const Climate*

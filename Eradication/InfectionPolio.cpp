@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "InfectionPolio.h"
 #include "SusceptibilityPolio.h"
-#include "InterventionsContainer.h"
+#include "PolioInterventionsContainer.h"
 #include "PolioDefs.h"
 #include "Environment.h"
 #include "Debug.h"
@@ -178,7 +178,7 @@ void Kernel::InfectionPolio::SetParameters(StrainIdentity* infstrain, int incuba
     }
 }
 
-void Kernel::InfectionPolio::InitInfectionImmunology(Susceptibility* _immunity)
+void Kernel::InfectionPolio::InitInfectionImmunology(ISusceptibilityContext* _immunity)
 {
     ISusceptibilityPolio* immunity = nullptr;
     if( _immunity->QueryInterface( GET_IID( ISusceptibilityPolio ), (void**)&immunity ) != s_OK )

@@ -18,7 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ConfigurationImpl.h"
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "NodeEventContext.h"
 #include "Log.h"
 #include "IIndividualHumanSTI.h"

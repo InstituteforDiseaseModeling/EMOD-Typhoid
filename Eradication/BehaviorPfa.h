@@ -27,12 +27,10 @@ namespace Kernel {
     public:
         static IPairFormationAgent* CreatePfa( const Configuration* pConfig,
                                                const IPairFormationParameters* params,
-                                               float updatePeriod,
                                                float selectionThreshold,
                                                RANDOMBASE* prng, 
                                                RelationshipCreator rc );
 
-        virtual void SetUpdatePeriod(float) override;
         virtual void AddIndividual(IIndividualHumanSTI*) override;
 
         virtual void RemoveIndividual(IIndividualHumanSTI*) override;
@@ -60,9 +58,8 @@ namespace Kernel {
         virtual bool Configure(const Configuration *config) override;
 
     protected:
-        BehaviorPfa();
+		BehaviorPfa();
         BehaviorPfa( const IPairFormationParameters*, 
-                     float updatePeriod, 
                      float selectionThreshold,
                      RANDOMBASE*, 
                      RelationshipCreator );
@@ -70,7 +67,6 @@ namespace Kernel {
         virtual ~BehaviorPfa();
         bool areInRelationship( IIndividualHumanSTI * person1, const IIndividualHumanSTI* person2 ) const;
 
-        float m_update_period;
         float m_cum_prob_threshold ;
         float m_time_since_last_update;
 

@@ -23,6 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "TransmissionGroupsFactory.h"
 #include "TransmissionGroupMembership.h"
+#include "IMigrationInfo.h"
 
 static const char * _module = "NodeVector";
 
@@ -167,19 +168,19 @@ namespace Kernel
         m_larval_habitats.clear();
     }
 
-    IIndividualHuman* NodeVector::createHuman(suids::suid id, float MCweight, float init_age, int gender, float init_poverty)
+    IIndividualHuman* NodeVector::createHuman( suids::suid id, float MCweight, float init_age, int gender, float init_poverty)
     {
         return IndividualHumanVector::CreateHuman(getContextPointer(), id, MCweight, init_age, gender, init_poverty);
     }
 
-    IIndividualHuman* NodeVector::processImmigratingIndividual(IIndividualHuman* movedind)
+    IIndividualHuman* NodeVector::processImmigratingIndividual( IIndividualHuman* movedind)
     {
         Node::processImmigratingIndividual(movedind);
 
         return movedind;
     }
 
-    IIndividualHuman* NodeVector::addNewIndividual(float MCweight, float init_age, int gender, int init_infs, float immparam, float riskparam, float mighet, float init_poverty)
+    IIndividualHuman* NodeVector::addNewIndividual( float MCweight, float init_age, int gender, int init_infs, float immparam, float riskparam, float mighet, float init_poverty)
     {
         // just the base class for now
         return Node::addNewIndividual(MCweight, init_age, gender, init_infs, immparam, riskparam, mighet, init_poverty);
@@ -477,12 +478,12 @@ namespace Kernel
         // calculate vectormigrationrate
         if (vector_migration_local && migration_info)
         {
-            std::vector<int /*MigrationType*/> migration_types = migration_info->GetMigrationTypes();
-            std::vector<suids::suid> adjacent_nodes = migration_info->GetAdjacentNodes();
+            std::vector<MigrationType::Enum> migration_types = migration_info->GetMigrationTypes();
+            std::vector<suids::suid> adjacent_nodes = migration_info->GetReachableNodes();
 
             for (int i = 0; i < adjacent_nodes.size(); i++)
             {
-                if (migration_types[i] == LOCAL_MIGRATION)
+                if( migration_types[i] == MigrationType::LOCAL_MIGRATION )
                 {
                     // increase total vector emigration rate
                     if (params()->lloffset > 0)

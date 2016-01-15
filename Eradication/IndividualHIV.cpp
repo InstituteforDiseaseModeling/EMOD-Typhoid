@@ -70,7 +70,7 @@ namespace Kernel
         LOG_DEBUG_F( "%lu (HIV) destructor.\n", this->GetSuid().data );
     }
 
-    Infection* IndividualHumanHIV::createInfection( suids::suid _suid )
+    IInfection* IndividualHumanHIV::createInfection( suids::suid _suid )
     {
         return InfectionHIV::CreateInfection(this, _suid);
     }

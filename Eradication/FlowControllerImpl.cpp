@@ -9,7 +9,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "FlowControllerImpl.h"
-#include "SimulationEnums.h"
+#include "IPairFormationStats.h"
+#include "IPairFormationRateTable.h"
+#include "IPairFormationParameters.h"
 
 #include "Log.h"
 
@@ -20,14 +22,14 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_BODY(FlowControllerImpl)
     END_QUERY_INTERFACE_BODY(FlowControllerImpl)
 
-    void FlowControllerImpl::UpdateEntryRates()
+    void FlowControllerImpl::UpdateEntryRates( const IdmDateTime& rCurrentTime, float dt )
     {
         LOG_DEBUG_F("%s()\n", __FUNCTION__);
 
         // -------------------------
         // --- Update desired rates
         // -------------------------
-        UpdateDesiredFlow();
+        UpdateDesiredFlow( rCurrentTime, dt );
 
         if (LOG_LEVEL(INFO))
         {
@@ -90,12 +92,9 @@ namespace Kernel
         , rate_table(rates)
         , parameters(params)
         , desired_flow()
-        , base_pair_formation_rate(0.0f)
     {
         if( parameters != nullptr )
         {
-            base_pair_formation_rate = parameters->BasePairFormationRate();
-
             rate_ratio[Gender::MALE  ] = parameters->GetRateRatio(Gender::MALE);
             rate_ratio[Gender::FEMALE] = parameters->GetRateRatio(Gender::FEMALE);
 
@@ -112,7 +111,7 @@ namespace Kernel
         parameters = nullptr;
     }
 
-    void FlowControllerImpl::UpdateDesiredFlow()
+    void FlowControllerImpl::UpdateDesiredFlow( const IdmDateTime& rCurrentTime, float dt )
     {
         LOG_DEBUG_F("%s()\n", __FUNCTION__);
 
@@ -148,7 +147,7 @@ namespace Kernel
         // ---------------------------------------------------------------------
         // --- Multiply the total number of people eligible times the base rate
         // ---------------------------------------------------------------------
-        cumulative_base_flow *= base_pair_formation_rate;
+        cumulative_base_flow *= parameters->FormationRate( rCurrentTime, dt );
 
         if (cumulative_base_flow > 0.0f)
         {
@@ -179,7 +178,6 @@ namespace Kernel
         FlowControllerImpl& flow = *obj;
         ar.labelElement("rate_ratio"              ); ar.serialize( flow.rate_ratio, Gender::COUNT );
         ar.labelElement("desired_flow"            ) & flow.desired_flow;
-        ar.labelElement("base_pair_formation_rate") & flow.base_pair_formation_rate;
 
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // !!! Needs to be set during serialization

@@ -16,17 +16,22 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IInfectable.h"
 #include "TransmissionGroupMembership.h"
 #include "ITransmissionGroups.h"
+#include "SimulationEnums.h"
 
 namespace Kernel
 {
-    class  MigrationInfoFactory;
-    struct ISimulationContext;
-    class  MigrationInfo;
+    struct IMigrationInfo;
+    struct IMigrationInfoFactory;
     struct NodeDemographics;
+    class NodeDemographicsFactory;
     struct NodeDemographicsDistribution;
     class  Climate;
+    class  ClimateFactory;
     struct INodeEventContext;
     struct IIndividualHuman;
+    struct ISimulationContext;
+
+    typedef uint32_t ExternalNodeId_t;
 
     struct IDMAPI INodeContext : ISerializable
     {
@@ -44,11 +49,19 @@ namespace Kernel
             return !(*this == rThat);
         } ;
 
+        virtual ISimulationContext* GetParent() = 0;
+
         //individual can get an id of their parent to compare against, for instance, their home node id
         virtual suids::suid GetSuid() const = 0;
 
-        virtual void SetupMigration( MigrationInfoFactory* ) = 0;
+        virtual void SetupMigration( IMigrationInfoFactory * migration_factory, 
+                                     MigrationStructure::Enum ms,
+                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) = 0;
+
         virtual void SetContextTo( ISimulationContext* ) = 0;
+        virtual void SetMonteCarloParameters(float indsamplerate =.05, int nummininf = 0) = 0;
+        virtual void SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory) = 0;
+        virtual void PopulateFromDemographics() = 0;
 
         virtual suids::suid GetNextInfectionSuid() = 0;
         virtual ::RANDOMBASE* GetRng() = 0; 
@@ -70,9 +83,10 @@ namespace Kernel
         // Discrete HINT contagion
         virtual act_prob_vec_t DiscreteGetTotalContagion(const TransmissionGroupMembership_t* membership) = 0;
 
-        virtual const MigrationInfo* GetMigrationInfo() const = 0;
+        virtual IMigrationInfo* GetMigrationInfo() = 0;
         virtual const NodeDemographics* GetDemographics() const = 0;
         virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string) const = 0;
+        virtual std::vector<bool> GetMigrationTypeEnabledFromDemographics() const = 0 ;
 
         // reporting interfaces
         virtual IdmDateTime GetTime()          const = 0;
@@ -88,7 +102,7 @@ namespace Kernel
         virtual float GetMeanAgeInfection()    const = 0;
 
         // This method will ONLY be used for reporting by input node ID, don't use it elsewhere!
-        virtual int GetExternalID() const = 0;
+        virtual ExternalNodeId_t GetExternalID() const = 0;
 
         typedef std::function<void(IIndividualHuman*)> callback_t;
         virtual void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer) = 0;

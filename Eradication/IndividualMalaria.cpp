@@ -14,11 +14,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SusceptibilityMalaria.h"
 #include "InfectionMalaria.h"
 #include "Debug.h"
-#include "MathFunctions.h"
+#include "Sigmoid.h"
 #include "TransmissionGroupMembership.h"
 
 #include "MalariaInterventionsContainer.h"
 #include "SimulationConfig.h"
+#include "MathFunctions.h"
 #include "MalariaBarcode.h"
 
 #ifdef randgen
@@ -173,7 +174,7 @@ namespace Kernel
     }
 
 
-    Infection* IndividualHumanMalaria::createInfection(suids::suid _suid)
+    IInfection* IndividualHumanMalaria::createInfection(suids::suid _suid)
     {
         // If m_initial_infected_hepatocytes=0, this function is being called from initial infections at t=0 or an Outbreak intervention.
         // In that case, default to the mean number of infected hepatocytes.

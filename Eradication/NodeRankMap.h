@@ -11,14 +11,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <map>
 #include "BoostLibWrapper.h"
 #include "suids.hpp"
+#include "INodeContext.h"
 
 namespace Kernel
 {
-    typedef uint32_t node_id_t;
 
     struct IInitialLoadBalanceScheme
     {
-        virtual int GetInitialRankFromNodeId(node_id_t node_id) = 0;
+        virtual int GetInitialRankFromNodeId( ExternalNodeId_t node_id ) = 0;
         virtual ~IInitialLoadBalanceScheme() {}
     };
 
@@ -27,7 +27,7 @@ namespace Kernel
     public:
         CheckerboardInitialLoadBalanceScheme();
 
-        virtual int GetInitialRankFromNodeId(node_id_t node_id) override;
+        virtual int GetInitialRankFromNodeId( ExternalNodeId_t node_id ) override;
 
     protected:
         uint32_t num_ranked;
@@ -40,7 +40,7 @@ namespace Kernel
 
         void Initialize(uint32_t in_num_nodes);
 
-        virtual int GetInitialRankFromNodeId(node_id_t node_id);
+        virtual int GetInitialRankFromNodeId( ExternalNodeId_t node_id );
 
     protected:
         uint32_t num_nodes;
@@ -52,10 +52,10 @@ namespace Kernel
     public:
         bool Initialize(std::string loadbalancefilename, uint32_t expected_num_nodes);
 
-        virtual int GetInitialRankFromNodeId(node_id_t node_id);
+        virtual int GetInitialRankFromNodeId( ExternalNodeId_t node_id );
 
     protected:
-        std::map<node_id_t, int> initialNodeRankMapping;
+        std::map<ExternalNodeId_t, int> initialNodeRankMapping;
     };
 
 
@@ -87,7 +87,7 @@ namespace Kernel
         // although node ids should be simulation-unique we still track nodes by our own suid 
         // system. this may not ever be strictly advantageous but it might make it easier to, 
         // e.g., generate new nodes later in the simulation for example
-        int GetInitialRankFromNodeId(node_id_t node_id);
+        int GetInitialRankFromNodeId( ExternalNodeId_t node_id );
 
         void Add(suids::suid node_suid, int rank);
 

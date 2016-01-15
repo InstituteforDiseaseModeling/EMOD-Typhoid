@@ -99,7 +99,7 @@ namespace Kernel
         virtual void InitializeVectorPopulation(VectorPopulation* vp);
         float HabitatMultiplierByType(VectorHabitatType::Enum type) const;
             
-        virtual IIndividualHuman *createHuman(suids::suid id, float MCweight, float init_age, int gender, float init_poverty) override;
+        virtual IIndividualHuman *createHuman( suids::suid id, float MCweight, float init_age, int gender, float init_poverty) override;
 
         /* clorton virtual */ const SimulationConfig *params() /* clorton override */;
         IVectorSimulationContext *context() const; // N.B. this is returning a non-const context because of the PostMigratingVector function

@@ -42,7 +42,7 @@ namespace Kernel
 
         virtual bool Configure( const Configuration* config ) override;
 
-        virtual IIndividualHuman* addNewIndividual(float = 1.0f, float = 0.0f, int = 0, int = 0, float = 1.0f, float = 1.0f, float = 1.0f, float = 0) override;
+        virtual IIndividualHuman* addNewIndividual( float = 1.0f, float = 0.0f, int = 0, int = 0, float = 1.0f, float = 1.0f, float = 1.0f, float = 0) override;
 
     protected:
         float m_Parasite_positive;
@@ -60,7 +60,7 @@ namespace Kernel
         virtual void LoadImmunityDemographicsDistribution() override;
         virtual float drawInitialImmunity(float ind_init_age) override;
 
-        virtual IIndividualHuman* createHuman(suids::suid id, float MCweight, float init_age, int gender, float init_poverty) override;
+        virtual IIndividualHuman* createHuman( suids::suid id, float MCweight, float init_age, int gender, float init_poverty) override;
 
         virtual void updatePopulationStatistics(float = 1.0f) override;
         virtual void accumulateIndividualPopulationStatistics(float dt, IIndividualHuman* individual);

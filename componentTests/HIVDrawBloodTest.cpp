@@ -47,13 +47,14 @@ SUITE(HivDrawBloodTest)
             , m_pSimulationConfig( new SimulationConfig() )
         {
             Environment::Finalize();
-            Environment::setLogger( new SimpleLogger() );
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
+            Environment::setSimulationConfig( m_pSimulationConfig );
+
             m_InterventionsContext.setCascadeState( "not_set" );
             m_InterventionsContext.SetContextTo( &m_Human );
             m_Diag.SetContextTo( &m_Human );
             m_ISusceptibilityHIVFake.SetCD4Count( 777.0 );
             m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
-            Environment::setSimulationConfig( m_pSimulationConfig );
             m_pSimulationConfig->listed_events.insert("Births"   );
             m_pSimulationConfig->listed_events.insert("NoTrigger");
         }

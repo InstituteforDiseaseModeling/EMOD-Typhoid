@@ -44,15 +44,16 @@ namespace Kernel
     {
         JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
 
-        // The Target_Demographic initConfig is repeated in the call to the base class, but that is fine.
-        initConfig( "Target_Demographic", target_demographic, inputJson, MetadataDescriptor::Enum("target_demographic", Target_Demographic_DESC_TEXT, MDD_ENUM_ARGS(TargetDemographicType)), "Intervention_Config.*.iv_type", "IndividualTargeted");
-        if ( target_demographic == TargetDemographicType::ExplicitDiseaseState || JsonConfigurable::_dryrun )
+        bool ret = StandardInterventionDistributionEventCoordinator::Configure(inputJson);
+        if( ret )
         {
-            initConfig( "Target_Disease_State", target_disease_state, inputJson, MetadataDescriptor::Enum("target_disease_state", Target_Disease_State_DESC_TEXT, MDD_ENUM_ARGS(TargetGroupType)));
+            if( (demographic_restrictions.GetTargetDemographic() == TargetDemographicType::ExplicitDiseaseState) || JsonConfigurable::_dryrun )
+            {
+                initConfig( "Target_Disease_State", target_disease_state, inputJson, MetadataDescriptor::Enum("target_disease_state", Target_Disease_State_DESC_TEXT, MDD_ENUM_ARGS(TargetGroupType)));
+            }
         }
 
-        return StandardInterventionDistributionEventCoordinator::Configure(inputJson);
-
+        return ret;
     }
 
  
@@ -60,7 +61,6 @@ namespace Kernel
     GroupInterventionDistributionEventCoordinator::qualifiesDemographically(
         const IIndividualHumanEventContext * const pIndividual
     )
-    const
     {
         bool retQualifies = true;
 
@@ -71,7 +71,7 @@ namespace Kernel
         }
 
 
-        if ( target_demographic == TargetDemographicType::ExplicitDiseaseState )
+        if( demographic_restrictions.GetTargetDemographic() == TargetDemographicType::ExplicitDiseaseState )
         {
             //TB SPECIFIC DISEASE STATES
             IIndividualHumanTB2* tb_ind = nullptr;

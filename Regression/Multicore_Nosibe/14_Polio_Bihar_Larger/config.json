@@ -35,6 +35,8 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Antigen": 0, 
         "Default_Genome": 0, 
+        "Default_Geography_Initial_Node_Population": 1000, 
+        "Default_Geography_Torus_Size": 10, 
         "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;Madagascar_Nosibe_2.5arcmin_demographics_overlay.json", 
         "Disease_Susceptible_Report_Poliovirus_Type": "WPV1", 
         "Enable_Absolute_Time": "NO", 

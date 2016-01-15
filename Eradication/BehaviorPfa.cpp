@@ -23,17 +23,6 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_BODY(BehaviorPfa)
     END_QUERY_INTERFACE_BODY(BehaviorPfa)
 
-    void BehaviorPfa::SetUpdatePeriod( float update_period )
-    {
-        LOG_DEBUG_F("%s( %f )\n", __FUNCTION__, update_period);
-        if (update_period < 0.0f)
-        {
-            throw OutOfRangeException(__FILE__, __LINE__, __FUNCTION__, "update_period", update_period, 0.0f);
-        }
-
-        m_update_period = update_period;
-    }
-
     void BehaviorPfa::AddIndividual( IIndividualHumanSTI* sti_person )
     {
         IIndividualHuman* person = nullptr;
@@ -90,7 +79,7 @@ namespace Kernel
         m_pAssortivity->Update( rCurrentTime, dt );
 
         m_time_since_last_update += dt;
-        if (m_time_since_last_update >= m_update_period)
+        if( m_time_since_last_update >= parameters->UpdatePeriod() )
         {
             if (LOG_LEVEL(INFO))
             {
@@ -253,19 +242,17 @@ namespace Kernel
 
     IPairFormationAgent* BehaviorPfa::CreatePfa( const Configuration* pConfig, 
                                                  const IPairFormationParameters* params, 
-                                                 float updatePeriod, 
                                                  float selectionThreshold,
                                                  RANDOMBASE *prng, 
                                                  RelationshipCreator relationship_fn )
     {
-        BehaviorPfa* pfa =  _new_ BehaviorPfa( params, updatePeriod, selectionThreshold, prng, relationship_fn );
+        BehaviorPfa* pfa =  _new_ BehaviorPfa( params, selectionThreshold, prng, relationship_fn );
         pfa->Configure( pConfig );
         return pfa ;
     }
 
     BehaviorPfa::BehaviorPfa()
-        : m_update_period(0.0f)
-        , m_cum_prob_threshold(0.0f)
+        : m_cum_prob_threshold(0.0f)
         , m_time_since_last_update(0.0f)
         , m_all_males()
         , m_male_population()
@@ -285,12 +272,10 @@ namespace Kernel
     }
 
     BehaviorPfa::BehaviorPfa( const IPairFormationParameters* params, 
-                              float updatePeriod, 
                               float selectionThreshold, 
                               RANDOMBASE *prng, 
                               RelationshipCreator creator )
-        : m_update_period(0.0f)
-        , m_cum_prob_threshold(selectionThreshold)
+        : m_cum_prob_threshold(selectionThreshold)
         , m_time_since_last_update(0.0f)
         , m_all_males()
         , m_male_population(params->GetMaleAgeBinCount())
@@ -308,8 +293,6 @@ namespace Kernel
         , new_females()
     {
         release_assert( m_pAssortivity != nullptr );
-
-        SetUpdatePeriod( updatePeriod );  // performs checks on value before setting
 
         auto& agebins = parameters->GetAgeBins();
         for (int sex = Gender::MALE; sex <= Gender::FEMALE; sex++)
@@ -408,7 +391,6 @@ namespace Kernel
     void BehaviorPfa::serialize(IArchive& ar, BehaviorPfa* obj)
     {
         BehaviorPfa& pfa = *obj;
-        ar.labelElement("m_update_period"         ) & pfa.m_update_period;
         ar.labelElement("m_cum_prob_threshold"    ) & pfa.m_cum_prob_threshold;
         ar.labelElement("m_time_since_last_update") & pfa.m_time_since_last_update;
 

@@ -92,11 +92,6 @@ struct NewInfectionState {
     };
 };
 
-#define MAX_LOCAL_MIGRATION_DESTINATIONS    (8)
-#define MAX_AIR_MIGRATION_DESTINATIONS      (60)
-#define MAX_REGIONAL_MIGRATION_DESTINATIONS (30)
-#define MAX_SEA_MIGRATION_DESTINATIONS      (5)
-
 #define MAXIMUM_TRAVEL_WAYPOINTS    (10)
 
 #define INFINITE_TIME   (365*1000)  // a full millennium
@@ -225,14 +220,6 @@ public:
         LOG(data);
         return temp;
     }
-
-#if 0
-    template<class Archive>
-    void serialize(Archive &ar, const unsigned int v)
-    {
-        ar & data;
-    };
-#endif
 };
 
 #ifdef VALIDATION

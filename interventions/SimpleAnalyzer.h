@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "Configuration.h"
 #include "Configure.h"
-#include "SimpleTypemapRegistration.h"
 
 namespace Kernel
 {
