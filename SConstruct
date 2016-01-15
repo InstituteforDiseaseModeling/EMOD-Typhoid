@@ -198,18 +198,20 @@ env['BUILD_VARIANT'] = bvar
 env['EXTRACPPPATH'] = []
 if os.sys.platform == 'win32':
     env['OS_FAMILY'] = 'win'
-    env.Append( EXTRACPPPATH=["C:/boost/boost_1_51_0",
+    env.Append( EXTRACPPPATH=[
+                          "#/Eradication",
+                          "#/interventions",
+                          "#/campaign",
+                          "#/baseReportLib",
+                          "#/utils",
+                          "#/libgeneric_static",
+                          "#/C:/boost/boost_1_51_0",
                           "#/C:/Python27/Include",
                           "#/Dependencies/ComputeClusterPack/Include",
                           "#/cajun/include",
-                          "#/Eradication",
-                          "#/campaign",
-                          "#/interventions",
-                          "#/utils",
-                          "#/baseReportLib",
-                          "#/libgeneric_static",
                           "#/rapidjson/include",
                           "#/rapidjson/modp",
+                          "#/snappy",
                           "#/unittest/UnitTest++/src"])
 else:
     SVN_BRANCH = os.popen("svn info|grep URL|awk '{ print $2 }'|awk -F/ '{ printf( \"/%s\", $NF) }'" ).read()
@@ -225,16 +227,18 @@ else:
     env.Append( CCFLAGS=["-ffloat-store"] )
     env.Append( CCFLAGS=["-Wno-unknown-pragmas"] )
     #env.Append( CCFLAGS=["-save-temps"] )
-    env.Append( EXTRACPPPATH=["/usr/include/python2.7/",
-                          "#/cajun/include",
+    env.Append( EXTRACPPPATH=[
                           "#/Eradication",
-                          "#/campaign",
                           "#/interventions",
-                          "#/utils",
+                          "#/campaign",
                           "#/baseReportLib",
+                          "#/utils",
                           "#/libgeneric_static",
+                          "/usr/include/python2.7/",
+                          "#/cajun/include",
                           "#/rapidjson/include",
                           "#/rapidjson/modp",
+                          "#/snappy",
                           "#/unittest/UnitTest++/src"])
 
 #if has_option( "cxx" ):
@@ -328,6 +332,8 @@ elif "win32" == os.sys.platform:
     env.Append( EXTRACPPPATH=[ winSDKHome + "/Include/um" ] )
     env.Append( EXTRALIBPATH=[ winSDKHome + "Lib/win8/um/x64" ] )
     env.Append( EXTRALIBPATH=[ "C:/Python27/libs" ] )
+    env.Append( EXTRALIBPATH=[ "C:/boost/boost_1_51_0/lib/x64" ] )
+    env.Append( EXTRALIBPATH=[ "#/Dependencies/ComputeClusterPack/Lib/amd64" ] )
 
     print( "Windows SDK Root '" + winSDKHome + "'" )
 

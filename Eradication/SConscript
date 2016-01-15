@@ -30,6 +30,8 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
     if env['DiseaseDll'] == "TB":
         eradenv.Append( CPPDEFINES=["ENABLE_TB"] )
 
+    env.Append( CPPDEFINES=["BOOST_ALL_NO_LIB" ] )
+
     #eradenv.Append(LIBS=['libvector_static'])
     #eradenv.Append(LIBS=['libmalaria_static'])
 
@@ -48,16 +50,16 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
 
 else:
 
+    env.Append( CPPDEFINES=["BOOST_ALL_NO_LIB" ] )
     env.Append( CPPDEFINES=["ENABLE_PYTHON" ] )
-    #env.Append( CPPDEFINES=["DISABLE_HIV" ] )
-    #clorton env.Append( CPPDEFINES=["ENABLE_TB" ] )
-    #clorton env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
-    #clorton env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+    env.Append( CPPDEFINES=["ENABLE_TB" ] )
+    env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
+    env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
     #env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
     #env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
     #env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
-    env.Append( CPPDEFINES=["DISABLE_STI" ] )     #clorton
-    env.Append( CPPDEFINES=["DISABLE_HIV" ] )     #clorton
+    #env.Append( CPPDEFINES=["DISABLE_STI" ] )
+    #env.Append( CPPDEFINES=["DISABLE_HIV" ] )
 
     eradicationSrcFiles = [
                             # Common
@@ -85,6 +87,7 @@ else:
                             "StandardEventCoordinator.cpp",
                             "CoverageByNodeEventCoordinator.cpp",
                             "DemographicRestrictions.cpp",
+                            "EventTrigger.cpp",
                             "../interventions/IndividualRepellent.cpp",
                             
                             # Reporting
@@ -131,8 +134,7 @@ else:
                             "../interventions/WaningEffectBoxExponential.cpp",
                             "../interventions/WaningEffectConstant.cpp",
                             "../interventions/WaningEffectExponential.cpp",
-                            "../interventions/WaningEffectFactory.cpp",
-                            "../interventions/Registration.cpp"
+                            "../interventions/WaningEffectFactory.cpp"
     ]
 
     vectorSrcFiles = [
@@ -344,11 +346,11 @@ else:
                             "../interventions/PMTCT.cpp"
     ]
 
-    #clorton eradicationSrcFiles.extend( hivSrcFiles )
+    eradicationSrcFiles.extend( hivSrcFiles )
     eradicationSrcFiles.extend( malariaSrcFiles )
-    #clorton eradicationSrcFiles.extend( polioSrcFiles )
-    #clorton eradicationSrcFiles.extend( tbSrcFiles )
-    #clorton eradicationSrcFiles.extend( tbhivSrcFiles )
+    eradicationSrcFiles.extend( polioSrcFiles )
+    eradicationSrcFiles.extend( tbSrcFiles )
+    eradicationSrcFiles.extend( tbhivSrcFiles )
 
     if 'Disease' in env:
         if env['Disease'] == "STI":
