@@ -206,7 +206,7 @@ namespace Kernel
         //Now acquire the HIV infection, this is used for the OutbreakHIV
         //note, use the original createInfection (which does not take the newInfectionlist) for the HIV 
         //for each created infection, set the parameters and the initinfectionimmunology
-        Infection* newinf = createInfection( parent->GetNextInfectionSuid()  );
+        IInfection* newinf = createInfection( parent->GetNextInfectionSuid()  );
 
 
         IInfectionHIV* pinfectionHIV = nullptr;
@@ -766,10 +766,10 @@ namespace Kernel
         return susceptibility_tb->IsImmune();
     }
 
-    Infection* IndividualHumanCoinfection::createInfection( suids::suid _suid )
+    IInfection* IndividualHumanCoinfection::createInfection( suids::suid _suid )
     {
         InfectionHIV* new_inf = InfectionHIV::CreateInfection(this, _suid);
-        return static_cast<Infection*>(new_inf);
+        return static_cast<IInfection*>(new_inf);
     }
 
     bool IndividualHumanCoinfection::createInfection( suids::suid _suid, infection_list_t &newInfections )
@@ -920,7 +920,9 @@ void IndividualHumanCoinfection::LifeCourseLatencyTimerUpdate( Susceptibility* i
         {
             return forward_act.back();
         }
-
-        return forward_act.at(int(time_incr/GetCD4TimeStep()));
+        else
+        {
+            return forward_act.at(int(time_incr/GetCD4TimeStep()));
+        }
     }
 }

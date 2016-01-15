@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <typeinfo>
 
 #include "Contexts.h"                      // for IIndividualHumanContext, IIndividualHumanInterventionsContext
-#include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "VectorInterventionsContainer.h"  // for IBednetConsumer methods
 #include "Log.h"

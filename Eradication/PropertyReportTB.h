@@ -20,15 +20,15 @@ namespace Kernel {
         static IReport* CreateReport();
         virtual ~PropertyReportTB() { }
 
-        virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
+        virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
 
-        virtual void LogNodeData( Kernel::INodeContext * pNC );
+        virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
 
 
     protected:
         PropertyReportTB();
 
-        virtual void postProcessAccumulatedData();
+        virtual void postProcessAccumulatedData() override;
 
         // counters
         std::map< std::string, float > active_infections;

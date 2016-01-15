@@ -22,6 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Common.h"
 #include "Exceptions.h"
 #include "PolioVaccine.h"
+#include "PolioInterventionsContainer.h"
 #include "RANDOM.h"
 #include "SimulationConfig.h"
 
@@ -457,7 +458,7 @@ namespace Kernel
         {
             // convert sabin strain id to wild strain id equivalent without using fragile math
             // doing this "inline" to save overhead of function call, and coz this is the only place we do this.
-            int wild_strain;
+            int wild_strain = 0;
             switch( virus_type)
             {
                 case PolioVirusTypes::VRPV1:
@@ -793,7 +794,7 @@ namespace Kernel
 
     float SusceptibilityPolio::GetReversionDegree(StrainIdentity* strain_id)
     {
-        float reversion_degree;
+        float reversion_degree = 0.0f;
         if(GET_CONFIGURABLE(SimulationConfig)->number_substrains > 1 && GET_CONFIGURABLE(SimulationConfig)->VDPV_virulence_model_type > VDPVVirulenceModelType::POLIO_VDPV_NONVIRULENT)
         {
             if( IS_SABIN_TYPE( strain_id->GetAntigenID() ) ) // vaccine strain

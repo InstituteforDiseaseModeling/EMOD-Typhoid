@@ -33,7 +33,8 @@ namespace Kernel
         : parent(nullptr) 
         , duration(0)
         , max_duration(0)
-        , demographic_coverage(1.0)
+        , demographic_restrictions(false,TargetDemographicType::Everyone)
+        , actual_intervention_config()
     {
     }
 
@@ -48,11 +49,13 @@ namespace Kernel
     {
         initConfigComplexType("Actual_IndividualIntervention_Config", &actual_intervention_config, BT_Actual_Intervention_Config_DESC_TEXT);
         initConfigTypeMap("Duration", &max_duration, BT_Duration_DESC_TEXT, -1.0f, FLT_MAX, -1.0f ); // -1 is a convention for indefinite duration
-        initConfigTypeMap("Demographic_Coverage", &demographic_coverage, BT_Demographic_Coverage_DESC_TEXT, 0.0f, 1.0f, 1.0f );
+
+        demographic_restrictions.ConfigureRestrictions( this, inputJson );
 
         bool ret = JsonConfigurable::Configure( inputJson );
         if( ret )
         {
+            demographic_restrictions.CheckConfiguration();
             InterventionValidator::ValidateIntervention( actual_intervention_config._json );
         }
         return ret ;
@@ -95,7 +98,13 @@ namespace Kernel
         assert( parent );
         assert( parent->GetRng() );
 
+        if( !demographic_restrictions.IsQualified( pIndiv ) )
+        {
+            return false;
+        }
+
         // want some way to demonstrate selective distribution of calender; no rng available to us, individual property value???
+        float demographic_coverage = demographic_restrictions.GetDemographicCoverage();
         LOG_DEBUG_F("demographic_coverage = %f\n", demographic_coverage);
         if( !SMART_DRAW( demographic_coverage ) )
         {
@@ -169,9 +178,9 @@ namespace Kernel {
     void serialize(Archive &ar, BirthTriggeredIV& iv, const unsigned int v)
     {
         ar & iv.actual_intervention_config;
-        ar & iv.demographic_coverage;
         ar & iv.efficacy;
         ar & iv.max_duration;
+        ar & iv.demographic_restrictions;
     }
 }
 #endif

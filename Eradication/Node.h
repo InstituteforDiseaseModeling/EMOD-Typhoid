@@ -28,7 +28,8 @@ namespace std
 #include "Climate.h"
 #include "Common.h"
 #include "Contexts.h"
-#include "Migration.h"
+#include "Environment.h"
+
 #include "NodeDemographics.h"
 #include "ITransmissionGroups.h"
 #include "suids.hpp"
@@ -48,6 +49,7 @@ namespace Kernel
     //typedef 
     class  NodeEventContextHost;
     class  Simulation;
+    struct IMigrationInfoFactory;
 
     class IDMAPI Node : public INodeContext, public JsonConfigurable
     {
@@ -62,37 +64,41 @@ namespace Kernel
         friend class ::DemographicsReport;
 
     public:
+        static Node *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid); 
+        static void VerifyPropertyDefinedInDemographics( const std::string& rKey, const std::string& rVal );
+        static std::vector<std::string> GetIndividualPropertyKeyList();
+        static std::vector<std::string> GetIndividualPropertyValuesList( const std::string& rKey );
 
         Node(ISimulationContext *_parent_sim, suids::suid _suid);
         Node(); // constructor for serialization use
-        static Node *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid); 
-        static void VerifyPropertyDefinedInDemographics( const std::string& rKey, const std::string& rVal );
-        static std::vector<std::string> GetIndividualPropertyValuesList( const std::string& rKey );
         virtual ~Node();
 
-        virtual void Update(float dt) override;
-
         // INodeContext
+        virtual void Update(float dt) override;
+        virtual ISimulationContext* GetParent() override;
         virtual suids::suid   GetSuid() const override;
         virtual suids::suid   GetNextInfectionSuid() override;
         virtual ::RANDOMBASE* GetRng() override;
         virtual const INodeContext::tDistrib& GetIndividualPropertyDistributions() const override;
 
-        virtual const MigrationInfo*    GetMigrationInfo() const override;
+        virtual IMigrationInfo*   GetMigrationInfo() override;
         virtual const NodeDemographics* GetDemographics()  const override;
         virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string key) const override;
+        virtual std::vector<bool> GetMigrationTypeEnabledFromDemographics() const override;
 
         virtual INodeEventContext* GetEventContext() override;
 
         // Migration
-        virtual void SetupMigration(MigrationInfoFactory*) override;
+        virtual void SetupMigration( IMigrationInfoFactory * migration_factory, 
+                                     MigrationStructure::Enum ms,
+                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override;
         virtual IIndividualHuman* processImmigratingIndividual( IIndividualHuman* ) override;
 
         // Initialization
-        virtual void PopulateFromDemographics();
         virtual void SetContextTo(ISimulationContext* context) override;
-        virtual void SetMonteCarloParameters(float indsamplerate =.05, int nummininf = 0);
-        virtual void SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory);
+        virtual void SetMonteCarloParameters(float indsamplerate =.05, int nummininf = 0) override;
+        virtual void SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory) override;
+        virtual void PopulateFromDemographics() override;
 
         // Campaign event-related
         bool IsInPolygon(float* vertex_coords, int numcoords); // might want to create a real polygon object at some point
@@ -118,7 +124,7 @@ namespace Kernel
         virtual void UnregisterNewInfectionObserver(void* id) override;
 
         // This method will ONLY be used for spatial reporting by input node ID, don't use it elsewhere!
-        virtual int GetExternalID() const override;
+        virtual ExternalNodeId_t GetExternalID() const;
 
         // Heterogeneous intra-node transmission
         virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) override;
@@ -187,10 +193,10 @@ namespace Kernel
         
         // Climate and demographics
         Climate *localWeather;
-        MigrationInfo *migration_info;
+        IMigrationInfo *migration_info;
         NodeDemographics demographics;
         std::map<std::string, NodeDemographicsDistribution*> demographic_distributions;
-        uint32_t externalId; // DON'T USE THIS EXCEPT FOR INPUT/OUTPUT PURPOSES!
+        ExternalNodeId_t externalId; // DON'T USE THIS EXCEPT FOR INPUT/OUTPUT PURPOSES!
 
         // Event handling
         friend class NodeEventContextHost;

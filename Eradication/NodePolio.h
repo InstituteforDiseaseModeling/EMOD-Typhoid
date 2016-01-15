@@ -9,6 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "NodeEnvironmental.h"
+#include "PolioContexts.h"
 #include <list>
 
 class ReportPolio;
@@ -17,13 +18,6 @@ namespace Kernel
 {
     class SimulationConfig;
     class SpatialReportPolio;
-
-    class INodePolio : public ISupports
-    {
-    public:
-        virtual float GetMeanAgeInfection() const = 0;
-        virtual float GetNewDiseaseSusceptibleInfections() const = 0;
-    };
 
     class NodePolio : public NodeEnvironmental, public INodePolio
     {
@@ -37,7 +31,7 @@ namespace Kernel
     public:
         static NodePolio *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
         virtual ~NodePolio(void);
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
 
         virtual void resetNodeStateCounters(void) override;
         virtual void updateNodeStateCounters(IIndividualHuman *ih);
@@ -76,7 +70,7 @@ namespace Kernel
         const SimulationConfig* params();
 
         // Factory methods
-        virtual Kernel::IIndividualHuman* createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
+        virtual Kernel::IIndividualHuman* createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
 
         virtual void LoadImmunityDemographicsDistribution() override;
         virtual float drawInitialImmunity(float ind_init_age) override;

@@ -16,30 +16,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
 #include "NodeEventContext.h"
 #include "Configure.h"
+#include "DemographicRestrictions.h"
 
 namespace Kernel
 {
     class NodeLevelHealthTriggeredIV : public IIndividualEventObserver, public BaseNodeIntervention
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, NodeLevelHealthTriggeredIV, INodeDistributableIntervention)
-
-        class tPropertyRestrictions : public JsonConfigurable
-        {
-        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
-        public:
-            tPropertyRestrictions() {}
-            virtual void ConfigureFromJsonAndKey( const Configuration *, const std::string &key );
-            virtual json::QuickBuilder GetSchema() override;
-
-            std::list< std::map< std::string, std::string > > _restrictions;
-        };
 
     public:        
         NodeLevelHealthTriggeredIV();
@@ -60,26 +48,16 @@ namespace Kernel
 
     protected:
         INodeEventContext* parent;
-
-        //std::string   m_trigger_condition; // TODO: is this obsolete now?
         std::vector<std::string>   m_trigger_conditions;
         float max_duration;
         float duration;
-        float demographic_coverage;
-
-        float target_age_min;
-        float target_age_max;
-
+        DemographicRestrictions demographic_restrictions;
+        bool m_disqualified_by_coverage_only;
         IndividualInterventionConfig actual_intervention_config;
         IDistributableIntervention *_di;
-
-        tPropertyRestrictions property_restrictions;
-        bool property_restrictions_verified;
 
         virtual bool qualifiesToGetIntervention( const IIndividualHumanEventContext * pIndividual );
         virtual float getDemographicCoverage() const;
         virtual void onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv );
-
-        bool m_disqualified_by_coverage_only;
     };
 }

@@ -82,7 +82,7 @@ namespace Kernel
         return m_strain;
     }
 
-    void VectorCohortIndividual::ImmigrateTo(INodeContext* node)
+    void VectorCohortIndividual::ImmigrateTo( INodeContext* node )
     {
         LOG_DEBUG_F( "Vector immigrating to node #%d\n", (node->GetSuid()).data );
         INodeVector* pNV = nullptr;
@@ -202,8 +202,8 @@ namespace Kernel
     )
     const
     {
-        float ret;
-
+        float ret = 0.0f;
+        
         if (GET_CONFIGURABLE(SimulationConfig)->vector_aging)
         {
             ret = additional_mortality + addition + mortalityFromAge( age );

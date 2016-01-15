@@ -16,7 +16,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
@@ -39,12 +38,12 @@ namespace Kernel
         MaleCircumcision();
         virtual ~MaleCircumcision() { }
 
-        virtual bool Configure( const Configuration * config );
+        virtual bool Configure( const Configuration * config ) override;
 
         // IDistributableIntervention
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void SetContextTo(IIndividualHumanContext *context);
-        virtual void Update(float dt);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual void SetContextTo(IIndividualHumanContext *context) override;
+        virtual void Update(float dt) override;
 
     protected:
         DECLARE_SERIALIZABLE(MaleCircumcision);

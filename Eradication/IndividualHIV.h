@@ -58,7 +58,7 @@ namespace Kernel
                             int gender = 0, 
                             float initial_poverty = 0.5f );
         
-        virtual Infection* createInfection(suids::suid _suid) override;
+        virtual IInfection* createInfection(suids::suid _suid) override;
         virtual void setupInterventionsContainer() override;
         ISusceptibilityHIV * hiv_susceptibility;
 

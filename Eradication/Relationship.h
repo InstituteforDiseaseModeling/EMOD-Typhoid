@@ -10,13 +10,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "Types.h"
-#include "Node.h"
+#include "INodeContext.h"
 #include "IRelationship.h"
+#include "IRelationshipParameters.h"
 #include "IRelationshipManager.h"
 #include "IIndividualHumanSTI.h"
+#include "Sigmoid.h"
 
-namespace Kernel {
-
+namespace Kernel 
+{
     class IDMAPI Relationship : public IRelationship
     {
         public:
@@ -29,50 +31,57 @@ namespace Kernel {
             virtual ~Relationship();
 
             // public non-const
-            virtual void pause( IIndividualHumanSTI* departee );
-            virtual void resume( IIndividualHumanSTI* returnee );
-            virtual void terminate( IRelationshipManager* );
-            virtual void Initialize( IRelationshipManager* );
-            virtual bool Update( float dt = 1.0f );
-            virtual void notifyIndividuals();
-            virtual void Consummate( float dt );
+            virtual void Pause( IIndividualHumanSTI* departee ) override;
+            virtual void Terminate() override;
+            virtual void Migrate() override;
+            virtual void Resume( IRelationshipManager* pRelMan, ISociety* pSociety, IIndividualHumanSTI* returnee ) override;
+            virtual bool Update( float dt ) override;
+            virtual void Consummate( float dt ) override;
 
             // public const
-            virtual IIndividualHumanSTI* MalePartner() const;
-            virtual IIndividualHumanSTI* FemalePartner() const;
-            virtual IIndividualHumanSTI* GetPartner( IIndividualHumanSTI* pIndiv ) const;
-            virtual unsigned long int GetId() const;
-            virtual void SetSuid(suids::suid);
-            virtual suids::suid GetSuid();
-            virtual const std::string& GetPropertyKey();
-            virtual const std::string& GetPropertyName() const;
-            virtual const tRelationshipMembers GetMembers() const;
-            virtual bool IsDiscordant() const;
-            virtual float GetTimer() const;
-            virtual float GetDuration() const;
-            virtual float GetStartTime() const;
-            virtual float GetScheduledEndTime() const;
-            virtual bool GetUsingCondom() const;
-            virtual RelationshipType::Enum GetType() const;
-            virtual suids::suid GetMalePartnerId() const;
-            virtual suids::suid GetFemalePartnerId() const;
-            virtual suids::suid GetOriginalNodeId() const;
+            virtual RelationshipState::Enum GetState() const override;
+            virtual RelationshipMigrationAction::Enum GetMigrationAction( RANDOMBASE* prng ) const override;
+            virtual IIndividualHumanSTI* MalePartner() const override;
+            virtual IIndividualHumanSTI* FemalePartner() const override;
+            virtual IIndividualHumanSTI* GetPartner( IIndividualHumanSTI* pIndiv ) const override;
+            virtual const suids::suid& GetSuid() const override;
+            virtual const std::string& GetPropertyKey() override;
+            virtual const std::string& GetPropertyName() const override;
+            virtual const tRelationshipMembers GetMembers() const override;
+            virtual bool IsDiscordant() const override;
+            virtual float GetTimer() const override;
+            virtual float GetDuration() const override;
+            virtual float GetStartTime() const override;
+            virtual float GetScheduledEndTime() const override;
+            virtual bool GetUsingCondom() const override;
+            virtual RelationshipType::Enum GetType() const override;
+            virtual suids::suid GetMalePartnerId() const override;
+            virtual suids::suid GetFemalePartnerId() const override;
+            virtual ExternalNodeId_t GetOriginalNodeId() const override;
 
-            virtual float GetCoitalRate() const;
-            virtual ProbabilityNumber getProbabilityUsingCondomThisAct() const;
-
-            static unsigned long int counter; // mpi-node level, maybe not that great an idea
+            virtual float GetCoitalRate() const override;
+            virtual ProbabilityNumber getProbabilityUsingCondomThisAct() const override;
+            virtual unsigned int GetNumCoitalActs() const override;
+            virtual bool HasMigrated() const override;
 
         protected:
             Relationship();
-            Relationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner, RelationshipType::Enum type = RelationshipType::TRANSITORY );
+            Relationship( const suids::suid& rRelId,
+                          IRelationshipManager* pRelMan,
+                          IRelationshipParameters* pParams, 
+                          IIndividualHumanSTI* male_partner, 
+                          IIndividualHumanSTI* female_partner );
 
+            void SetManager( IRelationshipManager* pRelMan, ISociety* pSociety );
+
+            suids::suid _suid;
+            RelationshipState::Enum state;
+            RelationshipType::Enum relationship_type;
+            IRelationshipParameters* p_rel_params ;
             IIndividualHumanSTI* male_partner; // change to male_partner and female_partner at some point, but sounds so sterile...
             IIndividualHumanSTI* female_partner;
             suids::suid absent_male_partner_id;
             suids::suid absent_female_partner_id;
-            uint64_t _id;
-            suids::suid _suid;
             float rel_timer;
             float rel_duration;
             float start_time;
@@ -81,12 +90,12 @@ namespace Kernel {
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
             std::string propertyKey;
             std::string propertyName;
-            bool force_finish;
-            RelationshipType::Enum relationship_type;
-            suids::suid original_node_id;
+            ExternalNodeId_t original_node_id;
             act_prob_vec_t act_prob_vec;
             bool using_condom;  // For notifying coital act observers
             IRelationshipManager * relMan;
+            unsigned int total_coital_acts;
+            bool has_migrated;
 
             DECLARE_SERIALIZABLE(Relationship);
 #pragma warning( pop )
@@ -108,7 +117,11 @@ namespace Kernel {
     class IDMAPI RelationshipFactory
     {
     public:
-        static IRelationship* CreateRelationship( RelationshipType::Enum relType, IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner );
+        static IRelationship* CreateRelationship( const suids::suid& rRelId,
+                                                  IRelationshipManager* pRelMan,
+                                                  IRelationshipParameters* pParams, 
+                                                  IIndividualHumanSTI* male_partner, 
+                                                  IIndividualHumanSTI* female_partner );
     };
 
     class IDMAPI TransitoryRelationship : public Relationship
@@ -118,7 +131,11 @@ namespace Kernel {
             DECLARE_QUERY_INTERFACE()
         protected:
             TransitoryRelationship();
-            TransitoryRelationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner );
+            TransitoryRelationship( const suids::suid& rRelId,
+                                    IRelationshipManager* pRelMan,
+                                    IRelationshipParameters* pParams,
+                                    IIndividualHumanSTI* male_partner, 
+                                    IIndividualHumanSTI* female_partner );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -133,7 +150,11 @@ namespace Kernel {
             DECLARE_QUERY_INTERFACE()
         protected:
             InformalRelationship();
-            InformalRelationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner );
+            InformalRelationship( const suids::suid& rRelId,
+                                  IRelationshipManager* pRelMan,
+                                  IRelationshipParameters* pParams, 
+                                  IIndividualHumanSTI* male_partner, 
+                                  IIndividualHumanSTI* female_partner );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -148,7 +169,11 @@ namespace Kernel {
             DECLARE_QUERY_INTERFACE()
         protected:
             MarriageRelationship();
-            MarriageRelationship( IIndividualHumanSTI* male_partner, IIndividualHumanSTI* female_partner );
+            MarriageRelationship( const suids::suid& rRelId,
+                                  IRelationshipManager* pRelMan,
+                                  IRelationshipParameters* pParams, 
+                                  IIndividualHumanSTI* male_partner, 
+                                  IIndividualHumanSTI* female_partner );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details

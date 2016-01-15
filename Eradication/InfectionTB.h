@@ -45,7 +45,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
     public:
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
         std::map <float,float> GetCD4Map();
         InfectionStateChange::_enum TB_event_type_associated_with_infectious_timer;
         
@@ -90,7 +90,7 @@ namespace Kernel
 
         virtual void SetParameters(StrainIdentity* infstrain=nullptr, int incubation_period_override = -1) override;
         virtual void Update(float dt, ISusceptibilityContext* immunity = nullptr) override;
-        virtual void InitInfectionImmunology(Susceptibility* _immunity) override;
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) override;
 
         // Inherited from base class
         virtual bool IsActive() const override;

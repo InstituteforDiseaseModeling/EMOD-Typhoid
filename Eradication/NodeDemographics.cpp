@@ -17,7 +17,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "IdmString.h"
 #include "Log.h"
-#include "SimulationConfig.h"
 
 #define EPSILON (FLT_EPSILON)
 
@@ -36,7 +35,7 @@ END_QUERY_INTERFACE_BODY(NodeDemographicsFactory)
 
 std::vector<std::string> NodeDemographicsFactory::demographics_filenames_list;
 bool DemographicsContext::using_compiled_demog = true;
-const uint32_t NodeDemographicsFactory::default_geography_torus_size = 10;
+
 const std::string NodeDemographicsFactory::default_node_demographics_str = string(
 "{ \n\
     \"NodeID\": -1, \n\
@@ -47,7 +46,6 @@ const std::string NodeDemographicsFactory::default_node_demographics_str = strin
         \"Airport\": 0, \n\
         \"Region\": 0, \n\
         \"Seaport\": 0, \n\
-        \"InitialPopulation\": 1000, \n\
         \"BirthRate\": 0.00008715, \n\
         \"Urban\": 0, \n\
         \"AbovePoverty\": 0.5 \n\
@@ -139,7 +137,7 @@ const NodeDemographics NodeDemographics::operator[]( int index ) const
         std::string msg = GetFailedToInterpretMessage( "array" ) ;
         throw NodeDemographicsFormatErrorException( __FILE__, __LINE__, __FUNCTION__, "UNKNOWN", msg.c_str() );
     }
-    return NodeDemographics(jsonValue[IndexType(index)], string_table, parent, nodeID, "array", valueKey );
+    return NodeDemographics( jsonValue[IndexType(index)], string_table, parent, nodeID, "array", valueKey );
 }
 
 std::string NodeDemographics::GetFailedToInterpretMessage( const char* pExpType ) const
@@ -171,7 +169,7 @@ JsonObjectDemog NodeDemographics::get_array() const
 
 double NodeDemographics::AsDouble() const
 {
-    double db;
+    double db = 0.0 ;
     try
     {
         db = jsonValue.AsDouble();
@@ -186,7 +184,7 @@ double NodeDemographics::AsDouble() const
 
 int NodeDemographics::AsInt() const
 {
-    int integer;
+    int integer = 0 ;
     try
     {
         integer = jsonValue.AsInt();
@@ -201,7 +199,7 @@ int NodeDemographics::AsInt() const
 
 bool NodeDemographics::AsBool() const
 {
-    bool flag;
+    bool flag = false;
     try
     {
         flag = jsonValue.AsBool();
@@ -216,7 +214,7 @@ bool NodeDemographics::AsBool() const
 
 uint64_t NodeDemographics::AsUint64() const
 {
-    uint64_t integer;
+    uint64_t integer = 0 ;
     try
     {
         integer = jsonValue.AsUint64();
@@ -330,13 +328,17 @@ bool NodeDemographics::operator!=( const NodeDemographics& rThat ) const
 }
 
 
-NodeDemographicsFactory * NodeDemographicsFactory::CreateNodeDemographicsFactory(boost::bimap<uint32_t, suids::suid> * nodeid_suid_map, const ::Configuration *config)
+NodeDemographicsFactory * NodeDemographicsFactory::CreateNodeDemographicsFactory( boost::bimap<uint32_t, suids::suid> * nodeid_suid_map, 
+                                                                                  const ::Configuration *config,
+                                                                                  bool isDataInFiles,
+                                                                                  uint32_t torusSize,
+                                                                                  uint32_t defaultPopulation )
 {
     NodeDemographicsFactory* factory = _new_ NodeDemographicsFactory(nodeid_suid_map);
 
     try
     {
-        factory->Initialize( config );
+        factory->Initialize( config, isDataInFiles, torusSize, defaultPopulation );
     }
     catch( std::exception& )
     {
@@ -395,16 +397,21 @@ bool NodeDemographicsFactory::Configure(const Configuration* config)
     return configured;
 }
 
-void NodeDemographicsFactory::Initialize(const ::Configuration* config)
+void NodeDemographicsFactory::Initialize( const ::Configuration* config,
+                                          bool isDataInFiles,
+                                          uint32_t torusSize,
+                                          uint32_t defaultPopulation )
 {
     try
     {
+        torus_size = torusSize;
+        default_population = defaultPopulation;
+
+        release_assert( torus_size >= 3 );
+
         full_string_table = new std::map<string, string>();
 
-        const SimulationConfig * pCfg = GET_CONFIGURABLE(SimulationConfig);
-        bool demographics_initial = pCfg->demographics_initial;
-
-        if(demographics_initial)
+        if( isDataInFiles )
         {
             demographics_filenames = GetDemographicFileNames( config );
 
@@ -525,19 +532,13 @@ void NodeDemographicsFactory::Initialize(const ::Configuration* config)
 
                         throw NodeDemographicsFormatErrorException( __FILE__, __LINE__, __FUNCTION__, demo_filename.c_str(), msg.str().c_str());
                     }
-                    else
-                    {
-                        LOG_WARN_F("Demographics file \"%s\" doesn't share any nodes with the base demographics file!\n", demo_filename.c_str());
-                        demographics_filenames.erase( demographics_filenames.begin() + layer );
-                        layer--;
-                    }
                 }
             }
         }
         else // default geography
         {
             std::stringstream ss;
-            ss << "default " << default_geography_torus_size << "x" << default_geography_torus_size << " torus geography";
+            ss << "default " << torus_size << "x" << torus_size << " torus geography";
             idreference = ss.str();
 
             LOG_INFO_F("Using %s\n", idreference.c_str());
@@ -545,7 +546,7 @@ void NodeDemographicsFactory::Initialize(const ::Configuration* config)
             std::map<uint32_t,JsonObjectDemog> nodeid_2_nodedata_map;
 
             // add nodeIDs 1..100 (don't start at 0, because that's an invalid (reserved) nodeid)
-            for(uint32_t nodeid = 1; nodeid <= default_geography_torus_size * default_geography_torus_size; nodeid++)
+            for(uint32_t nodeid = 1; nodeid <= torus_size * torus_size; nodeid++)
             {
                 nodeIDs.push_back( nodeid );
                 JsonObjectDemog nodedata = CreateDefaultNodeDemograhics( nodeid );
@@ -556,6 +557,8 @@ void NodeDemographicsFactory::Initialize(const ::Configuration* config)
 
             JsonObjectDemog default_node_demographics ;
             default_node_demographics.Parse( default_node_demographics_str.c_str() );
+            default_node_demographics["NodeAttributes"].Add( "InitialPopulation", (int)default_population );
+
             layer_defaults.push_back( default_node_demographics );
 
             // Generate string table to map demographics attributes to themselves so the string lookup
@@ -620,10 +623,9 @@ bool NodeDemographicsFactory::ReadNodeData( bool isUnCompiled,
 
     // Extract the data for each node and put it into a map so that node creation
     // can access only the nodes it needs to.
+    std::map<uint32_t,JsonObjectDemog> nodeid_2_nodedata_map;
     if( layer_has_nodes )
     {
-        std::map<uint32_t,JsonObjectDemog> nodeid_2_nodedata_map;
-
         for( int i = 0 ; i < node_list_data.size() ; i++ )
         {
             JsonObjectDemog nodedata = node_list_data[i] ;
@@ -662,10 +664,10 @@ bool NodeDemographicsFactory::ReadNodeData( bool isUnCompiled,
             }
             nodeid_2_nodedata_map[ node_id ] = nodedata ;
         }
-
-        // each layer should have a map of nodeid to nodedata
-        nodedata_maps.push_back( nodeid_2_nodedata_map );
     }
+
+    // each layer should have a map of nodeid to nodedata
+    nodedata_maps.push_back( nodeid_2_nodedata_map );
 
     return layer_has_nodes ;
 }
@@ -863,8 +865,8 @@ NodeDemographics* NodeDemographicsFactory::CreateNodeDemographics( JsonObjectDem
 
 JsonObjectDemog NodeDemographicsFactory::CreateDefaultNodeDemograhics( uint32_t nodeid )
 {
-    float lat = (nodeid % default_geography_torus_size) * 0.008333 /* 30 arcsecs */;
-    float lon = (nodeid / default_geography_torus_size) * 0.008333 /* 30 arcsecs */;
+    float lat = (nodeid % torus_size) * 0.008333 /* 30 arcsecs */;
+    float lon = (nodeid / torus_size) * 0.008333 /* 30 arcsecs */;
 
     std::stringstream ss;
     ss << "{ \"NodeID\": " << nodeid << ", \"NodeAttributes\": { \"Latitude\": " << lat << ", \"Longitude\": " << lon << " } }";
@@ -897,18 +899,30 @@ NodeDemographics* NodeDemographicsFactory::CreateNodeDemographics(INodeContext *
     bool found_node = false ;
     for(int i = int(demographics_filenames.size() - 1); i >= 0; i--)
     {
-        JsonObjectDemog nodedata = nodedata_maps[i][nodeid] ;
-        found_node = !nodedata.IsNull() ;
+        JsonObjectDemog nodedata ;
+        if( nodedata_maps[i].count(nodeid) > 0 )
+        {
+            nodedata = nodedata_maps[i][nodeid] ;
+        }
 
-        if( found_node )
+        if( !nodedata.IsNull() )
         {
             TranslateNodeData(nodedata, i, finalnodedata);
+            found_node = true ;
+        }
 
-            if(!layer_defaults[i].IsNull())
-            {
-                LOG_DEBUG_F( "layer %d has defaults layer, translating now...\n", i );
-                TranslateNodeData(layer_defaults[i], i, finalnodedata);
-            }
+        // -----------------------------------------------------------------------------------
+        // --- We want to support the situation where the user defines Defaults in the overlay.
+        // --- If the user does NOT define any nodes in the overlay, then the Defaults applys to all nodes.
+        // --- If the user DOES define nodes in the overlay, then the Defaults in the overlay only apply to those nodes.
+        // -----------------------------------------------------------------------------------
+        bool apply_defaults =  !layer_defaults[i].IsNull()
+                            && ((i == 0) || found_node || (nodedata_maps[i].size() == 0));
+
+        if( apply_defaults )
+        {
+            LOG_DEBUG_F( "layer %d has defaults layer, translating now...\n", i );
+            TranslateNodeData(layer_defaults[i], i, finalnodedata);
         }
     }
     if( !found_node )
@@ -957,29 +971,30 @@ void NodeDemographicsFactory::TranslateNodeData( const JsonObjectDemog& val, int
             if(layer > 0 && layer_string_sub_tables[layer].count(name) != 0)
                 name = layer_string_sub_tables[layer][name];
 
-            JsonObjectDemog v = existing_val[ name.c_str() ];
+            bool attribute_exists = existing_val.Contains( name.c_str() );
 
             // -------------------------------------------------------------------
             // --- if the existing object is an array, do NOT merge the new values
             // --- with the existing values.
             // -------------------------------------------------------------------
-            if( v.IsObject() )
+            if( attribute_exists && existing_val[ name.c_str() ].IsObject() )
             {
+                JsonObjectDemog v = existing_val[ name.c_str() ];
                 TranslateNodeData( it.GetValue(), layer, v );
             }
-            else if( v.IsNull() && it.GetValue().IsObject() )
+            else if( !attribute_exists && it.GetValue().IsObject() )
             {
                 JsonObjectDemog obj( JsonObjectDemog::JSON_OBJECT_OBJECT );
                 TranslateNodeData( it.GetValue(), layer, obj );
                 existing_val.Add( name, obj );
             }
-            else if( v.IsNull() && it.GetValue().IsArray() )
+            else if( !attribute_exists && it.GetValue().IsArray() )
             {
                 JsonObjectDemog arr( JsonObjectDemog::JSON_OBJECT_ARRAY );
                 TranslateNodeData( it.GetValue(), layer, arr );
                 existing_val.Add( name, arr );
             }
-            else if( v.IsNull() )
+            else if( !attribute_exists )
             {
                 existing_val.Add( name, it.GetValue() );
             }
@@ -1403,12 +1418,12 @@ float NodeDemographicsDistribution::pickDistributionValue(vector<float> &groupva
             float ret_val = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * 0));
             return ret_val ;
         }
-        /*else*/ if(i == num_groups)
+        else if(i == num_groups)
         {
             float ret_val = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * (i - 1)));
             return ret_val ;
         }
-        /*else*/
+        else
         {
             float val1 = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * (i - 1)));
             float val2 = pickDistributionValue(groupvals, randdraw, start_axis + 1, dim_span * num_groups, slot + (dim_span * i));
@@ -1418,7 +1433,7 @@ float NodeDemographicsDistribution::pickDistributionValue(vector<float> &groupva
             return ret_val ;
         }
     }
-    /*else*/
+    else
     {
         if(dist_values.size() != 0)
         {
@@ -1429,13 +1444,13 @@ float NodeDemographicsDistribution::pickDistributionValue(vector<float> &groupva
                 if(randdraw <= cdf[i])  break;
 
             if(i == 0)
-                return float(result_values[0]);
-            /*else*/ if(i == cdf.size())
-                return float(result_values[i - 1]);
-            /*else*/
-                return float(result_values[i - 1] + ((randdraw - cdf[i - 1]) * (result_values[i] - result_values[i - 1]) / (cdf[i] - cdf[i - 1])));
+                return (float)(result_values[0]);
+            else if(i == cdf.size())
+                return (float)(result_values[i - 1]);
+            else
+                return (float)(result_values[i - 1] + ((randdraw - cdf[i - 1]) * (result_values[i] - result_values[i - 1]) / (cdf[i] - cdf[i - 1])));
         }
-        /*else*/
+        else
         {
             return float(result_values[slot]);
         }

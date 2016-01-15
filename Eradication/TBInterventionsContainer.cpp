@@ -17,7 +17,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Drugs.h" // for IDrug interface
 #include "InterventionFactory.h"
 #include "Log.h"
-#include "SimpleTypemapRegistration.h"
 #include "Sugar.h"
 #include "IHealthSeekingBehavior.h" //for IHealthSeekingBehavior interface
 #include "NodeEventContext.h"    // for INodeEventContext (ICampaignCostObserver)

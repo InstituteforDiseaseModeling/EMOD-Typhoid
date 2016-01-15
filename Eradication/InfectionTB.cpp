@@ -18,7 +18,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "InfectionTB.h"
 
-#include "Node.h"
 #include "Interventions.h"
 #include "TBInterventionsContainer.h"
 #include "InterventionsContainer.h"
@@ -31,7 +30,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualCoinfection.h"
 #else
 #include "TBContexts.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #endif
 
 static const char * _module = "InfectionTB";
@@ -285,7 +284,7 @@ namespace Kernel
         ApplyDrugEffects(dt, immunity);
     }
 
-    void InfectionTB::InitInfectionImmunology(Susceptibility* _immunity)
+    void InfectionTB::InitInfectionImmunology(ISusceptibilityContext* _immunity)
     {
         LOG_DEBUG("Init InfectionImmunology \n");
         if(!_immunity)
@@ -316,7 +315,7 @@ namespace Kernel
         if(Environment::getInstance()->Log->CheckLogLevel(Logger::DEBUG, "EEL"))
         {
             std::ostringstream msg;
-            msg << "t=" << ((Node*)((IndividualHuman*)parent)->GetParent())->GetTime().time;
+            msg << "t=" << ((INodeContext*)((IndividualHuman*)parent)->GetParent())->GetTime().time;
             msg << ",hum_id=" << parent->GetSuid().data;
             msg << ",new_inf_state=10"; //10 is TBlatent
             msg << ",inf_id=-1";;
@@ -559,7 +558,6 @@ namespace Kernel
 
             default:
                 throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "TB infectious period distribution can only be exponential or Gaussian distribution right now" );
-                // break;
         }
         // FOR CHINA ONLY infectious_timer = (float) Probability::getInstance()->fromDistribution(  DistributionFunction::GAUSSIAN_DURATION, (log(2.0f)/total_rate), 200 );
         m_is_active = true;
@@ -690,7 +688,7 @@ namespace Kernel
                     if(Environment::getInstance()->Log->CheckLogLevel(Logger::DEBUG, "EEL"))
                     {
                         std::ostringstream msg;
-                        msg << "t=" << ((Node*)((IndividualHuman*)parent)->GetParent())->GetTime().time;
+                        msg << "t=" << ((INodeContext*)((IndividualHuman*)parent)->GetParent())->GetTime().time;
                         msg << ",hum_id=" << parent->GetSuid().data;
                         msg << ",inf_id=-1";
                         msg << ",ev=MDR";

@@ -119,25 +119,6 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "IMalariaDrugEffectsApply", "IIndividualHumanInterventionsContext" );
         }
 
-        IGlobalContext *pGC = nullptr;
-        const SimulationConfig* simConfigObj = nullptr;
-        if (s_OK == context->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
-        {
-            release_assert( pGC );
-            simConfigObj = pGC->GetSimulationConfigObj();
-        }
-        if (!simConfigObj)
-        {
-            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to SimulationConfig object is not valid (could be DLL specific)" );
-        }
-        release_assert( simConfigObj );
-        /*const Configuration* jsonConfig = simConfigObj->GetJsonConfigObj();
-        if (!jsonConfig)
-        {
-            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to Configuration object is not valid (could be DLL specific)" );
-        }*/
-
-        LOG_DEBUG( "Calling base class SetContextTo.\n" );
         return GenericDrug::SetContextTo( context );
     }
 
@@ -201,18 +182,7 @@ namespace Kernel
         drug_gametocyteM   = drug_params->drug_gametocyteM_killrate;
         drug_hepatocyte    = drug_params->drug_hepatocyte_killrate;
 
-        IGlobalContext *pGC = nullptr;
-        const SimulationConfig* simConfigObj = nullptr;
-        if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
-        {
-            simConfigObj = pGC->GetSimulationConfigObj();
-        }
-        if (!simConfigObj)
-        {
-            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer obtained to SimulationConfig object is not valid (could be DLL specific)" );
-        }
-
-        durability_time_profile = simConfigObj->PKPD_model;
+        durability_time_profile = GET_CONFIGURABLE(SimulationConfig)->PKPD_model;
         fast_decay_time_constant = drug_params->drug_decay_T1;
         slow_decay_time_constant = drug_params->drug_decay_T2;
 

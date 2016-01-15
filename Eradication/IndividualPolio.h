@@ -10,26 +10,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "Contexts.h"
+#include "PolioContexts.h"
 #include "InfectionPolio.h"
 #include "IndividualEnvironmental.h"
-#include "SusceptibilityPolio.h"
+#include "PolioContexts.h"
 
 namespace Kernel
 {
-    typedef std::list<const IInfectionPolioReportable*> infection_polio_reportable_list_t;
-
     class SusceptibilityPolio;
-    class IIndividualHumanPolio : public ISupports
-    {
-    public:
-        virtual ISusceptibilityPolioReportable *GetSusceptibilityReporting() const = 0;
-        virtual int GetParalysisVirusTypeMask() const = 0;
-        virtual float GetAgeOfMostRecentInfection(void) = 0;
-        virtual bool GetSusceptibleStatus(int pvType) = 0;
-        virtual void ClearAllNewInfectionByStrain(void) = 0;
-        virtual const infection_polio_reportable_list_t *GetNewInfectionReportables() const = 0;
-        virtual const infection_polio_reportable_list_t *GetInfectionReportables(bool getNewInfectionsOnly) const = 0;
-    };
 
     class IndividualHumanPolio : public IndividualHumanEnvironmental, public IIndividualHumanPolio
     {
@@ -67,7 +55,7 @@ namespace Kernel
         virtual void applyNewInterventionEffects(float dt) override;
 
         // Factory methods
-        virtual Infection* createInfection(suids::suid _suid) override;
+        virtual IInfection* createInfection(suids::suid _suid) override;
 
         // New Exposure Pattern
         virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route ) override;

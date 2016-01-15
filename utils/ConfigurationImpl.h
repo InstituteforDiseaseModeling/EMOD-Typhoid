@@ -15,7 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <functional>
 #include "ISupports.h"
 #include "EnumSupport.h"
-#include "SimpleTypemapRegistration.h"
 #include <boost/type_traits/is_base_of.hpp>
 
 namespace Kernel

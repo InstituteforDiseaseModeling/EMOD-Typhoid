@@ -128,8 +128,6 @@ namespace Kernel
         float susceptibility_scaling_rate;     // Susceptibility_Scaling_Rate, only for Susceptibility_Scale_Type = *_FUNCTION_OF_TIME
         float susceptibility_scaling_intercept;
 
-        bool demographic_tracking;              // from Simulation base class
-
         bool  vector_aging;                     // From SimulationVector
 
         bool  temperature_dependent_feeding_cycle;
@@ -164,6 +162,8 @@ namespace Kernel
         float larvalDensityMortalityOffset;
 
         bool demographics_initial;
+        int default_torus_size;
+        int default_node_population;
 
         float lloffset; // half the size of a grid edge in degrees, set by SetFlags()
 
@@ -290,19 +290,10 @@ namespace Kernel
         float prob_super_spreader;
         bool  enable_coital_dilution;
 
-#ifndef DISABLE_HIV
-        std::map< RelationshipType::Enum, float > coital_act_rate;
-#endif
         float coital_dilution_2_partners;
         float coital_dilution_3_partners;
         float coital_dilution_4_plus_partners;
 
-        float maritalRel_inv_kappa;
-        float maritalRel_lambda;
-        float informalRel_inv_kappa;
-        float informalRel_lambda;
-        float transitoryRel_inv_kappa;
-        float transitoryRel_lambda;
 
 #ifndef DISABLE_HIV
         bool  Enable_cd4_dep_prog;

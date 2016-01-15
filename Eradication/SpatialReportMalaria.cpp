@@ -11,17 +11,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <functional>
 #include <map>
-#include "BoostLibWrapper.h"
-// not in boost wrapper???
-#include <boost/math/special_functions/fpclassify.hpp>
 
 #include "SpatialReportMalaria.h"
-#include "NodeMalaria.h"
+#include "MalariaContexts.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "Exceptions.h"
-#include "Individual.h"
-#include "SimulationConfig.h"
+#include "IIndividualHuman.h"
 #include "ProgVersion.h"
 
 using namespace std;

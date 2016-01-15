@@ -55,7 +55,7 @@ namespace Kernel
         NodeAirborne::Initialize();
     }
 
-    IIndividualHuman* NodeTB::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+    IIndividualHuman* NodeTB::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
     {
         return IndividualHumanTB::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -256,7 +256,7 @@ namespace Kernel
 
     }
 
-    IIndividualHuman* NodeTB::processImmigratingIndividual(IIndividualHuman* movedind)
+    IIndividualHuman* NodeTB::processImmigratingIndividual( IIndividualHuman* movedind)
     {
         movedind = NodeAirborne::processImmigratingIndividual(movedind);
         dynamic_cast<IndividualHumanTB*>(movedind)->RegisterInfectionIncidenceObserver( this );

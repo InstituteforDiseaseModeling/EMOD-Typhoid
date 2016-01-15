@@ -97,7 +97,7 @@ namespace Kernel
     {
         bool covered=false;
 
-        uint32_t nodeid = ihec->GetNodeEventContext()->GetExternalId();
+        ExternalNodeId_t nodeid = ihec->GetNodeEventContext()->GetExternalId();
 
         auto coverage_it = coverage_by_node.node_coverage_map.find(nodeid);
         

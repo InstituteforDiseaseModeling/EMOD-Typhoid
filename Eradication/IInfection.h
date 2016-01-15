@@ -19,6 +19,8 @@ namespace Kernel
         virtual bool IsActive() const = 0;
         virtual NonNegativeFloat GetDuration() const = 0;
         virtual void SetContextTo(IIndividualHumanContext*) = 0;
+        virtual void SetParameters(StrainIdentity* infstrain=nullptr, int incubation_period_override = -1 ) = 0;
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) = 0;
 
         virtual ~IInfection() {}
     };

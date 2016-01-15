@@ -181,8 +181,9 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     initConfigTypeMap( "Config_Name", &ConfigName, Config_Name_DESC_TEXT );
 
 
-    initConfigTypeMap( "Enable_Demographics_Reporting", &demographic_tracking, Enable_Demographics_Reporting_DESC_TEXT, true ); 
     initConfigTypeMap( "Enable_Demographics_Initial", &demographics_initial, Enable_Demographics_Initial_DESC_TEXT, true ); // 'global' (3 files)
+    initConfigTypeMap( "Default_Geography_Torus_Size", &default_torus_size, Default_Geography_Torus_Size_DESC_TEXT, 3, 100, 10);
+    initConfigTypeMap( "Default_Geography_Initial_Node_Population", &default_node_population, Default_Geography_Initial_Node_Population_DESC_TEXT, 0, INT_MAX, 1000);
 
     initConfigTypeMap( "Enable_Vital_Dynamics", &vital_dynamics, Enable_Vital_Dynamics_DESC_TEXT, true );
     initConfigTypeMap( "Enable_Disease_Mortality", &vital_disease_mortality, Enable_Disease_Mortality_DESC_TEXT, true );
@@ -462,19 +463,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         initConfigTypeMap( "Coital_Dilution_Factor_2_Partners", &coital_dilution_2_partners, Coital_Dilution_Factor_2_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
         initConfigTypeMap( "Coital_Dilution_Factor_3_Partners", &coital_dilution_3_partners, Coital_Dilution_Factor_3_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f);
         initConfigTypeMap( "Coital_Dilution_Factor_4_Plus_Partners", &coital_dilution_4_plus_partners, Coital_Dilution_Factor_4_Plus_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
-#ifndef DISABLE_HIV 
-        initConfigTypeMap( "Coital_Act_Rate_Transitory", &coital_act_rate[RelationshipType::TRANSITORY], Coital_Act_Rate_Transitory_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
-        initConfigTypeMap( "Coital_Act_Rate_Informal", &coital_act_rate[RelationshipType::INFORMAL], Coital_Act_Rate_Informal_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
-        initConfigTypeMap( "Coital_Act_Rate_Marital", &coital_act_rate[RelationshipType::MARITAL], Coital_Act_Rate_Marital_DESC_TEXT, FLT_EPSILON, 20.0f, 0.33f );
-#endif
-        initConfigTypeMap( "Relationships_Transitory_Weibull_Heterogeneity", &transitoryRel_inv_kappa, Relationships_Transitory_Weibull_Heterogeneity_DESC_TEXT, 0.0f, 100.0f, 1.0f );
-        initConfigTypeMap( "Relationships_Transitory_Weibull_Scale", &transitoryRel_lambda, Relationships_Transitory_Weibull_Scale_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
-
-        initConfigTypeMap( "Relationships_Informal_Weibull_Heterogeneity", &informalRel_inv_kappa, Relationships_Informal_Weibull_Heterogeneity_DESC_TEXT, 0.0f, 100.0f, 1.0f );
-        initConfigTypeMap( "Relationships_Informal_Weibull_Scale", &informalRel_lambda,Relationships_Informal_Weibull_Scale_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
-
-        initConfigTypeMap( "Relationships_Marital_Weibull_Heterogeneity", &maritalRel_inv_kappa, Relationships_Marital_Weibull_Heterogeneity_DESC_TEXT, 0.0f, 100.0f, 1.0f );
-        initConfigTypeMap( "Relationships_Marital_Weibull_Scale", &maritalRel_lambda, Relationships_Marital_Weibull_Scale_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
     }
 
 #ifndef DISABLE_HIV
@@ -711,7 +699,6 @@ SimulationConfig::SimulationConfig()
     , heg_model(HEGModel::OFF)
     , susceptibility_scaling_rate(-42.0f)
     , susceptibility_scaling_intercept(-42.0f)
-    , demographic_tracking(false)
     , vector_aging(false)
     , temperature_dependent_feeding_cycle(false)
     , meanEggHatchDelay(0.0f)
@@ -861,16 +848,9 @@ SimulationConfig::SimulationConfig()
     //, shortTermRelationshipLength(10.0f)
     , prob_super_spreader(0.0f)
     , enable_coital_dilution(true)
-    , coital_act_rate( )
     , coital_dilution_2_partners(1)
     , coital_dilution_3_partners(1)
     , coital_dilution_4_plus_partners(1)
-    , maritalRel_inv_kappa(1.0f)
-    , maritalRel_lambda(1.0f)
-    , informalRel_inv_kappa(1.0f)
-    , informalRel_lambda(1.0f)
-    , transitoryRel_inv_kappa(1.0f)
-    , transitoryRel_lambda(1.0f)
     //, femaleToMaleRelativeInfectivity(1.0f)
 
 #ifndef DISABLE_HIV

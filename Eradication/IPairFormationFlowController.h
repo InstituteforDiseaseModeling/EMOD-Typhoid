@@ -9,13 +9,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "IdmApi.h"
+#include "IdmDateTime.h"
 #include "ISerializable.h"
 
 namespace Kernel
 {
     struct IDMAPI IPairFormationFlowController : ISerializable
     {
-        virtual void UpdateEntryRates() = 0;
+        virtual void UpdateEntryRates( const IdmDateTime& rCurrentTime, float dt ) = 0;
         virtual ~IPairFormationFlowController() {}
     };
 }

@@ -17,13 +17,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <boost/math/special_functions/fpclassify.hpp>
 
 #include "SpatialReport.h"
-#include "Node.h"
+#include "INodeContext.h"
+#include "Climate.h"
 #include "Sugar.h"
 #include "Debug.h"
 #include "Environment.h"
 #include "FileSystem.h"
 #include "Exceptions.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "SimulationConfig.h"
 #include "ProgVersion.h"
 

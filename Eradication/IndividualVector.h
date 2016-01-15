@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Individual.h"
 
 #include "VectorInterventionsContainer.h"
-#include "Infection.h"
+#include "IInfection.h"
 #include "IContagionPopulation.h"
 
 namespace Kernel
@@ -55,7 +55,7 @@ namespace Kernel
         IndividualHumanVector(suids::suid id = suids::nil_suid(), double monte_carlo_weight = 1.0, double initial_age = 0.0, int gender = 0, double initial_poverty = 0.5);
         IndividualHumanVector(INodeContext *context);
 
-        virtual Infection *createInfection(suids::suid _suid) override;
+        virtual IInfection *createInfection(suids::suid _suid) override;
        
         virtual void setupInterventionsContainer() override;
         virtual void ApplyTotalBitingExposure();

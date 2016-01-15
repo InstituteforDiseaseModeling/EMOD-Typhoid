@@ -67,6 +67,7 @@ namespace Kernel
     {
         std::stringstream header ;
         header << "Year,"
+               << "Node_ID,"
                << "Id,"
                << "MCWeight,"
                << "Age,"
@@ -141,6 +142,7 @@ namespace Kernel
         GetOutputStream() 
             << std::setprecision(10)
             << _parent->GetSimulationTime().Year()
+            << "," << individual->GetParent()->GetExternalID()
             << "," << individual->GetSuid().data
             << "," << individual->GetMonteCarloWeight()
             << "," << individual->GetAge() / DAYSPERYEAR

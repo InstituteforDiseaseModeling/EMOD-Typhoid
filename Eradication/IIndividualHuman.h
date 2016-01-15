@@ -27,6 +27,7 @@ namespace Kernel
         virtual void SetInitialInfections(int init_infs) = 0;
         virtual void SetParameters(float infsample, float imm_mod, float risk_mod, float mig_mod) = 0;
         virtual void InitializeHuman() = 0;
+        virtual void SetMigrationModifier( float modifier ) = 0;
 
         // Control
         virtual void Update(float current_time, float dt) = 0;
@@ -40,6 +41,7 @@ namespace Kernel
         virtual int GetGender() const = 0;
         virtual double GetMonteCarloWeight() const = 0;
         virtual bool IsInfected() const = 0;
+        virtual bool AtHome() const = 0;
 
         virtual NewInfectionState::_enum GetNewInfectionState() const = 0;
         virtual HumanStateChange GetStateChange() const = 0;

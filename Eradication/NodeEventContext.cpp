@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 #include "NodeDemographics.h"
 #include "Node.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 
 #include "Log.h"
 #include "Exceptions.h"
@@ -153,13 +153,7 @@ namespace Kernel
     }
 
     // First cut of this function writes the intervention report to stdout. It is an abbreviated,
-    // 1-line-per-intervention report like:
-    // IVLOG:t=62,n=1,iv=PolioVaccine,subtype=mOPV_2,s=CAL,ra=3
-    // which would mean
-    // At timestep 62, in node 1, a Polio Vaccine (monovalent OPV type 2), was given by a Calendar intervention to an individual at age 3 days.
-    // From an implementation point of view, originally I wanted to do a QueryInterface on the distributed intervention (& distributor) to identify their
-    // classname, but not every subclass of Intervention implements a unique interface (e.g., PolioVaccine does not implement IPolioVaccine 
-    // (there is no IPolioVaccine), so the QI route does not provide a means to uniquely identify interventions.
+    // 1-line-per-intervention report.
     void NodeEventContextHost::notifyCampaignEventOccurred(
         /*const*/ ISupports * pDistributedIntervention,
         /*const*/ ISupports * pDistributor,// for tb, cool to know parent intervention that 'gave', including tendency if it's an HSB.
@@ -170,7 +164,7 @@ namespace Kernel
             // intervention recipient
             std::stringstream msg;
             float recipientAge = float(pDistributeeIndividual->GetEventContext()->GetAge());
-            msg << ",hum_id="
+            msg << "hum_id="
                 << pDistributeeIndividual->GetSuid().data
                 << ",ra="
                 << recipientAge

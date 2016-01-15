@@ -10,6 +10,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "ISupports.h"
+#include "SimulationEnums.h"
+#include "suids.hpp"
 
 namespace Kernel
 {
@@ -20,6 +22,7 @@ namespace Kernel
         virtual void ImmigrateTo(INodeContext* node) = 0;
         virtual void SetMigrationDestination(suids::suid destination) = 0;
         virtual const suids::suid & GetMigrationDestination() = 0;
+        virtual MigrationType::Enum GetMigrationType() const = 0 ;
 
         virtual ~IMigrate() {}
     };

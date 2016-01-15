@@ -38,7 +38,7 @@ namespace Kernel
 
     public:
         InfectionMalariaConfig() {};
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
 
     protected:
         static ParasiteSwitchType::Enum parasite_switch_type;
@@ -68,7 +68,7 @@ namespace Kernel
 
         // TODO - becomes part of initialize?
         virtual void SetParameters(Kernel::StrainIdentity* _infstrain=nullptr, int incubation_period_override = -1 ) override;
-        virtual void InitInfectionImmunology(Susceptibility* _immunity) override;
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) override;
 
         virtual void Update(float, ISusceptibilityContext* = nullptr) override;
 

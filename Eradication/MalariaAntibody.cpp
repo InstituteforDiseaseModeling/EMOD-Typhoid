@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "MalariaAntibody.h"
-#include "MathFunctions.h"
+#include "Sigmoid.h"
 #include "SusceptibilityMalaria.h"
 
 #define NON_TRIVIAL_ANTIBODY_THRESHOLD  (0.0000001)

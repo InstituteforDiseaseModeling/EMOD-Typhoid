@@ -21,8 +21,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEventContext.h"
 #include "Infection.h"
 #include "InterventionEnums.h"
-#include "Migration.h"
-#include "Node.h"
+#include "InterventionFactory.h"
+#include "IMigrationInfo.h"
+#include "INodeContext.h"
+#include "NodeDemographics.h"
 #include "NodeEventContext.h"
 #include "SimulationConfig.h"
 #include "suids.hpp"
@@ -196,7 +198,7 @@ namespace Kernel
         , m_new_infection_state(NewInfectionState::Invalid)
         , StateChange(HumanStateChange::None)
         , migration_mod(0)
-        , migration_type(0)
+        , migration_type(MigrationType::NO_MIGRATION)
         , migration_destination(suids::nil_suid())
         , time_to_next_migration(FLT_MAX)
         , will_return(false)
@@ -231,7 +233,7 @@ namespace Kernel
         , m_new_infection_state(NewInfectionState::Invalid)
         , StateChange(HumanStateChange::None)
         , migration_mod(0)
-        , migration_type(0)
+        , migration_type(MigrationType::NO_MIGRATION)
         , migration_destination(suids::nil_suid())
         , time_to_next_migration(FLT_MAX)
         , will_return(false)
@@ -266,6 +268,8 @@ namespace Kernel
             foundInterface = static_cast<IIndividualHumanEventContext*>(this);
         else if ( iid == GET_IID(IIndividualHumanContext))
             foundInterface = static_cast<IIndividualHumanContext*>(this);
+        else if ( iid == GET_IID(IIndividualHuman)) 
+            foundInterface = static_cast<IIndividualHuman*>(this);
         else if ( iid == GET_IID(IInfectable))
             foundInterface = static_cast<IInfectable*>(this);
         else if ( iid == GET_IID(IInfectionAcquirable))
@@ -706,36 +710,41 @@ namespace Kernel
             if(migration_destination.is_nil())
                 SetNextMigration();
 
-            time_to_next_migration -= dt;
-            if(time_to_next_migration < 0)
+            if( !migration_destination.is_nil() )
             {
-                LOG_DEBUG_F( "%s: individual %d is migrating.\n", __FUNCTION__, suid.data );
-                StateChange = HumanStateChange::Migrating;
+                time_to_next_migration -= dt;
+                if(time_to_next_migration < 0)
+                {
+                    LOG_DEBUG_F( "%s: individual %d is migrating.\n", __FUNCTION__, suid.data );
+                    StateChange = HumanStateChange::Migrating;
+                }
             }
-
             break;
 
         case MigrationStructure::VARIABLE_RATE_MIGRATION:   // Variable, but drawn from distributions
             throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "MigrationStructure::VARIABLE_RATE_MIGRATION" );
-            // break;
 
         case MigrationStructure::LEVY_FLIGHTS: //Levy flights
             //  need community to have specific location with easy way to calculate distance
             //  can calculate a matrix among communities based on distances
             //  would be easiest to implement for individual-based
             throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "MigrationStructure::LEVY_FLIGHTS" );
-            // break;
 
-        case MigrationStructure::NO_MIGRATION: break;
-        default: break;
+        case MigrationStructure::NO_MIGRATION:
+        default:
+            std::stringstream msg;
+            msg << "Invalid migration_structure=" << GET_CONFIGURABLE(SimulationConfig)->migration_structure;
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            break;
         }
     }
 
     void IndividualHuman::SetNextMigration(void)
     {
-        const MigrationInfo *migration_info = parent->GetMigrationInfo();
+        IMigrationInfo *migration_info = parent->GetMigrationInfo();
 
-        if (GET_CONFIGURABLE(SimulationConfig)->migration_structure && migration_info)
+        if( (GET_CONFIGURABLE(SimulationConfig)->migration_structure != MigrationStructure::NO_MIGRATION) &&
+            (migration_info->GetReachableNodes().size() > 0) )
         {
             if(waypoints.size() == 0)
                 outbound = true;
@@ -744,15 +753,20 @@ namespace Kernel
 
             if(outbound)
             {
-                migration_info->PickMigrationStep(this, migration_mod, migration_destination, migration_type, time_to_next_migration);
+                migration_info->PickMigrationStep( this, migration_mod, migration_destination, migration_type, time_to_next_migration );
 
-                float return_prob;
-                switch(int(migration_type))
+                if( migration_type == MigrationType::NO_MIGRATION )
                 {
-                case LOCAL_MIGRATION:    return_prob = local_roundtrip_prob;  break;
-                case AIR_MIGRATION:      return_prob = air_roundtrip_prob;    break;
-                case REGIONAL_MIGRATION: return_prob = region_roundtrip_prob; break;
-                case SEA_MIGRATION:      return_prob = sea_roundtrip_prob;    break;
+                    return ;
+                }
+
+                float return_prob = 0.0f;
+                switch(migration_type)
+                {
+                case MigrationType::LOCAL_MIGRATION:    return_prob = local_roundtrip_prob;  break;
+                case MigrationType::AIR_MIGRATION:      return_prob = air_roundtrip_prob;    break;
+                case MigrationType::REGIONAL_MIGRATION: return_prob = region_roundtrip_prob; break;
+                case MigrationType::SEA_MIGRATION:      return_prob = sea_roundtrip_prob;    break;
                 default:
                     throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "migration_type", migration_type, "MigrationType" );
                 }
@@ -770,15 +784,15 @@ namespace Kernel
             {
                 migration_destination = waypoints.back();
 
-                int trip_type = waypoints_trip_type.back();
+                MigrationType::Enum trip_type = waypoints_trip_type.back();
 
-                float return_duration_rate;
+                float return_duration_rate = 0.0f;
                 switch(trip_type)
                 {
-                case LOCAL_MIGRATION:       return_duration_rate = local_roundtrip_duration_rate; break;
-                case AIR_MIGRATION:         return_duration_rate = air_roundtrip_duration_rate; break;
-                case REGIONAL_MIGRATION:    return_duration_rate = region_roundtrip_duration_rate; break;
-                case SEA_MIGRATION:         return_duration_rate = sea_roundtrip_duration_rate; break;
+                case MigrationType::LOCAL_MIGRATION:       return_duration_rate = local_roundtrip_duration_rate; break;
+                case MigrationType::AIR_MIGRATION:         return_duration_rate = air_roundtrip_duration_rate; break;
+                case MigrationType::REGIONAL_MIGRATION:    return_duration_rate = region_roundtrip_duration_rate; break;
+                case MigrationType::SEA_MIGRATION:         return_duration_rate = sea_roundtrip_duration_rate; break;
                 default:
                     throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "trip_type", trip_type, "MigrationType" );
                 }
@@ -893,7 +907,7 @@ namespace Kernel
             cumulativeInfs++;
             m_is_infected = true;
 
-            Infection *newinf = createInfection( parent->GetNextInfectionSuid() );
+            IInfection *newinf = createInfection( parent->GetNextInfectionSuid() );
             newinf->SetParameters(infstrain, incubation_period_override);
             newinf->InitInfectionImmunology(susceptibility);
 
@@ -948,7 +962,7 @@ namespace Kernel
         return false;
     }
 
-    Infection* IndividualHuman::createInfection(suids::suid _suid)
+    IInfection* IndividualHuman::createInfection(suids::suid _suid)
     {
         return Infection::CreateInfection(this, _suid);
     }
@@ -1174,6 +1188,30 @@ namespace Kernel
     }
 */
     
+    void serialize_waypoint_types( IArchive& ar, std::vector<MigrationType::Enum>& waypointTripTypes )
+    {
+        size_t count = ar.IsWriter() ? waypointTripTypes.size() : -1;
+
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto& entry : waypointTripTypes)
+            {
+                ar & (uint32_t&)entry;
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                MigrationType::Enum value;
+                ar & (uint32_t&)value;
+                waypointTripTypes.push_back( value );
+            }
+        }
+        ar.endArray();
+    }
+
     void IndividualHuman::serialize(IArchive& ar, IndividualHuman* obj)
     {
         IndividualHuman& individual = *obj;
@@ -1197,14 +1235,14 @@ namespace Kernel
         ar.labelElement("m_new_infection_state") & (uint32_t&)individual.m_new_infection_state;
         ar.labelElement("StateChange") & (uint32_t&)individual.StateChange;
         ar.labelElement("migration_mod") & individual.migration_mod;
-        ar.labelElement("migration_type") & individual.migration_type;
+        ar.labelElement("migration_type") & (uint32_t&)individual.migration_type;
         ar.labelElement("migration_destination_data") & individual.migration_destination.data;
         ar.labelElement("time_to_next_migration") & individual.time_to_next_migration;
         ar.labelElement("will_return") & individual.will_return;
         ar.labelElement("outbound") & individual.outbound;
         ar.labelElement("max_waypoints") & individual.max_waypoints;
         ar.labelElement("waypoints") & individual.waypoints;
-        ar.labelElement("waypoints_trip_type") & individual.waypoints_trip_type;
+        ar.labelElement("waypoints_trip_type"); serialize_waypoint_types( ar, individual.waypoints_trip_type );
         ar.labelElement("Properties") & individual.Properties;
     }
 

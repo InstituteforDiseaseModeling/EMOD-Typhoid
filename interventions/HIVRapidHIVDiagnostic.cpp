@@ -79,6 +79,21 @@ namespace Kernel
         {
             pMedHistory->OnReceivedTestResultForHIV( resultIsHivPositive );
         }
+
+        INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+        if (s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
+        }
+
+        if( resultIsHivPositive )
+        {
+            broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedPositive );
+        }
+        else
+        {
+            broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedNegative );
+        }
     }
 }
 

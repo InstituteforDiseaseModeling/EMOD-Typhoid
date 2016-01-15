@@ -81,12 +81,12 @@ namespace Kernel
         // vectorpopulation deletion handled at _Vector level
     }
 
-    IIndividualHuman* NodeMalaria::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float poverty_level)
+    IIndividualHuman* NodeMalaria::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float poverty_level)
     {
         return IndividualHumanMalaria::CreateHuman(getContextPointer(), suid, monte_carlo_weight, initial_age, gender,  poverty_level);
     }
 
-    IIndividualHuman* NodeMalaria::addNewIndividual(float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
+    IIndividualHuman* NodeMalaria::addNewIndividual( float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
     {
         //VALIDATE(boost::format("NodeMalaria::addNewIndividual(%f, %f, %d, %d, %f)") % monte_carlo_weight % initial_age % gender % initial_infection_count % init_poverty);
 
@@ -126,7 +126,7 @@ namespace Kernel
         return 1.0f;
     }
 
-    void NodeMalaria::accumulateIndividualPopulationStatistics(float dt, IIndividualHuman* basic_individual)
+    void NodeMalaria::accumulateIndividualPopulationStatistics( float dt, IIndividualHuman* basic_individual)
     {
         // Do base-class behavior, e.g. UpdateInfectiousness, statPop, Possible_Mothers
         Node::accumulateIndividualPopulationStatistics(dt, basic_individual);
@@ -191,7 +191,7 @@ namespace Kernel
         }
     }
 
-    void NodeMalaria::updateNodeStateCounters(IIndividualHuman *ih)
+    void NodeMalaria::updateNodeStateCounters( IIndividualHuman *ih)
     {
         float weight = ih->GetMonteCarloWeight();
         IMalariaHumanContext *malaria_human = nullptr;

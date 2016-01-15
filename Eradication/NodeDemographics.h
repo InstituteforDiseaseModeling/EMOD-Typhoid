@@ -132,9 +132,11 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
     public:
-        static const uint32_t default_geography_torus_size;
-
-        static NodeDemographicsFactory* CreateNodeDemographicsFactory(boost::bimap<uint32_t, suids::suid> * nodeid_suid_map, const ::Configuration *config);
+        static NodeDemographicsFactory* CreateNodeDemographicsFactory( boost::bimap<uint32_t, suids::suid> * nodeid_suid_map,  
+                                                                       const ::Configuration *config,
+                                                                       bool isDataInFiles, 
+                                                                       uint32_t torusSize, 
+                                                                       uint32_t defaultPopulation );
         ~NodeDemographicsFactory();
 
         DemographicsContext* CreateDemographicsContext();
@@ -150,7 +152,7 @@ namespace Kernel
                                                          const std::string& rParentKey );
 
         const std::vector<uint32_t>& GetNodeIDs() { return nodeIDs; }
-        std::string GetIdReference() { return idreference; }
+        const std::string& GetIdReference() { return idreference; }
 
         // If the user selected to use the default demographics, this routine can be used
         // to write the demographics to a file once the demographics have been initialized.
@@ -189,6 +191,10 @@ namespace Kernel
         // NOTE: we don't want to use unordered_map here because we want the order maintained.
         std::vector<std::map<uint32_t,JsonObjectDemog>> nodedata_maps ;
 
+        // values used when generating the default geography
+        uint32_t torus_size;
+        uint32_t default_population;
+
         static std::vector<std::string> demographics_filenames_list;
 
 #pragma warning( pop )
@@ -204,9 +210,11 @@ namespace Kernel
             , layer_string_sub_tables()
             , layer_string_value2key_tables()
             , nodedata_maps()
+            , torus_size(10)
+            , default_population(1000)
         { 
         };
-        void Initialize(const ::Configuration *config);
+        void Initialize( const ::Configuration *config, bool isDataInFiles, uint32_t torusSize, uint32_t defaultPopulation );
 
         virtual bool Configure( const Configuration* config ) override;
 

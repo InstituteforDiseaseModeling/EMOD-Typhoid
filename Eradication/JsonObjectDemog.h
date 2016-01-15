@@ -54,12 +54,14 @@ namespace Kernel
         bool operator==( const JsonObjectDemog& rThat ) const ;
         bool operator!=( const JsonObjectDemog& rThat ) const ;
 
+        void WriteToFile( const char* filename );
+
         // ------------------------------------------------------
         // --- Methods for creating an object from a string and
         // --- for creating the string from the object
         // ------------------------------------------------------
-        void Parse(const char* jsBuffer);
-        void ParseFile(const char* filename);
+        void Parse( const char* jsBuffer, const char* filename = nullptr );
+        void ParseFile( const char* filename );
         std::string ToString() const ;
 
         // ------------------------------------------------------
@@ -113,6 +115,8 @@ namespace Kernel
         void Add( const char*        pKey, const char*            pStrValue );
         void Add( const std::string& rKey, double                 val );
         void Add( const char*        pKey, double                 val );
+        void Add( const std::string& rKey, int                    val );
+        void Add( const char*        pKey, int                    val );
 
         void Remove( const Iterator& rIterator );
 

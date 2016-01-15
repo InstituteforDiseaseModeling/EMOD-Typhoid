@@ -13,18 +13,20 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <list>
 #include <vector>
 
-#include "BoostLibWrapper.h"
-
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
-#include "InterventionEnums.h"
 #include "FactorySupport.h"
 #include "Configure.h"
 
 namespace Kernel
 {
+    ENUM_DEFINE(BednetType,
+        ENUM_VALUE_SPEC(Barrier     , 1)
+        ENUM_VALUE_SPEC(ITN         , 2)
+        ENUM_VALUE_SPEC(LLIN        , 3)
+        ENUM_VALUE_SPEC(Retreatment , 4))
+
     struct IBednetConsumer;
 
     /* Keep around as an identity solution??? */
@@ -40,13 +42,13 @@ namespace Kernel
         SimpleBednet();
         virtual ~SimpleBednet() { }
 
-        bool Configure( const Configuration * config );
+        virtual bool Configure( const Configuration * config ) override;
 
         // IDistributableIntervention
-        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void SetContextTo(IIndividualHumanContext *context);
-        virtual void Update(float dt);
+        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual void SetContextTo(IIndividualHumanContext *context) override;
+        virtual void Update(float dt) override;
 
     protected:
 

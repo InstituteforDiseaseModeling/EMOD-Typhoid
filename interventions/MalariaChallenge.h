@@ -10,15 +10,17 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
-#include "InterventionEnums.h"
 #include "EventCoordinator.h"
 #include "Configure.h"
 
 namespace Kernel
 {
+    ENUM_DEFINE(MalariaChallengeType,
+        ENUM_VALUE_SPEC(InfectiousBites         , 1)
+        ENUM_VALUE_SPEC(Sporozoites             , 2))
+
     class MalariaChallenge : public BaseNodeIntervention
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()

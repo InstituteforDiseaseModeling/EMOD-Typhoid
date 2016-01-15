@@ -25,13 +25,14 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, GenericDrug, IDistributableIntervention)
 
     public:
-        /* clorton virtual */ bool Configure( const Configuration * ) /* clorton override */;
         virtual ~GenericDrug();
-        virtual int AddRef() override;
-        virtual int Release() override;
+
+        virtual bool Configure( const Configuration * ) override;
 
         // ISupports
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual int AddRef() override;
+        virtual int Release() override;
 
         // IDistributableIntervention
         virtual void SetContextTo(IIndividualHumanContext *context) override;

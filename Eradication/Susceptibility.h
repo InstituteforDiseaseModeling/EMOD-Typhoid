@@ -65,7 +65,7 @@ namespace Kernel
         virtual float getModMortality() const override;
         virtual float getSusceptibilityCorrection() const;
         virtual bool  IsImmune() const;
-        virtual void  InitNewInfection();
+        virtual void  InitNewInfection() override;
 
     protected:
         // current status

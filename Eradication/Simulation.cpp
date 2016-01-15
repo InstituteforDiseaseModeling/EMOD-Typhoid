@@ -24,13 +24,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "PropertyReport.h"
 #include "Exceptions.h"
 #include "Instrumentation.h"
-#include "Migration.h"
+#include "InterventionEnums.h"
+#include "IMigrationInfo.h"
 #include "Node.h"
 #include "NodeDemographics.h"
 #include "RANDOM.h"
 #include "SimulationConfig.h"
 #include "SimulationEventContext.h"
 #include "ReportEventRecorder.h"
+#include "Individual.h"
 
 #include "DllLoader.h"
 
@@ -735,6 +737,18 @@ namespace Kernel
         }
     }
 
+    IMigrationInfoFactory* Simulation::CreateMigrationInfoFactory ( const std::string& idreference,
+                                                                    MigrationStructure::Enum ms,
+                                                                    int torusSize )
+    {
+        IMigrationInfoFactory* pmf = MigrationFactory::ConstructMigrationInfoFactory( EnvPtr->Config, 
+                                                                                      idreference,
+                                                                                      ms,
+                                                                                      !(m_simConfigObj->demographics_initial),
+                                                                                      torusSize );
+        return pmf ;
+    }
+
     int Simulation::populateFromDemographics(const char* campaignfilename, const char* loadbalancefilename)
     {
         JsonConfigurable::_track_missing = false;
@@ -770,7 +784,11 @@ namespace Kernel
         JsonConfigurable::_track_missing = true;
 
         // Initialize node demographics from file
-        demographics_factory = NodeDemographicsFactory::CreateNodeDemographicsFactory(&nodeid_suid_map, EnvPtr->Config);
+        demographics_factory = NodeDemographicsFactory::CreateNodeDemographicsFactory( &nodeid_suid_map, 
+                                                                                       EnvPtr->Config,
+                                                                                       m_simConfigObj->demographics_initial,
+                                                                                       m_simConfigObj->default_torus_size,
+                                                                                       m_simConfigObj->default_node_population );
         if (demographics_factory == nullptr)
         {
             throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "Failed to create NodeDemographicsFactory" );
@@ -840,31 +858,31 @@ namespace Kernel
         MergeNodeIdSuidBimaps( nodeid_suid_map, merged_map );
 
         // Initialize migration structure from file
-        MigrationInfoFactory * migration_factory = nullptr;
-        release_assert( m_simConfigObj );
-        if (m_simConfigObj->migration_structure != MigrationStructure::NO_MIGRATION)
+        IMigrationInfoFactory * migration_factory = CreateMigrationInfoFactory( idreference, 
+                                                                                m_simConfigObj->migration_structure, 
+                                                                                m_simConfigObj->default_torus_size );
+
+        if (migration_factory == nullptr)
         {
-            migration_factory = MigrationInfoFactory::CreateMigrationInfoFactory(&merged_map, EnvPtr->Config, idreference);
+            throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "IMigrationInfoFactory" );
+        }
 
-            if (migration_factory == nullptr)
-            {
-                throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "MigrationInfoFactory" );
-            }
+        release_assert( m_simConfigObj );
+        if( (m_simConfigObj->migration_structure != MigrationStructure::NO_MIGRATION) &&
+            m_simConfigObj->demographics_initial &&
+            !migration_factory->IsAtLeastOneTypeConfiguredForIndividuals() )
+        {
+            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
+                                                    "Enable_Demographics_Initial and Migration_Model", 
+                                                    "true and not NO_MIGRATION (respectively)", 
+                                                    "(all of air, local, regional, and sea migration filenames and/or enables)", 
+                                                    "(empty/false)");
+        }
 
-            if (m_simConfigObj->demographics_initial          &&
-                migration_factory->airmig_filename.empty()    &&
-                migration_factory->localmig_filename.empty()  &&
-                migration_factory->regionmig_filename.empty() &&
-                migration_factory->seamig_filename.empty())
-            {
-                throw IncoherentConfigurationException(__FILE__, __LINE__, __FUNCTION__, "Enable_Demographics_Initial and Migration_Model", "true and not NO_MIGRATION (respectively)", "(all of air, local, regional, and sea migration filenames)", "(empty)");
-            }
-
-            for (auto& entry : nodes)
-            {
-                release_assert(entry.second);
-                (entry.second)->SetupMigration(migration_factory);
-            }
+        for (auto& entry : nodes)
+        {
+            release_assert(entry.second);
+            (entry.second)->SetupMigration( migration_factory, m_simConfigObj->migration_structure, merged_map );
         }
 
 #ifndef DISABLE_CLIMATE
@@ -887,7 +905,7 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void Kernel::Simulation::addNode_internal(Node *node, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory)
+    void Kernel::Simulation::addNode_internal( INodeContext *node, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory)
     {
         release_assert(node);
         release_assert(nodedemographics_factory);
@@ -896,7 +914,7 @@ namespace Kernel
 #endif
 
         // Add node to the map
-        nodes.insert(std::pair<suids::suid, Node*>(node->GetSuid(), static_cast<Node*>(node)));
+        nodes.insert(std::pair<suids::suid, INodeContext*>(node->GetSuid(), static_cast<INodeContext*>(node)));
         node_event_context_list.push_back( node->GetEventContext() );
         nodeRankMap.Add(node->GetSuid(), EnvPtr->MPI.Rank);
 
@@ -1142,6 +1160,20 @@ namespace Kernel
         return infectionSuidGenerator();
     }
 
+    ExternalNodeId_t Simulation::GetNodeExternalID( const suids::suid& rNodeSuid )
+    {
+        if( nodeid_suid_map.right.count( rNodeSuid ) <= 0 )
+        {
+            std::ostringstream msg;
+            msg << "Unknown node suid = " << rNodeSuid.data << ".  If using multi-core, this is not supported.";
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        }
+        else
+        {
+            return nodeid_suid_map.right.at( rNodeSuid );
+        }
+    }
+
     RANDOMBASE* Simulation::GetRng()
     {
         return rng;
@@ -1162,7 +1194,7 @@ namespace Kernel
         return individual_data_reports ;
     }
 
-    int Simulation::getInitialRankFromNodeId(node_id_t node_id)
+    int Simulation::getInitialRankFromNodeId( ExternalNodeId_t node_id )
     {
         return nodeRankMap.GetInitialRankFromNodeId(node_id); // R: leave as a wrapper call to nodeRankMap.GetInitialRankFromNodeId()
     }

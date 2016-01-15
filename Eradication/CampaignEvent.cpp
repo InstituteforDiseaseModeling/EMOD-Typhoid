@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISupports.h"
 #include "Debug.h"
 #include "EnumSupport.h"
-#include "SimpleTypemapRegistration.h"
 #include "Environment.h"
 #include "Sugar.h"
 #include "Log.h"
@@ -141,9 +140,12 @@ namespace Kernel
     IMPL_QUERY_INTERFACE1(CampaignEvent, IConfigurable)
 
     CampaignEvent::CampaignEvent()
-        : event_index(0)
+        : start_day(0.0f)
+        , event_index(0)
         , nodeset(nullptr)
         , event_coordinator(nullptr)
+        , nodeset_config()
+        , event_coordinator_config()
     {
     }
 

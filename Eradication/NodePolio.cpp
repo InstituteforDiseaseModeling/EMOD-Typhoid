@@ -110,7 +110,7 @@ void Kernel::NodePolio::resetNodeStateCounters(void)
     newDiseaseSusceptibleInfectionsOver5 = 0.0f;
 }
 
-void Kernel::NodePolio::updateNodeStateCounters(IIndividualHuman *ih)
+void Kernel::NodePolio::updateNodeStateCounters( IIndividualHuman *ih )
 {
     float mc_weight                = float(ih->GetMonteCarloWeight());
     IIndividualHumanPolio *tempind2 = nullptr;
@@ -209,7 +209,7 @@ float Kernel::NodePolio::drawInitialImmunity(float ind_init_age)
     return 1.0f;
 }
 
-Kernel::IIndividualHuman* Kernel::NodePolio::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+Kernel::IIndividualHuman* Kernel::NodePolio::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
 {
     return Kernel::IndividualHumanPolio::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
 }

@@ -166,7 +166,7 @@ namespace Kernel
         IndividualHumanCoinfection(suids::suid _suid = suids::nil_suid(), float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
 
         // Factory methods
-        virtual Infection* createInfection(suids::suid _suid);
+        virtual IInfection* createInfection(suids::suid _suid);
         virtual bool createInfection( suids::suid _suid, infection_list_t &newInfections );
         virtual void setupInterventionsContainer();
         virtual bool SetNewInfectionState(InfectionStateChange::_enum inf_state_change);

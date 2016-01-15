@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <map>
 #include "BoostLibWrapper.h"
 
-#include "Node.h"
+#include "INodeContext.h"
 #include "SpatialReportTB.h"
 #include "IndividualTB.h"
 #include "Sugar.h"

@@ -29,11 +29,11 @@ namespace Kernel
         // void Initialize();
 
         // Factory methods
-        virtual IIndividualHuman* createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
+        virtual IIndividualHuman* createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
 
         //virtual void SetupIntranodeTransmission();
         //virtual void Update( float dt );
-        //virtual void processEmigratingIndividual( IndividualHuman *individual );
+        //virtual void processEmigratingIndividual( IIndividualHuman *individual );
         //virtual IIndividualHuman* NodeHIV::processImmigratingIndividual( IIndividualHuman* movedind );
 
         // INodeHIV

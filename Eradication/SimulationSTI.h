@@ -9,13 +9,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "Simulation.h"
+#include "IIdGeneratorSTI.h"
 #include "Sugar.h" // for DECLARE_VIRTUAL_BASE
 
 namespace Kernel
 {
     class IndividualHumanSTI;
     struct IRelationship;
-    class SimulationSTI : public Simulation
+    class SimulationSTI : public Simulation, public IIdGeneratorSTI
     {
         GET_SCHEMA_STATIC_WRAPPER(SimulationSTI)
     public:
@@ -23,6 +24,8 @@ namespace Kernel
         static SimulationSTI *CreateSimulation();
         static SimulationSTI *CreateSimulation(const ::Configuration *config);
         SimulationSTI();
+
+        // methods of IIdGeneratorSTI
         virtual suids::suid GetNextRelationshipSuid();
 
     protected:

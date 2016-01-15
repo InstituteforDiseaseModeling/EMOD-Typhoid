@@ -120,18 +120,37 @@ namespace Kernel
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "SingularValues() is not supported." );
     }
 
-    float PairFormationParametersImpl::BasePairFormationRate() const
+    float PairFormationParametersImpl::FormationRate( const IdmDateTime& rCurrentTime, float dt ) const
     {
-        return base_pair_formation_rate;
+        float formation_rate = 0.0 ;
+        switch( formation_rate_type )
+        {
+            case FormationRateType::CONSTANT:
+                formation_rate = formation_rate_constant ;
+                break;
+            case FormationRateType::SIGMOID_VARIABLE_WIDTH_HEIGHT:
+                formation_rate = formation_rate_sigmoid.variableWidthAndHeightSigmoid( rCurrentTime.Year() );
+                break;
+            case FormationRateType::INTERPOLATED_VALUES:
+                formation_rate = formation_rate_value_map.getValueLinearInterpolation( rCurrentTime.Year(), 0.0f );
+                break;
+            default:
+                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "Formation_Rate_Type", formation_rate_type );
+        }
+        return formation_rate;
+    }
+
+    float PairFormationParametersImpl::UpdatePeriod() const
+    {
+        return update_period;
     }
 
     IPairFormationParameters* PairFormationParametersImpl::CreateParameters( RelationshipType::Enum relType,
                                                                              const Configuration* pConfig,
-                                                                             float base_rate, 
                                                                              float rate_ratio_male, 
                                                                              float rate_ratio_female )
     {
-        PairFormationParametersImpl* newParameters = _new_ PairFormationParametersImpl( relType, base_rate, rate_ratio_male, rate_ratio_female );
+        PairFormationParametersImpl* newParameters = _new_ PairFormationParametersImpl( relType, rate_ratio_male, rate_ratio_female );
 
         newParameters->Configure(pConfig);
 
@@ -150,12 +169,15 @@ namespace Kernel
         , joint_probabilities()
         , cumulative_joint_probabilities()
         , marginal_values()
-        , base_pair_formation_rate(0.0f)
+        , update_period(0.0f)
+        , formation_rate_type(FormationRateType::CONSTANT)
+        , formation_rate_constant(0.0f)
+        , formation_rate_sigmoid()
+        , formation_rate_value_map()
     {
     }
 
     PairFormationParametersImpl::PairFormationParametersImpl( RelationshipType::Enum relType,
-                                                              float base_rate, 
                                                               float rate_ratio_male, 
                                                               float rate_ratio_female )
         : rel_type( relType )
@@ -169,7 +191,11 @@ namespace Kernel
         , joint_probabilities()
         , cumulative_joint_probabilities()
         , marginal_values()
-        , base_pair_formation_rate(base_rate)
+        , update_period(0.0f)
+        , formation_rate_type(FormationRateType::CONSTANT)
+        , formation_rate_constant(0.0f)
+        , formation_rate_sigmoid()
+        , formation_rate_value_map()
     {
         rate_ratio[Gender::MALE] = rate_ratio_male;
         rate_ratio[Gender::FEMALE] = rate_ratio_female;
@@ -186,13 +212,36 @@ namespace Kernel
 
     bool PairFormationParametersImpl::Configure( const Configuration* inputJson )
     {
-        initConfigTypeMap("Number_Age_Bins_Male",           &male_age_bin_count,     Number_Age_Bins_Male_DESC_TEXT,           1,    1000,    1    );
-        initConfigTypeMap("Number_Age_Bins_Female",         &female_age_bin_count,   Number_Age_Bins_Female_DESC_TEXT,         1,    1000,    1    );
-        initConfigTypeMap("Age_of_First_Bin_Edge_Male",     &initial_male_age,       Age_of_First_Bin_Edge_Male_DESC_TEXT,     0,     100,    1    );
-        initConfigTypeMap("Age_of_First_Bin_Edge_Female",   &initial_female_age,     Age_of_First_Bin_Edge_Female_DESC_TEXT,   0,     100,    1    );
-        initConfigTypeMap("Years_Between_Bin_Edges_Male",   &male_age_increment,     Years_Between_Bin_Edges_Male_DESC_TEXT,   0.1f,  100.0f, 1.0f );
-        initConfigTypeMap("Years_Between_Bin_Edges_Female", &female_age_increment,   Years_Between_Bin_Edges_Female_DESC_TEXT, 0.1f,  100.0f, 1.0f );
-        initConfigTypeMap("Joint_Probabilities",            &joint_probabilities,    Joint_Probabilities_DESC_TEXT,            0.0, FLT_MAX, 0.0f ); 
+        initConfig( "Formation_Rate_Type", 
+                    formation_rate_type,
+                    inputJson, 
+                    MetadataDescriptor::Enum("Formation_Rate_Type", "TBD"/*Formation_Rate_Type_DESC_TEXT*/, MDD_ENUM_ARGS( FormationRateType ) ) );
+
+        if( formation_rate_type == FormationRateType::CONSTANT )
+        {
+            initConfigTypeMap( "Formation_Rate_Constant", &formation_rate_constant, "TBD"/*Formation_Rate_DESC_TEXT*/, 0, 1, 0.001f );
+        }
+        else if( formation_rate_type == FormationRateType::SIGMOID_VARIABLE_WIDTH_HEIGHT )
+        {
+            initConfigTypeMap( "Formation_Rate_Sigmoid", &formation_rate_sigmoid, "TBD"/*Formation_Rate_Sigmoid_DESC_TEXT*/ );
+        }
+        else if( formation_rate_type == FormationRateType::INTERPOLATED_VALUES )
+        {
+            initConfigComplexType("Formation_Rate_Interpolated_Values", &formation_rate_value_map, "TBD"/*Formation_Rate_Interpolated_Values_DESC_TEXT*/ );
+        }
+        else
+        {
+            throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "Formation_Rate_Type", formation_rate_type );
+        }
+
+        initConfigTypeMap( "Update_Period",                  &update_period,            "TBD"/*Update_Period_DESC_TEXT*/,         0,    FLT_MAX,    0      );
+        initConfigTypeMap( "Number_Age_Bins_Male",           &male_age_bin_count,       Number_Age_Bins_Male_DESC_TEXT,           1,       1000,    1      );
+        initConfigTypeMap( "Number_Age_Bins_Female",         &female_age_bin_count,     Number_Age_Bins_Female_DESC_TEXT,         1,       1000,    1      );
+        initConfigTypeMap( "Age_of_First_Bin_Edge_Male",     &initial_male_age,         Age_of_First_Bin_Edge_Male_DESC_TEXT,     0,        100,    1      );
+        initConfigTypeMap( "Age_of_First_Bin_Edge_Female",   &initial_female_age,       Age_of_First_Bin_Edge_Female_DESC_TEXT,   0,        100,    1      );
+        initConfigTypeMap( "Years_Between_Bin_Edges_Male",   &male_age_increment,       Years_Between_Bin_Edges_Male_DESC_TEXT,   0.1f,     100.0f, 1.0f   );
+        initConfigTypeMap( "Years_Between_Bin_Edges_Female", &female_age_increment,     Years_Between_Bin_Edges_Female_DESC_TEXT, 0.1f,     100.0f, 1.0f   );
+        initConfigTypeMap( "Joint_Probabilities",            &joint_probabilities,      Joint_Probabilities_DESC_TEXT,            0.0,  FLT_MAX,    0.0f   ); 
 
         bool ret = false;
         
@@ -361,6 +410,10 @@ namespace Kernel
         ar.labelElement("joint_probabilities"           ) & parameters.joint_probabilities;
         ar.labelElement("cumulative_joint_probabilities") & parameters.cumulative_joint_probabilities;
         ar.labelElement("marginal_values"               ) & parameters.marginal_values;
-        ar.labelElement("base_pair_formation_rate"      ) & parameters.base_pair_formation_rate;
+        ar.labelElement("update_period"                 ) & parameters.update_period;
+        ar.labelElement("formation_rate_type"           ) & (uint32_t&)parameters.formation_rate_type;
+        ar.labelElement("formation_rate_constant"       ) & parameters.formation_rate_constant;
+        ar.labelElement("formation_rate_sigmoid"        ) & parameters.formation_rate_sigmoid;
+        ar.labelElement("formation_rate_value_map"      ) & (std::map<float,float>&)parameters.formation_rate_value_map;
     }
 }

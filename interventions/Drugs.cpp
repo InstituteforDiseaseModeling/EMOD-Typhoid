@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Drugs.h"
 #include "RANDOM.h"
 #include "MathFunctions.h"
+#include "Sigmoid.h"
 #include "SimulationConfig.h"        // Just for PKPDModel parameter (!)
 
 static const char * _module = "GenericDrug";
@@ -272,7 +273,7 @@ namespace Kernel
             LOG_DEBUG_F("Remaining doses = %d, Dosing timer = %0.3f\n", remaining_doses, dosing_timer);
             if ( dosing_timer <= 0 )
             {
-                float slow_component_fraction;
+                float slow_component_fraction = 0;
                 if ( fast_decay_time_constant == slow_decay_time_constant )
                 {
                     // DJK: Should be easier to configure first order pkpd (see <ERAD-1853>)

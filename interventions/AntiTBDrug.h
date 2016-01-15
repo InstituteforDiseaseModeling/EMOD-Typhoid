@@ -57,7 +57,7 @@ namespace Kernel
         float TB_drug_mortality_rate;
         ITBDrugEffectsApply * itbda;
 
-        virtual void Expire();
+        virtual void Expire() override;
 
         ICampaignCostObserver * m_pCCO;
 

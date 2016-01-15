@@ -188,7 +188,6 @@
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="Sigmoid.h" />
-    <ClInclude Include="SimpleTypemapRegistration.h" />
     <ClInclude Include="StatusReporter.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Sugar.h" />

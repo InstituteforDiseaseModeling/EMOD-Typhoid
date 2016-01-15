@@ -49,7 +49,7 @@ namespace Kernel
     {
     }
 
-    Infection* IndividualHumanAirborne::createInfection( suids::suid _suid )
+    IInfection* IndividualHumanAirborne::createInfection( suids::suid _suid )
     {
         return InfectionAirborne::CreateInfection(this, _suid);
     }

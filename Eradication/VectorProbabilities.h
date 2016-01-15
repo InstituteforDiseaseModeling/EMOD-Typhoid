@@ -9,8 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include "Interventions.h" // for IVectorInterventionsEffects
-#include "BoostLibWrapper.h"
+#include "VectorContexts.h"
 
 namespace Kernel
 {

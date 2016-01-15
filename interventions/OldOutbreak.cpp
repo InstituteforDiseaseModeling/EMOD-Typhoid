@@ -21,6 +21,10 @@ static const char * _module = "Outbreak";
 
 namespace Kernel
 {
+    ENUM_DEFINE(OutbreakType, 
+        ENUM_VALUE_SPEC(PrevalenceIncrease , 1)
+        ENUM_VALUE_SPEC(ImportCases        , 2))
+
     BEGIN_QUERY_INTERFACE_BODY(Outbreak)
         HANDLE_INTERFACE(IConfigurable)
         //HANDLE_INTERFACE(IDistributableIntervention)

@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "IdmString.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "Node.h"
 #include "PropertyReport.h"
 

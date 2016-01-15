@@ -126,11 +126,13 @@ namespace Kernel
         virtual void Die( HumanStateChange ) override;
         virtual INodeEventContext   * GetNodeEventContext() override; // for campaign cost reporting in e.g. HealthSeekingBehavior
         virtual tProperties* GetProperties() override;
+        virtual bool AtHome() const override;
 
         // Migration
         virtual void ImmigrateTo(INodeContext* destination_node) override;
         virtual const suids::suid& GetMigrationDestination() override;
-        /* clorton virtual */ void SetMigrationDestination(suids::suid destination) /* clorton override */;
+        virtual MigrationType::Enum GetMigrationType() const override { return migration_type; }
+        virtual void SetMigrationDestination(suids::suid destination) override;
         virtual bool IsMigrating() override;
         virtual void CheckForMigration(float currenttime, float dt);
         void SetNextMigration();
@@ -144,6 +146,7 @@ namespace Kernel
         virtual void SetParameters(float infsample, float imm_mod, float risk_mod, float mig_mod) override; // specify each parameter, default version of SetParams()
         virtual void CreateSusceptibility(float imm_mod=1.0, float risk_mod=1.0);
         virtual void setupMaternalAntibodies(IIndividualHumanContext* mother, INodeContext* node) override;
+        virtual void SetMigrationModifier( float modifier ) override { migration_mod = modifier; }
 
         // Infections
         virtual void ExposeToInfectivity(float dt, const TransmissionGroupMembership_t* transmissionGroupMembership);
@@ -202,14 +205,14 @@ namespace Kernel
 
         // Migration
         float migration_mod;
-        int   migration_type;
+        MigrationType::Enum migration_type;
         suids::suid  migration_destination;
         float time_to_next_migration; // JPS: do we want to store this as an absolute time instead of offset?
         bool  will_return;
         bool  outbound;
         int   max_waypoints;    // maximum waypoints a trip can have before returning home
-        std::vector<suids::suid> waypoints;
-        std::vector<int>         waypoints_trip_type;
+        std::vector<suids::suid>         waypoints;
+        std::vector<MigrationType::Enum> waypoints_trip_type;
 
         tProperties Properties;
 
@@ -218,7 +221,7 @@ namespace Kernel
         IndividualHuman(INodeContext *context);
         IndividualHuman(suids::suid id = suids::nil_suid(), float MCweight = 1.0f, float init_age = 0.0f, int gender = 0, float init_poverty = 0.5f);
 
-        virtual Infection* createInfection(suids::suid _suid); // factory method (overridden in derived classes)
+        virtual IInfection* createInfection(suids::suid _suid); // factory method (overridden in derived classes)
         virtual void setupInterventionsContainer();            // derived classes can customize the container, and hence the interventions supported, by overriding this method
         virtual void applyNewInterventionEffects(float dt);    // overriden when interventions (e.g. polio vaccine) updates individual properties (e.g. immunity)
 
@@ -226,10 +229,10 @@ namespace Kernel
         virtual bool SetNewInfectionState(InfectionStateChange::_enum inf_state_change);
         virtual void ReportInfectionState();
 
-        bool AtHome() const;
-
         virtual void PropagateContextToDependents();
         INodeTriggeredInterventionConsumer* broadcaster;
+
+    private:
 
         virtual IIndividualHumanContext* GetContextPointer();
 

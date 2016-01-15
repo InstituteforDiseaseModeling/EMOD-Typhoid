@@ -10,21 +10,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 #include "InfectionEnvironmental.h"
 #include "PolioDefs.h" // for N_POLIO_SEROTYPES
-#include "SusceptibilityPolio.h"
+#include "PolioContexts.h"
 
 namespace Kernel
 { 
-    struct IInfectionPolioReportable : ISupports {
-        virtual float GetTotalDuration() const = 0;
-        virtual float GetInitialInfectiousness() const = 0;
-        virtual float GetInfectiousness() const = 0;
-        virtual float GetParalysisTime() const = 0;
-        virtual float GetMucosalImmunity() const = 0;
-        virtual float GetHumoralImmunity() const = 0;
-        virtual int   GetAntigenID() const = 0;
-        virtual int   GetGeneticID() const = 0;
-    };    
-    
     class InfectionPolioConfig : public JsonConfigurable
     {
         friend class IndividualPolio;
@@ -33,7 +22,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
     public:
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
 
     protected:
         static double         antibody_IRBC_killrate;
@@ -61,7 +50,7 @@ namespace Kernel
         virtual ~InfectionPolio(void);
 
         virtual void SetParameters(StrainIdentity* infstrain = nullptr, int incubation_period_override = -1) override;
-        virtual void InitInfectionImmunology(Susceptibility* _immunity) override;
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) override;
         virtual void Update(float dt, ISusceptibilityContext* _immunity = nullptr) override;
 
         // IInfectionPolioReportable methods
@@ -113,7 +102,7 @@ namespace Kernel
     /*public:
         virtual ~InfectionPolio(void);
 
-        virtual void InitInfectionImmunology(Susceptibility* _immunity);
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity);
         virtual void Update(float dt, Susceptibility* _immunity = nullptr);
     */
 

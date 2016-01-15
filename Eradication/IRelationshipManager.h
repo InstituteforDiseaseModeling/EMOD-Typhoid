@@ -33,6 +33,9 @@ namespace Kernel
         virtual void RemoveRelationship( IRelationship* ) = 0;
         virtual void ConsummateRelationship( IRelationship*, unsigned int acts ) = 0;
 
+        virtual IRelationship* Emigrate( IRelationship* ) = 0;
+        virtual IRelationship* Immigrate( IRelationship* ) = 0;
+
         typedef std::function<void(IRelationship*)> callback_t;
         virtual void RegisterNewRelationshipObserver(callback_t observer) = 0;
         virtual void RegisterRelationshipTerminationObserver(callback_t observer) = 0;

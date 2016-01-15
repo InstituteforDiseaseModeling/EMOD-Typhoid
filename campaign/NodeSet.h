@@ -22,6 +22,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    ENUM_DEFINE(PolygonFormatType,
+        ENUM_VALUE_SPEC(SHAPE      , 1) 
+        //ENUM_VALUE_SPEC(GEOJSON    , 2)
+        )
+
     struct INodeEventContext;
 
     struct IDMAPI INodeSet : public ISupports

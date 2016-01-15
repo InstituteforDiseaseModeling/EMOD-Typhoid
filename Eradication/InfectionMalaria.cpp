@@ -19,7 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 #include "MalariaEnums.h"
 
-#include "MathFunctions.h"
+#include "Sigmoid.h"
 #include "SusceptibilityMalaria.h"
 #include "Interventions.h"
 #include "SimulationConfig.h"
@@ -169,11 +169,11 @@ namespace Kernel
 
         // Variables for strain generator
         // In the future replace this with the specific strain ID
-        unsigned int tempstrainID;  // = 0;
+        unsigned int tempstrainID = 0;
         // 120 primes
         unsigned int stridelengths[] = {73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809};
-        unsigned int tempStridePosition;    // = 0;
-        unsigned int tempStrideLength;      // = 0;
+        unsigned int tempStridePosition = 0;
+        unsigned int tempStrideLength = 0;
 
         switch (malaria_strains)
         {
@@ -261,7 +261,7 @@ namespace Kernel
         }
     }
 
-    void InfectionMalaria::InitInfectionImmunology(Susceptibility* _immunity)
+    void InfectionMalaria::InitInfectionImmunology(ISusceptibilityContext* _immunity)
     {
         if( _immunity == nullptr )
         {
@@ -480,11 +480,6 @@ namespace Kernel
     // Calculates the IRBC killing from drugs and immune action
     void InfectionMalaria::malariaImmunityIRBCKill(float dt, IMalariaSusceptibility *immunity)
     {
-        double tempval1               ; // = 0;
-        double pkill                  ; // = 0;
-        double fever_cytokine_killrate; // = 0;
-        double drug_killrate           = 0;
-
         // check for valid inputs
         if (dt > 0 && immunity)
         {
@@ -492,7 +487,7 @@ namespace Kernel
             // "Innate immunity to malaria." Nat Rev Immunol 4(3): 169-180.
 
             // Offset basic sigmoid: effect rises as basic sigmoid beginning from a fever of MIN_FEVER_DEGREES_KILLING
-            fever_cytokine_killrate = (immunity->get_fever() > MIN_FEVER_DEGREES_KILLING) ? immunity->get_fever_killing_rate() * Sigmoid::basic_sigmoid(1.0, immunity->get_fever() - MIN_FEVER_DEGREES_KILLING) : 0.0;
+            double fever_cytokine_killrate = (immunity->get_fever() > MIN_FEVER_DEGREES_KILLING) ? immunity->get_fever_killing_rate() * Sigmoid::basic_sigmoid(1.0, immunity->get_fever() - MIN_FEVER_DEGREES_KILLING) : 0.0;
             LOG_VALID_F("fever = %0.9f (%0.2f C)  killrate = %0.9f\n", immunity->get_fever(), immunity->get_fever_celsius(), fever_cytokine_killrate);
 
             // ability to query for drug effects
@@ -500,6 +495,7 @@ namespace Kernel
             IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
             IMalariaDrugEffects *imde = nullptr;
 
+            double drug_killrate = 0;
             if (s_OK ==  context->QueryInterface(GET_IID(IMalariaDrugEffects), (void **)&imde))
             {
                 drug_killrate = imde->get_drug_IRBC_killrate();
@@ -514,7 +510,7 @@ namespace Kernel
                 LOG_VALID_F( "Ab concentration for variant %d: %0.9f (major) %0.9f (minor)\n", i, m_PfEMP1_antibodies[i].major->GetAntibodyConcentration(), m_PfEMP1_antibodies[i].minor->GetAntibodyConcentration() );
 
                 // total = antibodies (major, minor, maternal) + fever + drug
-                pkill = EXPCDF(-dt * ( (m_PfEMP1_antibodies[i].major->GetAntibodyConcentration() + non_specific_antigenicity * m_PfEMP1_antibodies[i].minor->GetAntibodyConcentration() + immunity->get_maternal_antibodies() ) * antibody_IRBC_killrate + fever_cytokine_killrate + drug_killrate));
+                double pkill = EXPCDF(-dt * ( (m_PfEMP1_antibodies[i].major->GetAntibodyConcentration() + non_specific_antigenicity * m_PfEMP1_antibodies[i].minor->GetAntibodyConcentration() + immunity->get_maternal_antibodies() ) * antibody_IRBC_killrate + fever_cytokine_killrate + drug_killrate));
                 
                 // Now here there is an interesting issue: to save massive amounts of computational time, can use a Gaussian approximation for the true binomial, but this returns a float
                 // This is fine for large numbers of killed IRBC's, but an issue arises for small numbers
@@ -522,7 +518,7 @@ namespace Kernel
 
                 LOG_VALID_F("pkill = %0.9f\n", pkill);
 
-                tempval1 = m_IRBC_count[i] * pkill;
+                double tempval1 = m_IRBC_count[i] * pkill;
                 if ( tempval1 > 0 ) // don't need to smear the killing by a random number if it is going to be zero
                     tempval1 = randgen->eGauss() * sqrt(tempval1 * (1.0 - pkill)) + tempval1;
 
@@ -582,9 +578,6 @@ namespace Kernel
     // Calculates immature gametocyte killing from drugs and immune action
     void InfectionMalaria::malariaImmunityGametocyteKill(float dt, IMalariaSusceptibility *immunity)
     {
-        double fever_cytokine_killrate = 0;
-        double drug_killrate           = 0;
-
         // ability to query for drug effects
         IIndividualHumanContext *patient              = GetParent();
         IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
@@ -596,12 +589,17 @@ namespace Kernel
             #pragma loop(hint_parallel(8))
             for (int i = 0; i < GametocyteStages::Mature; i++)
             {
-                // currently have fever and inflammatory cytokines limiting infectivity, rather than killing gametocytes
+                // Currently have fever and inflammatory cytokines limiting infectivity, 
+                // rather than killing gametocytes.  See IndividualHumanMalaria::DepositInfectiousnessFromGametocytes()
+                // We leave this variable here at zero incase we change DepositInfectiousnessFromGametocytes()
+                double fever_cytokine_killrate = 0; // 0 = don't kill due to fever
+
                 // gametocyte killing drugs
+                double drug_killrate = 0;
                 if (s_OK ==  context->QueryInterface(GET_IID(IMalariaDrugEffects), (void **)&imde))
                 {
                     if (i < GametocyteStages::Stage3)
-                         drug_killrate = imde->get_drug_gametocyte02();
+                        drug_killrate = imde->get_drug_gametocyte02();
                     else
                         drug_killrate = imde->get_drug_gametocyte34();
                 }
@@ -794,8 +792,6 @@ namespace Kernel
     // Process all infected hepatocytes
     void InfectionMalaria::malariaProcessHepatocytes(float dt, IMalariaSusceptibility *immunity)
     {
-        double drug_killrate = 0;
-
         // check for valid inputs
         if (dt > 0 && immunity && m_hepatocytes > 0)
         {
@@ -804,6 +800,7 @@ namespace Kernel
             IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
             IMalariaDrugEffects *imde = nullptr;
 
+            double drug_killrate = 0;
             if (s_OK ==  context->QueryInterface(GET_IID(IMalariaDrugEffects), (void **)&imde))
             {
                 drug_killrate = imde->get_drug_hepatocyte();

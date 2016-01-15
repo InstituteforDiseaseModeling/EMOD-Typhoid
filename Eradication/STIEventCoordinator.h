@@ -14,11 +14,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 
 #include "StandardEventCoordinator.h"
-#include "InterventionEnums.h"
 
 namespace Kernel
 {
-    
+    ENUM_DEFINE(BssTargetingType,
+        ENUM_VALUE_SPEC(TargetBss               , 0)
+        ENUM_VALUE_SPEC(IgnoreBss               , 1)
+        ENUM_VALUE_SPEC(NeutralBss              , 2))
+
     // STI distribution ec that just gives out the intervention once to the fraction of people specified by the coverage parameter
     class STIInterventionDistributionEventCoordinator : public StandardInterventionDistributionEventCoordinator
     {

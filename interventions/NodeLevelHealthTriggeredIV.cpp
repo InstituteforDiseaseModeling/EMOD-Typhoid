@@ -15,70 +15,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "EventTrigger.h"
+#include "SimulationConfig.h"  // for verifying string triggers are 'valid'
 
 static const char * _module = "NodeLevelHealthTriggeredIV";
 
 namespace Kernel
 {
-    void
-    NodeLevelHealthTriggeredIV::tPropertyRestrictions::ConfigureFromJsonAndKey(
-        const Configuration * inputJson,
-        const std::string& key
-    )
-    {
-        // Make this optional.
-        if( inputJson->Exist( key ) == false )
-        {
-            return;
-        }
-
-        // We have a list of json objects. The format/logic is as follows. For input:
-        // [
-        //  { "Character": "Good", "Income": "High" },
-        //  { "Character": "Bad", "Income": "Low" }
-        // ]
-        // We give the intervention if the individuals has
-        // Good Character AND High Income OR Bad Character AND Low Income.
-        // So we AND together the elements of each json object and OR together these
-        // calculated truth values of the elements of the json array.
-        json::QuickInterpreter s2sarray = (*inputJson)[key].As<json::Array>();
-        for( int idx=0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
-        {
-            std::map< std::string, std::string > kvp;
-            auto json_map = s2sarray[idx].As<json::Object>();
-            for( auto data = json_map.Begin();
-                      data != json_map.End();
-                      ++data )
-            {
-                std::string key = data->name;
-                std::string value = (std::string)s2sarray[idx][key].As< json::String >();
-                kvp.insert( std::make_pair( key, value ) );
-            }
-            _restrictions.push_back( kvp );
-        }
-    }
-
-    json::QuickBuilder
-    NodeLevelHealthTriggeredIV::tPropertyRestrictions::GetSchema()
-    {
-        json::QuickBuilder schema( jsonSchemaBase );
-        auto tn = JsonConfigurable::_typename_label();
-        auto ts = JsonConfigurable::_typeschema_label();
-
-        schema[ tn ] = json::String( "idmType:PropertyRestrictions" );
-        schema[ ts ] = json::Array();
-        schema[ ts ][0] = json::Object();
-        schema[ ts ][0]["<key>"] = json::Object();
-        schema[ ts ][0]["<key>"][ "type" ] = json::String( "Constrained String" );
-        schema[ ts ][0]["<key>"][ "constraints" ] = json::String( "<demographics>::Defaults.Individual_Properties.*.Property.<keys>" );
-        schema[ ts ][0]["<key>"][ "description" ] = json::String( "Individual Property Key from demographics file." );
-        schema[ ts ][0]["<value>"] = json::Object();
-        schema[ ts ][0]["<value>"][ "type" ] = json::String( "String" );
-        schema[ ts ][0]["<key>"][ "constraints" ] = json::String( "<demographics>::Defaults.Individual_Properties.*.Value.<keys>" );
-        schema[ ts ][0]["<value>"][ "description" ] = json::String( "Individual Property Value from demographics file." );
-        return schema;
-    }
-
     BEGIN_QUERY_INTERFACE_BODY(NodeLevelHealthTriggeredIV)
         HANDLE_INTERFACE(IConfigurable)
         HANDLE_INTERFACE(INodeDistributableIntervention)
@@ -90,24 +32,16 @@ namespace Kernel
 
     NodeLevelHealthTriggeredIV::NodeLevelHealthTriggeredIV()
     : parent(nullptr)
-    , duration(0)
+    , m_trigger_conditions()
     , max_duration(0)
-    , demographic_coverage(1)
-    , property_restrictions_verified( false )
+    , duration(0)
+    , demographic_restrictions(true,TargetDemographicType::ExplicitAgeRanges)
     , m_disqualified_by_coverage_only(false)
-    , target_age_min(0.0f)
-    , target_age_max(FLT_MAX)
+    , actual_intervention_config()
     , _di(nullptr)
     {
         initConfigComplexType("Actual_IndividualIntervention_Config", &actual_intervention_config, BT_Actual_Intervention_Config_DESC_TEXT);
         initConfigTypeMap("Duration", &max_duration, BT_Duration_DESC_TEXT, -1.0f, FLT_MAX, -1.0f ); // -1 is a convention for indefinite duration
-        initConfigTypeMap("Demographic_Coverage", &demographic_coverage, BT_Demographic_Coverage_DESC_TEXT, 0.0f, 1.0f, 1.0f );
-
-        //ugh should do the same thing like standard event coordinator but then I have to add targetdemographic to all my files
-        initConfigTypeMap( "Target_Age_Min", &target_age_min, Target_Age_Min_DESC_TEXT, 0.0f, FLT_MAX, 0.0f);
-        initConfigTypeMap( "Target_Age_Max", &target_age_max, Target_Age_Max_DESC_TEXT, 0.0f, FLT_MAX, FLT_MAX);
-
-        initConfigComplexType("Property_Restrictions_Within_Node", &property_restrictions, Property_Restriction_DESC_TEXT, "Intervention_Config.*.iv_type", "IndividualTargeted" );
     }
 
     NodeLevelHealthTriggeredIV::~NodeLevelHealthTriggeredIV() { }
@@ -125,34 +59,88 @@ namespace Kernel
         const Configuration* inputJson
     )
     {
-        // First, read in Trigger_Condition as an enum. 3 possible value (types):
-        // 1) Actual enum (not NoTrigger).
-        // 2) TriggerList (of strings). Read directly into m_trigger_conditions as string list.
-        // 3) TriggerString. Read directly into trigger_condition_string and then push into m_trigger_conditions as single string.
-        // Either way, we end up with m_trigger_conditions contains 1 or more strings. That's what we use.
+        // --------------------------------------------------------------------------------------------------------------------
+        // --- Phase 0 - Pre V2.0 - Trigger_Condition was an enum and users had to have all indivual events in the enum list.
+        // --- Phase 1 -     V2.0 - Trigger_Condition was an enum but TriggerString and TriggerList were added to allow the 
+        // ---                      user to use new User Defined events (i.e. strings).
+        // --- Phase 2 - 11/12/15 - Trigger_Condition is now a string and so users don't need to use Trigger_Condition_String
+        // ---                      in order to use the User Defined events.  However, we are leaving support here for 
+        // ---                      Trigger_Condition_String for backward compatibility (and I'm lazy).
+        // --- Phase 3 - TBD      - In the future, we want to consolidate so that the user only defines Trigger_Condition_List
+        // --------------------------------------------------------------------------------------------------------------------
+        JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
 
-        IndividualEventTriggerType::Enum trigger_condition = IndividualEventTriggerType::NoTrigger;
+        std::string trigger_string_enum_str = IndividualEventTriggerType::pairs::lookup_key( IndividualEventTriggerType::TriggerString );
+        std::string trigger_list_enum_str   = IndividualEventTriggerType::pairs::lookup_key( IndividualEventTriggerType::TriggerList );
+
+        jsonConfigurable::tDynamicStringSet tmp_listed_events;
+        if( !JsonConfigurable::_dryrun )
+        {
+            // ------------------------------------------------------------------
+            // --- Can't do this during "dryrun" because SimulationConfig is null
+            // ------------------------------------------------------------------
+            tmp_listed_events = GET_CONFIGURABLE(SimulationConfig)->listed_events;
+            tmp_listed_events.insert( trigger_string_enum_str );
+            tmp_listed_events.insert( trigger_list_enum_str );
+        }
+
+        jsonConfigurable::ConstrainedString trigger_condition = NO_TRIGGER_STR;
+        trigger_condition.constraints = "<configuration>:Listed_Events.*";
+        trigger_condition.constraint_param = &tmp_listed_events;
+
         EventTrigger trigger_condition_string = NO_TRIGGER_STR;
-        initConfig( "Trigger_Condition", trigger_condition, inputJson, MetadataDescriptor::Enum("Trigger_Condition", HTI_Trigger_Condition_DESC_TEXT, MDD_ENUM_ARGS(IndividualEventTriggerType)) );
-        if( trigger_condition == IndividualEventTriggerType::TriggerList || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Trigger_Condition_List", &m_trigger_conditions, NLHTI_Trigger_Condition_List_DESC_TEXT ); // TODO need to add conditionality but not supported in all datatypes yet
-        }
-        // would have else but schema needs to be able to enter both blocks.
-        if( trigger_condition == IndividualEventTriggerType::TriggerString || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Trigger_Condition_String", &trigger_condition_string, NLHTI_Trigger_Condition_String_DESC_TEXT  ); // TODO need to add conditionality but not supported in all datatypes yet
-        }
+
+        // TODO need to add conditionality but not supported in all datatypes yet
+        initConfigTypeMap( "Trigger_Condition", &trigger_condition, HTI_Trigger_Condition_DESC_TEXT  );
+
         bool retValue = JsonConfigurable::Configure( inputJson );
-        if( trigger_condition == IndividualEventTriggerType::TriggerString )
+
+        if( retValue && ( (trigger_condition == trigger_list_enum_str  ) ||
+                          (trigger_condition == trigger_string_enum_str) ||
+                          JsonConfigurable::_dryrun ) )
         {
-            m_trigger_conditions.push_back( trigger_condition_string );
-            LOG_INFO_F( "This NLHTI is listening to %s events.\n", trigger_condition_string.c_str() );
+            if( trigger_condition == trigger_list_enum_str || JsonConfigurable::_dryrun )
+            {
+                // TODO need to add conditionality but not supported in all datatypes yet
+                initConfigTypeMap( "Trigger_Condition_List", &m_trigger_conditions, NLHTI_Trigger_Condition_List_DESC_TEXT );
+            }
+            // would have else but schema needs to be able to enter both blocks. 
+            if( trigger_condition == trigger_string_enum_str || JsonConfigurable::_dryrun )
+            {
+                // TODO need to add conditionality but not supported in all datatypes yet
+                initConfigTypeMap( "Trigger_Condition_String", &trigger_condition_string, NLHTI_Trigger_Condition_String_DESC_TEXT  );
+            }
+            // ------------------------------------------------------------------------------------------------------------
+            // --- We have to call JsonConfigurable::Configure() twice in order to get the value of Trigger_Condition and
+            // --- then read in Trigger_Condition_List or Trigger_Condition_String based on the value of Trigger_Condition.
+            // ------------------------------------------------------------------------------------------------------------
+            retValue = JsonConfigurable::Configure( inputJson );
+
+            if( retValue )
+            {
+                if( trigger_condition == trigger_string_enum_str )
+                {
+                    m_trigger_conditions.push_back( trigger_condition_string );
+                    LOG_INFO_F( "This NLHTI is listening to %s events.\n", trigger_condition_string.c_str() );
+                }
+                else if( trigger_condition == trigger_list_enum_str )
+                {
+                    // ------------------------------------------------------------------------------
+                    // --- Use a constrained string to verify that the strings in the list are valid.
+                    // --- Assignign the trigger to the constrainged string will do the validation
+                    // ------------------------------------------------------------------------------
+                    EventTrigger validating_trigger = NO_TRIGGER_STR;
+                    for( auto trigger : m_trigger_conditions )
+                    {
+                        validating_trigger = trigger; // validate
+                    }
+                }
+            }
         }
-        else if( trigger_condition != IndividualEventTriggerType::TriggerList &&
-                 trigger_condition != IndividualEventTriggerType::NoTrigger )
+        else if( retValue && (trigger_condition != trigger_string_enum_str) &&
+                             (trigger_condition != NO_TRIGGER_STR         ) )
         {
-            m_trigger_conditions.push_back( IndividualEventTriggerType::pairs::lookup_key( trigger_condition ) );
+            m_trigger_conditions.push_back( trigger_condition );
             LOG_INFO_F( "This NLHTI is listening to %s events.\n", m_trigger_conditions[0].c_str() );
         }
         return retValue;
@@ -163,14 +151,20 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
+        JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
+
+        demographic_restrictions.ConfigureRestrictions( this, inputJson );
+
         bool retValue = ConfigureTriggers( inputJson );
 
         //this section copied from standardevent coordinator
         if( retValue )
         {
+            demographic_restrictions.CheckConfiguration();
             InterventionValidator::ValidateIntervention( actual_intervention_config._json );
         }
-        return retValue;
+        JsonConfigurable::_useDefaults = false;
+        return retValue;    
     }
 
     bool
@@ -229,8 +223,6 @@ namespace Kernel
             }
             return false;
         }
-        property_restrictions_verified = true;
-
 
         // Query for campaign cost observer interface from INodeEventContext *parent
         ICampaignCostObserver *iCCO;
@@ -320,81 +312,7 @@ namespace Kernel
         const IIndividualHumanEventContext * const pIndividual
     )
     {
-        bool retQualifies = true;
-
-        //based on StandardEventCoordinator pattern, first check if the individual has the right property, then check their age, then check if they are part of the demographic coverage
-
-        //this section directly copied from StandardEventCoordinator
-        if( property_restrictions._restrictions.size() )
-        {
-            retQualifies = false;
-            // individual has to have one of these properties
-            for (auto& prop_map : property_restrictions._restrictions)
-            {
-                bool meets_property_restriction_criteria = true;
-                for( auto& prop : prop_map )
-                {
-                    const std::string& szKey = prop.first;
-                    const std::string& szVal = prop.second;
-
-                    //Verify that the user entered in set of property key/value pairs which are included in the demographics file
-                    if( property_restrictions_verified == false )
-                    {
-                        parent->GetNodeContext()->VerifyPropertyDefined( szKey, szVal );
-                        //property_restrictions_verified = true;
-                        LOG_DEBUG( "Finished verifying properties \n" );
-                    }
-
-                    auto * pProp = const_cast<Kernel::IIndividualHumanEventContext*>(pIndividual)->GetProperties(); // const_cast needed by MSVC, not GCC
-                    release_assert( pProp );
-
-                    LOG_DEBUG_F( "Applying property restrictions in NodeLevelHealthTriggeredIV: %s/%s.\n", szKey.c_str(), szVal.c_str() );
-                    // Every individual has to have a property value for each property key
-                    if( pProp->find( szKey ) == pProp->end() )
-                    {
-                        throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "properties", szKey.c_str() );
-                    }
-                    else if( pProp->at( szKey ) == szVal )
-                    {
-                        LOG_DEBUG_F( "Person satisfies (partial) property restriction: constraint is %s/%s and the person is %s.\n", szKey.c_str(), szVal.c_str(), pProp->at( szKey ).c_str() );
-                        continue; // we're good
-                    }
-                    else
-                    {
-                        meets_property_restriction_criteria = false;
-                        LOG_DEBUG_F( "Person does not get the intervention because the allowed property is %s/%s and the person is %s.\n", szKey.c_str(), szVal.c_str(), pProp->at( szKey ).c_str() );
-                        break;
-                    }
-                }
-                // If verified, we're done since these are OR-ed together
-                if( meets_property_restriction_criteria )
-                {
-                    retQualifies = true;
-                    LOG_DEBUG_F( "Individual meets at least 1 of the OR-ed together property restriction conditions. Not checking the rest.\n" );
-                    break;
-                }
-            }
-        }
-        else
-        {
-            LOG_DEBUG( "No property restrictions in NodeLevelHealthTriggeredIV to apply.\n" );
-        }
-
-        //OK they passed the property test, now check if they pass the age test
-        if (retQualifies)
-        {
-            if( pIndividual->GetAge() < target_age_min * DAYSPERYEAR )
-            {
-                LOG_DEBUG_F("Individual not given intervention because too young (age=%f) for intervention min age (%f)\n", pIndividual->GetAge(), target_age_min* DAYSPERYEAR);
-                retQualifies = false;
-            }
-            else if( pIndividual->GetAge() > target_age_max * DAYSPERYEAR )
-            {
-                LOG_DEBUG_F("Individual not given intervention because too old (age=%f) for intervention max age (%f)\n", pIndividual->GetAge(), target_age_max* DAYSPERYEAR);
-                retQualifies = false;
-            }
-
-        }
+        bool retQualifies = demographic_restrictions.IsQualified( pIndividual );
 
         //OK they passed the property and age test, now check if they are part of the demographic coverage
         if (retQualifies)
@@ -414,7 +332,7 @@ namespace Kernel
 
     float NodeLevelHealthTriggeredIV::getDemographicCoverage() const
     {
-        return demographic_coverage;
+        return demographic_restrictions.GetDemographicCoverage();    
     }
 
     void NodeLevelHealthTriggeredIV::onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv )
@@ -429,7 +347,7 @@ namespace Kernel {
     void serialize(Archive &ar, NodeLevelHealthTriggeredIV& iv, const unsigned int v)
     {
         ar & iv.actual_intervention_config;
-        ar & iv.demographic_coverage;
+        ar & iv.demographic_restrictions;
         ar & iv.efficacy;
         ar & iv.max_duration;
         ar & iv.m_trigger_conditions;

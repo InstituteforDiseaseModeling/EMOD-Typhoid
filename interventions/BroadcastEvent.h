@@ -21,7 +21,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "EventTrigger.h"
 
 namespace Kernel

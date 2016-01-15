@@ -30,7 +30,7 @@ namespace Kernel
     class InfectionConfig : public JsonConfigurable
     {
     public:
-        /* clorton virtual */ bool Configure( const Configuration* config ) /* clorton override */;
+        virtual bool Configure( const Configuration* config ) override;
 
     protected:
         static float incubation_period;
@@ -70,7 +70,7 @@ namespace Kernel
 
         virtual suids::suid GetSuid() const;
 
-        virtual void SetParameters(StrainIdentity* infstrain=nullptr, int incubation_period_override = -1 );
+        virtual void SetParameters(StrainIdentity* infstrain=nullptr, int incubation_period_override = -1 ) override;
         virtual void Update(float, ISusceptibilityContext* =nullptr) override;
 
         virtual InfectionStateChange::_enum GetStateChange() const override;
@@ -78,7 +78,7 @@ namespace Kernel
         virtual float GetInfectiousnessByRoute(string route) const override; //used in multi-route simulations
         virtual float GetInfectiousPeriod() const override;
 
-        virtual void InitInfectionImmunology(Susceptibility* _immunity);
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) override;
         virtual void GetInfectiousStrainID(StrainIdentity* infstrain) override; // the ID of the strain being shed
         virtual bool IsActive() const override;
         virtual NonNegativeFloat GetDuration() const override;

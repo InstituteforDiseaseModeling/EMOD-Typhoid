@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BaseTextReport.h"
 #include "ISimulation.h"
 #include "IIndividualHuman.h"
+#include "INodeContext.h"
 
 namespace Kernel
 {
@@ -20,6 +21,7 @@ namespace Kernel
         NonNegativeFloat year;
 
         unsigned long rel_id; // relationship id
+        ExternalNodeId_t node_id;
         unsigned long source_id;
         bool source_is_infected;
         unsigned int source_gender;

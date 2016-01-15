@@ -109,7 +109,6 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "ITBDrugEffectsApply", "IIndividualHumanInterventionsContext" );
         }
-//        pCCO->notifyCampaignEventOccurred( (IBaseIntervention*)this, nullptr, context->GetParent() );
         m_pCCO = pCCO;
         return GenericDrug::Distribute( context, pCCO );
     }
@@ -167,7 +166,6 @@ namespace Kernel
         itbda->UpdateTreatmentStatus( IndividualEventTriggerType::TBStopDrugRegimen );
 
         // notify campaign event observer
-        //m_pCCO->notifyCampaignEventOccurred( (IBaseIntervention*)this, nullptr, parent );
         if (m_pCCO != nullptr)
         {
             m_pCCO->notifyCampaignEventOccurred( (IBaseIntervention*)this, nullptr, parent );

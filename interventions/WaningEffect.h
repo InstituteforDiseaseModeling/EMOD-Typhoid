@@ -65,8 +65,8 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;
@@ -82,8 +82,8 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;
@@ -102,8 +102,8 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;
@@ -120,8 +120,8 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;

@@ -12,9 +12,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifdef ENABLE_TB
 #include "Interventions.h"
-#include "InterventionEnums.h"
 #include "InterventionsContainer.h"
-#include "SimpleTypemapRegistration.h"
+#include "TBDrugTypeParameters.h"
 
 namespace Kernel
 {
@@ -37,7 +36,6 @@ namespace Kernel
     struct ITBDrugEffects : public ISupports
     {
         virtual TBDrugEffectsMap_t GetDrugEffectsMap() = 0;
-        //virtual TBDrugTypeParameters::tTBDTPMap& GetTBdtParams() = 0;
         virtual ~ITBDrugEffects() { }
     };
 

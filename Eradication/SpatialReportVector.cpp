@@ -16,11 +16,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <boost/math/special_functions/fpclassify.hpp>
 
 #include "SpatialReportVector.h"
-#include "NodeVector.h"
+#include "VectorContexts.h"
+#include "VectorPopulation.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "Exceptions.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "SimulationConfig.h"
 #include "ProgVersion.h"
 

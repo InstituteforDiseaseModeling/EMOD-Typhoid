@@ -17,12 +17,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 
 #include "SpatialReportPolio.h"
-#include "NodePolio.h"
+#include "PolioContexts.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "Exceptions.h"
-#include "Individual.h"
-#include "IndividualPolio.h"
+#include "IIndividualHuman.h"
 
 using namespace std;
 
@@ -93,7 +92,7 @@ void SpatialReportPolio::LogIndividualData( Kernel::IIndividualHuman* individual
 
     NewInfectionState::_enum nis = individual->GetNewInfectionState();
 
-    auto infectionsOfStrains = dynamic_cast<const IndividualHumanPolio*>(individual)->GetSusceptibilityReporting()->GetInfectionStrains();
+    auto infectionsOfStrains = dynamic_cast<const IIndividualHumanPolio*>(individual)->GetSusceptibilityReporting()->GetInfectionStrains();
 
     if(nis == NewInfectionState::NewlyDetected || nis == NewInfectionState::NewAndDetected)
         new_paralytic_cases += monte_carlo_weight;

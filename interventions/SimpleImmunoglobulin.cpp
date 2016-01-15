@@ -11,12 +11,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimpleImmunoglobulin.h"
 
 #include "Common.h"             // for INFINITE_TIME
-#include "InterventionEnums.h"  // for InterventionDurabilityProfile, ImmunoglobulinType, etc.
 
 static const char * _module = "SimpleImmunoglobulin";
 
 namespace Kernel
 {
+    ENUM_DEFINE(ImmunoglobulinType,
+        ENUM_VALUE_SPEC(StrainSpecific      , 1)
+        ENUM_VALUE_SPEC(BroadlyNeutralizing , 2))
+
     IMPLEMENT_FACTORY_REGISTERED(SimpleImmunoglobulin)
 
     SimpleImmunoglobulin::SimpleImmunoglobulin()

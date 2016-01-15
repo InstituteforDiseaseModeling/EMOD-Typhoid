@@ -18,8 +18,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ConfigurationImpl.h"
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
-#include "Individual.h"
-#include "Node.h"
+#include "IIndividualHuman.h"
+#include "INodeContext.h"
 #include "NodeEventContext.h"
 #include "Log.h"
 #include "IdmString.h"
@@ -47,21 +47,16 @@ namespace Kernel
     // ctor
     StandardInterventionDistributionEventCoordinator::StandardInterventionDistributionEventCoordinator()
     : parent(nullptr)
-    , coverage(0)
     , distribution_complete(false)
     , num_repetitions(-1)
     , tsteps_between_reps(-1)
     , intervention_activated(false)
     , tsteps_since_last(0)
-    , target_age_min(0)
-    , target_age_max(0)
-    , target_gender(TargetGender::All)
-    , demographic_coverage(0)
     , travel_linked(false)
     , include_emigrants(0)
     , include_immigrants(0)
-    , property_restrictions_verified( false )
     , _di( nullptr )
+    , demographic_restrictions()
     {
         LOG_DEBUG("StandardInterventionDistributionEventCoordinator ctor\n");
     }
@@ -76,7 +71,6 @@ namespace Kernel
         initializeInterventionConfig( inputJson );
 
         //initConfigTypeMap("Number_Distributions", &num_distributions, Number_Distributions_DESC_TEXT, -1, 1e6, -1 ); // by convention, -1 means no limit
-        initConfigTypeMap("Demographic_Coverage", &demographic_coverage, Demographic_Coverage_DESC_TEXT, 0.0, 1.0, 1.0, "Intervention_Config.*.iv_type", "IndividualTargeted" );
 
         initConfigTypeMap("Number_Repetitions", &num_repetitions, Number_Repetitions_DESC_TEXT, -1, 1000, -1 );
         //if( num_repetitions > 1 ) // -1 = repeat without end, 0 is meaningless. want to think this one through more
@@ -87,50 +81,51 @@ namespace Kernel
         initConfigTypeMap("Include_Departures", &include_emigrants, Include_Departures_DESC_TEXT, 0, 1, 0, "Travel_Linked", "true" );
         initConfigTypeMap("Include_Arrivals", &include_immigrants, Include_Arrivals_DESC_TEXT, 0, 1, 0, "Travel_Linked", "true" );
 
-        initConfig( "Target_Demographic", target_demographic, inputJson, MetadataDescriptor::Enum("target_demographic", Target_Demographic_DESC_TEXT, MDD_ENUM_ARGS(TargetDemographicType)), "Intervention_Config.*.iv_type", "IndividualTargeted");
-        if ( target_demographic == TargetDemographicType::ExplicitAgeRanges
-            || target_demographic == TargetDemographicType::ExplicitAgeRangesAndGender
-            || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Target_Age_Min", &target_age_min, Target_Age_Min_DESC_TEXT, 0.0f, FLT_MAX, 0.0f, "Target_Demographic", "ExplicitAgeRanges" );
-            initConfigTypeMap( "Target_Age_Max", &target_age_max, Target_Age_Max_DESC_TEXT, 0.0f, FLT_MAX, FLT_MAX, "Target_Demographic", "ExplicitAgeRanges" );
-            if( target_demographic == TargetDemographicType::ExplicitAgeRangesAndGender || JsonConfigurable::_dryrun)
-            {
-                initConfig( "Target_Gender", target_gender, inputJson, MetadataDescriptor::Enum("target_gender", Target_Gender_DESC_TEXT, MDD_ENUM_ARGS(TargetGender)) ); 
-            }
-        } else if ( target_demographic == TargetDemographicType::ExplicitGender || JsonConfigurable::_dryrun )
-        {
-            initConfig( "Target_Gender", target_gender, inputJson, MetadataDescriptor::Enum("target_gender", Target_Gender_DESC_TEXT, MDD_ENUM_ARGS(TargetGender)) ); 
-        }
+        demographic_restrictions.ConfigureRestrictions( this, inputJson );
 
-        property_restrictions.value_source = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>"; 
-        // xpath-y way of saying that the possible values for prop restrictions comes from demographics file IP's.
-        initConfigTypeMap("Property_Restrictions", &property_restrictions, Property_Restriction_DESC_TEXT, "Intervention_Config.*.iv_type", "IndividualTargeted" );
 
         bool retValue = JsonConfigurable::Configure( inputJson );
-        // check if property_restrictions are in the list
-        std::set< std::string > dupKeyHelperSet;
-        for (const auto& prop : property_restrictions)
+        if( retValue && !JsonConfigurable::_dryrun)
         {
-            // parse, pre-colon is prop key, post is value
-            size_t sep = prop.find( ':' );
-            const std::string& szKey = prop.substr( 0, sep );
-            const std::string& szVal = prop.substr( sep+1, prop.size()-sep );
-            if( dupKeyHelperSet.count( szKey ) != 0 )
-            {
-                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Duplicate keys in property_restrictions. Since entries are AND-ed together, this will always be an empty set since an individual can only have a single value of a given key. Use second intervention instead." );
-            }
-            dupKeyHelperSet.insert( szKey );
-            property_restrictions_map.insert( make_pair( szKey, szVal ) );
-        }
+            demographic_restrictions.CheckConfiguration();
 
-        if( retValue )
-        {
             validateInterventionConfig( intervention_config._json );
+
+            if( HasNodeLevelIntervention() )
+            {
+                // ---------------------------------------------------------------------------
+                // --- If the user is attempting to define demographic restrictions when they
+                // --- are using a node level intervention, then we need to error because these
+                // --- restrictions are not doing anything.
+                // ---------------------------------------------------------------------------
+                if( !demographic_restrictions.HasDefaultRestrictions() )
+                {
+                    std::ostringstream msg ;
+                    msg << "In StandardInterventionDistributionEventCoordinator, demographic restrictions such as 'Demographic_Coverage'\n";
+                    msg << "and 'Target_Gender' do not apply when distributing nodel level interventions such as ";
+                    msg << std::string( json::QuickInterpreter(intervention_config._json)["class"].As<json::String>() );
+                    msg << ".\nThe node level intervention must handle the demographic restrictions.";
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+                }
+            }
         }
 
         JsonConfigurable::_useDefaults = false;
         return retValue;
+    }
+
+    bool StandardInterventionDistributionEventCoordinator::HasNodeLevelIntervention() const
+    {
+        bool has_node_level_intervention = false;
+        auto qi_as_config = Configuration::CopyFromElement( (intervention_config._json) );
+        INodeDistributableIntervention *ndi = InterventionFactory::getInstance()->CreateNDIIntervention(qi_as_config);
+        if( ndi != nullptr )
+        {
+            has_node_level_intervention = true;
+            ndi->Release();
+        }
+        delete qi_as_config;
+        return has_node_level_intervention;
     }
 
     void StandardInterventionDistributionEventCoordinator::initializeInterventionConfig(
@@ -193,14 +188,11 @@ namespace Kernel
         }
     }
 
-    /*
-    float StandardInterventionDistributionEventCoordinator::getDemographicCoverage
-    const
-    ()
+    void StandardInterventionDistributionEventCoordinator::preDistribute()
     {
-        return demographic_coverage;
+        return;
     }
-    */
+
     void StandardInterventionDistributionEventCoordinator::UpdateNodes( float dt )
     {
         // Only call VisitNodes on first call and if countdown == 0
@@ -209,7 +201,6 @@ namespace Kernel
             return;
         }
 
-        int grandTotal = 0;
         int limitPerNode = -1;
 
         // intervention class names for informative logging
@@ -245,22 +236,18 @@ namespace Kernel
             }
             else
             {
+                preDistribute();
+
                 // For now, distribute evenly across nodes. 
                 int totalIndivGivenIntervention = event_context->VisitIndividuals( this, limitPerNode );
-                grandTotal += totalIndivGivenIntervention;
 
                 // Create log message 
                 std::stringstream ss;
                 ss << "UpdateNodes() gave out " << totalIndivGivenIntervention << " '" << intervention_name.str().c_str() << "' interventions ";
-                if( property_restrictions.size() > 0 )
+                std::string restriction_str = demographic_restrictions.GetPropertyRestrictionsAsString();
+                if( !restriction_str.empty() )
                 {
-                    std::string restriction_str ;
-                    for( auto prop : property_restrictions )
-                    {
-                        restriction_str += "'"+ prop +"', " ;
-                    }
-                    restriction_str = restriction_str.substr( 0, restriction_str.length()-2 );
-                    ss << "with property restriction(s) " << restriction_str << " " ;
+                    ss << " with property restriction(s) " << restriction_str << " " ;
                 }
                 ss << "at node " << event_context->GetId().data << "\n" ;
                 LOG_INFO( ss.str().c_str() );
@@ -285,6 +272,7 @@ namespace Kernel
 
     bool StandardInterventionDistributionEventCoordinator::TargetedIndividualIsCovered(IIndividualHumanEventContext *ihec)
     {
+        float demographic_coverage = demographic_restrictions.GetDemographicCoverage();
         if (demographic_coverage == 1.0 )
         {
             return true;
@@ -306,14 +294,13 @@ namespace Kernel
             // TODO: Demographic targeting goes here.
             // Add real checks on demographics based on intervention demographic targetting. 
             // Return immediately if we hit a non-distribute condition
-            if( target_demographic != TargetDemographicType::Everyone || property_restrictions.size() ) // don't waste any more time with checks if we're giving to everyone
+            if( !demographic_restrictions.HasDefaultRestrictions() ) // don't waste any more time with checks if we're giving to everyone
             {
                 if( qualifiesDemographically( ihec ) == false )
                 {
                     LOG_DEBUG("Individual not given intervention because not in target demographic\n");
                     return false;
                 }
-                property_restrictions_verified = true;
             }
             LOG_DEBUG("Individual meets demographic targeting criteria\n");
 
@@ -420,103 +407,15 @@ namespace Kernel
     // private/protected
     bool
     StandardInterventionDistributionEventCoordinator::qualifiesDemographically(
-        const IIndividualHumanEventContext * const pIndividual
+        const IIndividualHumanEventContext* pIndividual
     )
-    const
     {
-        bool retQualifies = true;
-
-        if (target_demographic == TargetDemographicType::PossibleMothers &&
-                 !pIndividual->IsPossibleMother())
-        {
-            LOG_DEBUG("Individual not given intervention because not possible mother\n");
-            return false;
-        }
-        else if( target_demographic == TargetDemographicType::ExplicitAgeRanges || target_demographic == TargetDemographicType::ExplicitAgeRangesAndGender)
-        {
-            if( pIndividual->GetAge() < target_age_min * DAYSPERYEAR )
-            {
-                LOG_DEBUG_F("Individual %lu not given intervention because too young (age=%f) for intervention min age (%f)\n", ((IndividualHuman*)pIndividual)->GetSuid().data, pIndividual->GetAge(), target_age_min* DAYSPERYEAR);
-                return false;
-            }
-            else if( pIndividual->GetAge() > target_age_max * DAYSPERYEAR )
-            {
-                LOG_DEBUG_F("Individual %lu not given intervention because too old (age=%f) for intervention max age (%f)\n", ((IndividualHuman*)pIndividual)->GetSuid().data, pIndividual->GetAge(), target_age_max* DAYSPERYEAR);
-                return false;
-            }
-
-            if( target_demographic == TargetDemographicType::ExplicitAgeRangesAndGender )
-            {
-                // Gender = 0 is MALE, Gender = 1 is FEMALE.  Should use Gender::Enum throughout code
-                if( pIndividual->GetGender() == 0 && target_gender == TargetGender::Female )
-                {
-                    return false;
-                }
-                else if( pIndividual->GetGender() == 1 && target_gender == TargetGender::Male )
-                {
-                    return false;
-                }
-            }
-        }
-        else if (target_demographic == TargetDemographicType::ExplicitGender )
-        {
-            // Gender = 0 is MALE, Gender = 1 is FEMALE.  Should use Gender::Enum throughout code
-            if( pIndividual->GetGender() == 0 && target_gender == TargetGender::Female )
-            {
-                return false;
-            }
-            else if( pIndividual->GetGender() == 1 && target_gender == TargetGender::Male )
-            {
-                return false;
-            }
-        }
-
-        if( property_restrictions.size() && retQualifies )
-        {
-            // individual has to have one of these properties
-            for (auto& prop : property_restrictions_map)
-            {
-                const std::string& szKey = prop.first;
-                const std::string& szVal = prop.second;
-
-                if( property_restrictions_verified == false )
-                {
-                    Node::VerifyPropertyDefinedInDemographics( szKey, szVal );
-
-                    //property_restrictions_verified = true;
-                }
-
-                auto * pProp = const_cast<Kernel::IIndividualHumanEventContext*>(pIndividual)->GetProperties();
-                release_assert( pProp );
-
-                LOG_DEBUG_F( "Applying property restrictions in event coordinator: %s/%s.\n", szKey.c_str(), szVal.c_str() );
-                // Every individual has to have a property value for each property key
-                if( pProp->find( szKey ) == pProp->end() )
-                {
-                    throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "properties", szKey.c_str() );
-                }
-                else if( pProp->at( szKey ) == szVal )
-                {
-                    continue; // we're good
-                }
-                else
-                {
-                    retQualifies = false;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            LOG_DEBUG( "No property restrictions in event coordiantor to apply.\n" );
-        }
-        LOG_DEBUG_F( "Returning %d from %s\n", retQualifies, __FUNCTION__ );
-        return retQualifies;
+        return demographic_restrictions.IsQualified( pIndividual );
     }
 
     float StandardInterventionDistributionEventCoordinator::GetDemographicCoverage() const
     {
-        return demographic_coverage;
+        return demographic_restrictions.GetDemographicCoverage();
     }
 
     float
@@ -530,17 +429,17 @@ namespace Kernel
 
     TargetDemographicType::Enum StandardInterventionDistributionEventCoordinator::GetTargetDemographic() const
     {
-        return target_demographic;
+        return demographic_restrictions.GetTargetDemographic();
     }
 
     float StandardInterventionDistributionEventCoordinator::GetMinimumAge() const
     {
-        return target_age_min;
+        return demographic_restrictions.GetMinimumAge();
     }
 
     float StandardInterventionDistributionEventCoordinator::GetMaximumAge() const
     {
-        return target_age_max;
+        return demographic_restrictions.GetMaximumAge();
     }
 
     void StandardInterventionDistributionEventCoordinator::ProcessDeparting(
