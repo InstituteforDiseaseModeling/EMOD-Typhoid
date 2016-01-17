@@ -964,6 +964,7 @@ namespace Kernel
         for (auto& entry : conStringConfigTypeMap)
         {
             const std::string& key = entry.first;
+            entry.second->parameter_name = key ;
             json::QuickInterpreter schema = jsonSchemaBase[key];
             std::string val = schema["default"].As<json::String>();
             if ( !inputJson->Exist(key) && _useDefaults )
