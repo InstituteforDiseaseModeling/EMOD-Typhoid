@@ -33,6 +33,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationEventContext.h"
 #include "ReportEventRecorder.h"
 #include "Individual.h"
+#include "LoadBalanceScheme.h"
 
 #include "DllLoader.h"
 
@@ -809,18 +810,8 @@ namespace Kernel
         // We can validate climate structure against sim_type now.
 
         // Initialize load-balancing scheme from file
-        boost::scoped_ptr<LegacyFileInitialLoadBalanceScheme> filescheme(_new_ LegacyFileInitialLoadBalanceScheme());
-        boost::scoped_ptr<CheckerboardInitialLoadBalanceScheme> checkerboardscheme(_new_ CheckerboardInitialLoadBalanceScheme());
-        if (filescheme->Initialize(loadbalancefilename, nodeIDs.size()))
-        {
-            LOG_INFO("Loaded load balancing file.\n");
-            nodeRankMap.SetInitialLoadBalanceScheme(static_cast<IInitialLoadBalanceScheme*>(filescheme.get()));
-        }
-        else 
-        {
-            LOG_WARN("Failed to use legacy loadbalance file. Defaulting to checkerboard.\n");
-            nodeRankMap.SetInitialLoadBalanceScheme(static_cast<IInitialLoadBalanceScheme*>(checkerboardscheme.get()));
-        }
+        IInitialLoadBalanceScheme* p_lbs = LoadBalanceSchemeFactory::Create( loadbalancefilename, nodeIDs.size(), EnvPtr->MPI.NumTasks );
+        nodeRankMap.SetInitialLoadBalanceScheme( p_lbs );
 
         // Delete any existing transitions.json file
         // TODO: only remove the transitions.json file if running on a single computer and single node 

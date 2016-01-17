@@ -15,73 +15,24 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
+#include "LoadBalanceScheme.h"
 
 static const char * _module = "NodeRankMap";
-namespace Kernel {
-
-    bool LegacyFileInitialLoadBalanceScheme::Initialize( std::string loadbalancefilename, uint32_t expected_num_nodes )
-    {
-        bool initialized = false;
-
-        std::ifstream loadbalancefile;
-        if(loadbalancefilename.length()) 
-        {
-            if( FileSystem::FileExists( loadbalancefilename ) )
-            {
-                loadbalancefile.open(loadbalancefilename, std::ios::binary);
-            }
-        }
-
-        if(loadbalancefile.is_open()) 
-        {
-            loadbalancefile.seekg(0, std::ios::end);
-            int filelen = int(loadbalancefile.tellg());
-            int expected_size = sizeof(uint32_t) + (expected_num_nodes * (sizeof(uint32_t) + sizeof(float)));
-
-            if(filelen == expected_size)
-            {
-                uint32_t num_nodes;
-                loadbalancefile.seekg(0, std::ios::beg);
-                loadbalancefile.read((char*)&num_nodes, 1*sizeof(num_nodes));
-
-                if(num_nodes == expected_num_nodes)
-                {
-                    LOG_INFO_F("Opened %s, reading balancing data for %d nodes...\n", loadbalancefilename.c_str(), num_nodes);
-
-                    std::vector<uint32_t> nodeids(num_nodes);
-                    std::vector<float> balance_scale(num_nodes);
-
-                    loadbalancefile.read((char*)&nodeids[0], (num_nodes)*sizeof(uint32_t));
-                    loadbalancefile.read((char*)&balance_scale[0], (num_nodes)*sizeof(float));
-
-                    for(uint32_t i = 0; i < num_nodes; i++)
-                    {
-                        initialNodeRankMapping[nodeids[i]] = int(EnvPtr->MPI.NumTasks*balance_scale[i]);
-                    }
-                    LOG_INFO("Static initial load balancing scheme initialized.\n");
-
-                    initialized = true;
-                }
-                else
-                {
-                    LOG_WARN_F( "Malformed load-balancing file: %s.  Node-count specified in file (%d) doesn't match expected number of nodes (%d)\n", loadbalancefilename.c_str(), num_nodes, expected_num_nodes );
-                }
-            }
-            else
-            {
-                LOG_WARN_F( "Problem with load-balancing file: %s.  File-size (%d) doesn't match expected size (%d) given number of nodes in demographics file\n", loadbalancefilename.c_str(), filelen, expected_size );
-            }
-
-            loadbalancefile.close();
-        }
-        else
-        {
-            LOG_WARN_F( "Failed to open load-balancing file: %s\n", loadbalancefilename.c_str() );
-        }
-
-        return initialized;
+namespace Kernel 
+{
+    NodeRankMap::NodeRankMap()
+        : initialLoadBalanceScheme(nullptr)
+        , rankMap()
+    { 
     }
 
+    NodeRankMap::~NodeRankMap()
+    {
+        delete initialLoadBalanceScheme ;
+        initialLoadBalanceScheme = nullptr ;
+
+        rankMap.clear();
+    }
 
     std::string NodeRankMap::ToString()
     {
@@ -173,50 +124,50 @@ namespace Kernel {
         return true;
     }
 
-    CheckerboardInitialLoadBalanceScheme::CheckerboardInitialLoadBalanceScheme()
-    : num_ranked(0) { }
+    void NodeRankMap::SetInitialLoadBalanceScheme( IInitialLoadBalanceScheme *ilbs ) 
+    { 
+        initialLoadBalanceScheme = ilbs; 
+    } 
 
-    int
-    CheckerboardInitialLoadBalanceScheme::GetInitialRankFromNodeId(ExternalNodeId_t node_id)
-    { return (num_ranked++) % EnvPtr->MPI.NumTasks; }
+    int NodeRankMap::GetRankFromNodeSuid(suids::suid node_id) 
+    { 
+        return rankMap[node_id]; 
+    } 
 
-    StripedInitialLoadBalanceScheme::StripedInitialLoadBalanceScheme()
-        : num_nodes(0)
-        , num_ranked(0)
-    {}
+    size_t NodeRankMap::Size() 
+    { 
+        return rankMap.size();
+    }
 
-    void StripedInitialLoadBalanceScheme::Initialize(uint32_t in_num_nodes) { num_nodes = in_num_nodes; }
-
-    int
-    StripedInitialLoadBalanceScheme::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
-    { return int((float(num_ranked++) / num_nodes) * EnvPtr->MPI.NumTasks); }
-
-    int LegacyFileInitialLoadBalanceScheme::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
-    { return initialNodeRankMapping[node_id]; }
-
-    NodeRankMap::NodeRankMap() : initialLoadBalanceScheme(nullptr) { }
-
-    void NodeRankMap::SetInitialLoadBalanceScheme(IInitialLoadBalanceScheme *ilbs) { initialLoadBalanceScheme = ilbs; } 
-
-    int NodeRankMap::GetRankFromNodeSuid(suids::suid node_id) { return rankMap[node_id]; } 
-
-    size_t NodeRankMap::Size() { return rankMap.size(); }
-
-    void NodeRankMap::Add(suids::suid node_suid, int rank) { rankMap.insert(RankMapEntry_t(node_suid, rank)); }
+    void NodeRankMap::Add(suids::suid node_suid, int rank) 
+    { 
+        rankMap.insert(RankMapEntry_t(node_suid, rank)); 
+    }
 
     const NodeRankMap::RankMap_t&
-    NodeRankMap::GetRankMap() const { return rankMap; }
+    NodeRankMap::GetRankMap() const 
+    { 
+        return rankMap; 
+    }
 
     int NodeRankMap::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
     {
-        if (initialLoadBalanceScheme) { return initialLoadBalanceScheme->GetInitialRankFromNodeId(node_id); }
-        else { return node_id % EnvPtr->MPI.NumTasks; }
+        if( initialLoadBalanceScheme ) 
+        { 
+            return initialLoadBalanceScheme->GetInitialRankFromNodeId(node_id); 
+        }
+        else 
+        { 
+            return node_id % EnvPtr->MPI.NumTasks; 
+        }
     }
 
     const char*
     NodeRankMap::merge_duplicate_key_exception::what()
     const throw()
-    { return "Duplicate key in map merge\n"; }
+    { 
+        return "Duplicate key in map merge\n"; 
+    }
 
     NodeRankMap::RankMap_t
     NodeRankMap::map_merge::operator()(

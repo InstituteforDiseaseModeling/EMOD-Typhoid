@@ -106,11 +106,6 @@
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
 			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
-			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
@@ -398,11 +393,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -908,11 +898,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -1494,11 +1479,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -2373,11 +2353,6 @@
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
 			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
-			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
@@ -2615,11 +2590,6 @@
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
 			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
-			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
@@ -2814,11 +2784,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -3037,11 +3002,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",

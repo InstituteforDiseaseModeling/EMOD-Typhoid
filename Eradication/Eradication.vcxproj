@@ -254,6 +254,7 @@
     <ClCompile Include="IMigrationInfo.cpp" />
     <ClCompile Include="ISusceptibilityContext.cpp" />
     <ClCompile Include="JsonObjectDemog.cpp" />
+    <ClCompile Include="LoadBalanceScheme.cpp" />
     <ClCompile Include="MalariaBarcode.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
@@ -557,6 +558,7 @@
     <ClInclude Include="ISTIInterventionsContainer.h" />
     <ClInclude Include="ISusceptibilityContext.h" />
     <ClInclude Include="JsonObjectDemog.h" />
+    <ClInclude Include="LoadBalanceScheme.h" />
     <ClInclude Include="MalariaBarcode.h" />
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />

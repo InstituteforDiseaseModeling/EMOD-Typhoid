@@ -9,16 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#ifdef __GNUC__
-#include <ext/hash_map>
-namespace std
-{
-     using namespace __gnu_cxx;
-}
-#else
-#include <hash_map>
-#endif
-
 #include <map>
 #include <vector>
 

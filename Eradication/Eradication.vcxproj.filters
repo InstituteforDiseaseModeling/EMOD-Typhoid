@@ -930,6 +930,9 @@
     <ClCompile Include="EventTrigger.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="LoadBalanceScheme.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
     <ClCompile Include="DemographicRestrictions.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
@@ -2035,6 +2038,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EventTrigger.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadBalanceScheme.h">
       <Filter>Source Files\Kernel</Filter>
     </ClInclude>
     <ClInclude Include="..\interventions\StiCoInfectionDiagnostic.h">
