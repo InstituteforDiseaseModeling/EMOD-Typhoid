@@ -38,10 +38,10 @@ if dst_path != "":
     sys.exit(0)
 
 # set the common libraries
-env.Append(LIBPATH = ["$BUILD_DIR/baseReportLib", "$BUILD_DIR/cajun", "$BUILD_DIR/campaign", "$BUILD_DIR/utils"])
+env.Append(LIBPATH = ["$BUILD_DIR/baseReportLib", "$BUILD_DIR/cajun", "$BUILD_DIR/campaign", "$BUILD_DIR/snappy", "$BUILD_DIR/utils"])
 
-print( "Link executable against cajun, campaign, and utils lib's." )
-env.Append(LIBS=["baseReportLib", "cajun", "campaign", "utils"])
+print( "Link executable against cajun, campaign, snappy, and utils lib's." )
+env.Append(LIBS=["baseReportLib", "cajun", "campaign", "snappy", "utils"])
 
 #print "builddir is " + env["BUILD_DIR"]
 
@@ -49,6 +49,7 @@ env.Append(LIBS=["baseReportLib", "cajun", "campaign", "utils"])
 SConscript( [ 'baseReportLib/SConscript',
               'cajun/SConscript',
               'campaign/SConscript',
+              'snappy/SConscript',
               'utils/SConscript' ])
 
 # If DLL=true, build libgeneric_static.lib
