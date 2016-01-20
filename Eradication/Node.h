@@ -63,6 +63,7 @@ namespace Kernel
         Node(); // constructor for serialization use
         virtual ~Node();
 
+
         // INodeContext
         virtual void Update(float dt) override;
         virtual ISimulationContext* GetParent() override;
@@ -70,6 +71,8 @@ namespace Kernel
         virtual suids::suid   GetNextInfectionSuid() override;
         virtual ::RANDOMBASE* GetRng() override;
         virtual const INodeContext::tDistrib& GetIndividualPropertyDistributions() const override;
+        virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override;
+
 
         virtual IMigrationInfo*   GetMigrationInfo() override;
         virtual const NodeDemographics* GetDemographics()  const override;
@@ -136,8 +139,9 @@ namespace Kernel
 
         // These methods are not const because they will extract the value from the demographics
         // if it has not been done yet.
-        float GetLatitudeDegrees();
-        float GetLongitudeDegrees();
+        virtual float GetLatitudeDegrees()override;
+        virtual float GetLongitudeDegrees() override;
+
 
         static void TestOnly_ClearProperties();
         static void TestOnly_AddPropertyKeyValue( const char* key, const char* value );
@@ -192,6 +196,7 @@ namespace Kernel
         friend class NodeEventContextHost;
         friend class Simulation; // so migration can call configureAndAdd?????
         NodeEventContextHost *event_context_host;
+        std::vector<std::string> events_from_other_nodes ;
 
         //  Counters (some for reporting, others also for internal calculations)
         float statPop;

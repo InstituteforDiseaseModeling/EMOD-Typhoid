@@ -177,6 +177,11 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
+    virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
+
     virtual QueryResult QueryInterface( iid_t iid, void** pinstance ) override
     {
         throw std::exception("The method or operation is not implemented.");
@@ -234,9 +239,19 @@ public:
         return enabled_list;
     }
 
-    virtual ExternalNodeId_t GetExternalID() const
+    virtual ExternalNodeId_t GetExternalID() const override
     {
         return m_suid.data ;
+    }
+
+    virtual float GetLatitudeDegrees() override
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
+
+    virtual float GetLongitudeDegrees() override
+    {
+        throw std::exception("The method or operation is not implemented.");
     }
 
     virtual void SetupMigration( IMigrationInfoFactory * migration_factory, 

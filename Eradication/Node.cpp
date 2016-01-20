@@ -378,6 +378,7 @@ namespace Kernel
         , demographic_distributions()
         , externalId(0)
         , event_context_host(nullptr)
+        , events_from_other_nodes()
         , statPop(0)
         , Infected(0)
         , Births(0.0f)
@@ -470,6 +471,7 @@ namespace Kernel
         , demographic_distributions()
         , externalId(0)
         , event_context_host(nullptr)
+        , events_from_other_nodes()
         , statPop(0)
         , Infected(0)
         , Births(0.0f)
@@ -1304,6 +1306,19 @@ namespace Kernel
         {
             release_assert(event_context_host);
             event_context_host->UpdateInterventions(dt); // update refactored node-owned node-targeted interventions
+
+            // -------------------------------------------------------------------------
+            // --- I'm putting this after updating the interventions because if one was
+            // --- supposed to expire this timestep, then this event should not fire it.
+            // -------------------------------------------------------------------------
+            for( auto event_name : events_from_other_nodes )
+            {
+                //printf("%d-broadcasting event from other node: %s\n",GetSuid().data,event_name.c_str());
+                for (auto individual : individualHumans)
+                {
+                    event_context_host->TriggerNodeEventObserversByString( individual->GetEventContext(), event_name );
+                }
+            }
         }
 
         //-------- Accumulate infectivity and reporting counters ---------
@@ -2412,6 +2427,15 @@ namespace Kernel
     //------------------------------------------------------------------
     //   Campaign event related
     //------------------------------------------------------------------
+
+    void Node::AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList )
+    {
+        events_from_other_nodes.clear();
+        for( auto event_name : rEventNameList )
+        {
+            events_from_other_nodes.push_back( event_name );
+        }
+    }
 
     // Determines if Node is in a defined lat-long polygon
     // checks for line crossings when extending a ray from the Node's location to increasing longitude

@@ -129,6 +129,7 @@
     <ClCompile Include="STIIsPostDebutTest.cpp" />
     <ClCompile Include="HIVSimpleDiagnosticTest.cpp" />
     <ClCompile Include="JsonObjectDemogTest.cpp" />
+    <ClCompile Include="MathFunctionsTest.cpp" />
     <ClCompile Include="NodeDemographicsTest.cpp" />
     <ClCompile Include="PairFormationParametersImplTest.cpp" />
     <ClCompile Include="PairFormationStatsImplTest.cpp" />

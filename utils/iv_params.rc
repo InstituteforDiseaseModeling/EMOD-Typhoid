@@ -424,3 +424,6 @@ EXPONENTIAL_DURATION"
 
 #define Interpolated_Value_Map_Times_DESC_TEXT "An array of years."
 #define Interpolated_Value_Map_Values_DESC_TEXT "An array of values to match the defined Times."
+
+#define BETON_Event_Trigger_DESC_TEXT "TBD"
+#define BETON_Distance_DESC_TEXT "TBD"

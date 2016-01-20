@@ -101,6 +101,11 @@ namespace Kernel
         virtual long int GetPossibleMothers()  const = 0;
         virtual float GetMeanAgeInfection()    const = 0;
 
+        // These methods are not const because they will extract the value from the demographics
+        // if it has not been done yet.
+        virtual float GetLatitudeDegrees() = 0;
+        virtual float GetLongitudeDegrees() = 0;
+
         // This method will ONLY be used for reporting by input node ID, don't use it elsewhere!
         virtual ExternalNodeId_t GetExternalID() const = 0;
 
@@ -113,6 +118,7 @@ namespace Kernel
         typedef std::map< std::string, std::multimap< float, std::string > > tDistrib;
         virtual const tDistrib& GetIndividualPropertyDistributions() const = 0;
         virtual void checkValidIPValue( const std::string& key, const std::string& to_value ) = 0;
+        virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) = 0;
 
         //Verify that the user entered in set of property key/value pairs which are included in the demographics file
         virtual void VerifyPropertyDefined( const std::string& rKey, const std::string& rVal ) const = 0;

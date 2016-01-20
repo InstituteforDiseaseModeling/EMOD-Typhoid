@@ -31,6 +31,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "RANDOM.h"
 #include "SimulationConfig.h"
 #include "SimulationEventContext.h"
+#include "NodeInfo.h"
 #include "ReportEventRecorder.h"
 #include "Individual.h"
 #include "LoadBalanceScheme.h"
@@ -41,6 +42,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BinaryArchiveReader.h"
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
+#include "MpiDataExchanger.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -68,6 +70,8 @@ namespace Kernel
         : serializationMask(SerializationFlags(uint32_t(SerializationFlags::Population) | uint32_t(SerializationFlags::Parameters)))
         , nodes()
         , nodeRankMap()
+        , node_events_added()
+        , node_events_to_be_processed()
         , node_event_context_list()
         , nodeid_suid_map()
         , migratingIndividualQueues()
@@ -114,6 +118,8 @@ namespace Kernel
         propertiesReportClassCreator    = PropertyReport::CreateReport;
         demographicsReportClassCreator  = DemographicsReport::CreateReport;
         eventReportClassCreator         = ReportEventRecorder::CreateReport;
+
+        nodeRankMap.SetNodeInfoFactory( this );
 
         initConfigTypeMap( "Enable_Default_Reporting", &enable_default_report, Enable_Default_Reporting_DESC_TEXT, true );
         initConfigTypeMap( "Enable_Demographics_Reporting", &demographic_tracking, Enable_Demographics_Reporting_DESC_TEXT, true );
@@ -237,6 +243,18 @@ namespace Kernel
         Reports_FindReportsCollectingIndividualData( 0.0, 0.0 );
     }
 
+    INodeInfo* Simulation::CreateNodeInfo()
+    {
+        INodeInfo* pin = new NodeInfo();
+        return pin ;
+    }
+
+    INodeInfo* Simulation::CreateNodeInfo( int rank, INodeContext* pNC )
+    {
+        INodeInfo* pin = new NodeInfo( rank, pNC );
+        return pin ;
+    }
+
     void Simulation::setupMigrationQueues()
     {
         migratingIndividualQueues.resize(EnvPtr->MPI.NumTasks); // elements are instances not pointers
@@ -353,6 +371,77 @@ namespace Kernel
         {
             LOG_WARN_F("%s: Didn't find entry for id %08X in observer map.", __FUNCTION__, id);
         }
+    }
+
+    void Simulation::DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier )
+    {
+        release_assert( pQualifier );
+
+        for( auto entry : nodeRankMap.GetRankMap() )
+        {
+            INodeInfo* pni = entry.second ;
+            if( pQualifier->Qualifies( *pni ) )
+            {
+                // -------------------------------------------------------------------------------------
+                // --- One could use a map to keep a node from getting more than one event per timestep
+                // --- but I thinkthe logic for that belongs in the object processing the event
+                // -------------------------------------------------------------------------------------
+                //printf("%s going to be sent to %d\n",rEventName.c_str(),pni->GetSuid().data);
+                node_events_added[ nodeRankMap.GetRankFromNodeSuid( pni->GetSuid() ) ].Add( pni->GetSuid(), rEventName ) ;
+            }
+        }
+    }
+
+
+    void Simulation::UpdateNodeEvents()
+    {
+        WithSelfFunc to_self_func = [this](int myRank) 
+        { 
+            //do nothing
+        }; 
+
+        // -------------------------------------------------------------
+        // --- Send Event Triggers destined for nodes not on this processor
+        // -------------------------------------------------------------
+        SendToOthersFunc to_others_func = [this](IArchive* writer, int toRank)
+        {
+            *writer & node_events_added[toRank];
+        };
+
+        // -----------------------------------------------------------------
+        // --- Receive the Event Triggers destined for the nodes on this processor
+        // -----------------------------------------------------------------
+        ReceiveFromOthersFunc from_others_func = [this](IArchive* reader, int fromRank)
+        {
+            EventsForOtherNodes efon ;
+            *reader & efon;
+            node_events_added[ EnvPtr->MPI.Rank ].Update( efon );
+        };
+
+        ClearDataFunc clear_data_func = [this](int rank)
+        {
+            node_events_added[rank].Clear();
+        };
+
+        MpiDataExchanger exchanger( "EventsForOtherNodes", to_self_func, to_others_func, from_others_func, clear_data_func );
+        exchanger.ExchangeData( this->currentTime );
+
+        // ---------------------------------------------------
+        // --- Update the events to be processed during the 
+        // --- next time step for the nodes on this processor
+        // ---------------------------------------------------
+        node_events_to_be_processed.clear();
+        for( auto entry : node_events_added[ EnvPtr->MPI.Rank ].GetMap() )
+        {
+            suids::suid node_id;
+            node_id.data = entry.first;
+            for( auto event_name : entry.second )
+            {
+                node_events_to_be_processed[ node_id ].push_back( event_name );
+            }
+        }
+        node_events_added.clear();
+
     }
 
     void Simulation::Reports_ConfigureBuiltIn()
@@ -601,7 +690,10 @@ namespace Kernel
         {
             INodeContext* n = iterator->second;
             release_assert(n);
+            n->AddEventsFromOtherNodes( node_events_to_be_processed[ n->GetSuid() ] );
             n->Update(dt);
+
+            nodeRankMap.Update( n );
 
             Reports_LogNodeData( n );
         }
@@ -610,6 +702,10 @@ namespace Kernel
         // --- Resolve Migration
         // -----------------------
         REPORT_TIME( ENABLE_DEBUG_MPI_TIMING, "resolveMigration", resolveMigration() );
+
+        nodeRankMap.Sync( currentTime );
+
+        UpdateNodeEvents();
 
         // -------------------
         // --- Increment Time
@@ -904,17 +1000,17 @@ namespace Kernel
         release_assert(climate_factory);
 #endif
 
-        // Add node to the map
-        nodes.insert(std::pair<suids::suid, INodeContext*>(node->GetSuid(), static_cast<INodeContext*>(node)));
-        node_event_context_list.push_back( node->GetEventContext() );
-        nodeRankMap.Add(node->GetSuid(), EnvPtr->MPI.Rank);
-
         // Node initialization
         node->SetParameters(nodedemographics_factory, climate_factory);
         node->SetMonteCarloParameters(Ind_Sample_Rate);// need to define parameters
 
         // Populate node
         node->PopulateFromDemographics();
+
+        // Add node to the map
+        nodes.insert( std::pair<suids::suid, INodeContext*>(node->GetSuid(), node) );
+        node_event_context_list.push_back( node->GetEventContext() );
+        nodeRankMap.Add( EnvPtr->MPI.Rank, node );
 
         notifyNewNodeObservers(node);
     }
@@ -941,175 +1037,71 @@ namespace Kernel
     //   Individual migration methods
     //------------------------------------------------------------------
 
-#define SIZE_TAG    (42)
-#define CONTENT_TAG (2015)
-
-    static void _write_json(uint32_t time_step, uint32_t source, uint32_t dest, char* suffix, const char* buffer, size_t size)
-    {
-        char filename[256];
-    #ifdef WIN32
-        sprintf_s(filename, 256, "%s\\%03d-%02d-%02d-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, suffix);
-        FILE* f = nullptr;
-        errno = 0;
-        if ( fopen_s( &f, filename, "w" ) != 0)
-        {
-            // LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
-            LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
-            return;
-        }
-    #else
-        sprintf(filename, "%s\\%03d-%02d-%02d-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, suffix);
-        FILE* f = fopen(filename, "w");
-    #endif
-        fwrite(buffer, 1, size, f);
-        fflush(f);
-        fclose(f);
-    }
-
     void Simulation::resolveMigration()
     {
-        static const char * _module = "MpiMigration";
         LOG_DEBUG("resolveMigration\n");
 
-        std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );           // "buffers" for size of buffer messages
-        std::vector< MPI_Request > outbound_requests;                                   // requests for each outbound message
-        std::list< BinaryArchiveWriter* > outbound_messages( EnvPtr->MPI.NumTasks );    // buffers for outbound messages
-
-        for (int destination_rank = 0; destination_rank < EnvPtr->MPI.NumTasks; ++destination_rank)
-        {
-            if (destination_rank == EnvPtr->MPI.Rank)
-            {
+        WithSelfFunc to_self_func = [this](int myRank) 
+        { 
 #ifndef _DEBUG
-                // Don't bother to serialize locally
-                // for (auto individual : migratingIndividualQueues[destination_rank]) // Note the direction of iteration below!
-                for (auto iterator = migratingIndividualQueues[destination_rank].rbegin(); iterator != migratingIndividualQueues[destination_rank].rend(); ++iterator)
-                {
-                    auto individual = *iterator;
-                    auto* emigre = dynamic_cast<IMigrate*>(individual);
-                    emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
-                }
+            // Don't bother to serialize locally
+            // for (auto individual : migratingIndividualQueues[destination_rank]) // Note the direction of iteration below!
+            for (auto iterator = migratingIndividualQueues[myRank].rbegin(); iterator != migratingIndividualQueues[myRank].rend(); ++iterator)
+            {
+                auto individual = *iterator;
+                auto* emigre = dynamic_cast<IMigrate*>(individual);
+                emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
+            }
 #else
-                if ( migratingIndividualQueues[destination_rank].size() > 0 )
-                {
-                    auto writer = make_shared<BinaryArchiveWriter>();
-                    (*static_cast<IArchive*>(writer.get())) & migratingIndividualQueues[destination_rank];
-
-                    for (auto& individual : migratingIndividualQueues[destination_rank])
-                        delete individual; // individual->Recycle();
-
-                    migratingIndividualQueues[destination_rank].clear();
-
-                    if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                        _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "self", static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize() );
-                    }
-
-                    auto reader = make_shared<BinaryArchiveReader>(static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize());
-                    (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[destination_rank];
-                    for (auto individual : migratingIndividualQueues[destination_rank])
-                    {
-                        auto* immigrant = dynamic_cast<IMigrate*>(individual);
-                        immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
-                    }
-                }
-#endif
-            }
-            else
+            if ( migratingIndividualQueues[destination_rank].size() > 0 )
             {
-                if ( migratingIndividualQueues[destination_rank].size() > 0 )
-                {
-                    auto writer = new BinaryArchiveWriter();
-                    // section = "resolveMigration() - remote migration, serialize::write";
-                    (*static_cast<IArchive*>(writer)) & migratingIndividualQueues[destination_rank];
-                    if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                        _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "send", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
-                    }
-                    LOG_VALID_F( "Rank %d sending %d individuals to rank %d ( %d bytes ).\n", EnvPtr->MPI.Rank, migratingIndividualQueues[destination_rank].size(), destination_rank, static_cast<IArchive*>(writer)->GetBufferSize() );
+                auto writer = make_shared<BinaryArchiveWriter>();
+                (*static_cast<IArchive*>(writer.get())) & migratingIndividualQueues[destination_rank];
 
-                    // section = "resolveMigration() - remote migration, recycle";
-                    for (auto& individual : migratingIndividualQueues[destination_rank])
-                        individual->Recycle();  // delete individual
+                for (auto& individual : migratingIndividualQueues[destination_rank])
+                    delete individual; // individual->Recycle();
 
-                    migratingIndividualQueues[destination_rank].clear();
+                migratingIndividualQueues[destination_rank].clear();
 
-                    // section = "resolveMigration() - remote migration, send buffer size";
-                    uint32_t buffer_size = message_size_by_rank[destination_rank] = static_cast<IArchive*>(writer)->GetBufferSize();
-                    MPI_Request size_request;
-                    MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, SIZE_TAG, MPI_COMM_WORLD, &size_request);
-
-                    if (buffer_size > 0)
-                    {
-                        const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
-                        MPI_Request buffer_request;
-                        // section = "resolveMigration() - remote migration, send buffer";
-                        MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, CONTENT_TAG, MPI_COMM_WORLD, &buffer_request);
-                        outbound_requests.push_back(buffer_request);
-                        outbound_messages.push_back(writer);
-                    }
-                }
-                else
-                {
-                    // section = "resolveMigration() - remote migration, send buffer size";
-                    MPI_Request size_request;
-                    MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, SIZE_TAG, MPI_COMM_WORLD, &size_request);
-                }
-            }
-
-            migratingIndividualQueues[destination_rank].clear();
-        }
-
-        for (int source_rank = 0; source_rank < EnvPtr->MPI.NumTasks; ++source_rank)
-        {
-            if (source_rank == EnvPtr->MPI.Rank) continue;  // We don't use MPI to send individuals to ourselves.
-
-            uint32_t size;
-            MPI_Status status;
-            // section = "resolveMigration() - remote migration, receive buffer size";
-            MPI_Recv(&size, 1, MPI_UNSIGNED, source_rank, SIZE_TAG, MPI_COMM_WORLD, &status);
-
-            if (size > 0)
-            {
-                unique_ptr<char[]> buffer(new char[size]);
-                MPI_Status buffer_status;
-                // section = "resolveMigration() - remote migration, receive buffer";
-                MPI_Recv(buffer.get(), size, MPI_BYTE, source_rank, CONTENT_TAG, MPI_COMM_WORLD, &buffer_status);
                 if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                    _write_json( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "recv", buffer.get(), size );
+                    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "self", static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize() );
                 }
 
-                // section = "resolveMigration() - remote migration, instantiate reader";
-                auto reader = make_shared<BinaryArchiveReader>(buffer.get(), size);
-
-                if ( static_cast<IArchive*>(reader.get())->HasError() )
-                {
-                    _write_json( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "recv", buffer.get(), size );
-                }
-
-                // section = "resolveMigration() - remote migration, serialize::read";
-                (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[source_rank];
-                LOG_VALID_F( "Rank %d receiving %d individuals from rank %d ( %d bytes ).\n", EnvPtr->MPI.Rank, migratingIndividualQueues[source_rank].size(), source_rank, size );
-                // section = "resolveMigration() - remote migration, immigrate";
-                for (auto individual : migratingIndividualQueues[source_rank])
+                auto reader = make_shared<BinaryArchiveReader>(static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize());
+                (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[destination_rank];
+                for (auto individual : migratingIndividualQueues[destination_rank])
                 {
                     auto* immigrant = dynamic_cast<IMigrate*>(individual);
                     immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
                 }
-
-                migratingIndividualQueues[source_rank].clear();
-          }
-          else {
-            LOG_ERR_F( "Rank %d received size %d from rank %d for content. { %d, %d, %d, %d %d }\n", EnvPtr->MPI.Rank, size, source_rank, status.count, status.cancelled, status.MPI_SOURCE, status.MPI_TAG, status.MPI_ERROR );
-          }
-        }
-
-        {   // Clean up from Isend(s)
-            std::vector<MPI_Status> status( outbound_requests.size() );
-            MPI_Waitall( outbound_requests.size(), (MPI_Request*)outbound_requests.data(), (MPI_Status*)status.data() );
-
-            for (auto writer : outbound_messages)
-            {
-                delete writer;
             }
-        }
+#endif
+        }; 
+
+        SendToOthersFunc to_others_func = [this](IArchive* writer, int toRank)
+        {
+            *writer & migratingIndividualQueues[toRank];
+            for (auto& individual : migratingIndividualQueues[toRank])
+                individual->Recycle();  // delete individual
+        };
+
+        ClearDataFunc clear_data_func = [this](int rank)
+        {
+            migratingIndividualQueues[rank].clear();
+        };
+
+        ReceiveFromOthersFunc from_others_func = [this](IArchive* reader, int fromRank)
+        {
+            *reader & migratingIndividualQueues[fromRank];
+            for (auto individual : migratingIndividualQueues[fromRank])
+            {
+                IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+            }
+        };
+
+        MpiDataExchanger exchanger( "HumanMigration", to_self_func, to_others_func, from_others_func, clear_data_func );
+        exchanger.ExchangeData( this->currentTime );
     }
 
     void Simulation::PostMigratingIndividualHuman(IIndividualHuman *i)
@@ -1151,18 +1143,19 @@ namespace Kernel
         return infectionSuidGenerator();
     }
 
+    suids::suid Simulation::GetNodeSuid( uint32_t external_node_id )
+    {
+        return nodeRankMap.GetSuidFromExternalID( external_node_id );
+    }
+
     ExternalNodeId_t Simulation::GetNodeExternalID( const suids::suid& rNodeSuid )
     {
-        if( nodeid_suid_map.right.count( rNodeSuid ) <= 0 )
-        {
-            std::ostringstream msg;
-            msg << "Unknown node suid = " << rNodeSuid.data << ".  If using multi-core, this is not supported.";
-            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
-        }
-        else
-        {
-            return nodeid_suid_map.right.at( rNodeSuid );
-        }
+        return nodeRankMap.GetNodeInfo( rNodeSuid ).GetExternalID();
+    }
+
+    uint32_t Simulation::GetNodeRank( const suids::suid& rNodeSuid )
+    {
+        return nodeRankMap.GetRankFromNodeSuid( rNodeSuid );
     }
 
     RANDOMBASE* Simulation::GetRng()

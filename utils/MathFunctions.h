@@ -57,4 +57,7 @@ class Probability
 };
 
 #define LOG_2 0.6931472f
+
+    // calcualte the great-circleis distance between two points along the surface a spherical earth in kilometers
+    double IDMAPI CalculateDistanceKm( double lon_1_deg, double lat_1_deg, double lon_2_deg, double lat_2_deg );
 }

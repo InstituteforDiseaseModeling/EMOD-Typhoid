@@ -176,6 +176,7 @@
     <ClCompile Include="..\interventions\BCGVaccine.cpp" />
     <ClCompile Include="..\interventions\BirthTriggeredIV.cpp" />
     <ClCompile Include="..\interventions\BroadcastEvent.cpp" />
+    <ClCompile Include="..\interventions\BroadcastEventToOtherNodes.cpp" />
     <ClCompile Include="..\interventions\CalendarIV.cpp" />
     <ClCompile Include="..\interventions\CD4Diagnostic.cpp" />
     <ClCompile Include="..\interventions\HIVARTStagingAbstract.cpp" />
@@ -242,6 +243,7 @@
     <ClCompile Include="CalendarEventCoordinator.cpp" />
     <ClCompile Include="CoverageByNodeEventCoordinator.cpp" />
     <ClCompile Include="DemographicRestrictions.cpp" />
+    <ClCompile Include="EventsForOtherNodes.cpp" />
     <ClCompile Include="EventTrigger.cpp" />
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="GroupEventCoordinatorHIV.cpp" />
@@ -256,9 +258,12 @@
     <ClCompile Include="JsonObjectDemog.cpp" />
     <ClCompile Include="LoadBalanceScheme.cpp" />
     <ClCompile Include="MalariaBarcode.cpp" />
+    <ClCompile Include="MpiDataExchanger.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
     <ClCompile Include="NodeEventCoordinator.cpp" />
+    <ClCompile Include="NodeInfo.cpp" />
+    <ClCompile Include="NodeInfoVector.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="RelationshipParameters.cpp" />
     <ClCompile Include="ReportEventRecorder.cpp" />
@@ -444,6 +449,7 @@
     <ClInclude Include="..\interventions\Bednet.h" />
     <ClInclude Include="..\interventions\BirthTriggeredIV.h" />
     <ClInclude Include="..\interventions\BroadcastEvent.h" />
+    <ClInclude Include="..\interventions\BroadcastEventToOtherNodes.h" />
     <ClInclude Include="..\interventions\CalendarIV.h" />
     <ClInclude Include="..\interventions\CD4Diagnostic.h" />
     <ClInclude Include="..\interventions\DelayedIntervention.h" />
@@ -534,6 +540,7 @@
     <ClInclude Include="..\utils\BoostLibWrapper.h" />
     <ClInclude Include="CalendarEventCoordinator.h" />
     <ClInclude Include="DemographicRestrictions.h" />
+    <ClInclude Include="EventsForOtherNodes.h" />
     <ClInclude Include="EventTrigger.h" />
     <ClInclude Include="FerrandAgeDependentDistribution.h" />
     <ClInclude Include="GroupEventCoordinatorHIV.h" />
@@ -550,6 +557,7 @@
     <ClInclude Include="IMigrationInfo.h" />
     <ClInclude Include="INodeContext.h" />
     <ClInclude Include="INodeHIV.h" />
+    <ClInclude Include="INodeInfo.h" />
     <ClInclude Include="INodeSTI.h" />
     <ClInclude Include="IntranodeTransmissionTypes.h" />
     <ClInclude Include="IRelationshipManager.h" />
@@ -560,8 +568,11 @@
     <ClInclude Include="JsonObjectDemog.h" />
     <ClInclude Include="LoadBalanceScheme.h" />
     <ClInclude Include="MalariaBarcode.h" />
+    <ClInclude Include="MpiDataExchanger.h" />
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />
+    <ClInclude Include="NodeInfo.h" />
+    <ClInclude Include="NodeInfoVector.h" />
     <ClInclude Include="NodeTBHIV.h" />
     <ClInclude Include="PolioContexts.h" />
     <ClInclude Include="PropertyReportTB.h" />

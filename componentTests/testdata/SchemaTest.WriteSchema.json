@@ -8296,6 +8296,41 @@
 					"iv_type" : "IndividualTargeted",
 					"class" : "BroadcastEvent"
 				},
+				"BroadcastEventToOtherNodes" : {
+					"Sim_Types" : [
+						"*"
+					],
+					"Event_Trigger" : {
+						"default" : "NoTrigger",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
+					"Include_My_Node" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Node_Selection_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"DISTANCE_ONLY",
+							"MIGRATION_NODES_ONLY",
+							"DISTANCE_AND_MIGRATION"
+						],
+						"description" : "TBD",
+						"default" : "DISTANCE_ONLY"
+					},
+					"Max_Distance_To_Other_Nodes_Km" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "BroadcastEventToOtherNodes"
+				},
 				"CD4Diagnostic" : {
 					"Sim_Types" : [
 						"HIV_SIM"

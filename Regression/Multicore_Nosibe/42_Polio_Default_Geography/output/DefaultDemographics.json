@@ -1,6 +1,6 @@
 {
     "Metadata": {
-        "DateCreated": "Thu Dec 17 11:16:22 2015",
+        "DateCreated": "Mon Jan 18 16:02:11 2016",
         "Tool": "Eradication.exe",
         "Author": "DTK",
         "IdReference": "default 10x10 torus geography",
@@ -15,10 +15,10 @@
             "Airport": 0,
             "Region": 0,
             "Seaport": 0,
-            "InitialPopulation": 1000,
             "BirthRate": 8.715e-005,
             "Urban": 0,
-            "AbovePoverty": 0.5
+            "AbovePoverty": 0.5,
+            "InitialPopulation": 1000
         },
         "IndividualAttributes": {
             "AgeDistributionFlag": 3,

@@ -527,9 +527,9 @@ namespace Kernel
 
                     // give vectors to attached communities like a sprinkler
                     tempentry->SetMigrationDestination(*itNodeId);
-                    ivsc->PostMigratingVector(tempentry);
+                    ivsc->PostMigratingVector( this->GetSuid(), tempentry);
 
-                    // circular iteration among available adjacent nodes
+                    // circular iteration among available nodes
                     if ( ++itNodeId == vectormigCommIDs.end() )
                     {
                         itNodeId = vectormigCommIDs.begin();
