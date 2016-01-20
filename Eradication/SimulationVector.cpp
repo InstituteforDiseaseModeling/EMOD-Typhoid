@@ -203,7 +203,7 @@ namespace Kernel
 
         WithSelfFunc to_self_func = [this](int myRank) 
         { 
-#ifndef _DEBUG
+#ifndef CLORTON
             // Don't bother to serialize locally
             for (auto vector : migratingVectorQueues[myRank])
             {
@@ -212,19 +212,19 @@ namespace Kernel
             }
 #else
             auto writer = new BinaryArchiveWriter();
-            (*static_cast<IArchive*>(writer)) & migratingVectorQueues[destination_rank];
-            for (auto& individual : migratingVectorQueues[destination_rank])
+            (*static_cast<IArchive*>(writer)) & migratingVectorQueues[myRank];
+            for (auto& individual : migratingVectorQueues[myRank])
                 individual->Recycle();
-            migratingVectorQueues[destination_rank].clear();
+            migratingVectorQueues[myRank].clear();
 
-            if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "vect", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
-            }
+            //if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+            //    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, myRank, "vect", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
+            //}
 
             const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
             auto reader = new BinaryArchiveReader(buffer, static_cast<IArchive*>(writer)->GetBufferSize());
-            (*static_cast<IArchive*>(reader)) & migratingVectorQueues[destination_rank];
-            for (auto individual : migratingVectorQueues[destination_rank])
+            (*static_cast<IArchive*>(reader)) & migratingVectorQueues[myRank];
+            for (auto individual : migratingVectorQueues[myRank])
             {
                 IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
                 immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()]);

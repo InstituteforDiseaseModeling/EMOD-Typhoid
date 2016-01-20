@@ -1043,7 +1043,7 @@ namespace Kernel
 
         WithSelfFunc to_self_func = [this](int myRank) 
         { 
-#ifndef _DEBUG
+#ifndef CLORTON
             // Don't bother to serialize locally
             // for (auto individual : migratingIndividualQueues[destination_rank]) // Note the direction of iteration below!
             for (auto iterator = migratingIndividualQueues[myRank].rbegin(); iterator != migratingIndividualQueues[myRank].rend(); ++iterator)
@@ -1053,23 +1053,23 @@ namespace Kernel
                 emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
             }
 #else
-            if ( migratingIndividualQueues[destination_rank].size() > 0 )
+            if ( migratingIndividualQueues[myRank].size() > 0 )
             {
                 auto writer = make_shared<BinaryArchiveWriter>();
-                (*static_cast<IArchive*>(writer.get())) & migratingIndividualQueues[destination_rank];
+                (*static_cast<IArchive*>(writer.get())) & migratingIndividualQueues[myRank];
 
-                for (auto& individual : migratingIndividualQueues[destination_rank])
+                for (auto& individual : migratingIndividualQueues[myRank])
                     delete individual; // individual->Recycle();
 
-                migratingIndividualQueues[destination_rank].clear();
+                migratingIndividualQueues[myRank].clear();
 
-                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "self", static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize() );
-                }
+                //if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+                //    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, myRank, "self", static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize() );
+                //}
 
                 auto reader = make_shared<BinaryArchiveReader>(static_cast<IArchive*>(writer.get())->GetBuffer(), static_cast<IArchive*>(writer.get())->GetBufferSize());
-                (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[destination_rank];
-                for (auto individual : migratingIndividualQueues[destination_rank])
+                (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[myRank];
+                for (auto individual : migratingIndividualQueues[myRank])
                 {
                     auto* immigrant = dynamic_cast<IMigrate*>(individual);
                     immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );

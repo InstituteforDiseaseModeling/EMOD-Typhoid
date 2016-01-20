@@ -331,12 +331,14 @@
                         {
                             "__class__" : "MaleCircumcision",
                             "cost_per_unit" : 1,
-                            "expired"       : false
+                            "expired"       : false,
+                            "dont_allow_duplicates" : false
                         },
                         {
                             "__class__" : "ModifyStiCoInfectionStatus",
                             "cost_per_unit" : 2,
                             "expired"       : false,
+                            "dont_allow_duplicates" : false,
                             "set_flag_to"   : true
                         }
                     ],
@@ -390,6 +392,7 @@
                 "max_waypoints"             : 5,
                 "waypoints"                 : [ 2, 3 ],
                 "waypoints_trip_type"       : [ 0, 1 ],
+                "home_node_id"              : 1,
                 "Properties" : 
                 [
                     {
@@ -683,18 +686,21 @@
                     {
                         "__class__" : "MaleCircumcision",
                         "cost_per_unit" : 1,
-                        "expired"       : false
+                        "expired"       : false,
+                            "dont_allow_duplicates" : false
                     },
                     {
                         "__class__" : "ModifyStiCoInfectionStatus",
                         "cost_per_unit" : 2,
                         "expired"       : false,
+                            "dont_allow_duplicates" : false,
                         "set_flag_to"   : true
                     },
                     {
                         "__class__" : "STIBarrier",
                         "cost_per_unit" : 3,
                         "expired"       : false,
+                            "dont_allow_duplicates" : false,
                         "early"         : 0.1,
                         "late"          : 0.2,
                         "midyear"       : 0.3,
@@ -704,12 +710,14 @@
                     {
                         "__class__" : "StiCoInfectionDiagnostic",
                         "cost_per_unit" : 4,
-                        "expired"       : false
+                        "expired"       : false,
+                            "dont_allow_duplicates" : false
                     },
                     {
                         "__class__" : "STIIsPostDebut",
                         "cost_per_unit" : 5,
                         "expired"       : false,
+                            "dont_allow_duplicates" : false,
                         "diagnostic_type":1,
                         "base_specificity":
                         {
@@ -777,6 +785,7 @@
                 "__class__":"SimpleDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
+                "dont_allow_duplicates" : false,
                 "diagnostic_type":1,
                 "base_specificity":
                 {
@@ -872,6 +881,7 @@
                         "__class__" : "AntiTBDrug",
                         "cost_per_unit"             : 1,
                         "expired"                   : false,
+                        "dont_allow_duplicates"     : false,
                         "drug_type"                 : 1,
                         "dosing_type"               : 2,
                         "durability_time_profile"   : 1,
@@ -901,6 +911,7 @@
                         "__class__" : "AntiTBPropDepDrug",
                         "cost_per_unit"             : 2,
                         "expired"                   : false,
+                        "dont_allow_duplicates"     : false,
                         "drug_type"                 : 2,
                         "dosing_type"               : 1,
                         "durability_time_profile"   : 2,
@@ -937,6 +948,7 @@
                         "__class__" : "BCGVaccine",
                         "cost_per_unit"                 : 3,
                         "expired"                       : false,
+                        "dont_allow_duplicates"         : false,
                         "vaccine_type"                  : 1,
                         "vaccine_take"                  : 0.1,
                         "current_reducedacquire"        : 0.2,
@@ -951,6 +963,7 @@
                         "__class__" : "DiagnosticTreatNeg",
                         "cost_per_unit"   : 4,
                         "expired"         : true,
+                        "dont_allow_duplicates" : false,
                         "diagnostic_type" : 1,
                         "base_specificity":
                         {
@@ -983,6 +996,7 @@
                         "__class__" : "HealthSeekingBehaviorUpdateable",
                         "cost_per_unit"              : 5,
                         "expired"                    : false,
+                        "dont_allow_duplicates"      : false,
                         "probability_of_seeking"     : 0.1,
                         "actual_intervention_config" : "null",
                         "actual_intervention_event"  : "Event_5",

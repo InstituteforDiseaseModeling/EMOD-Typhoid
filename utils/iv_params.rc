@@ -427,3 +427,5 @@ EXPONENTIAL_DURATION"
 
 #define BETON_Event_Trigger_DESC_TEXT "TBD"
 #define BETON_Distance_DESC_TEXT "TBD"
+
+#define Dont_Allow_Duplicates_DESC_TEXT "TBD"

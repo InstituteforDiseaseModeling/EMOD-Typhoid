@@ -42,6 +42,7 @@
     "max_waypoints":0,
     "waypoints":[],
     "waypoints_trip_type":[],
+    "home_node_id" : 1,
     "Properties":[]
   }
 }
