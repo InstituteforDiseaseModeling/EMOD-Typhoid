@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Sugar.h"
 #include "Vector.h"
 #include "SimulationConfig.h"
+#include "IVectorMigrationReporting.h"
 #include "NodeInfoVector.h"
 #include "BinaryArchiveWriter.h"
 #include "BinaryArchiveReader.h"
@@ -37,6 +38,7 @@ namespace Kernel
 
     SimulationVector::SimulationVector()
         : Kernel::Simulation()
+        , vector_migration_reports()
         , node_populations_map()
         , drugdefaultcost(1.0f)
         , vaccinedefaultcost(DEFAULT_VACCINE_COST)
@@ -110,6 +112,15 @@ namespace Kernel
         IndividualHumanVector fakeHuman;
         LOG_INFO( "Calling Configure on fakeHumanVector\n" );
         fakeHuman.Configure( config );
+
+        for( auto report : reports )
+        {
+            IVectorMigrationReporting* pivmr = dynamic_cast<IVectorMigrationReporting*>(report);
+            if( pivmr != nullptr )
+            {
+                vector_migration_reports.push_back( pivmr );
+            }
+        }
     }
 
     SimulationVector *SimulationVector::CreateSimulation()
@@ -263,6 +274,11 @@ namespace Kernel
 
     void SimulationVector::PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind )
     {
+        for( auto report : vector_migration_reports )
+        {
+            report->LogVectorMigration( this, currentTime.time, nodeSuid, ind );
+        }
+
         // cast to VectorCohortIndividual
         // TBD: Get rid of cast, replace with QI. Not such a big deal at Simulation level
         VectorCohortIndividual* vci = static_cast<VectorCohortIndividual*>(ind);

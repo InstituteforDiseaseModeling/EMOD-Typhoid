@@ -19,13 +19,16 @@ static const char * _module = "VectorCohortIndividual";
 
 namespace Kernel
 {
+    static uint64_t VCI_COUNTER = 1 ; //TODO - need to make multi-core
+
     // QI stuff
     BEGIN_QUERY_INTERFACE_DERIVED(VectorCohortIndividual, VectorCohortAging)
         HANDLE_INTERFACE( IVectorCohortIndividual )
     END_QUERY_INTERFACE_DERIVED(VectorCohortIndividual, VectorCohortAging)
 
     VectorCohortIndividual::VectorCohortIndividual() 
-    : state(VectorStateEnum::STATE_ADULT)
+    : m_ID( VCI_COUNTER++ )
+    , state(VectorStateEnum::STATE_ADULT)
     , additional_mortality(0.0f)
     , oviposition_timer(-0.1f)
     , parity(0)
@@ -38,6 +41,7 @@ namespace Kernel
 
     VectorCohortIndividual::VectorCohortIndividual(VectorStateEnum::Enum _state, float age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics, std::string vector_species_name)
     : VectorCohortAging(age, progress, initial_population, _vector_genetics)
+    , m_ID( VCI_COUNTER++ )
     , state(_state)
     , additional_mortality(0.0f)
     , oviposition_timer(-0.1f) // newly-mated mosquitoes feed on first cycle
@@ -70,7 +74,6 @@ namespace Kernel
         }
         else
         {
-
             progress = 0;
             state    = VectorStateEnum::STATE_INFECTED;
             m_strain = _new_ StrainIdentity( infstrain->GetAntigenID(), infstrain->GetGeneticID() );
@@ -243,6 +246,7 @@ namespace Kernel
     {
         VectorCohortAging::serialize(ar, obj);
         VectorCohortIndividual& cohort = *obj;
+        ar.labelElement("m_ID") & cohort.m_ID;
         ar.labelElement("state") & (uint32_t&)cohort.state;
         ar.labelElement("additional_mortality") & cohort.additional_mortality;
         ar.labelElement("oviposition_timer") & cohort.oviposition_timer;

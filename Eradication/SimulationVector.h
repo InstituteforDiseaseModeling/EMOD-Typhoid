@@ -37,6 +37,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    struct IVectorMigrationReporting ;
+
     class SimulationVector : public Simulation, public IVectorSimulationContext
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -67,6 +69,7 @@ namespace Kernel
 
         // holds a vector of migrating vectors for each node rank
         vector<vector<IVectorCohort*>> migratingVectorQueues;
+        vector< IVectorMigrationReporting* > vector_migration_reports ;
         std::map<suids::suid,float> node_populations_map ;
 
         float drugdefaultcost;

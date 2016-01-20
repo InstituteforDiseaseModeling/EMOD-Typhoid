@@ -15,6 +15,7 @@ namespace Kernel
 {
     struct IVectorCohortIndividual : ISupports
     {
+        virtual uint64_t GetID() const = 0 ;
         virtual VectorStateEnum::Enum & GetState() = 0;
         virtual void SetState( const VectorStateEnum::Enum & ) = 0;
         virtual float GetAdditionalMortality() const = 0;
@@ -57,6 +58,7 @@ namespace Kernel
         virtual void SetMigrationDestination(suids::suid destination) override;
         virtual const suids::suid& GetMigrationDestination() override;
 
+        virtual uint64_t GetID() const override { return m_ID; }
         virtual VectorStateEnum::Enum & GetState() override;
         virtual void SetState( const VectorStateEnum::Enum & ) override;
         virtual float GetAdditionalMortality() const override;
@@ -82,6 +84,7 @@ namespace Kernel
         VectorCohortIndividual(VectorStateEnum::Enum state, float age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics, std::string vector_species_name);
         /* clorton virtual */ void Initialize() /* clorton override */;
 
+        uint64_t m_ID ;
         VectorStateEnum::Enum state;
         float additional_mortality;
         float oviposition_timer;
