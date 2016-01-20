@@ -65,6 +65,7 @@ namespace Kernel
         jsonConfigurable::tDynamicStringSet property_restrictions_set;
         tPropertyRestrictions property_restrictions;
         bool property_restrictions_verified;
+        bool target_residents_only;
 
 #if USE_JSON_SERIALIZATION
     public:

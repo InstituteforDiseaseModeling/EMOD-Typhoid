@@ -213,6 +213,7 @@ namespace Kernel
         int   max_waypoints;    // maximum waypoints a trip can have before returning home
         std::vector<suids::suid>         waypoints;
         std::vector<MigrationType::Enum> waypoints_trip_type;
+        suids::suid home_node_id ;
 
         tProperties Properties;
 

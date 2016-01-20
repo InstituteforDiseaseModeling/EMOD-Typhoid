@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "DemographicRestrictions.h"
 #include "IndividualEventContext.h"
 #include "Node.h"
+#include "IIndividualHuman.h"
 
 static const char * _module = "DemographicRestrictions";
 
@@ -86,6 +87,7 @@ namespace Kernel
     , property_restrictions_set()
     , property_restrictions()
     , property_restrictions_verified( false )
+    , target_residents_only( false )
     {
     }
 
@@ -100,6 +102,7 @@ namespace Kernel
     , property_restrictions_set()
     , property_restrictions()
     , property_restrictions_verified( false )
+    , target_residents_only( false )
     {
     }
 
@@ -157,6 +160,7 @@ namespace Kernel
 
         pParent->initConfigComplexType("Property_Restrictions_Within_Node", &property_restrictions, Property_Restriction_DESC_TEXT, "Intervention_Config.*.iv_type", "IndividualTargeted" );
 
+        pParent->initConfigTypeMap( "Target_Residents_Only", &target_residents_only, Target_Residents_Only_DESC_TEXT, false );
     }
 
     void DemographicRestrictions::CheckConfiguration()
@@ -204,6 +208,19 @@ namespace Kernel
     bool DemographicRestrictions::IsQualified( const IIndividualHumanEventContext* pIndividual )
     {
         bool retQualifies = true;
+
+        if( target_residents_only )
+        {
+            IIndividualHuman* p_human = nullptr;
+            if (s_OK != const_cast<IIndividualHumanEventContext*>(pIndividual)->QueryInterface(GET_IID(IIndividualHuman), (void**)&p_human) )
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHuman", "IIndividualHumanEventContext" );
+            }
+            if( !p_human->AtHome() )
+            {
+                return false ;
+            }
+        }
 
         if( (target_demographic == TargetDemographicType::PossibleMothers) && !pIndividual->IsPossibleMother() )
         {

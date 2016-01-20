@@ -206,6 +206,7 @@ namespace Kernel
         , max_waypoints(0)
         , waypoints()
         , waypoints_trip_type()
+        , home_node_id(suids::nil_suid())
         , Properties()
         , parent(nullptr)
         , broadcaster(nullptr)
@@ -241,6 +242,7 @@ namespace Kernel
         , max_waypoints(0)
         , waypoints()
         , waypoints_trip_type()
+        , home_node_id(suids::nil_suid())
         , Properties()
         , parent(nullptr)
         , broadcaster(nullptr)
@@ -313,6 +315,8 @@ namespace Kernel
 
     void IndividualHuman::InitializeHuman()
     {
+        release_assert( parent );
+        home_node_id = parent->GetSuid() ;
     }
 
     void IndividualHuman::SetContextTo(INodeContext* context)
@@ -843,8 +847,9 @@ namespace Kernel
 
     bool IndividualHuman::AtHome() const
     {
-        return waypoints.size() == 0;
+        return home_node_id == parent->GetSuid();
     }
+
 
     //------------------------------------------------------------------
     //   Infection methods
@@ -1243,6 +1248,7 @@ namespace Kernel
         ar.labelElement("max_waypoints") & individual.max_waypoints;
         ar.labelElement("waypoints") & individual.waypoints;
         ar.labelElement("waypoints_trip_type"); serialize_waypoint_types( ar, individual.waypoints_trip_type );
+        ar.labelElement("home_node_id") & individual.home_node_id.data;
         ar.labelElement("Properties") & individual.Properties;
     }
 

@@ -487,6 +487,8 @@ NO_DENSITY_DEPENDENCE."
 #define Distribution_Times_DESC_TEXT "Vector of ints for simulation times at which distribution of events occurs in a CalendarEventCoordinator" 
 #define Distribution_Coverages_DESC_TEXT "Vector of floats for fraction of individuals that will receive this intervention in a CalendarEventCoordinator" 
 
+#define Target_Residents_Only_DESC_TEXT "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node"
+
 #define HIV_DTP_Mutation_DESC_TEXT "TBD"
 #define HIV_DTP_Mutation_Fitness_Cost_DESC_TEXT "TBD"
 #define HIV_DTP_Mutation_Fold_Change_IC50_DESC_TEXT "TBD"
