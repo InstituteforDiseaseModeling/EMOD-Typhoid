@@ -52,9 +52,8 @@ namespace Kernel
     , tsteps_between_reps(-1)
     , intervention_activated(false)
     , tsteps_since_last(0)
-    , travel_linked(false)
-    , include_emigrants(0)
-    , include_immigrants(0)
+    , include_emigrants(false)
+    , include_immigrants(false)
     , _di( nullptr )
     , demographic_restrictions()
     {
@@ -77,9 +76,8 @@ namespace Kernel
         {
             initConfigTypeMap("Timesteps_Between_Repetitions", &tsteps_between_reps, Timesteps_Between_Repetitions_DESC_TEXT, -1, 10000 /*undefined*/, -1 /*off*/, "Number_Repetitions", "<>0" );
         }
-        initConfigTypeMap("Travel_Linked", &travel_linked, Travel_Linked_DESC_TEXT, 0, 1, 0, "Intervention_Config.*.iv_type", "IndividualTargeted" );
-        initConfigTypeMap("Include_Departures", &include_emigrants, Include_Departures_DESC_TEXT, 0, 1, 0, "Travel_Linked", "true" );
-        initConfigTypeMap("Include_Arrivals", &include_immigrants, Include_Arrivals_DESC_TEXT, 0, 1, 0, "Travel_Linked", "true" );
+        initConfigTypeMap("Include_Departures", &include_emigrants, Include_Departures_DESC_TEXT, false );
+        initConfigTypeMap("Include_Arrivals", &include_immigrants, Include_Arrivals_DESC_TEXT, false );
 
         demographic_restrictions.ConfigureRestrictions( this, inputJson );
 
