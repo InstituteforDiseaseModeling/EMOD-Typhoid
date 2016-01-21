@@ -187,12 +187,13 @@ namespace Kernel
 
             new_event_qb[ "Event_Coordinator_Config" ] = new_sub_event;
             // This boilerplate stuff should come from Use_Defaults(!)
+            new_event_qb[ "Event_Coordinator_Config" ][ "Dont_Allow_Duplicates" ] = json::Number( 0 );
             new_event_qb[ "Event_Coordinator_Config" ][ "Number_Distributions" ] = json::Number( -1.0 );
             new_event_qb[ "Event_Coordinator_Config" ][ "Number_Repetitions" ] = json::Number( 1.0 );
             new_event_qb[ "Event_Coordinator_Config" ][ "Property_Restrictions" ] = json::Array();
             new_event_qb[ "Event_Coordinator_Config" ][ "Target_Demographic" ] = json::String( "Everyone" );
             new_event_qb[ "Event_Coordinator_Config" ][ "Timesteps_Between_Repetitions" ] = json::Number( 0 );
-            new_event_qb[ "Event_Coordinator_Config" ][ "Travel_Linked" ] = json::Number( 0 );
+            new_event_qb[ "Event_Coordinator_Config" ][ "Target_Residents_Only" ] = json::Number( 0 );
             new_event_qb[ "Event_Coordinator_Config" ][ "Include_Arrivals" ] = json::Number( 0 );
             new_event_qb[ "Event_Coordinator_Config" ][ "Include_Departures" ] = json::Number( 0 );
 
@@ -241,6 +242,7 @@ namespace Kernel
             {
                 new_event[ "Start_Day" ] = json::Number( when_value );
                 new_ic_qb[ "class" ] = json::String( "PropertyValueChanger" );
+                new_ic_qb[ "Dont_Allow_Duplicates" ] = json::Number( 0 );
                 new_ic_qb[ "Target_Property_Key" ] = json::String( prop_key );
                 new_ic_qb[ "Target_Property_Value" ] = json::String( to_value );
                 new_ic_qb[ "Daily_Probability" ] = json::Number( probability );
@@ -257,8 +259,10 @@ namespace Kernel
                     json::Object new_bti = json::Object();
                     json::QuickBuilder new_bti_qb = json::QuickBuilder( new_bti );
                     new_bti_qb[ "class" ] = json::String( "BirthTriggeredIV" );
+                    new_bti_qb[ "Dont_Allow_Duplicates" ] = json::Number( 0 );
                     new_bti_qb[ "Demographic_Coverage" ] = json::Number( 1.0 );
                     new_bti_qb[ "Target_Demographic" ] = json::String( "Everyone" );
+                    new_bti_qb[ "Target_Residents_Only" ] = json::Number( 0 );
                     new_bti_qb[ "Property_Restrictions" ] = json::Array();
                     new_bti_qb[ "Duration" ] = json::Number( -1.0 );
                     new_bti_qb[ "Actual_IndividualIntervention_Config" ] = new_ic_qb.As<json::Object>();
@@ -272,10 +276,12 @@ namespace Kernel
                 double age = DAYSPERYEAR * trans[idx][ "Age_In_Years" ].AsDouble();
                 new_event[ "Start_Day" ] = json::Number( when_value );
                 new_ic_qb[ "class" ] = json::String( "IVCalendar" );
+                new_ic_qb[ "Dont_Allow_Duplicates" ] = json::Number( 0 );
                 new_ic_qb[ "Dropout" ] = json::Number( 0 );
                 new_ic_qb[ "Calendar" ][0][ "Age" ] = json::Number( age );
                 new_ic_qb[ "Calendar" ][0][ "Probability" ] = json::Number( 1.0 );
                 new_ic_qb[ "Actual_IndividualIntervention_Configs" ][0][ "class" ] = json::String( "PropertyValueChanger" );
+                new_ic_qb[ "Actual_IndividualIntervention_Configs" ][0][ "Dont_Allow_Duplicates" ] = json::Number( 0 );
                 new_ic_qb[ "Actual_IndividualIntervention_Configs" ][0][ "Target_Property_Key" ] = json::String( prop_key );
                 new_ic_qb[ "Actual_IndividualIntervention_Configs" ][0][ "Target_Property_Value" ] = json::String( to_value );
                 new_ic_qb[ "Actual_IndividualIntervention_Configs" ][0][ "Daily_Probability" ] = json::Number( probability );
@@ -290,8 +296,10 @@ namespace Kernel
                 json::Object new_bti = json::Object();
                 json::QuickBuilder new_bti_qb = json::QuickBuilder( new_bti );
                 new_bti_qb[ "class" ] = json::String( "BirthTriggeredIV" );
+                new_bti_qb[ "Dont_Allow_Duplicates" ] = json::Number( 0 );
                 new_bti_qb[ "Demographic_Coverage" ] = json::Number( 1.0 );
                 new_bti_qb[ "Target_Demographic" ] = json::String( "Everyone" );
+                new_bti_qb[ "Target_Residents_Only" ] = json::Number( 0 );
                 new_bti_qb[ "Property_Restrictions" ] = json::Array();
                 new_bti_qb[ "Duration" ] = json::Number( -1.0 );
                 new_bti_qb[ "Actual_IndividualIntervention_Config" ] = new_ic_qb.As<json::Object>();
@@ -305,13 +313,6 @@ namespace Kernel
                 new_event_qb[ "Event_Coordinator_Config" ][ "Target_Age_Min" ] = json::Number( min );
                 new_event_qb[ "Event_Coordinator_Config" ][ "Target_Age_Max" ] = json::Number( max );
 
-            }
-            else if( type == "At_Event" )
-            {
-                // TBD: Add Health-Triggered Intervention
-                trigger = trans[idx][ "Trigger" ].AsString();
-                new_event[ "Start_Day" ] = json::Number( 100000 );
-                new_ic_qb[ "class" ] = json::String( "HealthTriggeredIntervention" );
             }
             else
             {
@@ -1034,8 +1035,6 @@ namespace Kernel
 
                 // Everybody stops here for a sync-up after rank 0 writes transitions.json
                 MPI_Barrier( MPI_COMM_WORLD );
-
-                ((Simulation*)parent)->loadCampaignFromFile( transitions_file_path );
 
                 doOnce = true;
             }

@@ -122,6 +122,7 @@ namespace Kernel
         void initSimulationState();
 
         // Node initialization
+        virtual void LoadInterventions( const char* campaignfilename );
         int  populateFromDemographics(const char* campaign_filename, const char* loadbalance_filename); // creates nodes from demographics input file data
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory); // For derived Simulation classes to add correct node type
         void addNode_internal( INodeContext *node, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory); // Helper to add Nodes

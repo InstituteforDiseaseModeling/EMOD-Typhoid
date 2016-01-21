@@ -846,7 +846,7 @@ namespace Kernel
         return pmf ;
     }
 
-    int Simulation::populateFromDemographics(const char* campaignfilename, const char* loadbalancefilename)
+    void Simulation::LoadInterventions( const char* campaignfilename )
     {
         JsonConfigurable::_track_missing = false;
         // Set up campaign interventions from file
@@ -876,10 +876,19 @@ namespace Kernel
 #endif
 
             loadCampaignFromFile(campaignfilename);
+
+            std::string transitions_file_path = FileSystem::Concat( Environment::getInstance()->OutputPath, std::string(Node::transitions_dot_json_filename) );
+            if( FileSystem::FileExists( transitions_file_path ) )
+            {
+                loadCampaignFromFile(transitions_file_path);
+            }
         }
 
         JsonConfigurable::_track_missing = true;
+    }
 
+    int Simulation::populateFromDemographics(const char* campaignfilename, const char* loadbalancefilename)
+    {
         // Initialize node demographics from file
         demographics_factory = NodeDemographicsFactory::CreateNodeDemographicsFactory( &nodeid_suid_map, 
                                                                                        EnvPtr->Config,
@@ -971,6 +980,8 @@ namespace Kernel
             release_assert(entry.second);
             (entry.second)->SetupMigration( migration_factory, m_simConfigObj->migration_structure, merged_map );
         }
+
+        LoadInterventions( campaignfilename );
 
 #ifndef DISABLE_CLIMATE
         // Clean up
