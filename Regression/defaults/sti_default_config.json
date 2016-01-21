@@ -31,6 +31,7 @@
 		"Enable_Demographics_Other": 0,
 		"Enable_Disease_Mortality": 1,
 		"Enable_Vital_Dynamics": 1,
+		"Minimum_Adult_Age_Years" : 15,
 		"x_Birth": 1.025,
 		"x_Other_Mortality": 0.85,
 

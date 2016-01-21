@@ -75,6 +75,7 @@
         "Max_Node_Population_Samples": 40, 
         "Migration_Model": "FIXED_RATE_MIGRATION", 
         "Migration_Pattern": "SINGLE_ROUND_TRIPS", 
+        "Minimum_Adult_Age_Years": 15, 
         "Mortality_Blocking_Immunity_Decay_Rate": 0.001, 
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 60, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 

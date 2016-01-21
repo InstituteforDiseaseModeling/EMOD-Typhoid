@@ -145,6 +145,11 @@ public:
         return m_pNodeContext ;
     }
 
+    virtual bool IsAdult() const
+    {
+        return m_Age/DAYSPERYEAR > 15.0 ;
+    }
+
     virtual void setupMaternalAntibodies(Kernel::IIndividualHumanContext *,Kernel::INodeContext *) override { throw std::exception("The method or operation is not implemented."); }
     virtual void AcquireNewInfection(Kernel::StrainIdentity *,int)                                 override { throw std::exception("The method or operation is not implemented."); }
     virtual void SetInitialInfections(int)                                                         override { throw std::exception("The method or operation is not implemented."); }

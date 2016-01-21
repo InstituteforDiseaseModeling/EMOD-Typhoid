@@ -24,6 +24,7 @@
                "Enable_Demographics_Initial": 1, 
                "Enable_Demographics_Other": 1, 
                "Enable_Demographics_Reporting": 1, 
+               "Minimum_Adult_Age_Years" : 15,
                "Enable_Vital_Dynamics": 1, 
                "IMMUNITY": {
                     "Acquisition_Blocking_Immunity_Decay_Rate": 0.01, 

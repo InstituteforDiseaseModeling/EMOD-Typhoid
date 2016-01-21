@@ -72,6 +72,7 @@
         "Max_Node_Population_Samples": 100, 
         "Migration_Model": "FIXED_RATE_MIGRATION", 
         "Migration_Pattern": "WAYPOINTS_HOME", 
+        "Minimum_Adult_Age_Years": 15, 
         "Mortality_Blocking_Immunity_Decay_Rate": 0.1, 
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 270, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 

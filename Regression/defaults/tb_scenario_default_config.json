@@ -29,6 +29,7 @@
             "Enable_Demographics_Initial":1,
             "Enable_Demographics_Other":0,
             "Base_Population_Scale_Factor":1,
+            "Minimum_Adult_Age_Years" : 15,
             "SAMPLING": {
                 "Base_Individual_Sample_Rate":1,
                 "Population_Scale_Type":"FIXED_SCALING",

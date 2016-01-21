@@ -1726,6 +1726,8 @@ namespace Kernel
     // (4) vital_birth_dependence: INDIVIDUAL_PREGNANCIES, INDIVIDUAL_PREGNANCIES_BY_URBAN_AND_AGE must have initial pregnancies initialized
     void Node::populateNewIndividualsFromDemographics(int count_new_individuals)
     {
+        int32_t num_adults = 0 ;
+        int32_t num_children = 0 ;
 
         // TODO: throw exception on disallowed combinations of parameters (i.e. adaptive sampling without initial demographics)?
 
@@ -1788,8 +1790,42 @@ namespace Kernel
             }
 
             // Draw individual's age if we haven't already done it to determine adaptive sampling rate
-            if ( ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP && ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE )
+            if ( (ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP             ) &&
+                 (ind_sampling_type != IndSamplingType::ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE) )
+            {
                 temp_age = calculateInitialAge(default_age);
+                if( demographics["IndividualAttributes"].Contains( "PercentageChildren" ) )
+                {
+                    float required_percentage_of_children = demographics["IndividualAttributes"]["PercentageChildren"].AsDouble();
+                    float required_percentage_of_adults = 1.0  -required_percentage_of_children ;
+                    float percent_children = (float)num_children / (float)count_new_individuals ;
+                    float percent_adults   = (float)num_adults   / (float)count_new_individuals ;
+                    float age_years = temp_age / DAYSPERYEAR ;
+
+                    // if a child and already have enough children, recalculate age until we get an adult
+                    while( !IndividualHumanConfig::IsAdultAge( age_years ) && (percent_children >= required_percentage_of_children) )
+                    {
+                        temp_age = calculateInitialAge(default_age);
+                        age_years = temp_age / DAYSPERYEAR ;
+                    }
+
+                    // if an adult and aalready have enough adults, recalculate age until we get a child
+                    while( IndividualHumanConfig::IsAdultAge( age_years ) && (percent_adults >= required_percentage_of_adults) )
+                    {
+                        temp_age = calculateInitialAge(default_age);
+                        age_years = temp_age / DAYSPERYEAR ;
+                    }
+
+                    if( IndividualHumanConfig::IsAdultAge( age_years ) )
+                    {
+                        num_adults++ ;
+                    }
+                    else
+                    {
+                        num_children++ ;
+                    }
+                }
+            }
 
             IIndividualHuman* tempind = configureAndAddNewIndividual(1.0F / temp_sampling_rate, float(temp_age), float(initial_prevalence), float(female_ratio));
             

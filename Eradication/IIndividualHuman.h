@@ -38,6 +38,7 @@ namespace Kernel
         // Inspection
         virtual suids::suid GetSuid() const = 0;
         virtual double GetAge() const = 0;
+        virtual bool IsAdult() const = 0;
         virtual int GetGender() const = 0;
         virtual double GetMonteCarloWeight() const = 0;
         virtual bool IsInfected() const = 0;

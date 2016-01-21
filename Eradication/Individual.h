@@ -47,8 +47,12 @@ namespace Kernel
         GET_SCHEMA_STATIC_WRAPPER(IndividualHumanConfig)
         friend class Simulation;
 
+    public:
+        static bool IsAdultAge( float years );
+
     protected:
         static bool aging;
+        static float min_adult_age_years ;
 
         // migration parameters
         static int roundtrip_waypoints;
@@ -127,6 +131,8 @@ namespace Kernel
         virtual INodeEventContext   * GetNodeEventContext() override; // for campaign cost reporting in e.g. HealthSeekingBehavior
         virtual tProperties* GetProperties() override;
         virtual bool AtHome() const override;
+
+        virtual bool IsAdult() const override;
 
         // Migration
         virtual void ImmigrateTo(INodeContext* destination_node) override;

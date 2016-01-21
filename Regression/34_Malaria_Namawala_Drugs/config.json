@@ -117,7 +117,6 @@
         "Larval_Density_Dependence": "UNIFORM_WHEN_OVERPOPULATION", 
         "Listed_Events": [], 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Simulation": 0, 
         "MSP1_Merozoite_Kill_Fraction": 0.5, 
         "Malaria_Drug_Params": {
@@ -271,6 +270,7 @@
         "Migration_Model": "NO_MIGRATION", 
         "Min_Adapted_Response": 0.01, 
         "Min_Days_Between_Clinical_Incidents": 3, 
+        "Minimum_Adult_Age_Years": 15, 
         "Mortality_Blocking_Immunity_Decay_Rate": 0.001, 
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 90, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 

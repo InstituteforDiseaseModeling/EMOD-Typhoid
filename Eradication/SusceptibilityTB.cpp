@@ -114,7 +114,8 @@ namespace Kernel
     {
         float fast_fraction = 0;
 
-        if(age < CHILD_AGE_YEARS * DAYSPERYEAR)
+        float age_years = age / DAYSPERYEAR ;
+        if( !IndividualHumanConfig::IsAdultAge( age_years ) )
             fast_fraction = TB_fast_progressor_fraction_child;
         else
             fast_fraction = TB_fast_progressor_fraction_adult;

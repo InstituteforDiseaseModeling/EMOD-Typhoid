@@ -53,11 +53,17 @@ namespace Kernel
     int IndividualHumanConfig::max_ind_inf = 0;
     bool IndividualHumanConfig::superinfection = 0;
     float IndividualHumanConfig::x_othermortality = 0.0f;
+    float IndividualHumanConfig::min_adult_age_years = 15.0f;
 
     // QI stuff in case we want to use it more extensively outside of campaigns
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanConfig)
     BEGIN_QUERY_INTERFACE_BODY(IndividualHumanConfig)
     END_QUERY_INTERFACE_BODY(IndividualHumanConfig)
+
+    bool IndividualHumanConfig::IsAdultAge( float years )
+    {
+        return (min_adult_age_years <= years);
+    }
 
     //------------------------------------------------------------------
     //   Initialization methods
@@ -75,6 +81,7 @@ namespace Kernel
         initConfigTypeMap( "Max_Individual_Infections", &max_ind_inf, Max_Individual_Infections_DESC_TEXT, 0, 1000, 1 );
         initConfigTypeMap( "Enable_Superinfection", &superinfection, Enable_Superinfection_DESC_TEXT, false );
         initConfigTypeMap( "x_Other_Mortality", &x_othermortality, x_Other_Mortality_DESC_TEXT, 0.0f, FLT_MAX, 1.0f );
+        initConfigTypeMap( "Minimum_Adult_Age_Years", &min_adult_age_years, "TBD", 0.0f, FLT_MAX, 15.0f );
 
         MigrationStructure::Enum migration_structure; // TBD: Would be nice to get from SimulationConfig, but fakeHuman is configured first
         initConfig( "Migration_Model", migration_structure, config, MetadataDescriptor::Enum("migration_structure", Migration_Model_DESC_TEXT, MDD_ENUM_ARGS(MigrationStructure)) );
@@ -317,6 +324,12 @@ namespace Kernel
     {
         release_assert( parent );
         home_node_id = parent->GetSuid() ;
+    }
+
+    bool IndividualHuman::IsAdult() const
+    {
+        float age_years = GetAge() / DAYSPERYEAR ;
+        return age_years >= min_adult_age_years ;
     }
 
     void IndividualHuman::SetContextTo(INodeContext* context)

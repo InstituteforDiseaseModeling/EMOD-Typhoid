@@ -3557,6 +3557,13 @@
 				"max" : 3.40282e+038,
 				"default" : 1
 			},
+			"Minimum_Adult_Age_Years" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 15
+			},
 			"Migration_Model" : {
 				"type" : "enum",
 				"enum" : [

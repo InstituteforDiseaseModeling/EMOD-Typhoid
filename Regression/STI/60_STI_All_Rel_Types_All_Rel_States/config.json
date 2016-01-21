@@ -92,6 +92,7 @@
         "Migration_Model": "FIXED_RATE_MIGRATION", 
         "Migration_Pattern": "SINGLE_ROUND_TRIPS", 
         "Min_Days_Between_Adding_Relationships": 60, 
+        "Minimum_Adult_Age_Years": 15, 
         "Mortality_Blocking_Immunity_Decay_Rate": 0, 
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 27000, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 
