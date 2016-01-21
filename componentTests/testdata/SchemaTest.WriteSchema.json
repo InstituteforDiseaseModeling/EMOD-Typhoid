@@ -4467,6 +4467,25 @@
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 1
+			},
+			"Family_Migration_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"LOCAL_MIGRATION",
+					"AIR_MIGRATION",
+					"REGIONAL_MIGRATION",
+					"SEA_MIGRATION"
+				],
+				"description" : "TBD",
+				"default" : "NO_MIGRATION"
+			},
+			"Family_Migration_Probability" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 1,
+				"default" : 1
 			}
 		},
 		"Node" : {

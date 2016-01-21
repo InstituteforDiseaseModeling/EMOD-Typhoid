@@ -49,6 +49,7 @@
         "Enable_Spatial_Output": 0, 
         "Enable_Superinfection": 0, 
         "Enable_Vital_Dynamics": 1, 
+        "Family_Migration_Type": "NO_MIGRATION", 
         "Geography": "Seattle", 
         "Immunity_Acquisition_Factor": 0.7, 
         "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_OFF", 

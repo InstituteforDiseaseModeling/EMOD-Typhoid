@@ -50,7 +50,11 @@ namespace Kernel
 
         // IMigrate interfaces
         virtual void ImmigrateTo(INodeContext* destination_node) override;
-        virtual void SetMigrationDestination(suids::suid destination) override;
+        virtual void SetMigrating( suids::suid destination, 
+                                   MigrationType::Enum type, 
+                                   float timeUntilTrip, 
+                                   float timeAtDestination,
+                                   bool isDestinationNewHome ) override;
         virtual const suids::suid & GetMigrationDestination() override;
         virtual MigrationType::Enum GetMigrationType() const  override;
 

@@ -207,12 +207,21 @@ namespace Kernel
         , migration_mod(0)
         , migration_type(MigrationType::NO_MIGRATION)
         , migration_destination(suids::nil_suid())
-        , time_to_next_migration(FLT_MAX)
-        , will_return(false)
-        , outbound(false)
+        , migration_time_until_trip(FLT_MAX)
+        , migration_time_at_destination(0.0)
+        , migration_is_destination_new_home(false)
+        , migration_will_return(false)
+        , migration_outbound(false)
         , max_waypoints(0)
         , waypoints()
         , waypoints_trip_type()
+        , waiting_for_family_trip(false)
+        , leave_on_family_trip(false)
+        , is_on_family_trip(false)
+        , family_migration_destination(suids::nil_suid())
+        , family_migration_type(MigrationType::NO_MIGRATION)
+        , family_migration_time_until_trip(0.0)
+        , family_migration_time_at_destination(0.0)
         , home_node_id(suids::nil_suid())
         , Properties()
         , parent(nullptr)
@@ -243,12 +252,21 @@ namespace Kernel
         , migration_mod(0)
         , migration_type(MigrationType::NO_MIGRATION)
         , migration_destination(suids::nil_suid())
-        , time_to_next_migration(FLT_MAX)
-        , will_return(false)
-        , outbound(false)
+        , migration_time_until_trip(FLT_MAX)
+        , migration_time_at_destination(0.0)
+        , migration_is_destination_new_home(false)
+        , migration_will_return(false)
+        , migration_outbound(false)
         , max_waypoints(0)
         , waypoints()
         , waypoints_trip_type()
+        , waiting_for_family_trip(false)
+        , leave_on_family_trip(false)
+        , is_on_family_trip(false)
+        , family_migration_destination(suids::nil_suid())
+        , family_migration_type(MigrationType::NO_MIGRATION)
+        , family_migration_time_until_trip(0.0)
+        , family_migration_time_at_destination(0.0)
         , home_node_id(suids::nil_suid())
         , Properties()
         , parent(nullptr)
@@ -346,11 +364,16 @@ namespace Kernel
                 if(waypoints.size() > 0 && waypoints[0] == migration_destination)
                 {
                     waypoints.clear();
-                    outbound = true;
-                    will_return = true;
+                    migration_outbound    = true;
+                    migration_will_return = true;
                 }
 
                 migration_destination = suids::nil_suid();
+            }
+
+            if( (parent->GetSuid() == home_node_id) && is_on_family_trip )
+            {
+                is_on_family_trip = false ;
             }
 
             // need to do this *after* (potentially) clearing waypoints above, so that AtHome() can return true
@@ -358,9 +381,9 @@ namespace Kernel
         }
         else if(old_context)
         {
-            if(outbound)
+            if(migration_outbound)
             {
-                if(will_return)
+                if(migration_will_return)
                 {
                     waypoints.push_back(old_context->GetSuid());
                     waypoints_trip_type.push_back(migration_type);
@@ -400,9 +423,9 @@ namespace Kernel
         StateChange       = HumanStateChange::None;
 
         // migration stuff
-        max_waypoints     = 10;
-        outbound          = true;
-        will_return       = true;
+        max_waypoints         = 10;
+        migration_outbound    = true;
+        migration_will_return = true;
 
         // set to 0
         is_pregnant     = false;
@@ -715,6 +738,15 @@ namespace Kernel
         }
 
         destination_node->processImmigratingIndividual(this);
+        if( migration_is_destination_new_home )
+        {
+            home_node_id = destination_node->GetSuid();
+            migration_is_destination_new_home = false;
+            migration_outbound = false ;
+            migration_will_return = false ;
+            waypoints.clear();
+            waypoints_trip_type.clear();
+        }
     }
 
     void IndividualHuman::CheckForMigration(float currenttime, float dt)
@@ -724,18 +756,27 @@ namespace Kernel
         switch (GET_CONFIGURABLE(SimulationConfig)->migration_structure)
         {
         case MigrationStructure::FIXED_RATE_MIGRATION:
-            if(migration_destination.is_nil())
-                SetNextMigration();
-
-            if( !migration_destination.is_nil() )
+            if( leave_on_family_trip )
             {
-                time_to_next_migration -= dt;
-                if(time_to_next_migration < 0)
-                {
-                    LOG_DEBUG_F( "%s: individual %d is migrating.\n", __FUNCTION__, suid.data );
-                    StateChange = HumanStateChange::Migrating;
-                }
+                migration_outbound            = true;
+                migration_will_return         = true;
+                migration_destination         = family_migration_destination;
+                migration_type                = family_migration_type;
+                migration_time_until_trip     = family_migration_time_until_trip;
+                migration_time_at_destination = family_migration_time_at_destination;
+                is_on_family_trip             = true;
+
+                leave_on_family_trip             = false;
+                family_migration_destination     = suids::nil_suid();
+                family_migration_type            = MigrationType::NO_MIGRATION;
+                family_migration_time_until_trip = 0.0 ;
             }
+            else if( !waiting_for_family_trip )
+            {
+                if( migration_destination.is_nil() )
+                    SetNextMigration();
+            }
+
             break;
 
         case MigrationStructure::VARIABLE_RATE_MIGRATION:   // Variable, but drawn from distributions
@@ -754,6 +795,21 @@ namespace Kernel
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
             break;
         }
+
+        // ----------------------------------------------------------------
+        // --- This is not part of the switch statement because we want to
+        // --- allow the MigrateTo intervention to not require a particular
+        // --- migration_structure.
+        // ----------------------------------------------------------------
+        if( !migration_destination.is_nil() )
+        {
+            migration_time_until_trip -= dt;
+            if(migration_time_until_trip < 0)
+            {
+                LOG_DEBUG_F( "%s: individual %d is migrating.\n", __FUNCTION__, suid.data );
+                StateChange = HumanStateChange::Migrating;
+            }
+        }
     }
 
     void IndividualHuman::SetNextMigration(void)
@@ -764,40 +820,57 @@ namespace Kernel
             (migration_info->GetReachableNodes().size() > 0) )
         {
             if(waypoints.size() == 0)
-                outbound = true;
+                migration_outbound = true;
             else if(waypoints.size() == max_waypoints)
-                outbound = false;
+                migration_outbound = false;
 
-            if(outbound)
+            if(migration_outbound)
             {
-                migration_info->PickMigrationStep( this, migration_mod, migration_destination, migration_type, time_to_next_migration );
+                migration_info->PickMigrationStep( this, migration_mod, migration_destination, migration_type, migration_time_until_trip );
 
                 if( migration_type == MigrationType::NO_MIGRATION )
                 {
                     return ;
                 }
+                if( (migration_type == migration_info->GetFamilyMigrationType()) &&
+                    (migration_info->GetFamilyMigrationProbability() > 0) )
+                {
+                    float rand = this->GetRng()->e();
+                    if( migration_info->GetFamilyMigrationProbability() >= rand )
+                    {
+                        waiting_for_family_trip = true ;
+
+                        parent->SetWaitingForFamilyTrip( migration_destination, 
+                                                         migration_type,
+                                                         migration_time_until_trip,
+                                                         0.0f );
+
+                        migration_destination = suids::nil_suid();
+                        migration_time_until_trip = 0.0 ;
+                    }
+                }
 
                 float return_prob = 0.0f;
                 switch(migration_type)
                 {
-                case MigrationType::LOCAL_MIGRATION:    return_prob = local_roundtrip_prob;  break;
-                case MigrationType::AIR_MIGRATION:      return_prob = air_roundtrip_prob;    break;
-                case MigrationType::REGIONAL_MIGRATION: return_prob = region_roundtrip_prob; break;
-                case MigrationType::SEA_MIGRATION:      return_prob = sea_roundtrip_prob;    break;
-                default:
-                    throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "migration_type", migration_type, "MigrationType" );
+                    case MigrationType::LOCAL_MIGRATION:    return_prob = local_roundtrip_prob;  break;
+                    case MigrationType::AIR_MIGRATION:      return_prob = air_roundtrip_prob;    break;
+                    case MigrationType::REGIONAL_MIGRATION: return_prob = region_roundtrip_prob; break;
+                    case MigrationType::SEA_MIGRATION:      return_prob = sea_roundtrip_prob;    break;
+                    default:
+                        throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "migration_type", migration_type, "MigrationType" );
                 }
 
-                will_return = (return_prob > 0.0f);
-                if(will_return  &&  return_prob < 1.0f)
+                migration_will_return = (return_prob > 0.0f);
+                if( migration_will_return && (return_prob < 1.0f) )
                 {
                     if(randgen->e() > return_prob)
                     {
-                        will_return = false;
+                        migration_will_return = false;
                     }
                 }
             }
-            else
+            else if( waypoints.size() > 0 )
             {
                 migration_destination = waypoints.back();
 
@@ -806,18 +879,25 @@ namespace Kernel
                 float return_duration_rate = 0.0f;
                 switch(trip_type)
                 {
-                case MigrationType::LOCAL_MIGRATION:       return_duration_rate = local_roundtrip_duration_rate; break;
-                case MigrationType::AIR_MIGRATION:         return_duration_rate = air_roundtrip_duration_rate; break;
-                case MigrationType::REGIONAL_MIGRATION:    return_duration_rate = region_roundtrip_duration_rate; break;
-                case MigrationType::SEA_MIGRATION:         return_duration_rate = sea_roundtrip_duration_rate; break;
-                default:
-                    throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "trip_type", trip_type, "MigrationType" );
+                    case MigrationType::LOCAL_MIGRATION:    return_duration_rate = local_roundtrip_duration_rate;  break;
+                    case MigrationType::AIR_MIGRATION:      return_duration_rate = air_roundtrip_duration_rate;    break;
+                    case MigrationType::REGIONAL_MIGRATION: return_duration_rate = region_roundtrip_duration_rate; break;
+                    case MigrationType::SEA_MIGRATION:      return_duration_rate = sea_roundtrip_duration_rate;    break;
+                    default:
+                        throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "trip_type", trip_type, "MigrationType" );
                 }
 
-                if(return_duration_rate > 0.0f)
-                    time_to_next_migration = float(randgen->expdist(return_duration_rate));
+                if( migration_time_at_destination > 0.0f )
+                {
+                    migration_time_until_trip = migration_time_at_destination ;
+                    migration_time_at_destination = 0.0f ;
+                }
+                else if(return_duration_rate > 0.0f)
+                {
+                    migration_time_until_trip = (float)randgen->expdist(return_duration_rate);
+                }
                 else
-                    time_to_next_migration = 0.0f;
+                    migration_time_until_trip = 0.0f;
             }
         }
     }
@@ -825,11 +905,6 @@ namespace Kernel
     const suids::suid& IndividualHuman::GetMigrationDestination()
     {
         return migration_destination;
-    }
-
-    void IndividualHuman::SetMigrationDestination(suids::suid destination)
-    {
-        migration_destination = destination;
     }
 
     bool IndividualHuman::IsMigrating()
@@ -863,6 +938,48 @@ namespace Kernel
         return home_node_id == parent->GetSuid();
     }
 
+    void IndividualHuman::GoHome()
+    {
+        migration_destination = home_node_id ;
+    }
+
+    void IndividualHuman::SetGoingOnFamilyTrip( suids::suid migrationDestination,
+                                                MigrationType::Enum migrationType,
+                                                float timeUntilTrip,
+                                                float timeAtDestination )
+    {
+        leave_on_family_trip                 = true ;
+        family_migration_destination         = migrationDestination ;
+        family_migration_type                = migrationType ;
+        family_migration_time_until_trip     = timeUntilTrip ;
+        family_migration_time_at_destination = timeAtDestination ;
+        waiting_for_family_trip              = false ;
+    }
+
+    void IndividualHuman::SetWaitingToGoOnFamilyTrip()
+    {
+        waiting_for_family_trip   = true ;
+        migration_destination     = suids::nil_suid();
+        migration_time_until_trip = 0.0 ;
+    }
+
+    void IndividualHuman::SetMigrating( suids::suid destination, 
+                                        MigrationType::Enum type, 
+                                        float timeUntilTrip, 
+                                        float timeAtDestination,
+                                        bool isDestinationNewHome )
+    {
+        if( parent->GetSuid().data != destination.data )
+        {
+            migration_destination             = destination;
+            migration_type                    = type;
+            migration_time_until_trip         = timeUntilTrip;
+            migration_time_at_destination     = timeAtDestination;
+            migration_is_destination_new_home = isDestinationNewHome;
+            migration_outbound                = !isDestinationNewHome;
+            migration_will_return             = !isDestinationNewHome;
+        }
+    }
 
     //------------------------------------------------------------------
     //   Infection methods
@@ -1255,14 +1372,23 @@ namespace Kernel
         ar.labelElement("migration_mod") & individual.migration_mod;
         ar.labelElement("migration_type") & (uint32_t&)individual.migration_type;
         ar.labelElement("migration_destination_data") & individual.migration_destination.data;
-        ar.labelElement("time_to_next_migration") & individual.time_to_next_migration;
-        ar.labelElement("will_return") & individual.will_return;
-        ar.labelElement("outbound") & individual.outbound;
+        ar.labelElement("migration_time_until_trip") & individual.migration_time_until_trip;
+        ar.labelElement("migration_time_at_destination") & individual.migration_time_at_destination;
+        ar.labelElement("migration_is_destination_new_home") & individual.migration_is_destination_new_home;
+        ar.labelElement("migration_will_return") & individual.migration_will_return;
+        ar.labelElement("migration_outbound") & individual.migration_outbound;
         ar.labelElement("max_waypoints") & individual.max_waypoints;
         ar.labelElement("waypoints") & individual.waypoints;
         ar.labelElement("waypoints_trip_type"); serialize_waypoint_types( ar, individual.waypoints_trip_type );
         ar.labelElement("home_node_id") & individual.home_node_id.data;
         ar.labelElement("Properties") & individual.Properties;
+        ar.labelElement("waiting_for_family_trip") & individual.waiting_for_family_trip;
+        ar.labelElement("leave_on_family_trip") & individual.leave_on_family_trip;
+        ar.labelElement("is_on_family_trip") & individual.is_on_family_trip;
+        ar.labelElement("family_migration_type") & (uint32_t&)individual.family_migration_type;
+        ar.labelElement("family_migration_time_until_trip") & individual.family_migration_time_until_trip;
+        ar.labelElement("family_migration_time_at_destination") & individual.family_migration_time_at_destination;
+        ar.labelElement("family_migration_destination") & individual.family_migration_destination.data;
     }
 
     REGISTER_SERIALIZABLE(IndividualHuman);

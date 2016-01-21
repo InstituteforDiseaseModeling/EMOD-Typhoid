@@ -72,6 +72,7 @@
         "Evolution_Polio_Sabin3_Linear_Rate": 0.022, 
         "Evolution_Polio_WPV_Linear_Rate": 0.02191781, 
         "Excrement_Load": 300, 
+        "Family_Migration_Type": "NO_MIGRATION", 
         "Geography": "auto-generated", 
         "Immunity_Acquisition_Factor": 1, 
         "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_OFF", 

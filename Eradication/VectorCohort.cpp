@@ -64,7 +64,11 @@ namespace Kernel
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
     }
 
-    void VectorCohort::SetMigrationDestination(suids::suid destination)
+    void VectorCohort::SetMigrating( suids::suid destination, 
+                                     MigrationType::Enum type, 
+                                     float timeUntilTrip, 
+                                     float timeAtDestination,
+                                     bool isDestinationNewHome )
     {
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
     }

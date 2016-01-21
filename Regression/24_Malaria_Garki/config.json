@@ -91,6 +91,7 @@
         "Falciparum_MSP_Variants": 4, 
         "Falciparum_Nonspecific_Types": 4, 
         "Falciparum_PfEMP1_Variants": 300, 
+        "Family_Migration_Type": "NO_MIGRATION", 
         "Fever_Detection_Threshold": 1, 
         "Fever_IRBC_Kill_Rate": 0.2, 
         "Fever_Mortality_Inverse_Width": 10, 

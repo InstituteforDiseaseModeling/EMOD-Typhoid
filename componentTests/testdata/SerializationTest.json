@@ -386,9 +386,11 @@
                 "migration_mod"             : 1.0,
                 "migration_type"            : 1,
                 "migration_destination_data": 4,
-                "time_to_next_migration"    : 3.3,
-                "will_return"               : true,
-                "outbound"                  : true,
+                "migration_time_until_trip"        : 3.3,
+                "migration_time_at_destination"    : 3.1,
+                "migration_is_destination_new_home": false,
+                "migration_will_return"            : true,
+                "migration_outbound"               : true,
                 "max_waypoints"             : 5,
                 "waypoints"                 : [ 2, 3 ],
                 "waypoints_trip_type"       : [ 0, 1 ],
@@ -404,6 +406,13 @@
                         "value" : "HIGH"
                     }
                 ],
+                "waiting_for_family_trip"              : false,
+                "leave_on_family_trip"                 : true,
+                "is_on_family_trip"                    : false,
+                "family_migration_type"                : 2,
+                "family_migration_time_until_trip"     : 15.5,
+                "family_migration_time_at_destination" : 16.6,
+                "family_migration_destination"         : 2,
                 "net_params" : 
                 {
                     "key_colon_val" : "Risk:HIGH",

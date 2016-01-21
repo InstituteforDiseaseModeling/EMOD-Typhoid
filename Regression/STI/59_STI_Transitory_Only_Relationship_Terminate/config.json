@@ -55,6 +55,7 @@
         "Enable_Vital_Dynamics": 1, 
         "Extra_Relational_Rate_Ratio_Female": 1, 
         "Extra_Relational_Rate_Ratio_Male": 1, 
+        "Family_Migration_Type": "NO_MIGRATION", 
         "Geography": "MigrationTest", 
         "Heterogeneous_Infectiousness_Weibull_Heterogeneity": 0, 
         "Heterogeneous_Infectiousness_Weibull_Scale": 1, 

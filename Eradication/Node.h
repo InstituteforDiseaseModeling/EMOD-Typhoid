@@ -142,6 +142,11 @@ namespace Kernel
         virtual float GetLatitudeDegrees()override;
         virtual float GetLongitudeDegrees() override;
 
+        virtual bool IsEveryoneHome() const override;
+        virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination,
+                                              MigrationType::Enum migrationType,
+                                              float timeUntilTrip,
+                                              float timeAtDestination ) override;
 
         static void TestOnly_ClearProperties();
         static void TestOnly_AddPropertyKeyValue( const char* key, const char* value );
@@ -177,6 +182,13 @@ namespace Kernel
         // --- http://ivlabsdvapp50:8090/pages/viewpage.action?pageId=30015603
         // ----------------------------------------------------------------------------------------
         std::vector<IIndividualHuman*> individualHumans;
+        std::map<int,suids::suid> home_individual_ids; // people who call this node home
+
+        bool                family_waiting_to_migrate;
+        suids::suid         family_migration_destination;
+        MigrationType::Enum family_migration_type;
+        float               family_time_until_trip;
+        float               family_time_at_destination;
 
         float Ind_Sample_Rate;   // adapted sampling parameter
 
@@ -323,6 +335,8 @@ namespace Kernel
         virtual INodeContext *getContextPointer();
         virtual void propagateContextToDependents();
 
+
+        virtual bool IsDead( IIndividualHuman* pi );
         const SimulationConfig* params() const;
         void checkIpKeyInWhitelist(const std::string& key, size_t numValues );
         void convertTransitions( const NodeDemographics &trans, json::Object& tx_camp, const std::string& key );

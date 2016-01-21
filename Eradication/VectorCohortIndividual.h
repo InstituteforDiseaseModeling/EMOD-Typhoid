@@ -55,8 +55,13 @@ namespace Kernel
 
         // IMigrate interfaces
         virtual void ImmigrateTo(INodeContext* destination_node) override;
-        virtual void SetMigrationDestination(suids::suid destination) override;
+        virtual void SetMigrating( suids::suid destination, 
+                                   MigrationType::Enum type, 
+                                   float timeUntilTrip, 
+                                   float timeAtDestination,
+                                   bool isDestinationNewHome ) override;
         virtual const suids::suid& GetMigrationDestination() override;
+        virtual MigrationType::Enum GetMigrationType() const override { return migration_type ; }
 
         virtual uint64_t GetID() const override { return m_ID; }
         virtual VectorStateEnum::Enum & GetState() override;
@@ -91,6 +96,7 @@ namespace Kernel
         int parity;
         int neweggs;
         suids::suid migration_destination;
+        MigrationType::Enum migration_type ;
         std::string species;
 
         StrainIdentity* m_strain;

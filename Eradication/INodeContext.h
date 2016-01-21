@@ -122,6 +122,12 @@ namespace Kernel
 
         //Verify that the user entered in set of property key/value pairs which are included in the demographics file
         virtual void VerifyPropertyDefined( const std::string& rKey, const std::string& rVal ) const = 0;
+
+        virtual bool IsEveryoneHome() const = 0;
+        virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, 
+                                              MigrationType::Enum migrationType, 
+                                              float timeUntilTrip, 
+                                              float timeAtDestination ) = 0;
     };
 }
 

@@ -95,6 +95,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportNodeDemographics",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvectormigration", "libvectormigration\libvectormigration.vcxproj", "{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhumanmigrationtracking", "libhumanmigrationtracking\libhumanmigrationtracking.vcxproj", "{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -185,6 +187,10 @@ Global
 		{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}.Debug|x64.Build.0 = Debug|x64
 		{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}.Release|x64.ActiveCfg = Release|x64
 		{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}.Release|x64.Build.0 = Release|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Debug|x64.ActiveCfg = Debug|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Debug|x64.Build.0 = Debug|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Release|x64.ActiveCfg = Release|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

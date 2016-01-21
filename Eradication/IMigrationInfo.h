@@ -46,7 +46,9 @@ namespace Kernel
         virtual const std::vector<suids::suid>& GetReachableNodes() const = 0;
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const = 0;
 
-        virtual bool IsHeterogeneityEnabled() const = 0 ;
+        virtual bool IsHeterogeneityEnabled() const = 0;
+        virtual MigrationType::Enum GetFamilyMigrationType() const = 0;
+        virtual ProbabilityNumber GetFamilyMigrationProbability() const = 0;
     };
 
     // IMigrationInfoFactory is used to create IMirationInfo objects for a node.

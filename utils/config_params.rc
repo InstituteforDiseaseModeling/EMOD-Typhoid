@@ -489,6 +489,9 @@ NO_DENSITY_DEPENDENCE."
 
 #define Target_Residents_Only_DESC_TEXT "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node"
 
+#define Family_Migration_Type_DESC_TEXT "TBD"
+#define Family_Migration_Probability_DESC_TEXT "TBD"
+
 #define HIV_DTP_Mutation_DESC_TEXT "TBD"
 #define HIV_DTP_Mutation_Fitness_Cost_DESC_TEXT "TBD"
 #define HIV_DTP_Mutation_Fold_Change_IC50_DESC_TEXT "TBD"

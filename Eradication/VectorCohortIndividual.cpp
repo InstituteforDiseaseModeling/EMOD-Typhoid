@@ -34,6 +34,7 @@ namespace Kernel
     , parity(0)
     , neweggs(0)
     , migration_destination(suids::nil_suid())
+    , migration_type(MigrationType::NO_MIGRATION)
     , species("gambiae")
     , m_strain(nullptr)
     {
@@ -48,6 +49,7 @@ namespace Kernel
     , parity(0)
     , neweggs(0)
     , migration_destination(suids::nil_suid())
+    , migration_type(MigrationType::NO_MIGRATION)
     , species(vector_species_name)
     , m_strain(nullptr)
     {
@@ -96,10 +98,15 @@ namespace Kernel
         pNV->processImmigratingVector(this);
     }
 
-    void VectorCohortIndividual::SetMigrationDestination(suids::suid destination)
+    void VectorCohortIndividual::SetMigrating( suids::suid destination, 
+                                               MigrationType::Enum type, 
+                                               float timeUntilTrip, 
+                                               float timeAtDestination,
+                                               bool isDestinationNewHome )
     {
         LOG_DEBUG_F( "Setting vector migration destination to node ID #%d\n", destination.data );
         migration_destination = destination;
+        migration_type        = type;
     }
 
     const suids::suid& VectorCohortIndividual::GetMigrationDestination()
@@ -246,14 +253,15 @@ namespace Kernel
     {
         VectorCohortAging::serialize(ar, obj);
         VectorCohortIndividual& cohort = *obj;
-        ar.labelElement("m_ID") & cohort.m_ID;
-        ar.labelElement("state") & (uint32_t&)cohort.state;
-        ar.labelElement("additional_mortality") & cohort.additional_mortality;
-        ar.labelElement("oviposition_timer") & cohort.oviposition_timer;
-        ar.labelElement("parity") & cohort.parity;
-        ar.labelElement("neweggs") & cohort.neweggs;
+        ar.labelElement("m_ID"                 ) & cohort.m_ID;
+        ar.labelElement("state"                ) & (uint32_t&)cohort.state;
+        ar.labelElement("additional_mortality" ) & cohort.additional_mortality;
+        ar.labelElement("oviposition_timer"    ) & cohort.oviposition_timer;
+        ar.labelElement("parity"               ) & cohort.parity;
+        ar.labelElement("neweggs"              ) & cohort.neweggs;
         ar.labelElement("migration_destination") & cohort.migration_destination.data;
-        ar.labelElement("species") & cohort.species;
+        ar.labelElement("migration_type"       ) & (uint32_t&)cohort.migration_type;
+        ar.labelElement("species"              ) & cohort.species;
 
         bool has_strain = ar.IsWriter() ? (cohort.m_strain != nullptr) : false; // We put false here, but this is just a placeholder since we're reading from the archive.
         ar.labelElement("__has_strain__");

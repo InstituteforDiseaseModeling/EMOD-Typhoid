@@ -370,6 +370,12 @@ namespace Kernel
         , birthrate(DEFAULT_BIRTHRATE)
         , Above_Poverty(DEFAULT_POVERTY_THRESHOLD)
         , individualHumans()
+        , home_individual_ids()
+        , family_waiting_to_migrate(false)
+        , family_migration_destination(suids::nil_suid())
+        , family_migration_type(MigrationType::NO_MIGRATION)
+        , family_time_until_trip(0.0f)
+        , family_time_at_destination(0.0f)
         , Ind_Sample_Rate(1.0f)
         , transmissionGroups(nullptr)
         , susceptibility_dynamic_scaling(1.0f)
@@ -463,6 +469,12 @@ namespace Kernel
         , birthrate(DEFAULT_BIRTHRATE)
         , Above_Poverty(DEFAULT_POVERTY_THRESHOLD)
         , individualHumans()
+        , home_individual_ids()
+        , family_waiting_to_migrate(false)
+        , family_migration_destination(suids::nil_suid())
+        , family_migration_type(MigrationType::NO_MIGRATION)
+        , family_time_until_trip(0.0f)
+        , family_time_at_destination(0.0f)
         , Ind_Sample_Rate(1.0f)
         , transmissionGroups(nullptr)
         , susceptibility_dynamic_scaling(1.0f)
@@ -552,6 +564,7 @@ namespace Kernel
         }
 
         individualHumans.clear();
+        home_individual_ids.clear();
 
         if (transmissionGroups) delete transmissionGroups;
         if (localWeather)       delete localWeather;
@@ -1290,6 +1303,18 @@ namespace Kernel
     //   Every timestep Update() methods
     //------------------------------------------------------------------
 
+    void Node::SetWaitingForFamilyTrip( suids::suid migrationDestination, 
+                                        MigrationType::Enum migrationType, 
+                                        float timeUntilTrip, 
+                                        float timeAtDestination )
+    {
+        family_waiting_to_migrate     = true;
+        family_migration_destination  = migrationDestination;
+        family_migration_type         = migrationType;
+        family_time_until_trip        = timeUntilTrip;
+        family_time_at_destination    = timeAtDestination;
+    }
+
     void Node::Update(float dt)
     {
 
@@ -1299,6 +1324,38 @@ namespace Kernel
         {
             localWeather->UpdateWeather(GetTime().time, dt);
         }
+
+        if( family_waiting_to_migrate )
+        {
+            bool leave_on_trip = IsEveryoneHome() ;
+            for (auto individual : individualHumans)
+            {
+                if( home_individual_ids.count( individual->GetSuid().data ) > 0 )
+                {
+                    if( leave_on_trip )
+                    {
+                        individual->SetGoingOnFamilyTrip( family_migration_destination, family_migration_type, family_time_until_trip, family_time_at_destination );
+                    }
+                    else
+                    {
+                        individual->SetWaitingToGoOnFamilyTrip();
+                    }
+                }
+            }
+            if( leave_on_trip )
+            {
+                family_waiting_to_migrate     = false ;
+                family_migration_destination  = suids::nil_suid();
+                family_migration_type         = MigrationType::NO_MIGRATION;
+                family_time_until_trip        = 0.0f;
+                family_time_at_destination    = 0.0f ;
+            }
+            else
+            {
+                family_time_until_trip -= dt ;
+            }
+        }
+
 
         // Update node-level interventions
         if (params()->interventions) 
@@ -1382,21 +1439,37 @@ namespace Kernel
             release_assert( individual );
 
             auto state_change = individual->GetStateChange();
-            if ( (params()->vital_dynamics &&
-                ((state_change == HumanStateChange::DiedFromNaturalCauses) || (state_change == HumanStateChange::KilledByInfection) ) ) 
-                || (state_change == HumanStateChange::KilledByMCSampling) )    //Killed by MC sampling should not rely on vital_dynamics being true.  
+            if( IsDead( individual ) )
             {
+                if (individual->GetStateChange() == HumanStateChange::KilledByInfection)
+                    Disease_Deaths += (float)individual->GetMonteCarloWeight();
+
                 individual->UpdateGroupPopulation(-1.0f);
-
-                if (state_change == HumanStateChange::KilledByInfection)
-                    Disease_Deaths += float(individual->GetMonteCarloWeight());
-
                 RemoveHuman( iHuman );
-                delete individual;
-                individual = nullptr;
+
+                // ---------------------------------------
+                // --- We want individuals to die at home
+                // ---------------------------------------
+                if( individual->AtHome() )
+                {
+                    home_individual_ids.erase( individual->GetSuid().data ); // if this person doesn't call this home, then nothing happens
+
+                    delete individual;
+                    individual = NULL;
+                }
+                else
+                {
+                    //printf("Rank=%2d: ++++++++Individual %d is dead but needs to go home\n",EnvPtr->MPI.Rank,individual->GetSuid().data); fflush(stdout);
+
+                    // individual must go home to officially die
+                    individual->GoHome();
+                    processEmigratingIndividual(individual);
+                }
             }
             else if (individual->IsMigrating())
             {
+                // don't remove from home_individual_ids because they are just migrating
+
                 RemoveHuman( iHuman );
 
                 // subtract individual from group population(s)
@@ -1419,6 +1492,17 @@ namespace Kernel
 
         // Increment simulation time counter
     }
+
+    bool Node::IsDead( IIndividualHuman* individual )
+    {
+        auto state_change = individual->GetStateChange();
+        bool is_dead = (params()->vital_dynamics &&
+                       ( (state_change == HumanStateChange::DiedFromNaturalCauses) || 
+                         (state_change == HumanStateChange::KilledByInfection    ) ) ) 
+                    || (state_change == HumanStateChange::KilledByMCSampling) ;    //Killed by MC sampling should not rely on vital_dynamics being true.  
+        return is_dead ;
+    }
+
 
     void Node::updateInfectivity(float dt)
     {
@@ -2154,6 +2238,7 @@ namespace Kernel
         new_individual->UpdateGroupPopulation(1.0f);
 
         individualHumans.push_back(new_individual);
+        home_individual_ids.insert( std::make_pair( new_individual->GetSuid().data, new_individual->GetSuid() ) );
 
         event_context_host->TriggerNodeEventObservers( new_individual->GetEventContext(), IndividualEventTriggerType::Births ); // EAW: this is not just births!!  this will also trigger on e.g. AddImportCases
 
@@ -2336,20 +2421,59 @@ namespace Kernel
 
     IIndividualHuman* Node::processImmigratingIndividual(IIndividualHuman* movedind)
     {
-        individualHumans.push_back(movedind);
-        movedind->SetContextTo(getContextPointer());
-
-        // check for arrival-linked interventions BEFORE!!!! setting the next migration
-        if (params()->interventions )
+        if( IsDead( movedind ) )
         {
-            event_context_host->ProcessArrivingIndividual(movedind);
+            // -------------------------------------------------------------
+            // --- We want individuals to officially die in their home node
+            // -------------------------------------------------------------
+            movedind->SetContextTo(getContextPointer());
+            release_assert( movedind->AtHome() );
+
+            home_individual_ids.erase( movedind->GetSuid().data );
+
+            delete movedind;
+            movedind = NULL;
         }
-        event_context_host->TriggerNodeEventObservers( movedind->GetEventContext(), IndividualEventTriggerType::Immigrating );
+        else
+        {
+            individualHumans.push_back(movedind);
+            movedind->SetContextTo(getContextPointer());
 
-        movedind->UpdateGroupMembership();
-        movedind->UpdateGroupPopulation(1.0f);
+            // check for arrival-linked interventions BEFORE!!!! setting the next migration
+            if (params()->interventions )
+            {
+                event_context_host->ProcessArrivingIndividual(movedind);
+            }
+            event_context_host->TriggerNodeEventObservers( movedind->GetEventContext(), IndividualEventTriggerType::Immigrating );
 
+            movedind->UpdateGroupMembership();
+            movedind->UpdateGroupPopulation(1.0f);
+        }
         return movedind;
+    }
+
+    bool Node::IsEveryoneHome() const
+    {
+        if( individualHumans.size() < home_individual_ids.size() )
+        {
+            // someone is missing
+            return false ;
+        }
+        // there could be more people in the node than call it home
+
+        int num_people_found = 0 ;
+        for( auto individual : individualHumans )
+        {
+            if( home_individual_ids.count( individual->GetSuid().data ) > 0 )
+            {
+                num_people_found++ ;
+                if( num_people_found == home_individual_ids.size() )
+                {
+                    return true ;
+                }
+            }
+        }
+        return false ;
     }
 
     //------------------------------------------------------------------
@@ -2822,7 +2946,8 @@ namespace Kernel
         ar.labelElement("serializationMask") & (uint32_t&)node.serializationMask;
 
         if ((node.serializationMask & SerializationFlags::Population) != 0) {
-            ar.labelElement("individualHumans") & node.individualHumans;
+            ar.labelElement("individualHumans"   ) & node.individualHumans;
+            ar.labelElement("home_individual_ids") & node.home_individual_ids;
         }
 
         if ((node.serializationMask & SerializationFlags::Parameters) != 0) {
@@ -2877,6 +3002,11 @@ namespace Kernel
             ar.labelElement("urban") & node.urban;
             ar.labelElement("birthrate") & node.birthrate;
             ar.labelElement("Above_Poverty") & node.Above_Poverty;
+            ar.labelElement("family_waiting_to_migrate") & node.family_waiting_to_migrate;
+            ar.labelElement("family_migration_destination") & node.family_migration_destination.data;
+            ar.labelElement("family_migration_type") & (uint32_t&)node.family_migration_type;
+            ar.labelElement("family_time_until_trip") & node.family_time_until_trip;
+            ar.labelElement("family_time_at_destination") & node.family_time_at_destination;
             ar.labelElement("Ind_Sample_Rate") & node.Ind_Sample_Rate;
 // clorton          ar.labelElement("transmissionGroups") & node.transmissionGroups;
             ar.labelElement("susceptibility_dynamic_scaling") & node.susceptibility_dynamic_scaling;

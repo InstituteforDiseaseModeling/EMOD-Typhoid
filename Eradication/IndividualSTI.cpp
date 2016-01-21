@@ -1048,9 +1048,10 @@ namespace Kernel
                         partner->StateChange                  = HumanStateChange::Migrating;
                         partner->migration_destination        = this->migration_destination ;
                         partner->migration_type               = this->migration_type;
-                        partner->time_to_next_migration       = this->time_to_next_migration;
-                        partner->will_return                  = this->will_return;
-                        partner->outbound                     = this->outbound;
+                        partner->migration_time_until_trip    = this->migration_time_until_trip;
+                        partner->migration_time_at_destination= this->migration_time_at_destination;
+                        partner->migration_will_return        = this->migration_will_return;
+                        partner->migration_outbound           = this->migration_outbound;
                         partner->waypoints                    = this->waypoints;
                         partner->waypoints_trip_type          = this->waypoints_trip_type;
 

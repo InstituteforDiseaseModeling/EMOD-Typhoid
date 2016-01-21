@@ -222,6 +222,16 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
+    virtual bool IsEveryoneHome() const override
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
+
+    virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, MigrationType::Enum migrationType, float timeUntilTrip, float timeAtDestination ) override
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
+
     virtual float GetMeanAgeInfection() const override
     {
         throw std::exception("The method or operation is not implemented.");

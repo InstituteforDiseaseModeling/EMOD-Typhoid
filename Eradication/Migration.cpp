@@ -143,6 +143,16 @@ namespace Kernel
         return false;
     }
 
+    MigrationType::Enum MigrationInfoNull::GetFamilyMigrationType() const
+    {
+        return MigrationType::NO_MIGRATION;
+    }
+
+    ProbabilityNumber MigrationInfoNull::GetFamilyMigrationProbability() const
+    {
+        return 0.0;
+    }
+
     // ------------------------------------------------------------------------
     // --- MigrationInfoFixedRate
     // ------------------------------------------------------------------------
@@ -150,9 +160,14 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_BODY(MigrationInfoFixedRate)
     END_QUERY_INTERFACE_BODY(MigrationInfoFixedRate)
 
-    MigrationInfoFixedRate::MigrationInfoFixedRate( INodeContext * _parent, bool isHeterogeneityEnabled ) 
+    MigrationInfoFixedRate::MigrationInfoFixedRate( INodeContext * _parent, 
+                                                    bool isHeterogeneityEnabled,
+                                                    MigrationType::Enum familyType,
+                                                    const ProbabilityNumber& familyProb ) 
         : m_Parent(_parent) 
         , m_IsHeterogeneityEnabled( isHeterogeneityEnabled )
+        , m_FamilyMigrationType( familyType )
+        , m_FamilyMigrationProbability( familyProb )
         , m_ReachableNodes()
         , m_MigrationTypes()
         , m_RateCDF()
@@ -296,6 +311,16 @@ namespace Kernel
         return m_MigrationTypes;
     }
 
+    MigrationType::Enum MigrationInfoFixedRate::GetFamilyMigrationType() const
+    {
+        return m_FamilyMigrationType;
+    }
+
+    ProbabilityNumber MigrationInfoFixedRate::GetFamilyMigrationProbability() const
+    {
+        return m_FamilyMigrationProbability;
+    }
+
     // ------------------------------------------------------------------------
     // --- MigrationInfoAgeAndGender
     // ------------------------------------------------------------------------
@@ -303,8 +328,11 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_DERIVED(MigrationInfoAgeAndGender, MigrationInfoFixedRate)
     END_QUERY_INTERFACE_DERIVED(MigrationInfoAgeAndGender, MigrationInfoFixedRate)
 
-    MigrationInfoAgeAndGender::MigrationInfoAgeAndGender( INodeContext * _parent, bool isHeterogeneityEnabled ) 
-        : MigrationInfoFixedRate( _parent, isHeterogeneityEnabled ) 
+    MigrationInfoAgeAndGender::MigrationInfoAgeAndGender( INodeContext * _parent, 
+                                                          bool isHeterogeneityEnabled,
+                                                          MigrationType::Enum familyType,
+                                                          const ProbabilityNumber& familyProb ) 
+        : MigrationInfoFixedRate( _parent, isHeterogeneityEnabled, familyType, familyProb ) 
         , m_RateData()
         , m_ReachableNodesFemale()
         , m_MigrationTypesFemale()
@@ -857,7 +885,17 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
     bool MigrationInfoFactoryFile::Configure( const Configuration* config )
     {
         InitializeInfoFileList( m_EnableMigration );
+
+        if( m_EnableMigration )
+        {
+            initConfig( "Family_Migration_Type", m_FamilyMigrationType, config, MetadataDescriptor::Enum("Family_Migration_Type", Family_Migration_Type_DESC_TEXT, MDD_ENUM_ARGS(MigrationType)) );
+            if( (m_FamilyMigrationType != MigrationType::NO_MIGRATION) || JsonConfigurable::_dryrun )
+            {
+                initConfigTypeMap( "Family_Migration_Probability", &m_FamilyMigrationProbability, Family_Migration_Probability_DESC_TEXT );
+            }
+        }
         bool ret = JsonConfigurable::Configure( config );
+
         return ret;
     }
 
@@ -900,13 +938,19 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
         {
             if( is_fixed_rate )
             {
-                MigrationInfoFixedRate* p_mifr = _new_ MigrationInfoFixedRate( pParentNode, m_IsHeterogeneityEnabled );
+                MigrationInfoFixedRate* p_mifr = _new_ MigrationInfoFixedRate( pParentNode, 
+                                                                               m_IsHeterogeneityEnabled, 
+                                                                               m_FamilyMigrationType, 
+                                                                               m_FamilyMigrationProbability );
                 p_mifr->Initialize( rate_data ); 
                 p_new_migration_info = p_mifr;
             }
             else
             {
-                MigrationInfoAgeAndGender* p_miag = _new_ MigrationInfoAgeAndGender( pParentNode, m_IsHeterogeneityEnabled );
+                MigrationInfoAgeAndGender* p_miag = _new_ MigrationInfoAgeAndGender( pParentNode,
+                                                                                     m_IsHeterogeneityEnabled, 
+                                                                                     m_FamilyMigrationType, 
+                                                                                     m_FamilyMigrationProbability );
                 p_miag->Initialize( rate_data );
                 p_new_migration_info = p_miag;
             }
@@ -1010,7 +1054,10 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
     {
         std::vector<std::vector<MigrationRateData>> rate_data = GetRateData( pParentNode, rNodeIdSuidMap );
 
-        MigrationInfoFixedRate* new_migration_info = _new_ MigrationInfoFixedRate( pParentNode, m_IsHeterogeneityEnabled );
+        MigrationInfoFixedRate* new_migration_info = _new_ MigrationInfoFixedRate( pParentNode, 
+                                                                                   m_IsHeterogeneityEnabled,
+                                                                                   MigrationType::NO_MIGRATION,
+                                                                                   ProbabilityNumber() );
         new_migration_info->Initialize( rate_data );
 
         return new_migration_info;

@@ -134,11 +134,19 @@ namespace Kernel
 
         virtual bool IsAdult() const override;
 
-        // Migration
+        // IMigrate
         virtual void ImmigrateTo(INodeContext* destination_node) override;
+        virtual void SetMigrating( suids::suid destination, 
+                                   MigrationType::Enum type, 
+                                   float timeUntilTrip, 
+                                   float timeAtDestination,
+                                   bool isDestinationNewHome ) override;
         virtual const suids::suid& GetMigrationDestination() override;
         virtual MigrationType::Enum GetMigrationType() const override { return migration_type; }
-        virtual void SetMigrationDestination(suids::suid destination) override;
+        virtual bool IsOnFamilyTrip() const override { return is_on_family_trip; } ;
+        virtual const suids::suid& GetHomeNodeId() const override { return home_node_id ; } ;
+
+        // Migration
         virtual bool IsMigrating() override;
         virtual void CheckForMigration(float currenttime, float dt);
         void SetNextMigration();
@@ -181,6 +189,13 @@ namespace Kernel
         virtual inline Kernel::suids::suid GetParentSuid() const override { return parent->GetSuid(); }
         virtual ProbabilityNumber getProbMaternalTransmission() const override;
 
+        virtual void SetGoingOnFamilyTrip( suids::suid migrationDestination, 
+                                           MigrationType::Enum migrationType, 
+                                           float timeUntilTrip, 
+                                           float timeAtDestination ) override;
+        virtual void SetWaitingToGoOnFamilyTrip() override;
+        virtual void GoHome() override;
+
     protected:
 
         // Core properties
@@ -210,15 +225,26 @@ namespace Kernel
         HumanStateChange          StateChange;           // to flag that the individual has migrated or died
 
         // Migration
-        float migration_mod;
+        float               migration_mod;
         MigrationType::Enum migration_type;
-        suids::suid  migration_destination;
-        float time_to_next_migration; // JPS: do we want to store this as an absolute time instead of offset?
-        bool  will_return;
-        bool  outbound;
-        int   max_waypoints;    // maximum waypoints a trip can have before returning home
+        suids::suid         migration_destination;
+        float               migration_time_until_trip;
+        float               migration_time_at_destination;
+        bool                migration_is_destination_new_home;
+        bool                migration_will_return;
+        bool                migration_outbound;
+        int                              max_waypoints;    // maximum waypoints a trip can have before returning home
         std::vector<suids::suid>         waypoints;
         std::vector<MigrationType::Enum> waypoints_trip_type;
+
+        bool                waiting_for_family_trip ;
+        bool                leave_on_family_trip ;
+        bool                is_on_family_trip ;
+        suids::suid         family_migration_destination ;
+        MigrationType::Enum family_migration_type ;
+        float               family_migration_time_until_trip ;
+        float               family_migration_time_at_destination ;
+
         suids::suid home_node_id ;
 
         tProperties Properties;
