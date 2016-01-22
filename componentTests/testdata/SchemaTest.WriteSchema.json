@@ -10420,6 +10420,98 @@
 					"iv_type" : "NodeTargeted",
 					"class" : "MalariaChallenge"
 				},
+				"MalariaDiagnostic" : {
+					"Sim_Types" : [
+						"MALARIA_SIM"
+					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Base_Specificity" : {
+						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"Base_Sensitivity" : {
+						"description" : "The sensitivity of the diagnostic. This sets the proportion of the time that individuals with the condition being tested receive a positive diagnostic test. When set to 1, the diagnostic always accurately reflects the condition. When set to zero, then individuals who have the condition always receive a false-negative diagnostic test.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"Treatment_Fraction" : {
+						"description" : "The fraction of positive diagnoses that are treated.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"Days_To_Diagnosis" : {
+						"description" : "The number of days from test until diagnosis.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Cost_To_Consumer" : {
+						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Diagnostic_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"Microscopy",
+							"NewDetectionTech",
+							"Other"
+						],
+						"description" : "TBD",
+						"default" : "Microscopy"
+					},
+					"Detection_Threshold" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1e+006,
+						"default" : 100,
+						"depends-on" : {
+							"Diagnostic_Type" : "Other"
+						}
+					},
+					"Event_Or_Config" : {
+						"type" : "enum",
+						"enum" : [
+							"Config",
+							"Event"
+						],
+						"description" : "Specifies whether the current intervention distributes a nested intervention (the Config option) or an event will be broadcast which may trigger other interventions in the campaign file (the Event option). See event list.",
+						"default" : "Config"
+					},
+					"Positive_Diagnosis_Event" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
+					"idmType:IndividualIntervention" : {
+						"base" : "interventions.idmAbstractType.IndividualIntervention"
+					},
+					"Positive_Diagnosis_Config" : {
+						"description" : "The intervention distributed to individuals if they test positive. This is only valid if Event_Or_Config is set to 'Config'.",
+						"type" : "idmType:IndividualIntervention",
+						"depends-on" : {
+							"Event_Or_Config" : "Config"
+						}
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "MalariaDiagnostic"
+				},
 				"MaleCircumcision" : {
 					"Sim_Types" : [
 						"STI_SIM",

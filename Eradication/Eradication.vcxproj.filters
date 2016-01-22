@@ -972,6 +972,9 @@
     <ClCompile Include="MpiDataExchanger.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="..\interventions\MalariaDiagnostic.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted\Vector\Malaria</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2070,6 +2073,9 @@
     <ClInclude Include="ISusceptibilityContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EventsForOtherNodes.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
     <ClInclude Include="EventTrigger.h">
       <Filter>Source Files\Kernel</Filter>
     </ClInclude>
@@ -2111,6 +2117,9 @@
     </ClInclude>
     <ClInclude Include="INodeInfo.h">
       <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\MalariaDiagnostic.h">
+      <Filter>Source Files\Campaign\IndividualTargeted\Vector\Malaria</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
