@@ -11650,6 +11650,12 @@
 						"max" : 1e+006,
 						"default" : 3650
 					},
+					"On_Distributed_Event_Trigger" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
 					"Durability_Time_Profile" : {
 						"type" : "enum",
 						"enum" : [
