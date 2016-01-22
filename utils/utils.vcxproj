@@ -97,6 +97,7 @@
     </ClCompile>
     <ClCompile Include="Configure.cpp" />
     <ClCompile Include="Coredump.cpp" />
+    <ClCompile Include="DurationDistribution.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="Exceptions.cpp" />
     <ClCompile Include="FileSystem.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Configure.h" />
     <ClInclude Include="Coredump.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DurationDistribution.h" />
     <ClInclude Include="EnumSupport.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="Exceptions.h" />

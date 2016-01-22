@@ -56,21 +56,6 @@ namespace Kernel
         ENUM_VALUE_SPEC(POLIO_EVOCLOCK_REVERSION                            , 4)
         ENUM_VALUE_SPEC(POLIO_EVOCLOCK_POISSONSITES                         , 5))
 
-    // ENUM defs for INCUBATION_DISTRIBUTION, INFECTIOUS_DISTRIBUTION
-    ENUM_DEFINE(DistributionFunction, 
-        ENUM_VALUE_SPEC(NOT_INITIALIZED                                     , -1)
-        ENUM_VALUE_SPEC(FIXED_DURATION                                      , 0)
-        ENUM_VALUE_SPEC(UNIFORM_DURATION                                    , 1)
-        ENUM_VALUE_SPEC(GAUSSIAN_DURATION                                   , 2)
-        ENUM_VALUE_SPEC(EXPONENTIAL_DURATION                                , 3)
-        ENUM_VALUE_SPEC(POISSON_DURATION                                    , 4)
-        ENUM_VALUE_SPEC(LOG_NORMAL_DURATION                                 , 5)
-        ENUM_VALUE_SPEC(BIMODAL_DURATION                                    , 6)
-        ENUM_VALUE_SPEC(PIECEWISE_CONSTANT                                  , 7)
-        ENUM_VALUE_SPEC(PIECEWISE_LINEAR                                    , 8)
-        ENUM_VALUE_SPEC(WEIBULL_DURATION                                    , 9)
-        )
-
     // ENUM defs for IND_SAMPLING_TYPE
     ENUM_DEFINE(IndSamplingType, 
         ENUM_VALUE_SPEC(TRACK_ALL                                           , 0)

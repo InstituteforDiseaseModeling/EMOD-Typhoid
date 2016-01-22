@@ -897,6 +897,9 @@
     <ClCompile Include="..\interventions\BroadcastEventToOtherNodes.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
+    <ClCompile Include="..\interventions\MigrateTo.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClCompile>
     <ClCompile Include="HIVTransmissionReporter.cpp">
       <Filter>Source Files\Reporting\STI\HIV</Filter>
     </ClCompile>
@@ -1960,6 +1963,9 @@
       <Filter>Source Files\Kernel</Filter>
     </ClInclude>
     <ClInclude Include="..\interventions\BroadcastEventToOtherNodes.h">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\MigrateTo.h">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
     <ClInclude Include="HIVTransmissionReporter.h">

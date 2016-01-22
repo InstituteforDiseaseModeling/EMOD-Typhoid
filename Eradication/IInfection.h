@@ -14,7 +14,6 @@ namespace Kernel
         virtual InfectionStateChange::_enum GetStateChange() const = 0;
         virtual float GetInfectiousness() const = 0;
         virtual float GetInfectiousnessByRoute(std::string route) const = 0;
-        virtual float GetInfectiousPeriod() const = 0;
         virtual void GetInfectiousStrainID(StrainIdentity*) = 0;
         virtual bool IsActive() const = 0;
         virtual NonNegativeFloat GetDuration() const = 0;

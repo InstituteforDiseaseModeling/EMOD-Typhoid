@@ -8,9 +8,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #pragma once
-#include "SimulationEnums.h"
+#include "MathFunctions.h"
 #include "Interventions.h"
 #include "InterventionFactory.h"
+#include "DurationDistribution.h"
 
 namespace Kernel
 {
@@ -32,7 +33,7 @@ namespace Kernel
         virtual void Update(float dt);
 
     protected:
-        virtual bool PreConfigure( const Configuration* config );
+        virtual void PreConfigure( const Configuration* config );
         virtual void DistributionConfigure( const Configuration* config );
         virtual void InterventionConfigure( const Configuration* config );
         virtual void InterventionValidate();
@@ -44,12 +45,7 @@ namespace Kernel
         float remaining_delay_days;
         float coverage;
 
-        DistributionFunction::Enum delay_distribution;
-        float delay_period;
-        float delay_period_min;
-        float delay_period_max;
-        float delay_period_mean;
-        float delay_period_std_dev;
+        DurationDistribution delay_distribution;
 
         IndividualInterventionConfig actual_intervention_config;
 

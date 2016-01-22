@@ -23,18 +23,8 @@ namespace Kernel
 {
     // static initializers for config base class
     MortalityTimeCourse::Enum  InfectionConfig::mortality_time_course   =  MortalityTimeCourse::DAILY_MORTALITY;
-    DistributionFunction::Enum InfectionConfig::incubation_distribution = DistributionFunction::FIXED_DURATION;
-    DistributionFunction::Enum InfectionConfig::infectious_distribution = DistributionFunction::FIXED_DURATION;
-    float InfectionConfig::incubation_period = 1.0f;
-    float InfectionConfig::incubation_period_mean = 1.0f;
-    float InfectionConfig::incubation_period_std_dev = 1.0f;
-    float InfectionConfig::incubation_period_min = 1.0f;
-    float InfectionConfig::incubation_period_max = 1.0f;
-    float InfectionConfig::infectious_period = 1.0f;
-    float InfectionConfig::infectious_period_mean = 1.0f;
-    float InfectionConfig::infectious_period_std_dev = 1.0f;
-    float InfectionConfig::infectious_period_min = 1.0f;
-    float InfectionConfig::infectious_period_max = 1.0f;
+    DurationDistribution InfectionConfig::incubation_distribution = DurationDistribution( DistributionFunction::FIXED_DURATION );
+    DurationDistribution InfectionConfig::infectious_distribution = DurationDistribution( DistributionFunction::FIXED_DURATION );
     float InfectionConfig::base_infectivity = 1.0f;
     float InfectionConfig::base_mortality = 1.0f;
 
@@ -42,89 +32,45 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_BODY(InfectionConfig)
     END_QUERY_INTERFACE_BODY(InfectionConfig)
 
+    InfectionConfig::InfectionConfig()
+    {
+        incubation_distribution.SetTypeNameDesc( "Incubation_Period_Distribution", Incubation_Period_Distribution_DESC_TEXT );
+        incubation_distribution.AddSupportedType( DistributionFunction::FIXED_DURATION,       "Base_Incubation_Period", Base_Incubation_Period_DESC_TEXT,      "", "" );
+        incubation_distribution.AddSupportedType( DistributionFunction::UNIFORM_DURATION,     "Incubation_Period_Min",  Incubation_Period_Min_DESC_TEXT,  "Incubation_Period_Max",     Incubation_Period_Max_DESC_TEXT );
+        incubation_distribution.AddSupportedType( DistributionFunction::GAUSSIAN_DURATION,    "Incubation_Period_Mean", Incubation_Period_Mean_DESC_TEXT, "Incubation_Period_Std_Dev", Incubation_Period_Std_Dev_DESC_TEXT );
+        incubation_distribution.AddSupportedType( DistributionFunction::EXPONENTIAL_DURATION, "Base_Incubation_Period", Base_Incubation_Period_DESC_TEXT,      "", "" );
+        incubation_distribution.AddSupportedType( DistributionFunction::POISSON_DURATION,     "Incubation_Period_Mean", Incubation_Period_Mean_DESC_TEXT,      "", "" );
+
+        infectious_distribution.SetTypeNameDesc( "Infectious_Period_Distribution", Infectious_Period_Distribution_DESC_TEXT );
+        infectious_distribution.AddSupportedType( DistributionFunction::FIXED_DURATION,       "Base_Infectious_Period", Base_Infectious_Period_DESC_TEXT,      "", "" );
+        infectious_distribution.AddSupportedType( DistributionFunction::UNIFORM_DURATION,     "Infectious_Period_Min",  Infectious_Period_Min_DESC_TEXT,  "Infectious_Period_Max",     Infectious_Period_Max_DESC_TEXT );
+        infectious_distribution.AddSupportedType( DistributionFunction::GAUSSIAN_DURATION,    "Infectious_Period_Mean", Infectious_Period_Mean_DESC_TEXT, "Infectious_Period_Std_Dev", Infectious_Period_Std_Dev_DESC_TEXT );
+        infectious_distribution.AddSupportedType( DistributionFunction::EXPONENTIAL_DURATION, "Base_Infectious_Period", Base_Infectious_Period_DESC_TEXT,      "", "" );
+        infectious_distribution.AddSupportedType( DistributionFunction::POISSON_DURATION,     "Infectious_Period_Mean", Infectious_Period_Mean_DESC_TEXT,      "", "" );
+    }
+
     bool 
     InfectionConfig::Configure(
         const Configuration* config
     )
     {
         initConfig( "Mortality_Time_Course", mortality_time_course, config, MetadataDescriptor::Enum("mortality_time_course", Mortality_Time_Course_DESC_TEXT, MDD_ENUM_ARGS(MortalityTimeCourse)) ); // infection only (move)
-        initConfig( "Incubation_Period_Distribution", incubation_distribution, config, MetadataDescriptor::Enum("incubation_distribution", Incubation_Period_Distribution_DESC_TEXT, MDD_ENUM_ARGS(DistributionFunction)) ); // infection-only (move)
-        LOG_DEBUG_F( "incubation_distribution = %s\n", DistributionFunction::pairs::lookup_key(incubation_distribution) );
-        if( incubation_distribution == DistributionFunction::FIXED_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Base_Incubation_Period", &incubation_period, Base_Incubation_Period_DESC_TEXT, 0.0f, FLT_MAX, 6.0f ); // should default change depending on disease?
-        }
 
-        if( incubation_distribution == DistributionFunction::UNIFORM_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Incubation_Period_Min", &incubation_period_min, Incubation_Period_Min_DESC_TEXT, 0.0f, FLT_MAX, 6.0f, "Incubation_Period_Distribution", "UNIFORM_DISTRIBUTION" );
-            initConfigTypeMap( "Incubation_Period_Max", &incubation_period_max, Incubation_Period_Max_DESC_TEXT, 0.0f, FLT_MAX, 6.0f, "Incubation_Period_Distribution", "UNIFORM_DISTRIBUTION" );
-        }
-
-        if( incubation_distribution == DistributionFunction::EXPONENTIAL_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Base_Incubation_Period", &incubation_period, Base_Incubation_Period_DESC_TEXT, 0.0f, FLT_MAX, 6.0f );
-        }
-
-        if( incubation_distribution == DistributionFunction::GAUSSIAN_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Incubation_Period_Mean", &incubation_period_mean, Incubation_Period_Mean_DESC_TEXT, 0.0f, FLT_MAX, 6.0f );
-            initConfigTypeMap( "Incubation_Period_Std_Dev", &incubation_period_std_dev, Incubation_Period_Std_Dev_DESC_TEXT, 0.0f, FLT_MAX, 1.0f );
-        }
-
-        if( incubation_distribution == DistributionFunction::POISSON_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Incubation_Period_Mean", &incubation_period_mean, Incubation_Period_Mean_DESC_TEXT, 0.0f, FLT_MAX, 6.0f );
-        }
-
-        // Infectious_Duration...
-        initConfig( "Infectious_Period_Distribution", infectious_distribution, config, MetadataDescriptor::Enum("infectious_distribution", Infectious_Period_Distribution_DESC_TEXT, MDD_ENUM_ARGS(DistributionFunction)) ); 
-        LOG_DEBUG_F( "infectious_distribution = %s\n", DistributionFunction::pairs::lookup_key(infectious_distribution) );
-
-        if( infectious_distribution == DistributionFunction::FIXED_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Base_Infectious_Period", &infectious_period, Base_Infectious_Period_DESC_TEXT, 0.0f, FLT_MAX, 6.0f );
-        }
-
-        if( infectious_distribution == DistributionFunction::UNIFORM_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Infectious_Period_Min", &infectious_period_min, Infectious_Period_Min_DESC_TEXT, 0.0f, FLT_MAX, 6.0f, "Infectious_Period_Distribution", "UNIFORM_DISTRIBUTION" );
-            initConfigTypeMap( "Infectious_Period_Max", &infectious_period_max, Infectious_Period_Max_DESC_TEXT, 0.0f, FLT_MAX, 6.0f, "Infectious_Period_Distribution", "UNIFORM_DISTRIBUTION" );
-        }
-
-        if( infectious_distribution == DistributionFunction::EXPONENTIAL_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Base_Infectious_Period", &infectious_period, Base_Infectious_Period_DESC_TEXT, 0.0f, FLT_MAX, 6.0f );
-        }
-
-        if( infectious_distribution == DistributionFunction::GAUSSIAN_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Infectious_Period_Mean", &infectious_period_mean, Infectious_Period_Mean_DESC_TEXT, 0.0f, FLT_MAX, 6.0f );
-            initConfigTypeMap( "Infectious_Period_Std_Dev", &infectious_period_std_dev, Infectious_Period_Std_Dev_DESC_TEXT, 0.0f, FLT_MAX, 1.0f );
-        }
-            
-        if( infectious_distribution == DistributionFunction::POISSON_DURATION || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Infectious_Period_Mean", &infectious_period_mean, Infectious_Period_Mean_DESC_TEXT, 0.0f, FLT_MAX, 6.0f );
-        }
-
-        if( JsonConfigurable::_dryrun == false )
-        {
-            if( incubation_distribution == DistributionFunction::LOG_NORMAL_DURATION ||
-                incubation_distribution == DistributionFunction::BIMODAL_DURATION ||
-                infectious_distribution == DistributionFunction::LOG_NORMAL_DURATION ||
-                infectious_distribution == DistributionFunction::BIMODAL_DURATION
-              )
-            {
-                throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "LOG_NORMAL_DURATION and BIMODAL_DURATION are not yet supported for Incubation_Period_Distribution and Infectious_Period_Distribution." );
-            }
-        }
+        incubation_distribution.Configure( this, config );
+        infectious_distribution.Configure( this, config );
+        LOG_DEBUG_F( "incubation_distribution = %s\n", DistributionFunction::pairs::lookup_key(incubation_distribution.GetType()) );
+        LOG_DEBUG_F( "infectious_distribution = %s\n", DistributionFunction::pairs::lookup_key(infectious_distribution.GetType()) );
 
         initConfigTypeMap( "Base_Infectivity", &base_infectivity, Base_Infectivity_DESC_TEXT, 0.0f, 1000.0f, 0.3f ); // should default change depending on disease?
         initConfigTypeMap( "Base_Mortality", &base_mortality, Base_Mortality_DESC_TEXT, 0.0f, 1000.0f, 0.001f ); // should default change depending on disease?
 
         bool bRet = JsonConfigurable::Configure( config );
 
+        if( bRet )
+        {
+            incubation_distribution.CheckConfiguration();
+            infectious_distribution.CheckConfiguration();
+        }
         return bRet;
     }
 
@@ -190,60 +136,11 @@ namespace Kernel
         }
         else
         {
-            // have to do this again
-            switch( incubation_distribution ) 
-            {
-                case DistributionFunction::FIXED_DURATION:
-                    incubation_timer = incubation_period;
-                    break;
-
-                case DistributionFunction::UNIFORM_DURATION:
-                    incubation_timer = Probability::getInstance()->fromDistribution( incubation_distribution, incubation_period_min, incubation_period_max );
-                    break;
-
-                case DistributionFunction::EXPONENTIAL_DURATION:
-                    incubation_timer = Probability::getInstance()->fromDistribution( incubation_distribution, 1.0/incubation_period );
-                    break;
-
-                case DistributionFunction::GAUSSIAN_DURATION:
-                    incubation_timer = Probability::getInstance()->fromDistribution( incubation_distribution, incubation_period_mean, incubation_period_std_dev );
-                    break;
-
-                case DistributionFunction::POISSON_DURATION:
-                    incubation_timer = Probability::getInstance()->fromDistribution( incubation_distribution, incubation_period_mean );
-                    break;
-
-                default:
-                    break;
-            }
+            incubation_timer = incubation_distribution.CalculateDuration();
             LOG_DEBUG_F( "incubation_timer = %f\n", incubation_timer );
         }
         
-        switch( infectious_distribution ) 
-        {
-            case DistributionFunction::FIXED_DURATION:
-                infectious_timer = infectious_period;
-                break;
-
-            case DistributionFunction::UNIFORM_DURATION:
-                infectious_timer = Probability::getInstance()->fromDistribution( infectious_distribution, infectious_period_min, infectious_period_max );
-                break;
-
-            case DistributionFunction::EXPONENTIAL_DURATION:
-                infectious_timer = Probability::getInstance()->fromDistribution( infectious_distribution, 1.0/infectious_period );
-                break;
-
-            case DistributionFunction::GAUSSIAN_DURATION:
-                infectious_timer = Probability::getInstance()->fromDistribution( infectious_distribution, infectious_period_mean, infectious_period_std_dev );
-                break;
-
-            case DistributionFunction::POISSON_DURATION:
-                infectious_timer = Probability::getInstance()->fromDistribution( infectious_distribution, infectious_period_mean );
-                break;
-
-            default:
-                break;
-        }
+        infectious_timer = infectious_distribution.CalculateDuration();
         LOG_DEBUG_F( "infectious_timer = %f\n", infectious_timer );
 
         total_duration = incubation_timer + infectious_timer;
@@ -367,8 +264,6 @@ namespace Kernel
         }
         return infectiousnessByRoute.at(route); 
     }
-
-    float Infection::GetInfectiousPeriod() const { return infectious_period; }
 
     // Created for TB, but makes sense to be in base class, but no-one else is using yet, placeholder functionality
     bool Infection::IsActive() const

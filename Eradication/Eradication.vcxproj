@@ -184,6 +184,7 @@
     <ClCompile Include="..\interventions\HIVMuxer.cpp" />
     <ClCompile Include="..\interventions\HIVPreARTNotification.cpp" />
     <ClCompile Include="..\interventions\HIVSetCascadeState.cpp" />
+    <ClCompile Include="..\interventions\MigrateTo.cpp" />
     <ClCompile Include="..\interventions\ImportPressure.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBox.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBoxExponential.cpp" />
@@ -484,6 +485,7 @@
     <ClInclude Include="..\interventions\Ivermectin.h" />
     <ClInclude Include="..\interventions\MalariaChallenge.h" />
     <ClInclude Include="..\interventions\MaleCircumcision.h" />
+    <ClInclude Include="..\interventions\MigrateTo.h" />
     <ClInclude Include="..\interventions\ModifyStiCoInfectionStatus.h" />
     <ClInclude Include="..\interventions\MosquitoRelease.h" />
     <ClInclude Include="..\interventions\MultiInterventionDistributor.h" />

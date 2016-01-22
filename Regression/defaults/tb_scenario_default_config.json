@@ -66,7 +66,7 @@
             "Enable_Maternal_Transmission":0,
             "Maternal_Transmission_Probability":0,
             "Infection_Updates_Per_Timestep":1,
-            "Infectious_Period_Distribution":"EXPONENTIAL_DURATION",
+            "Infectious_Period_Distribution":"FIXED_DURATION",
             "Infectivity_Scale_Type":"CONSTANT_INFECTIVITY",
             "Population_Density_C50":1,
             "Population_Density_Infectivity_Correction":"CONSTANT_INFECTIVITY"
@@ -75,7 +75,7 @@
             "Enable_Superinfection":0,
             "Max_Individual_Infections":3,
             "Base_Incubation_Period":0.0,
-            "Incubation_Period_Distribution":"EXPONENTIAL_DURATION",
+            "Incubation_Period_Distribution":"FIXED_DURATION",
             "Number_Basestrains":1,
             "Number_Substrains":2
         },

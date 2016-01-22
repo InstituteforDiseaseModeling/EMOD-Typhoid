@@ -138,6 +138,7 @@ namespace Kernel
     {
         friend class InterventionFactory;
         friend class DemographicRestrictions;
+        friend class DurationDistribution;
     public:
         typedef std::map< float, float > tFloatFloatMapConfigType;
         typedef std::map< std::string, float > tStringFloatMapConfigType;

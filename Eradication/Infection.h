@@ -17,7 +17,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 class Configuration;
 
 #include "Sugar.h"
-#include "SimulationEnums.h" // to get DistributionFunction enum. Don't want utils reaching into Eradication though. TBD!!!
+#include "SimulationEnums.h"
+#include "DurationDistribution.h"
+
 
 #include "IInfection.h"
 
@@ -30,24 +32,15 @@ namespace Kernel
     class InfectionConfig : public JsonConfigurable
     {
     public:
+        InfectionConfig();
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
-        static float incubation_period;
-        static float incubation_period_mean;
-        static float incubation_period_std_dev;
-        static float incubation_period_min;
-        static float incubation_period_max;
-        static float infectious_period;
-        static float infectious_period_mean;
-        static float infectious_period_std_dev;
-        static float infectious_period_min;
-        static float infectious_period_max;
+        static DurationDistribution incubation_distribution;
+        static DurationDistribution infectious_distribution;
         static float base_infectivity;
         static float base_mortality;
         static MortalityTimeCourse::Enum                          mortality_time_course;                            // MORTALITY_TIME_COURSE
-        static DistributionFunction::Enum                         incubation_distribution;                          // INCUBATION_DISTRIBUTION
-        static DistributionFunction::Enum                         infectious_distribution;                          // INFECTIOUS_DISTRIBUTION
 
         GET_SCHEMA_STATIC_WRAPPER(InfectionConfig)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -76,7 +69,6 @@ namespace Kernel
         virtual InfectionStateChange::_enum GetStateChange() const override;
         virtual float GetInfectiousness() const override;
         virtual float GetInfectiousnessByRoute(string route) const override; //used in multi-route simulations
-        virtual float GetInfectiousPeriod() const override;
 
         virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) override;
         virtual void GetInfectiousStrainID(StrainIdentity* infstrain) override; // the ID of the strain being shed

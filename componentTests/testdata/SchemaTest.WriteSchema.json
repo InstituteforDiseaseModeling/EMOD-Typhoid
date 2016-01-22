@@ -8454,20 +8454,14 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 6
 					},
 					"Delay_Period_Std_Dev" : {
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 1
 					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
@@ -8920,20 +8914,14 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 6
 					},
 					"Delay_Period_Std_Dev" : {
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 1
 					},
 					"idmType:InterpolatedValueMap" : {
 						"Times" : [
@@ -9151,20 +9139,14 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 6
 					},
 					"Delay_Period_Std_Dev" : {
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 1
 					},
 					"idmType:InterpolatedValueMap" : {
 						"Times" : [
@@ -10467,6 +10449,181 @@
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "MaleCircumcision"
+				},
+				"MigrateTo" : {
+					"Sim_Types" : [
+						"*"
+					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"NodeID_To_Migrate_To" : {
+						"description" : "TBD",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 2.14748e+009,
+						"default" : 0
+					},
+					"Is_Family_Trip" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Is_Moving" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Duration_Before_Leaving_Distribution_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"NOT_INITIALIZED",
+							"FIXED_DURATION",
+							"UNIFORM_DURATION",
+							"GAUSSIAN_DURATION",
+							"EXPONENTIAL_DURATION",
+							"POISSON_DURATION",
+							"LOG_NORMAL_DURATION",
+							"BIMODAL_DURATION",
+							"PIECEWISE_CONSTANT",
+							"PIECEWISE_LINEAR",
+							"WEIBULL_DURATION"
+						],
+						"description" : "TBD",
+						"default" : "NOT_INITIALIZED"
+					},
+					"Duration_Before_Leaving_Fixed" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_Before_Leaving_Uniform_Min" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6,
+						"depends-on" : {
+							"Duration_Before_Leaving_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_Before_Leaving_Uniform_Max" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6,
+						"depends-on" : {
+							"Duration_Before_Leaving_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_Before_Leaving_Exponential_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_Before_Leaving_Gausian_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_Before_Leaving_Gausian_StdDev" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Duration_Before_Leaving_Poisson_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Distribution_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"NOT_INITIALIZED",
+							"FIXED_DURATION",
+							"UNIFORM_DURATION",
+							"GAUSSIAN_DURATION",
+							"EXPONENTIAL_DURATION",
+							"POISSON_DURATION",
+							"LOG_NORMAL_DURATION",
+							"BIMODAL_DURATION",
+							"PIECEWISE_CONSTANT",
+							"PIECEWISE_LINEAR",
+							"WEIBULL_DURATION"
+						],
+						"description" : "TBD",
+						"default" : "NOT_INITIALIZED"
+					},
+					"Duration_At_Node_Fixed" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Uniform_Min" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6,
+						"depends-on" : {
+							"Duration_At_Node_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_At_Node_Uniform_Max" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6,
+						"depends-on" : {
+							"Duration_At_Node_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_At_Node_Exponential_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Gausian_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Gausian_StdDev" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Duration_At_Node_Poisson_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "MigrateTo"
 				},
 				"ModifyStiCoInfectionStatus" : {
 					"Sim_Types" : [

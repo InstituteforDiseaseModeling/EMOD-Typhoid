@@ -24,6 +24,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ITransmissionGroups.h"
 #include "suids.hpp"
 #include "IInfectable.h"
+#include "MathFunctions.h"
 #include "Serialization.h"
 
 class RANDOMBASE;

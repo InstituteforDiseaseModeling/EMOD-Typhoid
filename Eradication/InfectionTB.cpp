@@ -295,11 +295,11 @@ namespace Kernel
 
         _immunity->InitNewInfection();
 
-        if ( incubation_distribution != DistributionFunction::EXPONENTIAL_DURATION )
+        if ( incubation_distribution.GetType() != DistributionFunction::EXPONENTIAL_DURATION )
         {
             LOG_DEBUG("TB incubation timers will use exponential distributions in spite of 'incubation_distribution' settings\n");
         }
-        if ( infectious_distribution != TB_active_period_distribution)
+        if ( infectious_distribution.GetType() != TB_active_period_distribution)
         {
             LOG_DEBUG("TB active period timers will use the TB_active_period_distribution, NOT the infectious_distribution \n");
         }
