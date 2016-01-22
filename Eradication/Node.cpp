@@ -1439,7 +1439,7 @@ namespace Kernel
             release_assert( individual );
 
             auto state_change = individual->GetStateChange();
-            if( IsDead( individual ) )
+            if( individual->IsDead() )
             {
                 if (individual->GetStateChange() == HumanStateChange::KilledByInfection)
                     Disease_Deaths += (float)individual->GetMonteCarloWeight();
@@ -1492,17 +1492,6 @@ namespace Kernel
 
         // Increment simulation time counter
     }
-
-    bool Node::IsDead( IIndividualHuman* individual )
-    {
-        auto state_change = individual->GetStateChange();
-        bool is_dead = (params()->vital_dynamics &&
-                       ( (state_change == HumanStateChange::DiedFromNaturalCauses) || 
-                         (state_change == HumanStateChange::KilledByInfection    ) ) ) 
-                    || (state_change == HumanStateChange::KilledByMCSampling) ;    //Killed by MC sampling should not rely on vital_dynamics being true.  
-        return is_dead ;
-    }
-
 
     void Node::updateInfectivity(float dt)
     {
@@ -2421,7 +2410,7 @@ namespace Kernel
 
     IIndividualHuman* Node::processImmigratingIndividual(IIndividualHuman* movedind)
     {
-        if( IsDead( movedind ) )
+        if( movedind->IsDead() )
         {
             // -------------------------------------------------------------
             // --- We want individuals to officially die in their home node
@@ -2430,9 +2419,6 @@ namespace Kernel
             release_assert( movedind->AtHome() );
 
             home_individual_ids.erase( movedind->GetSuid().data );
-
-            delete movedind;
-            movedind = NULL;
         }
         else
         {

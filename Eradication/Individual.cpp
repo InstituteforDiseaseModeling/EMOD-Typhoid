@@ -350,6 +350,16 @@ namespace Kernel
         return age_years >= min_adult_age_years ;
     }
 
+    bool IndividualHuman::IsDead() const
+    {
+        auto state_change = GetStateChange();
+        bool is_dead = (GET_CONFIGURABLE(SimulationConfig)->vital_dynamics &&
+                       ( (state_change == HumanStateChange::DiedFromNaturalCauses) || 
+                         (state_change == HumanStateChange::KilledByInfection    ) ) ) 
+                    || (state_change == HumanStateChange::KilledByMCSampling) ;    //Killed by MC sampling should not rely on vital_dynamics being true.  
+        return is_dead ;
+    }
+
     void IndividualHuman::SetContextTo(INodeContext* context)
     {
         INodeContext *old_context = parent;

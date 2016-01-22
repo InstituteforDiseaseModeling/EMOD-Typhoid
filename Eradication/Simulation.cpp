@@ -1062,6 +1062,11 @@ namespace Kernel
                 auto individual = *iterator;
                 auto* emigre = dynamic_cast<IMigrate*>(individual);
                 emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
+                if( individual->IsDead() )
+                {
+                    // we want the individual to migrate home and then finish dieing
+                    delete individual;
+                }
             }
 #else
             if ( migratingIndividualQueues[myRank].size() > 0 )
@@ -1108,6 +1113,11 @@ namespace Kernel
             {
                 IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
                 immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
+                if( individual->IsDead() )
+                {
+                    // we want the individual to migrate home and then finish dieing
+                    delete individual;
+                }
             }
         };
 

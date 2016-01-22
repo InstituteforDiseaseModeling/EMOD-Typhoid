@@ -336,7 +336,6 @@ namespace Kernel
         virtual void propagateContextToDependents();
 
 
-        virtual bool IsDead( IIndividualHuman* pi );
         const SimulationConfig* params() const;
         void checkIpKeyInWhitelist(const std::string& key, size_t numValues );
         void convertTransitions( const NodeDemographics &trans, json::Object& tx_camp, const std::string& key );

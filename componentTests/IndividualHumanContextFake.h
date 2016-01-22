@@ -264,6 +264,7 @@ public:
     virtual bool             AtHome()              const override { throw std::exception("The method or operation is not implemented."); }
     virtual bool             IsOnFamilyTrip()      const override { throw std::exception("The method or operation is not implemented."); }
     virtual const suids::suid& GetHomeNodeId()     const override { throw std::exception("The method or operation is not implemented."); }
+    virtual bool IsDead()                          const override { throw std::exception("The method or operation is not implemented."); }
 
     virtual tProperties* GetProperties() override
     {

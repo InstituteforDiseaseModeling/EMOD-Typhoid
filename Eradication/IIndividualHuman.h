@@ -45,6 +45,7 @@ namespace Kernel
         virtual bool AtHome() const = 0;
         virtual bool IsOnFamilyTrip() const = 0 ;
         virtual const suids::suid& GetHomeNodeId() const = 0 ;
+        virtual bool IsDead() const = 0;
 
         virtual NewInfectionState::_enum GetNewInfectionState() const = 0;
         virtual HumanStateChange GetStateChange() const = 0;

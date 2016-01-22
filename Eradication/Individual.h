@@ -133,6 +133,7 @@ namespace Kernel
         virtual bool AtHome() const override;
 
         virtual bool IsAdult() const override;
+        virtual bool IsDead() const override;
 
         // IMigrate
         virtual void ImmigrateTo(INodeContext* destination_node) override;
