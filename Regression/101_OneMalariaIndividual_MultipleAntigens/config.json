@@ -78,6 +78,7 @@
         "Enable_Vector_Aging": 0, 
         "Enable_Vector_Migration": 0, 
         "Enable_Vector_Migration_Local": 0, 
+        "Enable_Vector_Mortality": 1, 
         "Enable_Vital_Dynamics": 1, 
         "Erythropoiesis_Anemia_Effect": 0.0, 
         "Falciparum_MSP_Variants": 100, 

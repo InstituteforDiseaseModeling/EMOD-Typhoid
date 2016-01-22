@@ -4884,6 +4884,11 @@
 			}
 		},
 		"NodeVector" : {
+			"Enable_Vector_Mortality" : {
+				"description" : "TBD",
+				"type" : "bool",
+				"default" : 1
+			},
 			"Enable_Vector_Migration" : {
 				"description" : "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS",
 				"type" : "bool",

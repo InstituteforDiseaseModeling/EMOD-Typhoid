@@ -272,8 +272,12 @@ namespace Kernel
         probs()->FinalizeTransitionProbabilites( species()->anthropophily, species()->indoor_feeding); // TODO: rename this function now??
 
         // Update local adult mortality rate
-        float temperature   = m_context->GetLocalWeather()->airtemperature();
-        dryheatmortality    = dryHeatMortality(temperature);
+        dryheatmortality = 0.0;
+        if( m_VectorMortality )
+        {
+            float temperature = m_context->GetLocalWeather()->airtemperature();
+            dryheatmortality  = dryHeatMortality(temperature);
+        }
         localadultmortality = species()->adultmortality + dryheatmortality;
     }
 
@@ -1371,6 +1375,7 @@ namespace Kernel
         ar.labelElement("MaleQueues") & population.MaleQueues;
         ar.labelElement("m_species_params"); VectorSpeciesParameters::serialize(ar, const_cast<VectorSpeciesParameters*&>(population.m_species_params));
         ar.labelElement("m_probabilities"); VectorProbabilities::serialize(ar, population.m_probabilities);
+        ar.labelElement("m_VectorMortality") & population.m_VectorMortality;
     }
 
     void serialize(IArchive& ar, std::pair<float, float>& pair)

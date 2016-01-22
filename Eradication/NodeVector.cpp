@@ -53,12 +53,14 @@ namespace Kernel
     NodeVector::NodeVector() 
         : Node()
         , larval_habitat_multiplier()
+        , vector_mortality(true)
     {
     }
 
     NodeVector::NodeVector(ISimulationContext *context, suids::suid _suid) 
         : Node(context, _suid)
         , larval_habitat_multiplier()
+        , vector_mortality(true)
     {
     }
 
@@ -67,6 +69,7 @@ namespace Kernel
         const Configuration * config
     )
     {
+        initConfigTypeMap( "Enable_Vector_Mortality", &vector_mortality, "TBD"/*Enable_Vector_Mortality_DESC_TEXT*/, true );
         initConfigTypeMap( "Enable_Vector_Migration", &vector_migration, Enable_Vector_Migration_DESC_TEXT, false );
         initConfigTypeMap( "Enable_Vector_Migration_Local", &vector_migration_local, Enable_Vector_Migration_Local_DESC_TEXT, false );
         initConfigTypeMap( "Mosquito_Weight", &mosquito_weight, Mosquito_Weight_DESC_TEXT, 1, 1e4, 1 ); // should this be renamed vector_weight?
@@ -635,6 +638,8 @@ namespace Kernel
         // and keep a list of pointers so the node can update it with new rainfall, etc.
         vp->SetupLarvalHabitat(getContextPointer());
 
+        vp->SetVectorMortality( vector_mortality );
+
         // Add this new vector population to the list
         m_vectorpopulations.push_front(vp);
     }
@@ -654,6 +659,7 @@ namespace Kernel
 // clorton        ar.labelElement("m_vectorpopulations") & node.m_vectorpopulations;
 // clorton        ar.labelElement("m_vector_lifecycle_probabilities") & node.m_vector_lifecycle_probabilities;
 // clorton        ar.labelElement("larval_habitat_multiplier") & node.larval_habitat_multiplier;
+        ar.labelElement("vector_mortality") & node.vector_mortality;
         ar.labelElement("vector_migration") & node.vector_migration;
         ar.labelElement("vector_migration_local") & node.vector_migration_local;
         ar.labelElement("mosquito_weight") & node.mosquito_weight;

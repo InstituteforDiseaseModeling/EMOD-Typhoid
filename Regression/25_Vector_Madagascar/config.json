@@ -64,6 +64,7 @@
         "Enable_Vector_Aging": 0, 
         "Enable_Vector_Migration": 0, 
         "Enable_Vector_Migration_Local": 0, 
+        "Enable_Vector_Mortality": 1, 
         "Enable_Vital_Dynamics": 1, 
         "Family_Migration_Type": "NO_MIGRATION", 
         "Geography": "Madagascar", 

@@ -231,7 +231,7 @@ namespace Kernel
                 cumulative_probability += (1 - cumulative_probability) * probs()->sugarTrapKilling;  // add in sugarTrap to kill rate
             }
             
-            if(outcome <= cumulative_probability)
+            if( m_VectorMortality && (outcome <= cumulative_probability) )
             { 
                 queue->SetPopulation(0);  //mosquito dies
             }
@@ -246,7 +246,10 @@ namespace Kernel
             {
                 if ( randgen->e() < m_average_oviposition_killing )
                 {
-                    queue->SetPopulation(0); // mosquito dies
+                    if( m_VectorMortality )
+                    {
+                        queue->SetPopulation(0); // mosquito dies
+                    }
                     tempentry2->SetNewEggs(0);    // and does not lay eggs
 
                     return 0;                 // exit feeding cycle
@@ -265,7 +268,10 @@ namespace Kernel
             {
                 if(randgen->e() < probs()->sugarTrapKilling)
                 {
-                    queue->SetPopulation(0);
+                    if( m_VectorMortality )
+                    {
+                        queue->SetPopulation(0);
+                    }
 
                     return 0;  // dead mosquito: no blood-feeding cycle
                 }
@@ -288,8 +294,11 @@ namespace Kernel
         cumulative_probability = p_local_mortality + (1 - p_local_mortality) * probs()->diebeforeattempttohumanfeed;
         if (outcome <= cumulative_probability)
         {
-            //mosquito dies
-            queue->SetPopulation(0);
+            if( m_VectorMortality )
+            {
+                //mosquito dies
+                queue->SetPopulation(0);
+            }
             return 0;
         }
 
@@ -341,7 +350,10 @@ namespace Kernel
                 cumulative_probability = float(cumulative_probability + probs()->indoor_diebeforefeeding + probs()->indoor_dieduringfeeding * x_infectioushfmortmod + probs()->indoor_diepostfeeding * x_infectiouscorrection);
                 if (outcome <= cumulative_probability)
                 {
-                    queue->SetPopulation(0);
+                    if( m_VectorMortality )
+                    {
+                        queue->SetPopulation(0);
+                    }
                     return 0;
                 }
 
@@ -399,7 +411,10 @@ namespace Kernel
                 cumulative_probability = float(probs()->outdoor_diebeforefeeding + probs()->outdoor_dieduringfeeding * x_infectioushfmortmod + probs()->outdoor_diepostfeeding* x_infectiouscorrection + probs()->outdoor_successfulfeed_human * probs()->outdoor_returningmortality * x_infectiouscorrection);
                 if (outcome <= cumulative_probability)
                 { 
-                    queue->SetPopulation(0);
+                    if( m_VectorMortality )
+                    {
+                        queue->SetPopulation(0);
+                    }
                     return 0;
                 }
 
@@ -487,7 +502,11 @@ namespace Kernel
             VectorCohortList_t::iterator iCurrent = iList++;
 
             tempentry1->IncreaseProgress( dt * species()->immaturerate ); // introduce climate dependence here if we can figure it out
-            tempentry1->SetPopulation( int32_t(tempentry1->GetPopulation() - randgen->binomial_approx(tempentry1->GetPopulation(), p_local_mortality)) );
+            if( m_VectorMortality )
+            {
+                int32_t die = randgen->binomial_approx(tempentry1->GetPopulation(), p_local_mortality) ;
+                tempentry1->SetPopulation( tempentry1->GetPopulation() - die );
+            }
 
             if (tempentry1->GetProgress() >= 1 || tempentry1->GetPopulation() <= 0)
             { 
@@ -609,9 +628,10 @@ namespace Kernel
             p_local_male_mortality = p_local_male_mortality + (1.0f - p_local_male_mortality) * probs()->outdoorareakilling_male;
 
             // adults die
-            if ((*iCurrent)->GetPopulation() > 0)
+            if( m_VectorMortality && ((*iCurrent)->GetPopulation() > 0) )
             {
-                (*iCurrent)->SetPopulation( int32_t((*iCurrent)->GetPopulation() - randgen->binomial_approx((*iCurrent)->GetPopulation(), p_local_male_mortality)) );
+                int32_t die = (int32_t)(randgen->binomial_approx((*iCurrent)->GetPopulation(), p_local_male_mortality)) ;
+                (*iCurrent)->SetPopulation( (*iCurrent)->GetPopulation() - die );
             }
 
             if ((*iCurrent)->GetPopulation() <= 0)

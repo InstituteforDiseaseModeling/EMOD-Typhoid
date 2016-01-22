@@ -85,6 +85,7 @@ namespace Kernel
 
         std::map<VectorHabitatType::Enum,float> larval_habitat_multiplier;
 
+        bool vector_mortality;
         bool vector_migration;
         bool vector_migration_local;
         int32_t mosquito_weight;

@@ -90,6 +90,7 @@ namespace Kernel
         virtual const infection_list_t& GetInfections()             const override;
         virtual float GetInterventionReducedAcquire()               const override;
 
+        void SetVectorMortality( bool mortality ) { m_VectorMortality = mortality; }
     protected:
         VectorPopulation();
         void Initialize(INodeContext *context, std::string species_name, unsigned int adults, unsigned int infectious);
@@ -201,6 +202,8 @@ namespace Kernel
         const VectorSpeciesParameters *m_species_params;
         VectorProbabilities           *m_probabilities;
         ITransmissionGroups           *m_transmissionGroups;
+
+        bool m_VectorMortality ;
 
         DECLARE_SERIALIZABLE(VectorPopulation);
     };
