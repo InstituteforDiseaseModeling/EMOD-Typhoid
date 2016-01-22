@@ -68,8 +68,6 @@ namespace Kernel
     )
     {
         initConfigTypeMap( "Enable_Vector_Migration", &vector_migration, Enable_Vector_Migration_DESC_TEXT, false );
-        initConfigTypeMap( "Enable_Vector_Migration_Wind", &vector_migration_wind, Enable_Vector_Migration_Wind_DESC_TEXT, false );
-        initConfigTypeMap( "Enable_Vector_Migration_Human", &vector_migration_human, Enable_Vector_Migration_Human_DESC_TEXT, false );
         initConfigTypeMap( "Enable_Vector_Migration_Local", &vector_migration_local, Enable_Vector_Migration_Local_DESC_TEXT, false );
         initConfigTypeMap( "Mosquito_Weight", &mosquito_weight, Mosquito_Weight_DESC_TEXT, 1, 1e4, 1 ); // should this be renamed vector_weight?
 
@@ -393,11 +391,28 @@ namespace Kernel
             vector_sampling_type == VectorSamplingType::SAMPLE_IND_VECTORS)
         {
             LOG_DEBUG( "Creating VectorPopulationIndividual instance(s).\n" );
+
             for (auto& vector_species_name : params()->vector_species_names)
             {
-                VectorPopulation *vectorpopulation = VectorPopulationIndividual::CreatePopulation(getContextPointer(), vector_species_name, DEFAULT_VECTOR_POPULATION_SIZE, 0, mosquito_weight);
+                int32_t population_per_species = DEFAULT_VECTOR_POPULATION_SIZE;
+                if( demographics["NodeAttributes"].Contains( "InitialVectorsPerSpecies" ) )
+                {
+                    if( demographics["NodeAttributes"]["InitialVectorsPerSpecies"].IsObject() )
+                    {
+                        if( demographics["NodeAttributes"]["InitialVectorsPerSpecies"].Contains( vector_species_name ) )
+                        {
+                            population_per_species = demographics["NodeAttributes"]["InitialVectorsPerSpecies"][ vector_species_name ].AsInt();
+                        }
+                    }
+                    else
+                    {
+                        population_per_species = demographics["NodeAttributes"]["InitialVectorsPerSpecies"].AsInt();
+                    }
+                }
+                VectorPopulation *vectorpopulation = VectorPopulationIndividual::CreatePopulation(getContextPointer(), vector_species_name, population_per_species, 0, mosquito_weight);
                 InitializeVectorPopulation(vectorpopulation);
             }
+
         }
         // Aging cohort model
         else if (params()->vector_aging)
@@ -502,9 +517,6 @@ namespace Kernel
                 }
             }
         }
-
-        if (vector_migration_wind)  {} // adjust for wind
-        if (vector_migration_human) {} // adjust for other migration routes
 
         // bookkeeping
         VectorCohortList_t migratingvectors;             // to hold vectors
@@ -643,8 +655,6 @@ namespace Kernel
 // clorton        ar.labelElement("m_vector_lifecycle_probabilities") & node.m_vector_lifecycle_probabilities;
 // clorton        ar.labelElement("larval_habitat_multiplier") & node.larval_habitat_multiplier;
         ar.labelElement("vector_migration") & node.vector_migration;
-        ar.labelElement("vector_migration_wind") & node.vector_migration_wind;
-        ar.labelElement("vector_migration_human") & node.vector_migration_human;
         ar.labelElement("vector_migration_local") & node.vector_migration_local;
         ar.labelElement("mosquito_weight") & node.mosquito_weight;
     }

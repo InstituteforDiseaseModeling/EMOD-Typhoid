@@ -264,9 +264,22 @@ namespace Kernel
     {
         int num_nodes = Simulation::populateFromDemographics( campaign_filename, loadbalance_filename );
 
+        int total_vector_population = 0;
         for( auto node_entry : nodes )
         {
             node_populations_map[ node_entry.first ] = node_entry.second->GetStatPop() ;
+
+            NodeVector* pnv = static_cast<NodeVector*>( node_entry.second );
+
+            for( auto vp : pnv->GetVectorPopulations() )
+            {
+                total_vector_population += vp->getAdultCount();
+            }
+        }
+
+        if( total_vector_population == 0 )
+        {
+            LOG_WARN_F("!!!! NO VECTORS !!!!!  There are %d nodes on this core and zero vectors.",nodes.size());
         }
 
         return num_nodes ;

@@ -4889,16 +4889,6 @@
 				"type" : "bool",
 				"default" : 0
 			},
-			"Enable_Vector_Migration_Wind" : {
-				"description" : "Set to 1 to consider vector migration due to wind. Set to 0 to not consider vector migration due to wind. Note: This parameter is currently not in use.",
-				"type" : "bool",
-				"default" : 0
-			},
-			"Enable_Vector_Migration_Human" : {
-				"description" : "Set to 1 to consider vector migration influenced by humans in vehicles. Set to 0 to not consider such migration. Note: This parameter is currently not in use.",
-				"type" : "bool",
-				"default" : 0
-			},
 			"Enable_Vector_Migration_Local" : {
 				"description" : "Set to 1 to consider local vector migration by humans traveling on foot. Set to 0 to not consider local vector migration.",
 				"type" : "bool",
