@@ -7,6 +7,8 @@
         { "path" : "28_Malaria_Sandbox" },
         { "path" : "TB_10_LatentFast_SmearPos" },
         { "path" : "49_Environmental_Namawala" },
-        { "path" : "50_Airborne_Namawala" }
+        { "path" : "50_Airborne_Namawala" },
+        { "path": "STI/60_STI_All_Rel_Types_All_Rel_States" },
+        { "path" : "HIV/12_HIV_CascadeOfCare"}
     ]
 }

@@ -10615,6 +10615,19 @@
 						"max" : 3.40282e+038,
 						"default" : -1
 					},
+					"Blackout_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0
+					},
+					"Blackout_Event_Trigger" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
 						"type" : "float",
@@ -10747,6 +10760,19 @@
 						"min" : -1,
 						"max" : 3.40282e+038,
 						"default" : -1
+					},
+					"Blackout_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0
+					},
+					"Blackout_Event_Trigger" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Demographic_Coverage_Time_Profile" : {
 						"type" : "enum",
