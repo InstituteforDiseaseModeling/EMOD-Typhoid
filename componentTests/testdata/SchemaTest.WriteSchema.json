@@ -4479,13 +4479,6 @@
 				],
 				"description" : "TBD",
 				"default" : "NO_MIGRATION"
-			},
-			"Family_Migration_Probability" : {
-				"description" : "TBD",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 1
 			}
 		},
 		"Node" : {

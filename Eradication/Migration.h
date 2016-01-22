@@ -96,7 +96,6 @@ namespace Kernel
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const override;
         virtual bool IsHeterogeneityEnabled() const override;
         virtual MigrationType::Enum GetFamilyMigrationType() const override;
-        virtual ProbabilityNumber GetFamilyMigrationProbability() const override;
 
     protected:
         friend class MigrationInfoFactoryFile;
@@ -135,7 +134,6 @@ namespace Kernel
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const override;
         virtual bool IsHeterogeneityEnabled() const override;
         virtual MigrationType::Enum GetFamilyMigrationType() const override;
-        virtual ProbabilityNumber GetFamilyMigrationProbability() const override;
 
     protected:
         friend class MigrationInfoFactoryFile;
@@ -143,8 +141,7 @@ namespace Kernel
 
         MigrationInfoFixedRate( INodeContext* _parent,
                                 bool isHeterogeneityEnabled,
-                                MigrationType::Enum familyType,
-                                const ProbabilityNumber& familyProb );
+                                MigrationType::Enum familyType );
 
         virtual void Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData );
         virtual void CalculateRates( Gender::Enum gender, float ageYears );
@@ -160,7 +157,6 @@ namespace Kernel
         INodeContext * m_Parent;
         bool m_IsHeterogeneityEnabled;
         MigrationType::Enum m_FamilyMigrationType;
-        ProbabilityNumber   m_FamilyMigrationProbability;
         std::vector<suids::suid>         m_ReachableNodes;
         std::vector<MigrationType::Enum> m_MigrationTypes;
         std::vector<float>               m_RateCDF;
@@ -187,8 +183,7 @@ namespace Kernel
 
         MigrationInfoAgeAndGender( INodeContext* _parent,
                                    bool isHeterogeneityEnabled,
-                                   MigrationType::Enum familyType,
-                                   const ProbabilityNumber& familyProb );
+                                   MigrationType::Enum familyType );
 
         virtual void Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData );
         virtual void CalculateRates( Gender::Enum gender, float ageYears );
@@ -302,7 +297,6 @@ namespace Kernel
         bool m_IsHeterogeneityEnabled;
         bool m_EnableMigration;
         MigrationType::Enum m_FamilyMigrationType;
-        ProbabilityNumber   m_FamilyMigrationProbability;
 #pragma warning( pop )
     private:
     };

@@ -48,7 +48,6 @@ namespace Kernel
 
         virtual bool IsHeterogeneityEnabled() const = 0;
         virtual MigrationType::Enum GetFamilyMigrationType() const = 0;
-        virtual ProbabilityNumber GetFamilyMigrationProbability() const = 0;
     };
 
     // IMigrationInfoFactory is used to create IMirationInfo objects for a node.

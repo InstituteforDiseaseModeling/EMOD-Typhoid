@@ -148,11 +148,6 @@ namespace Kernel
         return MigrationType::NO_MIGRATION;
     }
 
-    ProbabilityNumber MigrationInfoNull::GetFamilyMigrationProbability() const
-    {
-        return 0.0;
-    }
-
     // ------------------------------------------------------------------------
     // --- MigrationInfoFixedRate
     // ------------------------------------------------------------------------
@@ -162,12 +157,10 @@ namespace Kernel
 
     MigrationInfoFixedRate::MigrationInfoFixedRate( INodeContext * _parent, 
                                                     bool isHeterogeneityEnabled,
-                                                    MigrationType::Enum familyType,
-                                                    const ProbabilityNumber& familyProb ) 
+                                                    MigrationType::Enum familyType ) 
         : m_Parent(_parent) 
         , m_IsHeterogeneityEnabled( isHeterogeneityEnabled )
         , m_FamilyMigrationType( familyType )
-        , m_FamilyMigrationProbability( familyProb )
         , m_ReachableNodes()
         , m_MigrationTypes()
         , m_RateCDF()
@@ -316,11 +309,6 @@ namespace Kernel
         return m_FamilyMigrationType;
     }
 
-    ProbabilityNumber MigrationInfoFixedRate::GetFamilyMigrationProbability() const
-    {
-        return m_FamilyMigrationProbability;
-    }
-
     // ------------------------------------------------------------------------
     // --- MigrationInfoAgeAndGender
     // ------------------------------------------------------------------------
@@ -330,9 +318,8 @@ namespace Kernel
 
     MigrationInfoAgeAndGender::MigrationInfoAgeAndGender( INodeContext * _parent, 
                                                           bool isHeterogeneityEnabled,
-                                                          MigrationType::Enum familyType,
-                                                          const ProbabilityNumber& familyProb ) 
-        : MigrationInfoFixedRate( _parent, isHeterogeneityEnabled, familyType, familyProb ) 
+                                                          MigrationType::Enum familyType ) 
+        : MigrationInfoFixedRate( _parent, isHeterogeneityEnabled, familyType ) 
         , m_RateData()
         , m_ReachableNodesFemale()
         , m_MigrationTypesFemale()
@@ -889,10 +876,6 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
         if( m_EnableMigration )
         {
             initConfig( "Family_Migration_Type", m_FamilyMigrationType, config, MetadataDescriptor::Enum("Family_Migration_Type", Family_Migration_Type_DESC_TEXT, MDD_ENUM_ARGS(MigrationType)) );
-            if( (m_FamilyMigrationType != MigrationType::NO_MIGRATION) || JsonConfigurable::_dryrun )
-            {
-                initConfigTypeMap( "Family_Migration_Probability", &m_FamilyMigrationProbability, Family_Migration_Probability_DESC_TEXT );
-            }
         }
         bool ret = JsonConfigurable::Configure( config );
 
@@ -940,8 +923,7 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
             {
                 MigrationInfoFixedRate* p_mifr = _new_ MigrationInfoFixedRate( pParentNode, 
                                                                                m_IsHeterogeneityEnabled, 
-                                                                               m_FamilyMigrationType, 
-                                                                               m_FamilyMigrationProbability );
+                                                                               m_FamilyMigrationType );
                 p_mifr->Initialize( rate_data ); 
                 p_new_migration_info = p_mifr;
             }
@@ -949,8 +931,7 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
             {
                 MigrationInfoAgeAndGender* p_miag = _new_ MigrationInfoAgeAndGender( pParentNode,
                                                                                      m_IsHeterogeneityEnabled, 
-                                                                                     m_FamilyMigrationType, 
-                                                                                     m_FamilyMigrationProbability );
+                                                                                     m_FamilyMigrationType );
                 p_miag->Initialize( rate_data );
                 p_new_migration_info = p_miag;
             }
@@ -1056,8 +1037,7 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
 
         MigrationInfoFixedRate* new_migration_info = _new_ MigrationInfoFixedRate( pParentNode, 
                                                                                    m_IsHeterogeneityEnabled,
-                                                                                   MigrationType::NO_MIGRATION,
-                                                                                   ProbabilityNumber() );
+                                                                                   MigrationType::NO_MIGRATION );
         new_migration_info->Initialize( rate_data );
 
         return new_migration_info;

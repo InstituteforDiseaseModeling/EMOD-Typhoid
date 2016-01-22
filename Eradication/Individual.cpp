@@ -842,22 +842,19 @@ namespace Kernel
                 {
                     return ;
                 }
-                if( (migration_type == migration_info->GetFamilyMigrationType()) &&
-                    (migration_info->GetFamilyMigrationProbability() > 0) )
+                if( migration_type == migration_info->GetFamilyMigrationType() )
                 {
-                    float rand = this->GetRng()->e();
-                    if( migration_info->GetFamilyMigrationProbability() >= rand )
-                    {
-                        waiting_for_family_trip = true ;
+                    waiting_for_family_trip = true ;
 
-                        parent->SetWaitingForFamilyTrip( migration_destination, 
-                                                         migration_type,
-                                                         migration_time_until_trip,
-                                                         0.0f );
+                    float time_at_destination = GetRoundTripDurationRate( migration_type );
+                    parent->SetWaitingForFamilyTrip( migration_destination, 
+                                                     migration_type,
+                                                     migration_time_until_trip,
+                                                     time_at_destination );
 
-                        migration_destination = suids::nil_suid();
-                        migration_time_until_trip = 0.0 ;
-                    }
+                    migration_destination = suids::nil_suid();
+                    migration_type = MigrationType::NO_MIGRATION;
+                    migration_time_until_trip = 0.0 ;
                 }
 
                 float return_prob = 0.0f;
@@ -883,33 +880,41 @@ namespace Kernel
             else if( waypoints.size() > 0 )
             {
                 migration_destination = waypoints.back();
-
                 MigrationType::Enum trip_type = waypoints_trip_type.back();
 
-                float return_duration_rate = 0.0f;
-                switch(trip_type)
-                {
-                    case MigrationType::LOCAL_MIGRATION:    return_duration_rate = local_roundtrip_duration_rate;  break;
-                    case MigrationType::AIR_MIGRATION:      return_duration_rate = air_roundtrip_duration_rate;    break;
-                    case MigrationType::REGIONAL_MIGRATION: return_duration_rate = region_roundtrip_duration_rate; break;
-                    case MigrationType::SEA_MIGRATION:      return_duration_rate = sea_roundtrip_duration_rate;    break;
-                    default:
-                        throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "trip_type", trip_type, "MigrationType" );
-                }
 
                 if( migration_time_at_destination > 0.0f )
                 {
                     migration_time_until_trip = migration_time_at_destination ;
                     migration_time_at_destination = 0.0f ;
                 }
-                else if(return_duration_rate > 0.0f)
-                {
-                    migration_time_until_trip = (float)randgen->expdist(return_duration_rate);
-                }
                 else
-                    migration_time_until_trip = 0.0f;
+                {
+                    migration_time_until_trip = GetRoundTripDurationRate( trip_type );
+                }
             }
         }
+    }
+
+    float IndividualHuman::GetRoundTripDurationRate( MigrationType::Enum trip_type )
+    {
+        float return_duration_rate = 0.0f;
+        switch(trip_type)
+        {
+            case MigrationType::LOCAL_MIGRATION:    return_duration_rate = local_roundtrip_duration_rate;  break;
+            case MigrationType::AIR_MIGRATION:      return_duration_rate = air_roundtrip_duration_rate;    break;
+            case MigrationType::REGIONAL_MIGRATION: return_duration_rate = region_roundtrip_duration_rate; break;
+            case MigrationType::SEA_MIGRATION:      return_duration_rate = sea_roundtrip_duration_rate;    break;
+            default:
+                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "trip_type", trip_type, "MigrationType" );
+        }
+
+        float duration = 0.0;
+        if(return_duration_rate > 0.0f)
+        {
+            duration = float(randgen->expdist( return_duration_rate ));
+        }
+        return duration;
     }
 
     const suids::suid& IndividualHuman::GetMigrationDestination()

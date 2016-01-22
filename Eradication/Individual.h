@@ -259,6 +259,8 @@ namespace Kernel
         virtual void setupInterventionsContainer();            // derived classes can customize the container, and hence the interventions supported, by overriding this method
         virtual void applyNewInterventionEffects(float dt);    // overriden when interventions (e.g. polio vaccine) updates individual properties (e.g. immunity)
 
+        float GetRoundTripDurationRate( MigrationType::Enum trip_type );
+
         // Infection updating
         virtual bool SetNewInfectionState(InfectionStateChange::_enum inf_state_change);
         virtual void ReportInfectionState();
