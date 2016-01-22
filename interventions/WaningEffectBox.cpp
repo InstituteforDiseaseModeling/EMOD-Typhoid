@@ -46,15 +46,13 @@ namespace Kernel
     {
         return currentEffect;
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, WaningEffectBox& we, const unsigned int v)
+    REGISTER_SERIALIZABLE(WaningEffectBox);
+
+    void WaningEffectBox::serialize(IArchive& ar, WaningEffectBox* obj)
     {
-        ar & we.currentEffect;
-        ar & we.boxDuration;
+        WaningEffectBox& effect = *obj;
+        ar.labelElement("currentEffect") & effect.currentEffect;
+        ar.labelElement("boxDuration") & effect.boxDuration;
     }
 }
-#endif

@@ -51,5 +51,7 @@ namespace Kernel
         float secondary_decay_time_constant;
         InterventionDurabilityProfile::Enum durability_time_profile;
         IVectorInterventionEffectsSetter *ivies;
+
+        DECLARE_SERIALIZABLE(HumanHostSeekingTrap);
     };
 }

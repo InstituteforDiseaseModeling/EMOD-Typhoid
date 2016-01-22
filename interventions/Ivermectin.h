@@ -41,5 +41,7 @@ namespace Kernel
         WaningConfig killing_config;
         IWaningEffect* killing_effect;
         IVectorInterventionEffectsSetter *ivies; // aka individual vector interventions container
+
+        DECLARE_SERIALIZABLE(Ivermectin);
     };
 }

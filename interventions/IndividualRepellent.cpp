@@ -162,19 +162,17 @@ namespace Kernel
         *ppinstance = foundInterface;
         return status;
     }*/
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SimpleIndividualRepellent& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(SimpleIndividualRepellent);
+
+    void SimpleIndividualRepellent::serialize(IArchive& ar, SimpleIndividualRepellent* obj)
     {
-        ar & obj.durability_time_profile;
-        ar & obj.current_blockingrate;
-        ar & obj.current_killingrate;
-        ar & obj.primary_decay_time_constant;
-        ar & obj.secondary_decay_time_constant;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        SimpleIndividualRepellent& repellent = *obj;
+        ar.labelElement("durability_time_profile") & (uint32_t&)repellent.durability_time_profile;
+        ar.labelElement("current_blockingrate") & repellent.current_blockingrate;
+        ar.labelElement("current_killingrate") & repellent.current_killingrate;
+        ar.labelElement("primary_decay_time_constant") & repellent.primary_decay_time_constant;
+        ar.labelElement("secondary_decay_time_constant") & repellent.secondary_decay_time_constant;
     }
 }
-#endif

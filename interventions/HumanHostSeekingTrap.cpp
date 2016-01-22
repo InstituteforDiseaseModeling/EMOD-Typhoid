@@ -122,19 +122,17 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IVectorInterventionEffectsSetter", "IIndividualHumanContext" );
         }
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HumanHostSeekingTrap& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(HumanHostSeekingTrap);
+
+    void HumanHostSeekingTrap::serialize(IArchive& ar, HumanHostSeekingTrap* obj)
     {
-        ar & obj.current_attractrate;
-        ar & obj.current_killingrate;
-        ar & obj.primary_decay_time_constant;
-        ar & obj.secondary_decay_time_constant;
-        ar & obj.durability_time_profile;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        HumanHostSeekingTrap& trap = *obj;
+        ar.labelElement("current_attractrate") & trap.current_attractrate;
+        ar.labelElement("current_killingrate") & trap.current_killingrate;
+        ar.labelElement("primary_decay_time_constant") & trap.primary_decay_time_constant;
+        ar.labelElement("secondary_decay_time_constant") & trap.secondary_decay_time_constant;
+        ar.labelElement("durability_time_profile") & (uint32_t&)trap.durability_time_profile;
     }
 }
-#endif

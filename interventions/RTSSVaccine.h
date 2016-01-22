@@ -46,5 +46,7 @@ namespace Kernel
         MalariaAntibodyType::Enum antibody_type;
         int antibody_variant;
         float boosted_antibody_concentration;
+
+        DECLARE_SERIALIZABLE(RTSSVaccine);
     };
 }

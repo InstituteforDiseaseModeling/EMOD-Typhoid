@@ -60,14 +60,3 @@ namespace Kernel
         ar.labelElement("decayTimeConstant") & effect.decayTimeConstant;
     }
 }
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, WaningEffectExponential& we, const unsigned int v)
-    {
-        ar & we.currentEffect;
-        ar & we.decayTimeConstant;
-    }
-}
-#endif

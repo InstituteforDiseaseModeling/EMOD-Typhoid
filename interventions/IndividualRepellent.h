@@ -52,5 +52,7 @@ namespace Kernel
         float primary_decay_time_constant;
         float secondary_decay_time_constant;
         IIndividualRepellentConsumer *ihmc; // aka individual or individual vector interventions container
+
+        DECLARE_SERIALIZABLE(SimpleIndividualRepellent);
     };
 }

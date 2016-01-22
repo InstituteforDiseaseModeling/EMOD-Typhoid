@@ -70,6 +70,8 @@ namespace Kernel
 
     protected:
         float currentEffect;
+
+        DECLARE_SERIALIZABLE(WaningEffectConstant);
     };
 
     // --------------------------- WaningEffectExponential ---------------------------
@@ -108,6 +110,8 @@ namespace Kernel
     protected:
         float currentEffect;
         float boxDuration;
+
+        DECLARE_SERIALIZABLE(WaningEffectBox);
     };
 
     // --------------------------- WaningEffectBoxExponential ---------------------------
@@ -127,5 +131,7 @@ namespace Kernel
         float currentEffect;
         float boxDuration;
         float decayTimeConstant;
+
+        DECLARE_SERIALIZABLE(WaningEffectBoxExponential);
     };
 }

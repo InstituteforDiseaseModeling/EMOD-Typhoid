@@ -85,15 +85,13 @@ namespace Kernel
         HANDLE_INTERFACE(IDistributableIntervention)
         HANDLE_ISUPPORTS_VIA(IDistributableIntervention)
     END_QUERY_INTERFACE_BODY(Ivermectin)
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, Ivermectin& ivm, const unsigned int v)
+    REGISTER_SERIALIZABLE(Ivermectin);
+
+    void Ivermectin::serialize(IArchive& ar, Ivermectin* obj)
     {
-        ar & ivm.killing_effect;
-        ar & boost::serialization::base_object<BaseIntervention>(ivm);
+        BaseIntervention::serialize( ar, obj );
+        Ivermectin& ivermectin = *obj;
+        ar.labelElement("killing_effect") & ivermectin.killing_effect;
     }
 }
-#endif

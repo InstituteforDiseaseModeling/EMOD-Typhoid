@@ -72,17 +72,15 @@ namespace Kernel
     {
         // Nothing to do for this intervention, which doesn't have ongoing effects after an initial boosting
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, RTSSVaccine& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(RTSSVaccine);
+
+    void RTSSVaccine::serialize(IArchive& ar, RTSSVaccine* obj)
     {
-        ar & obj.antibody_type;
-        ar & obj.antibody_variant;
-        ar & obj.boosted_antibody_concentration;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        RTSSVaccine& vaccine = *obj;
+        ar.labelElement("antibody_type") & (uint32_t&)vaccine.antibody_type;
+        ar.labelElement("antibody_variant") & vaccine.antibody_variant;
+        ar.labelElement("boosted_antibody_concentration") & vaccine.boosted_antibody_concentration;
     }
 }
-#endif
