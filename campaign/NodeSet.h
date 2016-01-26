@@ -13,12 +13,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "IdmApi.h"
 #include "BoostLibWrapper.h"
-#include "ISupports.h"
 #include "Configuration.h"
 #include "Contexts.h"
 #include "FactorySupport.h"
 #include "Configure.h"
 #include "InterventionEnums.h"
+#include "ISerializable.h"
 
 namespace Kernel
 {
@@ -29,7 +29,7 @@ namespace Kernel
 
     struct INodeEventContext;
 
-    struct IDMAPI INodeSet : public ISupports
+    struct IDMAPI INodeSet : public ISerializable
     {
         virtual bool Contains(INodeEventContext *ndc) = 0; // must provide access to demographics id, lat, long, etc
     };
@@ -76,6 +76,12 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
         
         virtual bool Contains(INodeEventContext *ndc);
+
+    protected:
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+        DECLARE_SERIALIZABLE(NodeSetAll);
+#pragma warning( pop )
     };
 
     class IDMAPI NodeSetPolygon : public INodeSet, public JsonConfigurable

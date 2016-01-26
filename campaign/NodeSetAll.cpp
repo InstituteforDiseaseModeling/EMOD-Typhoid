@@ -43,4 +43,11 @@ namespace Kernel
     {
         return true;
     }
+
+    REGISTER_SERIALIZABLE(NodeSetAll);
+
+    void NodeSetAll::serialize(IArchive& ar, NodeSetAll* obj)
+    {
+        // Nothing to do here. NodeSetAll does its work in Contains()
+    }
 }

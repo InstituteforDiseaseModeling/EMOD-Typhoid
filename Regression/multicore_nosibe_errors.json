@@ -11,7 +11,7 @@
         { "path": "Multicore_Nosibe/Scenarios/TB/06_PopulationBurnIn/A_SteadyState",     "note": "TB specific channels roughly 1/5 of expected value. SEIR channels diverge around time step 5320." },
         { "path": "Multicore_Nosibe/Scenarios/TB/06_PopulationBurnIn/B_PrivateToPublic", "note": "TB specific channels roughly 1/5 of expected value. SEIR channels diverge around time step 5320." },
         { "path": "Multicore_Nosibe/TB_34_GroupCoordinator",                             "note": "Traces look good until time step ~200." },
-        { "path" : "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn",         "note": "Crashes around/after time step 175." }
+        { "path": "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn",          "note": "TB specific channels roughly 1/5 of expected value." }
     ],
     "good": [
         { "path": "Multicore_Nosibe/39_Vector_Namawala_HostSeekingTrap",     "note": "Needs updated baseline." },

@@ -71,4 +71,12 @@ namespace Kernel
         else
         { return false;}
     }
+
+    REGISTER_SERIALIZABLE(SmearDiagnostic);
+
+    void SmearDiagnostic::serialize(IArchive& ar, SmearDiagnostic* obj)
+    {
+        SimpleDiagnostic::serialize( ar, obj );
+        // No SmearDiagnostic specific fields yet.
+    }
 }

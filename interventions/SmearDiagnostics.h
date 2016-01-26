@@ -29,5 +29,7 @@ namespace Kernel
         virtual bool Configure( const Configuration* pConfig );
         virtual ~SmearDiagnostic();// { }
         virtual bool positiveTestResult();
+
+        DECLARE_SERIALIZABLE(SmearDiagnostic);
     };
 }
