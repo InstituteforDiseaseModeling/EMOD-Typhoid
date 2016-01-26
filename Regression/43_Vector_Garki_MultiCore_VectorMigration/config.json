@@ -64,6 +64,7 @@
         "Enable_Vector_Aging": 0, 
         "Enable_Vector_Migration": 1, 
         "Enable_Vector_Migration_Local": 1, 
+        "Enable_Vector_Migration_Regional": 0, 
         "Enable_Vector_Mortality": 1, 
         "Enable_Vital_Dynamics": 1, 
         "Family_Migration_Type": "NO_MIGRATION", 
@@ -90,7 +91,6 @@
         "Larval_Density_Dependence": "UNIFORM_WHEN_OVERPOPULATION", 
         "Listed_Events": [], 
         "Load_Balance_Filename": "Garki_30arcsec_load_balancing_8procs.bin", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Migration_Filename": "Garki_30arcsec_local_migration.bin", 
         "Local_Simulation": 0, 
         "Maternal_Transmission_Probability": 0, 
@@ -143,6 +143,12 @@
         "Transmission_Blocking_Immunity_Decay_Rate": 0.01, 
         "Transmission_Blocking_Immunity_Duration_Before_Decay": 90, 
         "Vector_Larval_Rainfall_Mortality": "NONE", 
+        "Vector_Migration_Filename_Local": "", 
+        "Vector_Migration_Filename_Regional": "", 
+        "Vector_Migration_Food_Modifier": 1.0, 
+        "Vector_Migration_Habitat_Modifier": 1.0, 
+        "Vector_Migration_Modifier_Equation": "LINEAR", 
+        "Vector_Migration_Stay_Put_Modifier": 1.0, 
         "Vector_Sampling_Type": "SAMPLE_IND_VECTORS", 
         "Vector_Species_Names": [
             "arabiensis", 
@@ -254,6 +260,8 @@
         "x_Population_Immunity": 1, 
         "x_Regional_Migration": 1, 
         "x_Sea_Migration": 1, 
-        "x_Temporary_Larval_Habitat": 1
+        "x_Temporary_Larval_Habitat": 1, 
+        "x_Vector_Migration_Local": 1, 
+        "x_Vector_Migration_Regional": 1
     }
 }

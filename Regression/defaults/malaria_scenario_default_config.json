@@ -68,10 +68,7 @@
           "CLUSTER": {
                "Job_Node_Groups": "Chassis08", 
                "Job_Priority": "BELOWNORMAL", 
-               "LOAD_BALANCING": {
-                    "Load_Balance_Filename": "", 
-                    "Load_Balance_Scheme": "STATIC"
-               }, 
+                "Load_Balance_Filename": "", 
                "Num_Cores": 1
           }, 
           "Local_Simulation": 0
@@ -441,7 +438,7 @@
           "Enable_Vector_Aging": 0, 
           "Enable_Vector_Mortality" : 1,
           "Enable_Vector_Migration": 0, 
-          "Enable_Vector_Migration_Local": 0, 
+
           "Age_Dependent_Biting_Risk_Type": "OFF",
           "Human_Feeding_Mortality": 0.1, 
           "Vector_Sampling_Type": "VECTOR_COMPARTMENTS_NUMBER"

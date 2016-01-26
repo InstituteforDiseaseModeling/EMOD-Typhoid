@@ -118,10 +118,7 @@
           "HPC": {
                "Job_Node_Groups": "Chassis08", 
                "Job_Priority": "BELOWNORMAL", 
-               "LB": {
-                    "Load_Balance_Filename": "", 
-                    "Load_Balance_Scheme": "STATIC"
-               }, 
+               "Load_Balance_Filename": "", 
                "Local_Simulation": 0, 
                "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\",
                "Num_Cores": 1
@@ -177,7 +174,6 @@
                "Enable_Vector_Aging": 0, 
                "Enable_Vector_Mortality" : 1,
                "Enable_Vector_Migration": 0, 
-               "Enable_Vector_Migration_Local": 0, 
                "Age_Dependent_Biting_Risk_Type": "OFF",
                "HABITAT": {
                     "Air_Temperature_Offset": 0, 

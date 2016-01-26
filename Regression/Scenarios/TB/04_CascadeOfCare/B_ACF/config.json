@@ -61,7 +61,6 @@
             "TBFailedDrugRegimen"
         ], 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Simulation": 0, 
         "Maternal_Transmission_Probability": 0, 
         "Max_Individual_Infections": 3, 

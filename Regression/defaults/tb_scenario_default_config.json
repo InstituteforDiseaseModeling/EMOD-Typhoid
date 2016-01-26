@@ -12,7 +12,6 @@
             "Job_Node_Groups":"Chassis08",
             "Job_Priority":"BELOWNORMAL",
             "Load_Balance_Filename":"",
-            "Load_Balance_Scheme":"STATIC",
             "Local_Simulation":0,
             "Listed_Events": [],
             "Node_Grid_Size":0.009,

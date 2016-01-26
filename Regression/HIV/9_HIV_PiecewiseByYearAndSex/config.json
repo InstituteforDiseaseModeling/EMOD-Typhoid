@@ -93,7 +93,6 @@
             "OnART1"
         ], 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Simulation": 0, 
         "Male_To_Female_Relative_Infectivity_Ages": [
             15, 

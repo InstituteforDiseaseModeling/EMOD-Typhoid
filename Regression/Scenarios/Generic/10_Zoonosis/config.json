@@ -62,7 +62,6 @@
         "Job_Priority": "BELOWNORMAL", 
         "Listed_Events": [], 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Migration_Filename": "Seattle_30arcsec_local_migration.bin", 
         "Local_Simulation": 0, 
         "Maternal_Transmission_Probability": 0, 

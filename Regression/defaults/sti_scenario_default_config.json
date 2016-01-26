@@ -149,7 +149,6 @@
             "Incubation_Period_Distribution": "FIXED_DURATION",
             "Individual_Sampling_Type": "FIXED_SAMPLING",
             "Load_Balance_Filename": "",
-            "Load_Balance_Scheme": "STATIC",
             "Local_Simulation": 0,
             "Enable_Superinfection": 0,
             "Max_Individual_Infections": 1,

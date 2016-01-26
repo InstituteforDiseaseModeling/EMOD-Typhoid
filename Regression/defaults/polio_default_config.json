@@ -98,10 +98,7 @@
           "HPC": {
                "Job_Node_Groups": "Chassis08", 
                "Job_Priority": "BELOWNORMAL", 
-               "LB": {
-                    "Load_Balance_Filename": "", 
-                    "Load_Balance_Scheme": "STATIC"
-               }, 
+               "Load_Balance_Filename": "", 
                "Local_Simulation": 0, 
                "Num_Cores": 1,
                "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\"
