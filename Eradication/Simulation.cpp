@@ -840,6 +840,7 @@ namespace Kernel
     {
         IMigrationInfoFactory* pmf = MigrationFactory::ConstructMigrationInfoFactory( EnvPtr->Config, 
                                                                                       idreference,
+                                                                                      m_simConfigObj->sim_type,
                                                                                       ms,
                                                                                       !(m_simConfigObj->demographics_initial),
                                                                                       torusSize );

@@ -60,7 +60,8 @@ namespace Kernel
         species_ID("gambiae"),
         m_context(nullptr),
         m_species_params(nullptr),
-        m_probabilities(nullptr)
+        m_probabilities(nullptr),
+        m_VectorMortality(true)
     {
     }
 
@@ -1250,6 +1251,11 @@ namespace Kernel
                     VectorAllele::pairs::lookup_key(_vector_genetics.GetHEG().second) );
     }
 
+    void VectorPopulation::Vector_Migration( IMigrationInfo* pMigInfo, VectorCohortList_t* pMigratingQueue )
+    {
+        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
+    }
+
     unsigned long int VectorPopulation::Vector_Migration(float migrate, VectorCohortList_t *Migration_Queue)
     {
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
@@ -1315,6 +1321,8 @@ namespace Kernel
     int32_t VectorPopulation::getAdultCount()       const  { return adult; }
     int32_t VectorPopulation::getInfectedCount()    const  { return infected; }
     int32_t VectorPopulation::getInfectiousCount()  const  { return infectious; }
+    int32_t VectorPopulation::getMaleCount()        const  { return males; }
+    int32_t VectorPopulation::getNewEggsCount()     const  { return neweggs; }
     double  VectorPopulation::getInfectivity()      const  { return infectivity; }
     std::string VectorPopulation::get_SpeciesID()   const  { return species_ID; }
 

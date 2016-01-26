@@ -260,6 +260,7 @@
     <ClCompile Include="JsonObjectDemog.cpp" />
     <ClCompile Include="LoadBalanceScheme.cpp" />
     <ClCompile Include="MalariaBarcode.cpp" />
+    <ClCompile Include="MigrationInfoVector.cpp" />
     <ClCompile Include="MpiDataExchanger.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
@@ -559,6 +560,7 @@
     <ClInclude Include="IInfection.h" />
     <ClInclude Include="IInfectionHIV.h" />
     <ClInclude Include="IMigrationInfo.h" />
+    <ClInclude Include="IMigrationInfoVector.h" />
     <ClInclude Include="INodeContext.h" />
     <ClInclude Include="INodeHIV.h" />
     <ClInclude Include="INodeInfo.h" />
@@ -572,6 +574,7 @@
     <ClInclude Include="JsonObjectDemog.h" />
     <ClInclude Include="LoadBalanceScheme.h" />
     <ClInclude Include="MalariaBarcode.h" />
+    <ClInclude Include="MigrationInfoVector.h" />
     <ClInclude Include="MpiDataExchanger.h" />
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />

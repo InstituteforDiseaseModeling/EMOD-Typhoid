@@ -20,10 +20,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 class ReportVector;
 class VectorSpeciesReport;
 
-#include "BoostLibWrapper.h"
-
 namespace Kernel
 {
+    struct IMigrationInfoVector;
     class SpatialReportVector;
     class NodeVector : public Node, public IVectorNodeContext , public INodeVector
     {
@@ -60,9 +59,13 @@ namespace Kernel
         void SetVectorPopulations(void);    //default--1 population as before
         virtual void AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, unsigned long int releasedNumber) override;
 
+        virtual void SetupMigration( IMigrationInfoFactory * migration_factory, 
+                                     MigrationStructure::Enum ms,
+                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override;
         virtual void processImmigratingVector( VectorCohort* immigrant ) override;
         void processEmigratingVectors();
 
+        virtual const std::list<VectorHabitat *>& GetHabitats() const ;
         virtual VectorPopulationList_t& GetVectorPopulations() override;
 
         static TransmissionGroupMembership_t human_to_vector_all;
@@ -86,9 +89,8 @@ namespace Kernel
         std::map<VectorHabitatType::Enum,float> larval_habitat_multiplier;
 
         bool vector_mortality;
-        bool vector_migration;
-        bool vector_migration_local;
         int32_t mosquito_weight;
+        IMigrationInfoVector* vector_migration_info;
 
         NodeVector();
         NodeVector(ISimulationContext *context, suids::suid node_suid);
@@ -97,6 +99,8 @@ namespace Kernel
         virtual void setupEventContextHost() override;
         virtual void InitializeVectorPopulation(VectorPopulation* vp);
         float HabitatMultiplierByType(VectorHabitatType::Enum type) const;
+        void VectorMigrationBasedOnFiles();
+        void VectorMigrationToAdjacentNodes();
             
         virtual IIndividualHuman *createHuman( suids::suid id, float MCweight, float init_age, int gender, float init_poverty) override;
 

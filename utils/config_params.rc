@@ -102,10 +102,10 @@
 #define Enable_Spatial_Output_DESC_TEXT     "Use value 0 to disable all spatial output channels. Use value 1 to enable spatial output of all channels listed in the array parameter: Spatial_Output_Channels.  For full documentation of spatial output channels, please see the online documentation."
 #define Spatial_Output_Days_To_Accumulate_DESC_TEXT  "Number of days to accumulate for each entry in spatial report output.  Accumulation method is sum"
 #define Enable_Superinfection_DESC_TEXT     "Set to 1 if an individual can have multiple infections with the same agent simultaneously. Set to 0 if multiple infections are not possible. See the Max_Individual_Infections parameter."
+#define Enable_Vector_Mortality_DESC_TEXT "TBD"
 #define Enable_Vector_Migration_DESC_TEXT     "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS"
-#define Enable_Vector_Migration_Human_DESC_TEXT     "Set to 1 to consider vector migration influenced by humans in vehicles. Set to 0 to not consider such migration. Note: This parameter is currently not in use."
-#define Enable_Vector_Migration_Local_DESC_TEXT     "Set to 1 to consider local vector migration by humans traveling on foot. Set to 0 to not consider local vector migration."
-#define Enable_Vector_Migration_Wind_DESC_TEXT     "Set to 1 to consider vector migration due to wind. Set to 0 to not consider vector migration due to wind. Note: This parameter is currently not in use."
+#define Enable_Vector_Migration_Local_DESC_TEXT     "Set to 1 to consider local vector migration by vectors to adjacent nodes. Set to 0 to not consider local vector migration."
+#define Enable_Vector_Migration_Regional_DESC_TEXT     "Set to 1 to consider regional vector migration by vectors to non-adjacent nodes. Set to 0 to not consider regional vector migration."
 #define Enable_Vital_Dynamics_DESC_TEXT     "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these."
 #define Erythropoiesis_Anemia_Effect_DESC_TEXT   "Exponential rate of increased red-blood-cell production from reduced red-blood-cell availability."
 #define Event_Coordinator_Config_DESC_TEXT "Configuration of the EventCoordinator to be instantiated."
@@ -487,10 +487,15 @@ NO_DENSITY_DEPENDENCE."
 #define Distribution_Times_DESC_TEXT "Vector of ints for simulation times at which distribution of events occurs in a CalendarEventCoordinator" 
 #define Distribution_Coverages_DESC_TEXT "Vector of floats for fraction of individuals that will receive this intervention in a CalendarEventCoordinator" 
 
+#define Vector_Migration_Filename_Local_DESC_TEXT     "Path of input file defining patterns of vector migration to adjacent nodes."
+#define Vector_Migration_Filename_Regional_DESC_TEXT     "Path of input file defining patterns of vector migration to non-adjacent nodes."
+
+#define x_Vector_Migration_Local_DESC_TEXT     "Multiplier for rate of vector migration to adjacent nodes."
+#define x_Vector_Migration_Regional_DESC_TEXT     "Multiplier for rate of vector migration to non-adjacent nodes."
+
 #define Target_Residents_Only_DESC_TEXT "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node"
 
 #define Family_Migration_Type_DESC_TEXT "TBD"
-#define Family_Migration_Probability_DESC_TEXT "TBD"
 
 #define HIV_DTP_Mutation_DESC_TEXT "TBD"
 #define HIV_DTP_Mutation_Fitness_Cost_DESC_TEXT "TBD"

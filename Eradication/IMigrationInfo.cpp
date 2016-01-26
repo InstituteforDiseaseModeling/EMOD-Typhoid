@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "IMigrationInfo.h"
 #include "Migration.h"
+#include "MigrationInfoVector.h"
 
 static const char * _module = "IMigrationInfo";
 
@@ -19,20 +20,32 @@ namespace Kernel
     {
         IMigrationInfoFactory* ConstructMigrationInfoFactory( const ::Configuration *config, 
                                                               const std::string& idreference,
+                                                              SimType::Enum sim_type,
                                                               MigrationStructure::Enum ms,
                                                               bool useDefaultMigration,
                                                               int defaultTorusSize )
         {
-            bool enable_migration = (ms != MigrationStructure::NO_MIGRATION);
+            bool enable_human_migration = (ms != MigrationStructure::NO_MIGRATION);
 
             IMigrationInfoFactory* p_mif = nullptr ;
-            if( useDefaultMigration )
+            if( (sim_type == SimType::VECTOR_SIM) || (sim_type == SimType::MALARIA_SIM) )
             {
-                p_mif = new MigrationInfoFactoryDefault( enable_migration, defaultTorusSize );
+                if( useDefaultMigration )
+                {
+                    p_mif = new MigrationInfoFactoryVectorDefault( enable_human_migration, defaultTorusSize );
+                }
+                else
+                {
+                    p_mif = new MigrationInfoFactoryVector( enable_human_migration );
+                }
+            }
+            else if( useDefaultMigration )
+            {
+                p_mif = new MigrationInfoFactoryDefault( enable_human_migration, defaultTorusSize );
             }
             else
             {
-                p_mif = new MigrationInfoFactoryFile( enable_migration );
+                p_mif = new MigrationInfoFactoryFile( enable_human_migration );
             }
             p_mif->Initialize( config, idreference );
             return p_mif;

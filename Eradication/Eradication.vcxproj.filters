@@ -975,6 +975,9 @@
     <ClCompile Include="..\interventions\MalariaDiagnostic.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\Vector\Malaria</Filter>
     </ClCompile>
+    <ClCompile Include="MigrationInfoVector.cpp">
+      <Filter>Source Files\Vector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2120,6 +2123,12 @@
     </ClInclude>
     <ClInclude Include="..\interventions\MalariaDiagnostic.h">
       <Filter>Source Files\Campaign\IndividualTargeted\Vector\Malaria</Filter>
+    </ClInclude>
+    <ClInclude Include="IMigrationInfoVector.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="MigrationInfoVector.h">
+      <Filter>Source Files\Vector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

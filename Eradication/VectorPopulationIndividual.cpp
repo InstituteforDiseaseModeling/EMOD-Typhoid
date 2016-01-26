@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "Log.h"
 #include "Debug.h"
+#include "IMigrationInfoVector.h"
 
 #ifdef randgen
 #undef randgen
@@ -746,6 +747,35 @@ namespace Kernel
             }
         }
     }
+
+    void VectorPopulationIndividual::Vector_Migration( IMigrationInfo* pMigInfo, VectorCohortList_t* pMigratingQueue )
+    {
+        release_assert( pMigInfo );
+        release_assert( pMigratingQueue );
+
+        // Use the verbose "for" construct here because we may be modifying the list and need to protect the iterator.
+        for (VectorCohortList_t::iterator iList = AdultQueues.begin(); iList != AdultQueues.end(); /* iList++ */)
+        { 
+            VectorCohort *tempentry = *iList;
+            VectorCohortList_t::iterator iCurrent = iList++;
+
+            suids::suid destination = suids::nil_suid();
+            MigrationType::Enum mig_type = MigrationType::NO_MIGRATION;
+            float time = 0.0;
+            pMigInfo->PickMigrationStep( nullptr, 1.0, destination, mig_type, time );
+
+            // test if each vector will migrate this time step
+            if( !destination.is_nil() && (time <= 1.0) )
+            { 
+                AdultQueues.erase(iCurrent);
+
+                tempentry->SetMigrating( destination, mig_type, 0.0, 0.0, false );
+                pMigratingQueue->push_front( tempentry );
+            }
+        }
+
+    }
+
 
     // receives a rate, and sends that fraction of mosquitoes to other communities
     unsigned long int VectorPopulationIndividual::Vector_Migration(float migrate, VectorCohortList_t *Migration_Queue)

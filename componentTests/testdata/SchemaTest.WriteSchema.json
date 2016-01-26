@@ -3905,7 +3905,7 @@
 				"type" : "float",
 				"min" : 0,
 				"max" : 3.40282e+038,
-				"default" : 6,
+				"default" : 0,
 				"depends-on" : {
 					"Incubation_Period_Distribution" : "UNIFORM_DISTRIBUTION"
 				}
@@ -3964,7 +3964,7 @@
 				"type" : "float",
 				"min" : 0,
 				"max" : 3.40282e+038,
-				"default" : 6,
+				"default" : 0,
 				"depends-on" : {
 					"Infectious_Period_Distribution" : "UNIFORM_DISTRIBUTION"
 				}
@@ -4481,6 +4481,176 @@
 				"default" : "NO_MIGRATION"
 			}
 		},
+		"Migration.Vector" : {
+			"Enable_Migration_Heterogeneity" : {
+				"description" : "Set to 1 to use migration rate distribution in the demographics file. Set to 0 to assume by default that the same migration rate applies for all individuals.",
+				"type" : "bool",
+				"default" : 1
+			},
+			"Enable_Local_Migration" : {
+				"description" : "Set to 1 to enable local migration, the diffusion of people in and out of nearby nodes by foot travel. Set to 0 to disable local migration.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Air_Migration" : {
+				"description" : "Set to 1 to account for migration by airplane in and out of cities with airports. Set to 0 to assume by default that no migration occurs by air travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Regional_Migration" : {
+				"description" : "Set to 1 to account for migration by road vehicle in and out of nodal cities in the road network. Set to 0 to assume by default that no migration occurs by road travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Sea_Migration" : {
+				"description" : "Set to 1 to account for migration on ships in and out of coastal cities with seaports. Set to 0 to assume by default that no migration occurs by sea travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Local_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration to adjacent nodes by foot travel.",
+				"type" : "string"
+			},
+			"Air_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by airplane.",
+				"type" : "string"
+			},
+			"Regional_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by vehicle via road or rail network. If the node is not on a road or rail network, regional migration focuses on the closest hub city in the network.",
+				"type" : "string"
+			},
+			"Sea_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by ship.",
+				"type" : "string"
+			},
+			"x_Local_Migration" : {
+				"description" : "Multiplier for rate of migration by foot travel.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Air_Migration" : {
+				"description" : "Multiplier for rate of migration by air.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Regional_Migration" : {
+				"description" : "Multiplier for rate of migration by road vehicle.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Sea_Migration" : {
+				"description" : "Multiplier for rate of migration by sea.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"Enable_Vector_Migration" : {
+				"description" : "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Vector_Migration_Modifier_Equation" : {
+				"type" : "enum",
+				"enum" : [
+					"LINEAR",
+					"EXPONENTIAL"
+				],
+				"description" : "TBD",
+				"default" : "LINEAR"
+			},
+			"Enable_Vector_Migration_Local" : {
+				"description" : "Set to 1 to consider local vector migration by vectors to adjacent nodes. Set to 0 to not consider local vector migration.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Vector_Migration_Regional" : {
+				"description" : "Set to 1 to consider regional vector migration by vectors to non-adjacent nodes. Set to 0 to not consider regional vector migration.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Vector_Migration_Filename_Local" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of vector migration to adjacent nodes.",
+				"type" : "string"
+			},
+			"Vector_Migration_Filename_Regional" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of vector migration to non-adjacent nodes.",
+				"type" : "string"
+			},
+			"x_Vector_Migration_Local" : {
+				"description" : "Multiplier for rate of vector migration to adjacent nodes.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Vector_Migration_Regional" : {
+				"description" : "Multiplier for rate of vector migration to non-adjacent nodes.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"Vector_Migration_Habitat_Modifier" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 0
+			},
+			"Vector_Migration_Food_Modifier" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 0
+			},
+			"Vector_Migration_Stay_Put_Modifier" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 0
+			},
+			"Family_Migration_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"LOCAL_MIGRATION",
+					"AIR_MIGRATION",
+					"REGIONAL_MIGRATION",
+					"SEA_MIGRATION"
+				],
+				"description" : "TBD",
+				"default" : "NO_MIGRATION"
+			}
+		},
+		"Migration.VectorDefault" : {
+			"Enable_Vector_Migration" : {
+				"description" : "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS",
+				"type" : "bool",
+				"default" : 0
+			},
+			"x_Vector_Migration_Local" : {
+				"description" : "Multiplier for rate of migration by foot travel.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			}
+		},
 		"Node" : {
 			"Infectivity_Scale_Type" : {
 				"type" : "enum",
@@ -4888,16 +5058,6 @@
 				"description" : "TBD",
 				"type" : "bool",
 				"default" : 1
-			},
-			"Enable_Vector_Migration" : {
-				"description" : "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS",
-				"type" : "bool",
-				"default" : 0
-			},
-			"Enable_Vector_Migration_Local" : {
-				"description" : "Set to 1 to consider local vector migration by humans traveling on foot. Set to 0 to not consider local vector migration.",
-				"type" : "bool",
-				"default" : 0
 			},
 			"Mosquito_Weight" : {
 				"description" : "Value indicating how many mosquitoes are represented by a sample mosquito.  This parameter is only used for Vector_Sampling_Type value SAMPLE_IND_VECTORS.",
@@ -8422,7 +8582,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Delay_Distribution" : "UNIFORM_DISTRIBUTION"
 						}
@@ -8882,7 +9042,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Delay_Distribution" : "UNIFORM_DISTRIBUTION"
 						}
@@ -9107,7 +9267,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Delay_Distribution" : "UNIFORM_DISTRIBUTION"
 						}
@@ -10586,7 +10746,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Duration_Before_Leaving_Distribution_Type" : "UNIFORM_DISTRIBUTION"
 						}
@@ -10659,7 +10819,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Duration_At_Node_Distribution_Type" : "UNIFORM_DISTRIBUTION"
 						}

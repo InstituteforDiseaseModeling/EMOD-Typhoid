@@ -176,6 +176,9 @@ BOXDECAYDURABILITY - Both killing and blocking have the same durability profile,
 #define SD_Positive_Diagnosis_Config_Event_DESC_TEXT "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'."
 #define SD_Treatment_Fraction_DESC_TEXT "The fraction of positive diagnoses that are treated."
 
+#define MD_Diagnostic_Type_DESC_TEXT "Type of malaria diagnostic. Possible values are: Microscopy, NewDetectionTech, Other."
+#define MD_Detection_Threshold_DESC_TEXT "The diagnostic detection threshold for parasites in units of microliters of blood."
+
 #define DTN_Negative_Diagnosis_Config_Event_DESC_TEXT "Specifies what state transition event will occur if an individual tests negative."
 #define DTN_Defaulters_Diagnosis_Config_Event_DESC_TEXT "Specifies what state transition event will occur if an individual receives the test but does not return for the test results."
 #define DTN_Negative_Diagnosis_Config_DESC_TEXT "The intervention distributed to individuals, if they test negative. This is only valid if Event_Or_Config is set to Config."
