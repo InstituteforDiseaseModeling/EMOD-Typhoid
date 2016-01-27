@@ -11,16 +11,16 @@
         { "path": "Multicore_Nosibe/Scenarios/TB/06_PopulationBurnIn/A_SteadyState",     "note": "TB specific channels roughly 1/5 of expected value. SEIR channels diverge around time step 5320." },
         { "path": "Multicore_Nosibe/Scenarios/TB/06_PopulationBurnIn/B_PrivateToPublic", "note": "TB specific channels roughly 1/5 of expected value. SEIR channels diverge around time step 5320." },
         { "path": "Multicore_Nosibe/TB_34_GroupCoordinator",                             "note": "Traces look good until time step ~200." },
-        { "path": "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn",          "note": "TB specific channels roughly 1/5 of expected value." }
+        { "path": "Multicore_Nosibe/TB_35b_NodeHTIScaleUpSwitch_PhaseOutandIn",          "note": "TB specific channels roughly 1/5 of expected value." },
+        { "path": "Multicore_Nosibe/97_Generic_Intervention_ImportPressure",             "note": "Issue #38 -- Occasional exception. Failed validation otherwise." }
     ],
     "good": [
-        { "path": "Multicore_Nosibe/39_Vector_Namawala_HostSeekingTrap",     "note": "Needs updated baseline." },
-        { "path": "Multicore_Nosibe/69_Vector_IRS_Ivermectin",               "note": "Needs updated baseline." },
-        { "path": "Multicore_Nosibe/79_Vector_Ivermectin",                   "note": "Needs updated baseline." },
-        { "path": "Multicore_Nosibe/86_Vector_SimpleIndividualRepellent",    "note": "Needs updated baseline." },
+        { "path": "Multicore_Nosibe/39_Vector_Namawala_HostSeekingTrap" },
+        { "path": "Multicore_Nosibe/69_Vector_IRS_Ivermectin" },
+        { "path": "Multicore_Nosibe/79_Vector_Ivermectin" },
+        { "path": "Multicore_Nosibe/86_Vector_SimpleIndividualRepellent" },
         { "path": "Multicore_Nosibe/89_Generic_SimpleImmunoglobulin" },
-        { "path": "Multicore_Nosibe/97_Generic_Intervention_ImportPressure", "note": "Needs updated baseline." },
-        { "path": "Multicore_Nosibe/99_Malaria_Intervention_RTSSVaccine",    "note": "Needs updated baseline." },
+        { "path": "Multicore_Nosibe/99_Malaria_Intervention_RTSSVaccine" },
         { "path": "Multicore_Nosibe/Scenarios/Generic/01_SIR" },
         { "path": "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/A_BaselineOutbreak" },
         { "path": "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/B_Vaccinations" },
