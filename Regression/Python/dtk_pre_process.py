@@ -63,6 +63,35 @@ def application( config_file_name ):
                         param_value = param_list
                     print( param_name, param_value )
                     config_json[param_key]["STI_Network_Params_By_Property"][ snpbp_key ][param_name] = param_value
+            elif sheet.name.startswith( "Campaign" ):
+                campaign_json = {}
+                campaign_json["Events"] = []
+                campaign_json["Use_Defaults"] = 1
+                for event in range(1,sheet.ncols):
+                    campaign_event = {}
+                    campaign_event["class"] = "CampaignEvent"
+                    campaign_event["Nodeset_Config"] = {}
+                    campaign_event["Nodeset_Config"]["class"] = "NodeSetAll" 
+                    campaign_event["Event_Coordinator_Config"] = {}
+                    campaign_event["Event_Coordinator_Config"]["Intervention_Config"] = {}
+                    campaign_event["Event_Coordinator_Config"]["class"] = "StandardInterventionDistributionEventCoordinator"
+                    print( "Creating campaign event..." )
+                    for row_id in range(0,sheet.nrows):
+                        row = sheet.row(row_id)
+                        param_name = row[0].value
+                        param_value = row[ event ].value
+                        if param_value is None:
+                            continue
+                        if param_name in [ "Target_Demographic", "Demographic_Coverage" ]:
+                            campaign_event["Event_Coordinator_Config"][ param_name ] = param_value
+                        elif param_name in [ "Start_Day" ]:
+                            campaign_event[ param_name ] = param_value
+                        else:
+                            campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ param_name ] = param_value
+                    campaign_json["Events"].append( campaign_event )
+                campaign_file = open( "campaign.json", "w+" )
+                campaign_file.write( json.dumps( campaign_json, indent=4, sort_keys=True ) )
+                campaign_file.close()
             else:
                 for row_id in range(0,sheet.nrows):
                     row = sheet.row(row_id)
