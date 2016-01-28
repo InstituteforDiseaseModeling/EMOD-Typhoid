@@ -49,11 +49,11 @@
           "PRIMARY": {
                "Config_Name": "29_MV_hum_local_reg_sea_vec_local_reg_outbreak_13", 
                "Geography": "Household_MultipleVillages", 
-               "Listed_Events": ["VaccinateNeighbors", "Blackout", "Distributing_AntimalariaDrug"], 
+               "Listed_Events": ["VaccinateNeighbors", "Blackout"], 
                "Node_Grid_Size": 0.005, 
                "Num_Cores" : 1,
                "Report_Event_Recorder": 1, 
-               "Report_Event_Recorder_Events" : ["VaccinateNeighbors", "NewClinicalCase", "Blackout", "Emigrating", "Immigrating", "Distributing_AntimalariaDrug" ],
+               "Report_Event_Recorder_Events" : ["VaccinateNeighbors", "NewClinicalCase", "Blackout", "Emigrating", "Immigrating" ],
                "Report_Event_Recorder_Ignore_Events_In_List" : 0,
                "Run_Number": 33, 
                "Simulation_Timestep": 1, 
