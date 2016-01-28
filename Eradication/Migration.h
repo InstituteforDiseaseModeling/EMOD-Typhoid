@@ -148,6 +148,7 @@ namespace Kernel
         virtual const std::vector<float>& GetRates() const;
         virtual float GetTotalRate() const;
         virtual void NormalizeRates( std::vector<float>& r_rate_cdf, float& r_total_rate );
+        virtual void SaveRawRates( std::vector<float>& r_rate_cdf ) {}
 
         virtual const std::vector<suids::suid>& GetReachableNodes( Gender::Enum gender ) const;
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes( Gender::Enum gender ) const;

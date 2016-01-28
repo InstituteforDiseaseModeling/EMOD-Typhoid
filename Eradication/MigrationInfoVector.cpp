@@ -35,7 +35,7 @@ namespace Kernel
     : MigrationInfoFixedRate( _parent, false, MigrationType::NO_MIGRATION ) 
     , m_RawMigrationRate()
     , m_ThisNodeId(suids::nil_suid())
-    , m_ModifierEquation(ModiferEquationType::LINEAR)
+    , m_ModifierEquation(equation)
     , m_ModifierHabitat(habitatModifier)
     , m_ModifierFood(foodModifier)
     , m_ModifierStayPut(stayPutModifier)
@@ -51,15 +51,18 @@ namespace Kernel
     void MigrationInfoVector::Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData )
     {
         MigrationInfoFixedRate::Initialize( rRateData );
+    }
 
+    void MigrationInfoVector::SaveRawRates( std::vector<float>& r_rate_cdf )
+    {
         // ---------------------------------------------------------
         // --- Keep the un-normalized rates so we can multiply them
         // --- times our food adjusted rates.
         // ---------------------------------------------------------
         m_RawMigrationRate.clear();
-        for( int i = 0; i < m_RateCDF.size(); i++)
+        for( int i = 0; i < r_rate_cdf.size(); i++)
         {
-            m_RawMigrationRate.push_back( m_RateCDF[i] );
+            m_RawMigrationRate.push_back( r_rate_cdf[i] );
         }
     }
 
@@ -262,9 +265,9 @@ namespace Kernel
     , m_IsVectorMigrationEnabled( false )
     , m_IsFileBased( false )
     , m_ModifierEquation( ModiferEquationType::EXPONENTIAL )
-    , m_ModifierHabitat(1.0)
-    , m_ModifierFood(1.0)
-    , m_ModifierStayPut(1.0)
+    , m_ModifierHabitat(0.0)
+    , m_ModifierFood(0.0)
+    , m_ModifierStayPut(0.0)
     {
     }
 
@@ -274,9 +277,9 @@ namespace Kernel
     , m_IsVectorMigrationEnabled( false )
     , m_IsFileBased( false )
     , m_ModifierEquation( ModiferEquationType::EXPONENTIAL )
-    , m_ModifierHabitat(1.0)
-    , m_ModifierFood(1.0)
-    , m_ModifierStayPut(1.0)
+    , m_ModifierHabitat(0.0)
+    , m_ModifierFood(0.0)
+    , m_ModifierStayPut(0.0)
     {
     }
 

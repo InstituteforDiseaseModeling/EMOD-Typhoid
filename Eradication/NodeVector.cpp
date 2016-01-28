@@ -534,7 +534,10 @@ namespace Kernel
     {
         if( vector_migration_info->IsVectorMigrationFileBased() )
         {
-            VectorMigrationBasedOnFiles();
+            if( vector_migration_info->GetReachableNodes().size() > 0 )
+            {
+                VectorMigrationBasedOnFiles();
+            }
         }
         else if( vector_migration_info->IsLocalVectorMigrationEnabled() )
         {

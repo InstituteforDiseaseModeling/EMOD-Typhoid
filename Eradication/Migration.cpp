@@ -121,7 +121,9 @@ namespace Kernel
                                                MigrationType::Enum &migration_type,
                                                float &time )
     {
-        throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "PickMigrationStep() should not be called when there Node has no migration." );
+        destination = suids::nil_suid();
+        migration_type = MigrationType::NO_MIGRATION;
+        time = -1.0;
     }
 
     void MigrationInfoNull::SetContextTo(INodeContext* _parent)
@@ -186,6 +188,7 @@ namespace Kernel
 
                 m_RateCDF.push_back( mrd.GetRate( 0.0 ) );
             }
+            SaveRawRates( m_RateCDF );
             NormalizeRates( m_RateCDF, m_TotalRate );
         }
     }

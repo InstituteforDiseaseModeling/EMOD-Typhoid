@@ -420,7 +420,6 @@ namespace Kernel
 
         ClearDataFunc clear_data_func = [this](int rank)
         {
-            node_events_added[rank].Clear();
         };
 
         MpiDataExchanger exchanger( "EventsForOtherNodes", to_self_func, to_others_func, from_others_func, clear_data_func );
@@ -693,8 +692,6 @@ namespace Kernel
             n->AddEventsFromOtherNodes( node_events_to_be_processed[ n->GetSuid() ] );
             n->Update(dt);
 
-            nodeRankMap.Update( n );
-
             Reports_LogNodeData( n );
         }
 
@@ -703,6 +700,11 @@ namespace Kernel
         // -----------------------
         REPORT_TIME( ENABLE_DEBUG_MPI_TIMING, "resolveMigration", resolveMigration() );
 
+        for (auto iterator = nodes.rbegin(); iterator != nodes.rend(); iterator++)
+        {
+            INodeContext *n = iterator->second;
+            nodeRankMap.Update( n );
+        }
         nodeRankMap.Sync( currentTime );
 
         UpdateNodeEvents();

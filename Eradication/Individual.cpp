@@ -207,7 +207,7 @@ namespace Kernel
         , migration_mod(0)
         , migration_type(MigrationType::NO_MIGRATION)
         , migration_destination(suids::nil_suid())
-        , migration_time_until_trip(FLT_MAX)
+        , migration_time_until_trip(0.0)
         , migration_time_at_destination(0.0)
         , migration_is_destination_new_home(false)
         , migration_will_return(false)
@@ -252,7 +252,7 @@ namespace Kernel
         , migration_mod(0)
         , migration_type(MigrationType::NO_MIGRATION)
         , migration_destination(suids::nil_suid())
-        , migration_time_until_trip(FLT_MAX)
+        , migration_time_until_trip(0.0)
         , migration_time_at_destination(0.0)
         , migration_is_destination_new_home(false)
         , migration_will_return(false)
@@ -826,15 +826,20 @@ namespace Kernel
     {
         IMigrationInfo *migration_info = parent->GetMigrationInfo();
 
-        if( (GET_CONFIGURABLE(SimulationConfig)->migration_structure != MigrationStructure::NO_MIGRATION) &&
-            (migration_info->GetReachableNodes().size() > 0) )
+        // ----------------------------------------------------------------------------------------
+        // --- We don't want the check for reachable nodes here because one could travel to a node
+        // --- that doesn't let its residents travel and we need the ability to get back.
+        // --- That is, I should be able to travel to a node and return from it, even if the
+        // --- residents of the node do not migrate.
+        // ----------------------------------------------------------------------------------------
+        if( GET_CONFIGURABLE(SimulationConfig)->migration_structure != MigrationStructure::NO_MIGRATION )
         {
             if(waypoints.size() == 0)
                 migration_outbound = true;
             else if(waypoints.size() == max_waypoints)
                 migration_outbound = false;
 
-            if(migration_outbound)
+            if( migration_outbound && (migration_info->GetReachableNodes().size() > 0) )
             {
                 migration_info->PickMigrationStep( this, migration_mod, migration_destination, migration_type, migration_time_until_trip );
 
@@ -855,25 +860,28 @@ namespace Kernel
                     migration_destination = suids::nil_suid();
                     migration_type = MigrationType::NO_MIGRATION;
                     migration_time_until_trip = 0.0 ;
+                    migration_will_return = true; // family trips must return
                 }
-
-                float return_prob = 0.0f;
-                switch(migration_type)
+                else
                 {
-                    case MigrationType::LOCAL_MIGRATION:    return_prob = local_roundtrip_prob;  break;
-                    case MigrationType::AIR_MIGRATION:      return_prob = air_roundtrip_prob;    break;
-                    case MigrationType::REGIONAL_MIGRATION: return_prob = region_roundtrip_prob; break;
-                    case MigrationType::SEA_MIGRATION:      return_prob = sea_roundtrip_prob;    break;
-                    default:
-                        throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "migration_type", migration_type, "MigrationType" );
-                }
-
-                migration_will_return = (return_prob > 0.0f);
-                if( migration_will_return && (return_prob < 1.0f) )
-                {
-                    if(randgen->e() > return_prob)
+                    float return_prob = 0.0f;
+                    switch(migration_type)
                     {
-                        migration_will_return = false;
+                        case MigrationType::LOCAL_MIGRATION:    return_prob = local_roundtrip_prob;  break;
+                        case MigrationType::AIR_MIGRATION:      return_prob = air_roundtrip_prob;    break;
+                        case MigrationType::REGIONAL_MIGRATION: return_prob = region_roundtrip_prob; break;
+                        case MigrationType::SEA_MIGRATION:      return_prob = sea_roundtrip_prob;    break;
+                        default:
+                            throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "migration_type", migration_type, "MigrationType" );
+                    }
+
+                    migration_will_return = (return_prob > 0.0f);
+                    if( migration_will_return && (return_prob < 1.0f) )
+                    {
+                        if(randgen->e() > return_prob)
+                        {
+                            migration_will_return = false;
+                        }
                     }
                 }
             }

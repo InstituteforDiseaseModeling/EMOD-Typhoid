@@ -60,6 +60,7 @@ namespace Kernel
                              bool isFileBased );
 
         virtual void Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData ) override;
+        virtual void SaveRawRates( std::vector<float>& r_rate_cdf ) override;
         float CalculateModifiedRate( const suids::suid& rNodeId, 
                                      float rawRate, 
                                      float populationRatio, 
