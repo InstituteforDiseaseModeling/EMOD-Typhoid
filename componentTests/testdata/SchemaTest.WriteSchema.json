@@ -10690,7 +10690,7 @@
 					"iv_type" : "IndividualTargeted",
 					"class" : "MaleCircumcision"
 				},
-				"MigrateTo" : {
+				"MigrateIndividuals" : {
 					"Sim_Types" : [
 						"*"
 					],

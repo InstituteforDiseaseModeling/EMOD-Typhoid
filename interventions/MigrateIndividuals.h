@@ -20,15 +20,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class IDMAPI MigrateTo :  public BaseIntervention
+    class IDMAPI MigrateIndividuals :  public BaseIntervention
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
-        DECLARE_FACTORY_REGISTERED(InterventionFactory, MigrateTo, IDistributableIntervention)
+        DECLARE_FACTORY_REGISTERED(InterventionFactory, MigrateIndividuals, IDistributableIntervention)
 
     public: 
-        MigrateTo();
-        MigrateTo( const MigrateTo& master );
-        virtual ~MigrateTo() {  }
+        MigrateIndividuals();
+        MigrateIndividuals( const MigrateIndividuals& master );
+        virtual ~MigrateIndividuals() {  }
         virtual bool Configure( const Configuration* pConfig ) override;
 
         // IDistributingDistributableIntervention
@@ -47,7 +47,7 @@ namespace Kernel
         bool is_family_trip ;
         bool is_moving;
 
-        DECLARE_SERIALIZABLE(MigrateTo);
+        DECLARE_SERIALIZABLE(MigrateIndividuals);
 #pragma warning( pop )
     };
 }

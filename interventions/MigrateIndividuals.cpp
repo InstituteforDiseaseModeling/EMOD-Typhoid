@@ -8,25 +8,25 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
-#include "MigrateTo.h"
+#include "MigrateIndividuals.h"
 #include "IMigrate.h"
 
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 
-static const char * _module = "MigrateTo";
+static const char * _module = "MigrateIndividuals";
 
 namespace Kernel
 {
-    BEGIN_QUERY_INTERFACE_BODY(MigrateTo)
+    BEGIN_QUERY_INTERFACE_BODY(MigrateIndividuals)
         HANDLE_INTERFACE(IConfigurable)
         HANDLE_INTERFACE(IDistributableIntervention)
         HANDLE_INTERFACE(IBaseIntervention)
         HANDLE_ISUPPORTS_VIA(IDistributableIntervention)
-    END_QUERY_INTERFACE_BODY(MigrateTo)
+    END_QUERY_INTERFACE_BODY(MigrateIndividuals)
 
-    IMPLEMENT_FACTORY_REGISTERED(MigrateTo)
+    IMPLEMENT_FACTORY_REGISTERED(MigrateIndividuals)
 
-    bool MigrateTo::Configure(
+    bool MigrateIndividuals::Configure(
         const Configuration * inputJson
     )
     {
@@ -47,7 +47,7 @@ namespace Kernel
         return ret;
     }
 
-    MigrateTo::MigrateTo()
+    MigrateIndividuals::MigrateIndividuals()
         : BaseIntervention()
         , parent( nullptr )
         , destination_external_node_id( 0 )
@@ -71,7 +71,7 @@ namespace Kernel
         duration_at_node.AddSupportedType( DistributionFunction::POISSON_DURATION,     "Duration_At_Node_Poisson_Mean",       "TBD", "", "" );
     }
 
-    MigrateTo::MigrateTo( const MigrateTo& master )
+    MigrateIndividuals::MigrateIndividuals( const MigrateIndividuals& master )
         : BaseIntervention( master )
         , parent( nullptr )
         , destination_external_node_id( master.destination_external_node_id )
@@ -82,7 +82,7 @@ namespace Kernel
     {
     }
 
-    void MigrateTo::Update( float dt )
+    void MigrateIndividuals::Update( float dt )
     {
         // expire the intervention
         expired = true;
@@ -108,12 +108,12 @@ namespace Kernel
             im->SetMigrating( destination_id, MigrationType::SEA_MIGRATION, duration_before, duration_at, is_moving );
         }
     }
-    REGISTER_SERIALIZABLE(MigrateTo);
+    REGISTER_SERIALIZABLE(MigrateIndividuals);
 
-    void MigrateTo::serialize(IArchive& ar, MigrateTo* obj)
+    void MigrateIndividuals::serialize(IArchive& ar, MigrateIndividuals* obj)
     {
         BaseIntervention::serialize( ar, obj );
-        MigrateTo& mt = *obj;
+        MigrateIndividuals& mt = *obj;
         ar.labelElement("destination_external_node_id") & mt.destination_external_node_id;
         ar.labelElement("duration_before_leaving"     ) & mt.duration_before_leaving;
         ar.labelElement("duration_at_node"            ) & mt.duration_at_node;
