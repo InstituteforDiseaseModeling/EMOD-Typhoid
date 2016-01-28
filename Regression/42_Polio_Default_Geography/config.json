@@ -90,7 +90,6 @@
         "Job_Priority": "BELOWNORMAL", 
         "Listed_Events": [], 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Migration_Filename": "", 
         "Local_Simulation": 0, 
         "Maternal_Ab_Halflife": 21.5, 

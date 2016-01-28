@@ -66,7 +66,6 @@
         "Job_Priority": "BELOWNORMAL", 
         "Listed_Events": [], 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Migration_Filename": "3X3_Gender_Local.bin", 
         "Local_Migration_Roundtrip_Duration": 10000, 
         "Local_Migration_Roundtrip_Probability": 0, 
