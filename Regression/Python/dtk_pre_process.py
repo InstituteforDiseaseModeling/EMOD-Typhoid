@@ -64,11 +64,10 @@ def application( config_file_name ):
                     print( param_name, param_value )
                     config_json[param_key]["STI_Network_Params_By_Property"][ snpbp_key ][param_name] = param_value
             elif sheet.name.startswith( "VSP" ):
-                #pdb.set_trace()
-                config_json[param_key]["Vector_Species_Params"] = {}
+		if "Vector_Species_Params" not in config_json[param_key]:
+		    config_json[param_key]["Vector_Species_Params"] = {}
                 name_parsed = sheet.name.split( "-" )
-                ipn = name_parsed[1]
-                snpbp_key = name_parsed[2]
+                snpbp_key = name_parsed[1]
                 config_json[param_key]["Vector_Species_Params"][ snpbp_key ] = {}
                 # print( "handle differently" )
                 for row_id in range(0,sheet.nrows):
@@ -77,8 +76,15 @@ def application( config_file_name ):
                     param_value = row[1].value
                     if isinstance( param_value,basestring) and param_value.startswith( "[" ):
                         param_list = param_value.strip( "[" ).strip( "]" ).split()
+			# could be list of strings or list of floats...
+                        if param_list[0].isnumeric():
+			    list_of_numbers = []
+			    for elem in param_list:
+			    	list_of_numbers.append( float(elem) )
+	                    param_list= list_of_numbers
                         param_value = param_list
                     print( param_name, param_value )
+                    config_json[param_key]["Vector_Species_Params"][ snpbp_key ][param_name] = param_value
             elif sheet.name.startswith( "Campaign" ):
                 campaign_json = {}
                 campaign_json["Events"] = []
