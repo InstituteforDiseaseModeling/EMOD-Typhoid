@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "ReportMalaria.h" // for base class
-#include "NodeMalaria.h" // for base class
+#include "MalariaContexts.h" // for base class
 
 static const string _parasite_prevalence_label( "Parasite Prevalence" );
 static const string _mean_parasitemia_label( "Mean Parasitemia" );

@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "ReportVector.h" // for base class
 #include "Log.h" // for base class
-#include "NodeVector.h"
+#include "VectorContexts.h"
 #include "VectorPopulation.h"
 
 static const char * _module = "VectorReporter";

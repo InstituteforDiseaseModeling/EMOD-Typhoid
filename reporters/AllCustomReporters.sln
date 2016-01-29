@@ -99,6 +99,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhumanmigrationtracking",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvectorstats", "libvectorstats\libvectorstats.vcxproj", "{619BFF45-282D-4254-8554-748B3433F72F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportMalariaFiltered", "libReportMalariaFiltered\libReportMalariaFiltered.vcxproj", "{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -197,6 +199,10 @@ Global
 		{619BFF45-282D-4254-8554-748B3433F72F}.Debug|x64.Build.0 = Debug|x64
 		{619BFF45-282D-4254-8554-748B3433F72F}.Release|x64.ActiveCfg = Release|x64
 		{619BFF45-282D-4254-8554-748B3433F72F}.Release|x64.Build.0 = Release|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Debug|x64.ActiveCfg = Debug|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Debug|x64.Build.0 = Debug|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Release|x64.ActiveCfg = Release|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
