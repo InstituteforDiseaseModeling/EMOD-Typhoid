@@ -63,6 +63,22 @@ def application( config_file_name ):
                         param_value = param_list
                     print( param_name, param_value )
                     config_json[param_key]["STI_Network_Params_By_Property"][ snpbp_key ][param_name] = param_value
+            elif sheet.name.startswith( "VSP" ):
+                #pdb.set_trace()
+                config_json[param_key]["Vector_Species_Params"] = {}
+                name_parsed = sheet.name.split( "-" )
+                ipn = name_parsed[1]
+                snpbp_key = name_parsed[2]
+                config_json[param_key]["Vector_Species_Params"][ snpbp_key ] = {}
+                # print( "handle differently" )
+                for row_id in range(0,sheet.nrows):
+                    row = sheet.row(row_id)
+                    param_name = row[0].value
+                    param_value = row[1].value
+                    if isinstance( param_value,basestring) and param_value.startswith( "[" ):
+                        param_list = param_value.strip( "[" ).strip( "]" ).split()
+                        param_value = param_list
+                    print( param_name, param_value )
             elif sheet.name.startswith( "Campaign" ):
                 campaign_json = {}
                 campaign_json["Events"] = []
