@@ -82,14 +82,16 @@ def application( config_file_name ):
                         param_value = row[ event ].value
                         if param_value is None:
                             continue
-                        if param_name in [ "Target_Demographic", "Demographic_Coverage" ]:
-                            campaign_event["Event_Coordinator_Config"][ param_name ] = param_value
+                        if param_name in [ "Target_Demographic", "Demographic_Coverage", "Number_Repetitions", "Timesteps_Between_Repetitions" ]:
+                            if param_value != "":
+                                campaign_event["Event_Coordinator_Config"][ param_name ] = param_value
                         elif param_name in [ "Start_Day" ]:
                             campaign_event[ param_name ] = param_value
                         else:
                             campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ param_name ] = param_value
                     campaign_json["Events"].append( campaign_event )
-                campaign_file = open( "campaign.json", "w+" )
+                campaign_file = open( ".campaign_from_excel.json", "w+" )
+                config_json[param_key]["Campaign_Filename"] = ".campaign_from_excel.json"
                 campaign_file.write( json.dumps( campaign_json, indent=4, sort_keys=True ) )
                 campaign_file.close()
             else:
