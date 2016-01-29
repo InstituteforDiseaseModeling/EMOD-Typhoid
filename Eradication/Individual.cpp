@@ -787,6 +787,21 @@ namespace Kernel
                     SetNextMigration();
             }
 
+            if( !migration_destination.is_nil() )
+            {
+                migration_time_until_trip -= dt;
+
+                // --------------------------------------------------------------------
+                // --- This check should really be zero, but epsilon makes the test for
+                // --- this pass as expected.  Namely, it helps things work more like
+                // --- you'd expect with an intervention where the times might be round numbers.
+                // --------------------------------------------------------------------
+                if( migration_time_until_trip <= 0.0000001f )
+                {
+                    LOG_DEBUG_F( "%s: individual %d is migrating.\n", __FUNCTION__, suid.data );
+                    StateChange = HumanStateChange::Migrating;
+                }
+            }
             break;
 
         case MigrationStructure::VARIABLE_RATE_MIGRATION:   // Variable, but drawn from distributions
@@ -804,21 +819,6 @@ namespace Kernel
             msg << "Invalid migration_structure=" << GET_CONFIGURABLE(SimulationConfig)->migration_structure;
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
             break;
-        }
-
-        // ----------------------------------------------------------------
-        // --- This is not part of the switch statement because we want to
-        // --- allow the MigrateTo intervention to not require a particular
-        // --- migration_structure.
-        // ----------------------------------------------------------------
-        if( !migration_destination.is_nil() )
-        {
-            migration_time_until_trip -= dt;
-            if(migration_time_until_trip < 0)
-            {
-                LOG_DEBUG_F( "%s: individual %d is migrating.\n", __FUNCTION__, suid.data );
-                StateChange = HumanStateChange::Migrating;
-            }
         }
     }
 

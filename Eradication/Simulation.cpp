@@ -971,11 +971,7 @@ namespace Kernel
             m_simConfigObj->demographics_initial &&
             !migration_factory->IsAtLeastOneTypeConfiguredForIndividuals() )
         {
-            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
-                                                    "Enable_Demographics_Initial and Migration_Model", 
-                                                    "true and not NO_MIGRATION (respectively)", 
-                                                    "(all of air, local, regional, and sea migration filenames and/or enables)", 
-                                                    "(empty/false)");
+            LOG_WARN("Enable_Demographics_Initial is set to true,  Migration_Model != NO_MIGRATION,and not migration file names have been defined and enabled.  No file-based migration will occur.");
         }
 
         for (auto& entry : nodes)
