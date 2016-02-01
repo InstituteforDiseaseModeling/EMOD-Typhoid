@@ -75,6 +75,8 @@ namespace Kernel
         RankMap_t rankMap;
         INodeInfoFactory* pNodeInfoFactory;
         std::vector<INodeInfo*> nodes_in_my_rank;
+        unsigned char* m_Buffer;
+        uint32_t m_BufferSize;
 
         struct merge_duplicate_key_exception : public std::exception
         {

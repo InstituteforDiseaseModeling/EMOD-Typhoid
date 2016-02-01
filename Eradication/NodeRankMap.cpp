@@ -9,6 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include <fstream>
+#include <memory>
 
 #include "NodeRankMap.h"
 #include "Log.h"
@@ -18,6 +19,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "JsonRawReader.h"
 #include "LoadBalanceScheme.h"
 #include "MpiDataExchanger.h"
+#include "BinaryArchiveWriter.h"
+#include "BinaryArchiveReader.h"
+#include "Debug.h"
 
 static const char * _module = "NodeRankMap";
 namespace Kernel 
@@ -27,6 +31,8 @@ namespace Kernel
         , rankMap()
         , pNodeInfoFactory(nullptr)
         , nodes_in_my_rank()
+        , m_Buffer(nullptr)
+        , m_BufferSize(0)
     { 
     }
 
@@ -43,6 +49,11 @@ namespace Kernel
 
         // don't own pNodeInfoFactory
         pNodeInfoFactory = nullptr ;
+
+        if( m_Buffer != nullptr )
+        {
+            free( m_Buffer );
+        }
     }
 
     std::string NodeRankMap::ToString()
@@ -152,29 +163,45 @@ namespace Kernel
 
     void NodeRankMap::Sync( IdmDateTime& currentTime )
     {
+        // ------------------------------------------------------------------------
+        // --- The data to be sent is the same for all processes, hence, we want to
+        // --- serialize it once and then send that same chunk to each process.
+        // ------------------------------------------------------------------------
+        auto binary_writer = new BinaryArchiveWriter();
+        IArchive* writer = static_cast<IArchive*>(binary_writer);
+        size_t count = nodes_in_my_rank.size();
+        writer->startArray( count );
+        for( size_t i = 0; i < count; ++i )
+        {
+            int id = nodes_in_my_rank[i]->GetSuid().data;
+            INodeInfo* pni = nodes_in_my_rank[i] ;
+            writer->startObject();
+                // ---------------------------------------------------------
+                // --- false => Since we are just updating the other cores, 
+                // --- we only need to send the data that has changed.
+                // ----------------------------------------------------------
+                writer->labelElement( "key"   ) & id; // send id so receive can use to put in map
+                writer->labelElement( "value" ); pni->serialize( *writer, false );
+            writer->endObject();
+        }
+        writer->endArray();
+
+
+        char* buffer_temp = const_cast<char*>(writer->GetBuffer());
+        unsigned char* buffer = (unsigned char*)buffer_temp;
+        int buffer_size = writer->GetBufferSize();
+
+        // -----------------------------------------------------
+        // --- Define functions to be called by MpiDataExchanger
+        // -----------------------------------------------------
         WithSelfFunc to_self_func = [this](int myRank) 
         { 
             //do nothing
         }; 
 
-        SendToOthersFunc to_others_func = [this](IArchive* writer, int toRank)
+        SendToOthersFunc to_others_func = [this,buffer,buffer_size](IArchive* writer, int toRank)
         {
-            size_t count = nodes_in_my_rank.size();
-            writer->startArray( count );
-            for( size_t i = 0; i < count; ++i )
-            {
-                int id = nodes_in_my_rank[i]->GetSuid().data;
-                INodeInfo* pni = nodes_in_my_rank[i] ;
-                writer->startObject();
-                    // ---------------------------------------------------------
-                    // --- false => Since we are just updating the other cores, 
-                    // --- we only need to send the data that has changed.
-                    // ----------------------------------------------------------
-                    writer->labelElement("key") & id; // send id so receive can use to put in map
-                    writer->labelElement( "value" ); pni->serialize( *writer, false );
-                writer->endObject();
-            }
-            writer->endArray();
+            writer->labelElement("ArchivedNodeInfoData"); writer->serialize( buffer, buffer_size );
         };
 
         ClearDataFunc clear_data_func = [this](int rank)
@@ -184,27 +211,64 @@ namespace Kernel
 
         ReceiveFromOthersFunc from_others_func = [this](IArchive* reader, int fromRank)
         {
+            // -------------------------------------
+            // --- Read the buffer out of the reader
+            // -------------------------------------
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // !!! I'd really like to get access to this buffer directly
+            // !!! so we don't have to allocate the memory
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            size_t data_size = 0;
+            reader->startArray( data_size );
+
+            if( (m_Buffer == nullptr) || (data_size > m_BufferSize) )
+            {
+                delete m_Buffer;
+
+                m_BufferSize = data_size;
+                m_Buffer = (unsigned char*)malloc( m_BufferSize );
+                if( m_Buffer == nullptr )
+                {
+                    throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "m_Buffer" );
+                }
+            }
+            memset( m_Buffer, 0, m_BufferSize );
+
+            for (size_t i = 0; i < data_size; ++i)
+            {
+                (*reader) & m_Buffer[i];
+            }
+
+            reader->endArray();
+
+            // -----------------------------------------
+            // --- Deserialize the data from the buffer
+            // -----------------------------------------
+            BinaryArchiveReader binary_reader_converter( (char*)m_Buffer, data_size );
+            IArchive* converter = static_cast<IArchive*>(&binary_reader_converter);
             size_t count=0;
-            reader->startArray( count );
+            converter->startArray( count );
             for (size_t i = 0; i < count; ++i)
             {
                 suids::suid id;
-                reader->startObject();
+                converter->startObject();
                     // ---------------------------------------------------------
                     // --- false => Since we are just updating the INodeInfo objects 
                     // --- for the nodes on the other cores, we only need to read 
                     // --- the data that has changed.
                     // ----------------------------------------------------------
-                    reader->labelElement("key") & id.data;
+                    converter->labelElement("key") & id.data;
                     INodeInfo* pni = rankMap[ id ] ;
-                    reader->labelElement( "value" ); pni->serialize( *reader, false );
-                reader->endObject();
+                    converter->labelElement( "value" ); pni->serialize( *converter, false );
+                converter->endObject();
             }
-            reader->endArray();
+            converter->endArray();
         };
 
         MpiDataExchanger exchanger( "NodeRankMap", to_self_func, to_others_func, from_others_func, clear_data_func );
         exchanger.ExchangeData( currentTime );
+
+        delete binary_writer;
     }
 
     void NodeRankMap::SetInitialLoadBalanceScheme( IInitialLoadBalanceScheme *ilbs ) 
