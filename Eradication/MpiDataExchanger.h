@@ -53,12 +53,12 @@ namespace Kernel
         void ExchangeData( IdmDateTime& currentTime );
 
     private:
-        void WriteJson( uint32_t time_step, 
-                        uint32_t source, 
-                        uint32_t dest, 
-                        char* suffix, 
-                        const char* buffer, 
-                        size_t size );
+        void SaveData( uint32_t time_step, 
+                       uint32_t source, 
+                       uint32_t dest, 
+                       char* suffix, 
+                       const char* buffer, 
+                       size_t size );
 
         const char*           m_pName;
         WithSelfFunc          m_WithSelfFunc;

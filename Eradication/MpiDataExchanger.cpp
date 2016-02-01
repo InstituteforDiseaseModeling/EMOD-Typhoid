@@ -16,6 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Sugar.h"
 #include "Log.h"
 #include "mpi.h"
+#include "NoCrtWarnings.h"
 
 static const char * _module = "MpiDataExchanger";
 
@@ -59,7 +60,7 @@ namespace Kernel
 
                 if( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) )
                 {
-                    WriteJson( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "send", writer->GetBuffer(), writer->GetBufferSize() );
+                    SaveData( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "send", writer->GetBuffer(), writer->GetBufferSize() );
                 }
 
                 uint32_t buffer_size = message_size_by_rank[destination_rank] = writer->GetBufferSize();
@@ -81,7 +82,7 @@ namespace Kernel
 
         for (int source_rank = 0; source_rank < EnvPtr->MPI.NumTasks; ++source_rank)
         {
-            if (source_rank == EnvPtr->MPI.Rank) continue;  // We don't use MPI to send individuals to ourselves.
+            if (source_rank == EnvPtr->MPI.Rank) continue;  // We don't use MPI to send data to ourselves.
 
             uint32_t size;
             MPI_Status status;
@@ -95,7 +96,7 @@ namespace Kernel
 
                 if( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) 
                 {
-                    WriteJson( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "recv", buffer.get(), size );
+                    SaveData( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "recv", buffer.get(), size );
                 }
 
                 auto binary_reader = make_shared<BinaryArchiveReader>(buffer.get(), size);
@@ -103,7 +104,7 @@ namespace Kernel
 
                 if( reader->HasError() )
                 {
-                    WriteJson( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "recv", buffer.get(), size );
+                    SaveData( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "recv", buffer.get(), size );
                 }
 
                 m_FromOthersFunc( reader, source_rank );
@@ -122,28 +123,23 @@ namespace Kernel
         }
     }
 
-    void MpiDataExchanger::WriteJson( uint32_t time_step,
-                                      uint32_t source, 
-                                      uint32_t dest, 
-                                      char* suffix, 
-                                      const char* buffer, 
-                                      size_t size )
+    void MpiDataExchanger::SaveData( uint32_t time_step,
+                                     uint32_t source, 
+                                     uint32_t dest, 
+                                     char* suffix, 
+                                     const char* buffer, 
+                                     size_t size )
     {
         char filename[256];
-    #ifdef WIN32
         sprintf_s(filename, 256, "%s\\%03d-%02d-%02d-%s-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, m_pName, suffix);
         FILE* f = nullptr;
         errno = 0;
         if ( fopen_s( &f, filename, "w" ) != 0)
         {
-            // LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
-            LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
-            return;
+            std::stringstream ss;
+            ss << "Could not open for writing '"<< filename << "'";
+            throw FileIOException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str());
         }
-    #else
-        sprintf(filename, "%s\\%03d-%02d-%02d-%s-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, m_pName, suffix);
-        FILE* f = fopen(filename, "w");
-    #endif
         fwrite(buffer, 1, size, f);
         fflush(f);
         fclose(f);
