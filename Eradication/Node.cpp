@@ -1882,7 +1882,7 @@ namespace Kernel
                         age_years = temp_age / DAYSPERYEAR ;
                     }
 
-                    // if an adult and aalready have enough adults, recalculate age until we get a child
+                    // if an adult and already have enough adults, recalculate age until we get a child
                     while( IndividualHumanConfig::IsAdultAge( age_years ) && (percent_adults >= required_percentage_of_adults) )
                     {
                         temp_age = calculateInitialAge(default_age);

@@ -25,6 +25,7 @@ namespace Kernel
         float GetTotalAvailableLarvalHabitat() const;
 
         virtual void serialize( IArchive& ar, bool firstTime ) override;
+
     private:
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // !!! We are using a couple of vectors in an effort to reduce the amount

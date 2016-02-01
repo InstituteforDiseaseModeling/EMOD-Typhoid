@@ -279,30 +279,3 @@ namespace Kernel
         ar.labelElement("m_SupportedParameterInfoMap"); serialize_map( ar, dd.m_SupportedParameterInfoMap );
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::DurationDistribution)
-
-namespace Kernel 
-{
-    template<class Archive>
-    void serialize(Archive &ar,  DurationDistribution::ParameterInfo& obj, const unsigned int v)
-    {
-        ar & obj.m_ParamName_1;
-        ar & obj.m_ParamDesc_1;
-        ar & obj.m_ParamName_2;
-        ar & obj.m_ParamDesc_2;
-    }
-
-    template<class Archive>
-    void serialize(Archive &ar, DurationDistribution& obj, const unsigned int v)
-    {
-        ar & obj.m_Type;
-        ar & obj.m_Param1;
-        ar & obj.m_Param2;
-        ar & obj.m_TypeName;
-        ar & obj.m_TypeDesc;
-        ar & obj.m_SupportedParameterInfoMap;
-    }
-}
-#endif

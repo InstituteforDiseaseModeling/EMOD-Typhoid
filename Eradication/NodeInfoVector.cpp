@@ -33,8 +33,11 @@ namespace Kernel
             float total_capacity = 0.0 ;
             for( auto pHabitat : pvp->GetHabitats() )
             {
-                //total_capacity += pHabitat->GetMaximumLarvalCapacity();
-                //total_capacity += (pHabitat->GetCurrentLarvalCapacity() - pHabitat->GetTotalLarvaCount(TimeStepIndex::CURRENT_TIME_STEP));
+                // -----------------------------------------------------------------------------------------
+                // --- DMB 1/29/16 At one time, we subtracted the current larval count (GetTotalLarvaCount)
+                // --- but since this data is used in modifying vector migration behavior,
+                // --- Jaline requested that it be based on just the capacity.
+                // -----------------------------------------------------------------------------------------
                 total_capacity += pHabitat->GetCurrentLarvalCapacity();
             }
             auto iter = std::find( species.begin(), species.end(), pvp->get_SpeciesID() );

@@ -205,7 +205,7 @@ namespace Kernel
         { 
 #ifndef CLORTON
             // Don't bother to serialize locally
-            for (auto iterator = migratingVectorQueues[myRank].rbegin(); iterator != migratingVectorQueues[myRank].rend(); iterator++)
+            for (auto iterator = migratingVectorQueues[myRank].rbegin(); iterator != migratingVectorQueues[myRank].rend(); ++iterator)
             {
                 auto vector = *iterator;
                 IMigrate* emigre = dynamic_cast<IMigrate*>(vector);
