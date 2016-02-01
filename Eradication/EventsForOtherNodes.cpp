@@ -29,8 +29,8 @@ namespace Kernel
     {
         if( this->m_NodeEventMap.size() != rThat.m_NodeEventMap.size() ) return false ;
 
-        std::map<int,std::vector<std::string>>::const_iterator this_it = this->m_NodeEventMap.begin();
-        std::map<int,std::vector<std::string>>::const_iterator that_it = rThat.m_NodeEventMap.begin();
+        std::map<suids::suid,std::vector<std::string>>::const_iterator this_it = this->m_NodeEventMap.begin();
+        std::map<suids::suid,std::vector<std::string>>::const_iterator that_it = rThat.m_NodeEventMap.begin();
         while( this_it != this->m_NodeEventMap.end() )
         {
             if( (*this_it).first != (*that_it).first ) return false ;
@@ -55,12 +55,12 @@ namespace Kernel
 
     void EventsForOtherNodes::Add( const suids::suid& rNodeSuid, const std::string& rEventName )
     {
-        m_NodeEventMap[ rNodeSuid.data ].push_back( rEventName );
+        m_NodeEventMap[ rNodeSuid ].push_back( rEventName );
     }
 
     const std::vector<std::string>& EventsForOtherNodes::GetEventNames( const suids::suid& rNodeSuid )
     {
-        return m_NodeEventMap[ rNodeSuid.data ] ;
+        return m_NodeEventMap[ rNodeSuid ] ;
     }
 
     void EventsForOtherNodes::Clear()
@@ -72,9 +72,11 @@ namespace Kernel
     {
         for( auto entry : m_NodeEventMap )
         {
+            auto& dest_node_id = entry.first;
+            auto& event_name_list = entry.second;
             std::ostringstream ss ;
-            ss << entry.first  ;
-            for( auto event_name : entry.second )
+            ss << dest_node_id.data  ;
+            for( auto event_name : event_name_list )
             {
                 ss << ", " << event_name ;
             }
@@ -86,9 +88,11 @@ namespace Kernel
     {
         for( auto entry : rEfon.m_NodeEventMap )
         {
-            for( auto event_name : entry.second )
+            auto& dest_node_id = entry.first;
+            auto& event_name_list = entry.second;
+            for( auto event_name : event_name_list )
             {
-                m_NodeEventMap[ entry.first ].push_back( event_name );
+                m_NodeEventMap[ dest_node_id ].push_back( event_name );
             }
         }
     }

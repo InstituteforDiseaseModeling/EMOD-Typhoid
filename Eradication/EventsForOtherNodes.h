@@ -34,10 +34,10 @@ namespace Kernel
         void Clear();
         void Print();
         void Update( const EventsForOtherNodes& rEfon );
-        const std::map<int,std::vector<std::string>>& GetMap() const { return m_NodeEventMap; }
+        const std::map<suids::suid,std::vector<std::string>>& GetMap() const { return m_NodeEventMap; }
 
         static void serialize( IArchive& ar, EventsForOtherNodes& obj );
     private:
-        std::map<int,std::vector<std::string>> m_NodeEventMap ;
+        std::map<suids::suid,std::vector<std::string>> m_NodeEventMap ;
     };
 }

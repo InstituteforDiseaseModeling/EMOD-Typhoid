@@ -384,9 +384,8 @@ namespace Kernel
             {
                 // -------------------------------------------------------------------------------------
                 // --- One could use a map to keep a node from getting more than one event per timestep
-                // --- but I thinkthe logic for that belongs in the object processing the event
+                // --- but I think the logic for that belongs in the object processing the event
                 // -------------------------------------------------------------------------------------
-                //printf("%s going to be sent to %d\n",rEventName.c_str(),pni->GetSuid().data);
                 node_events_added[ nodeRankMap.GetRankFromNodeSuid( pni->GetSuid() ) ].Add( pni->GetSuid(), rEventName ) ;
             }
         }
@@ -432,9 +431,9 @@ namespace Kernel
         node_events_to_be_processed.clear();
         for( auto entry : node_events_added[ EnvPtr->MPI.Rank ].GetMap() )
         {
-            suids::suid node_id;
-            node_id.data = entry.first;
-            for( auto event_name : entry.second )
+            suids::suid node_id = entry.first;
+            auto& event_name_list = entry.second;
+            for( auto event_name : event_name_list )
             {
                 node_events_to_be_processed[ node_id ].push_back( event_name );
             }
@@ -700,7 +699,7 @@ namespace Kernel
         // -----------------------
         REPORT_TIME( ENABLE_DEBUG_MPI_TIMING, "resolveMigration", resolveMigration() );
 
-        for (auto iterator = nodes.rbegin(); iterator != nodes.rend(); iterator++)
+        for (auto iterator = nodes.rbegin(); iterator != nodes.rend(); ++iterator)
         {
             INodeContext *n = iterator->second;
             nodeRankMap.Update( n );
