@@ -25,10 +25,10 @@ namespace Kernel
 
     bool MalariaDiagnostic::Configure(const Configuration * inputJson)
     {
-        initConfig( "Diagnostic_Type", malaria_diagnostic_type, inputJson, MetadataDescriptor::Enum("Diagnostic_Type", "TBD"/*MD_Diagnostic_Type_DESC_TEXT*/, MDD_ENUM_ARGS( MalariaDiagnosticType ) ) );
+        initConfig( "Diagnostic_Type", malaria_diagnostic_type, inputJson, MetadataDescriptor::Enum("Diagnostic_Type", MD_Diagnostic_Type_DESC_TEXT, MDD_ENUM_ARGS( MalariaDiagnosticType ) ) );
         if( malaria_diagnostic_type == MalariaDiagnosticType::Other || JsonConfigurable::_dryrun )
         {
-            initConfigTypeMap("Detection_Threshold", &detection_threshold, "TBD"/*MD_Detection_Threshold_DESC_TEXT*/, 0, 1e6, 100, "Diagnostic_Type", "Other" );
+            initConfigTypeMap("Detection_Threshold", &detection_threshold, MD_Detection_Threshold_DESC_TEXT, 0, 1e6, 100, "Diagnostic_Type", "Other" );
         }
         return SimpleDiagnostic::Configure(inputJson);
     }

@@ -509,3 +509,22 @@ NO_DENSITY_DEPENDENCE."
 #define HIV_DTP_Dose_Interval_DESC_TEXT "TBD"
 #define HIV_DTP_Drug_Class_DESC_TEXT "TBD"
 #define HIV_DTP_Nucleoside_Analog_DESC_TEXT "TBD"
+
+// Individual
+#define Minimum_Adult_Age_Years_DESC_TEXT "TBD"
+
+// MigrationInfoVector
+#define Vector_Migration_Modifier_Equation_DESC_TEXT "TBD"
+#define Vector_Migration_Habitat_Modifier_DESC_TEXT  "TBD"
+#define Vector_Migration_Food_Modifier_DESC_TEXT     "TBD"
+#define Vector_Migration_Stay_Put_Modifier_DESC_TEXT "TBD"
+
+#define Enable_Vector_Mortality_DESC_TEXT "TBD"
+
+#define Report_HIV_ByAgeAndGender_Collect_Circumcision_Data_DESC_TEXT "TBD"
+#define Report_HIV_ByAgeAndGender_Collect_IP_Data_DESC_TEXT           "TBD"
+#define Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT  "TBD"
+
+
+
+

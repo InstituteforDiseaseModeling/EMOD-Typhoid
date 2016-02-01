@@ -33,9 +33,9 @@ namespace Kernel
     )
     {
         initConfigTypeMap( "Event_Trigger", &event_trigger, BETON_Event_Trigger_DESC_TEXT, NO_TRIGGER_STR );
-        initConfigTypeMap( "Include_My_Node", &include_my_node, "TBD", false );
+        initConfigTypeMap( "Include_My_Node", &include_my_node, BETON_Include_My_Node_DESC_TEXT, false );
 
-        initConfig( "Node_Selection_Type", node_selection_type, inputJson, MetadataDescriptor::Enum("Node_Selection_Type", "TBD", MDD_ENUM_ARGS(NodeSelectionType)) );
+        initConfig( "Node_Selection_Type", node_selection_type, inputJson, MetadataDescriptor::Enum("Node_Selection_Type", BETON_Node_Selection_Type_DESC_TEXT, MDD_ENUM_ARGS(NodeSelectionType)) );
         if( (node_selection_type == NodeSelectionType::DISTANCE_ONLY         ) ||
             (node_selection_type == NodeSelectionType::DISTANCE_AND_MIGRATION) ||
             JsonConfigurable::_dryrun )
@@ -139,23 +139,6 @@ namespace Kernel
 
         return qualifies ;
     }
+
+    // DMB TODO - Add serialization
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::BroadcastEventToOtherNodes)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, BroadcastEventToOtherNodes& obj, const unsigned int v)
-    {
-        static const char * _module = "BroadcastEventToOtherNodes";
-        LOG_DEBUG("(De)serializing BroadcastEventToOtherNodes\n");
-
-        boost::serialization::void_cast_register<BroadcastEventToOtherNodes, IDistributableIntervention>();
-        ar & obj.event_trigger;
-        ar & obj.max_distance_km;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::BroadcastEventToOtherNodes&, unsigned int);
-}
-#endif

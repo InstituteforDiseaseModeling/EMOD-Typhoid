@@ -48,7 +48,7 @@ namespace Kernel
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, SB_Cost_To_Consumer_DESC_TEXT, 0, 999999, 3.75 );
         initConfigTypeMap( "Primary_Decay_Time_Constant", &primary_decay_time_constant, SB_Primary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
         initConfigTypeMap( "Secondary_Decay_Time_Constant", &secondary_decay_time_constant, SB_Secondary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
-        initConfigTypeMap( "On_Distributed_Event_Trigger", &on_distributed_event, "TBD", JsonConfigurable::default_string );
+        initConfigTypeMap( "On_Distributed_Event_Trigger", &on_distributed_event, On_Distributed_Event_Trigger_DESC_TEXT, JsonConfigurable::default_string );
     }
 
     bool

@@ -30,9 +30,9 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfigTypeMap( "NodeID_To_Migrate_To", &destination_external_node_id, "TBD", 0, INT_MAX, 0 );
+        initConfigTypeMap( "NodeID_To_Migrate_To", &destination_external_node_id, NodeID_To_Migrate_To_DESC_TEXT, 0, INT_MAX, 0 );
         initConfigTypeMap( "Is_Family_Trip", &is_family_trip, "TBD", false );
-        initConfigTypeMap( "Is_Moving", &is_moving, "TBD", false );
+        initConfigTypeMap( "Is_Moving", &is_moving, Is_Moving_DESC_TEXT, false );
 
         duration_before_leaving.Configure( this, inputJson );
         duration_at_node.Configure( this, inputJson );
@@ -56,19 +56,19 @@ namespace Kernel
         , is_family_trip( false )
         , is_moving( false )
     {
-        duration_before_leaving.SetTypeNameDesc( "Duration_Before_Leaving_Distribution_Type", "TBD" );
-        duration_before_leaving.AddSupportedType( DistributionFunction::FIXED_DURATION,       "Duration_Before_Leaving_Fixed",              "TBD", "", "" );
-        duration_before_leaving.AddSupportedType( DistributionFunction::UNIFORM_DURATION,     "Duration_Before_Leaving_Uniform_Min",        "TBD", "Duration_Before_Leaving_Uniform_Max", "TBD" );
-        duration_before_leaving.AddSupportedType( DistributionFunction::GAUSSIAN_DURATION,    "Duration_Before_Leaving_Gausian_Mean",       "TBD", "Duration_Before_Leaving_Gausian_StdDev", "TBD" );
-        duration_before_leaving.AddSupportedType( DistributionFunction::EXPONENTIAL_DURATION, "Duration_Before_Leaving_Exponential_Period", "TBD", "", "" );
-        duration_before_leaving.AddSupportedType( DistributionFunction::POISSON_DURATION,     "Duration_Before_Leaving_Poisson_Mean",       "TBD", "", "" );
+        duration_before_leaving.SetTypeNameDesc( "Duration_Before_Leaving_Distribution_Type", DBL_Type_DESC_TEXT );
+        duration_before_leaving.AddSupportedType( DistributionFunction::FIXED_DURATION,       "Duration_Before_Leaving_Fixed",              DBL_Fixed_DESC_TEXT,              "", "" );
+        duration_before_leaving.AddSupportedType( DistributionFunction::UNIFORM_DURATION,     "Duration_Before_Leaving_Uniform_Min",        DBL_Uniform_Min_DESC_TEXT,        "Duration_Before_Leaving_Uniform_Max",    DBL_Uniform_Max_DESC_TEXT    );
+        duration_before_leaving.AddSupportedType( DistributionFunction::GAUSSIAN_DURATION,    "Duration_Before_Leaving_Gausian_Mean",       DBL_Gausian_Mean_DESC_TEXT,       "Duration_Before_Leaving_Gausian_StdDev", DBL_Gausian_StdDev_DESC_TEXT );
+        duration_before_leaving.AddSupportedType( DistributionFunction::EXPONENTIAL_DURATION, "Duration_Before_Leaving_Exponential_Period", DBL_Exponential_Period_DESC_TEXT, "", "" );
+        duration_before_leaving.AddSupportedType( DistributionFunction::POISSON_DURATION,     "Duration_Before_Leaving_Poisson_Mean",       DBL_Poisson_Mean_DESC_TEXT,       "", "" );
 
-        duration_at_node.SetTypeNameDesc( "Duration_At_Node_Distribution_Type", "TBD" );
-        duration_at_node.AddSupportedType( DistributionFunction::FIXED_DURATION,       "Duration_At_Node_Fixed",              "TBD", "", "" );
-        duration_at_node.AddSupportedType( DistributionFunction::UNIFORM_DURATION,     "Duration_At_Node_Uniform_Min",        "TBD", "Duration_At_Node_Uniform_Max", "TBD" );
-        duration_at_node.AddSupportedType( DistributionFunction::GAUSSIAN_DURATION,    "Duration_At_Node_Gausian_Mean",       "TBD", "Duration_At_Node_Gausian_StdDev", "TBD" );
-        duration_at_node.AddSupportedType( DistributionFunction::EXPONENTIAL_DURATION, "Duration_At_Node_Exponential_Period", "TBD", "", "" );
-        duration_at_node.AddSupportedType( DistributionFunction::POISSON_DURATION,     "Duration_At_Node_Poisson_Mean",       "TBD", "", "" );
+        duration_at_node.SetTypeNameDesc( "Duration_At_Node_Distribution_Type", DAN_Type_DESC_TEXT );
+        duration_at_node.AddSupportedType( DistributionFunction::FIXED_DURATION,       "Duration_At_Node_Fixed",              DAN_Fixed_DESC_TEXT,              "", "" );
+        duration_at_node.AddSupportedType( DistributionFunction::UNIFORM_DURATION,     "Duration_At_Node_Uniform_Min",        DAN_Uniform_Min_DESC_TEXT,        "Duration_At_Node_Uniform_Max",    DAN_Uniform_Max_DESC_TEXT    );
+        duration_at_node.AddSupportedType( DistributionFunction::GAUSSIAN_DURATION,    "Duration_At_Node_Gausian_Mean",       DAN_Gausian_Mean_DESC_TEXT,       "Duration_At_Node_Gausian_StdDev", DAN_Gausian_StdDev_DESC_TEXT );
+        duration_at_node.AddSupportedType( DistributionFunction::EXPONENTIAL_DURATION, "Duration_At_Node_Exponential_Period", DAN_Exponential_Period_DESC_TEXT, "", "" );
+        duration_at_node.AddSupportedType( DistributionFunction::POISSON_DURATION,     "Duration_At_Node_Poisson_Mean",       DAN_Poisson_Mean_DESC_TEXT,       "", "" );
     }
 
     MigrateIndividuals::MigrateIndividuals( const MigrateIndividuals& master )

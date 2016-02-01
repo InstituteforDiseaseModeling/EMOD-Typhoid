@@ -81,7 +81,7 @@ namespace Kernel
         initConfigTypeMap( "Max_Individual_Infections", &max_ind_inf, Max_Individual_Infections_DESC_TEXT, 0, 1000, 1 );
         initConfigTypeMap( "Enable_Superinfection", &superinfection, Enable_Superinfection_DESC_TEXT, false );
         initConfigTypeMap( "x_Other_Mortality", &x_othermortality, x_Other_Mortality_DESC_TEXT, 0.0f, FLT_MAX, 1.0f );
-        initConfigTypeMap( "Minimum_Adult_Age_Years", &min_adult_age_years, "TBD", 0.0f, FLT_MAX, 15.0f );
+        initConfigTypeMap( "Minimum_Adult_Age_Years", &min_adult_age_years, Minimum_Adult_Age_Years_DESC_TEXT, 0.0f, FLT_MAX, 15.0f );
 
         MigrationStructure::Enum migration_structure; // TBD: Would be nice to get from SimulationConfig, but fakeHuman is configured first
         initConfig( "Migration_Model", migration_structure, config, MetadataDescriptor::Enum("migration_structure", Migration_Model_DESC_TEXT, MDD_ENUM_ARGS(MigrationStructure)) );

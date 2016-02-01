@@ -79,7 +79,7 @@ namespace Kernel
         const Configuration * config
     )
     {
-        initConfigTypeMap( "Enable_Vector_Mortality", &vector_mortality, "TBD"/*Enable_Vector_Mortality_DESC_TEXT*/, true );
+        initConfigTypeMap( "Enable_Vector_Mortality", &vector_mortality, Enable_Vector_Mortality_DESC_TEXT, true );
         initConfigTypeMap( "Mosquito_Weight", &mosquito_weight, Mosquito_Weight_DESC_TEXT, 1, 1e4, 1 ); // should this be renamed vector_weight?
 
         bool configured = Node::Configure( config );
