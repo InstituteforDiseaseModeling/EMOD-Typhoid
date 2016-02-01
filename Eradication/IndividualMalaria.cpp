@@ -700,8 +700,14 @@ namespace Kernel
         ar.labelElement("m_parasites_detected_by_new_diagnostic") & individual.m_parasites_detected_by_new_diagnostic;
         ar.labelElement("m_gametocytes_detected") & individual.m_gametocytes_detected;
         ar.labelElement("m_clinical_symptoms"); ar.serialize( individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
-        ar.labelElement("m_CSP_antibody") & individual.m_CSP_antibody;
         ar.labelElement("m_initial_infected_hepatocytes") & individual.m_initial_infected_hepatocytes;
+
+        // ----------------------------------------------------------------------
+        // --- This is a pointer to an object held in the Susceptibility object. 
+        // --- It will be re-set after de-serialization. See SetContextTo()
+        // ----------------------------------------------------------------------
+        //ar.labelElement("m_CSP_antibody") & individual.m_CSP_antibody;
+        // ----------------------------------------------------------------------
     }
 }
 
