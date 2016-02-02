@@ -57,7 +57,11 @@ namespace Kernel
 
         //this section for counting the number of HSB interventions in the interventionslist
         //in future clean up so that this function doesn't have hard coded intervention class names
-        std::list<IDistributableIntervention*> list_of_HSB = GetInterventionsByType("class Kernel::HealthSeekingBehaviorUpdateable");
+        std::string classname = "Kernel::HealthSeekingBehaviorUpdateable";
+#ifdef WIN32
+        classname = "class " + classname;
+#endif
+        std::list<IDistributableIntervention*> list_of_HSB = GetInterventionsByType(classname);
         LOG_DEBUG_F("Number of HSBUpdateable in intervention list %d\n", list_of_HSB.size()); 
         
         if (list_of_HSB.size() == 0)
@@ -71,7 +75,7 @@ namespace Kernel
             {
                 if (s_OK == active_HSB->QueryInterface(GET_IID(IHealthSeekingBehavior), (void **)&IHSB))
                 {
-                    IHSB->UpdateProbabilityofSeeking( new_probability_of_seeking); 
+                    IHSB->UpdateProbabilityofSeeking( new_probability_of_seeking ); 
                 }
                 else
                 {
