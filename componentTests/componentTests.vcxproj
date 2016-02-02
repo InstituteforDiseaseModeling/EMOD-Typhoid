@@ -124,6 +124,7 @@
     <ClCompile Include="HIVDrawBloodTest.cpp" />
     <ClCompile Include="InterpolatedValueMapTest.cpp" />
     <ClCompile Include="LoadBalanceSchemeTest.cpp" />
+    <ClCompile Include="MigrateIndividualsTest.cpp" />
     <ClCompile Include="MigrationTest.cpp" />
     <ClCompile Include="SerializationTest.cpp" />
     <ClCompile Include="STIIsPostDebutTest.cpp" />

@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "MigrateIndividuals.h"
 #include "IMigrate.h"
+#include "SimulationConfig.h"
 
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 
@@ -30,6 +31,13 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
+        if( JsonConfigurable::_dryrun && (GET_CONFIGURABLE(SimulationConfig)->migration_structure == MigrationStructure::NO_MIGRATION) )
+        {
+            std::stringstream msg;
+            msg << _module << " cannot be used when 'Migration_Model' = 'NO_MIGRATION'.";
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        }
+
         initConfigTypeMap( "NodeID_To_Migrate_To", &destination_external_node_id, NodeID_To_Migrate_To_DESC_TEXT, 0, INT_MAX, 0 );
         initConfigTypeMap( "Is_Family_Trip", &is_family_trip, "TBD", false );
         initConfigTypeMap( "Is_Moving", &is_moving, Is_Moving_DESC_TEXT, false );
