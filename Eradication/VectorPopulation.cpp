@@ -257,10 +257,10 @@ namespace Kernel
             m_HBR_by_pool.first  = float(indoorbites / eff_pop);
             m_HBR_by_pool.second = float(outdoorbites / eff_pop);
         }
-        //else
-        //{
-        //    LOG_WARN_F("The effective human population at node %lu is zero, so EIR and HBR are not being normalized in VectorPopulation::UpdateVectorPopulation.\n", m_context->GetSuid().data );
-        //}
+        else
+        {
+            LOG_DEBUG_F("The effective human population at node %lu is zero, so EIR and HBR are not being normalized in VectorPopulation::UpdateVectorPopulation.\n", m_context->GetSuid().data );
+        }
         // (3) vector-to-human infectivity
         infectivity = GetEIRByPool(VectorPoolIdEnum::BOTH_VECTOR_POOLS) * species()->transmissionmod;
     }

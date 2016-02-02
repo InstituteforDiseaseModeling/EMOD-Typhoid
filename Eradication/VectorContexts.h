@@ -41,6 +41,7 @@ namespace Kernel
     class INodeVector : public ISupports
     {
     public:
+        virtual const std::list<VectorHabitat *>& GetHabitats() const = 0 ;
         virtual const VectorPopulationList_t& GetVectorPopulations() = 0;
         virtual void AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, unsigned long int releasedNumber) = 0;
         virtual void processImmigratingVector( VectorCohort* immigrant ) = 0;

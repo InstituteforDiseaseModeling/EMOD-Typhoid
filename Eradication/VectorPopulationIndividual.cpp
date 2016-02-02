@@ -815,8 +815,14 @@ namespace Kernel
 
         VectorPopulationIndividual& population = *obj;
         ar.labelElement("m_mosquito_weight") & population.m_mosquito_weight;
-// Boost serialization implementation didn't include this member.            ar.labelElement("m_average_oviposition_killing") & population.m_average_oviposition_killing;
-// Boost serialization implementation didn't include this member.            ar.labelElement("IndoorExposedQueues"); serialize(ar, population.IndoorExposedQueues);
-// Boost serialization implementation didn't include this member.            ar.labelElement("OutdoorExposedQueues"); serialize(ar, population.OutdoorExposedQueues);
+
+        // ------------------------------------------------------------------
+        // --- The following are only use temporarily during an update cycle.
+        // ---  They are cleared and populated each update.
+        // ------------------------------------------------------------------
+        //m_average_oviposition_killing
+        //IndoorExposedQueues
+        //OutdoorExposedQueues
+        //current_vci
     }
 }

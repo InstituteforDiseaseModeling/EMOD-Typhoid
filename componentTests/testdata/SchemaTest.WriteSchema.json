@@ -10636,11 +10636,11 @@
 							"NewDetectionTech",
 							"Other"
 						],
-						"description" : "TBD",
+						"description" : "Type of malaria diagnostic. Possible values are: Microscopy, NewDetectionTech, Other.",
 						"default" : "Microscopy"
 					},
 					"Detection_Threshold" : {
-						"description" : "TBD",
+						"description" : "The diagnostic detection threshold for parasites in units of microliters of blood.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 1e+006,
@@ -10863,7 +10863,7 @@
 						"default" : 6
 					},
 					"iv_type" : "IndividualTargeted",
-					"class" : "MigrateTo"
+					"class" : "MigrateIndividuals"
 				},
 				"ModifyStiCoInfectionStatus" : {
 					"Sim_Types" : [

@@ -970,7 +970,7 @@ namespace Kernel
             m_simConfigObj->demographics_initial &&
             !migration_factory->IsAtLeastOneTypeConfiguredForIndividuals() )
         {
-            LOG_WARN("Enable_Demographics_Initial is set to true,  Migration_Model != NO_MIGRATION,and not migration file names have been defined and enabled.  No file-based migration will occur.");
+            LOG_WARN("Enable_Demographics_Initial is set to true,  Migration_Model != NO_MIGRATION, and no migration file names have been defined and enabled.  No file-based migration will occur.");
         }
 
         for (auto& entry : nodes)
