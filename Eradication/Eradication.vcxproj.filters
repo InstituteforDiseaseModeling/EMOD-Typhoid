@@ -897,9 +897,6 @@
     <ClCompile Include="..\interventions\BroadcastEventToOtherNodes.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
-    <ClCompile Include="..\interventions\MigrateTo.cpp">
-      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
-    </ClCompile>
     <ClCompile Include="HIVTransmissionReporter.cpp">
       <Filter>Source Files\Reporting\STI\HIV</Filter>
     </ClCompile>
@@ -977,6 +974,9 @@
     </ClCompile>
     <ClCompile Include="MigrationInfoVector.cpp">
       <Filter>Source Files\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\MigrateIndividuals.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1971,9 +1971,6 @@
     <ClInclude Include="..\interventions\BroadcastEventToOtherNodes.h">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
-    <ClInclude Include="..\interventions\MigrateTo.h">
-      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
-    </ClInclude>
     <ClInclude Include="HIVTransmissionReporter.h">
       <Filter>Source Files\Reporting\STI\HIV</Filter>
     </ClInclude>
@@ -2129,6 +2126,9 @@
     </ClInclude>
     <ClInclude Include="MigrationInfoVector.h">
       <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\MigrateIndividuals.h">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
