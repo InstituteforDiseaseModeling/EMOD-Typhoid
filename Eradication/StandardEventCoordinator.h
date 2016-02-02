@@ -90,6 +90,7 @@ namespace Kernel
         virtual void validateInterventionConfig( const json::Element& rElement );
         virtual bool TargetedIndividualIsCovered(IIndividualHumanEventContext *ihec);
         bool property_restrictions_verified;
+        bool avoid_duplicates;
 
 #if USE_JSON_SERIALIZATION
     public:

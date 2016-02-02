@@ -61,6 +61,7 @@ namespace Kernel
     , include_immigrants(0)
     , property_restrictions_verified( false )
     , _di( nullptr )
+    , avoid_duplicates( false )
     {
         LOG_DEBUG("StandardInterventionDistributionEventCoordinator ctor\n");
     }
@@ -314,11 +315,14 @@ namespace Kernel
             LOG_DEBUG("Individual meets demographic targeting criteria\n");
 
             // optionally filter out individuals who already have this intervention
-            bool already_has_this = ( ihec->GetInterventionsContext()->GetInterventionsByType( typeid( *_di ).name() ).size() > 0 ? true : false );
-            if( already_has_this  )
+            if( avoid_duplicates )
             {
-                LOG_DEBUG_F( "Individual already has intervention, skipping.\n" );
-                return false;
+                bool already_has_this = ( ihec->GetInterventionsContext()->GetInterventionsByType( typeid( *_di ).name() ).size() > 0 ? true : false );
+                if( already_has_this  )
+                {
+                    LOG_DEBUG_F( "Individual already has intervention, skipping.\n" );
+                    return false;
+                }
             }
 
             if (!TargetedIndividualIsCovered(ihec))

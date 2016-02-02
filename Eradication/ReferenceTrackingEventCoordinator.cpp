@@ -22,6 +22,7 @@ namespace Kernel
     ReferenceTrackingEventCoordinator::ReferenceTrackingEventCoordinator()
     : target_coverage( 0.0 ) // no great reason for this value
     {
+        avoid_duplicates = true;
     }
 
     QuickBuilder
