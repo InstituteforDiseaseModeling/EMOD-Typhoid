@@ -31,7 +31,9 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        if( JsonConfigurable::_dryrun && (GET_CONFIGURABLE(SimulationConfig)->migration_structure == MigrationStructure::NO_MIGRATION) )
+        if( !JsonConfigurable::_dryrun && 
+            //(EnvPtr->getSimulationConfig() != nullptr) &&
+            (GET_CONFIGURABLE(SimulationConfig)->migration_structure == MigrationStructure::NO_MIGRATION) )
         {
             std::stringstream msg;
             msg << _module << " cannot be used when 'Migration_Model' = 'NO_MIGRATION'.";
