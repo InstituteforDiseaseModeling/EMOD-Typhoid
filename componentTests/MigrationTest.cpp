@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include <memory> // unique_ptr
 #include "UnitTest++.h"
+#include "common.h"
 #include "IMigrationInfo.h"
 #include "IMigrationInfoVector.h"
 #include "SimulationConfig.h"
@@ -20,8 +21,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 using namespace Kernel; 
 
-
-void PrintDebug( const std::string& rMessage );
 
 
 // maybe these shouldn't be protected in Simulation.h
