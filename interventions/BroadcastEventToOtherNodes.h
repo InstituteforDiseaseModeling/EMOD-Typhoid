@@ -57,6 +57,8 @@ namespace Kernel
         bool include_my_node ;
         NodeSelectionType::Enum node_selection_type ;
         float max_distance_km ;
+
+        DECLARE_SERIALIZABLE(BroadcastEventToOtherNodes);
 #pragma warning( pop )
     };
 }

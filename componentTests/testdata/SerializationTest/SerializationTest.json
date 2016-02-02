@@ -7,10 +7,24 @@
         "Event_4",
         "Event_5",
         "Event_6",
-        "Event_7"
+        "Event_7",
+        "Event_8"
     ],
     "Objects" :
     [
+        {
+            "Test" :
+            {
+                "__class__":"BroadcastEventToOtherNodes",
+                "cost_per_unit":1,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "event_trigger"       : "Event_8",
+                "include_my_node"     : true,
+                "node_selection_type" : 2,
+                "max_distance_km"     : 12.3
+            }
+        },
         {
             "Test" :
             {

@@ -140,5 +140,21 @@ namespace Kernel
         return qualifies ;
     }
 
-    // DMB TODO - Add serialization
+    REGISTER_SERIALIZABLE(BroadcastEventToOtherNodes);
+
+    void BroadcastEventToOtherNodes::serialize(IArchive& ar, BroadcastEventToOtherNodes* obj)
+    {
+        BaseIntervention::serialize( ar, obj );
+        BroadcastEventToOtherNodes& cal = *obj;
+        ar.labelElement("event_trigger"      ) & cal.event_trigger;
+        ar.labelElement("include_my_node"    ) & cal.include_my_node;
+        ar.labelElement("node_selection_type") & (uint32_t&)cal.node_selection_type;
+        ar.labelElement("max_distance_km"    ) & cal.max_distance_km;
+
+        // -------------------------
+        // --- Set in SetContextTo()
+        // -------------------------
+        // parent
+        // p_node_context
+    }
 }
