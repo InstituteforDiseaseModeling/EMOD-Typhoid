@@ -47,7 +47,6 @@
           "Base_Population_Scale_Factor": 1, 
           "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
           "Birth_Rate_Time_Dependence": "NONE",
-          "Demographics_Filename": "", 
           "Default_Geography_Initial_Node_Population":1000,
           "Default_Geography_Torus_Size":10,
           "Enable_Aging": 1, 
@@ -61,16 +60,14 @@
           "Enable_Immunity_Initialization_Distribution": 0, 
           "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF",
           "Enable_Vital_Dynamics": 1, 
+          "Minimum_Adult_Age_Years" : 15,
           "Population_Scale_Type": "USE_INPUT_FILE"
      }, 
      "EXECUTION": {
           "CLUSTER": {
                "Job_Node_Groups": "Chassis08", 
                "Job_Priority": "BELOWNORMAL", 
-               "LOAD_BALANCING": {
-                    "Load_Balance_Filename": "", 
-                    "Load_Balance_Scheme": "STATIC"
-               }, 
+                "Load_Balance_Filename": "", 
                "Num_Cores": 1
           }, 
           "Local_Simulation": 0
@@ -438,10 +435,9 @@
      "VECTOR": {
           "Enable_Temperature_Dependent_Feeding_Cycle": 0,
           "Enable_Vector_Aging": 0, 
+          "Enable_Vector_Mortality" : 1,
           "Enable_Vector_Migration": 0, 
-          "Enable_Vector_Migration_Human": 0, 
-          "Enable_Vector_Migration_Local": 0, 
-          "Enable_Vector_Migration_Wind": 0, 
+
           "Age_Dependent_Biting_Risk_Type": "OFF",
           "Human_Feeding_Mortality": 0.1, 
           "Vector_Sampling_Type": "VECTOR_COMPARTMENTS_NUMBER"

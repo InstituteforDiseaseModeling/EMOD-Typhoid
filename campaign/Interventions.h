@@ -66,6 +66,7 @@ namespace Kernel
         virtual IIndividualHumanContext* GetParent() = 0;
         virtual std::list<IDistributableIntervention*> GetInterventionsByType(const std::string &type_name) = 0;
         virtual void PurgeExisting( const std::string &iv_name ) = 0;
+        virtual bool ContainsExisting( const std::string &iv_name ) = 0;
 
         virtual ~IIndividualHumanInterventionsContext() {}
     };
@@ -121,6 +122,7 @@ namespace Kernel
 
         float cost_per_unit;
         bool expired;
+        bool dont_allow_duplicates ;
     };
 
     struct BaseNodeIntervention : IBaseIntervention, JsonConfigurable, INodeDistributableIntervention
@@ -138,16 +140,6 @@ namespace Kernel
 
         float cost_per_unit;
         bool expired;
-
-#if 0
-    private:
-        template<class Archive>
-        void serialize_inner(Archive &ar, const unsigned int v)
-        {
-            ar & cost_per_unit;
-            ar & expired;
-        }
-#endif
     };
 
     struct IDMAPI IIndividualEventObserver : ISupports

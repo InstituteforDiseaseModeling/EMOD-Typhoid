@@ -11,9 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifdef ENABLE_TB
 
-//Define child age
-#define CHILD_AGE_YEARS (15.0f)
-
 #include "SusceptibilityTB.h"
 #include "Common.h"
 #include "RANDOM.h"
@@ -114,7 +111,8 @@ namespace Kernel
     {
         float fast_fraction = 0;
 
-        if(age < CHILD_AGE_YEARS * DAYSPERYEAR)
+        float age_years = age / DAYSPERYEAR ;
+        if( !IndividualHumanConfig::IsAdultAge( age_years ) )
             fast_fraction = TB_fast_progressor_fraction_child;
         else
             fast_fraction = TB_fast_progressor_fraction_adult;
@@ -126,7 +124,8 @@ namespace Kernel
     {
         float smear_positive_fraction = 0;
 
-        if(age < CHILD_AGE_YEARS * DAYSPERYEAR)
+        float age_years = age / DAYSPERYEAR ;
+        if( !IndividualHumanConfig::IsAdultAge( age_years ) )
             smear_positive_fraction = TB_smear_positive_fraction_child;
         else
             smear_positive_fraction = TB_smear_positive_fraction_adult;
@@ -138,7 +137,8 @@ namespace Kernel
     {
         float extrapulmonary_fraction = 0;
 
-        if(age < CHILD_AGE_YEARS* DAYSPERYEAR)
+        float age_years = age / DAYSPERYEAR ;
+        if( !IndividualHumanConfig::IsAdultAge( age_years ) )
             extrapulmonary_fraction = TB_extrapulmonary_fraction_child;
         else
             extrapulmonary_fraction = TB_extrapulmonary_fraction_adult;

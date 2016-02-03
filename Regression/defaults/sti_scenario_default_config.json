@@ -34,6 +34,7 @@
             "Enable_Demographics_Other": 0,
             "Enable_Disease_Mortality": 0,
             "Enable_Vital_Dynamics": 1,
+            "Minimum_Adult_Age_Years" : 15,
             "Mortality_Time_Course": "DAILY_MORTALITY",
             "x_Birth": 1,
             "x_Other_Mortality": 1
@@ -148,7 +149,6 @@
             "Incubation_Period_Distribution": "FIXED_DURATION",
             "Individual_Sampling_Type": "FIXED_SAMPLING",
             "Load_Balance_Filename": "",
-            "Load_Balance_Scheme": "STATIC",
             "Local_Simulation": 0,
             "Enable_Superinfection": 0,
             "Max_Individual_Infections": 1,

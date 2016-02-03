@@ -78,7 +78,7 @@ namespace Kernel
     // Essentially, this object implements the IMigrationInfo interface
     // but doesn't do anything.  This object is given to nodes when migration
     // is on but the node does not have any migration away from it.
-    class IDMAPI MigrationInfoNull : public IMigrationInfo
+    class IDMAPI MigrationInfoNull : virtual public IMigrationInfo
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
@@ -90,11 +90,12 @@ namespace Kernel
                                         float migration_rate_modifier, 
                                         suids::suid &destination, 
                                         MigrationType::Enum &migration_type,
-                                        float &time );
-        virtual void SetContextTo(INodeContext* _parent);
-        virtual const std::vector<suids::suid>& GetReachableNodes() const;
-        virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const;
-        virtual bool IsHeterogeneityEnabled() const;
+                                        float &time ) override;
+        virtual void SetContextTo(INodeContext* _parent) override;
+        virtual const std::vector<suids::suid>& GetReachableNodes() const override;
+        virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const override;
+        virtual bool IsHeterogeneityEnabled() const override;
+        virtual MigrationType::Enum GetFamilyMigrationType() const override;
 
     protected:
         friend class MigrationInfoFactoryFile;
@@ -115,7 +116,7 @@ namespace Kernel
     // ---------------------------
 
     // MigrationInfoFixedRate is an IMigrationInfo object that has fixed/constant rates.
-    class IDMAPI MigrationInfoFixedRate : public IMigrationInfo
+    class IDMAPI MigrationInfoFixedRate : virtual public IMigrationInfo
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
@@ -127,23 +128,27 @@ namespace Kernel
                                         float migration_rate_modifier, 
                                         suids::suid &destination, 
                                         MigrationType::Enum &migration_type,
-                                        float &time );
-        virtual void SetContextTo(INodeContext* _parent);
-        virtual const std::vector<suids::suid>& GetReachableNodes() const;
-        virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const;
-        virtual bool IsHeterogeneityEnabled() const;
+                                        float &time ) override;
+        virtual void SetContextTo(INodeContext* _parent) override;
+        virtual const std::vector<suids::suid>& GetReachableNodes() const override;
+        virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const override;
+        virtual bool IsHeterogeneityEnabled() const override;
+        virtual MigrationType::Enum GetFamilyMigrationType() const override;
 
     protected:
         friend class MigrationInfoFactoryFile;
         friend class MigrationInfoFactoryDefault;
 
-        MigrationInfoFixedRate( INodeContext* _parent, bool isHeterogeneityEnabled );
+        MigrationInfoFixedRate( INodeContext* _parent,
+                                bool isHeterogeneityEnabled,
+                                MigrationType::Enum familyType );
 
         virtual void Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData );
         virtual void CalculateRates( Gender::Enum gender, float ageYears );
         virtual const std::vector<float>& GetRates() const;
         virtual float GetTotalRate() const;
         virtual void NormalizeRates( std::vector<float>& r_rate_cdf, float& r_total_rate );
+        virtual void SaveRawRates( std::vector<float>& r_rate_cdf ) {}
 
         virtual const std::vector<suids::suid>& GetReachableNodes( Gender::Enum gender ) const;
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes( Gender::Enum gender ) const;
@@ -152,6 +157,7 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         INodeContext * m_Parent;
         bool m_IsHeterogeneityEnabled;
+        MigrationType::Enum m_FamilyMigrationType;
         std::vector<suids::suid>         m_ReachableNodes;
         std::vector<MigrationType::Enum> m_MigrationTypes;
         std::vector<float>               m_RateCDF;
@@ -176,13 +182,15 @@ namespace Kernel
     protected:
         friend class MigrationInfoFactoryFile;
 
-        MigrationInfoAgeAndGender( INodeContext* _parent, bool isHeterogeneityEnabled );
+        MigrationInfoAgeAndGender( INodeContext* _parent,
+                                   bool isHeterogeneityEnabled,
+                                   MigrationType::Enum familyType );
 
         virtual void Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData );
         virtual void CalculateRates( Gender::Enum gender, float ageYears );
 
-        virtual const std::vector<suids::suid>& GetReachableNodes( Gender::Enum gender ) const;
-        virtual const std::vector<MigrationType::Enum>& GetMigrationTypes( Gender::Enum gender ) const;
+        virtual const std::vector<suids::suid>& GetReachableNodes( Gender::Enum gender ) const override;
+        virtual const std::vector<MigrationType::Enum>& GetMigrationTypes( Gender::Enum gender ) const override;
 
 
 #pragma warning( push )
@@ -256,7 +264,7 @@ namespace Kernel
     // MigrationInfoFactoryFile is an IMigrationInfoFactory that creates IMigrationInfo objects based
     // on data found in migration input files.  It can create one IMigrationInfo object for each node
     // in the simulation.
-    class IDMAPI MigrationInfoFactoryFile : public IMigrationInfoFactory, public JsonConfigurable
+    class IDMAPI MigrationInfoFactoryFile : public JsonConfigurable, virtual public IMigrationInfoFactory
     {
     public:
         // for JsonConfigurable stuff...
@@ -264,31 +272,33 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
 
-        MigrationInfoFactoryFile( bool enableMigration );
+        MigrationInfoFactoryFile( bool enableHumanMigration );
         MigrationInfoFactoryFile();
         virtual ~MigrationInfoFactoryFile();
 
         // JsonConfigurable methods
-        virtual bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
         // IMigrationInfoFactory methods
-        virtual void Initialize( const ::Configuration *config, const std::string& idreference );
-        virtual bool IsAtLeastOneTypeConfiguredForIndividuals() const ;
+        virtual void Initialize( const ::Configuration *config, const std::string& idreference ) override;
+        virtual bool IsAtLeastOneTypeConfiguredForIndividuals() const override;
 
         virtual IMigrationInfo* CreateMigrationInfo( INodeContext *parent_node, 
-                                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap );
+                                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override;
     protected:
         virtual void CreateInfoFileList();
-        virtual void InitializeInfoFileList( bool enableMigration );
-        std::vector<std::vector<MigrationRateData>> GetRateData( INodeContext *parent_node, 
-                                                                 const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap,
-                                                                 bool* pIsFixedRate );
+        virtual void InitializeInfoFileList( bool enableHumanMigration, const Configuration* config );
+        static std::vector<std::vector<MigrationRateData>> GetRateData( INodeContext *parent_node, 
+                                                                        const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap,
+                                                                        std::vector<MigrationInfoFile*>& infoFileList,
+                                                                        bool* pIsFixedRate );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         std::vector<MigrationInfoFile*> m_InfoFileList ;
         bool m_IsHeterogeneityEnabled;
-        bool m_EnableMigration;
+        bool m_EnableHumanMigration;
+        MigrationType::Enum m_FamilyMigrationType;
 #pragma warning( pop )
     private:
     };
@@ -299,7 +309,7 @@ namespace Kernel
 
     // MigrationInfoFactoryDefault is used when the user is running the default/internal scenario.
     // This assumes that there are at least 3-rows and 3-columns of nodes and that the set of nodes is square.
-    class IDMAPI MigrationInfoFactoryDefault : public IMigrationInfoFactory, public JsonConfigurable
+    class IDMAPI MigrationInfoFactoryDefault : public JsonConfigurable, virtual public IMigrationInfoFactory
     {
     public:
         // for JsonConfigurable stuff...
@@ -307,21 +317,22 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
 
-        MigrationInfoFactoryDefault( bool enableMigration, int torusSize );
+        MigrationInfoFactoryDefault( bool enableHumanMigration, int torusSize );
         MigrationInfoFactoryDefault();
         virtual ~MigrationInfoFactoryDefault();
 
         // JsonConfigurable methods
-        virtual bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
         // IMigrationInfoFactory methods
-        virtual void Initialize( const ::Configuration *config, const std::string& idreference );
+        virtual void Initialize( const ::Configuration *config, const std::string& idreference ) override;
         virtual IMigrationInfo* CreateMigrationInfo( INodeContext *parent_node, 
-                                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap );
-        virtual bool IsAtLeastOneTypeConfiguredForIndividuals() const ;
+                                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override;
+        virtual bool IsAtLeastOneTypeConfiguredForIndividuals() const override;
     protected:
         std::vector<std::vector<MigrationRateData>> GetRateData( INodeContext *parent_node, 
-                                                                 const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap );
+                                                                 const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap,
+                                                                 float modifier );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -330,6 +341,6 @@ namespace Kernel
         int   m_TorusSize;
 #pragma warning( pop )
     private:
-        void InitializeParameters( bool enableMigration ); // just used in multiple constructors
+        void InitializeParameters( bool enableHumanMigration ); // just used in multiple constructors
     };
 }

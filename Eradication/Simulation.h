@@ -22,10 +22,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISimulation.h"
 #include "INodeContext.h"
 #include "NodeRankMap.h"
+#include "INodeInfo.h"
 #include "IReport.h"
 #include "Configure.h"
 #include "IdmApi.h"
 #include "Serialization.h"
+#include "EventsForOtherNodes.h"
 
 class RANDOMBASE;
 
@@ -42,7 +44,7 @@ namespace Kernel
     class Infection;
     class IndividualHuman;
 
-    class IDMAPI Simulation : public ISimulation, public ISimulationContext, public JsonConfigurable
+    class IDMAPI Simulation : public ISimulation, public ISimulationContext, public INodeInfoFactory, public JsonConfigurable
     {
         GET_SCHEMA_STATIC_WRAPPER(Simulation)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -74,11 +76,16 @@ namespace Kernel
         // Migration
         virtual void PostMigratingIndividualHuman(IIndividualHuman *i) override;
 
+        virtual void DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier ) override;
+        virtual void UpdateNodeEvents() override;
+
         // Unique ID services
         virtual suids::suid GetNextNodeSuid() override;
         virtual suids::suid GetNextIndividualHumanSuid() override;
         virtual suids::suid GetNextInfectionSuid() override;
-        virtual ExternalNodeId_t GetNodeExternalID( const suids::suid& rNodeSuid );
+        virtual suids::suid GetNodeSuid( ExternalNodeId_t external_node_id ) override;
+        virtual ExternalNodeId_t GetNodeExternalID( const suids::suid& rNodeSuid ) override;
+        virtual uint32_t    GetNodeRank( const suids::suid& rNodeSuid ) override;
 
         // Random number handling
         virtual RANDOMBASE* GetRng() override;
@@ -87,6 +94,10 @@ namespace Kernel
         // Reporting
         virtual std::vector<IReport*>& GetReports() override;
         virtual std::vector<IReport*>& GetReportsNeedingIndividualData() override;
+
+        // INodeInfoFactory
+        virtual INodeInfo* CreateNodeInfo() override;
+        virtual INodeInfo* CreateNodeInfo( int rank, INodeContext* pNC ) override;
 
         virtual void Initialize(const ::Configuration *config);
 
@@ -111,6 +122,7 @@ namespace Kernel
         void initSimulationState();
 
         // Node initialization
+        virtual void LoadInterventions( const char* campaignfilename );
         int  populateFromDemographics(const char* campaign_filename, const char* loadbalance_filename); // creates nodes from demographics input file data
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory); // For derived Simulation classes to add correct node type
         void addNode_internal( INodeContext *node, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory); // Helper to add Nodes
@@ -134,6 +146,9 @@ namespace Kernel
         typedef NodeMap_t::value_type NodeMapEntry_t;
         NodeMap_t nodes;
         NodeRankMap nodeRankMap;
+
+        std::map<int,EventsForOtherNodes> node_events_added ; // map of rank to EventsForOtherNodes
+        std::map<suids::suid,std::vector<std::string>> node_events_to_be_processed ; // map of node suids to list of events
 
         std::vector<INodeEventContext*> node_event_context_list ;
 

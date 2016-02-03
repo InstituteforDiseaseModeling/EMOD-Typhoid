@@ -180,6 +180,9 @@
     <ClInclude Include="Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DurationDistribution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="IArchive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -276,6 +279,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InterpolatedValueMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DurationDistribution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonRawWriter.cpp">

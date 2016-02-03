@@ -123,11 +123,14 @@
     <ClCompile Include="HIVARTStagingCD4AgnosticDiagnosticTest.cpp" />
     <ClCompile Include="HIVDrawBloodTest.cpp" />
     <ClCompile Include="InterpolatedValueMapTest.cpp" />
+    <ClCompile Include="LoadBalanceSchemeTest.cpp" />
+    <ClCompile Include="MigrateIndividualsTest.cpp" />
     <ClCompile Include="MigrationTest.cpp" />
     <ClCompile Include="SerializationTest.cpp" />
     <ClCompile Include="STIIsPostDebutTest.cpp" />
     <ClCompile Include="HIVSimpleDiagnosticTest.cpp" />
     <ClCompile Include="JsonObjectDemogTest.cpp" />
+    <ClCompile Include="MathFunctionsTest.cpp" />
     <ClCompile Include="NodeDemographicsTest.cpp" />
     <ClCompile Include="PairFormationParametersImplTest.cpp" />
     <ClCompile Include="PairFormationStatsImplTest.cpp" />

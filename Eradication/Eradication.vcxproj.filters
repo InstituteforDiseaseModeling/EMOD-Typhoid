@@ -891,6 +891,12 @@
     <ClCompile Include="STINetworkParameters.cpp">
       <Filter>Source Files\STI</Filter>
     </ClCompile>
+    <ClCompile Include="NodeInfo.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\BroadcastEventToOtherNodes.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClCompile>
     <ClCompile Include="HIVTransmissionReporter.cpp">
       <Filter>Source Files\Reporting\STI\HIV</Filter>
     </ClCompile>
@@ -918,6 +924,9 @@
     <ClCompile Include="CalendarEventCoordinator.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
+    <ClCompile Include="NodeInfoVector.cpp">
+      <Filter>Source Files\Vector</Filter>
+    </ClCompile>
     <ClCompile Include="IIndividualHuman.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
@@ -927,7 +936,13 @@
     <ClCompile Include="IInfection.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="EventsForOtherNodes.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
     <ClCompile Include="EventTrigger.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadBalanceScheme.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
     <ClCompile Include="DemographicRestrictions.cpp">
@@ -950,6 +965,18 @@
     </ClCompile>
     <ClCompile Include="CampaignEventByYear.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClCompile>
+    <ClCompile Include="MpiDataExchanger.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\MalariaDiagnostic.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted\Vector\Malaria</Filter>
+    </ClCompile>
+    <ClCompile Include="MigrationInfoVector.cpp">
+      <Filter>Source Files\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\MigrateIndividuals.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1938,6 +1965,12 @@
     <ClInclude Include="ISTIInterventionsContainer.h">
       <Filter>Source Files\Campaign\InterventionContainers\STI</Filter>
     </ClInclude>
+    <ClInclude Include="NodeInfo.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\BroadcastEventToOtherNodes.h">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClInclude>
     <ClInclude Include="HIVTransmissionReporter.h">
       <Filter>Source Files\Reporting\STI\HIV</Filter>
     </ClInclude>
@@ -2028,13 +2061,25 @@
     <ClInclude Include="..\utils\RANDOM.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NodeInfoVector.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="EventsForOtherNodes.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
     <ClInclude Include="IInfection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ISusceptibilityContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EventsForOtherNodes.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
     <ClInclude Include="EventTrigger.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadBalanceScheme.h">
       <Filter>Source Files\Kernel</Filter>
     </ClInclude>
     <ClInclude Include="..\interventions\StiCoInfectionDiagnostic.h">
@@ -2066,6 +2111,24 @@
     </ClInclude>
     <ClInclude Include="PolioContexts.h">
       <Filter>Source Files\Environmental\Polio</Filter>
+    </ClInclude>
+    <ClInclude Include="MpiDataExchanger.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="INodeInfo.h">
+      <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\MalariaDiagnostic.h">
+      <Filter>Source Files\Campaign\IndividualTargeted\Vector\Malaria</Filter>
+    </ClInclude>
+    <ClInclude Include="IMigrationInfoVector.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="MigrationInfoVector.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\MigrateIndividuals.h">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

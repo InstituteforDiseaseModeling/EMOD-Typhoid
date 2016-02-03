@@ -13,6 +13,7 @@
             "Migration_Model": "FIXED_RATE_MIGRATION", 
             "Migration_Pattern": "WAYPOINTS_HOME", 
             "Enable_Migration_Heterogeneity" : 0,
+            "Family_Migration_Type" : "NO_MIGRATION",
             "Roundtrip_Waypoints": 5,
             "AIR" : {
                 "Enable_Air_Migration" : 0,

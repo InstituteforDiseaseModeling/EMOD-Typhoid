@@ -322,7 +322,6 @@
             "Needs_Option_B"
         ], 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Simulation": 0, 
         "Male_To_Female_Relative_Infectivity_Ages": [
             15, 
@@ -340,6 +339,7 @@
         "Max_Node_Population_Samples": 100, 
         "Migration_Model": "NO_MIGRATION", 
         "Min_Days_Between_Adding_Relationships": 60, 
+        "Minimum_Adult_Age_Years": 15, 
         "Mortality_Blocking_Immunity_Decay_Rate": 0, 
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 27000, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 

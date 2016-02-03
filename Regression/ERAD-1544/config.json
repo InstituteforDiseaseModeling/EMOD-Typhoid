@@ -80,7 +80,6 @@
         "Land_Temperature_Variance": 2, 
         "Larval_Density_Dependence": "UNIFORM_WHEN_OVERPOPULATION", 
         "Load_Balance_Filename": "", 
-        "Load_Balance_Scheme": "STATIC", 
         "Local_Migration_Filename": "", 
         "Local_Migration_Roundtrip_Duration": 0.5, 
         "Local_Migration_Roundtrip_Probability": 0.95, 

@@ -59,16 +59,19 @@ namespace Kernel
     BaseIntervention::BaseIntervention()
         : cost_per_unit(0.0f)
         , expired(false)
+        , dont_allow_duplicates(false)
     {
         //total_intervention_counter++;
         initSimTypes( 1, "*" );
+        initConfigTypeMap( "Dont_Allow_Duplicates", &dont_allow_duplicates, Dont_Allow_Duplicates_DESC_TEXT, false );
         //LOG_DEBUG_F("New intervention, total_intervention_counter = %d\n", total_intervention_counter);
     }
 
     BaseIntervention::BaseIntervention( const BaseIntervention& master )
     {
-        cost_per_unit = master.cost_per_unit;
-        expired = master.expired;
+        cost_per_unit         = master.cost_per_unit;
+        expired               = master.expired;
+        dont_allow_duplicates = master.dont_allow_duplicates ;
     }
 
     BaseIntervention::~BaseIntervention()
@@ -97,6 +100,11 @@ namespace Kernel
         ICampaignCostObserver * const pICCO
     )
     {
+        if( dont_allow_duplicates && context->ContainsExisting( typeid(*this).name() ) )
+        {
+            return false ;
+        }
+
         bool wasDistributed=false;
         IInterventionConsumer * ic;
         if (s_OK == (context->QueryInterface(GET_IID(IInterventionConsumer), (void**)&ic) ) )
@@ -173,7 +181,8 @@ namespace Kernel
     void BaseIntervention::serialize(IArchive& ar, BaseIntervention* obj)
     {
         BaseIntervention& intervention = *obj;
-        ar.labelElement("cost_per_unit") & intervention.cost_per_unit;
-        ar.labelElement("expired") & intervention.expired;
+        ar.labelElement("cost_per_unit"        ) & intervention.cost_per_unit;
+        ar.labelElement("expired"              ) & intervention.expired;
+        ar.labelElement("dont_allow_duplicates") & intervention.dont_allow_duplicates;
     }
 }

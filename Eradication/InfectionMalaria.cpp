@@ -821,8 +821,13 @@ namespace Kernel
                 m_hepatocytes -= tempval1;
             }
 
-            // latency in hepatocyte phase Collins, W. E. and G. M. Jeffery (1999). "A retrospective examination of sporozoite- and trophozoite-induced infections with Plasmodium falciparum: development of parasitologic and clinical immunity during primary infection." Am J Trop Med Hyg 61(1 Suppl): 4-19.
-            // process start of asexual phase if the incubation period is over and there are still hepatocytes
+            // ----------------------------------------------------------------------------------------------------------------------
+            // --- latency in hepatocyte phase Collins, W. E. and G. M. Jeffery (1999). 
+            // --- "A retrospective examination of sporozoite- and trophozoite-induced infections with Plasmodium falciparum:
+            // --- development of parasitologic and clinical immunity during primary infection." Am J Trop Med Hyg 61(1 Suppl): 4-19.
+            // --- process start of asexual phase if the incubation period is over and there are still hepatocytes
+            // ----------------------------------------------------------------------------------------------------------------------
+            float incubation_period = incubation_distribution.GetParam1();
             if (m_asexual_phase == AsexualCycleStatus::NoAsexualCycle && duration >= incubation_period)
             {
                 m_IRBC_count.assign(CLONAL_PfEMP1_VARIANTS, 0);

@@ -531,6 +531,25 @@ namespace Kernel
         jsonSchemaBase[paramName] = newVector2dFloatSchema;
     }
 
+    void
+    JsonConfigurable::initConfigTypeMap(
+        const char* paramName,
+        std::vector< std::vector< int > > * pVariable,
+        const char* description,
+        int min, int max, int defaultvalue
+    )
+    {
+        LOG_DEBUG_F( "initConfigTypeMap<vector,vector<int>>>: %s\n", paramName);
+        vector2dIntConfigTypeMap[ paramName ] = pVariable;
+        json::Object newVector2dIntSchema;
+        newVector2dIntSchema["description"] = json::String(description);
+        newVector2dIntSchema["type"] = json::String("vector2d int");
+        newVector2dIntSchema["min"] = json::Number(min);
+        newVector2dIntSchema["max"] = json::Number(max);
+        newVector2dIntSchema["default"] = json::Number(defaultvalue);
+        jsonSchemaBase[paramName] = newVector2dIntSchema;
+    }
+
     // We have sets/vectors from json arrays, now add maps from json dictonaries
     // This will be for specific piece-wise constant maps of dates (fractional years)
     // to config values (floats first).
@@ -945,6 +964,7 @@ namespace Kernel
         for (auto& entry : conStringConfigTypeMap)
         {
             const std::string& key = entry.first;
+            entry.second->parameter_name = key ;
             json::QuickInterpreter schema = jsonSchemaBase[key];
             std::string val = schema["default"].As<json::String>();
             if ( !inputJson->Exist(key) && _useDefaults )
@@ -1081,6 +1101,27 @@ namespace Kernel
                 for( auto values : configValues )
                 {
                     EnforceVectorParameterRanges<float>(key, values, schema);
+                }
+            }
+        }
+
+        //----------------------------------- VECTOR VECTOR of INTs ------------------------------
+        for (auto& entry : vector2dIntConfigTypeMap)
+        {
+            const std::string& key = entry.first;
+            json::QuickInterpreter schema = jsonSchemaBase[key];
+            if ( !inputJson->Exist(key) && _track_missing )
+            {
+                missing_parameters_set.insert(key);
+            }
+            else
+            {
+                std::vector<std::vector<int>> configValues = GET_CONFIG_VECTOR2D_INT( inputJson, (entry.first).c_str() );
+                *(entry.second) = configValues;
+
+                for( auto values : configValues )
+                {
+                    EnforceVectorParameterRanges<int>(key, values, schema);
                 }
             }
         }

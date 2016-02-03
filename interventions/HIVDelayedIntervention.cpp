@@ -36,6 +36,8 @@ namespace Kernel
     , broadcast_on_expiration_event()
     {
         initSimTypes(1, "HIV_SIM");
+        delay_distribution.AddSupportedType( DistributionFunction::PIECEWISE_CONSTANT, "", "", "", "" );
+        delay_distribution.AddSupportedType( DistributionFunction::PIECEWISE_LINEAR,   "", "", "", "" );
     }
 
     HIVDelayedIntervention::HIVDelayedIntervention( const HIVDelayedIntervention& master )
@@ -63,8 +65,8 @@ namespace Kernel
         DelayedIntervention::DistributionConfigure(inputJson);
 
         // HIVDelayedIntervention specific
-        if( delay_distribution == DistributionFunction::PIECEWISE_CONSTANT
-            || delay_distribution == DistributionFunction::PIECEWISE_LINEAR
+        if( delay_distribution.GetType() == DistributionFunction::PIECEWISE_CONSTANT 
+            || delay_distribution.GetType() == DistributionFunction::PIECEWISE_LINEAR
             || JsonConfigurable::_dryrun )
         {
             initConfigComplexType( "Time_Varying_Constants",
@@ -113,7 +115,7 @@ namespace Kernel
     void
     HIVDelayedIntervention::CalculateDelay()
     {
-        switch (delay_distribution)
+        switch( delay_distribution.GetType() )
         {
             case DistributionFunction::PIECEWISE_CONSTANT:
             {
@@ -137,7 +139,7 @@ namespace Kernel
                 DelayedIntervention::CalculateDelay();
             break;
         }
-        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution));
+        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
     }
 
     // todo: lift to HIVIntervention or helper function (repeated in HIVSimpleDiagnostic)

@@ -23,6 +23,7 @@ namespace Kernel {
         , report_name( rReportName )
         , output_stream()
         , reduced_stream()
+        , outfile()
     {
     }
 
@@ -55,8 +56,11 @@ namespace Kernel {
         if( write_every_time_step )
         {
             GetDataFromOtherCores();
-            WriteData( reduced_stream.str() );
-            reduced_stream.str( std::string() ); // clear stream
+            if( EnvPtr->MPI.Rank == 0 )
+            {
+                WriteData( reduced_stream.str() );
+                reduced_stream.str( std::string() ); // clear stream
+            }
         }
     }
 
@@ -70,12 +74,16 @@ namespace Kernel {
 
     void BaseTextReport::Finalize()
     {
-        if( !write_every_time_step )
+        if( EnvPtr->MPI.Rank == 0 )
         {
-            WriteData( reduced_stream.str() );
-            reduced_stream.str( std::string() ); // clear stream
+            if( !write_every_time_step )
+            {
+                WriteData( reduced_stream.str() );
+                reduced_stream.str( std::string() ); // clear stream
+            }
+
+            outfile.close();
         }
-        outfile.close();
     }
 
     std::string BaseTextReport::GetOutputFilePath() const

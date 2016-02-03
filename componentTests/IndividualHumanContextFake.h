@@ -145,6 +145,11 @@ public:
         return m_pNodeContext ;
     }
 
+    virtual bool IsAdult() const
+    {
+        return m_Age/DAYSPERYEAR > 15.0 ;
+    }
+
     virtual void setupMaternalAntibodies(Kernel::IIndividualHumanContext *,Kernel::INodeContext *) override { throw std::exception("The method or operation is not implemented."); }
     virtual void AcquireNewInfection(Kernel::StrainIdentity *,int)                                 override { throw std::exception("The method or operation is not implemented."); }
     virtual void SetInitialInfections(int)                                                         override { throw std::exception("The method or operation is not implemented."); }
@@ -166,6 +171,13 @@ public:
     virtual void SetContextTo(Kernel::INodeContext *)                                              override { throw std::exception("The method or operation is not implemented."); }
     virtual void SetMigrationModifier( float modifier )                                            override { throw std::exception("The method or operation is not implemented."); }
 
+    virtual void SetGoingOnFamilyTrip( suids::suid migrationDestination, 
+                                        MigrationType::Enum migrationType, 
+                                        float timeUntilTrip, 
+                                        float timeAtDestination ) override { throw std::exception("The method or operation is not implemented."); }
+
+    virtual void SetWaitingToGoOnFamilyTrip() override { throw std::exception("The method or operation is not implemented."); }
+    virtual void GoHome()                     override { throw std::exception("The method or operation is not implemented."); }
 
     // --------------------------------
     // --- IIndividualHumanHIV Methods
@@ -250,6 +262,9 @@ public:
     virtual HumanStateChange GetStateChange(void)  const override { throw std::exception("The method or operation is not implemented."); }
     virtual void             Die( HumanStateChange )     override { throw std::exception("The method or operation is not implemented."); }
     virtual bool             AtHome()              const override { throw std::exception("The method or operation is not implemented."); }
+    virtual bool             IsOnFamilyTrip()      const override { throw std::exception("The method or operation is not implemented."); }
+    virtual const suids::suid& GetHomeNodeId()     const override { throw std::exception("The method or operation is not implemented."); }
+    virtual bool IsDead()                          const override { throw std::exception("The method or operation is not implemented."); }
 
     virtual tProperties* GetProperties() override
     {

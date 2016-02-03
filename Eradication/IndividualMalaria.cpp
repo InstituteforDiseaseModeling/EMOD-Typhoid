@@ -79,26 +79,40 @@ namespace Kernel
         HANDLE_INTERFACE(IMalariaHumanInfectable)
     END_QUERY_INTERFACE_DERIVED(IndividualHumanMalaria, IndividualHumanVector)
 
-    IndividualHumanMalaria::IndividualHumanMalaria(suids::suid _suid, double monte_carlo_weight, double initial_age, int gender, double initial_poverty) :
-        IndividualHumanVector(_suid, monte_carlo_weight, initial_age, gender, initial_poverty),
-        malaria_susceptibility(nullptr),
-        m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
-        m_male_gametocytes(0),
-        m_female_gametocytes(0),
-        m_CSP_antibody(nullptr),
-        m_initial_infected_hepatocytes(0)
+    IndividualHumanMalaria::IndividualHumanMalaria(suids::suid _suid, double monte_carlo_weight, double initial_age, int gender, double initial_poverty)
+    : IndividualHumanVector(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
+    , malaria_susceptibility(nullptr)
+    , m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT)
+    , m_male_gametocytes(0)
+    , m_female_gametocytes(0)
+    , m_male_gametocytes_by_strain()
+    , m_female_gametocytes_by_strain()
+    , m_parasites_detected_by_blood_smear(0.0)
+    , m_parasites_detected_by_new_diagnostic(0.0)
+    , m_gametocytes_detected(0.0)
+    //, m_clinical_symptoms()
+    , m_CSP_antibody(nullptr)
+    , m_initial_infected_hepatocytes(0)
     {
         ResetClinicalSymptoms();
     }
 
-    IndividualHumanMalaria::IndividualHumanMalaria(INodeContext *context) : IndividualHumanVector(context),
-        malaria_susceptibility(nullptr),
-        m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
-        m_male_gametocytes(0),
-        m_female_gametocytes(0),
-        m_CSP_antibody(nullptr),
-        m_initial_infected_hepatocytes(0)
+    IndividualHumanMalaria::IndividualHumanMalaria(INodeContext *context)
+    : IndividualHumanVector(context)
+    , malaria_susceptibility(nullptr)
+    , m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT)
+    , m_male_gametocytes(0)
+    , m_female_gametocytes(0)
+    , m_male_gametocytes_by_strain()
+    , m_female_gametocytes_by_strain()
+    , m_parasites_detected_by_blood_smear(0.0)
+    , m_parasites_detected_by_new_diagnostic(0.0)
+    , m_gametocytes_detected(0.0)
+    //, m_clinical_symptoms()
+    , m_CSP_antibody(nullptr)
+    , m_initial_infected_hepatocytes(0)
     {
+        ResetClinicalSymptoms();
     }
 
     IndividualHumanMalaria *IndividualHumanMalaria::CreateHuman(INodeContext *context, suids::suid id, double weight, double initial_age, int gender, double poverty)
@@ -682,28 +696,18 @@ namespace Kernel
         ar.labelElement("m_female_gametocytes") & individual.m_female_gametocytes;
         ar.labelElement("m_male_gametocytes_by_strain"); Kernel::serialize(ar, individual.m_male_gametocytes_by_strain);
         ar.labelElement("m_female_gametocytes_by_strain"); Kernel::serialize(ar, individual.m_female_gametocytes_by_strain);
-// Boost serialization didn't include this element.        ar.labelElement("m_parasites_detected_by_blood_smear") & individual.m_parasites_detected_by_blood_smear;
-// Boost serialization didn't include this element.        ar.labelElement("m_parasites_detected_by_new_diagnostic") & individual.m_parasites_detected_by_new_diagnostic;
-// Boost serialization didn't include this element.        ar.labelElement("m_gametocytes_detected") & individual.m_gametocytes_detected;
-// Boost serialization didn't include this element.        ar.labelElement("m_clinical_symptoms"); ::serialize(ar, individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
-// shared pointer        ar.labelElement("m_CSP_antibody"); Kernel::serialize<IMalariaAntibody>(ar, individual.m_CSP_antibody);
+        ar.labelElement("m_parasites_detected_by_blood_smear") & individual.m_parasites_detected_by_blood_smear;
+        ar.labelElement("m_parasites_detected_by_new_diagnostic") & individual.m_parasites_detected_by_new_diagnostic;
+        ar.labelElement("m_gametocytes_detected") & individual.m_gametocytes_detected;
+        ar.labelElement("m_clinical_symptoms"); ar.serialize( individual.m_clinical_symptoms, ClinicalSymptomsEnum::CLINICAL_SYMPTOMS_COUNT);
         ar.labelElement("m_initial_infected_hepatocytes") & individual.m_initial_infected_hepatocytes;
+
+        // ----------------------------------------------------------------------
+        // --- This is a pointer to an object held in the Susceptibility object. 
+        // --- It will be re-set after de-serialization. See SetContextTo()
+        // ----------------------------------------------------------------------
+        //ar.labelElement("m_CSP_antibody") & individual.m_CSP_antibody;
+        // ----------------------------------------------------------------------
     }
 }
 
-#if 0
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanFlagsMalaria& flags, const unsigned int  file_version )
-    {
-        ar & flags.malaria_strains;
-        ar & flags.malaria_model;
-        ar & flags.sexual_combination;
-        ar & flags.base_gametocyte_mosquito_survival;
-        ar & flags.cytokine_gametocyte_inactivation;
-        ar & flags.feverDetectionThreshold;
-        ar & boost::serialization::base_object<Kernel::IndividualHumanFlagsVector>(flags);
-    }
-}
-#endif

@@ -21,6 +21,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 #include <iostream>
 #include <memory> // unique_ptr
+#include "common.h"
 
 #ifdef WIN32
 #include <sys/stat.h> // _S_IREAD
@@ -29,8 +30,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 using namespace Kernel;
 using namespace std;
-
-void PrintDebug( const std::string& rMessage );
 
 
 class Stopwatch

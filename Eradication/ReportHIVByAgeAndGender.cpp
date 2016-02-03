@@ -55,18 +55,17 @@ namespace Kernel
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Stop_Year",  &stopYear,  Report_HIV_ByAgeAndGender_Stop_Year_DESC_TEXT,  0.0f, FLT_MAX, FLT_MAX );
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Collect_Circumcision_Data",  
                            &is_collecting_circumcision_data,  
-                           "TBD"/*Report_HIV_ByAgeAndGender_Collect_Circumcision_Data_DESC_TEXT*/,
+                           Report_HIV_ByAgeAndGender_Collect_Circumcision_Data_DESC_TEXT,
                            false );
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Collect_IP_Data",
                            &is_collecting_ip_data,  
-                           "TBD"/*Report_HIV_ByAgeAndGender_Collect_IP_Data_DESC_TEXT*/, 
+                          Report_HIV_ByAgeAndGender_Collect_IP_Data_DESC_TEXT, 
                            false );
 
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4",
                            &stratify_infected_by_CD4,  
-                           "TBD"/*Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT*/, 
+                           Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT, 
                            false );
-
 
         bool ret = JsonConfigurable::Configure( inputJson );
 

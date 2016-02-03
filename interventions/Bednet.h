@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "FactorySupport.h"
 #include "Configure.h"
+#include "EventTrigger.h"
 
 namespace Kernel
 {
@@ -58,6 +59,7 @@ namespace Kernel
         float secondary_decay_time_constant;
         InterventionDurabilityProfile::Enum durability_time_profile;
         BednetType::Enum bednet_type;
+        EventTrigger on_distributed_event ;
         IBednetConsumer *ibc;
 
         DECLARE_SERIALIZABLE(SimpleBednet);

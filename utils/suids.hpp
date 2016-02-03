@@ -19,6 +19,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    struct IArchive;
+
     namespace suids 
     {
         /*
@@ -97,6 +99,7 @@ namespace Kernel
             /*uint8_t data[static_size()];*/
             suid_data_t data;
 
+            static void serialize( IArchive& ar, suid& id );
 #if 0
         private:
             template<class Archive>

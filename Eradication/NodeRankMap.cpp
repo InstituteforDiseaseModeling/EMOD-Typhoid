@@ -9,79 +9,52 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include <fstream>
+#include <memory>
 
 #include "NodeRankMap.h"
 #include "Log.h"
 #include "FileSystem.h"
+#include "INodeInfo.h"
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
+#include "LoadBalanceScheme.h"
+#include "MpiDataExchanger.h"
+#include "BinaryArchiveWriter.h"
+#include "BinaryArchiveReader.h"
+#include "Debug.h"
 
 static const char * _module = "NodeRankMap";
-namespace Kernel {
-
-    bool LegacyFileInitialLoadBalanceScheme::Initialize( std::string loadbalancefilename, uint32_t expected_num_nodes )
-    {
-        bool initialized = false;
-
-        std::ifstream loadbalancefile;
-        if(loadbalancefilename.length()) 
-        {
-            if( FileSystem::FileExists( loadbalancefilename ) )
-            {
-                loadbalancefile.open(loadbalancefilename, std::ios::binary);
-            }
-        }
-
-        if(loadbalancefile.is_open()) 
-        {
-            loadbalancefile.seekg(0, std::ios::end);
-            int filelen = int(loadbalancefile.tellg());
-            int expected_size = sizeof(uint32_t) + (expected_num_nodes * (sizeof(uint32_t) + sizeof(float)));
-
-            if(filelen == expected_size)
-            {
-                uint32_t num_nodes;
-                loadbalancefile.seekg(0, std::ios::beg);
-                loadbalancefile.read((char*)&num_nodes, 1*sizeof(num_nodes));
-
-                if(num_nodes == expected_num_nodes)
-                {
-                    LOG_INFO_F("Opened %s, reading balancing data for %d nodes...\n", loadbalancefilename.c_str(), num_nodes);
-
-                    std::vector<uint32_t> nodeids(num_nodes);
-                    std::vector<float> balance_scale(num_nodes);
-
-                    loadbalancefile.read((char*)&nodeids[0], (num_nodes)*sizeof(uint32_t));
-                    loadbalancefile.read((char*)&balance_scale[0], (num_nodes)*sizeof(float));
-
-                    for(uint32_t i = 0; i < num_nodes; i++)
-                    {
-                        initialNodeRankMapping[nodeids[i]] = int(EnvPtr->MPI.NumTasks*balance_scale[i]);
-                    }
-                    LOG_INFO("Static initial load balancing scheme initialized.\n");
-
-                    initialized = true;
-                }
-                else
-                {
-                    LOG_WARN_F( "Malformed load-balancing file: %s.  Node-count specified in file (%d) doesn't match expected number of nodes (%d)\n", loadbalancefilename.c_str(), num_nodes, expected_num_nodes );
-                }
-            }
-            else
-            {
-                LOG_WARN_F( "Problem with load-balancing file: %s.  File-size (%d) doesn't match expected size (%d) given number of nodes in demographics file\n", loadbalancefilename.c_str(), filelen, expected_size );
-            }
-
-            loadbalancefile.close();
-        }
-        else
-        {
-            LOG_WARN_F( "Failed to open load-balancing file: %s\n", loadbalancefilename.c_str() );
-        }
-
-        return initialized;
+namespace Kernel 
+{
+    NodeRankMap::NodeRankMap()
+        : initialLoadBalanceScheme(nullptr)
+        , rankMap()
+        , pNodeInfoFactory(nullptr)
+        , nodes_in_my_rank()
+        , m_Buffer(nullptr)
+        , m_BufferSize(0)
+    { 
     }
 
+    NodeRankMap::~NodeRankMap()
+    {
+        delete initialLoadBalanceScheme ;
+        initialLoadBalanceScheme = nullptr ;
+
+        for( auto entry : rankMap )
+        {
+            delete entry.second ;
+        }
+        rankMap.clear();
+
+        // don't own pNodeInfoFactory
+        pNodeInfoFactory = nullptr ;
+
+        if( m_Buffer != nullptr )
+        {
+            free( m_Buffer );
+        }
+    }
 
     std::string NodeRankMap::ToString()
     {
@@ -113,10 +86,13 @@ namespace Kernel {
                 LOG_VALID_F( "Serializing %d suid-rank map entries.\n", count );
                 for (auto& entry : rankMap)
                 {
+                    INodeInfo* pni = entry.second;
                     writer.startObject();
-                        uint32_t suid = entry.first.data;
-                        writer.labelElement( "key" ) & suid;            // node.suid
-                        writer.labelElement( "value" ) & entry.second;  // rank
+                        // ---------------------------------------------------------------
+                        // --- true => write all of the data about the node since this is
+                        // --- the first time and the other nodes will need it
+                        // ---------------------------------------------------------------
+                        writer.labelElement( "value" ); pni->serialize( writer, true );
                     writer.endObject();
                 }
                 writer.endArray();
@@ -145,13 +121,15 @@ namespace Kernel {
                             LOG_VALID_F( "Merging %d suid-rank map entries from rank %d\n", count, rank );
                             for (size_t i = 0; i < count; ++i)
                             {
-                                suids::suid suid;
-                                int32_t node_rank;
+                                INodeInfo* pni = this->pNodeInfoFactory->CreateNodeInfo();
                                 reader.startObject();
-                                    reader.labelElement( "key" ) & suid.data;
-                                    reader.labelElement( "value" ) & node_rank;
+                                    // ---------------------------------------------------------------
+                                    // --- true => read all of the data about the node since this is
+                                    // --- the first time this core needs the data about the nodes
+                                    // ---------------------------------------------------------------
+                                    reader.labelElement( "value" ); pni->serialize( reader, true );
                                 reader.endObject();
-                                mergedMap[suid] = node_rank;
+                                mergedMap[ pni->GetSuid() ] = pni; // own memory
                             }
                         reader.endArray();
                         delete json_reader;
@@ -164,59 +142,216 @@ namespace Kernel {
         }
         catch (std::exception &e)
         {
-            LOG_ERR_F("MergeMaps() exception: %s\n",e.what());
-            return false; // return failure; program must not continue if merge was invalid
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, e.what() );
         }
 
         rankMap = mergedMap;
 
+        // ---------------------------------------------------------------------
+        // --- Save a list of INodeInfo objects that are hosted on this core.
+        // --- We need to send this list to the other cores each time step.
+        // ---------------------------------------------------------------------
+        for( auto entry : rankMap )
+        {
+            if( entry.second->GetRank() == EnvPtr->MPI.Rank )
+            {
+                nodes_in_my_rank.push_back( entry.second );
+            }
+        }
         return true;
     }
 
-    CheckerboardInitialLoadBalanceScheme::CheckerboardInitialLoadBalanceScheme()
-    : num_ranked(0) { }
+    void NodeRankMap::Sync( IdmDateTime& currentTime )
+    {
+        // ------------------------------------------------------------------------
+        // --- The data to be sent is the same for all processes, hence, we want to
+        // --- serialize it once and then send that same chunk to each process.
+        // ------------------------------------------------------------------------
+        auto binary_writer = new BinaryArchiveWriter();
+        IArchive* writer = static_cast<IArchive*>(binary_writer);
+        size_t count = nodes_in_my_rank.size();
+        writer->startArray( count );
+        for( size_t i = 0; i < count; ++i )
+        {
+            int id = nodes_in_my_rank[i]->GetSuid().data;
+            INodeInfo* pni = nodes_in_my_rank[i] ;
+            writer->startObject();
+                // ---------------------------------------------------------
+                // --- false => Since we are just updating the other cores, 
+                // --- we only need to send the data that has changed.
+                // ----------------------------------------------------------
+                writer->labelElement( "key"   ) & id; // send id so receive can use to put in map
+                writer->labelElement( "value" ); pni->serialize( *writer, false );
+            writer->endObject();
+        }
+        writer->endArray();
 
-    int
-    CheckerboardInitialLoadBalanceScheme::GetInitialRankFromNodeId(ExternalNodeId_t node_id)
-    { return (num_ranked++) % EnvPtr->MPI.NumTasks; }
 
-    StripedInitialLoadBalanceScheme::StripedInitialLoadBalanceScheme()
-        : num_nodes(0)
-        , num_ranked(0)
-    {}
+        char* buffer_temp = const_cast<char*>(writer->GetBuffer());
+        unsigned char* buffer = (unsigned char*)buffer_temp;
+        int buffer_size = writer->GetBufferSize();
 
-    void StripedInitialLoadBalanceScheme::Initialize(uint32_t in_num_nodes) { num_nodes = in_num_nodes; }
+        // -----------------------------------------------------
+        // --- Define functions to be called by MpiDataExchanger
+        // -----------------------------------------------------
+        WithSelfFunc to_self_func = [this](int myRank) 
+        { 
+            //do nothing
+        }; 
 
-    int
-    StripedInitialLoadBalanceScheme::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
-    { return int((float(num_ranked++) / num_nodes) * EnvPtr->MPI.NumTasks); }
+        SendToOthersFunc to_others_func = [this,buffer,buffer_size](IArchive* writer, int toRank)
+        {
+            writer->labelElement("ArchivedNodeInfoData"); writer->serialize( buffer, buffer_size );
+        };
 
-    int LegacyFileInitialLoadBalanceScheme::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
-    { return initialNodeRankMapping[node_id]; }
+        ClearDataFunc clear_data_func = [this](int rank)
+        {
+            //do nothing
+        };
 
-    NodeRankMap::NodeRankMap() : initialLoadBalanceScheme(nullptr) { }
+        ReceiveFromOthersFunc from_others_func = [this](IArchive* reader, int fromRank)
+        {
+            // -------------------------------------
+            // --- Read the buffer out of the reader
+            // -------------------------------------
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // !!! I'd really like to get access to this buffer directly
+            // !!! so we don't have to allocate the memory
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            size_t data_size = 0;
+            reader->startArray( data_size );
 
-    void NodeRankMap::SetInitialLoadBalanceScheme(IInitialLoadBalanceScheme *ilbs) { initialLoadBalanceScheme = ilbs; } 
+            if( (m_Buffer == nullptr) || (data_size > m_BufferSize) )
+            {
+                delete m_Buffer;
 
-    int NodeRankMap::GetRankFromNodeSuid(suids::suid node_id) { return rankMap[node_id]; } 
+                m_BufferSize = data_size;
+                m_Buffer = (unsigned char*)malloc( m_BufferSize );
+                if( m_Buffer == nullptr )
+                {
+                    throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "m_Buffer" );
+                }
+            }
+            memset( m_Buffer, 0, m_BufferSize );
 
-    size_t NodeRankMap::Size() { return rankMap.size(); }
+            for (size_t i = 0; i < data_size; ++i)
+            {
+                (*reader) & m_Buffer[i];
+            }
 
-    void NodeRankMap::Add(suids::suid node_suid, int rank) { rankMap.insert(RankMapEntry_t(node_suid, rank)); }
+            reader->endArray();
+
+            // -----------------------------------------
+            // --- Deserialize the data from the buffer
+            // -----------------------------------------
+            BinaryArchiveReader binary_reader_converter( (char*)m_Buffer, data_size );
+            IArchive* converter = static_cast<IArchive*>(&binary_reader_converter);
+            size_t count=0;
+            converter->startArray( count );
+            for (size_t i = 0; i < count; ++i)
+            {
+                suids::suid id;
+                converter->startObject();
+                    // ---------------------------------------------------------
+                    // --- false => Since we are just updating the INodeInfo objects 
+                    // --- for the nodes on the other cores, we only need to read 
+                    // --- the data that has changed.
+                    // ----------------------------------------------------------
+                    converter->labelElement("key") & id.data;
+                    INodeInfo* pni = rankMap[ id ] ;
+                    converter->labelElement( "value" ); pni->serialize( *converter, false );
+                converter->endObject();
+            }
+            converter->endArray();
+        };
+
+        MpiDataExchanger exchanger( "NodeRankMap", to_self_func, to_others_func, from_others_func, clear_data_func );
+        exchanger.ExchangeData( currentTime );
+
+        delete binary_writer;
+    }
+
+    void NodeRankMap::SetInitialLoadBalanceScheme( IInitialLoadBalanceScheme *ilbs ) 
+    { 
+        initialLoadBalanceScheme = ilbs; 
+    } 
+
+    void NodeRankMap::SetNodeInfoFactory( INodeInfoFactory* pnif )
+    {
+        pNodeInfoFactory = pnif ;
+    }
+
+    int NodeRankMap::GetRankFromNodeSuid(suids::suid node_id) 
+    { 
+        return rankMap[node_id]->GetRank(); 
+    } 
+
+    size_t NodeRankMap::Size() 
+    { 
+        return rankMap.size();
+    }
+
+    void NodeRankMap::Add( int rank, INodeContext* pNC  ) 
+    { 
+        INodeInfo* pni = pNodeInfoFactory->CreateNodeInfo( rank, pNC );
+        rankMap.insert( RankMapEntry_t( pNC->GetSuid(), pni ) ); 
+    }
+
+    void NodeRankMap::Update( INodeContext* pNC )
+    {
+        rankMap[ pNC->GetSuid() ]->Update( pNC );
+    }
+
+    const INodeInfo& NodeRankMap::GetNodeInfo( const suids::suid& node_suid ) const
+    {
+        if( rankMap.count( node_suid ) == 0 )
+        {
+            std::ostringstream msg;
+            msg << "Could not find internal node id = " << node_suid.data ;
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        }
+        return *(rankMap.at( node_suid )) ;
+    }
 
     const NodeRankMap::RankMap_t&
-    NodeRankMap::GetRankMap() const { return rankMap; }
+    NodeRankMap::GetRankMap() const 
+    { 
+        return rankMap; 
+    }
 
     int NodeRankMap::GetInitialRankFromNodeId( ExternalNodeId_t node_id )
     {
-        if (initialLoadBalanceScheme) { return initialLoadBalanceScheme->GetInitialRankFromNodeId(node_id); }
-        else { return node_id % EnvPtr->MPI.NumTasks; }
+        if( initialLoadBalanceScheme ) 
+        { 
+            return initialLoadBalanceScheme->GetInitialRankFromNodeId(node_id); 
+        }
+        else 
+        { 
+            return node_id % EnvPtr->MPI.NumTasks; 
+        }
     }
+
+    suids::suid NodeRankMap::GetSuidFromExternalID( uint32_t externalNodeId ) const
+    {
+        for( auto entry : rankMap )
+        {
+            if( entry.second->GetExternalID() == externalNodeId )
+            {
+                return entry.second->GetSuid() ;
+            }
+        }
+        std::ostringstream msg;
+        msg << "Could not find externalNodeId = " << externalNodeId ;
+        throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+    }
+
 
     const char*
     NodeRankMap::merge_duplicate_key_exception::what()
     const throw()
-    { return "Duplicate key in map merge\n"; }
+    { 
+        return "Duplicate key in map merge\n"; 
+    }
 
     NodeRankMap::RankMap_t
     NodeRankMap::map_merge::operator()(
@@ -242,14 +377,3 @@ namespace Kernel {
         return mergedMap;
     }
 }
-
-#if 0
-namespace Kernel
-{
-    template<typename Archive>
-    void serialize(Archive & ar, NodeRankMap& nrm, const unsigned int file_version)
-    {
-        ar & nrm.rankMap;
-    }
-}
-#endif

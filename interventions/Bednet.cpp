@@ -16,6 +16,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "VectorInterventionsContainer.h"  // for IBednetConsumer methods
 #include "Log.h"
+#include "IndividualEventContext.h"
+#include "NodeEventContext.h"
 
 static const char* _module = "SimpleBednet";
 
@@ -28,8 +30,17 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(SimpleBednet)
 
     IMPLEMENT_FACTORY_REGISTERED(SimpleBednet)
-
+    
     SimpleBednet::SimpleBednet()
+    : BaseIntervention()
+    , current_blockingrate(0.5)
+    , current_killingrate(0.5)
+    , primary_decay_time_constant(3650)
+    , secondary_decay_time_constant(3650)
+    , durability_time_profile(InterventionDurabilityProfile::BOXDURABILITY)
+    , bednet_type(BednetType::Barrier)
+    , on_distributed_event()
+    , ibc(nullptr)
     {
         initSimTypes( 2, "MALARIA_SIM", "VECTOR_SIM" );
         initConfigTypeMap( "Blocking_Rate", &current_blockingrate, SB_Blocking_Rate_DESC_TEXT, 0.0, 1.0, 0.5 );
@@ -37,6 +48,7 @@ namespace Kernel
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, SB_Cost_To_Consumer_DESC_TEXT, 0, 999999, 3.75 );
         initConfigTypeMap( "Primary_Decay_Time_Constant", &primary_decay_time_constant, SB_Primary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
         initConfigTypeMap( "Secondary_Decay_Time_Constant", &secondary_decay_time_constant, SB_Secondary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
+        initConfigTypeMap( "On_Distributed_Event_Trigger", &on_distributed_event, On_Distributed_Event_Trigger_DESC_TEXT, JsonConfigurable::default_string );
     }
 
     bool
@@ -60,7 +72,20 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IBednetConsumer", "IIndividualHumanInterventionsContext" );
         }
         context->PurgeExisting( typeid(*this).name() );
-        return BaseIntervention::Distribute( context, pCCO );
+        bool ret = BaseIntervention::Distribute( context, pCCO );
+        if( ret && !on_distributed_event.IsUninitialized() && (on_distributed_event != NO_TRIGGER_STR) )
+        {
+            INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+            if (s_OK != context->GetParent()->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
+                                               "parent->GetEventContext()->GetNodeEventContext()", 
+                                               "INodeTriggeredInterventionConsumer", 
+                                               "INodeEventContext" );
+            }
+            broadcaster->TriggerNodeEventObserversByString( context->GetParent()->GetEventContext(), on_distributed_event );
+        }
+        return ret ;
     }
 
     void SimpleBednet::Update( float dt )

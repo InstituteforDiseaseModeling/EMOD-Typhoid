@@ -38,6 +38,7 @@ namespace Kernel
         // IInfectable
         virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route ) override;
 
+        virtual void Vector_Migration( IMigrationInfo* pMigInfo, VectorCohortList_t* pMigratingQueue ) override;
         virtual unsigned long int Vector_Migration(float = 0.0f, VectorCohortList_t * = nullptr) override;
 
     protected:

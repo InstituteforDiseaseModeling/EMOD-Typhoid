@@ -93,6 +93,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libstirelationshipmigration
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportNodeDemographics", "libReportNodeDemographics\libReportNodeDemographics.vcxproj", "{92EECB80-CA36-4066-A1B9-C14E061EEB14}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvectormigration", "libvectormigration\libvectormigration.vcxproj", "{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhumanmigrationtracking", "libhumanmigrationtracking\libhumanmigrationtracking.vcxproj", "{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvectorstats", "libvectorstats\libvectorstats.vcxproj", "{619BFF45-282D-4254-8554-748B3433F72F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libReportMalariaFiltered", "libReportMalariaFiltered\libReportMalariaFiltered.vcxproj", "{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -179,6 +187,22 @@ Global
 		{92EECB80-CA36-4066-A1B9-C14E061EEB14}.Debug|x64.Build.0 = Debug|x64
 		{92EECB80-CA36-4066-A1B9-C14E061EEB14}.Release|x64.ActiveCfg = Release|x64
 		{92EECB80-CA36-4066-A1B9-C14E061EEB14}.Release|x64.Build.0 = Release|x64
+		{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}.Debug|x64.ActiveCfg = Debug|x64
+		{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}.Debug|x64.Build.0 = Debug|x64
+		{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}.Release|x64.ActiveCfg = Release|x64
+		{8143FE1F-A3B8-45FC-AA7C-A4578404F82C}.Release|x64.Build.0 = Release|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Debug|x64.ActiveCfg = Debug|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Debug|x64.Build.0 = Debug|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Release|x64.ActiveCfg = Release|x64
+		{18E9EB0D-B3D0-43D5-94B5-B8250D372DE2}.Release|x64.Build.0 = Release|x64
+		{619BFF45-282D-4254-8554-748B3433F72F}.Debug|x64.ActiveCfg = Debug|x64
+		{619BFF45-282D-4254-8554-748B3433F72F}.Debug|x64.Build.0 = Debug|x64
+		{619BFF45-282D-4254-8554-748B3433F72F}.Release|x64.ActiveCfg = Release|x64
+		{619BFF45-282D-4254-8554-748B3433F72F}.Release|x64.Build.0 = Release|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Debug|x64.ActiveCfg = Debug|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Debug|x64.Build.0 = Debug|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Release|x64.ActiveCfg = Release|x64
+		{F7E52533-F307-43E8-8F85-D0C4CAE73EEF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -24,7 +24,9 @@ namespace Kernel
 
     struct IVectorSimulationContext : public ISupports
     {
-        virtual void  PostMigratingVector(VectorCohort* ind) = 0;
+        virtual void  PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind ) = 0;
+        virtual float GetNodePopulation( const suids::suid& nodeSuid ) const = 0;
+        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const = 0 ;
     };
 
     struct IVectorNodeContext : public ISupports
@@ -39,6 +41,7 @@ namespace Kernel
     class INodeVector : public ISupports
     {
     public:
+        virtual const std::list<VectorHabitat *>& GetHabitats() const = 0 ;
         virtual const VectorPopulationList_t& GetVectorPopulations() = 0;
         virtual void AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, unsigned long int releasedNumber) = 0;
         virtual void processImmigratingVector( VectorCohort* immigrant ) = 0;

@@ -106,11 +106,6 @@
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
 			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
-			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
@@ -398,11 +393,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -908,11 +898,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -1494,11 +1479,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -2373,11 +2353,6 @@
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
 			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
-			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
@@ -2615,11 +2590,6 @@
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
 			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
-			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
 				"type" : "bool",
@@ -2814,11 +2784,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -3037,11 +3002,6 @@
 				"default" : "UNINITIALIZED STRING",
 				"description" : "User-supplied title naming a configuration.",
 				"type" : "string"
-			},
-			"Enable_Demographics_Reporting" : {
-				"description" : "Outputs demographic summary data and age-binned reports to file.",
-				"type" : "bool",
-				"default" : 1
 			},
 			"Enable_Demographics_Initial" : {
 				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
@@ -3597,6 +3557,13 @@
 				"max" : 3.40282e+038,
 				"default" : 1
 			},
+			"Minimum_Adult_Age_Years" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 15
+			},
 			"Migration_Model" : {
 				"type" : "enum",
 				"enum" : [
@@ -3938,7 +3905,7 @@
 				"type" : "float",
 				"min" : 0,
 				"max" : 3.40282e+038,
-				"default" : 6,
+				"default" : 0,
 				"depends-on" : {
 					"Incubation_Period_Distribution" : "UNIFORM_DISTRIBUTION"
 				}
@@ -3997,7 +3964,7 @@
 				"type" : "float",
 				"min" : 0,
 				"max" : 3.40282e+038,
-				"default" : 6,
+				"default" : 0,
 				"depends-on" : {
 					"Infectious_Period_Distribution" : "UNIFORM_DISTRIBUTION"
 				}
@@ -4500,6 +4467,188 @@
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 1
+			},
+			"Family_Migration_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"LOCAL_MIGRATION",
+					"AIR_MIGRATION",
+					"REGIONAL_MIGRATION",
+					"SEA_MIGRATION"
+				],
+				"description" : "TBD",
+				"default" : "NO_MIGRATION"
+			}
+		},
+		"Migration.Vector" : {
+			"Enable_Migration_Heterogeneity" : {
+				"description" : "Set to 1 to use migration rate distribution in the demographics file. Set to 0 to assume by default that the same migration rate applies for all individuals.",
+				"type" : "bool",
+				"default" : 1
+			},
+			"Enable_Local_Migration" : {
+				"description" : "Set to 1 to enable local migration, the diffusion of people in and out of nearby nodes by foot travel. Set to 0 to disable local migration.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Air_Migration" : {
+				"description" : "Set to 1 to account for migration by airplane in and out of cities with airports. Set to 0 to assume by default that no migration occurs by air travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Regional_Migration" : {
+				"description" : "Set to 1 to account for migration by road vehicle in and out of nodal cities in the road network. Set to 0 to assume by default that no migration occurs by road travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Sea_Migration" : {
+				"description" : "Set to 1 to account for migration on ships in and out of coastal cities with seaports. Set to 0 to assume by default that no migration occurs by sea travel.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Local_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration to adjacent nodes by foot travel.",
+				"type" : "string"
+			},
+			"Air_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by airplane.",
+				"type" : "string"
+			},
+			"Regional_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by vehicle via road or rail network. If the node is not on a road or rail network, regional migration focuses on the closest hub city in the network.",
+				"type" : "string"
+			},
+			"Sea_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of migration by ship.",
+				"type" : "string"
+			},
+			"x_Local_Migration" : {
+				"description" : "Multiplier for rate of migration by foot travel.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Air_Migration" : {
+				"description" : "Multiplier for rate of migration by air.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Regional_Migration" : {
+				"description" : "Multiplier for rate of migration by road vehicle.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Sea_Migration" : {
+				"description" : "Multiplier for rate of migration by sea.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"Enable_Vector_Migration" : {
+				"description" : "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Vector_Migration_Modifier_Equation" : {
+				"type" : "enum",
+				"enum" : [
+					"LINEAR",
+					"EXPONENTIAL"
+				],
+				"description" : "TBD",
+				"default" : "LINEAR"
+			},
+			"Enable_Vector_Migration_Local" : {
+				"description" : "Set to 1 to consider local vector migration by vectors to adjacent nodes. Set to 0 to not consider local vector migration.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Enable_Vector_Migration_Regional" : {
+				"description" : "Set to 1 to consider regional vector migration by vectors to non-adjacent nodes. Set to 0 to not consider regional vector migration.",
+				"type" : "bool",
+				"default" : 0
+			},
+			"Vector_Migration_Filename_Local" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of vector migration to adjacent nodes.",
+				"type" : "string"
+			},
+			"Vector_Migration_Filename_Regional" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "Path of input file defining patterns of vector migration to non-adjacent nodes.",
+				"type" : "string"
+			},
+			"x_Vector_Migration_Local" : {
+				"description" : "Multiplier for rate of vector migration to adjacent nodes.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Vector_Migration_Regional" : {
+				"description" : "Multiplier for rate of vector migration to non-adjacent nodes.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"Vector_Migration_Habitat_Modifier" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 0
+			},
+			"Vector_Migration_Food_Modifier" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 0
+			},
+			"Vector_Migration_Stay_Put_Modifier" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 0
+			},
+			"Family_Migration_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"LOCAL_MIGRATION",
+					"AIR_MIGRATION",
+					"REGIONAL_MIGRATION",
+					"SEA_MIGRATION"
+				],
+				"description" : "TBD",
+				"default" : "NO_MIGRATION"
+			}
+		},
+		"Migration.VectorDefault" : {
+			"Enable_Vector_Migration" : {
+				"description" : "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS",
+				"type" : "bool",
+				"default" : 0
+			},
+			"x_Vector_Migration_Local" : {
+				"description" : "Multiplier for rate of migration by foot travel.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
 			}
 		},
 		"Node" : {
@@ -4905,25 +5054,10 @@
 			}
 		},
 		"NodeVector" : {
-			"Enable_Vector_Migration" : {
-				"description" : "Set to 1 to enable vector migration. Set to 0 to disable vector migration. Note: Only supported for individual-vector model with Vector_Sampling_Type value of TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS",
+			"Enable_Vector_Mortality" : {
+				"description" : "TBD",
 				"type" : "bool",
-				"default" : 0
-			},
-			"Enable_Vector_Migration_Wind" : {
-				"description" : "Set to 1 to consider vector migration due to wind. Set to 0 to not consider vector migration due to wind. Note: This parameter is currently not in use.",
-				"type" : "bool",
-				"default" : 0
-			},
-			"Enable_Vector_Migration_Human" : {
-				"description" : "Set to 1 to consider vector migration influenced by humans in vehicles. Set to 0 to not consider such migration. Note: This parameter is currently not in use.",
-				"type" : "bool",
-				"default" : 0
-			},
-			"Enable_Vector_Migration_Local" : {
-				"description" : "Set to 1 to consider local vector migration by humans traveling on foot. Set to 0 to not consider local vector migration.",
-				"type" : "bool",
-				"default" : 0
+				"default" : 1
 			},
 			"Mosquito_Weight" : {
 				"description" : "Value indicating how many mosquitoes are represented by a sample mosquito.  This parameter is only used for Vector_Sampling_Type value SAMPLE_IND_VECTORS.",
@@ -6261,35 +6395,15 @@
 							"Number_Repetitions" : "<>0"
 						}
 					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Include_Departures" : {
 						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Include_Arrivals" : {
 						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -6381,6 +6495,11 @@
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
+					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
 					},
 					"class" : "CalendarEventCoordinator"
 				},
@@ -6429,35 +6548,15 @@
 							"Number_Repetitions" : "<>0"
 						}
 					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Include_Departures" : {
 						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Include_Arrivals" : {
 						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -6549,6 +6648,11 @@
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
+					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
 					},
 					"class" : "CoverageByNodeEventCoordinator"
 				},
@@ -6577,35 +6681,15 @@
 							"Number_Repetitions" : "<>0"
 						}
 					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Include_Departures" : {
 						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Include_Arrivals" : {
 						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -6697,6 +6781,11 @@
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
+					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
 					},
 					"Target_Disease_State" : {
 						"type" : "enum",
@@ -6764,35 +6853,15 @@
 							"Number_Repetitions" : "<>0"
 						}
 					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Include_Departures" : {
 						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Include_Arrivals" : {
 						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -6884,6 +6953,11 @@
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
+					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
 					},
 					"class" : "GroupInterventionDistributionEventCoordinatorHIV"
 				},
@@ -6912,35 +6986,15 @@
 							"Number_Repetitions" : "<>0"
 						}
 					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Include_Departures" : {
 						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Include_Arrivals" : {
 						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -7032,6 +7086,11 @@
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
+					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
 					},
 					"class" : "MultiInterventionEventCoordinator"
 				},
@@ -7083,35 +7142,15 @@
 							"Number_Repetitions" : "<>0"
 						}
 					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Include_Departures" : {
 						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Include_Arrivals" : {
 						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -7203,6 +7242,11 @@
 						"depends-on" : {
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
+					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
 					},
 					"class" : "STIInterventionDistributionEventCoordinator"
 				},
@@ -7248,35 +7292,15 @@
 							"Number_Repetitions" : "<>0"
 						}
 					},
-					"Travel_Linked" : {
-						"description" : "travel_linked (1=yes, 0=no.)",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Intervention_Config.*.iv_type" : "IndividualTargeted"
-						}
-					},
 					"Include_Departures" : {
 						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Include_Arrivals" : {
 						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0,
-						"depends-on" : {
-							"Travel_Linked" : "true"
-						}
+						"type" : "bool",
+						"default" : 0
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -7369,6 +7393,11 @@
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
+					},
 					"class" : "StandardInterventionDistributionEventCoordinator"
 				}
 			},
@@ -7377,6 +7406,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per drug (unamortized).",
 						"type" : "float",
@@ -7403,6 +7437,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per drug (unamortized).",
 						"type" : "float",
@@ -7417,6 +7456,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -7484,6 +7528,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -7596,6 +7645,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Drug_Type" : {
 						"type" : "enum",
 						"enum" : [
@@ -7731,6 +7785,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Enable_State_Specific_Treatment" : {
 						"description" : "Enables drug outcomes specific to the individual's state (drug naive, drug resistant, or relapsed). When disabled, all recipients of the drug will experience the drug naive results.",
 						"type" : "bool",
@@ -7880,6 +7939,11 @@
 					"Sim_Types" : [
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per drug (unamortized).",
 						"type" : "float",
@@ -7916,6 +7980,11 @@
 					"Sim_Types" : [
 						"POLIO_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Adherence_Rate" : {
 						"description" : "Adherence rate for doses subsequent to first dose. Per-dose adherece rate for a dropout model.",
 						"type" : "float",
@@ -8079,6 +8148,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Primary_Decay_Time_Constant" : {
 						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
 						"type" : "float",
@@ -8131,6 +8205,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float",
@@ -8320,6 +8399,11 @@
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
+					},
 					"iv_type" : "NodeTargeted",
 					"class" : "BirthTriggeredIV"
 				},
@@ -8327,6 +8411,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Broadcast_Event" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "The event that should occur at the end of the delay period.",
@@ -8336,10 +8425,55 @@
 					"iv_type" : "IndividualTargeted",
 					"class" : "BroadcastEvent"
 				},
+				"BroadcastEventToOtherNodes" : {
+					"Sim_Types" : [
+						"*"
+					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Event_Trigger" : {
+						"default" : "NoTrigger",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
+					"Include_My_Node" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Node_Selection_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"DISTANCE_ONLY",
+							"MIGRATION_NODES_ONLY",
+							"DISTANCE_AND_MIGRATION"
+						],
+						"description" : "TBD",
+						"default" : "DISTANCE_ONLY"
+					},
+					"Max_Distance_To_Other_Nodes_Km" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "BroadcastEventToOtherNodes"
+				},
 				"CD4Diagnostic" : {
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -8406,6 +8540,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Coverage" : {
 						"description" : "Fraction of individuals receiving delayed distribution of configured interventions.",
 						"type" : "float",
@@ -8443,7 +8582,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Delay_Distribution" : "UNIFORM_DISTRIBUTION"
 						}
@@ -8463,20 +8602,14 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 6
 					},
 					"Delay_Period_Std_Dev" : {
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 1
 					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
@@ -8492,6 +8625,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -8585,6 +8723,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -8700,6 +8843,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -8834,6 +8982,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Abort_States" : {
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
@@ -8889,7 +9042,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Delay_Distribution" : "UNIFORM_DISTRIBUTION"
 						}
@@ -8909,20 +9062,14 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 6
 					},
 					"Delay_Period_Std_Dev" : {
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 1
 					},
 					"idmType:InterpolatedValueMap" : {
 						"Times" : [
@@ -8968,6 +9115,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -9043,6 +9195,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Muxer_Name" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "A name used to identify the delay and check whether individuals have entered it multiple times. If the same name is used at multiple points in the health care process, then the number of entries is combined when Max_Entries is applied.",
@@ -9110,7 +9267,7 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
+						"default" : 0,
 						"depends-on" : {
 							"Delay_Distribution" : "UNIFORM_DISTRIBUTION"
 						}
@@ -9130,20 +9287,14 @@
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 6,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 6
 					},
 					"Delay_Period_Std_Dev" : {
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
-						"depends-on" : {
-							"Delay_Distribution" : "GAUSSIAN_DURATION"
-						}
+						"default" : 1
 					},
 					"idmType:InterpolatedValueMap" : {
 						"Times" : [
@@ -9189,6 +9340,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -9307,6 +9463,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Starting_PreART" : {
 						"description" : "Used to track the number of individuals in pre-ART care. It allows the user to define, as part of the health care specification, which portions of the health care process should be considered as part of pre-ART care. When called with 1, it sets a marker/flag to indicate that the individual has started pre-ART care. When called with 0, it removes the marker/ to indicate that the individual has left pre-ART care.",
 						"type" : "bool",
@@ -9319,6 +9480,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -9411,6 +9577,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -9493,6 +9664,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -9568,6 +9744,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -9678,6 +9859,11 @@
 					"Sim_Types" : [
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -9753,6 +9939,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"New_Tendency" : {
 						"description" : "The new rate of seeking care. The original value was set by HealthSeekingBehaviorUpdateable.",
 						"type" : "float",
@@ -9767,6 +9958,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Event_Or_Config" : {
 						"type" : "enum",
 						"enum" : [
@@ -9812,6 +10008,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Attract_Rate" : {
 						"description" : "The fraction of human-feeding attempts attracted to a trap. A parameter that is decayed.",
 						"type" : "float",
@@ -9865,6 +10066,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Primary_Decay_Time_Constant" : {
 						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
 						"type" : "float",
@@ -9917,6 +10123,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Dropout" : {
 						"description" : "If an intervention in the series is missed, all subsequent interventions are also missed.  If false (0), all calendar dates/doses are applied independently of each other. If true (1), a missed dose (by applying the probability) will result in no further doses, that is, a miss means you have dropped out altogether. ",
 						"type" : "bool",
@@ -10086,6 +10297,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Primary_Decay_Time_Constant" : {
 						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
 						"type" : "float",
@@ -10139,6 +10355,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per Ivermectin dosing (unamortized).",
 						"type" : "float",
@@ -10226,6 +10447,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -10359,19 +10585,296 @@
 					"iv_type" : "NodeTargeted",
 					"class" : "MalariaChallenge"
 				},
+				"MalariaDiagnostic" : {
+					"Sim_Types" : [
+						"MALARIA_SIM"
+					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Base_Specificity" : {
+						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"Base_Sensitivity" : {
+						"description" : "The sensitivity of the diagnostic. This sets the proportion of the time that individuals with the condition being tested receive a positive diagnostic test. When set to 1, the diagnostic always accurately reflects the condition. When set to zero, then individuals who have the condition always receive a false-negative diagnostic test.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"Treatment_Fraction" : {
+						"description" : "The fraction of positive diagnoses that are treated.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"Days_To_Diagnosis" : {
+						"description" : "The number of days from test until diagnosis.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Cost_To_Consumer" : {
+						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Diagnostic_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"Microscopy",
+							"NewDetectionTech",
+							"Other"
+						],
+						"description" : "Type of malaria diagnostic. Possible values are: Microscopy, NewDetectionTech, Other.",
+						"default" : "Microscopy"
+					},
+					"Detection_Threshold" : {
+						"description" : "The diagnostic detection threshold for parasites in units of microliters of blood.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1e+006,
+						"default" : 100,
+						"depends-on" : {
+							"Diagnostic_Type" : "Other"
+						}
+					},
+					"Event_Or_Config" : {
+						"type" : "enum",
+						"enum" : [
+							"Config",
+							"Event"
+						],
+						"description" : "Specifies whether the current intervention distributes a nested intervention (the Config option) or an event will be broadcast which may trigger other interventions in the campaign file (the Event option). See event list.",
+						"default" : "Config"
+					},
+					"Positive_Diagnosis_Event" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
+					"idmType:IndividualIntervention" : {
+						"base" : "interventions.idmAbstractType.IndividualIntervention"
+					},
+					"Positive_Diagnosis_Config" : {
+						"description" : "The intervention distributed to individuals if they test positive. This is only valid if Event_Or_Config is set to 'Config'.",
+						"type" : "idmType:IndividualIntervention",
+						"depends-on" : {
+							"Event_Or_Config" : "Config"
+						}
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "MalariaDiagnostic"
+				},
 				"MaleCircumcision" : {
 					"Sim_Types" : [
 						"STI_SIM",
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "MaleCircumcision"
+				},
+				"MigrateIndividuals" : {
+					"Sim_Types" : [
+						"*"
+					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"NodeID_To_Migrate_To" : {
+						"description" : "TBD",
+						"type" : "integer",
+						"min" : 0,
+						"max" : 2.14748e+009,
+						"default" : 0
+					},
+					"Is_Family_Trip" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Is_Moving" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Duration_Before_Leaving_Distribution_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"NOT_INITIALIZED",
+							"FIXED_DURATION",
+							"UNIFORM_DURATION",
+							"GAUSSIAN_DURATION",
+							"EXPONENTIAL_DURATION",
+							"POISSON_DURATION",
+							"LOG_NORMAL_DURATION",
+							"BIMODAL_DURATION",
+							"PIECEWISE_CONSTANT",
+							"PIECEWISE_LINEAR",
+							"WEIBULL_DURATION"
+						],
+						"description" : "TBD",
+						"default" : "NOT_INITIALIZED"
+					},
+					"Duration_Before_Leaving_Fixed" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_Before_Leaving_Uniform_Min" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0,
+						"depends-on" : {
+							"Duration_Before_Leaving_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_Before_Leaving_Uniform_Max" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6,
+						"depends-on" : {
+							"Duration_Before_Leaving_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_Before_Leaving_Exponential_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_Before_Leaving_Gausian_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_Before_Leaving_Gausian_StdDev" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Duration_Before_Leaving_Poisson_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Distribution_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"NOT_INITIALIZED",
+							"FIXED_DURATION",
+							"UNIFORM_DURATION",
+							"GAUSSIAN_DURATION",
+							"EXPONENTIAL_DURATION",
+							"POISSON_DURATION",
+							"LOG_NORMAL_DURATION",
+							"BIMODAL_DURATION",
+							"PIECEWISE_CONSTANT",
+							"PIECEWISE_LINEAR",
+							"WEIBULL_DURATION"
+						],
+						"description" : "TBD",
+						"default" : "NOT_INITIALIZED"
+					},
+					"Duration_At_Node_Fixed" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Uniform_Min" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0,
+						"depends-on" : {
+							"Duration_At_Node_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_At_Node_Uniform_Max" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6,
+						"depends-on" : {
+							"Duration_At_Node_Distribution_Type" : "UNIFORM_DISTRIBUTION"
+						}
+					},
+					"Duration_At_Node_Exponential_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Gausian_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"Duration_At_Node_Gausian_StdDev" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 1
+					},
+					"Duration_At_Node_Poisson_Mean" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 6
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "MigrateIndividuals"
 				},
 				"ModifyStiCoInfectionStatus" : {
 					"Sim_Types" : [
 						"STI_SIM",
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"New_STI_CoInfection_Status" : {
 						"description" : "Determines whether to apply STI co-infection, or cure/remove STI co-infection.When called with 1, it sets the co-infection status to true. When called with 0, it sets the co-infection status to false.",
 						"type" : "bool",
@@ -10476,6 +10979,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
 					},
@@ -10503,6 +11011,19 @@
 						"min" : -1,
 						"max" : 3.40282e+038,
 						"default" : -1
+					},
+					"Blackout_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0
+					},
+					"Blackout_Event_Trigger" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
@@ -10595,6 +11116,11 @@
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Trigger_Condition" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "The condition for triggering a health seeking intervention.",
@@ -10631,6 +11157,19 @@
 						"min" : -1,
 						"max" : 3.40282e+038,
 						"default" : -1
+					},
+					"Blackout_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0
+					},
+					"Blackout_Event_Trigger" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Demographic_Coverage_Time_Profile" : {
 						"type" : "enum",
@@ -10751,6 +11290,11 @@
 							"Intervention_Config.*.iv_type" : "IndividualTargeted"
 						}
 					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Trigger_Condition" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "The condition for triggering a health seeking intervention.",
@@ -10814,6 +11358,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Antigen" : {
 						"description" : "The antigenic ID of the outbreak infection.",
 						"type" : "integer",
@@ -10945,6 +11494,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Efficacy" : {
 						"description" : "Represents the efficacy of a PMTCT intervention, defined as the rate ratio of MTCT between women receiving the intervention and women not receiving the intervention. A setting of 1 is equivalent to 100% blocking efficacy, and 0 reverts to the default probability of transmission, configured through the config.json parameter Maternal_Transmission_Probability.",
 						"type" : "float",
@@ -10966,6 +11520,11 @@
 					"Sim_Types" : [
 						"POLIO_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Cost of each polio vaccine.",
 						"type" : "float",
@@ -11000,6 +11559,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Target_Property_Key" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "target_property_key",
@@ -11040,6 +11604,11 @@
 					"Sim_Types" : [
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Antibody_Variant" : {
 						"description" : "Antibody variant index",
 						"type" : "integer",
@@ -11081,6 +11650,11 @@
 						"STI_SIM",
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Early" : {
 						"description" : "The left asymptote for the sigmoid trend over time.",
 						"type" : "float",
@@ -11128,6 +11702,11 @@
 						"STI_SIM",
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -11230,6 +11809,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Primary_Decay_Time_Constant" : {
 						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
 						"type" : "float",
@@ -11283,6 +11867,11 @@
 						"MALARIA_SIM",
 						"VECTOR_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Blocking_Rate" : {
 						"description" : "A fraction of feed attempts that have been blocked. The rate of blocking indoor feeds on individuals with an ITN. A parameter that is decayed.",
 						"type" : "float",
@@ -11318,6 +11907,12 @@
 						"max" : 1e+006,
 						"default" : 3650
 					},
+					"On_Distributed_Event_Trigger" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
 					"Durability_Time_Profile" : {
 						"type" : "enum",
 						"enum" : [
@@ -11346,6 +11941,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -11413,6 +12013,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Event_Or_Config" : {
 						"type" : "enum",
 						"enum" : [
@@ -11458,6 +12063,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Primary_Decay_Time_Constant" : {
 						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
 						"type" : "float",
@@ -11510,6 +12120,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float",
@@ -11572,6 +12187,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Primary_Decay_Time_Constant" : {
 						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
 						"type" : "float",
@@ -11617,6 +12237,11 @@
 					"Sim_Types" : [
 						"*"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float",
@@ -11694,6 +12319,11 @@
 					"Sim_Types" : [
 						"TB_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",
@@ -11884,6 +12514,11 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Primary_Decay_Time_Constant" : {
 						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
 						"type" : "float",
@@ -11937,6 +12572,11 @@
 						"STI_SIM",
 						"HIV_SIM"
 					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
 					"Base_Specificity" : {
 						"description" : "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test.",
 						"type" : "float",

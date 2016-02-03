@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 // modelled on the boost uuid interface in case we want to extend in that direction eventually
 #include "stdafx.h"
 #include "suids.hpp"
+#include "IArchive.h"
 
 namespace Kernel
 {
@@ -19,5 +20,10 @@ namespace Kernel
     {
         BEGIN_QUERY_INTERFACE_BODY(suid)
         END_QUERY_INTERFACE_BODY(suid)
+
+        void suid::serialize( IArchive& ar, suid& id )
+        {
+            ar.labelElement("id") & id.data;
+        }
     }
 }

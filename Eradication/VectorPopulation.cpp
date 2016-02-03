@@ -60,7 +60,8 @@ namespace Kernel
         species_ID("gambiae"),
         m_context(nullptr),
         m_species_params(nullptr),
-        m_probabilities(nullptr)
+        m_probabilities(nullptr),
+        m_VectorMortality(true)
     {
     }
 
@@ -258,7 +259,7 @@ namespace Kernel
         }
         else
         {
-            LOG_WARN_F("The effective human population at node %lu is zero, so EIR and HBR are not being normalized in VectorPopulation::UpdateVectorPopulation.\n", m_context->GetSuid().data );
+            LOG_DEBUG_F("The effective human population at node %lu is zero, so EIR and HBR are not being normalized in VectorPopulation::UpdateVectorPopulation.\n", m_context->GetSuid().data );
         }
         // (3) vector-to-human infectivity
         infectivity = GetEIRByPool(VectorPoolIdEnum::BOTH_VECTOR_POOLS) * species()->transmissionmod;
@@ -272,8 +273,12 @@ namespace Kernel
         probs()->FinalizeTransitionProbabilites( species()->anthropophily, species()->indoor_feeding); // TODO: rename this function now??
 
         // Update local adult mortality rate
-        float temperature   = m_context->GetLocalWeather()->airtemperature();
-        dryheatmortality    = dryHeatMortality(temperature);
+        dryheatmortality = 0.0;
+        if( m_VectorMortality )
+        {
+            float temperature = m_context->GetLocalWeather()->airtemperature();
+            dryheatmortality  = dryHeatMortality(temperature);
+        }
         localadultmortality = species()->adultmortality + dryheatmortality;
     }
 
@@ -1246,6 +1251,11 @@ namespace Kernel
                     VectorAllele::pairs::lookup_key(_vector_genetics.GetHEG().second) );
     }
 
+    void VectorPopulation::Vector_Migration( IMigrationInfo* pMigInfo, VectorCohortList_t* pMigratingQueue )
+    {
+        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
+    }
+
     unsigned long int VectorPopulation::Vector_Migration(float migrate, VectorCohortList_t *Migration_Queue)
     {
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
@@ -1311,6 +1321,8 @@ namespace Kernel
     int32_t VectorPopulation::getAdultCount()       const  { return adult; }
     int32_t VectorPopulation::getInfectedCount()    const  { return infected; }
     int32_t VectorPopulation::getInfectiousCount()  const  { return infectious; }
+    int32_t VectorPopulation::getMaleCount()        const  { return males; }
+    int32_t VectorPopulation::getNewEggsCount()     const  { return neweggs; }
     double  VectorPopulation::getInfectivity()      const  { return infectivity; }
     std::string VectorPopulation::get_SpeciesID()   const  { return species_ID; }
 
@@ -1371,6 +1383,7 @@ namespace Kernel
         ar.labelElement("MaleQueues") & population.MaleQueues;
         ar.labelElement("m_species_params"); VectorSpeciesParameters::serialize(ar, const_cast<VectorSpeciesParameters*&>(population.m_species_params));
         ar.labelElement("m_probabilities"); VectorProbabilities::serialize(ar, population.m_probabilities);
+        ar.labelElement("m_VectorMortality") & population.m_VectorMortality;
     }
 
     void serialize(IArchive& ar, std::pair<float, float>& pair)

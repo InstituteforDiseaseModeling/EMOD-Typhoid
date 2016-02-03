@@ -9,16 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#ifdef __GNUC__
-#include <ext/hash_map>
-namespace std
-{
-     using namespace __gnu_cxx;
-}
-#else
-#include <hash_map>
-#endif
-
 #include <map>
 #include <vector>
 
@@ -34,6 +24,7 @@ namespace std
 #include "ITransmissionGroups.h"
 #include "suids.hpp"
 #include "IInfectable.h"
+#include "MathFunctions.h"
 #include "Serialization.h"
 
 class RANDOMBASE;
@@ -73,6 +64,7 @@ namespace Kernel
         Node(); // constructor for serialization use
         virtual ~Node();
 
+
         // INodeContext
         virtual void Update(float dt) override;
         virtual ISimulationContext* GetParent() override;
@@ -80,6 +72,8 @@ namespace Kernel
         virtual suids::suid   GetNextInfectionSuid() override;
         virtual ::RANDOMBASE* GetRng() override;
         virtual const INodeContext::tDistrib& GetIndividualPropertyDistributions() const override;
+        virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override;
+
 
         virtual IMigrationInfo*   GetMigrationInfo() override;
         virtual const NodeDemographics* GetDemographics()  const override;
@@ -146,8 +140,14 @@ namespace Kernel
 
         // These methods are not const because they will extract the value from the demographics
         // if it has not been done yet.
-        float GetLatitudeDegrees();
-        float GetLongitudeDegrees();
+        virtual float GetLatitudeDegrees()override;
+        virtual float GetLongitudeDegrees() override;
+
+        virtual bool IsEveryoneHome() const override;
+        virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination,
+                                              MigrationType::Enum migrationType,
+                                              float timeUntilTrip,
+                                              float timeAtDestination ) override;
 
         static void TestOnly_ClearProperties();
         static void TestOnly_AddPropertyKeyValue( const char* key, const char* value );
@@ -183,6 +183,13 @@ namespace Kernel
         // --- http://ivlabsdvapp50:8090/pages/viewpage.action?pageId=30015603
         // ----------------------------------------------------------------------------------------
         std::vector<IIndividualHuman*> individualHumans;
+        std::map<int,suids::suid> home_individual_ids; // people who call this node home
+
+        bool                family_waiting_to_migrate;
+        suids::suid         family_migration_destination;
+        MigrationType::Enum family_migration_type;
+        float               family_time_until_trip;
+        float               family_time_at_destination;
 
         float Ind_Sample_Rate;   // adapted sampling parameter
 
@@ -202,6 +209,7 @@ namespace Kernel
         friend class NodeEventContextHost;
         friend class Simulation; // so migration can call configureAndAdd?????
         NodeEventContextHost *event_context_host;
+        std::vector<std::string> events_from_other_nodes ;
 
         //  Counters (some for reporting, others also for internal calculations)
         float statPop;
@@ -327,6 +335,7 @@ namespace Kernel
         // Fix up child object pointers after deserializing
         virtual INodeContext *getContextPointer();
         virtual void propagateContextToDependents();
+
 
         const SimulationConfig* params() const;
         void checkIpKeyInWhitelist(const std::string& key, size_t numValues );

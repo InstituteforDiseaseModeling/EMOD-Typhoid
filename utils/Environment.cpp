@@ -72,21 +72,31 @@ bool Environment::Initialize(
 
         if( localEnv->MPI.Rank != 0 )
         {
+            // -------------------------------------------------------
+            // --- Wait for Rank=0 process to create output directory
+            // -------------------------------------------------------
             MPI_Barrier( MPI_COMM_WORLD );
         }
         else
         {
+            // ------------------------------------------------------------------------------
+            // --- The Process with Rank=0 is responsible for creating the output directory
+            // ------------------------------------------------------------------------------
             if( !FileSystem::DirectoryExists(outputPath) )
             {
                 FileSystem::MakeDirectory( outputPath ) ;
             }
-            MPI_Barrier( MPI_COMM_WORLD );
-        }
 
-        if( !FileSystem::DirectoryExists(outputPath) )
-        {
-            LOG_ERR_F( "Failed to create new output directory %s with error %s\n", localEnv->OutputPath.c_str(), strerror(errno) );
-            throw Kernel::FileNotFoundException( __FILE__, __LINE__, __FUNCTION__, localEnv->OutputPath.c_str() );
+            // ----------------------------------------------------------------------
+            // --- Synchronize with other process after creating output directory
+            // ----------------------------------------------------------------------
+            MPI_Barrier( MPI_COMM_WORLD );
+
+            if( !FileSystem::DirectoryExists(outputPath) )
+            {
+                LOG_ERR_F( "Rank=%d: Failed to create new output directory '%s' with error %s\n", localEnv->MPI.Rank, outputPath.c_str(), strerror(errno) );
+                throw Kernel::FileNotFoundException( __FILE__, __LINE__, __FUNCTION__, outputPath.c_str() );
+            }
         }
     }
 

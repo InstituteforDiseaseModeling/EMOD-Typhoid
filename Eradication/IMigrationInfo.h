@@ -20,10 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 class Configuration;
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-#include "Configuration.h"
-#endif
-
 
 namespace Kernel
 {
@@ -46,7 +42,8 @@ namespace Kernel
         virtual const std::vector<suids::suid>& GetReachableNodes() const = 0;
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const = 0;
 
-        virtual bool IsHeterogeneityEnabled() const = 0 ;
+        virtual bool IsHeterogeneityEnabled() const = 0;
+        virtual MigrationType::Enum GetFamilyMigrationType() const = 0;
     };
 
     // IMigrationInfoFactory is used to create IMirationInfo objects for a node.
@@ -68,6 +65,7 @@ namespace Kernel
         // Contructs and initializes the proper factory based on the initialization parameters
         IMigrationInfoFactory IDMAPI * ConstructMigrationInfoFactory( const ::Configuration *config, 
                                                                       const std::string& idreference,
+                                                                      SimType::Enum sim_type,
                                                                       MigrationStructure::Enum ms,
                                                                       bool useDefaultMigration,
                                                                       int defaultTorusSize=10 );

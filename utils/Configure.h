@@ -138,6 +138,7 @@ namespace Kernel
     {
         friend class InterventionFactory;
         friend class DemographicRestrictions;
+        friend class DurationDistribution;
     public:
         typedef std::map< float, float > tFloatFloatMapConfigType;
         typedef std::map< std::string, float > tStringFloatMapConfigType;
@@ -156,6 +157,7 @@ namespace Kernel
         typedef std::map< std::string, std::vector< float > * > tVectorFloatConfigTypeMapType;
         typedef std::map< std::string, std::vector< int > * > tVectorIntConfigTypeMapType;
         typedef std::map< std::string, std::vector< std::vector< float > > * > tVector2dFloatConfigTypeMapType;
+        typedef std::map< std::string, std::vector< std::vector< int > > * > tVector2dIntConfigTypeMapType;
         typedef std::map< std::string, tFloatFloatMapConfigType * > tFloatFloatMapConfigTypeMapType;
         typedef std::map< std::string, tStringFloatMapConfigType * > tStringFloatMapConfigTypeMapType;
         typedef std::map< std::string, RangedFloat * > tRangedFloatConfigTypeMapType;
@@ -200,6 +202,7 @@ namespace Kernel
         tVectorFloatConfigTypeMapType vectorFloatConfigTypeMap;
         tVectorIntConfigTypeMapType vectorIntConfigTypeMap;
         tVector2dFloatConfigTypeMapType vector2dFloatConfigTypeMap;
+        tVector2dIntConfigTypeMapType vector2dIntConfigTypeMap;
         tFloatFloatMapConfigTypeMapType ffMapConfigTypeMap;
         tStringFloatMapConfigTypeMapType sfMapConfigTypeMap;
         tRangedFloatConfigTypeMapType rangedFloatConfigTypeMap;
@@ -305,6 +308,13 @@ namespace Kernel
             std::vector< std::vector< float > > * pVariable,
             const char* description = default_description,
             float min = -FLT_MAX, float max = FLT_MAX, float defaultvalue = 1.0
+        );
+
+        void initConfigTypeMap(
+            const char* paramName,
+            std::vector< std::vector< int > > * pVariable,
+            const char* description = default_description,
+            int min = -INT_MAX, int max = INT_MAX, int defaultvalue = 1
         );
 
         void

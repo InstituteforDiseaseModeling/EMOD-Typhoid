@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include <memory> // unique_ptr
 #include "UnitTest++.h"
+#include "common.h"
 #include "Environment.h"
 #include "SimulationConfig.h"
 #include "JsonFullReader.h"
@@ -25,8 +26,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "RandomFake.h"
 
 using namespace Kernel; 
-
-void PrintDebug( const std::string& rMessage );
 
 SUITE(SerializationTest)
 {
@@ -62,7 +61,7 @@ SUITE(SerializationTest)
         try
         {
             JsonObjectDemog json ;
-            json.ParseFile( "testdata/SerializationTest.json" );
+            json.ParseFile( "testdata/SerializationTest/SerializationTest.json" );
             CHECK( json.Contains( "Listed_Events" ) );
             CHECK( json["Listed_Events"].IsArray() );
 
@@ -111,7 +110,7 @@ SUITE(SerializationTest)
     TEST_FIXTURE(SerializationFixture, TestGenericSerialization)
     {
         // Open and read JSON
-        std::string* json = FileSystem::ReadFile( "testdata/genericIndividual.json" );
+        std::string* json = FileSystem::ReadFile( "testdata/SerializationTest/genericIndividual.json" );
 
         // Instantiate from JSON
         IndividualHuman* individual = nullptr;
@@ -156,7 +155,7 @@ SUITE(SerializationTest)
     TEST_FIXTURE(SerializationFixture, TestAirborneSerialization)
     {
         // Open and read JSON
-        std::string* json = FileSystem::ReadFile( "testdata/airborneIndividual.json" );
+        std::string* json = FileSystem::ReadFile( "testdata/SerializationTest/airborneIndividual.json" );
 
         // Instantiate from JSON
         IndividualHumanAirborne* individual = nullptr;
@@ -201,7 +200,7 @@ SUITE(SerializationTest)
     TEST_FIXTURE(SerializationFixture, TestTbSerialization)
     {
         // Open and read JSON
-        std::string* json = FileSystem::ReadFile( "testdata/tbIndividual.json" );
+        std::string* json = FileSystem::ReadFile( "testdata/SerializationTest/tbIndividual.json" );
 
         // Instantiate from JSON
         IndividualHumanTB* individual = nullptr;

@@ -37,6 +37,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    struct IVectorMigrationReporting ;
+
     class SimulationVector : public Simulation, public IVectorSimulationContext
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -48,18 +50,27 @@ namespace Kernel
         virtual ~SimulationVector();
 
         // IVectorSimulationContext methods
-        virtual void  PostMigratingVector(VectorCohort* ind);
+        virtual void  PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind ) override;
+        virtual float GetNodePopulation( const suids::suid& nodeSuid ) const override;
+        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const override;
 
         // Allows correct type of community to be added by derived class Simulations
-        virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
+        virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory) override;
+        virtual int  populateFromDemographics(const char* campaign_filename, const char* loadbalance_filename);
 
         // Creates reporters.  Specifies vector-species-specific reporting in addition to base reporting
-        virtual void Reports_CreateBuiltIn();
+        virtual void Reports_CreateBuiltIn() override;
+
+        // INodeInfoFactory
+        virtual INodeInfo* CreateNodeInfo() override;
+        virtual INodeInfo* CreateNodeInfo( int rank, INodeContext* pNC ) override;
 
     protected:
 
         // holds a vector of migrating vectors for each node rank
         vector<vector<IVectorCohort*>> migratingVectorQueues;
+        vector< IVectorMigrationReporting* > vector_migration_reports ;
+        std::map<suids::suid,float> node_populations_map ;
 
         float drugdefaultcost;
         float vaccinedefaultcost;

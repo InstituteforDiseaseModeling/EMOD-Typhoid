@@ -23,7 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "TransmissionGroupsFactory.h"
 #include "TransmissionGroupMembership.h"
-#include "IMigrationInfo.h"
+#include "IMigrationInfoVector.h"
 
 static const char * _module = "NodeVector";
 
@@ -52,13 +52,25 @@ namespace Kernel
 
     NodeVector::NodeVector() 
         : Node()
+        , m_larval_habitats()
+        , m_vectorpopulations()
+        , m_vector_lifecycle_probabilities()
         , larval_habitat_multiplier()
+        , vector_mortality(true)
+        , mosquito_weight(0)
+        , vector_migration_info(nullptr)
     {
     }
 
     NodeVector::NodeVector(ISimulationContext *context, suids::suid _suid) 
         : Node(context, _suid)
+        , m_larval_habitats()
+        , m_vectorpopulations()
+        , m_vector_lifecycle_probabilities()
         , larval_habitat_multiplier()
+        , vector_mortality(true)
+        , mosquito_weight(0)
+        , vector_migration_info(nullptr)
     {
     }
 
@@ -67,10 +79,7 @@ namespace Kernel
         const Configuration * config
     )
     {
-        initConfigTypeMap( "Enable_Vector_Migration", &vector_migration, Enable_Vector_Migration_DESC_TEXT, false );
-        initConfigTypeMap( "Enable_Vector_Migration_Wind", &vector_migration_wind, Enable_Vector_Migration_Wind_DESC_TEXT, false );
-        initConfigTypeMap( "Enable_Vector_Migration_Human", &vector_migration_human, Enable_Vector_Migration_Human_DESC_TEXT, false );
-        initConfigTypeMap( "Enable_Vector_Migration_Local", &vector_migration_local, Enable_Vector_Migration_Local_DESC_TEXT, false );
+        initConfigTypeMap( "Enable_Vector_Mortality", &vector_mortality, Enable_Vector_Mortality_DESC_TEXT, true );
         initConfigTypeMap( "Mosquito_Weight", &mosquito_weight, Mosquito_Weight_DESC_TEXT, 1, 1e4, 1 ); // should this be renamed vector_weight?
 
         bool configured = Node::Configure( config );
@@ -166,6 +175,8 @@ namespace Kernel
             delete habitat;
         }
         m_larval_habitats.clear();
+
+        delete vector_migration_info ;
     }
 
     IIndividualHuman* NodeVector::createHuman( suids::suid id, float MCweight, float init_age, int gender, float init_poverty)
@@ -184,6 +195,41 @@ namespace Kernel
     {
         // just the base class for now
         return Node::addNewIndividual(MCweight, init_age, gender, init_infs, immparam, riskparam, mighet, init_poverty);
+    }
+
+    void NodeVector::SetupMigration( IMigrationInfoFactory * migration_factory,
+                                     MigrationStructure::Enum ms,
+                                     const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap )
+    {
+        Node::SetupMigration( migration_factory, ms, rNodeIdSuidMap );
+
+        IMigrationInfoFactoryVector* p_mf_vector = dynamic_cast<IMigrationInfoFactoryVector*>(migration_factory);
+        release_assert( p_mf_vector );
+
+        vector_migration_info = p_mf_vector->CreateMigrationInfoVector( this, rNodeIdSuidMap );
+
+        VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_sampling_type;
+        if( vector_migration_info->IsVectorMigrationFileBased() )
+        {
+            if( (vector_sampling_type != VectorSamplingType::TRACK_ALL_VECTORS) &&
+                (vector_sampling_type != VectorSamplingType::SAMPLE_IND_VECTORS) )
+            {
+                const char* vst_label = VectorSamplingType::pairs::lookup_key( vector_sampling_type );
+                throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__,
+                    "Vector_Sampling_Type", vst_label, "Vector_Migration_Filename_XXX", "<not empty>",
+                    "Once must have the sampling type set to TRACK_ALL_VECTORS or SAMPLE_IND_VECTORS in order to control vector migration by files." );
+            }
+        }
+        else if( vector_migration_info->IsLocalVectorMigrationEnabled() )
+        {
+            if( ms == MigrationStructure::NO_MIGRATION )
+            {
+                const char* ms_label = MigrationStructure::pairs::lookup_key( ms );
+                throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__,
+                    "Migration_Model", ms_label, "Enable_Vector_Migration, Enable_Vector_Migration_Local, Vector_Migration_Filename_XXX", "true, true, <empty>",
+                    "If one wants vector migration without human migration, then one must specify the migration via the vector migration files." );
+            }
+        }
     }
 
     void NodeVector::SetupIntranodeTransmission()
@@ -393,11 +439,28 @@ namespace Kernel
             vector_sampling_type == VectorSamplingType::SAMPLE_IND_VECTORS)
         {
             LOG_DEBUG( "Creating VectorPopulationIndividual instance(s).\n" );
+
             for (auto& vector_species_name : params()->vector_species_names)
             {
-                VectorPopulation *vectorpopulation = VectorPopulationIndividual::CreatePopulation(getContextPointer(), vector_species_name, DEFAULT_VECTOR_POPULATION_SIZE, 0, mosquito_weight);
+                int32_t population_per_species = DEFAULT_VECTOR_POPULATION_SIZE;
+                if( demographics["NodeAttributes"].Contains( "InitialVectorsPerSpecies" ) )
+                {
+                    if( demographics["NodeAttributes"]["InitialVectorsPerSpecies"].IsObject() )
+                    {
+                        if( demographics["NodeAttributes"]["InitialVectorsPerSpecies"].Contains( vector_species_name ) )
+                        {
+                            population_per_species = demographics["NodeAttributes"]["InitialVectorsPerSpecies"][ vector_species_name ].AsInt();
+                        }
+                    }
+                    else
+                    {
+                        population_per_species = demographics["NodeAttributes"]["InitialVectorsPerSpecies"].AsInt();
+                    }
+                }
+                VectorPopulation *vectorpopulation = VectorPopulationIndividual::CreatePopulation(getContextPointer(), vector_species_name, population_per_species, 0, mosquito_weight);
                 InitializeVectorPopulation(vectorpopulation);
             }
+
         }
         // Aging cohort model
         else if (params()->vector_aging)
@@ -469,6 +532,42 @@ namespace Kernel
 
     void NodeVector::processEmigratingVectors()
     {
+        if( vector_migration_info->IsVectorMigrationFileBased() )
+        {
+            if( vector_migration_info->GetReachableNodes().size() > 0 )
+            {
+                VectorMigrationBasedOnFiles();
+            }
+        }
+        else if( vector_migration_info->IsLocalVectorMigrationEnabled() )
+        {
+            VectorMigrationToAdjacentNodes();
+        }
+    }
+
+    void NodeVector::VectorMigrationBasedOnFiles()
+    {
+        IVectorSimulationContext* ivsc = context();
+        release_assert( vector_migration_info );
+
+        for( auto vp : m_vectorpopulations )
+        {
+            vector_migration_info->UpdateRates( this->GetSuid(), vp->get_SpeciesID(),  ivsc );
+
+            VectorCohortList_t migrating_vectors;
+            vp->Vector_Migration( vector_migration_info, &migrating_vectors );
+            while (migrating_vectors.size() > 0)
+            {
+                VectorCohort* p_vc = migrating_vectors.front();
+                migrating_vectors.pop_front();
+
+                ivsc->PostMigratingVector( this->GetSuid(), p_vc );
+            }
+        }
+    }
+
+    void NodeVector::VectorMigrationToAdjacentNodes()
+    {
         // to hold the total migration rate summed over all destination nodes
         float vectormigrationrate = 0;
 
@@ -476,35 +575,29 @@ namespace Kernel
         std::vector<suids::suid> vectormigCommIDs(0);
 
         // calculate vectormigrationrate
-        if (vector_migration_local && migration_info)
+        const std::vector<MigrationType::Enum>& migration_types = migration_info->GetMigrationTypes();
+        const std::vector<suids::suid>& reachable_nodes = migration_info->GetReachableNodes(); // these are not necessarily adjacent
+
+        for (int i = 0; i < reachable_nodes.size(); i++)
         {
-            std::vector<MigrationType::Enum> migration_types = migration_info->GetMigrationTypes();
-            std::vector<suids::suid> adjacent_nodes = migration_info->GetReachableNodes();
-
-            for (int i = 0; i < adjacent_nodes.size(); i++)
+            if( migration_types[i] == MigrationType::LOCAL_MIGRATION )
             {
-                if( migration_types[i] == MigrationType::LOCAL_MIGRATION )
+                // increase total vector emigration rate
+                if (params()->lloffset > 0)
                 {
-                    // increase total vector emigration rate
-                    if (params()->lloffset > 0)
-                    {
-                        // .0045 is the lloffset for the 30 arc second grid.  This allows bigger cells to lose fewer mosquitoes to diffusion
-                        vectormigrationrate = float(vectormigrationrate + 0.125 * 0.5 * 0.0045 / params()->lloffset);   // 50 percent leave a 1km x 1 km square per day
-                    }
-                    else
-                    {
-                        // If there is no spatial scale associated with the grid, then only 10 percent of mosquitoes leave the node
-                        vectormigrationrate = float(vectormigrationrate + 0.125 * 0.5 * 0.2);
-                    }
-
-                    // locally adjacent nodes
-                    vectormigCommIDs.push_back(adjacent_nodes[i]);
+                    // .0045 is the lloffset for the 30 arc second grid.  This allows bigger cells to lose fewer mosquitoes to diffusion
+                    vectormigrationrate += float((0.125 * 0.5 * 0.0045) / params()->lloffset);   // 50 percent leave a 1km x 1 km square per day
                 }
+                else
+                {
+                    // If there is no spatial scale associated with the grid, then only 10 percent of mosquitoes leave the node
+                    vectormigrationrate += float(0.125 * 0.5 * 0.2);
+                }
+
+                // locally adjacent nodes
+                vectormigCommIDs.push_back(reachable_nodes[i]);
             }
         }
-
-        if (vector_migration_wind)  {} // adjust for wind
-        if (vector_migration_human) {} // adjust for other migration routes
 
         // bookkeeping
         VectorCohortList_t migratingvectors;             // to hold vectors
@@ -525,11 +618,11 @@ namespace Kernel
                     tempentry = migratingvectors.front();
                     migratingvectors.pop_front();
 
-                    // give vectors to attached communities like a sprinkler
-                    tempentry->SetMigrationDestination(*itNodeId);
-                    ivsc->PostMigratingVector(tempentry);
+                    // give vectors to attached communities like a sprinkler / round-robin
+                    tempentry->SetMigrating( *itNodeId, MigrationType::LOCAL_MIGRATION, 0.0, 0.0, false );
+                    ivsc->PostMigratingVector( this->GetSuid(), tempentry);
 
-                    // circular iteration among available adjacent nodes
+                    // circular iteration among available nodes
                     if ( ++itNodeId == vectormigCommIDs.end() )
                     {
                         itNodeId = vectormigCommIDs.begin();
@@ -558,6 +651,8 @@ namespace Kernel
         {
             population->SetContextTo(getContextPointer());
         }
+
+        vector_migration_info->SetContextTo( getContextPointer() );
     }
 
     const SimulationConfig*
@@ -623,8 +718,15 @@ namespace Kernel
         // and keep a list of pointers so the node can update it with new rainfall, etc.
         vp->SetupLarvalHabitat(getContextPointer());
 
+        vp->SetVectorMortality( vector_mortality );
+
         // Add this new vector population to the list
         m_vectorpopulations.push_front(vp);
+    }
+
+    const std::list<VectorHabitat *>& NodeVector::GetHabitats() const
+    {
+        return m_larval_habitats ;
     }
 
     VectorPopulationList_t& NodeVector::GetVectorPopulations()
@@ -642,10 +744,7 @@ namespace Kernel
 // clorton        ar.labelElement("m_vectorpopulations") & node.m_vectorpopulations;
 // clorton        ar.labelElement("m_vector_lifecycle_probabilities") & node.m_vector_lifecycle_probabilities;
 // clorton        ar.labelElement("larval_habitat_multiplier") & node.larval_habitat_multiplier;
-        ar.labelElement("vector_migration") & node.vector_migration;
-        ar.labelElement("vector_migration_wind") & node.vector_migration_wind;
-        ar.labelElement("vector_migration_human") & node.vector_migration_human;
-        ar.labelElement("vector_migration_local") & node.vector_migration_local;
+        ar.labelElement("vector_mortality") & node.vector_mortality;
         ar.labelElement("mosquito_weight") & node.mosquito_weight;
     }
 } // end namespace Kernel

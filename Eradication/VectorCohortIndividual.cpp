@@ -19,18 +19,22 @@ static const char * _module = "VectorCohortIndividual";
 
 namespace Kernel
 {
+    static uint64_t VCI_COUNTER = 1 ; //TODO - need to make multi-core
+
     // QI stuff
     BEGIN_QUERY_INTERFACE_DERIVED(VectorCohortIndividual, VectorCohortAging)
         HANDLE_INTERFACE( IVectorCohortIndividual )
     END_QUERY_INTERFACE_DERIVED(VectorCohortIndividual, VectorCohortAging)
 
     VectorCohortIndividual::VectorCohortIndividual() 
-    : state(VectorStateEnum::STATE_ADULT)
+    : m_ID( VCI_COUNTER++ )
+    , state(VectorStateEnum::STATE_ADULT)
     , additional_mortality(0.0f)
     , oviposition_timer(-0.1f)
     , parity(0)
     , neweggs(0)
     , migration_destination(suids::nil_suid())
+    , migration_type(MigrationType::NO_MIGRATION)
     , species("gambiae")
     , m_strain(nullptr)
     {
@@ -38,12 +42,14 @@ namespace Kernel
 
     VectorCohortIndividual::VectorCohortIndividual(VectorStateEnum::Enum _state, float age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics, std::string vector_species_name)
     : VectorCohortAging(age, progress, initial_population, _vector_genetics)
+    , m_ID( VCI_COUNTER++ )
     , state(_state)
     , additional_mortality(0.0f)
     , oviposition_timer(-0.1f) // newly-mated mosquitoes feed on first cycle
     , parity(0)
     , neweggs(0)
     , migration_destination(suids::nil_suid())
+    , migration_type(MigrationType::NO_MIGRATION)
     , species(vector_species_name)
     , m_strain(nullptr)
     {
@@ -70,7 +76,6 @@ namespace Kernel
         }
         else
         {
-
             progress = 0;
             state    = VectorStateEnum::STATE_INFECTED;
             m_strain = _new_ StrainIdentity( infstrain->GetAntigenID(), infstrain->GetGeneticID() );
@@ -93,10 +98,15 @@ namespace Kernel
         pNV->processImmigratingVector(this);
     }
 
-    void VectorCohortIndividual::SetMigrationDestination(suids::suid destination)
+    void VectorCohortIndividual::SetMigrating( suids::suid destination, 
+                                               MigrationType::Enum type, 
+                                               float timeUntilTrip, 
+                                               float timeAtDestination,
+                                               bool isDestinationNewHome )
     {
         LOG_DEBUG_F( "Setting vector migration destination to node ID #%d\n", destination.data );
         migration_destination = destination;
+        migration_type        = type;
     }
 
     const suids::suid& VectorCohortIndividual::GetMigrationDestination()
@@ -243,13 +253,15 @@ namespace Kernel
     {
         VectorCohortAging::serialize(ar, obj);
         VectorCohortIndividual& cohort = *obj;
-        ar.labelElement("state") & (uint32_t&)cohort.state;
-        ar.labelElement("additional_mortality") & cohort.additional_mortality;
-        ar.labelElement("oviposition_timer") & cohort.oviposition_timer;
-        ar.labelElement("parity") & cohort.parity;
-        ar.labelElement("neweggs") & cohort.neweggs;
+        ar.labelElement("m_ID"                 ) & cohort.m_ID;
+        ar.labelElement("state"                ) & (uint32_t&)cohort.state;
+        ar.labelElement("additional_mortality" ) & cohort.additional_mortality;
+        ar.labelElement("oviposition_timer"    ) & cohort.oviposition_timer;
+        ar.labelElement("parity"               ) & cohort.parity;
+        ar.labelElement("neweggs"              ) & cohort.neweggs;
         ar.labelElement("migration_destination") & cohort.migration_destination.data;
-        ar.labelElement("species") & cohort.species;
+        ar.labelElement("migration_type"       ) & (uint32_t&)cohort.migration_type;
+        ar.labelElement("species"              ) & cohort.species;
 
         bool has_strain = ar.IsWriter() ? (cohort.m_strain != nullptr) : false; // We put false here, but this is just a placeholder since we're reading from the archive.
         ar.labelElement("__has_strain__");

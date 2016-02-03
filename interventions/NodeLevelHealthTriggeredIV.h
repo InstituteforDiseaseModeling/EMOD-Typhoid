@@ -22,6 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "Configure.h"
 #include "DemographicRestrictions.h"
+#include "EventTrigger.h"
 
 namespace Kernel
 {
@@ -53,6 +54,12 @@ namespace Kernel
         float duration;
         DemographicRestrictions demographic_restrictions;
         bool m_disqualified_by_coverage_only;
+        float blackout_period ;
+        float blackout_time_remaining ;
+        EventTrigger blackout_event_trigger ;
+        bool notification_occured ;
+        std::map<std::string,std::set<int>> event_occured_map ;
+        std::map<suids::suid,bool> event_occurred_while_resident_away;
         IndividualInterventionConfig actual_intervention_config;
         IDistributableIntervention *_di;
 

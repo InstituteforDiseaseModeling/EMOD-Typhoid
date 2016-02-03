@@ -59,6 +59,7 @@ namespace Kernel
         virtual IIndividualHumanContext* GetParent() override;
         virtual std::list<IDistributableIntervention*> GetInterventionsByType(const std::string& type_name) override;
         virtual void PurgeExisting( const std::string& iv_name ) override;
+        virtual bool ContainsExisting( const std::string &iv_name ) override;
 
         // IUnknown
         virtual QueryResult QueryInterface(iid_t iid, void** pinstance) override;
@@ -90,6 +91,9 @@ namespace Kernel
         virtual void PropagateContextToDependents(); // pass context to interventions if they need it
 
         IIndividualHumanContext *parent;    // context for this interventions container
+
+    private:
+        IDistributableIntervention* GetIntervention( const std::string& iv_name );
 
         DECLARE_SERIALIZABLE(InterventionsContainer);
     };

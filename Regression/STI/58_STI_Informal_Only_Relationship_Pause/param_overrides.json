@@ -26,6 +26,7 @@
         "Migration_Model": "FIXED_RATE_MIGRATION",
         "Migration_Pattern": "SINGLE_ROUND_TRIPS",
         "Enable_Migration_Heterogeneity": 1, 
+        "Family_Migration_Type" : "NO_MIGRATION",
 
         "Local_Migration_Roundtrip_Duration"       : 100.0,
         "Local_Migration_Roundtrip_Probability"    : 1.0,

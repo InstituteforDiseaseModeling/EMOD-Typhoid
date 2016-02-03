@@ -23,10 +23,10 @@ namespace Kernel
         , m_Mid(0.0)
         , m_Rate(1.0)
     {
-        initConfigTypeMap( "Min",  &m_Min,  "TBD"/*Sigmoid_Min_DESC_TEXT*/,     0.0,     1.0,    1.0 );
-        initConfigTypeMap( "Max",  &m_Max,  "TBD"/*Sigmoid_Max_DESC_TEXT*/,     0.0,     1.0,    1.0 );
-        initConfigTypeMap( "Mid",  &m_Mid,  "TBD"/*Sigmoid_Mid_DESC_TEXT*/,     0.0, FLT_MAX, 2000.0 );
-        initConfigTypeMap( "Rate", &m_Rate, "TBD"/*Sigmoid_Rate_DESC_TEXT*/, -100.0,   100.0,    1.0 );
+        initConfigTypeMap( "Min",  &m_Min,  Sigmoid_Min_DESC_TEXT,     0.0,     1.0,    1.0 );
+        initConfigTypeMap( "Max",  &m_Max,  Sigmoid_Max_DESC_TEXT,     0.0,     1.0,    1.0 );
+        initConfigTypeMap( "Mid",  &m_Mid,  Sigmoid_Mid_DESC_TEXT,     0.0, FLT_MAX, 2000.0 );
+        initConfigTypeMap( "Rate", &m_Rate, Sigmoid_Rate_DESC_TEXT, -100.0,   100.0,    1.0 );
     }
 
     Sigmoid::Sigmoid( float min, float max, float mid, float rate )

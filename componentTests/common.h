@@ -11,5 +11,4 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <iostream>
 
-#define HEADER()  { std::cout << std::endl << std::endl << "--===##### " << m_details.suiteName << "::" << m_details.testName << " #####===--" << std::endl << std::endl; }
-#define FOOTER()  { std::cout << std::endl << "---------- " << m_details.suiteName << "::" << m_details.testName << " ----------" << std::endl << std::endl; }
+void PrintDebug( const std::string& rMessage );

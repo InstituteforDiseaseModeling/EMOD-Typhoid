@@ -45,6 +45,8 @@ namespace Kernel
         virtual int32_t getAdultCount()                            const = 0;
         virtual int32_t getInfectedCount()                         const = 0;
         virtual int32_t getInfectiousCount()                       const = 0;
+        virtual int32_t getMaleCount()                             const = 0;
+        virtual int32_t getNewEggsCount()                          const = 0;
         virtual double  getInfectivity()                           const = 0;
         virtual std::string get_SpeciesID()                        const = 0;
         virtual const VectorHabitatList_t& GetHabitats()           const = 0;
@@ -70,6 +72,7 @@ namespace Kernel
         virtual void UpdateVectorPopulation(float dt);
 
         // For NodeVector to calculate # of migrating vectors (processEmigratingVectors) and put them in new node (processImmigratingVector)
+        virtual void Vector_Migration( IMigrationInfo* pMigInfo, VectorCohortList_t* pMigratingQueue );
         virtual unsigned long int Vector_Migration(float = 0, VectorCohortList_t * = nullptr);
         void AddAdults(VectorCohort *adults) { AdultQueues.push_front(adults); }
         virtual void AddVectors(VectorMatingStructure _vector_genetics, unsigned long int releasedNumber);
@@ -83,6 +86,8 @@ namespace Kernel
         virtual int32_t getAdultCount()                             const override;
         virtual int32_t getInfectedCount()                          const override;
         virtual int32_t getInfectiousCount()                        const override;
+        virtual int32_t getMaleCount()                              const override;
+        virtual int32_t getNewEggsCount()                           const override;
         virtual double  getInfectivity()                            const override;
         virtual std::string get_SpeciesID()                         const override;
         virtual const VectorHabitatList_t& GetHabitats()            const override;
@@ -90,6 +95,7 @@ namespace Kernel
         virtual const infection_list_t& GetInfections()             const override;
         virtual float GetInterventionReducedAcquire()               const override;
 
+        void SetVectorMortality( bool mortality ) { m_VectorMortality = mortality; }
     protected:
         VectorPopulation();
         void Initialize(INodeContext *context, std::string species_name, unsigned int adults, unsigned int infectious);
@@ -201,6 +207,8 @@ namespace Kernel
         const VectorSpeciesParameters *m_species_params;
         VectorProbabilities           *m_probabilities;
         ITransmissionGroups           *m_transmissionGroups;
+
+        bool m_VectorMortality ;
 
         DECLARE_SERIALIZABLE(VectorPopulation);
     };

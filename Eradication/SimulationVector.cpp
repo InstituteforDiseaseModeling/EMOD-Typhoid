@@ -18,8 +18,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Sugar.h"
 #include "Vector.h"
 #include "SimulationConfig.h"
+#include "IVectorMigrationReporting.h"
+#include "NodeInfoVector.h"
 #include "BinaryArchiveWriter.h"
 #include "BinaryArchiveReader.h"
+#include "MpiDataExchanger.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -35,6 +38,8 @@ namespace Kernel
 
     SimulationVector::SimulationVector()
         : Kernel::Simulation()
+        , vector_migration_reports()
+        , node_populations_map()
         , drugdefaultcost(1.0f)
         , vaccinedefaultcost(DEFAULT_VACCINE_COST)
     {
@@ -107,6 +112,15 @@ namespace Kernel
         IndividualHumanVector fakeHuman;
         LOG_INFO( "Calling Configure on fakeHumanVector\n" );
         fakeHuman.Configure( config );
+
+        for( auto report : reports )
+        {
+            IVectorMigrationReporting* pivmr = dynamic_cast<IVectorMigrationReporting*>(report);
+            if( pivmr != nullptr )
+            {
+                vector_migration_reports.push_back( pivmr );
+            }
+        }
     }
 
     SimulationVector *SimulationVector::CreateSimulation()
@@ -151,6 +165,18 @@ namespace Kernel
         // No need to do any deletion for the flags
     }
 
+    INodeInfo* SimulationVector::CreateNodeInfo()
+    {
+        INodeInfo* pin = new NodeInfoVector();
+        return pin ;
+    }
+
+    INodeInfo* SimulationVector::CreateNodeInfo( int rank, INodeContext* pNC )
+    {
+        INodeInfo* pin = new NodeInfoVector( rank, pNC );
+        return pin ;
+    }
+
     void SimulationVector::Reports_CreateBuiltIn()
     {
         // Do base-class behavior for creating one or more reporters
@@ -168,156 +194,121 @@ namespace Kernel
     {
         NodeVector *node = NodeVector::CreateNode(this, node_suid);
         addNode_internal(node, nodedemographics_factory, climate_factory);
-    }
-
-#define SIZE_TAG    ('V')
-#define CONTENT_TAG (2015)
-
-    static void _write_json(uint32_t time_step, uint32_t source, uint32_t dest, char* suffix, const char* buffer, size_t size)
-    {
-        char filename[256];
-    #ifdef WIN32
-        sprintf_s(filename, 256, "%s\\%03d-%02d-%02d-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, suffix);
-        FILE* f = nullptr;
-        errno = 0;
-        if ( fopen_s( &f, filename, "w" ) != 0)
-        {
-//            LOG_ERR_F( "Couldn't open '%s' for writing (%d - %s).\n", filename, errno, strerror(errno) );
-            LOG_ERR_F( "Couldn't open '%s' for writing (%d).\n", filename, errno );
-            return;
-        }
-    #else
-        sprintf(filename, "%s\\%03d-%02d-%02d-%s.json", EnvPtr->OutputPath.c_str(), time_step, source, dest, suffix);
-        FILE* f = fopen(filename, "w");
-    #endif
-        fwrite(buffer, 1, size, f);
-        fflush(f);
-        fclose(f);
+        node_populations_map.insert( std::make_pair( node_suid, node->GetStatPop() ) );
     }
 
     void SimulationVector::resolveMigration()
     {
-        static const char * _module = "MpiMigration";
-
         Simulation::resolveMigration(); // Take care of the humans
 
-        std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
-        std::list< MPI_Request > outbound_requests;     // requests for each outbound message
-        std::list< BinaryArchiveWriter* > outbound_messages;  // buffers for outbound messages
-
-        for (int destination_rank = 0; destination_rank < EnvPtr->MPI.NumTasks; ++destination_rank)
-        {
-            if (destination_rank == EnvPtr->MPI.Rank)
+        WithSelfFunc to_self_func = [this](int myRank) 
+        { 
+#ifndef CLORTON
+            // Don't bother to serialize locally
+            for (auto iterator = migratingVectorQueues[myRank].rbegin(); iterator != migratingVectorQueues[myRank].rend(); ++iterator)
             {
-#ifndef _DEBUG
-                // Don't bother to serialize locally
-                for (auto individual : migratingVectorQueues[destination_rank])
-                {
-                    IMigrate* emigre = dynamic_cast<IMigrate*>(individual);
-                    emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
-                }
+                auto vector = *iterator;
+                IMigrate* emigre = dynamic_cast<IMigrate*>(vector);
+                emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
+            }
 #else
-                auto writer = new BinaryArchiveWriter();
-                (*static_cast<IArchive*>(writer)) & migratingVectorQueues[destination_rank];
-                for (auto& individual : migratingVectorQueues[destination_rank])
-                    individual->Recycle();
-                migratingVectorQueues[destination_rank].clear();
+            auto writer = new BinaryArchiveWriter();
+            (*static_cast<IArchive*>(writer)) & migratingVectorQueues[myRank];
+            for (auto& individual : migratingVectorQueues[myRank])
+                individual->Recycle();
+            migratingVectorQueues[myRank].clear();
 
-                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "vect", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
-                }
+            //if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
+            //    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, myRank, "vect", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
+            //}
 
-                const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
-                auto reader = new BinaryArchiveReader(buffer, static_cast<IArchive*>(writer)->GetBufferSize());
-                (*static_cast<IArchive*>(reader)) & migratingVectorQueues[destination_rank];
-                for (auto individual : migratingVectorQueues[destination_rank])
-                {
-                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
-                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()]);
-                }
-                delete reader;
-                delete writer;
+            const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
+            auto reader = new BinaryArchiveReader(buffer, static_cast<IArchive*>(writer)->GetBufferSize());
+            (*static_cast<IArchive*>(reader)) & migratingVectorQueues[myRank];
+            for (auto individual : migratingVectorQueues[myRank])
+            {
+                IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()]);
+            }
+            delete reader;
+            delete writer;
 #endif
-            }
-            else
-            {
-                auto writer = new BinaryArchiveWriter();
-                (*static_cast<IArchive*>(writer)) & migratingVectorQueues[destination_rank];
-                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                    _write_json( int(currentTime.time), EnvPtr->MPI.Rank, destination_rank, "sndv", static_cast<IArchive*>(writer)->GetBuffer(), static_cast<IArchive*>(writer)->GetBufferSize() );
-                }
-                for (auto& individual : migratingVectorQueues[destination_rank])
-                    individual->Recycle();  // delete individual
+        };
 
-                uint32_t buffer_size = message_size_by_rank[destination_rank] = static_cast<IArchive*>(writer)->GetBufferSize();
-                MPI_Request size_request;
-                MPI_Isend(&message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, 0, MPI_COMM_WORLD, &size_request);
-
-                if (buffer_size > 0)
-                {
-                    const char* buffer = static_cast<IArchive*>(writer)->GetBuffer();
-                    MPI_Request buffer_request;
-                    MPI_Isend(const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, 0, MPI_COMM_WORLD, &buffer_request);
-                    outbound_requests.push_back(buffer_request);
-                    outbound_messages.push_back(writer);
-                }
-            }
-
-            migratingVectorQueues[destination_rank].clear();
-        }
-
-        for (int source_rank = 0; source_rank < EnvPtr->MPI.NumTasks; ++source_rank)
+        SendToOthersFunc to_others_func = [this](IArchive* writer, int toRank)
         {
-            if (source_rank == EnvPtr->MPI.Rank) continue;  // We don't use MPI to send individuals to ourselves.
+            *writer & migratingVectorQueues[toRank];
+            for (auto& vector : migratingVectorQueues[toRank])
+                vector->Recycle();  // delete vector
+        };
 
-            uint32_t size;
-            MPI_Status status;
-            MPI_Recv(&size, 1, MPI_UNSIGNED, source_rank, 0, MPI_COMM_WORLD, &status);
+        ClearDataFunc clear_data_func = [this](int rank)
+        {
+            migratingVectorQueues[rank].clear();
+        };
 
-            if (size > 0)
+        ReceiveFromOthersFunc from_others_func = [this](IArchive* reader, int fromRank)
+        {
+            *reader & migratingVectorQueues[fromRank];
+            for (auto vector : migratingVectorQueues[fromRank])
             {
-                unique_ptr<char[]> buffer(new char[size]);
-                MPI_Status buffer_status;
-                MPI_Recv(buffer.get(), size, MPI_BYTE, source_rank, 0, MPI_COMM_WORLD, &buffer_status);
-
-                if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) {
-                    _write_json( int(currentTime.time), source_rank, EnvPtr->MPI.Rank, "rcvv", buffer.get(), size );
-                }
-
-                auto reader = make_shared<BinaryArchiveReader>(buffer.get(), size);
-                (*static_cast<IArchive*>(reader.get())) & migratingVectorQueues[source_rank];
-                for (auto individual : migratingVectorQueues[source_rank])
-                {
-                    IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
-                    immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
-                }
-
-                migratingVectorQueues[source_rank].clear();
-          }
-        }
-
-        {   // Clean up from Isend(s)
-            for (auto& request : outbound_requests)
-            {
-                MPI_Status status;
-                MPI_Wait(&request, &status);
+                IMigrate* immigrant = dynamic_cast<IMigrate*>(vector);
+                immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
             }
+        };
 
-            for (auto writer : outbound_messages)
-            {
-                delete writer;
-            }
-        }
+        MpiDataExchanger exchanger( "VectorMigration", to_self_func, to_others_func, from_others_func, clear_data_func );
+        exchanger.ExchangeData( this->currentTime );
     }
 
-    void SimulationVector::PostMigratingVector(VectorCohort* ind)
+    int SimulationVector::populateFromDemographics( const char* campaign_filename, const char* loadbalance_filename )
     {
+        int num_nodes = Simulation::populateFromDemographics( campaign_filename, loadbalance_filename );
+
+        int total_vector_population = 0;
+        for( auto node_entry : nodes )
+        {
+            node_populations_map[ node_entry.first ] = node_entry.second->GetStatPop() ;
+
+            NodeVector* pnv = static_cast<NodeVector*>( node_entry.second );
+
+            for( auto vp : pnv->GetVectorPopulations() )
+            {
+                total_vector_population += vp->getAdultCount();
+            }
+        }
+
+        if( total_vector_population == 0 )
+        {
+            LOG_WARN_F("!!!! NO VECTORS !!!!!  There are %d nodes on this core and zero vectors.",nodes.size());
+        }
+
+        return num_nodes ;
+    }
+
+    void SimulationVector::PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind )
+    {
+        for( auto report : vector_migration_reports )
+        {
+            report->LogVectorMigration( this, currentTime.time, nodeSuid, ind );
+        }
+
         // cast to VectorCohortIndividual
         // TBD: Get rid of cast, replace with QI. Not such a big deal at Simulation level
         VectorCohortIndividual* vci = static_cast<VectorCohortIndividual*>(ind);
 
         // put in queue by species and node rank
         migratingVectorQueues[nodeRankMap.GetRankFromNodeSuid(vci->GetMigrationDestination())].push_back(vci);
+    }
+
+    float SimulationVector::GetNodePopulation( const suids::suid& nodeSuid ) const
+    {
+        return nodeRankMap.GetNodeInfo( nodeSuid ).GetPopulation() ;
+    }
+
+    float SimulationVector::GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const
+    {
+        return ((NodeInfoVector&)nodeRankMap.GetNodeInfo( nodeSuid )).GetAvailableLarvalHabitat( rSpeciesID ) ;
     }
 
     void SimulationVector::setupMigrationQueues()

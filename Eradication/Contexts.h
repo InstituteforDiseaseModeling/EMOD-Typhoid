@@ -29,6 +29,7 @@ namespace Kernel
     struct DemographicsContext;
     struct NodeDemographics;
     struct NodeDemographicsDistribution;
+    struct INodeQualifier;
 
     ////////////////////////////////////////////////////////////////////////
     /* Design pattern for allowing access of child objects to methods of Simulation
@@ -62,13 +63,19 @@ namespace Kernel
         virtual suids::suid GetNextNodeSuid() = 0;
         virtual suids::suid GetNextIndividualHumanSuid() = 0;
         virtual suids::suid GetNextInfectionSuid() = 0;
+        virtual suids::suid GetNodeSuid( ExternalNodeId_t external_node_id ) = 0 ;
         virtual ExternalNodeId_t GetNodeExternalID( const suids::suid& rNodeSuid ) = 0;
+        virtual uint32_t    GetNodeRank( const suids::suid& rNodeSuid ) = 0;
 
         // random number services
         virtual RANDOMBASE* GetRng() = 0;
 
         // migration
         virtual void PostMigratingIndividualHuman(IIndividualHuman *i) = 0;
+
+        // events
+        virtual void DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier ) = 0;
+        virtual void UpdateNodeEvents() = 0;
 
         // reporting
         virtual std::vector<IReport*>& GetReports() = 0;

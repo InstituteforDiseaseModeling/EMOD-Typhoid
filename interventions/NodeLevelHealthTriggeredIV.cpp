@@ -16,6 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "EventTrigger.h"
 #include "SimulationConfig.h"  // for verifying string triggers are 'valid'
+#include "IIndividualHuman.h"
 
 static const char * _module = "NodeLevelHealthTriggeredIV";
 
@@ -37,11 +38,20 @@ namespace Kernel
     , duration(0)
     , demographic_restrictions(true,TargetDemographicType::ExplicitAgeRanges)
     , m_disqualified_by_coverage_only(false)
+    , blackout_period(0.0)
+    , blackout_time_remaining(0.0)
+    , blackout_event_trigger("UNINITIALIZED STRING")
+    , notification_occured(false)
+    , event_occured_map()
+    , event_occurred_while_resident_away()
     , actual_intervention_config()
     , _di(nullptr)
     {
         initConfigComplexType("Actual_IndividualIntervention_Config", &actual_intervention_config, BT_Actual_Intervention_Config_DESC_TEXT);
         initConfigTypeMap("Duration", &max_duration, BT_Duration_DESC_TEXT, -1.0f, FLT_MAX, -1.0f ); // -1 is a convention for indefinite duration
+
+        initConfigTypeMap( "Blackout_Period", &blackout_period, Blackout_Period_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
+        initConfigTypeMap( "Blackout_Event_Trigger", &blackout_event_trigger, Blackout_Event_Trigger_DESC_TEXT );
     }
 
     NodeLevelHealthTriggeredIV::~NodeLevelHealthTriggeredIV() { }
@@ -203,6 +213,78 @@ namespace Kernel
         const std::string& StateChange
     )
     {
+        IIndividualHuman *p_human = nullptr;
+        if (s_OK != pIndiv->QueryInterface(GET_IID(IIndividualHuman), (void**)&p_human))
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndiv", "IIndividualHuman", "IIndividualHumanEventContext" );
+        }
+
+        bool missed_intervention = false ;
+        if( StateChange == IndividualEventTriggerType::pairs::lookup_key( IndividualEventTriggerType::Emigrating ) )
+        {
+            if( p_human->AtHome() )
+            {
+                // ------------------------------------------------------------------------------------------------
+                // --- If the individual is leaving his node of residence, then we want to keep track that he left
+                // --- so that when he returns we can give him the interventions that he missed.
+                // ------------------------------------------------------------------------------------------------
+                release_assert( event_occurred_while_resident_away.count( pIndiv->GetSuid() ) == 0 );
+                event_occurred_while_resident_away.insert( make_pair( pIndiv->GetSuid(), false ) );
+            }
+            return false ;
+        }
+        else if( StateChange == IndividualEventTriggerType::pairs::lookup_key( IndividualEventTriggerType::Immigrating ) )
+        {
+            if( p_human->AtHome() )
+            {
+                // ------------------------------------------------------------------------------
+                // --- If the individual has returned home and they missed the intervention, then
+                // --- we want them to get it, assuming they qualify.
+                // ------------------------------------------------------------------------------
+                release_assert( event_occurred_while_resident_away.count( pIndiv->GetSuid() ) > 0 );
+                missed_intervention = event_occurred_while_resident_away[ pIndiv->GetSuid() ] ;
+                event_occurred_while_resident_away.erase( pIndiv->GetSuid() );
+                if( missed_intervention )
+                {
+                    LOG_DEBUG_F( "Resident %d came home and intervention was distributed while away.\n", pIndiv->GetSuid().data );
+                }
+            }
+
+            if( !missed_intervention )
+            {
+                return false ;
+            }
+        }
+        else // the trigger event
+        {
+            // --------------------------------------------------------------------------------------------
+            // --- If this is one of the non-migrating events that they intervention is listening for
+            // --- and this is not a blackout period, then record that the residents that are away missed
+            // --- the intervention.
+            // --------------------------------------------------------------------------------------------
+            if( blackout_time_remaining <= 0.0f )
+            {
+                for( auto& rEntry : event_occurred_while_resident_away )
+                {
+                    rEntry.second = true ;
+                }
+            }
+        }
+
+        if( !blackout_event_trigger.IsUninitialized() && (blackout_event_trigger != NO_TRIGGER_STR ) && (blackout_period > 0.0) )
+        {
+            if( (event_occured_map[ StateChange ].count( pIndiv->GetSuid().data ) > 0) || (!missed_intervention && (blackout_time_remaining > 0.0f)) )
+            {
+                INodeTriggeredInterventionConsumer * pNTIC = NULL;
+                if (s_OK != parent->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&pNTIC) )
+                {
+                    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
+                }
+                pNTIC->TriggerNodeEventObserversByString( pIndiv, blackout_event_trigger );
+                return false;
+            }
+        }
+
         LOG_DEBUG_F("Individual %d experienced event %s, check to see if they pass the conditions before distributing actual_intervention \n",
                     pIndiv->GetInterventionsContext()->GetParent()->GetSuid().data,
                     StateChange.c_str()
@@ -261,6 +343,8 @@ namespace Kernel
         {
             if( di->Distribute( pIndiv->GetInterventionsContext(), iCCO ) )
             {
+                notification_occured = true ;
+                event_occured_map[ StateChange ].insert( pIndiv->GetSuid().data );
 /*
                 auto classname = (std::string) json::QuickInterpreter(actual_intervention_config._json)["class"].As<json::String>();
                 LOG_DEBUG_F("A Node level health-triggered intervention (%s) was successfully distributed to individual %d\n",
@@ -274,6 +358,7 @@ namespace Kernel
             }
             di->Release();
         }
+
         return ret;
     }
 
@@ -292,11 +377,20 @@ namespace Kernel
                 {
                     pNTIC->UnregisterNodeEventObserverByString( this, trigger );
                 }
+                expired = true ;
             }
             else
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
             }
+        }
+        event_occured_map.clear();
+        blackout_time_remaining -= dt ;
+        if( notification_occured )
+        {
+            notification_occured = false ;
+            blackout_time_remaining = blackout_period ;
+            LOG_DEBUG_F( "start blackout period - nodeid=%d\n",parent->GetExternalId() );
         }
     }
 
@@ -351,6 +445,12 @@ namespace Kernel {
         ar & iv.efficacy;
         ar & iv.max_duration;
         ar & iv.m_trigger_conditions;
+        ar & iv.blackout_period;
+        ar & iv.blackout_time_remaining;
+        ar & iv.blackout_event_trigger;
+        ar & iv.notification_occured;
+        ar & iv.event_occured_map;
+        ar & iv.event_occurred_while_resident_away;
     }
 }
 #endif

@@ -15,6 +15,7 @@ namespace Kernel
 {
     struct IVectorCohortIndividual : ISupports
     {
+        virtual uint64_t GetID() const = 0 ;
         virtual VectorStateEnum::Enum & GetState() = 0;
         virtual void SetState( const VectorStateEnum::Enum & ) = 0;
         virtual float GetAdditionalMortality() const = 0;
@@ -54,9 +55,15 @@ namespace Kernel
 
         // IMigrate interfaces
         virtual void ImmigrateTo(INodeContext* destination_node) override;
-        virtual void SetMigrationDestination(suids::suid destination) override;
+        virtual void SetMigrating( suids::suid destination, 
+                                   MigrationType::Enum type, 
+                                   float timeUntilTrip, 
+                                   float timeAtDestination,
+                                   bool isDestinationNewHome ) override;
         virtual const suids::suid& GetMigrationDestination() override;
+        virtual MigrationType::Enum GetMigrationType() const override { return migration_type ; }
 
+        virtual uint64_t GetID() const override { return m_ID; }
         virtual VectorStateEnum::Enum & GetState() override;
         virtual void SetState( const VectorStateEnum::Enum & ) override;
         virtual float GetAdditionalMortality() const override;
@@ -82,12 +89,14 @@ namespace Kernel
         VectorCohortIndividual(VectorStateEnum::Enum state, float age, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics, std::string vector_species_name);
         /* clorton virtual */ void Initialize() /* clorton override */;
 
+        uint64_t m_ID ;
         VectorStateEnum::Enum state;
         float additional_mortality;
         float oviposition_timer;
         int parity;
         int neweggs;
         suids::suid migration_destination;
+        MigrationType::Enum migration_type ;
         std::string species;
 
         StrainIdentity* m_strain;

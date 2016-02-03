@@ -38,10 +38,14 @@ namespace Kernel
         // Inspection
         virtual suids::suid GetSuid() const = 0;
         virtual double GetAge() const = 0;
+        virtual bool IsAdult() const = 0;
         virtual int GetGender() const = 0;
         virtual double GetMonteCarloWeight() const = 0;
         virtual bool IsInfected() const = 0;
         virtual bool AtHome() const = 0;
+        virtual bool IsOnFamilyTrip() const = 0 ;
+        virtual const suids::suid& GetHomeNodeId() const = 0 ;
+        virtual bool IsDead() const = 0;
 
         virtual NewInfectionState::_enum GetNewInfectionState() const = 0;
         virtual HumanStateChange GetStateChange() const = 0;
@@ -72,6 +76,12 @@ namespace Kernel
 
         // Migration
         virtual void SetContextTo( INodeContext* ) = 0;
+        virtual void SetGoingOnFamilyTrip( suids::suid migrationDestination, 
+                                           MigrationType::Enum migrationType, 
+                                           float timeUntilTrip, 
+                                           float timeAtDestination ) = 0;
+        virtual void SetWaitingToGoOnFamilyTrip() = 0;
+        virtual void GoHome() = 0;
 
         virtual ~IIndividualHuman() {}
     };
