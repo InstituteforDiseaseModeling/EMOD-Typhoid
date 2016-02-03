@@ -47,7 +47,7 @@
                }
           }, 
           "PRIMARY": {
-               "Config_Name": "34_MV_hum_local_reg_sea_vec_local_reg_outbreak_57_BETON_MigrateTo_4_cores", 
+               "Config_Name": "34_MV_hum_local_reg_sea_vec_local_reg_outbreak_57_BETON_MigrateIndividuals_4_cores", 
                "Geography": "Household_MultipleVillages", 
                "Listed_Events": ["VaccinateNeighbors", "Blackout"], 
                "Node_Grid_Size": 0.005, 
