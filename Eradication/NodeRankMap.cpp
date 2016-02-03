@@ -50,10 +50,7 @@ namespace Kernel
         // don't own pNodeInfoFactory
         pNodeInfoFactory = nullptr ;
 
-        if( m_Buffer != nullptr )
-        {
-            free( m_Buffer );
-        }
+        free( m_Buffer );
     }
 
     std::string NodeRankMap::ToString()
@@ -185,7 +182,6 @@ namespace Kernel
             writer->endObject();
         }
         writer->endArray();
-
 
         char* buffer_temp = const_cast<char*>(writer->GetBuffer());
         unsigned char* buffer = (unsigned char*)buffer_temp;
