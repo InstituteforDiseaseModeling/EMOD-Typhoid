@@ -567,9 +567,9 @@ namespace Kernel
         return int(nodePop);
     }
 
-    int NodeEventContextHost::GetExternalId() const
+    ExternalNodeId_t NodeEventContextHost::GetExternalId() const
     {
-        uint32_t nodeId = node->GetExternalID();
+        ExternalNodeId_t nodeId = node->GetExternalID();
         return nodeId;
     }
 }

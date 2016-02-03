@@ -178,7 +178,7 @@ SpatialReport::LogNodeData(
 
     // a bit of a hack... store nodeid's as "floats" so that we can just reduce them like any other channel;
     // they're same size as floats anyway, so we can write them out to the output file just fine...
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
     float * flt = (float*)&nodeid;
     Accumulate("NodeID", nodeid, *flt);
 

@@ -129,7 +129,7 @@ SpatialReportPolio::LogNodeData(
 {
     SpatialReport::LogNodeData(pNC);
 
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
 
     const Kernel::INodePolio * pPolioNode = nullptr;
     if( pNC->QueryInterface( GET_IID( Kernel::INodePolio), (void**) &pPolioNode ) != Kernel::s_OK )

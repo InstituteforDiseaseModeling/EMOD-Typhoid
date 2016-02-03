@@ -80,7 +80,7 @@ SpatialReportMalaria::LogNodeData(
 {
     SpatialReportVector::LogNodeData(pNC);
 
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
 
     const INodeMalaria* pMalariaNode = nullptr;
     if( pNC->QueryInterface( GET_IID(INodeMalaria), (void**)&pMalariaNode ) != s_OK )

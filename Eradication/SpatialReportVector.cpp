@@ -104,7 +104,7 @@ SpatialReportVector::LogNodeData(
         daily_hbr          += vectorpopulation->GetHBRByPool(Kernel::VectorPoolIdEnum::BOTH_VECTOR_POOLS);
     }
 
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
 
     if(adult_vectors_info.enabled)
         Accumulate(adult_vectors_info.name, nodeid, adult_vectors);

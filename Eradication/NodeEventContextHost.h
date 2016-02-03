@@ -50,7 +50,7 @@ namespace Kernel
         virtual ::RANDOMBASE* GetRng() override;
         virtual INodeContext* GetNodeContext() override;
         virtual int GetIndividualHumanCount() const override;
-        virtual int GetExternalId() const override;
+        virtual ExternalNodeId_t GetExternalId() const override;
 
         virtual void UpdateInterventions(float = 0.0f) override;
 
