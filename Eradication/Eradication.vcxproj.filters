@@ -978,6 +978,9 @@
     <ClCompile Include="..\interventions\MigrateIndividuals.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
+    <ClCompile Include="..\interventions\MigrateFamily.cpp">
+      <Filter>Source Files\Campaign\NodeTargeted</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2129,6 +2132,9 @@
     </ClInclude>
     <ClInclude Include="..\interventions\MigrateIndividuals.h">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\MigrateFamily.h">
+      <Filter>Source Files\Campaign\NodeTargeted</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

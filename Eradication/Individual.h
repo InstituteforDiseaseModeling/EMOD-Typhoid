@@ -193,7 +193,8 @@ namespace Kernel
         virtual void SetGoingOnFamilyTrip( suids::suid migrationDestination, 
                                            MigrationType::Enum migrationType, 
                                            float timeUntilTrip, 
-                                           float timeAtDestination ) override;
+                                           float timeAtDestination,
+                                           bool isDestinationNewHome ) override;
         virtual void SetWaitingToGoOnFamilyTrip() override;
         virtual void GoHome() override;
 
@@ -245,6 +246,7 @@ namespace Kernel
         MigrationType::Enum family_migration_type ;
         float               family_migration_time_until_trip ;
         float               family_migration_time_at_destination ;
+        bool                family_migration_is_destination_new_home;
 
         suids::suid home_node_id ;
 

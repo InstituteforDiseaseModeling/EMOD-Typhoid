@@ -127,7 +127,8 @@ namespace Kernel
         virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, 
                                               MigrationType::Enum migrationType, 
                                               float timeUntilTrip, 
-                                              float timeAtDestination ) = 0;
+                                              float timeAtDestination,
+                                              bool isDestinationNewHome ) = 0;
     };
 }
 

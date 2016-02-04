@@ -88,11 +88,12 @@ namespace Kernel
         ENUM_VALUE_SPEC(LEVY_FLIGHTS                                        , 3))
 
     ENUM_DEFINE(MigrationType,
-        ENUM_VALUE_SPEC(NO_MIGRATION       , 0)
-        ENUM_VALUE_SPEC(LOCAL_MIGRATION    , 1)
-        ENUM_VALUE_SPEC(AIR_MIGRATION      , 2)
-        ENUM_VALUE_SPEC(REGIONAL_MIGRATION , 3)
-        ENUM_VALUE_SPEC(SEA_MIGRATION      , 4))
+        ENUM_VALUE_SPEC(NO_MIGRATION           , 0)
+        ENUM_VALUE_SPEC(LOCAL_MIGRATION        , 1)
+        ENUM_VALUE_SPEC(AIR_MIGRATION          , 2)
+        ENUM_VALUE_SPEC(REGIONAL_MIGRATION     , 3)
+        ENUM_VALUE_SPEC(SEA_MIGRATION          , 4)
+        ENUM_VALUE_SPEC(INTERVENTION_MIGRATION , 5))
 
     // ENUM defs for MORTALITY_TIME_COURSE
     ENUM_DEFINE(MortalityTimeCourse, 

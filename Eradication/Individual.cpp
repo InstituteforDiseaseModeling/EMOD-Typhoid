@@ -222,6 +222,7 @@ namespace Kernel
         , family_migration_type(MigrationType::NO_MIGRATION)
         , family_migration_time_until_trip(0.0)
         , family_migration_time_at_destination(0.0)
+        , family_migration_is_destination_new_home(false)
         , home_node_id(suids::nil_suid())
         , Properties()
         , parent(nullptr)
@@ -267,6 +268,7 @@ namespace Kernel
         , family_migration_type(MigrationType::NO_MIGRATION)
         , family_migration_time_until_trip(0.0)
         , family_migration_time_at_destination(0.0)
+        , family_migration_is_destination_new_home(false)
         , home_node_id(suids::nil_suid())
         , Properties()
         , parent(nullptr)
@@ -768,13 +770,14 @@ namespace Kernel
         case MigrationStructure::FIXED_RATE_MIGRATION:
             if( leave_on_family_trip )
             {
-                migration_outbound            = true;
-                migration_will_return         = true;
-                migration_destination         = family_migration_destination;
-                migration_type                = family_migration_type;
-                migration_time_until_trip     = family_migration_time_until_trip;
-                migration_time_at_destination = family_migration_time_at_destination;
-                is_on_family_trip             = true;
+                migration_outbound                = true;
+                migration_will_return             = true;
+                migration_destination             = family_migration_destination;
+                migration_type                    = family_migration_type;
+                migration_time_until_trip         = family_migration_time_until_trip;
+                migration_time_at_destination     = family_migration_time_at_destination;
+                migration_is_destination_new_home = family_migration_is_destination_new_home;
+                is_on_family_trip                 = true;
 
                 leave_on_family_trip             = false;
                 family_migration_destination     = suids::nil_suid();
@@ -855,7 +858,8 @@ namespace Kernel
                     parent->SetWaitingForFamilyTrip( migration_destination, 
                                                      migration_type,
                                                      migration_time_until_trip,
-                                                     time_at_destination );
+                                                     time_at_destination,
+                                                     false );
 
                     migration_destination = suids::nil_suid();
                     migration_type = MigrationType::NO_MIGRATION;
@@ -969,14 +973,16 @@ namespace Kernel
     void IndividualHuman::SetGoingOnFamilyTrip( suids::suid migrationDestination,
                                                 MigrationType::Enum migrationType,
                                                 float timeUntilTrip,
-                                                float timeAtDestination )
+                                                float timeAtDestination,
+                                                bool isDestinationNewHome )
     {
-        leave_on_family_trip                 = true ;
-        family_migration_destination         = migrationDestination ;
-        family_migration_type                = migrationType ;
-        family_migration_time_until_trip     = timeUntilTrip ;
-        family_migration_time_at_destination = timeAtDestination ;
-        waiting_for_family_trip              = false ;
+        leave_on_family_trip                     = true;
+        family_migration_destination             = migrationDestination;
+        family_migration_type                    = migrationType;
+        family_migration_time_until_trip         = timeUntilTrip;
+        family_migration_time_at_destination     = timeAtDestination;
+        family_migration_is_destination_new_home = isDestinationNewHome;
+        waiting_for_family_trip                  = false;
     }
 
     void IndividualHuman::SetWaitingToGoOnFamilyTrip()
@@ -1411,6 +1417,7 @@ namespace Kernel
         ar.labelElement("family_migration_type") & (uint32_t&)individual.family_migration_type;
         ar.labelElement("family_migration_time_until_trip") & individual.family_migration_time_until_trip;
         ar.labelElement("family_migration_time_at_destination") & individual.family_migration_time_at_destination;
+        ar.labelElement("family_migration_is_destination_new_home") & individual.family_migration_is_destination_new_home;
         ar.labelElement("family_migration_destination") & individual.family_migration_destination.data;
     }
 

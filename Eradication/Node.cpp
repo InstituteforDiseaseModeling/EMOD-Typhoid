@@ -376,6 +376,7 @@ namespace Kernel
         , family_migration_type(MigrationType::NO_MIGRATION)
         , family_time_until_trip(0.0f)
         , family_time_at_destination(0.0f)
+        , family_is_destination_new_home(false)
         , Ind_Sample_Rate(1.0f)
         , transmissionGroups(nullptr)
         , susceptibility_dynamic_scaling(1.0f)
@@ -475,6 +476,7 @@ namespace Kernel
         , family_migration_type(MigrationType::NO_MIGRATION)
         , family_time_until_trip(0.0f)
         , family_time_at_destination(0.0f)
+        , family_is_destination_new_home(false)
         , Ind_Sample_Rate(1.0f)
         , transmissionGroups(nullptr)
         , susceptibility_dynamic_scaling(1.0f)
@@ -1306,13 +1308,54 @@ namespace Kernel
     void Node::SetWaitingForFamilyTrip( suids::suid migrationDestination, 
                                         MigrationType::Enum migrationType, 
                                         float timeUntilTrip, 
-                                        float timeAtDestination )
+                                        float timeAtDestination,
+                                        bool isDestinationNewHome )
     {
-        family_waiting_to_migrate     = true;
-        family_migration_destination  = migrationDestination;
-        family_migration_type         = migrationType;
-        family_time_until_trip        = timeUntilTrip;
-        family_time_at_destination    = timeAtDestination;
+        family_waiting_to_migrate      = true;
+        family_migration_destination   = migrationDestination;
+        family_migration_type          = migrationType;
+        family_time_until_trip         = timeUntilTrip;
+        family_time_at_destination     = timeAtDestination;
+        family_is_destination_new_home = isDestinationNewHome;
+    }
+
+    void Node::ManageFamilyTrip( float currentTime, float dt )
+    {
+        if( family_waiting_to_migrate )
+        {
+            bool leave_on_trip = IsEveryoneHome() ;
+            for (auto individual : individualHumans)
+            {
+                if( home_individual_ids.count( individual->GetSuid().data ) > 0 )
+                {
+                    if( leave_on_trip )
+                    {
+                        individual->SetGoingOnFamilyTrip( family_migration_destination, 
+                                                          family_migration_type, 
+                                                          family_time_until_trip, 
+                                                          family_time_at_destination,
+                                                          family_is_destination_new_home );
+                    }
+                    else
+                    {
+                        individual->SetWaitingToGoOnFamilyTrip();
+                    }
+                }
+            }
+            if( leave_on_trip )
+            {
+                family_waiting_to_migrate      = false ;
+                family_migration_destination   = suids::nil_suid();
+                family_migration_type          = MigrationType::NO_MIGRATION;
+                family_time_until_trip         = 0.0f;
+                family_time_at_destination     = 0.0f ;
+                family_is_destination_new_home = false;
+            }
+            else
+            {
+                family_time_until_trip -= dt ;
+            }
+        }
     }
 
     void Node::Update(float dt)
@@ -1324,38 +1367,6 @@ namespace Kernel
         {
             localWeather->UpdateWeather(GetTime().time, dt);
         }
-
-        if( family_waiting_to_migrate )
-        {
-            bool leave_on_trip = IsEveryoneHome() ;
-            for (auto individual : individualHumans)
-            {
-                if( home_individual_ids.count( individual->GetSuid().data ) > 0 )
-                {
-                    if( leave_on_trip )
-                    {
-                        individual->SetGoingOnFamilyTrip( family_migration_destination, family_migration_type, family_time_until_trip, family_time_at_destination );
-                    }
-                    else
-                    {
-                        individual->SetWaitingToGoOnFamilyTrip();
-                    }
-                }
-            }
-            if( leave_on_trip )
-            {
-                family_waiting_to_migrate     = false ;
-                family_migration_destination  = suids::nil_suid();
-                family_migration_type         = MigrationType::NO_MIGRATION;
-                family_time_until_trip        = 0.0f;
-                family_time_at_destination    = 0.0f ;
-            }
-            else
-            {
-                family_time_until_trip -= dt ;
-            }
-        }
-
 
         // Update node-level interventions
         if (params()->interventions) 
@@ -1376,6 +1387,8 @@ namespace Kernel
                 }
             }
         }
+
+        ManageFamilyTrip( GetTime().time, dt );
 
         //-------- Accumulate infectivity and reporting counters ---------
 
@@ -1870,6 +1883,15 @@ namespace Kernel
                 if( demographics["IndividualAttributes"].Contains( "PercentageChildren" ) )
                 {
                     float required_percentage_of_children = demographics["IndividualAttributes"]["PercentageChildren"].AsDouble();
+
+                    if( (required_percentage_of_children > 0.0f)  && IndividualHumanConfig::IsAdultAge( 0.0 ) )
+                    {
+                        throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__,
+                            "Minimum_Adult_Age_Years", 0,
+                            "<demographics>::Defaults/Node.IndividualAttributes.PercentageChildren", required_percentage_of_children,
+                            "You can't have any children if everyone is an adult (Minimum_Adult_Age_Years = 0 implies every one is an adult)." );
+                    }
+
                     float required_percentage_of_adults = 1.0  -required_percentage_of_children ;
                     float percent_children = (float)num_children / (float)count_new_individuals ;
                     float percent_adults   = (float)num_adults   / (float)count_new_individuals ;
@@ -2993,6 +3015,7 @@ namespace Kernel
             ar.labelElement("family_migration_type") & (uint32_t&)node.family_migration_type;
             ar.labelElement("family_time_until_trip") & node.family_time_until_trip;
             ar.labelElement("family_time_at_destination") & node.family_time_at_destination;
+            ar.labelElement("family_is_destination_new_home") & node.family_is_destination_new_home;
             ar.labelElement("Ind_Sample_Rate") & node.Ind_Sample_Rate;
 // clorton          ar.labelElement("transmissionGroups") & node.transmissionGroups;
             ar.labelElement("susceptibility_dynamic_scaling") & node.susceptibility_dynamic_scaling;
