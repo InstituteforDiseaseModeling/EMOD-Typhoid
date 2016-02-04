@@ -157,29 +157,6 @@
                 ], 
                 "Transmission_Rate": 0.5
             }, 
-            "farauti": {
-                "Acquire_Modifier": 0.05, 
-                "Adult_Life_Expectancy": 5.9, 
-                "Anthropophily": 0.97, 
-                "Aquatic_Arrhenius_1": 84200000000, 
-                "Aquatic_Arrhenius_2": 8328, 
-                "Aquatic_Mortality_Rate": 0.1, 
-                "Days_Between_Feeds": 2, 
-                "Egg_Batch_Size": 70, 
-                "Habitat_Type": [
-                    "BRACKISH_SWAMP"
-                ], 
-                "Immature_Duration": 2, 
-                "Indoor_Feeding_Fraction": 0.05, 
-                "Infected_Arrhenius_1": 117000000000, 
-                "Infected_Arrhenius_2": 8336, 
-                "Infected_Egg_Batch_Factor": 0.8, 
-                "Infectious_Human_Feed_Mortality_Factor": 1.5, 
-                "Required_Habitat_Factor": [
-                    10000000000
-                ], 
-                "Transmission_Rate": 0.8
-            }, 
             "funestus": {
                 "Acquire_Modifier": 0.2, 
                 "Adult_Life_Expectancy": 10, 
