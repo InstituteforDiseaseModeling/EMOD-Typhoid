@@ -249,19 +249,19 @@ namespace Kernel
         return tempind;
     }
 
-    void NodeTB::processEmigratingIndividual(IndividualHuman *individual)
+    void NodeTB::processEmigratingIndividual( IIndividualHuman* individual )
     {
         dynamic_cast<IndividualHumanTB*>(individual)->UnRegisterAllObservers( this );
-        NodeAirborne::processEmigratingIndividual(individual);
-
+        NodeAirborne::processEmigratingIndividual( individual );
     }
 
-    IIndividualHuman* NodeTB::processImmigratingIndividual( IIndividualHuman* movedind)
+    IIndividualHuman* NodeTB::processImmigratingIndividual( IIndividualHuman* individual )
     {
-        movedind = NodeAirborne::processImmigratingIndividual(movedind);
-        dynamic_cast<IndividualHumanTB*>(movedind)->RegisterInfectionIncidenceObserver( this );
-        return movedind;
+        individual = NodeAirborne::processImmigratingIndividual( individual );
+        dynamic_cast<IndividualHumanTB*>(individual)->RegisterInfectionIncidenceObserver( this );
+        return individual;
     }
+
     float NodeTB::GetIncidentCounter() const 
     {
         return incident_counter;

@@ -11,77 +11,74 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifdef ENABLE_TB
 
-#include "ReportTB.h" // for base class
+#include "ReportTB.h"
 #include "IndividualTB.h"
 #include "Types.h"
 static const char* _module = "ReportTB";
 
-
-
 namespace Kernel
 {
-    static const char * _latent_TB_label = "Latent TB Prevalence";
-    static const char * _latent_fast_label = "Latent Fast TB Prevalence";
-    static const char * _active_TB_label = "Active TB Prevalence";
-    static const char * _active_presymp_label = "Active Presymptomatic Prevalence";
-    static const char * _active_smear_neg_label = "Active Smear neg Prevalence";
-    static const char * _sx_smear_pos_label = "Active Sx Smear pos Prevalence";
-    static const char * _sx_smear_neg_label = "Active Sx Smear neg Prevalence";
+    static const char * _latent_TB_label          = "Latent TB Prevalence";
+    static const char * _latent_fast_label        = "Latent Fast TB Prevalence";
+    static const char * _active_TB_label          = "Active TB Prevalence";
+    static const char * _active_presymp_label     = "Active Presymptomatic Prevalence";
+    static const char * _active_smear_neg_label   = "Active Smear neg Prevalence";
+    static const char * _sx_smear_pos_label       = "Active Sx Smear pos Prevalence";
+    static const char * _sx_smear_neg_label       = "Active Sx Smear neg Prevalence";
     static const char * _sx_smear_extrapulm_label = "Active Sx Extrapulm Prevalence";
-    static const char * _mdr_TB_label = "MDR TB Prevalence";
-    static const char * _active_mdr_TB_label = "Active MDR TB Prevalence";
+    static const char * _mdr_TB_label             = "MDR TB Prevalence";
+    static const char * _active_mdr_TB_label      = "Active MDR TB Prevalence";
     static const char * _TB_immune_fraction_label = "TB Immune Fraction";
 
-    static const char * _new_active_label = "New Active TB Infections";
-    static const char * _newly_cleared_label = "Newly Cleared TB Infections";
-    static const char * _new_smear_pos_label = "New Smear Positive Infections";
+    static const char * _new_active_label      = "New Active TB Infections";
+    static const char * _newly_cleared_label   = "Newly Cleared TB Infections";
+    static const char * _new_smear_pos_label   = "New Smear Positive Infections";
     static const char * _new_active_fast_label = "New Active Fast TB Infections";
     static const char * _new_active_slow_label = "New Active Slow TB Infections";
 
-    static const char * _active_sx_label = "Active Symptomatic Prevalence";
-    static const char * _mdr_active_sx_label = "Fraction Sx that is MDR";
+    static const char * _active_sx_label               = "Active Symptomatic Prevalence";
+    static const char * _mdr_active_sx_label           = "Fraction Sx that is MDR";
     static const char * _mdr_active_sx_smear_pos_label = "Fraction Smear pos that is MDR";
-    static const char * _mdr_active_sx_evolved_label = "Fraction Sx MDR that is evolved";
-    static const char * _infectiousness_fast_label = "Infectiousness Fast Progressors";
+    static const char * _mdr_active_sx_evolved_label   = "Fraction Sx MDR that is evolved";
+    static const char * _infectiousness_fast_label     = "Infectiousness Fast Progressors";
 
     static const char * _disease_deaths_MDR_label = "Disease Deaths MDR";
 
     ReportTB::ReportTB()
-    :ReportAirborne()
+        : ReportAirborne()
     {
         disease_deaths_MDR = 0.0f;
     }
 
     void ReportTB::BeginTimestep()
     {
-        Report::BeginTimestep();
+        ReportAirborne::BeginTimestep();
 
-        latent_TB_persons = 0.0f;
-        latent_fast = 0.0f;
-        active_TB_persons = 0.0f;
+        latent_TB_persons     = 0.0f;
+        latent_fast           = 0.0f;
+        active_TB_persons     = 0.0f;
         active_presymptomatic = 0.0f;
-        active_smear_neg = 0.0f;
-        active_sx_smear_pos = 0.0f;
-        active_sx_smear_neg = 0.0f;
-        active_sx_extrapulm = 0.0f;
+        active_smear_neg      = 0.0f;
+        active_sx_smear_pos   = 0.0f;
+        active_sx_smear_neg   = 0.0f;
+        active_sx_extrapulm   = 0.0f;
 
-        MDR_TB_persons = 0.0f;
+        MDR_TB_persons        = 0.0f;
         active_MDR_TB_persons = 0.0f;
-        TB_immune_persons = 0.0f;
+        TB_immune_persons     = 0.0f;
 
-        new_active_TB_infections = 0.0f;
-        newly_cleared_TB_infections = 0.0f;
+        new_active_TB_infections      = 0.0f;
+        newly_cleared_TB_infections   = 0.0f;
         new_smear_positive_infections = 0.0f;
         new_active_fast_TB_infections = 0.0f;
         new_active_slow_TB_infections = 0.0f;
 
-        active_sx = 0.0f;
-        mdr_active_sx = 0.0f;;
+        active_sx               = 0.0f;
+        mdr_active_sx           = 0.0f;;
         mdr_active_sx_smear_pos = 0.0f;
-        mdr_active_sx_evolved = 0.0f;
+        mdr_active_sx_evolved   = 0.0f;
 
         infectiousness_fast = 0.0f;
-
     }
 
     void
@@ -92,33 +89,33 @@ namespace Kernel
         ReportAirborne::populateSummaryDataUnitsMap(units_map);
     
         // Additional TB channels
-        units_map[_latent_TB_label]                = _infected_fraction_label;
-        units_map[_latent_fast_label]          = _infected_fraction_label;
-        units_map[_active_TB_label]                = _infected_fraction_label;
-        units_map[_active_presymp_label]        = _infected_fraction_label;
-        units_map[_active_smear_neg_label]      = _infected_fraction_label;
+        units_map[_latent_TB_label]               = _infected_fraction_label;
+        units_map[_latent_fast_label]             = _infected_fraction_label;
+        units_map[_active_TB_label]               = _infected_fraction_label;
+        units_map[_active_presymp_label]          = _infected_fraction_label;
+        units_map[_active_smear_neg_label]        = _infected_fraction_label;
         units_map[_sx_smear_pos_label]            = _infected_fraction_label;
         units_map[_sx_smear_neg_label]            = _infected_fraction_label;
-        units_map[_sx_smear_extrapulm_label]    = _infected_fraction_label;
-        units_map[_mdr_TB_label]                = _infected_fraction_label;
-        units_map[_active_mdr_TB_label]            = _infected_fraction_label;
-        units_map[_TB_immune_fraction_label]            = "Immune fraction";
+        units_map[_sx_smear_extrapulm_label]      = _infected_fraction_label;
+        units_map[_mdr_TB_label]                  = _infected_fraction_label;
+        units_map[_active_mdr_TB_label]           = _infected_fraction_label;
+        units_map[_TB_immune_fraction_label]      = "Immune fraction";
 
-        units_map[_new_active_label]          = "";
-        units_map[_newly_cleared_label]       = "";
-        units_map[_new_smear_pos_label]       = "";
+        units_map[_new_active_label]              = "";
+        units_map[_newly_cleared_label]           = "";
+        units_map[_new_smear_pos_label]           = "";
 
-        units_map[_new_active_fast_label]  = "";
-        units_map[_new_active_slow_label]  = "";
+        units_map[_new_active_fast_label]         = "";
+        units_map[_new_active_slow_label]         = "";
 
-        units_map[_active_sx_label]          = "";
-        units_map[_mdr_active_sx_label]       = "MDR fraction";
-        units_map[_mdr_active_sx_smear_pos_label]       = "MDR fraction";
-        units_map[_mdr_active_sx_evolved_label]          = "MDR fraction";
+        units_map[_active_sx_label]               = "";
+        units_map[_mdr_active_sx_label]           = "MDR fraction";
+        units_map[_mdr_active_sx_smear_pos_label] = "MDR fraction";
+        units_map[_mdr_active_sx_evolved_label]   = "MDR fraction";
 
-        units_map[ _infectiousness_fast_label] = "";
+        units_map[ _infectiousness_fast_label]    = "";
 
-        units_map[_disease_deaths_MDR_label] = "";
+        units_map[_disease_deaths_MDR_label]      = "";
     }
 
     void
@@ -127,23 +124,23 @@ namespace Kernel
         ReportAirborne::postProcessAccumulatedData();
 
         // Normalize TB-specific summary data channels
-        normalizeChannel(_latent_TB_label,            _stat_pop_label);
-        normalizeChannel(_latent_fast_label,        _stat_pop_label);
-        normalizeChannel(_active_TB_label,            _stat_pop_label);
-        normalizeChannel(_mdr_TB_label,                _stat_pop_label);
-        normalizeChannel(_active_mdr_TB_label,        _stat_pop_label);
-        normalizeChannel(_TB_immune_fraction_label, _stat_pop_label);
+        normalizeChannel(_latent_TB_label,               _stat_pop_label);
+        normalizeChannel(_latent_fast_label,             _stat_pop_label);
+        normalizeChannel(_active_TB_label,               _stat_pop_label);
+        normalizeChannel(_mdr_TB_label,                  _stat_pop_label);
+        normalizeChannel(_active_mdr_TB_label,           _stat_pop_label);
+        normalizeChannel(_TB_immune_fraction_label,      _stat_pop_label);
 
-        normalizeChannel(_mdr_active_sx_evolved_label,        _mdr_active_sx_label);
-        normalizeChannel(_mdr_active_sx_label,                _active_sx_label);
-        normalizeChannel(_mdr_active_sx_smear_pos_label,    _sx_smear_pos_label);
+        normalizeChannel(_mdr_active_sx_evolved_label,   _mdr_active_sx_label);
+        normalizeChannel(_mdr_active_sx_label,           _active_sx_label);
+        normalizeChannel(_mdr_active_sx_smear_pos_label, _sx_smear_pos_label);
 
-        normalizeChannel(_active_presymp_label,        _stat_pop_label);
-        normalizeChannel(_sx_smear_pos_label,        _stat_pop_label);
-        normalizeChannel(_sx_smear_neg_label,        _stat_pop_label);
-        normalizeChannel(_sx_smear_extrapulm_label, _stat_pop_label);
-        normalizeChannel(_active_smear_neg_label,   _stat_pop_label);
-        normalizeChannel(_active_sx_label,            _stat_pop_label);
+        normalizeChannel(_active_presymp_label,          _stat_pop_label);
+        normalizeChannel(_sx_smear_pos_label,            _stat_pop_label);
+        normalizeChannel(_sx_smear_neg_label,            _stat_pop_label);
+        normalizeChannel(_sx_smear_extrapulm_label,      _stat_pop_label);
+        normalizeChannel(_active_smear_neg_label,        _stat_pop_label);
+        normalizeChannel(_active_sx_label,               _stat_pop_label);
     }
 
     void ReportTB::UpdateSEIRW( const IIndividualHuman * const individual, float monte_carlo_weight )
@@ -307,7 +304,6 @@ namespace Kernel
         {
             MDR_TB_persons += monte_carlo_weight;
         }
-
     }
 
     void
@@ -317,43 +313,48 @@ namespace Kernel
     {
         ReportAirborne::LogNodeData( pNC );
 
-        Accumulate(_latent_TB_label,                latent_TB_persons );
-        Accumulate(_latent_fast_label,                latent_fast);
-        Accumulate(_active_TB_label,                active_TB_persons );
-        Accumulate(_active_presymp_label,            active_presymptomatic);
-        Accumulate(_active_smear_neg_label,            active_smear_neg );
-        Accumulate(_sx_smear_pos_label,                active_sx_smear_pos );
-        Accumulate(_sx_smear_neg_label,                active_sx_smear_neg );
-        Accumulate(_sx_smear_extrapulm_label,        active_sx_extrapulm );
-        Accumulate(_active_sx_label,                active_sx);
-    
-        Accumulate(_mdr_TB_label,                    MDR_TB_persons );
-        Accumulate(_active_mdr_TB_label,            active_MDR_TB_persons );
-        Accumulate(_TB_immune_fraction_label,        TB_immune_persons );
-
-        Accumulate(_new_active_label,                new_active_TB_infections );
-        Accumulate(_newly_cleared_label,            newly_cleared_TB_infections );
-        Accumulate(_new_smear_pos_label,            new_smear_positive_infections );
-        Accumulate(_new_active_fast_label,            new_active_fast_TB_infections );
-        Accumulate(_new_active_slow_label,            new_active_slow_TB_infections );
-
-        Accumulate(_mdr_active_sx_evolved_label,        mdr_active_sx_evolved );
-        Accumulate(_mdr_active_sx_label,                mdr_active_sx );
-        Accumulate(_mdr_active_sx_smear_pos_label,        mdr_active_sx_smear_pos );
-
-        Accumulate(_infectiousness_fast_label,            infectiousness_fast );
-
-        Accumulate(_disease_deaths_MDR_label,            disease_deaths_MDR );
-
         const INodeTB* pTBNode = nullptr;
         if( pNC->QueryInterface( GET_IID(INodeTB), (void**)&pTBNode ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTB", "INodeContext" );
         }
 
-        Accumulate("New MDR active infections", pTBNode->GetMDRIncidentCounter() );
+        Accumulate("New MDR active infections",         pTBNode->GetMDRIncidentCounter() );
         Accumulate("New MDR evolved active infections", pTBNode->GetMDREvolvedIncidentCounter() );
-        Accumulate("New MDR fast active infections", pTBNode->GetMDRFastIncidentCounter() );
+        Accumulate("New MDR fast active infections",    pTBNode->GetMDRFastIncidentCounter() );
+    }
+
+    void ReportTB::EndTimestep( float currentTime, float dt )
+    {
+        ReportAirborne::EndTimestep( currentTime, dt );
+
+        Accumulate(_latent_TB_label,               latent_TB_persons );
+        Accumulate(_latent_fast_label,             latent_fast);
+        Accumulate(_active_TB_label,               active_TB_persons );
+        Accumulate(_active_presymp_label,          active_presymptomatic);
+        Accumulate(_active_smear_neg_label,        active_smear_neg );
+        Accumulate(_sx_smear_pos_label,            active_sx_smear_pos );
+        Accumulate(_sx_smear_neg_label,            active_sx_smear_neg );
+        Accumulate(_sx_smear_extrapulm_label,      active_sx_extrapulm );
+        Accumulate(_active_sx_label,               active_sx);
+    
+        Accumulate(_mdr_TB_label,                  MDR_TB_persons );
+        Accumulate(_active_mdr_TB_label,           active_MDR_TB_persons );
+        Accumulate(_TB_immune_fraction_label,      TB_immune_persons );
+
+        Accumulate(_new_active_label,              new_active_TB_infections );
+        Accumulate(_newly_cleared_label,           newly_cleared_TB_infections );
+        Accumulate(_new_smear_pos_label,           new_smear_positive_infections );
+        Accumulate(_new_active_fast_label,         new_active_fast_TB_infections );
+        Accumulate(_new_active_slow_label,         new_active_slow_TB_infections );
+
+        Accumulate(_mdr_active_sx_evolved_label,   mdr_active_sx_evolved );
+        Accumulate(_mdr_active_sx_label,           mdr_active_sx );
+        Accumulate(_mdr_active_sx_smear_pos_label, mdr_active_sx_smear_pos );
+
+        Accumulate(_infectiousness_fast_label,     infectiousness_fast );
+
+        Accumulate(_disease_deaths_MDR_label,      disease_deaths_MDR );
     }
 }
 

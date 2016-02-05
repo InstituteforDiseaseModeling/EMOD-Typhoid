@@ -57,7 +57,7 @@ namespace Kernel
             float risk_parameter = 1.0,
             float migration_heterogeneity = 1.0,
             float poverty_parameter = 0) override;
-        virtual void processEmigratingIndividual(IndividualHuman *i);
+        virtual void processEmigratingIndividual(IIndividualHuman *i) override;
         virtual IIndividualHuman* processImmigratingIndividual( IIndividualHuman* immigrant ) override;
 
         //for event observers going to reporter
