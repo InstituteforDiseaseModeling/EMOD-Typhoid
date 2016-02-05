@@ -85,6 +85,31 @@ def application( config_file_name ):
                         param_value = param_list
                     print( param_name, param_value )
                     config_json[param_key]["Vector_Species_Params"][ snpbp_key ][param_name] = param_value
+            elif sheet.name.endswith( " Drug Params" ):
+	        mod_sheet_name = sheet.name.replace( " ", "_" )
+	        # process actual table of data. Param names are in left-most column, but all other cols
+		# are 1 drug each -- until we get to descriptions and metadata -- not figured out yet.
+		#pdb.set_trace()
+                config_json[param_key][ mod_sheet_name ] = {}
+		for col_id in range(0,sheet.ncols-1):
+		    drug_name = sheet.col(col_id+1)[0].value
+                    config_json[param_key][ mod_sheet_name ][drug_name] = {}
+                    for row_id in range(1,sheet.nrows):
+                        row = sheet.row(row_id)
+                        param_name = row[0].value
+                        param_value = row[col_id+1].value
+                        if isinstance( param_value,basestring) and param_value.startswith( "[" ):
+                            param_list = param_value.strip( "[" ).strip( "]" ).split()
+			    # could be list of strings or list of floats...
+                            if param_list[0].isnumeric():
+			        list_of_numbers = []
+			        for elem in param_list:
+			    	    list_of_numbers.append( float(elem) )
+	                        param_list= list_of_numbers
+                            param_value = param_list
+                        print( param_name, param_value )
+                        config_json[param_key][ mod_sheet_name ][ drug_name ][param_name] = param_value
+
             elif sheet.name.startswith( "Campaign" ):
                 campaign_json = {}
                 campaign_json["Events"] = []
