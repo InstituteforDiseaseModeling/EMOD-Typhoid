@@ -198,5 +198,7 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
 SConscript('Eradication/SConscript')
 if os.sys.platform == 'win32':
     SConscript('reporters/STI_Reports_SConscript')
-    #SConscript('reporters/TB_Reports_SConscript')
-
+    SConscript('reporters/TB_Reports_SConscript')
+    SConscript('reporters/NodeDemographics_Reports_SConscript')
+    SConscript('reporters/VectorStats_Reports_SConscript')
+    

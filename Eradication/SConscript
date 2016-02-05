@@ -125,6 +125,7 @@ else:
                             "../interventions/DelayedIntervention.cpp",
                             "../interventions/Diagnostics.cpp",
                             "../interventions/BroadcastEvent.cpp",
+                            "../interventions/BroadcastEventToOtherNodes.cpp",
                             "../interventions/Drugs.cpp",
                             "../interventions/HealthSeekingBehavior.cpp",
                             "../interventions/ImportPressure.cpp",
