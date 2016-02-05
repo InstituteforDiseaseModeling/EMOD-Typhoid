@@ -90,7 +90,7 @@ namespace Kernel
         virtual INodeContext* GetNodeContext() = 0;
 
         virtual int GetIndividualHumanCount() const = 0;
-        virtual int GetExternalId() const = 0;
+        virtual ExternalNodeId_t GetExternalId() const = 0;
     };
 
     class Simulation;

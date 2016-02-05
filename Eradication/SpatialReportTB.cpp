@@ -134,7 +134,7 @@ SpatialReportTB::LogNodeData(
 {
     SpatialReport::LogNodeData(pNC);
 
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
 
     if(active_tb_prevalence_info.enabled)
     {

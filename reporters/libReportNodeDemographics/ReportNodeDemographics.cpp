@@ -165,7 +165,7 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
     void ReportNodeDemographics::LogNodeData( INodeContext* pNC )
     {
         float time = pNC->GetTime().time;
-        int node_id = pNC->GetExternalID();
+        auto node_id = pNC->GetExternalID();
 
         for( int g = 0 ; g < 2 ; g++ )
         {

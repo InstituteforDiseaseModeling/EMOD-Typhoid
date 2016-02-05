@@ -44,7 +44,6 @@ namespace Kernel
         int destination_external_node_id ;
         DurationDistribution duration_before_leaving;
         DurationDistribution duration_at_node;
-        bool is_family_trip ;
         bool is_moving;
 
         DECLARE_SERIALIZABLE(MigrateIndividuals);

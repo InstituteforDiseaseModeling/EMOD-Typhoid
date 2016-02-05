@@ -167,9 +167,9 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 
     void ReportVectorStats::LogNodeData( Kernel::INodeContext* pNC )
     {
-        float time = pNC->GetTime().time ;
-        int nodeId = pNC->GetExternalID();
-        int pop = pNC->GetStatPop();
+        auto time = pNC->GetTime().time ;
+        auto nodeId = pNC->GetExternalID();
+        auto pop = pNC->GetStatPop();
         
         INodeVector * pNodeVector = NULL;
         if (s_OK != pNC->QueryInterface(GET_IID(INodeVector), (void**)&pNodeVector) )

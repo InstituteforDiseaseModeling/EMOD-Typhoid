@@ -420,13 +420,14 @@
                         "value" : "HIGH"
                     }
                 ],
-                "waiting_for_family_trip"              : false,
-                "leave_on_family_trip"                 : true,
-                "is_on_family_trip"                    : false,
-                "family_migration_type"                : 2,
-                "family_migration_time_until_trip"     : 15.5,
-                "family_migration_time_at_destination" : 16.6,
-                "family_migration_destination"         : 2,
+                "waiting_for_family_trip"                  : false,
+                "leave_on_family_trip"                     : true,
+                "is_on_family_trip"                        : false,
+                "family_migration_type"                    : 2,
+                "family_migration_time_until_trip"         : 15.5,
+                "family_migration_time_at_destination"     : 16.6,
+                "family_migration_is_destination_new_home" : false,
+                "family_migration_destination"             : 2,
                 "net_params" : 
                 {
                     "key_colon_val" : "Risk:HIGH",

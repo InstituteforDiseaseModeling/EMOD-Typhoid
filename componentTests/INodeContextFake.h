@@ -227,7 +227,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, MigrationType::Enum migrationType, float timeUntilTrip, float timeAtDestination ) override
+    virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, MigrationType::Enum migrationType, float timeUntilTrip, float timeAtDestination, bool isDestinationNewHome ) override
     {
         throw std::exception("The method or operation is not implemented.");
     }

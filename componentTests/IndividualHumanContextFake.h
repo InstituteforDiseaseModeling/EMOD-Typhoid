@@ -174,7 +174,8 @@ public:
     virtual void SetGoingOnFamilyTrip( suids::suid migrationDestination, 
                                         MigrationType::Enum migrationType, 
                                         float timeUntilTrip, 
-                                        float timeAtDestination ) override { throw std::exception("The method or operation is not implemented."); }
+                                        float timeAtDestination,
+                                        bool isDestinationNewHome ) override { throw std::exception("The method or operation is not implemented."); }
 
     virtual void SetWaitingToGoOnFamilyTrip() override { throw std::exception("The method or operation is not implemented."); }
     virtual void GoHome()                     override { throw std::exception("The method or operation is not implemented."); }

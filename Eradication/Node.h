@@ -147,7 +147,10 @@ namespace Kernel
         virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination,
                                               MigrationType::Enum migrationType,
                                               float timeUntilTrip,
-                                              float timeAtDestination ) override;
+                                              float timeAtDestination,
+                                              bool isDestinationNewHome ) override;
+
+        virtual void ManageFamilyTrip( float currentTime, float dt );
 
         static void TestOnly_ClearProperties();
         static void TestOnly_AddPropertyKeyValue( const char* key, const char* value );
@@ -190,6 +193,7 @@ namespace Kernel
         MigrationType::Enum family_migration_type;
         float               family_time_until_trip;
         float               family_time_at_destination;
+        bool                family_is_destination_new_home;
 
         float Ind_Sample_Rate;   // adapted sampling parameter
 

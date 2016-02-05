@@ -194,6 +194,8 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
                 mig_type_str = "regional" ;
             else if( mig_type == MigrationType::SEA_MIGRATION )
                 mig_type_str = "sea" ;
+            else if( mig_type == MigrationType::INTERVENTION_MIGRATION )
+                mig_type_str = "intervention" ;
             else
                 release_assert( false );
 

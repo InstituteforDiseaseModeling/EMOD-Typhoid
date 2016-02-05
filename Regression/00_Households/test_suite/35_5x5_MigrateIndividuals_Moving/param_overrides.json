@@ -47,7 +47,7 @@
                }
           }, 
           "PRIMARY": {
-               "Config_Name": "35_5x5_MigrateTo_Moving", 
+               "Config_Name": "35_5x5_MigrateIndividuals_Moving", 
                "Custom_Reports_Filename" : "custom_reports.json",
                "Geography": "Household_5x5", 
                "Listed_Events": [], 

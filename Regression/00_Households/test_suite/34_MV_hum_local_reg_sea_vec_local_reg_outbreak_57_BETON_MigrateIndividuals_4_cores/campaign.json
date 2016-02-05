@@ -94,17 +94,13 @@
             }, 
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
-                "Target_Residents_Only" : 1,
-                "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "MigrateIndividuals",
+                    "class": "MigrateFamily",
                     "NodeID_To_Migrate_To": 8,
                     "Duration_Before_Leaving_Distribution_Type" : "FIXED_DURATION",
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type" : "FIXED_DURATION",
                     "Duration_At_Node_Fixed": 100, 
-                    "Is_Family_Trip": 1,
                     "Is_Moving" : 0
                 }
             }
@@ -121,17 +117,13 @@
             }, 
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
-                "Target_Residents_Only" : 1,
-                "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "MigrateIndividuals",
+                    "class": "MigrateFamily",
                     "NodeID_To_Migrate_To": 9,
                     "Duration_Before_Leaving_Distribution_Type" : "FIXED_DURATION",
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type" : "FIXED_DURATION",
                     "Duration_At_Node_Fixed": 100, 
-                    "Is_Family_Trip": 1,
                     "Is_Moving" : 0
                 }
             }
@@ -142,23 +134,19 @@
             "Start_Day": 216, 
             "Nodeset_Config": {
                 "Node_List": [
-                        59
+                        60
                 ], 
                 "class": "NodeSetNodeList"
             }, 
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
-                "Target_Residents_Only" : 1,
-                "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "MigrateIndividuals",
-                    "NodeID_To_Migrate_To": 9,
+                    "class": "MigrateFamily",
+                    "NodeID_To_Migrate_To": 10,
                     "Duration_Before_Leaving_Distribution_Type" : "FIXED_DURATION",
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type" : "FIXED_DURATION",
                     "Duration_At_Node_Fixed": 100, 
-                    "Is_Family_Trip": 1,
                     "Is_Moving" : 0
                 }
             }
@@ -175,17 +163,13 @@
             }, 
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
-                "Target_Residents_Only" : 1,
-                "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "MigrateIndividuals",
+                    "class": "MigrateFamily",
                     "NodeID_To_Migrate_To": 50,
                     "Duration_Before_Leaving_Distribution_Type" : "FIXED_DURATION",
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type" : "FIXED_DURATION",
                     "Duration_At_Node_Fixed": 100, 
-                    "Is_Family_Trip": 1,
                     "Is_Moving" : 0
                 }
             }
@@ -202,17 +186,13 @@
             }, 
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
-                "Target_Residents_Only" : 1,
-                "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "MigrateIndividuals",
+                    "class": "MigrateFamily",
                     "NodeID_To_Migrate_To": 40,
                     "Duration_Before_Leaving_Distribution_Type" : "FIXED_DURATION",
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type" : "FIXED_DURATION",
                     "Duration_At_Node_Fixed": 100, 
-                    "Is_Family_Trip": 1,
                     "Is_Moving" : 0
                 }
             }
@@ -229,17 +209,13 @@
             }, 
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
-                "Target_Residents_Only" : 1,
-                "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "MigrateIndividuals",
+                    "class": "MigrateFamily",
                     "NodeID_To_Migrate_To": 30,
                     "Duration_Before_Leaving_Distribution_Type" : "FIXED_DURATION",
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type" : "FIXED_DURATION",
                     "Duration_At_Node_Fixed": 100, 
-                    "Is_Family_Trip": 1,
                     "Is_Moving" : 0
                 }
             }
@@ -256,17 +232,13 @@
             }, 
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
-                "Target_Residents_Only" : 1,
-                "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "MigrateIndividuals",
+                    "class": "MigrateFamily",
                     "NodeID_To_Migrate_To": 20,
                     "Duration_Before_Leaving_Distribution_Type" : "FIXED_DURATION",
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type" : "FIXED_DURATION",
                     "Duration_At_Node_Fixed": 100, 
-                    "Is_Family_Trip": 1,
                     "Is_Moving" : 0
                 }
             }

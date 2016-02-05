@@ -41,7 +41,6 @@ namespace Kernel
         }
 
         initConfigTypeMap( "NodeID_To_Migrate_To", &destination_external_node_id, NodeID_To_Migrate_To_DESC_TEXT, 0, INT_MAX, 0 );
-        initConfigTypeMap( "Is_Family_Trip", &is_family_trip, "TBD", false );
         initConfigTypeMap( "Is_Moving", &is_moving, Is_Moving_DESC_TEXT, false );
 
         duration_before_leaving.Configure( this, inputJson );
@@ -63,7 +62,6 @@ namespace Kernel
         , destination_external_node_id( 0 )
         , duration_before_leaving()
         , duration_at_node()
-        , is_family_trip( false )
         , is_moving( false )
     {
         duration_before_leaving.SetTypeNameDesc( "Duration_Before_Leaving_Distribution_Type", DBL_Type_DESC_TEXT );
@@ -87,7 +85,6 @@ namespace Kernel
         , destination_external_node_id( master.destination_external_node_id )
         , duration_before_leaving( master.duration_before_leaving )
         , duration_at_node( master.duration_at_node )
-        , is_family_trip( master.is_family_trip )
         , is_moving( master.is_moving )
     {
     }
@@ -104,20 +101,14 @@ namespace Kernel
         float duration_before = duration_before_leaving.CalculateDuration();
         float duration_at = duration_at_node.CalculateDuration();
 
-        if( is_family_trip )
+        IMigrate * im = NULL;
+        if (s_OK != parent->QueryInterface(GET_IID(IMigrate), (void**)&im) )
         {
-            p_node_context->SetWaitingForFamilyTrip( destination_id, MigrationType::SEA_MIGRATION, duration_before, duration_at );
+            throw QueryInterfaceException(__FILE__, __LINE__, __FUNCTION__, "parent", "IMigrate", "IIndividualHumanContext");
         }
-        else
-        {
-            IMigrate * im = NULL;
-            if (s_OK != parent->QueryInterface(GET_IID(IMigrate), (void**)&im) )
-            {
-                throw QueryInterfaceException(__FILE__, __LINE__, __FUNCTION__, "parent", "IMigrate", "IIndividualHumanContext");
-            }
-            im->SetMigrating( destination_id, MigrationType::SEA_MIGRATION, duration_before, duration_at, is_moving );
-        }
+        im->SetMigrating( destination_id, MigrationType::INTERVENTION_MIGRATION, duration_before, duration_at, is_moving );
     }
+
     REGISTER_SERIALIZABLE(MigrateIndividuals);
 
     void MigrateIndividuals::serialize(IArchive& ar, MigrateIndividuals* obj)
@@ -127,7 +118,6 @@ namespace Kernel
         ar.labelElement("destination_external_node_id") & mt.destination_external_node_id;
         ar.labelElement("duration_before_leaving"     ) & mt.duration_before_leaving;
         ar.labelElement("duration_at_node"            ) & mt.duration_at_node;
-        ar.labelElement("is_family_trip"              ) & mt.is_family_trip;
         ar.labelElement("is_moving"                   ) & mt.is_moving;
     }
 }

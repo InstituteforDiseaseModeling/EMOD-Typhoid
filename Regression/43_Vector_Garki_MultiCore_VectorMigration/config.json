@@ -145,10 +145,10 @@
         "Vector_Larval_Rainfall_Mortality": "NONE", 
         "Vector_Migration_Filename_Local": "", 
         "Vector_Migration_Filename_Regional": "", 
-        "Vector_Migration_Food_Modifier": 1.0, 
-        "Vector_Migration_Habitat_Modifier": 1.0, 
+        "Vector_Migration_Food_Modifier": 0.0, 
+        "Vector_Migration_Habitat_Modifier": 0.0, 
         "Vector_Migration_Modifier_Equation": "LINEAR", 
-        "Vector_Migration_Stay_Put_Modifier": 1.0, 
+        "Vector_Migration_Stay_Put_Modifier": 0.0, 
         "Vector_Sampling_Type": "SAMPLE_IND_VECTORS", 
         "Vector_Species_Names": [
             "arabiensis", 

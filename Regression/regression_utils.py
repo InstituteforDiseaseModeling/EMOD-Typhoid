@@ -182,9 +182,9 @@ def strToEventList( str_in ):
 
 
 def flattenCampaign(override_fn, verbose):
-    print "Looking for " + override_fn + " relative to " + os.getcwd()
+    #print "Looking for " + override_fn + " relative to " + os.getcwd()
     if os.path.exists( override_fn ) == False:
-        print( "Path \'" + override_fn + "\' supposedly doesn't exist!!! Looking relative to " + os.getcwd() )
+        #print( "Path \'" + override_fn + "\' supposedly doesn't exist!!! Looking relative to " + os.getcwd() )
         return None
 
     override_str = open( override_fn ).read()

@@ -21,7 +21,6 @@
                     "Duration_Before_Leaving_Fixed": 0, 
                     "Duration_At_Node_Distribution_Type": "FIXED_DURATION", 
                     "Duration_At_Node_Fixed": 10, 
-                    "Is_Family_Trip": 0, 
                     "Is_Moving": 0
                 }
             }

@@ -200,6 +200,7 @@ namespace Kernel
     {
         if( demographic_coverage         != DEFAULT_DEMOGRAPHIC_COVERAGE    ) return false;
         if( target_demographic           != TargetDemographicType::Everyone ) return false;
+        if( target_residents_only        != false                           ) return false;
         if( property_restrictions._restrictions.size() >  0                 ) return false;
 
         return true;

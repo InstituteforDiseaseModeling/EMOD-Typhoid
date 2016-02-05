@@ -181,6 +181,7 @@
     <ClCompile Include="..\interventions\CD4Diagnostic.cpp" />
     <ClCompile Include="..\interventions\HIVARTStagingAbstract.cpp" />
     <ClCompile Include="..\interventions\MalariaDiagnostic.cpp" />
+    <ClCompile Include="..\interventions\MigrateFamily.cpp" />
     <ClCompile Include="..\interventions\STIIsPostDebut.cpp" />
     <ClCompile Include="..\interventions\HIVMuxer.cpp" />
     <ClCompile Include="..\interventions\HIVPreARTNotification.cpp" />
@@ -460,6 +461,7 @@
     <ClInclude Include="..\interventions\HIVARTStagingByCD4Diagnostic.h" />
     <ClInclude Include="..\interventions\HIVARTStagingCD4AgnosticDiagnostic.h" />
     <ClInclude Include="..\interventions\MalariaDiagnostic.h" />
+    <ClInclude Include="..\interventions\MigrateFamily.h" />
     <ClInclude Include="..\interventions\STIIsPostDebut.h" />
     <ClInclude Include="..\interventions\HIVDelayedIntervention.h" />
     <ClInclude Include="..\interventions\Diagnostics.h" />

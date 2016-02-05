@@ -79,7 +79,8 @@ namespace Kernel
         virtual void SetGoingOnFamilyTrip( suids::suid migrationDestination, 
                                            MigrationType::Enum migrationType, 
                                            float timeUntilTrip, 
-                                           float timeAtDestination ) = 0;
+                                           float timeAtDestination,
+                                           bool isDestinationNewHome ) = 0;
         virtual void SetWaitingToGoOnFamilyTrip() = 0;
         virtual void GoHome() = 0;
 
