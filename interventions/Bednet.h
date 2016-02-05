@@ -49,11 +49,10 @@ namespace Kernel
         virtual void Update(float dt);
 
     protected:
-        float current_blockingrate;
-        float current_killingrate;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
-        InterventionDurabilityProfile::Enum durability_time_profile;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   blocking_config;
+        IWaningEffect* blocking_effect;
         BednetType::Enum bednet_type;
         IBednetConsumer *ibc;
 

@@ -11,9 +11,9 @@
 						"Initial_Effect": 1,
 						"class": "WaningEffectBox"
 						},
-                    "Killing_Rate_NO": 0.95,
-                    "Primary_Decay_Time_Constant": 5,
-                    "Secondary_Decay_Time_Constant": 1,
+                    ".Killing_Rate_NO": 0.95,
+                    ".Primary_Decay_Time_Constant": 5,
+                    ".Secondary_Decay_Time_Constant": 1,
                     "class": "Ivermectin"
                 },
                 "Target_Demographic": "Everyone",
