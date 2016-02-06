@@ -131,6 +131,7 @@ else:
                             "../interventions/ImportPressure.cpp",
                             "../interventions/MigrateFamily.cpp",
                             "../interventions/MigrateIndividuals.cpp",
+                            "../interventions/MultiInterventionDistributor.cpp",
                             "../interventions/NodeLevelHealthTriggeredIV.cpp",
                             "../interventions/PropertyValueChanger.cpp",
                             "../interventions/Outbreak.cpp",
