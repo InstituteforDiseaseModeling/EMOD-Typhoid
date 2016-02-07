@@ -2715,6 +2715,7 @@ namespace Kernel
         demog_enabled.push_back( demographics["NodeAttributes"]["Airport"].AsUint64() != 0 );
         demog_enabled.push_back( demographics["NodeAttributes"]["Region" ].AsUint64() != 0 );
         demog_enabled.push_back( demographics["NodeAttributes"]["Seaport"].AsUint64() != 0 );
+        demog_enabled.push_back( true ) ; // family
 
         return demog_enabled ;
     }

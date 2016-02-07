@@ -245,6 +245,7 @@ public:
         enabled_list.push_back( true );
         enabled_list.push_back( true );
         enabled_list.push_back( true );
+        enabled_list.push_back( true );
 
         return enabled_list;
     }

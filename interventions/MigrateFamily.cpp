@@ -87,6 +87,19 @@ namespace Kernel
     {
     }
 
+    bool MigrateFamily::Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC )
+    {
+        ISimulationContext* p_sim = pNodeEventContext->GetNodeContext()->GetParent();
+        if( !p_sim->CanSupportFamilyTrips() )
+        {
+            std::stringstream msg;
+            msg << "Invalid Configuration for Family Trips.  MigrateFamily cannot be used." << std::endl;
+            msg << "Migration_Pattern must be SINGLE_ROUND_TRIPS and the 'XXX_Migration_Roundtrip_Probability' must equal 1.0 if that Migration Type is enabled." << std::endl;
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        }
+        return BaseNodeIntervention::Distribute( pNodeEventContext, pEC );
+    }
+
     void MigrateFamily::Update( float dt )
     {
         INodeContext* p_node_context = parent->GetNodeContext();

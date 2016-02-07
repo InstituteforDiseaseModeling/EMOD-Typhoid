@@ -33,9 +33,11 @@
                "Regional_Migration_Roundtrip_Probability" : 1.0,
                "Sea_Migration_Roundtrip_Duration"         : 100.0,
                "Sea_Migration_Roundtrip_Probability"      : 1.0,
-               "Family_Migration_Type"                    : "NO_MIGRATION",
+               "Family_Migration_Roundtrip_Duration"      : 100.0,
 
-
+               "Enable_Family_Migration": 0, 
+               "Family_Migration_Filename": "", 
+               "x_Family_Migration": 1,
 
                "REGIONAL": {
                     "Enable_Regional_Migration": 1,

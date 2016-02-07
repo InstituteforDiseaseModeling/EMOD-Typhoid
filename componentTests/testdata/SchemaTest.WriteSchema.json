@@ -3668,6 +3668,16 @@
 					"Migration_Pattern" : "SINGLE_ROUND_TRIPS"
 				}
 			},
+			"Family_Migration_Roundtrip_Duration" : {
+				"description" : "TBD",
+				"type" : "float",
+				"min" : 0,
+				"max" : 10000,
+				"default" : 1,
+				"depends-on" : {
+					"Migration_Pattern" : "SINGLE_ROUND_TRIPS"
+				}
+			},
 			"Roundtrip_Waypoints" : {
 				"description" : "The maximum number of points reached during a trip before steps are retraced on the return trip home.",
 				"type" : "integer",
@@ -4420,6 +4430,11 @@
 				"type" : "bool",
 				"default" : 0
 			},
+			"Enable_Family_Migration" : {
+				"description" : "TBD",
+				"type" : "bool",
+				"default" : 0
+			},
 			"Local_Migration_Filename" : {
 				"default" : "UNINITIALIZED STRING",
 				"description" : "Path of input file defining patterns of migration to adjacent nodes by foot travel.",
@@ -4438,6 +4453,11 @@
 			"Sea_Migration_Filename" : {
 				"default" : "UNINITIALIZED STRING",
 				"description" : "Path of input file defining patterns of migration by ship.",
+				"type" : "string"
+			},
+			"Family_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "TBD",
 				"type" : "string"
 			},
 			"x_Local_Migration" : {
@@ -4468,18 +4488,12 @@
 				"max" : 3.40282e+038,
 				"default" : 1
 			},
-			"Family_Migration_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"LOCAL_MIGRATION",
-					"AIR_MIGRATION",
-					"REGIONAL_MIGRATION",
-					"SEA_MIGRATION",
-					"INTERVENTION_MIGRATION"
-				],
+			"x_Family_Migration" : {
 				"description" : "TBD",
-				"default" : "NO_MIGRATION"
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
 			}
 		},
 		"Migration.Vector" : {
@@ -4508,6 +4522,11 @@
 				"type" : "bool",
 				"default" : 0
 			},
+			"Enable_Family_Migration" : {
+				"description" : "TBD",
+				"type" : "bool",
+				"default" : 0
+			},
 			"Local_Migration_Filename" : {
 				"default" : "UNINITIALIZED STRING",
 				"description" : "Path of input file defining patterns of migration to adjacent nodes by foot travel.",
@@ -4526,6 +4545,11 @@
 			"Sea_Migration_Filename" : {
 				"default" : "UNINITIALIZED STRING",
 				"description" : "Path of input file defining patterns of migration by ship.",
+				"type" : "string"
+			},
+			"Family_Migration_Filename" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "TBD",
 				"type" : "string"
 			},
 			"x_Local_Migration" : {
@@ -4551,6 +4575,13 @@
 			},
 			"x_Sea_Migration" : {
 				"description" : "Multiplier for rate of migration by sea.",
+				"type" : "float",
+				"min" : 0,
+				"max" : 3.40282e+038,
+				"default" : 1
+			},
+			"x_Family_Migration" : {
+				"description" : "TBD",
 				"type" : "float",
 				"min" : 0,
 				"max" : 3.40282e+038,
@@ -4624,19 +4655,6 @@
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 0
-			},
-			"Family_Migration_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"LOCAL_MIGRATION",
-					"AIR_MIGRATION",
-					"REGIONAL_MIGRATION",
-					"SEA_MIGRATION",
-					"INTERVENTION_MIGRATION"
-				],
-				"description" : "TBD",
-				"default" : "NO_MIGRATION"
 			}
 		},
 		"Migration.VectorDefault" : {
