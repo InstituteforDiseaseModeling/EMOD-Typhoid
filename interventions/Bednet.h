@@ -22,6 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "FactorySupport.h"
 #include "Configure.h"
+#include "WaningEffect.h"
 
 namespace Kernel
 {
@@ -38,6 +39,7 @@ namespace Kernel
 
     public:
         SimpleBednet();
+        SimpleBednet( const SimpleBednet& );
         virtual ~SimpleBednet() { }
 
         bool Configure( const Configuration * config );
