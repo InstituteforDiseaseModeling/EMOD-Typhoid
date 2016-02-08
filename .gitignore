@@ -248,3 +248,5 @@ componentTests/invalid.json
 componentTests/testdata/NodeDemographicsTest/DefaultDemographics.json
 .sconsign.dblite
 .sconf_temp/conftest_0.cpp
+Regression/Scenarios/InputFiles
+

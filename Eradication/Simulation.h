@@ -62,7 +62,7 @@ namespace Kernel
         virtual const SimulationConfig* GetSimulationConfigObj() const override;
         virtual const IInterventionFactory* GetInterventionFactory() const override;
 
-        // ISimulation methods
+        // ISimulation methods 
         virtual bool  Populate() override;
         virtual void  Update(float dt) override;
         virtual int   GetSimulationTimestep() const override;
@@ -70,7 +70,6 @@ namespace Kernel
         virtual void  RegisterNewNodeObserver(void* id, Kernel::ISimulation::callback_t observer) override;
         virtual void  UnregisterNewNodeObserver(void* id) override;
         virtual void  WriteReportsData() override;
-
         virtual const DemographicsContext* GetDemographicsContext() const override;
 
         // Migration

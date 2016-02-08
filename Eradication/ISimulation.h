@@ -22,9 +22,11 @@ namespace Kernel
     struct IDMAPI ISimulation : ISerializable
     {
         virtual void Initialize(const ::Configuration *config) = 0;
-        virtual bool  Populate() = 0;
-        virtual void  Update(float time_step) = 0;
+        virtual bool Populate() = 0;
+        virtual void Update(float time_step) = 0;
+
         virtual int  GetSimulationTimestep() const = 0;
+        virtual void LoadCampaignFile() = 0;
         virtual IdmDateTime GetSimulationTime() const = 0;
 
         typedef std::function<void(INodeContext*)> callback_t;
