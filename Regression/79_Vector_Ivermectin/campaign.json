@@ -5,15 +5,11 @@
                 "Demographic_Coverage": 0.8,
                 "Intervention_Config": {
                     "Cost_To_Consumer": 1,
-                    "Durability_Time_Profile": "BOXDECAYDURABILITY",
 					"Killing_Config": {
 						"Box_Duration": 3,
 						"Initial_Effect": 1,
 						"class": "WaningEffectBox"
 						},
-                    ".Killing_Rate_NO": 0.95,
-                    ".Primary_Decay_Time_Constant": 5,
-                    ".Secondary_Decay_Time_Constant": 1,
                     "class": "Ivermectin"
                 },
                 "Target_Demographic": "Everyone",
