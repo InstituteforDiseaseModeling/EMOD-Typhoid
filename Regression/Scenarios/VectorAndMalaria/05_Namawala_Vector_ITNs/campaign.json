@@ -5,12 +5,17 @@
                 "Demographic_Coverage": 0.7,
                 "Intervention_Config": {
                     "Bednet_Type": "ITN",
-                    "Blocking_Rate": 0.9,
                     "Cost_To_Consumer": 3.75,
-                    "Durability_Time_Profile": "DECAYDURABILITY",
-                    "Killing_Rate": 0.6,
-                    "Primary_Decay_Time_Constant": 1460,
-                    "Secondary_Decay_Time_Constant": 730,
+                    "Killing_Config": {
+                        "Initial_Effect": 0.6,
+                        "Decay_Time_Constant": 1460,
+                        "class": "WaningEffectExponential"
+                    },
+                    "Blocking_Config": {
+                        "Initial_Effect": 0.9,
+                        "Decay_Time_Constant": 730,
+                        "class": "WaningEffectExponential"
+                    },
                     "class": "SimpleBednet"
                 },
                 "Target_Demographic": "Everyone",
