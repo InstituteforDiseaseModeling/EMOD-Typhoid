@@ -271,16 +271,20 @@ namespace Kernel
         {
             if( di->Distribute( pIndiv->GetInterventionsContext(), iCCO ) )
             {
-/*
+
                 auto classname = (std::string) json::QuickInterpreter(actual_intervention_config._json)["class"].As<json::String>();
                 LOG_DEBUG_F("A Node level health-triggered intervention (%s) was successfully distributed to individual %d\n",
                             classname.c_str(),
                             pIndiv->GetInterventionsContext()->GetParent()->GetSuid().data
                            );
-*/
+
                 // It's not at all clear to me that we would incur cost at this point, but we could.
                 //iCCO->notifyCampaignExpenseIncurred( interventionCost, pIndiv );
                 ret = true;
+            }
+            else
+            {
+                LOG_DEBUG_F( "Intervention not distributed?\n" );
             }
             di->Release();
         }
