@@ -29,11 +29,12 @@ namespace Kernel
 
     IMPLEMENT_FACTORY_REGISTERED(BirthTriggeredIV)
 
-    BirthTriggeredIV::BirthTriggeredIV() : 
-    parent(NULL) 
-    , duration(0)
-    , max_duration(0)
-    , demographic_coverage(1.0)
+    BirthTriggeredIV::BirthTriggeredIV()
+        : parent(nullptr) 
+        , duration(0)
+        , max_duration(0)
+        , demographic_restrictions(false,TargetDemographicType::Everyone)
+        , actual_intervention_config()
     {
     }
 
@@ -48,11 +49,13 @@ namespace Kernel
     {
         initConfigComplexType("Actual_IndividualIntervention_Config", &actual_intervention_config, BT_Actual_Intervention_Config_DESC_TEXT);
         initConfigTypeMap("Duration", &max_duration, BT_Duration_DESC_TEXT, -1.0f, FLT_MAX, -1.0f ); // -1 is a convention for indefinite duration
-        initConfigTypeMap("Demographic_Coverage", &demographic_coverage, BT_Demographic_Coverage_DESC_TEXT, 0.0f, 1.0f, 1.0f );
+
+        demographic_restrictions.ConfigureRestrictions( this, inputJson );
 
         bool ret = JsonConfigurable::Configure( inputJson );
         if( ret )
         {
+            demographic_restrictions.CheckConfiguration();
             InterventionValidator::ValidateIntervention( actual_intervention_config._json );
         }
         return ret ;
@@ -67,7 +70,7 @@ namespace Kernel
         LOG_DEBUG_F("Distributed birth-triggered intervention to NODE: %d\n", pNodeEventContext->GetId().data);
 
         // QI to register ourself as a birth observer
-        INodeTriggeredInterventionConsumer * pNTIC = NULL;
+        INodeTriggeredInterventionConsumer * pNTIC = nullptr;
         if (s_OK != pNodeEventContext->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&pNTIC) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNodeEventContext", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
@@ -95,7 +98,13 @@ namespace Kernel
         assert( parent );
         assert( parent->GetRng() );
 
+        if( !demographic_restrictions.IsQualified( pIndiv ) )
+        {
+            return false;
+        }
+
         // want some way to demonstrate selective distribution of calender; no rng available to us, individual property value???
+        float demographic_coverage = demographic_restrictions.GetDemographicCoverage();
         LOG_DEBUG_F("demographic_coverage = %f\n", demographic_coverage);
         if( !SMART_DRAW( demographic_coverage ) )
         {
@@ -112,8 +121,8 @@ namespace Kernel
 
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
         //const IInterventionFactory* ifobj = dynamic_cast<NodeEventContextHost *>(parent)->GetInterventionFactoryObj();
-        IGlobalContext *pGC = NULL;
-        const IInterventionFactory* ifobj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const IInterventionFactory* ifobj = nullptr;
         if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             ifobj = pGC->GetInterventionFactory();
@@ -161,41 +170,17 @@ namespace Kernel
     { 
         parent = context; 
     }
-
-#if USE_JSON_SERIALIZATION
-    // It is double inheritance from both BaseIntervention and IIndividualEventObserver
-    // For JSON serialization
-    void BirthTriggeredIV::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("actual_intervention_config");
-        actual_intervention_config.JSerialize(root, helper);
-        root->Insert("demographic_coverage", demographic_coverage);
-        root->Insert("max_duration", max_duration);
-
-        root->EndObject();
-    }
-
-    void BirthTriggeredIV::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::BirthTriggeredIV)
-
+#if 0
 namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(BirthTriggeredIV, INodeDistributableIntervention)
-    REGISTER_SERIALIZATION_VOID_CAST(BirthTriggeredIV, IIndividualEventObserver)
     template<class Archive>
     void serialize(Archive &ar, BirthTriggeredIV& iv, const unsigned int v)
     {
         ar & iv.actual_intervention_config;
-        ar & iv.demographic_coverage;
         ar & iv.efficacy;
         ar & iv.max_duration;
+        ar & iv.demographic_restrictions;
     }
 }
 #endif

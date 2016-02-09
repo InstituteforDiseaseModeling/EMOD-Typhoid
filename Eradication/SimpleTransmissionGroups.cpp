@@ -11,9 +11,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "SimpleTransmissionGroups.h"
 #include "Exceptions.h"
-
-// release_assert
-#include "Debug.h"
+#include "Debug.h"  // release_assert
+#include "Log.h"
 
 static const char* _module = "SimpleTransmissionGroups";
 
@@ -105,8 +104,8 @@ namespace Kernel
 
     void SimpleTransmissionGroups::GetGroupMembershipForProperties( RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut ) const
     {
-        (*membershipOut)[0] = (GroupIndex)0; // map route 0 to index 0
-        std::ostringstream* msg = NULL;
+        (*membershipOut)[0] = GroupIndex(0); // map route 0 to index 0
+        std::ostringstream* msg = nullptr;
         if (LOG_LEVEL(DEBUG)) 
         {
             msg = new std::ostringstream();
@@ -176,9 +175,9 @@ namespace Kernel
 
         if (groupInfectionRate > 0)
         {
-            if (candidate != NULL)
+            if (candidate != nullptr)
             {
-                candidate->Expose((IContagionPopulation*)&contagionPopulation, deltaTee, TransmissionRoute::TRANSMISSIONROUTE_ALL);
+                candidate->Expose(static_cast<IContagionPopulation*>(&contagionPopulation), deltaTee, TransmissionRoute::TRANSMISSIONROUTE_ALL);
             }
         }
     }

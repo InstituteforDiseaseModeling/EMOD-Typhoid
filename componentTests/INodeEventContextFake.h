@@ -102,7 +102,7 @@ public:
     virtual INodeContext* GetNodeContext() { throw std::exception("The method or operation is not implemented."); }
 
     virtual int GetIndividualHumanCount() const { throw std::exception("The method or operation is not implemented."); }
-    virtual int GetExternalId()           const { throw std::exception("The method or operation is not implemented."); }
+    virtual ExternalNodeId_t GetExternalId()  const { throw std::exception("The method or operation is not implemented."); }
 
     // -----------------
     // --- Other Methods

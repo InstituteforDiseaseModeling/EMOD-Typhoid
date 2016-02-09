@@ -6,15 +6,6 @@
 Import('env')
 
 libgenericSrcFiles = [ "stdafx.cpp",
-                       "../baseReportLib/BaseChannelReport.cpp",
-                       "../baseReportLib/BaseEventReport.cpp",
-                       "../baseReportLib/BaseEventReportIntervalOutput.cpp",
-                       "../baseReportLib/BaseTextReport.cpp",
-                       "../baseReportLib/BaseTextReportEvents.cpp",
-                       "../baseReportLib/BinnedReport.cpp",
-                       "../baseReportLib/ChannelDataMap.cpp",
-                       "../baseReportLib/ReportUtilities.cpp",
-                       "../baseReportLib/stdafx.cpp",
                        "../Eradication/CampaignEvent.cpp",
                        "../Eradication/Climate.cpp",
                        "../Eradication/ClimateByData.cpp",
@@ -104,6 +95,8 @@ if msvc is not None and msvc != False and msvc != "":
     bvar = env['BUILD_VARIANT'] + '|x64'
     print str(libgeneric_static) + ": Generating MSVS" + env['MSVS_VERSION'] + " project files for '%s'" % bvar
    
+    env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
+    env['PDB']='${TARGET.base}.pdb'
     env.MSVSProject(
         target = 'LibgenericStaticScons' + env['MSVSPROJECTSUFFIX'],
         srcs = libgenericSrcFiles,

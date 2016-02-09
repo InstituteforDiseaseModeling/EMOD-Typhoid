@@ -21,12 +21,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeDemographics.h"
 #include "Common.h"
 #include "Exceptions.h"
-#include "Individual.h" // for IIndividualHumanEventContext
-#include "NodeDemographics.h" // for static strings e.g. tOPV_dose_distribution
 #include "PolioVaccine.h"
+#include "PolioInterventionsContainer.h"
 #include "RANDOM.h"
 #include "SimulationConfig.h"
-#include "Vaccine.h"
 
 static const char * _module = "SusceptibilityPolio";
 
@@ -87,13 +85,42 @@ namespace Kernel
 
     SusceptibilityPolio::SusceptibilityPolio()
         : SusceptibilityEnvironmental()
+        , individual_acquire_risk(1.0f)
     {
+        ZERO_ARRAY( shedding_titer );
+        ZERO_ARRAY( humoralNAb );
+        ZERO_ARRAY( mucosalNAb );
+        ZERO_ARRAY( maternalSerumNAb );
+        ZERO_ARRAY( humoralMemoryNAb );
+        ZERO_ARRAY( mucosalMemoryNAb );
+        ZERO_ARRAY( humoral_fastDecayCompartment );
+        ZERO_ARRAY( mucosal_fastDecayCompartment );
+        ZERO_ARRAY( time_since_last_infection );
+        ZERO_ARRAY( time_since_last_IPV );
+        ZERO_ARRAY( vaccine_doses_received );
+        ZERO_ARRAY( vaccine_doses_received_by_type );
+        ZERO_ARRAY( infectionStrains );
+        ZERO_ARRAY( newInfectionByStrain );
     }
 
     SusceptibilityPolio::SusceptibilityPolio(IIndividualHumanContext *context)
         : SusceptibilityEnvironmental(context) 
+        , individual_acquire_risk(1.0f)
     {
-        // Everything initialized to 0 in Initialize
+        ZERO_ARRAY( shedding_titer );
+        ZERO_ARRAY( humoralNAb );
+        ZERO_ARRAY( mucosalNAb );
+        ZERO_ARRAY( maternalSerumNAb );
+        ZERO_ARRAY( humoralMemoryNAb );
+        ZERO_ARRAY( mucosalMemoryNAb );
+        ZERO_ARRAY( humoral_fastDecayCompartment );
+        ZERO_ARRAY( mucosal_fastDecayCompartment );
+        ZERO_ARRAY( time_since_last_infection );
+        ZERO_ARRAY( time_since_last_IPV );
+        ZERO_ARRAY( vaccine_doses_received );
+        ZERO_ARRAY( vaccine_doses_received_by_type );
+        ZERO_ARRAY( infectionStrains );
+        ZERO_ARRAY( newInfectionByStrain );
     }
 
     void SusceptibilityPolio::Initialize(float _age, float _immmod, float _riskmod)
@@ -107,22 +134,6 @@ namespace Kernel
         age = _age;
         demographic_risk = _riskmod; // takes values from 0 to 1, demographic_risk = 1+sanitation*(minrisk - 1), (sanitation = fraction of households with latrine)
 
-        ZERO_ARRAY( infectionStrains );
-        ZERO_ARRAY( newInfectionByStrain );
-        ZERO_ARRAY( shedding_titer );
-        ZERO_ARRAY( humoralNAb );
-        ZERO_ARRAY( mucosalNAb );
-        ZERO_ARRAY( humoral_fastDecayCompartment );
-        ZERO_ARRAY( mucosal_fastDecayCompartment );
-        ZERO_ARRAY( maternalSerumNAb );
-        ZERO_ARRAY( humoralMemoryNAb );
-        ZERO_ARRAY( mucosalMemoryNAb );
-        ZERO_ARRAY( time_since_last_infection );
-        ZERO_ARRAY( time_since_last_IPV );
-        ZERO_ARRAY( vaccine_doses_received );
-        ZERO_ARRAY(vaccine_doses_received_by_type);
-        
-        individual_acquire_risk = 1.0f; // (dimensionless) 
         release_assert( age >= 0);
 
         if (age == 0)
@@ -427,7 +438,7 @@ namespace Kernel
             LOG_DEBUG_F("vi_take_rate for type %d after = %f\n", virustype, (float) vi_take_rate);
 
             probability_infected[i_challenge] = vaccine_take_multiplier[virustype] *  vi_take_rate * getProbabilityInfectionSingleStrain(&strain_id[i_challenge], challenge_dose[virustype]);
-            LOG_DEBUG_F( "vi_take_rate = %f, challenge dose = %f, probability_infected[%d] = %f\n", (float) vi_take_rate, challenge_dose[virustype], i_challenge, probability_infected[i_challenge] );
+            LOG_DEBUG_F( "vi_take_rate = %f, challenge dose = %f, probability_infected[%d] = %f\n", float(vi_take_rate), challenge_dose[virustype], i_challenge, probability_infected[i_challenge] );
             /*if( probability_infected[i_challenge] == 0 )
             {
                 LOG_DEBUG("prob[i] = 0: vi_take_rate = %f, probInfSingleStrain = %f\n", vi_take_rate, getProbabilityInfectionSingleStrain(&strain_id[i_challenge], challenge_dose[virustype]));
@@ -464,7 +475,6 @@ namespace Kernel
 
                 default:
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "virus_type", virus_type, PolioVirusTypes::pairs::lookup_key( virus_type ) );
-                break;
             }
             
             specificInfectivity = GET_CONFIGURABLE(SimulationConfig)->PVinf0[virus_type] * pow( GET_CONFIGURABLE(SimulationConfig)->PVinf0[wild_strain] / GET_CONFIGURABLE(SimulationConfig)->PVinf0[virus_type], GetReversionDegree(strain_id) );
@@ -505,9 +515,9 @@ namespace Kernel
         // Polio only cares when a new vaccine dose has been given - durability does not apply to Polio vaccines
         // Polio should set the durability of all vaccines to 1 day. This will eliminate unnecessary iteration through the following loops.
         // Use GetParent, and then intervention interfaces here.
-        IIndividualHumanContext* vaccinee = NULL;
-        IIndividualHumanInterventionsContext* context = NULL;
-        IPolioVaccineEffects* ipve = NULL;
+        IIndividualHumanContext* vaccinee = nullptr;
+        IIndividualHumanInterventionsContext* context = nullptr;
+        IPolioVaccineEffects* ipve = nullptr;
 
         vaccinee = GetParent();
 
@@ -725,8 +735,8 @@ namespace Kernel
         NO_LESS_THAN(randomdraw, -1*meanlog10titer);
         NonNegativeFloat log10titer = randomdraw + meanlog10titer;
 
-        LOG_DEBUG_F( "log10titer = %f = rand(%f) + stddev(%f) + ( %f * ( 1.0f - %f / %f ) )\n", (float) log10titer, rand, stddev, numerator, immun_factor, denom );
-        return (float) log10titer;
+        LOG_DEBUG_F( "log10titer = %f = rand(%f) + stddev(%f) + ( %f * ( 1.0f - %f / %f ) )\n", float(log10titer), rand, stddev, numerator, immun_factor, denom );
+        return float(log10titer);
     }
 
     float SusceptibilityPolio::GetPeakOralLog10VirusTiter(StrainIdentity* strain_id)
@@ -767,7 +777,7 @@ namespace Kernel
             seronegativeParalysisRate = revDegree * GET_CONFIGURABLE(SimulationConfig)->paralysis_base_rate[serotype]; // linear reversion-dependent paralysis rate
         }
 
-        float p_paralysis = seronegativeParalysisRate * (float) (GetHumoralImmunity(strain_id) < paralytic_immunity_titer);
+        float p_paralysis = seronegativeParalysisRate * float(GetHumoralImmunity(strain_id) < paralytic_immunity_titer);
         if(p_paralysis && randgen->e() < p_paralysis)
         {
             float t_paral = exp( GET_CONFIGURABLE(SimulationConfig)->Incubation_Disease_Mu + GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->Incubation_Disease_Sigma ); // lognormal distributed incubation period, from Casey 1942, mu=2.3893 sigma=0.4558
@@ -825,10 +835,10 @@ namespace Kernel
 
     void SusceptibilityPolio::AddVaccineToInterventionsContainer( int type, float time_since_vaccination)
     {
-        PolioVaccineType::Enum vac_type = (PolioVaccineType::Enum) (type); // not great, but better
+        PolioVaccineType::Enum vac_type = PolioVaccineType::Enum(type); // not great, but better
         PolioVaccine* vac = PolioVaccine::CreateVaccine(vac_type, time_since_vaccination);
         IIndividualHumanInterventionsContext* context = parent->GetInterventionsContext();
-        IInterventionConsumer* iic = NULL;
+        IInterventionConsumer* iic = nullptr;
         if (s_OK ==  context->QueryInterface(GET_IID(IInterventionConsumer), (void**)&iic) )
         {
             iic->GiveIntervention(vac);
@@ -886,16 +896,19 @@ namespace Kernel
 
     bool SusceptibilityPolio::GetSusceptibleStatus(int pvType)
     {
+        auto strain_identity = StrainIdentity(pvType, 0);
         LOG_DEBUG_F( "Individual has humoral immunity of %f for antigen %d compared to config param for paralytic immunity_titer of %f.\n",
-                     GetHumoralImmunity(&StrainIdentity(pvType, 0)),
+                     GetHumoralImmunity(&strain_identity),
                      pvType,
                      paralytic_immunity_titer );
 
-        if( (GetHumoralImmunity(&StrainIdentity(pvType, 0)) < paralytic_immunity_titer) )
+        bool is_susceptible_to_paralysis = GetHumoralImmunity(&strain_identity) < paralytic_immunity_titer;
+
+        if ( is_susceptible_to_paralysis )
         {
             LOG_DEBUG_F( "Is susceptible to paralysis from this infection.\n" );
         }
-        return (GetHumoralImmunity(&StrainIdentity(pvType, 0)) < paralytic_immunity_titer);
+        return is_susceptible_to_paralysis;
     }
 
     int SusceptibilityPolio::GetSerotype(StrainIdentity* strain_id)
@@ -970,7 +983,7 @@ namespace Kernel
 
         if(EvolutionPolioClockType::POLIO_EVOCLOCK_POISSONSITES)
         {
-            int n_bits = (int)( log((float)n_substrain) / LOG_2 );
+            int n_bits = int(log(float(n_substrain)) / LOG_2);
 
             if(     n_bits < ((GET_CONFIGURABLE(SimulationConfig)->Sabin1_Site_Rates).size() - 1)
                 ||  n_bits < ((GET_CONFIGURABLE(SimulationConfig)->Sabin2_Site_Rates).size() - 1)
@@ -990,33 +1003,28 @@ namespace Kernel
         return( receiveHumoralMemoryNAb[ serotype ] > pit );
     }
 
-}
+    REGISTER_SERIALIZABLE(SusceptibilityPolio);
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityPolio)
-namespace Kernel {
-
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityPolio &sus, const unsigned int  file_version )
+    void SusceptibilityPolio::serialize(IArchive& ar, SusceptibilityPolio* obj)
     {
-        ar & sus.shedding_titer; // (TCID50/g feces) amount of each virus by type currently being shed
-        ar & sus.humoralNAb; // (reciprocal titer, linear units)
-        ar & sus.mucosalNAb; // (reciprocal titer, linear units)
-        ar & sus.maternalSerumNAb; // (reciprocal titer, linear units)
-        ar & sus.humoralMemoryNAb; // (reciprocal titer, linear units)
-        ar & sus.mucosalMemoryNAb; // (reciprocal titer, linear units)
-        ar & sus.humoral_fastDecayCompartment; // (reciprocal titer, linear units)
-        ar & sus.mucosal_fastDecayCompartment; // (reciprocal titer, linear units)
-        ar & sus.mucosalMemoryNAb; // (reciprocal titer, linear units)
-        ar & sus.time_since_last_infection; // (days) time elapsed from exposure
-        ar & sus.time_since_last_IPV; // (days) time elapsed from exposure
-        ar & sus.individual_acquire_risk; // (dimensionless) demographic- and age-dependent acquisition risk, multiplies with contact_acquire_polio to give the individual's contact acquisition
-        ar & sus.vaccine_doses_received; // {tOPV bOPV mOPV1 mOPV2 mOPV3 IPV} counters for number of doses already received
-        ar & sus.vaccine_doses_received_by_type;
-        ar & sus.infectionStrains; // number of current infections of each virus type
-        ar & boost::serialization::base_object<SusceptibilityEnvironmental>(sus);
+        SusceptibilityEnvironmental::serialize(ar, obj);
+        SusceptibilityPolio& susceptibility = *obj;
+        ar.labelElement("shedding_titer"); ar.serialize(susceptibility.shedding_titer, N_POLIO_VIRUS_TYPES);
+        ar.labelElement("humoralNAb"); ar.serialize(susceptibility.humoralNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("mucosalNAb"); ar.serialize(susceptibility.mucosalNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("maternalSerumNAb"); ar.serialize(susceptibility.maternalSerumNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("humoralMemoryNAb"); ar.serialize(susceptibility.humoralMemoryNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("mucosalMemoryNAb"); ar.serialize(susceptibility.mucosalMemoryNAb, N_POLIO_SEROTYPES);
+        ar.labelElement("humoral_fastDecayCompartment"); ar.serialize(susceptibility.humoral_fastDecayCompartment, N_POLIO_SEROTYPES);
+        ar.labelElement("mucosal_fastDecayCompartment"); ar.serialize(susceptibility.mucosal_fastDecayCompartment, N_POLIO_SEROTYPES);
+        ar.labelElement("time_since_last_infection"); ar.serialize(susceptibility.time_since_last_infection, N_POLIO_SEROTYPES);
+        ar.labelElement("time_since_last_IPV"); ar.serialize(susceptibility.time_since_last_IPV, N_POLIO_SEROTYPES);
+        ar.labelElement("vaccine_doses_received"); ar.serialize(susceptibility.vaccine_doses_received, N_POLIO_VACCINES);
+        ar.labelElement("vaccine_doses_received_by_type"); ar.serialize(susceptibility.vaccine_doses_received_by_type, N_POLIO_VIRUS_TYPES);
+        ar.labelElement("infectionStrains"); ar.serialize(susceptibility.infectionStrains, N_POLIO_VIRUS_TYPES);
+// Boost implementation didn't serialize this            ar.labelElement("newInfectionByStrain"); ar.serialize(susceptibility.newInfectionByStrain, N_POLIO_VIRUS_TYPES);
+        ar.labelElement("individual_acquire_risk") & susceptibility.individual_acquire_risk;
     }
 }
-#endif
 
 #endif // ENABLE_POLIO

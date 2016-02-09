@@ -24,7 +24,11 @@
 		"Base_Population_Scale_Factor": 1e-5,
 		"Enable_Birth": 0,
 		"x_Birth": 20.025, 
-		"Demographics_Filename": "../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed.json;../input/PFA_overlay.json;../input/HasActiveTB_IP_Overlay.json", 
+		"Demographics_Filenames": [
+			"../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed.json",
+			"../input/PFA_overlay.json",
+			"../input/HasActiveTB_IP_Overlay.json"
+		], 
 
 		"____________REPORTING___________": "",
 		"Enable_Demographics_Reporting": 1,
@@ -40,7 +44,10 @@
 			"Births"
 		],
         "Listed_Events": [
-            "HIVPositiveHIVTest"
+            "HIVPositiveHIVTest",
+            "HIVNegativeHIVTest",
+            "HIVNeedsHIVTest",
+            "HIVDiagnosedEligibleForART"
         ],
 		"Report_HIV_Infection": 1,
 		"Report_HIV_Infection_Start_Year": 0,

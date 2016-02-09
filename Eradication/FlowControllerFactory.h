@@ -8,13 +8,16 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #pragma once
-#include "IdmApi.h"
-#include "IPairFormationFlowController.h"
-#include "IPairFormationRateTable.h"
-#include "IPairFormationStats.h"
-#include "IPairFormationParameters.h"
 
-namespace Kernel {
+#include "IdmApi.h"
+
+namespace Kernel
+{
+    struct IPairFormationAgent;
+    struct IPairFormationRateTable;
+    struct IPairFormationStats;
+    struct IPairFormationParameters;
+    struct IPairFormationFlowController;
 
     class FlowControllerFactory {
     public:

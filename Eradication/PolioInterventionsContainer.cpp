@@ -10,7 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #ifdef ENABLE_POLIO
 
-#include "SimpleTypemapRegistration.h"
 #include "Sugar.h"
 #include "Debug.h"
 #include "Environment.h"
@@ -59,13 +58,13 @@ namespace Kernel
 
         // Additionally, keep this newly-distributed polio-vaccine pointer in the 'new_vaccines' list.  
         // IndividualHuman::applyNewInterventionEffects will come looking for these to apply to SusceptibilityPolio.
-        IPolioVaccine* ipvac = NULL;
+        IPolioVaccine* ipvac = nullptr;
         if (s_OK == pIV->QueryInterface(GET_IID(IPolioVaccine), (void**)&ipvac) )
         {
             new_vaccines.push_front(ipvac);
         }
 
-        IDrug * pDrug = NULL;
+        IDrug * pDrug = nullptr;
         if( s_OK == pIV->QueryInterface(GET_IID(IDrug), (void**) &pDrug) )
         {
             LOG_DEBUG("Getting a drug\n");
@@ -138,23 +137,18 @@ namespace Kernel
         }
     }
 
-}
+    REGISTER_SERIALIZABLE(PolioInterventionsContainer);
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::PolioInterventionsContainer)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive &ar, PolioInterventionsContainer& cont, const unsigned int v)
+    void PolioInterventionsContainer::serialize(IArchive& ar, PolioInterventionsContainer* obj)
     {
-        static const char * _module = "PolioInterventionsContainer";
-        LOG_DEBUG("(De)serializing PolioInterventionsContainer\n");
-
-        //ar & cont.new_vaccines;  // SusceptibilityPolio update based on new vaccines done in same time step?
-        boost::serialization::void_cast_register<PolioInterventionsContainer, InterventionsContainer>();
-        ar & boost::serialization::base_object<Kernel::InterventionsContainer>(cont);
+        InterventionsContainer::serialize(ar, obj);
+        /* Not needed yet(?)
+        PolioInterventionsContainer& interventions = *dynamic_cast<PolioInterventionsContainer*>(obj);
+        ar.labelElement("new_vaccines"); ar.serialize(interventions.new_vaccines);
+        ar.labelElement("titer_efficacy") & interventions.titer_efficacy;
+        ar.labelElement("infection_duration_efficacy") & interventions.infection_duration_efficacy;
+        */
     }
 }
-#endif
 
 #endif // ENABLE_POLIO

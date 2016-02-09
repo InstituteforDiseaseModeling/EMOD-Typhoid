@@ -18,16 +18,22 @@ using namespace std;
 
 namespace Kernel {
 
-    class IDMAPI RateTableImpl : public IPairFormationRateTable {
-
+    class IDMAPI RateTableImpl : public IPairFormationRateTable 
+    {
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
+        DECLARE_QUERY_INTERFACE();
     public:
-        virtual float GetRateForAgeAndSexAndRiskGroup(float age, int sex, RiskGroup::Enum risk_group) const;
-        virtual void SetRateForBinAndSexAndRiskGroup(int bin_index, int sex, RiskGroup::Enum risk_group, float value);
-        virtual void DumpRates();
+        virtual float GetRateForAgeAndSexAndRiskGroup(float age, int sex, RiskGroup::Enum risk_group) const override;
+        virtual void SetRateForBinAndSexAndRiskGroup(int bin_index, int sex, RiskGroup::Enum risk_group, float value) override;
+        virtual void SetParameters( const IPairFormationParameters* params ) override;
+        virtual void DumpRates() override;
 
         static IPairFormationRateTable* CreateRateTable(const IPairFormationParameters*);
 
     protected:
+
+        RateTableImpl(const IPairFormationParameters* params = nullptr);
+        ~RateTableImpl();
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -35,9 +41,8 @@ namespace Kernel {
 
         RateTable_t rate_table;
         const IPairFormationParameters* parameters;
-#pragma warning( pop )
 
-        RateTableImpl(const IPairFormationParameters*);
-        ~RateTableImpl();
+        DECLARE_SERIALIZABLE(RateTableImpl);
+#pragma warning( pop )
     };
 }

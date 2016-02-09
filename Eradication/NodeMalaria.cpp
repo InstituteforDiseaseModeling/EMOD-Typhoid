@@ -81,12 +81,12 @@ namespace Kernel
         // vectorpopulation deletion handled at _Vector level
     }
 
-    IndividualHuman *NodeMalaria::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float poverty_level)
+    IIndividualHuman* NodeMalaria::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float poverty_level)
     {
         return IndividualHumanMalaria::CreateHuman(getContextPointer(), suid, monte_carlo_weight, initial_age, gender,  poverty_level);
     }
 
-    IndividualHuman *NodeMalaria::addNewIndividual(float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
+    IIndividualHuman* NodeMalaria::addNewIndividual( float monte_carlo_weight, float initial_age, int gender, int initial_infection_count, float immparam, float riskparam, float mighet, float init_poverty)
     {
         //VALIDATE(boost::format("NodeMalaria::addNewIndividual(%f, %f, %d, %d, %f)") % monte_carlo_weight % initial_age % gender % initial_infection_count % init_poverty);
 
@@ -111,7 +111,7 @@ namespace Kernel
         case DistributionType::DISTRIBUTION_COMPLEX:
         case DistributionType::DISTRIBUTION_OFF:
             // For MALARIA_SIM, ImmunityDistributionFlag, ImmunityDistribution1, ImmunityDistribution2 map to Innate_Immune_Variation (e.g. variable pyrogenic threshold, cytokine killing)
-            return (float)(Probability::getInstance()->fromDistribution(immunity_dist_type, immunity_dist1, immunity_dist2, 1.0));
+            return float(Probability::getInstance()->fromDistribution(immunity_dist_type, immunity_dist1, immunity_dist2, 1.0));
 
         case DistributionType::DISTRIBUTION_SIMPLE:
             throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Immunity_Initialization_Distribution_Type", "DISTRIBUTION_SIMPLE", "Simulation_Type", "MALARIA_SIM");
@@ -126,18 +126,18 @@ namespace Kernel
         return 1.0f;
     }
 
-    void NodeMalaria::accumulateIndividualPopulationStatistics(float dt, IndividualHuman* basic_individual)
+    void NodeMalaria::accumulateIndividualPopulationStatistics( float dt, IIndividualHuman* basic_individual)
     {
         // Do base-class behavior, e.g. UpdateInfectiousness, statPop, Possible_Mothers
         Node::accumulateIndividualPopulationStatistics(dt, basic_individual);
 
         // Cast from IndividualHuman to IndividualHumanMalaria
-        IMalariaHumanContext *individual = NULL;
+        IMalariaHumanContext *individual = nullptr;
         if( basic_individual->QueryInterface( GET_IID( IMalariaHumanContext ), (void**)&individual ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IndividualHumanMalaria", "IndividualHuman" );
         }
-        float mc_weight = (float)basic_individual->GetMonteCarloWeight();
+        float mc_weight = float(basic_individual->GetMonteCarloWeight());
 
         // NOTE: always perform the malaria test (so we have a definite number to report), but
         // once Node is not longer the one accumulating parasite-counts/positives, we can remove
@@ -191,10 +191,10 @@ namespace Kernel
         }
     }
 
-    void NodeMalaria::updateNodeStateCounters(IndividualHuman *ih)
+    void NodeMalaria::updateNodeStateCounters( IIndividualHuman *ih)
     {
         float weight = ih->GetMonteCarloWeight();
-        IMalariaHumanContext *malaria_human = NULL;
+        IMalariaHumanContext *malaria_human = nullptr;
         if( ih->QueryInterface( GET_IID( IMalariaHumanContext ), (void**) &malaria_human ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "ih", "IndividualHuman", "IndividualHumanMalaria" );
@@ -238,19 +238,23 @@ namespace Kernel
     {
         event_context_host = _new_ NodeMalariaEventContextHost(this);
     }
-}
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeMalaria)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, NodeMalaria& node, const unsigned int file_version )
+    REGISTER_SERIALIZABLE(NodeMalaria);
+
+    void NodeMalaria::serialize(IArchive& ar, NodeMalaria* obj)
     {
-        // Register derived types - N/A
-        ar.template register_type<Kernel::IndividualHumanMalaria>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::NodeVector>(node);
+        NodeVector::serialize(ar, obj);
+        NodeMalaria& node = *obj;
+        ar.labelElement("m_Parasite_positive") & node.m_Parasite_positive;
+        ar.labelElement("m_Log_parasites") & node.m_Log_parasites;
+        ar.labelElement("m_Fever_positive") & node.m_Fever_positive;
+        ar.labelElement("m_New_Clinical_Cases") & node.m_New_Clinical_Cases;
+        ar.labelElement("m_New_Severe_Cases") & node.m_New_Severe_Cases;
+        ar.labelElement("m_Parasite_Prevalence") & node.m_Parasite_Prevalence;
+        ar.labelElement("m_New_Diagnostic_Positive") & node.m_New_Diagnostic_Positive;
+        ar.labelElement("m_New_Diagnostic_Prevalence") & node.m_New_Diagnostic_Prevalence;
+        ar.labelElement("m_Geometric_Mean_Parasitemia") & node.m_Geometric_Mean_Parasitemia;
+        ar.labelElement("m_Fever_Prevalence") & node.m_Fever_Prevalence;
+        ar.labelElement("m_Maternal_Antibody_Fraction") & node.m_Maternal_Antibody_Fraction;
     }
 }
-#endif

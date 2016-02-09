@@ -18,12 +18,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <stdint.h>
 #include "IdmApi.h"
 
-// ---------------------------------------------------------------------
-// --- DMB 9-21-2014 Not sure why I need to undefine this, but it I get
-// --- unresolved externals if I don't.
-// ---------------------------------------------------------------------
-#undef GetObject
-
 namespace Kernel
 {
     typedef uint32_t IndexType;
@@ -60,8 +54,8 @@ namespace Kernel
         // --- Methods for creating an object from a string and
         // --- for creating the string from the object
         // ------------------------------------------------------
-        void Parse(const char* jsBuffer);
-        void ParseFile(const char* filename);
+        void Parse( const char* jsBuffer, const char* filename = nullptr );
+        void ParseFile( const char* filename );
         std::string ToString() const ;
 
         // ------------------------------------------------------
@@ -77,17 +71,17 @@ namespace Kernel
         // ----------------------------------------------
         // --- Methods for getting values from an object
         // ----------------------------------------------
-        JsonObjectDemog operator[]( const char* key ) const;
-        JsonObjectDemog GetObject(  const char* key ) const;
-        JsonObjectDemog GetArray(   const char* key ) const;
-        const char*     GetString(  const char* key ) const;
-        int32_t         GetInt(     const char* key ) const;
-        uint32_t        GetUint(    const char* key ) const;
-        int64_t         GetInt64(   const char* key ) const;
-        uint64_t        GetUint64(  const char* key ) const;
-        float           GetFloat(   const char* key ) const;
-        double          GetDouble(  const char* key ) const;
-        bool            GetBool(    const char* key ) const;
+        JsonObjectDemog operator[](    const char* key ) const;
+        JsonObjectDemog GetJsonObject( const char* key ) const;
+        JsonObjectDemog GetJsonArray(  const char* key ) const;
+        const char*     GetString(     const char* key ) const;
+        int32_t         GetInt(        const char* key ) const;
+        uint32_t        GetUint(       const char* key ) const;
+        int64_t         GetInt64(      const char* key ) const;
+        uint64_t        GetUint64(     const char* key ) const;
+        float           GetFloat(      const char* key ) const;
+        double          GetDouble(     const char* key ) const;
+        bool            GetBool(       const char* key ) const;
 
         // -------------------------------------------
         // --- Methods for getting values from values
@@ -115,6 +109,8 @@ namespace Kernel
         void Add( const char*        pKey, const char*            pStrValue );
         void Add( const std::string& rKey, double                 val );
         void Add( const char*        pKey, double                 val );
+        void Add( const std::string& rKey, int                    val );
+        void Add( const char*        pKey, int                    val );
 
         void Remove( const Iterator& rIterator );
 

@@ -18,7 +18,7 @@ static int MEMORY_PAGES_LIMIT = 50;
 
 static const char * _module = "Instrumentation";
 
-void * MemoryGauge::processHandle = NULL;
+void * MemoryGauge::processHandle = nullptr;
 
 #ifndef WIN32
 // dummy implementations for non-windows platforms

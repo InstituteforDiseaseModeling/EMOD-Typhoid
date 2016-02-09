@@ -11,7 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "ReportPluginAgeAtInfection.h"
 #include "Environment.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "FileSystem.h"
 
 #include "DllInterfaceHelper.h"
@@ -123,7 +123,7 @@ ReportPluginAgeAtInfection::LogNodeData(
 
 void 
 ReportPluginAgeAtInfection::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     LOG_DEBUG( "LogIndividualData\n" );

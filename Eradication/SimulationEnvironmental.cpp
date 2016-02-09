@@ -57,7 +57,7 @@ namespace Kernel
 
     SimulationEnvironmental *SimulationEnvironmental::CreateSimulation(const ::Configuration *config)
     {
-        SimulationEnvironmental *newsimulation = NULL;
+        SimulationEnvironmental *newsimulation = nullptr;
 
         newsimulation = _new_ SimulationEnvironmental();
         if (newsimulation)
@@ -68,7 +68,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -97,25 +97,5 @@ void SimulationEnvironmental::addNewNodeFromDemographics(suids::suid node_suid, 
 void Kernel::SimulationEnvironmental::InitializeFlags( const ::Configuration *config )
 {
 }
-
-#include "IndividualEnvironmental.h"
-void Kernel::SimulationEnvironmental::resolveMigration()
-{
-    resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-}
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationEnvironmental)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationEnvironmental &sim, const unsigned int  file_version )
-    {
-        ar.template register_type<NodeEnvironmental>();
-        ar.template register_type<NodeEnvironmentalFlags>();
-
-        ar & boost::serialization::base_object<Simulation>(sim);
-    }
-}
-#endif
 
 #endif // ENABLE_POLIO

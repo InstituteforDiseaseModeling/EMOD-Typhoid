@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
-#include "SimulationConfig.h"
 
 static const char * _module = "CD4Diagnostic";
 
@@ -33,9 +32,7 @@ namespace Kernel
         assert( a_qi.As<json::Array>().Size() );
         for( unsigned int idx=0; idx<a_qi.As<json::Array>().Size(); idx++ )
         {
-            ConstrainedString signal = "UNINITIALIZED";
-            signal.constraints = "<configuration>:Listed_Events.*";
-            signal.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
+            EventTrigger signal;
             initConfigTypeMap( "Event", &signal, HIV_CD4_Diagnostic_Event_Name_DESC_TEXT );
             auto obj = Configuration::CopyFromElement((threshJson)[idx]);
             JsonConfigurable::Configure( obj );
@@ -47,7 +44,7 @@ namespace Kernel
             if( high <= low )
             {
                 throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "low", std::to_string( low ).c_str(),
-                                                                                          "high", std::to_string( high ).c_str(), 
+                                                                                          "high", std::to_string( high ).c_str(),
                                                                                           "High value must be higher than Low value." );
             }
 
@@ -105,9 +102,9 @@ namespace Kernel
     {
         cd4_thresholds = master.cd4_thresholds;
     }
-        
+
     CD4Diagnostic::~CD4Diagnostic()
-    { 
+    {
         LOG_DEBUG("Destructing CD4 Diagnostic \n");
     }
 
@@ -118,7 +115,7 @@ namespace Kernel
         // Apply diagnostic test with given specificity/sensitivity
         bool test_pos = false;
 
-        IIndividualHumanHIV* hiv_ind = NULL;
+        IIndividualHumanHIV* hiv_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanHIV ), (void**)&hiv_ind ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanHIV", "IIndividualHuman" );
@@ -154,18 +151,3 @@ namespace Kernel
         return positiveTest;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::CD4Diagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, CD4Diagnostic& obj, const unsigned int v)
-    {
-
-        boost::serialization::void_cast_register<CD4Diagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
-    }
-}
-#endif

@@ -10,9 +10,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "Configure.h"
-#include "InterventionEnums.h"
 
-namespace Kernel {
+namespace Kernel
+{
+    ENUM_DEFINE(PolioDrugType,
+        ENUM_VALUE_SPEC(V073                    , 1)
+        ENUM_VALUE_SPEC(Combo                   , 2))
+
     class PolioDrugTypeParameters : public JsonConfigurable
     {
         friend class SimulationConfig;

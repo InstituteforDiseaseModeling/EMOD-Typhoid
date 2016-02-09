@@ -82,6 +82,10 @@ class RuntimeParameters:
             return self.args.use_dlls
     
     @property
+    def scons(self):
+        return self.args.scons
+    
+    @property
     def label(self):
         return self.args.label
 
@@ -1062,7 +1066,11 @@ def copyEModulesOver( params ):
     if params.dll_path is not None:
         emodule_dir = params.dll_path
     else:
-        emodule_dir = os.path.join( params.src_root, "x64" )
+        if params.scons:
+            emodule_dir = os.path.join( params.src_root, "build" )
+            emodule_dir = os.path.join( emodule_dir, "x64" )
+        else:
+            emodule_dir = os.path.join( params.src_root, "x64" )
         if params.debug == True:
             emodule_dir = os.path.join( emodule_dir, "Debug" )
         else:
@@ -1319,7 +1327,17 @@ def setup():
     parser.add_argument("--dll-path", help="Path to the root directory of the DLLs to use (e.g. contains reporter_plugins)")
     parser.add_argument("--skip-emodule-check", action="store_true", default=False, help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
     parser.add_argument("--config-constraints", default=[], action="append", help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
+    parser.add_argument("--scons", help="assume scons build")
     args = parser.parse_args()
+
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # The following is a hack to force the use of the STI custom report.
+    # This can be removed once we can control 'scons' in bamboo
+    if os.path.isfile( "../build/x64/Release/reporter_plugins/libstirelationshipmigrationtracking.dll" ):
+        args.scons = True
+        args.use_dlls = True
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     global params
     params = RuntimeParameters(args)
 

@@ -176,6 +176,9 @@ BOXDECAYDURABILITY - Both killing and blocking have the same durability profile,
 #define SD_Positive_Diagnosis_Config_Event_DESC_TEXT "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'."
 #define SD_Treatment_Fraction_DESC_TEXT "The fraction of positive diagnoses that are treated."
 
+#define MD_Diagnostic_Type_DESC_TEXT "Type of malaria diagnostic. Possible values are: Microscopy, NewDetectionTech, Other."
+#define MD_Detection_Threshold_DESC_TEXT "The diagnostic detection threshold for parasites in units of microliters of blood."
+
 #define DTN_Negative_Diagnosis_Config_Event_DESC_TEXT "Specifies what state transition event will occur if an individual tests negative."
 #define DTN_Defaulters_Diagnosis_Config_Event_DESC_TEXT "Specifies what state transition event will occur if an individual receives the test but does not return for the test results."
 #define DTN_Negative_Diagnosis_Config_DESC_TEXT "The intervention distributed to individuals, if they test negative. This is only valid if Event_Or_Config is set to Config."
@@ -350,7 +353,7 @@ EXPONENTIAL_DURATION"
 #define WEB_Initial_Effect_DESC_TEXT "Initial strength of effect."
 #define WEB_Box_Duration_DESC_TEXT "Box duration of effect in days."
 #define WEBE_Initial_Effect_DESC_TEXT "Initial strength of effect."
-#define WEBE_Box_Duration_DESC_TEXT "Box duration of effect in days." 
+#define WEBE_Box_Duration_DESC_TEXT "Box duration of effect in days."
 #define WEBE_Decay_Time_Constant_DESC_TEXT "Exponential decay length in days."
 #define WEC_Initial_Effect_DESC_TEXT "Initial strength of effect."
 #define WEE_Initial_Effect_DESC_TEXT "Initial strength of effect."
@@ -424,3 +427,44 @@ EXPONENTIAL_DURATION"
 
 #define Interpolated_Value_Map_Times_DESC_TEXT "An array of years."
 #define Interpolated_Value_Map_Values_DESC_TEXT "An array of values to match the defined Times."
+
+#define BETON_Event_Trigger_DESC_TEXT "TBD"
+#define BETON_Distance_DESC_TEXT "TBD"
+#define BETON_Include_My_Node_DESC_TEXT     "TBD"
+#define BETON_Node_Selection_Type_DESC_TEXT "TBD"
+
+#define Dont_Allow_Duplicates_DESC_TEXT "TBD"
+
+#define Sigmoid_Min_DESC_TEXT  "TBD"
+#define Sigmoid_Max_DESC_TEXT  "TBD"
+#define Sigmoid_Mid_DESC_TEXT  "TBD"
+#define Sigmoid_Rate_DESC_TEXT "TBD"
+
+#define On_Distributed_Event_Trigger_DESC_TEXT "TBD"
+
+
+#define Blackout_Period_DESC_TEXT "TBD"
+#define Blackout_Event_Trigger_DESC_TEXT "TBD"
+
+//MigrateFamily & MigrateIndividuals
+#define NodeID_To_Migrate_To_DESC_TEXT "TBD"
+#define Is_Moving_DESC_TEXT "TBD"
+
+#define DBL_Type_DESC_TEXT "TBD"
+#define DBL_Fixed_DESC_TEXT "TBD"
+#define DBL_Uniform_Min_DESC_TEXT "TBD"
+#define DBL_Uniform_Max_DESC_TEXT "TBD"
+#define DBL_Gausian_Mean_DESC_TEXT "TBD"
+#define DBL_Gausian_StdDev_DESC_TEXT "TBD"
+#define DBL_Exponential_Period_DESC_TEXT "TBD"
+#define DBL_Poisson_Mean_DESC_TEXT "TBD"
+   
+#define DAN_Type_DESC_TEXT "TBD"
+#define DAN_Fixed_DESC_TEXT "TBD"
+#define DAN_Uniform_Min_DESC_TEXT "TBD"
+#define DAN_Uniform_Max_DESC_TEXT "TBD"
+#define DAN_Gausian_Mean_DESC_TEXT "TBD"
+#define DAN_Gausian_StdDev_DESC_TEXT "TBD"
+#define DAN_Exponential_Period_DESC_TEXT "TBD"
+#define DAN_Poisson_Mean_DESC_TEXT "TBD"
+

@@ -21,6 +21,10 @@ static const char * _module = "Outbreak";
 
 namespace Kernel
 {
+    ENUM_DEFINE(OutbreakType, 
+        ENUM_VALUE_SPEC(PrevalenceIncrease , 1)
+        ENUM_VALUE_SPEC(ImportCases        , 2))
+
     BEGIN_QUERY_INTERFACE_BODY(Outbreak)
         HANDLE_INTERFACE(IConfigurable)
         //HANDLE_INTERFACE(IDistributableIntervention)
@@ -139,13 +143,11 @@ namespace Kernel
 
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::Outbreak)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, Outbreak &ob, const unsigned int v)
     {
-        boost::serialization::void_cast_register<Outbreak, INodeDistributableIntervention>();
         ar & ob.outbreak_source;
         ar & ob.antigen;
         ar & ob.genome;

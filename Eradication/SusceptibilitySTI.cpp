@@ -33,25 +33,13 @@ namespace Kernel
         // initialize members of airborne susceptibility below
         demographic_risk = _riskmod; 
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilitySTI)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilitySTI& sus, const unsigned int file_version )
+    REGISTER_SERIALIZABLE(SusceptibilitySTI);
+
+    void SusceptibilitySTI::serialize(IArchive& ar, SusceptibilitySTI* obj)
     {
-        ar & sus.demographic_risk;
-        ar & boost::serialization::base_object<Susceptibility>(sus);
+        Susceptibility::serialize( ar, obj );
+        SusceptibilitySTI& suscep = *obj;
+        ar.labelElement("demographic_risk") & suscep.demographic_risk;
     }
-    template void serialize(boost::archive::binary_iarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_iarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_skeleton_iarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::detail::mpi_datatype_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::packed_skeleton_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::mpi::detail::content_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
-    template void serialize(boost::archive::binary_oarchive&, Kernel::SusceptibilitySTI&, unsigned int);
 }
-#endif
-

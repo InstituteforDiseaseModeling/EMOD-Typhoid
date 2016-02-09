@@ -17,13 +17,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <boost/math/special_functions/fpclassify.hpp>
 
 #include "SpatialReport.h"
-#include "Node.h"
+#include "INodeContext.h"
+#include "Climate.h"
 #include "Sugar.h"
 #include "Debug.h"
 #include "Environment.h"
 #include "FileSystem.h"
 #include "Exceptions.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "SimulationConfig.h"
 #include "ProgVersion.h"
 
@@ -149,7 +150,7 @@ void SpatialReport::BeginTimestep()
 
 void
 SpatialReport::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     LOG_DEBUG( "LogIndividualData\n" );
@@ -177,7 +178,7 @@ SpatialReport::LogNodeData(
 
     // a bit of a hack... store nodeid's as "floats" so that we can just reduce them like any other channel;
     // they're same size as floats anyway, so we can write them out to the output file just fine...
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
     float * flt = (float*)&nodeid;
     Accumulate("NodeID", nodeid, *flt);
 
@@ -396,12 +397,24 @@ void SpatialReport::shuffleNodeData()
     }
 
     // reduce nodeids and sort
-    boost::mpi::all_reduce(
-        *(EnvPtr->MPI.World),
-        &nodeids,
-        1,
-        &all_nodeids,
-        vec_append< vector<int> >() );
+    {
+        int32_t count = (int32_t)nodeids.size();
+        LOG_VALID_F( "Contributing %d nodeids\n", count );
+
+        std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
+        MPI_Allgather((void*)&count, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, MPI_COMM_WORLD);
+
+        int32_t total = 0;
+        std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
+        for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
+        {
+            displs[i] = total;
+            total += lengths[i];
+        }
+        all_nodeids.resize(total);
+
+        MPI_Allgatherv((void*)nodeids.data(), count, MPI_INTEGER4, (void*)all_nodeids.data(), lengths.data(), displs.data(), MPI_INTEGER4, MPI_COMM_WORLD);
+    }
 
     std::sort(all_nodeids.begin(), all_nodeids.end());
 
@@ -430,12 +443,10 @@ void SpatialReport::shuffleNodeData()
     nodeid_index_map = new_nodeid_index_map;
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(SpatialReport)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, SpatialReport& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReport,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

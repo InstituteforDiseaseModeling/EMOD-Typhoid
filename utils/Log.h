@@ -12,14 +12,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "IdmApi.h"
 
-#include <iostream>
-#include <streambuf>
 #include <map>
 
-#include "BoostLibWrapper.h"
 #include "Sugar.h"
 
-//#define ENABLE_LOG_VALID 1
+#define ENABLE_LOG_VALID 1  // clorton
 
 namespace Logger
 {
@@ -78,6 +75,7 @@ class IDMAPI SimpleLogger
 {
 public:
     SimpleLogger();
+    SimpleLogger( Logger::tLevel syslevel );
     void Init( const json::QuickInterpreter * configJson );
     bool CheckLogLevel( Logger::tLevel log_level, const char* module );
     void Log(Logger::tLevel log_level, const char* module, const char* msg);

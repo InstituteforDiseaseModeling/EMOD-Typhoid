@@ -11,17 +11,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <functional>
 #include <map>
-#include "BoostLibWrapper.h"
-// not in boost wrapper???
-#include <boost/math/special_functions/fpclassify.hpp>
 
 #include "SpatialReportMalaria.h"
-#include "NodeMalaria.h"
+#include "MalariaContexts.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "Exceptions.h"
-#include "Individual.h"
-#include "SimulationConfig.h"
+#include "IIndividualHuman.h"
 #include "ProgVersion.h"
 
 using namespace std;
@@ -84,9 +80,9 @@ SpatialReportMalaria::LogNodeData(
 {
     SpatialReportVector::LogNodeData(pNC);
 
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
 
-    const INodeMalaria* pMalariaNode = NULL;
+    const INodeMalaria* pMalariaNode = nullptr;
     if( pNC->QueryInterface( GET_IID(INodeMalaria), (void**)&pMalariaNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeMalaria", "INodeContext" );
@@ -144,12 +140,10 @@ SpatialReportMalaria::postProcessAccumulatedData()
 }
 
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(SpatialReport)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, SpatialReportMalaria& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReportMalaria,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

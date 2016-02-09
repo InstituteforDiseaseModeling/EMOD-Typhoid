@@ -11,7 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #define XSTRINGIFY(ver)       STRINGIFY(ver)
 
 #ifdef WIN32
-static const char *BUILD_DATE   = "2015/08/07 14:40:43";
+static const char *BUILD_DATE   = "2015/09/23 14:04:15";
 static const char *SVN_URL      = "https://idm-repo/svn/Eradication/trunk";
 #else
 static const char *SVN_URL      = XSTRINGIFY(SVN_BRANCH_FROM_SCONS);
@@ -21,7 +21,7 @@ static const char *SVN_URL      = XSTRINGIFY(SVN_BRANCH_FROM_SCONS);
 #define    MAJOR_VERSION    2
 #define    MINOR_VERSION    0
 #ifndef REVISION_NUMBER
-#define    REVISION_NUMBER  5538
+#define    REVISION_NUMBER  5633
 #endif
 #define    BUILD_NUMBER     0
 

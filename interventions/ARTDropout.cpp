@@ -28,7 +28,7 @@ namespace Kernel
 
     ARTDropout::ARTDropout()
     : GenericDrug()
-    , itbda(NULL)
+    , itbda(nullptr)
     {
         initSimTypes( 1, "HIV_SIM" );
     }
@@ -91,18 +91,5 @@ namespace Kernel
         //itbda->ApplyDrugClearanceRateEffect( GetDrugClearanceRate() );
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::ARTDropout)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, ARTDropout& drug, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<ARTDropout, IDrug>();
-        //ar & drug.drug_type;
-        ar & boost::serialization::base_object<GenericDrug>(drug);
-    }
-}
-#endif
 
 //#endif // ENABLE_STI

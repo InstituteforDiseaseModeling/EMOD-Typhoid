@@ -48,12 +48,5 @@ namespace Kernel
         std::string ip_tb_key ;
         std::string ip_tb_value_expected ;
 #pragma warning( pop )
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVARTStagingAbstract &obj, const unsigned int v);
-#endif
     };
 }

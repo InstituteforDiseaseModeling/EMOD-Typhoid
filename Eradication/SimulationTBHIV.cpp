@@ -13,14 +13,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Exceptions.h"
 #include "SimulationTBHIV.h"
-//#include "PropertyReportTBHIV.h"
-
-//#include "InfectionTBHIV.h"
 #include "NodeTBHIV.h"
-//#include "SusceptibilityTBHIV.h"
 #include "ReportTBHIV.h"
-//#include "SpatialReportTBHIV.h"
-//#include "BinnedReportTBHIV.h"
 
 static const char* _module = "SimulationTBHIV";
 
@@ -44,8 +38,7 @@ namespace Kernel
 
     SimulationTBHIV *SimulationTBHIV::CreateSimulation(const ::Configuration *config)
     {
-        SimulationTBHIV *newsimulation = NULL;
-        newsimulation = _new_ SimulationTBHIV();
+        SimulationTBHIV *newsimulation = _new_ SimulationTBHIV();
         if (newsimulation)
         {
             // This sequence is important: first
@@ -54,7 +47,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -84,31 +77,6 @@ namespace Kernel
         NodeTBHIV *node = NodeTBHIV::CreateNode(this, node_suid);
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
-
-    void SimulationTBHIV::resolveMigration()
-    {
-        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
-    }
 }
-
-#if 1
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationTBHIV)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationTBHIV &sim, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<NodeTBHIV>();
-        //ar.template register_type<NodeTBHIVFlags>();
-        //ar.template register_type<SusceptibilityTBHIVFlags>();
-        //ar.template register_type<InfectionTBHIVFlags>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<SimulationAirborne>(sim);
-    }
-}
-#endif
-#endif
 
 #endif // ENABLE_TBHIV

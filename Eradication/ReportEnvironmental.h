@@ -18,10 +18,10 @@ public:
     virtual ~ReportEnvironmental(){};
 
 protected:
-    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
+    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) override;
 
-    virtual void AddSEIRWUnits( std::map<std::string, std::string> &units_map ) {}
-    virtual void UpdateSEIRW( const Kernel::IndividualHuman * individual, float monte_carlo_weight ) {}
-    virtual void AccumulateSEIRW() {}
-    virtual void NormalizeSEIRWChannels() {}
+    virtual void AddSEIRWUnits( std::map<std::string, std::string> &units_map ) override {}
+    virtual void UpdateSEIRW( const Kernel::IIndividualHuman* individual, float monte_carlo_weight ) override {}
+    virtual void AccumulateSEIRW() override {}
+    virtual void NormalizeSEIRWChannels() override {}
 };

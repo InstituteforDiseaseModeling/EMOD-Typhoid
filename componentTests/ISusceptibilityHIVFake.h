@@ -25,11 +25,11 @@ public:
         return m_CD4Count ;
     }
 
-    virtual void  Generate_forward_CD4()                                  { throw std::exception("The method or operation is not implemented."); }
-    virtual void  FastForward( const IInfectionHIV * const, float dt )    { throw std::exception("The method or operation is not implemented."); }
-    virtual void  ApplyARTOnset()                                         { throw std::exception("The method or operation is not implemented."); }
-    virtual const ProbabilityNumber GetPrognosisCompletedFraction() const { throw std::exception("The method or operation is not implemented."); }
-    virtual void  TerminateSuppression(float)                                  { throw std::exception("The method or operation is not implemented."); }
+    virtual void  Generate_forward_CD4()                               override { throw std::exception("The method or operation is not implemented."); }
+    virtual void  FastForward( const IInfectionHIV * const, float dt ) override { throw std::exception("The method or operation is not implemented."); }
+    virtual void  ApplyARTOnset()                                      override { throw std::exception("The method or operation is not implemented."); }
+    virtual ProbabilityNumber GetPrognosisCompletedFraction() const    override { throw std::exception("The method or operation is not implemented."); }
+    virtual void  TerminateSuppression(float)                          override { throw std::exception("The method or operation is not implemented."); }
 
     // ---------------------
     // --- ISupport Methods

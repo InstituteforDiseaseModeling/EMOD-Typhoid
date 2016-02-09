@@ -22,11 +22,9 @@ SUITE(PairFormationStatsImplTest)
 {
     TEST(TestMethods)
     {
-        float transitory_rate = 0.0013699f ;
-
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/PairFormationParametersTest/TransitoryParameters.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), transitory_rate, 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
 
         unique_ptr<IPairFormationStats> stats( PairFormationStatsImpl::CreateStats( from_data.get() ) );
 

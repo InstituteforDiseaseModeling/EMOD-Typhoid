@@ -102,7 +102,7 @@ void BinnedReportPolio::EndTimestep( float currentTime, float dt )
     clearChannelsBins();
 }
 
-void  BinnedReportPolio::LogIndividualData( Kernel::IndividualHuman * individual )
+void  BinnedReportPolio::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "BinnedReportPolio::LogIndividualData\n" );
 
@@ -120,7 +120,7 @@ void  BinnedReportPolio::LogIndividualData( Kernel::IndividualHuman * individual
         if(nis == NewInfectionState::NewAndDetected || nis == NewInfectionState::NewlyDetected)
             new_paralytic_cases[bin_index] += mc_weight;
 
-        const Kernel::IIndividualHumanPolio* individual_polio = NULL;
+        const Kernel::IIndividualHumanPolio* individual_polio = nullptr;
         if( individual->QueryInterface( GET_IID( Kernel::IIndividualHumanPolio), (void**) &individual_polio ) != Kernel::s_OK )
         {
             throw Kernel::QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualHumanPolio", "IndividualHuman" );

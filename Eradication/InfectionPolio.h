@@ -10,20 +10,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 #include "InfectionEnvironmental.h"
 #include "PolioDefs.h" // for N_POLIO_SEROTYPES
+#include "PolioContexts.h"
 
 namespace Kernel
 { 
-    struct IInfectionPolioReportable : public ISupports {
-        virtual const float GetTotalDuration() const = 0;
-        virtual const float GetInitialInfectiousness() const = 0;
-        virtual float GetInfectiousness() const = 0;
-        virtual const float GetParalysisTime() const = 0;
-        virtual const float GetMusocalImmunity() const = 0;
-        virtual const float GetHumoralImmunity() const = 0;
-        virtual const int   GetAntigenID() const = 0;
-        virtual const int   GetGeneticID() const = 0;
-    };    
-    
     class InfectionPolioConfig : public JsonConfigurable
     {
         friend class IndividualPolio;
@@ -32,7 +22,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
     public:
-        bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
     protected:
         static double         antibody_IRBC_killrate;
@@ -59,20 +49,19 @@ namespace Kernel
         static InfectionPolio *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
         virtual ~InfectionPolio(void);
 
-        virtual void SetParameters(StrainIdentity* infstrain = NULL, int incubation_period_override = -1);
-        virtual void InitInfectionImmunology(Susceptibility* _immunity);
-        virtual void Update(float dt, Susceptibility* _immunity = NULL);
-        void SetMCWeightOfHost(float ind_mc_weight);
+        virtual void SetParameters(StrainIdentity* infstrain = nullptr, int incubation_period_override = -1) override;
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) override;
+        virtual void Update(float dt, ISusceptibilityContext* _immunity = nullptr) override;
 
-        // InfectionPolioReportable methods
-        virtual const float GetTotalDuration() const { return total_duration; }
-        virtual const float GetInitialInfectiousness() const { return initial_infectiousness; }
-        virtual float GetInfectiousness() const { return infectiousness; }
-        virtual const float GetParalysisTime() const { return paralysis_time; }
-        virtual const float GetMusocalImmunity() const;
-        virtual const float GetHumoralImmunity() const { return cached_humoral_immunity; }
-        virtual const int   GetAntigenID() const { return infection_strain->GetAntigenID(); }
-        virtual const int   GetGeneticID() const { return infection_strain->GetGeneticID(); }
+        // IInfectionPolioReportable methods
+        virtual float GetTotalDuration() const override { return total_duration; }
+        virtual float GetInitialInfectiousness() const override { return initial_infectiousness; }
+        virtual float GetInfectiousness() const override { return infectiousness; }
+        virtual float GetParalysisTime() const override { return paralysis_time; }
+        virtual float GetMucosalImmunity() const override;
+        virtual float GetHumoralImmunity() const override { return cached_humoral_immunity; }
+        virtual int   GetAntigenID() const override { return infection_strain->GetAntigenID(); }
+        virtual int   GetGeneticID() const override { return infection_strain->GetGeneticID(); }
 
         void CacheMCWeightOfHost(float ind_mc_weight);
 
@@ -99,22 +88,22 @@ namespace Kernel
 
         bool drug_flag;
 
-        //END_PERSIST()
-
-        virtual void  evolveStrain(Susceptibility* _immunity, float dt);
+        virtual void  evolveStrain(ISusceptibilityPolio* _immunity, float dt);
         virtual float getCurrentTiterFromProfile(float peak_Log10Titer, float infectiousTime, float mu, float sigma); // (TCID50 per volume excretion at time from infection)
         virtual void  setCurrentInfectivity(float relative_infectivity, float infectionTimeFecal, float InfectionTimeOral);// (TCID50 virus per day excreted)
 
-        const SimulationConfig* params();
+        /* clorton virtual */ const SimulationConfig* params() /* clorton override */;
 
         InfectionPolio(IIndividualHumanContext *context);
-        void Initialize(suids::suid _suid);
+        /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
+
+        DECLARE_SERIALIZABLE(InfectionPolio);
 
     /*public:
         virtual ~InfectionPolio(void);
 
-        virtual void InitInfectionImmunology(Susceptibility* _immunity);
-        virtual void Update(float dt, Susceptibility* _immunity = NULL);
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity);
+        virtual void Update(float dt, Susceptibility* _immunity = nullptr);
     */
 
         // InfectionPolioReportable methods
@@ -122,18 +111,11 @@ namespace Kernel
         virtual const float GetInitialInfectiousness() const { return initial_infectiousness; }
         virtual const float GetInfectiousness() const { return infectiousness; }
         virtual const float GetParalysisTime() const { return paralysis_time; }
-        virtual const float GetMusocalImmunity() const { return cached_mucosal_immunity; }
+        virtual const float GetMucosalImmunity() const { return cached_mucosal_immunity; }
         virtual const float GetHumoralImmunity() const { return cached_humoral_immunity; }
         virtual const int   GetAntigenID() const { return infection_strain->GetAntigenID(); }
         virtual const int   GetGeneticID() const { return infection_strain->GetGeneticID(); }
 */
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, InfectionPolio& inf, const unsigned int file_version );
-#endif
     };
 }
 

@@ -15,6 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "INodeSTI.h"
 #include "NodeSTI.h"
+#include "NodeEventContext.h"
 
 static const char* _module = "RelationshipEndReporter";
 
@@ -55,11 +56,18 @@ namespace Kernel
 
     void StiRelationshipEndReporter::onRelationshipTermination(IRelationship* relationship)
     {
+        // --------------------------------------------------------
+        // --- Assuming that the individuals in a relationship
+        // --- must be in the same node.
+        //release_assert( false );
+        // --------------------------------------------------------
+
         RelationshipEndInfo info;
         info.end_time = (float) simulation->GetSimulationTime().time; // current timestep
         info.start_time = relationship->GetStartTime();
         info.scheduled_end_time = relationship->GetScheduledEndTime();
-        info.id = relationship->GetId();
+        info.id = relationship->GetSuid().data;
+        info.node_id = dynamic_cast <IndividualHuman*> (relationship->MalePartner())->GetNodeEventContext()->GetNodeContext()->GetExternalID();
         info.relationship_type = (unsigned int) relationship->GetType(); 
         info.male_id = relationship->GetMalePartnerId().data;
         info.female_id = relationship->GetFemalePartnerId().data;
@@ -74,6 +82,7 @@ namespace Kernel
     {
         std::stringstream header ;
         header << "Rel_ID,"
+               << "Node_ID,"
                << "Rel_start_time,"
                << "Rel_scheduled_end_time,"
                << "Rel_actual_end_time,"
@@ -98,6 +107,7 @@ namespace Kernel
         for (auto& entry : report_data)
         {
             GetOutputStream() << entry.id << ','
+                              << entry.node_id << ','
                               << entry.start_time << ','
                               << entry.scheduled_end_time << ','
                               << entry.end_time << ','

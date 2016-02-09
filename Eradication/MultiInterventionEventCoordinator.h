@@ -21,12 +21,13 @@ namespace Kernel
 
     public:
         MultiInterventionEventCoordinator();
-        virtual void UpdateNodes(float dt);
-        virtual bool visitIndividualCallback(IIndividualHumanEventContext *ihec, float &incrementalCostOut, ICampaignCostObserver * pICCO );
+        virtual void UpdateNodes(float dt) override;
+        virtual bool visitIndividualCallback(IIndividualHumanEventContext *ihec, float &incrementalCostOut, ICampaignCostObserver * pICCO ) override;
 
     protected:
-        virtual void initializeInterventionConfig( const Configuration * inputJson );
-        virtual void validateInterventionConfig( const json::Element& rElement );
+        virtual void initializeInterventionConfig( const Configuration * inputJson ) override;
+        virtual void validateInterventionConfig( const json::Element& rElement ) override;
+        virtual bool HasNodeLevelIntervention() const override;
 
     };
 }

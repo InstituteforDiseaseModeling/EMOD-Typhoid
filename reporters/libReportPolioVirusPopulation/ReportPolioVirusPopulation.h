@@ -25,7 +25,7 @@ public:
 
     virtual void LogNodeData( Kernel::INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return false ; } ;
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void BeginTimestep();
     virtual void EndTimestep( float currentTime, float dt );
 

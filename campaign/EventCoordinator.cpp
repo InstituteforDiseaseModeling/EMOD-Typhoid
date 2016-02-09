@@ -19,6 +19,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
 
+#include "Log.h"
+
 static const char* _module = "EventCoordinator";
 
 json::Object Kernel::EventCoordinatorFactory::ecSchema;
@@ -88,10 +90,6 @@ json::Object Kernel::EventCoordinatorFactory::ecSchema;
 
     */
 
-#if USE_BOOST_SERIALIZATION
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel::IEventCoordinator);
-#endif
-
 namespace Kernel
 {
 
@@ -104,7 +102,7 @@ namespace Kernel
         return CreateInstanceFromSpecs<IEventCoordinator>(config, spec_list, true);
 
     }*/
-    IEventCoordinatorFactory * EventCoordinatorFactory::_instance = NULL;
+    IEventCoordinatorFactory * EventCoordinatorFactory::_instance = nullptr;
     bool EventCoordinatorFactory::doThisOnce = false;
     IEventCoordinator* EventCoordinatorFactory::CreateInstance( const Configuration *config )
     {
@@ -128,7 +126,7 @@ namespace Kernel
                         continue;
                     }
                     HMODULE ecDll = LoadLibrary( dllPath.c_str() );
-                    if( ecDll == NULL )
+                    if( ecDll == nullptr )
                     {
                         LOG_WARN_F("Failed to load dll %S\n", ffd.cFileName);
                     }
@@ -136,7 +134,7 @@ namespace Kernel
                     {
                         typedef int (*callProc)(IEventCoordinatorFactory*, IInterventionFactory *);
                         callProc _callProc = (callProc)GetProcAddress( ecDll, "RegisterWithFactory" );
-                        if( _callProc != NULL )
+                        if( _callProc != nullptr )
                         {
                             (_callProc)( EventCoordinatorFactory::getInstance(), InterventionFactory::getInstance() );
                         }

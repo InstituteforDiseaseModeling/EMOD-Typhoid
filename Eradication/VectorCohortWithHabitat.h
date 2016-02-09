@@ -29,7 +29,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
     public:
-        static VectorCohortWithHabitat *CreateCohort( VectorHabitat* _habitat = NULL, float progress = 0.0f, int32_t initial_population = 0, VectorMatingStructure _vector_genetics = VectorMatingStructure() );
+        static VectorCohortWithHabitat *CreateCohort( VectorHabitat* _habitat = nullptr, float progress = 0.0f, int32_t initial_population = 0, VectorMatingStructure _vector_genetics = VectorMatingStructure() );
         virtual ~VectorCohortWithHabitat();
 
         virtual VectorHabitat* GetHabitat();
@@ -39,13 +39,5 @@ namespace Kernel
         VectorCohortWithHabitat();
         VectorCohortWithHabitat(VectorHabitat* _habitat, float progress, int32_t initial_population, VectorMatingStructure _vector_genetics);
         void Initialize();
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, VectorCohortWithHabitat& cohort, const unsigned int  file_version );
-#endif
     };
 }

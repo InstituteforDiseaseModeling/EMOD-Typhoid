@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 #include "Exceptions.h"
 #include "INodeSTI.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "INodeContext.h"
 #include "IRelationship.h"
 #include "RelationshipReporting.h"

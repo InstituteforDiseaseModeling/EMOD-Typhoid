@@ -90,11 +90,11 @@ static NaturalNumber num_adults_not_related = 0;
 
     void
     ReportSTI::LogIndividualData(
-        IndividualHuman* individual
+        IIndividualHuman* individual
     )
     {
         Report::LogIndividualData( individual );
-        IIndividualHumanSTI* sti_individual = NULL;
+        IIndividualHumanSTI* sti_individual = nullptr;
         if( individual->QueryInterface( GET_IID( IIndividualHumanSTI ), (void**)&sti_individual ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualSTI", "IndividualHuman" );

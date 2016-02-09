@@ -10,7 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include <map>
-#include <string>
 #include <stdint.h>
 
 #include "EnumSupport.h"

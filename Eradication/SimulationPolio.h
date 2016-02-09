@@ -31,27 +31,16 @@ namespace Kernel
     protected:
         static bool ValidateConfiguration(const ::Configuration *config);
 
-        void Initialize();
-        void Initialize(const ::Configuration *config);
+        virtual void Initialize() override;
+        virtual void Initialize(const ::Configuration *config) override;
 
         // Allows correct type of community to be added by derived class Simulations
-        virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
+        virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory) override;
 
-        virtual void InitializeFlags(const ::Configuration *config);
-        virtual void resolveMigration();
+        virtual void InitializeFlags(const ::Configuration *config) override;
 
     private:
 
         friend class Kernel::SimulationFactory; // allow them to create us
-
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationPolio& sim, const unsigned int  file_version );
-#endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanPolio> typed_migration_queue_storage;
     };
 }
-
-#ifndef WIN32
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPolio)
-#endif

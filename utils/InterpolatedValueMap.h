@@ -17,7 +17,6 @@ namespace Kernel
 
     class IDMAPI InterpolatedValueMap : public JsonConfigurable, public JsonConfigurable::tFloatFloatMapConfigType /* really just a map */
     {
-        friend class ::boost::serialization::access;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
         public:

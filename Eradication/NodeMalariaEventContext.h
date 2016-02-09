@@ -17,8 +17,8 @@ namespace Kernel
     class ISporozoiteChallengeConsumer : public ISupports
     {
         public:
-            virtual void ChallengeWithSporozoites(int n_sporozoites, float coverage=1.0f, tAgeBitingFunction=NULL ) = 0;
-            virtual void ChallengeWithInfectiousBites(int n_bites, float coverage=1.0f, tAgeBitingFunction=NULL) = 0;
+            virtual void ChallengeWithSporozoites(int n_sporozoites, float coverage=1.0f, tAgeBitingFunction=nullptr ) = 0;
+            virtual void ChallengeWithInfectiousBites(int n_bites, float coverage=1.0f, tAgeBitingFunction=nullptr) = 0;
     };
 
     class NodeMalariaEventContextHost : public NodeVectorEventContextHost,

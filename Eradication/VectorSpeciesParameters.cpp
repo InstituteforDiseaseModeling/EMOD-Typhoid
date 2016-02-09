@@ -11,17 +11,46 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorSpeciesParameters.h"
 
 #include "NodeVector.h"  // just for the NodeFlags :(
-#include "SimulationConfig.h"  // just for vspMap (to avoid static)
 #include "Vector.h"
 #include "Exceptions.h"
-#include <algorithm> // for transform
-#include <cctype> // for tolower
 
 static const char * _module = "VectorSpeciesParameters";
 
-
 namespace Kernel
 {
+    void VectorSpeciesParameters::serialize(IArchive& ar, VectorSpeciesParameters*& parameters)
+    {
+        if (!ar.IsWriter())
+        {
+            parameters = new VectorSpeciesParameters();
+        }
+
+        ar.startObject();
+            ar.labelElement("habitat_param") & parameters->habitat_param;
+            ar.labelElement("habitat_type") & (std::vector<uint32_t>&)parameters->habitat_type;
+            ar.labelElement("aquaticarrhenius1") & parameters->aquaticarrhenius1;
+            ar.labelElement("aquaticarrhenius2") & parameters->aquaticarrhenius2;
+            ar.labelElement("infectedarrhenius1") & parameters->infectedarrhenius1;
+            ar.labelElement("infectedarrhenius2") & parameters->infectedarrhenius2;
+            ar.labelElement("immatureduration") & parameters->immatureduration;
+            ar.labelElement("daysbetweenfeeds") & parameters->daysbetweenfeeds;
+            ar.labelElement("anthropophily") & parameters->anthropophily;
+            ar.labelElement("eggbatchsize") & parameters->eggbatchsize;
+            ar.labelElement("infectedeggbatchmod") & parameters->infectedeggbatchmod;
+            ar.labelElement("infectiousmortalitymod") & parameters->infectiousmortalitymod;
+            ar.labelElement("aquaticmortalityrate") & parameters->aquaticmortalityrate;
+            ar.labelElement("adultlifeexpectancy") & parameters->adultlifeexpectancy;
+            ar.labelElement("transmissionmod") & parameters->transmissionmod;
+            ar.labelElement("acquiremod") & parameters->acquiremod;
+            ar.labelElement("infectioushfmortmod") & parameters->infectioushfmortmod;
+            ar.labelElement("indoor_feeding") & parameters->indoor_feeding;
+
+            ar.labelElement("feedingrate") & parameters->feedingrate;
+            ar.labelElement("adultmortality") & parameters->adultmortality;
+            ar.labelElement("immaturerate") & parameters->immaturerate;
+        ar.endObject();
+    }
+
     VectorSpeciesParameters::VectorSpeciesParameters() :
         aquaticarrhenius1(DEFAULT_AQUATIC_ARRHENIUS1),
         aquaticarrhenius2(DEFAULT_AQUATIC_ARRHENIUS2),
@@ -135,48 +164,3 @@ namespace Kernel
         _species = vector_species_name;
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-namespace Kernel
-{
-    template< typename Archive >
-    void serialize(Archive & ar, VectorSpeciesParameters& pars, const unsigned int file_version)
-    {
-        // Register derived types - N/A
-
-        // Serialize fields
-        ar  &  pars.habitat_type
-            &  pars.habitat_param
-            &  pars.aquaticarrhenius1
-            &  pars.aquaticarrhenius2
-            &  pars.infectedarrhenius1
-            &  pars.infectedarrhenius2
-            &  pars.immatureduration
-            &  pars.daysbetweenfeeds
-            &  pars.anthropophily
-            &  pars.eggbatchsize
-            &  pars.infectedeggbatchmod
-            &  pars.infectiousmortalitymod
-            &  pars.aquaticmortalityrate
-            &  pars.adultlifeexpectancy
-            &  pars.transmissionmod
-            &  pars.acquiremod
-            &  pars.infectioushfmortmod
-            &  pars.indoor_feeding
-            &  pars.feedingrate
-            &  pars.adultmortality
-            &  pars.immaturerate;
-
-        // Serialize base class - N/A
-    }
-
-    template void serialize(boost::archive::binary_iarchive & ar, VectorSpeciesParameters&, const unsigned int file_version);
-    template void serialize(boost::archive::binary_oarchive & ar, VectorSpeciesParameters&, const unsigned int file_version);
-    template void serialize(boost::mpi::packed_skeleton_iarchive& ar, VectorSpeciesParameters&, const unsigned int file_version);
-    template void serialize(boost::mpi::packed_skeleton_oarchive& ar, VectorSpeciesParameters&, const unsigned int file_version);
-    template void serialize(boost::mpi::packed_oarchive& ar, VectorSpeciesParameters&, const unsigned int file_version);
-    template void serialize(boost::mpi::packed_iarchive& ar, VectorSpeciesParameters&, const unsigned int file_version);
-    template void serialize(boost::mpi::detail::content_oarchive& ar, VectorSpeciesParameters&, const unsigned int file_version);
-    template void serialize(boost::mpi::detail::mpi_datatype_oarchive& ar, VectorSpeciesParameters&, const unsigned int file_version);
-}
-#endif

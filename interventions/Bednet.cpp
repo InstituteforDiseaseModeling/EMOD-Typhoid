@@ -13,9 +13,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <typeinfo>
 
 #include "Contexts.h"                      // for IIndividualHumanContext, IIndividualHumanInterventionsContext
-#include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "VectorInterventionsContainer.h"  // for IBednetConsumer methods
+#include "Log.h"
+#include "IndividualEventContext.h"
+#include "NodeEventContext.h"
 
 static const char* _module = "SimpleBednet";
 
@@ -30,6 +32,15 @@ namespace Kernel
     IMPLEMENT_FACTORY_REGISTERED(SimpleBednet)
     
     SimpleBednet::SimpleBednet()
+    : BaseIntervention()
+    , current_blockingrate(0.5)
+    , current_killingrate(0.5)
+    , primary_decay_time_constant(3650)
+    , secondary_decay_time_constant(3650)
+    , durability_time_profile(InterventionDurabilityProfile::BOXDURABILITY)
+    , bednet_type(BednetType::Barrier)
+    , on_distributed_event()
+    , ibc(nullptr)
     {
         initSimTypes( 2, "MALARIA_SIM", "VECTOR_SIM" );
         initConfigTypeMap( "Blocking_Rate", &current_blockingrate, SB_Blocking_Rate_DESC_TEXT, 0.0, 1.0, 0.5 );
@@ -37,6 +48,7 @@ namespace Kernel
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, SB_Cost_To_Consumer_DESC_TEXT, 0, 999999, 3.75 );
         initConfigTypeMap( "Primary_Decay_Time_Constant", &primary_decay_time_constant, SB_Primary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
         initConfigTypeMap( "Secondary_Decay_Time_Constant", &secondary_decay_time_constant, SB_Secondary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
+        initConfigTypeMap( "On_Distributed_Event_Trigger", &on_distributed_event, On_Distributed_Event_Trigger_DESC_TEXT, JsonConfigurable::default_string );
     }
 
     bool
@@ -60,7 +72,20 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IBednetConsumer", "IIndividualHumanInterventionsContext" );
         }
         context->PurgeExisting( typeid(*this).name() );
-        return BaseIntervention::Distribute( context, pCCO );
+        bool ret = BaseIntervention::Distribute( context, pCCO );
+        if( ret && !on_distributed_event.IsUninitialized() && (on_distributed_event != NO_TRIGGER_STR) )
+        {
+            INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+            if (s_OK != context->GetParent()->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
+                                               "parent->GetEventContext()->GetNodeEventContext()", 
+                                               "INodeTriggeredInterventionConsumer", 
+                                               "INodeEventContext" );
+            }
+            broadcaster->TriggerNodeEventObserversByString( context->GetParent()->GetEventContext(), on_distributed_event );
+        }
+        return ret ;
     }
 
     void SimpleBednet::Update( float dt )
@@ -121,7 +146,6 @@ namespace Kernel
         }
     }
 
-
 /*
     Kernel::QueryResult SimpleBednet::QueryInterface( iid_t iid, void **ppinstance )
     {
@@ -132,10 +156,10 @@ namespace Kernel
 
         ISupports* foundInterface;
 
-        if ( iid == GET_IID(IBednet)) 
+        if ( iid == GET_IID(IBednet))
             foundInterface = static_cast<IBednet*>(this);
-        // -->> add support for other I*Consumer interfaces here <<--      
-        else if ( iid == GET_IID(ISupports)) 
+        // -->> add support for other I*Consumer interfaces here <<--
+        else if ( iid == GET_IID(ISupports))
             foundInterface = static_cast<ISupports*>(static_cast<IBednet*>(this));
         else
             foundInterface = 0;
@@ -153,25 +177,17 @@ namespace Kernel
         return status;
 
     }*/
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleBednet)
+    REGISTER_SERIALIZABLE(SimpleBednet);
 
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SimpleBednet& bn, const unsigned int v)
+    void SimpleBednet::serialize(IArchive& ar, SimpleBednet* obj)
     {
-        //LOG_DEBUG("(De)serializing SimpleHousingBednet\n");
-
-        boost::serialization::void_cast_register<SimpleBednet, IDistributableIntervention>();
-        ar & bn.bednet_type;
-        ar & bn.durability_time_profile;
-        ar & bn.current_blockingrate;
-        ar & bn.current_killingrate;
-        ar & bn.primary_decay_time_constant;
-        ar & bn.secondary_decay_time_constant;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(bn);
+        SimpleBednet& bednet = *obj;
+        ar.labelElement("current_blockingrate") & bednet.current_blockingrate;
+        ar.labelElement("current_killingrate") & bednet.current_killingrate;
+        ar.labelElement("primary_decay_time_constant") & bednet.primary_decay_time_constant;
+        ar.labelElement("secondary_decay_time_constant") & bednet.secondary_decay_time_constant;
+        ar.labelElement("durability_time_profile") & (uint32_t&)bednet.durability_time_profile;
+        ar.labelElement("bednet_type") & (uint32_t&)bednet.bednet_type;
     }
 }
-#endif

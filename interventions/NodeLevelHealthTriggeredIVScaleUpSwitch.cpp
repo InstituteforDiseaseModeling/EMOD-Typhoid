@@ -52,8 +52,8 @@ namespace Kernel
 
     float NodeLevelHealthTriggeredIVScaleUpSwitch::getDemographicCoverage( ) const
     {
-        
-        float current_demographic_coverage;  
+        float demographic_coverage = demographic_restrictions.GetDemographicCoverage();  
+        float current_demographic_coverage = demographic_coverage;  
 
         switch (demographic_coverage_time_profile)
         {
@@ -67,7 +67,10 @@ namespace Kernel
             {
                 //the increment amount is ((demographic_coverage - initial_demog_coverage)/primary_time_constant) per day
                 current_demographic_coverage = initial_demographic_coverage + ( (demographic_coverage - initial_demographic_coverage)/primary_time_constant) * duration;
-                LOG_DEBUG_F("ScaleUpProfile is Linear, duration is %f, rate of %f, coverage is %f \n", duration, ( (demographic_coverage - initial_demographic_coverage)/primary_time_constant), current_demographic_coverage); 
+                LOG_DEBUG_F("ScaleUpProfile is Linear, duration is %f, rate of %f, coverage is %f \n", 
+                    duration,
+                    ( (demographic_coverage - initial_demographic_coverage)/primary_time_constant), 
+                    current_demographic_coverage); 
             }
             else
             {
@@ -101,8 +104,8 @@ namespace Kernel
 
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
         //const IInterventionFactory* ifobj = dynamic_cast<NodeEventContextHost *>(parent)->GetInterventionFactoryObj();
-        IGlobalContext *pGC = NULL;
-        const IInterventionFactory* ifobj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const IInterventionFactory* ifobj = nullptr;
         if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             ifobj = pGC->GetInterventionFactory();
@@ -141,16 +144,3 @@ namespace Kernel
          }       
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeLevelHealthTriggeredIVScaleUpSwitch)
-
-namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(NodeLevelHealthTriggeredIVScaleUpSwitch, INodeDistributableIntervention)
-    REGISTER_SERIALIZATION_VOID_CAST(NodeLevelHealthTriggeredIVScaleUpSwitch, IIndividualEventObserver)
-    template<class Archive>
-    void serialize(Archive &ar, NodeLevelHealthTriggeredIVScaleUpSwitch& iv, const unsigned int v)
-    {
-    }
-}
-#endif

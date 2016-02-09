@@ -79,26 +79,34 @@ namespace Kernel
         {
             pMedHistory->OnReceivedTestResultForHIV( resultIsHivPositive );
         }
+
+        INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+        if (s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
+        }
+
+        if( resultIsHivPositive )
+        {
+            broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedPositive );
+        }
+        else
+        {
+            broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedNegative );
+        }
     }
 }
 
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVRapidHIVDiagnostic)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HIVRapidHIVDiagnostic& obj, const unsigned int v)
     {
-        static const char * _module = "HIVRapidHIVDiagnostic";
-        LOG_DEBUG("(De)serializing HIVRapidHIVDiagnostic\n");
-
-        boost::serialization::void_cast_register<HIVRapidHIVDiagnostic, IDistributableIntervention>();
         //ar & obj.abortStates;     // todo: serialize this!
         ar & obj.cascadeState;
         ar & obj.firstUpdate;
         ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVRapidHIVDiagnostic&, unsigned int);
 }
 #endif

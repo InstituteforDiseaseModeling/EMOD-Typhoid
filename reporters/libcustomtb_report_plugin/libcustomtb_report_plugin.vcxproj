@@ -53,7 +53,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_REPORT_DLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBCUSTOMMALARIA_REPORT_PLUGIN_NEW_EXPORTS;%(PreprocessorDefinitions);ENABLE_TB</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;_REPORT_DLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBCUSTOMMALARIA_REPORT_PLUGIN_NEW_EXPORTS;%(PreprocessorDefinitions);ENABLE_TB</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\Dependencies\ComputeClusterPack\Include;C:\boost\boost_1_51_0;..\..\cajun\Include;..\..\utils;..\..\Eradication;C:\Program Files\MATLAB\R2011b\extern\include;..\..\jsonspirit;..\..\campaign;..\..\interventions;..\rapidjson\modp;..\..\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -71,7 +71,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_REPORT_DLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBCUSTOMMALARIA_REPORT_PLUGIN_NEW_EXPORTS;%(PreprocessorDefinitions);ENABLE_TB</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;_REPORT_DLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBCUSTOMMALARIA_REPORT_PLUGIN_NEW_EXPORTS;%(PreprocessorDefinitions);ENABLE_TB</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\Dependencies\ComputeClusterPack\Include;C:\boost\boost_1_51_0;..\..\cajun\Include;..\..\utils;..\..\Eradication;C:\Program Files\MATLAB\R2011b\extern\include;..\..\jsonspirit;..\..\campaign;..\..\interventions;..\rapidjson\modp;..\..\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

@@ -14,18 +14,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 class VectorSpeciesReport : public BinnedReport
 {
 public:
-    static IReport* CreateReport( const JsonConfigurable::tDynamicStringSet& rVectorSpeciesNames );
+    static IReport* CreateReport( const Kernel::jsonConfigurable::tDynamicStringSet& rVectorSpeciesNames );
     virtual ~VectorSpeciesReport();
 
     virtual void Initialize( unsigned int nrmSize );
 
     virtual void LogNodeData( Kernel::INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return false ; } ;
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void EndTimestep( float currentTime, float dt );
 
 protected:
-    VectorSpeciesReport( const JsonConfigurable::tDynamicStringSet& rVectorSpeciesNames );
+    VectorSpeciesReport( const Kernel::jsonConfigurable::tDynamicStringSet& rVectorSpeciesNames );
 
     virtual void initChannelBins();
     void clearChannelsBins();

@@ -1,0 +1,69 @@
+{
+    "tests": [
+        {
+            "path" : "Multicore_Nosibe/39_Vector_Namawala_HostSeekingTrap"
+        },
+        {
+            "path" : "Multicore_Nosibe/64_Vector_ScaleLarvalHabitat"
+        },            
+        {
+            "path" : "Multicore_Nosibe/69_Vector_IRS_Ivermectin"
+        },
+        {
+            "path" : "Multicore_Nosibe/79_Vector_Ivermectin"
+        },    
+        {
+            "path" : "Multicore_Nosibe/86_Vector_SimpleIndividualRepellent"
+        },            
+        {
+            "path" : "Multicore_Nosibe/99_Malaria_Intervention_RTSSVaccine"
+        },    
+        {
+            "path" : "Multicore_Nosibe/104_Vector_DrivingYHEGs"
+        },    
+        {
+            "path" : "Multicore_Nosibe/107_Generic_Intervention_SimpleDiagnostic"
+        } 
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/01_A_Namawala3Vectors_lowEIR"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/01_B_Namawala3Vectors_highEIR"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/03_A_Namawala_Vector"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/03_B_Muheza_Vector"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/03_C_Garki_single_node_Vector"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/05_Namawala_Vector_ITNs"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/06_Namawala_Vector_ITNsPEV"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/07_Namawala_Vector_SSV"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/09_Namawala_Vector_SugarBaitedTraps"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/10_InsectKillingFence"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats"
+        }
+    ],
+    "long tests": [
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/02_Namawala_Full_Malaria_Model"
+        },        
+        {
+            "path" : "Multicore_Nosibe/Scenarios/VectorAndMalaria/08_Garki_IRSMDA"
+        }
+    ]
+}

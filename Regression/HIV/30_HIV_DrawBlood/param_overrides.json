@@ -39,6 +39,7 @@
             "HIVDiagnosedEligibleForART",
             "HIVPositiveHIVTest",
             "HIVNegativeHIVTest",
+            "HIVNeedsHIVTest",
             "HCTTestingLoop3"
         ],
 

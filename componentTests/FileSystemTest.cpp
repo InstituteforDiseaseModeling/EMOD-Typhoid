@@ -26,7 +26,7 @@ SUITE(FileSystemTest)
         string str_backslash    = "Ends in a backslash\\" ;
         string str_forwardslash = "Ends in a forward slash/" ;
         string str_all          = "Ends in all the characters to replace \n\r\t\\/" ;
-		string str_all_spaces   = "     " ;
+        string str_all_spaces   = "     " ;
 
         string exp_space        = "Ends in a space";
         string exp_line_feed    = "Ends in a line feed" ;

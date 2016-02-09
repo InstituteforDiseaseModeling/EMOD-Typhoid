@@ -16,11 +16,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "HealthSeekingBehavior.h"
 #include "IHealthSeekingBehavior.h"
 
-
 namespace Kernel
 {
-
-    class HealthSeekingBehaviorUpdateable :  public IHealthSeekingBehavior, public SimpleHealthSeekingBehavior
+    class HealthSeekingBehaviorUpdateable :  public SimpleHealthSeekingBehavior, public IHealthSeekingBehavior
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -34,12 +32,6 @@ namespace Kernel
         virtual void UpdateProbabilityofSeeking(float new_probability_of_seeking); //this function only called by TBInterventions Container
 
     protected:
-
-    private:
-        // Serialization
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, HealthSeekingBehaviorUpdateable &obj, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(HealthSeekingBehaviorUpdateable);
     };
 }

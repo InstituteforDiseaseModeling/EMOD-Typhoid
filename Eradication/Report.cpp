@@ -15,11 +15,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Report.h"
 #include "Sugar.h"
 #include "Environment.h"
-#include "Node.h"
-#include "Individual.h"
-#include "Exceptions.h"
-#include "ProgVersion.h"
-#include "ISimulation.h"
+#include "INodeContext.h"
+#include "IIndividualHuman.h"
+#include "Climate.h"
 
 using namespace std;
 using namespace json;
@@ -82,35 +80,35 @@ void Report::BeginTimestep()
 
 void Report::EndTimestep( float currentTime, float dt )
 {
-#ifdef __GNUC__
-    auto now = clock(); // msec on linux, seconds on windoze!
-#else
-    auto now = GetTickCount(); // msec on win
-#endif
-
-    float diff = 0;
-    if( last_time > 0 )
-    {
-        //std::cout << "now = " << now << ", last = " << last_time << std::endl;
-        diff = now - last_time;
-    }
+//#ifdef __GNUC__
+//    auto now = clock(); // msec on linux, seconds on windoze!
+//#else
+//    auto now = GetTickCount(); // msec on win
+//#endif
+//
+//    float diff = 0;
+//    if( last_time > 0 )
+//    {
+//        //std::cout << "now = " << now << ", last = " << last_time << std::endl;
+//        diff = now - last_time;
+//    }
     Accumulate("Disease Deaths", disease_deaths);
     //Accumulate("Timestep Wallclock Duration", diff);
     BaseChannelReport::EndTimestep( currentTime, dt );
     //last_time = clock();
-#ifdef __GNUC__
-    last_time = clock(); // msec on linux, seconds on windoze!
-#else
-    last_time = GetTickCount();
-#endif
+//#ifdef __GNUC__
+//    last_time = clock(); // msec on linux, seconds on windoze!
+//#else
+//    last_time = GetTickCount();
+//#endif
 }
 
 void
 Report::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
-    float monte_carlo_weight = (float)individual->GetMonteCarloWeight();
+    float monte_carlo_weight = float(individual->GetMonteCarloWeight());
 
     NewInfectionState::_enum nis = individual->GetNewInfectionState();
 
@@ -191,13 +189,13 @@ Report::postProcessAccumulatedData()
     normalizeChannel("Infected", _stat_pop_label);
     if( channelDataMap.HasChannel( "Air Temperature" ) )
     {
-        normalizeChannel("Air Temperature", (float)_nrmSize);
-        normalizeChannel("Land Temperature", (float)_nrmSize);
-        normalizeChannel("Relative Humidity", (float)_nrmSize);
-        normalizeChannel("Rainfall", (float)_nrmSize * (1 / 1000.0f)); // multiply by 1000 to get result in mm/day
+        normalizeChannel("Air Temperature", float(_nrmSize));
+        normalizeChannel("Land Temperature", float(_nrmSize));
+        normalizeChannel("Relative Humidity", float(_nrmSize));
+        normalizeChannel("Rainfall", float(_nrmSize) * (1 / 1000.0f)); // multiply by 1000 to get result in mm/day
     }
-    normalizeChannel( _hum_infectious_res_label, (float)_nrmSize );
-    normalizeChannel( _prob_new_infection_label, (float)_nrmSize );
+    normalizeChannel( _hum_infectious_res_label, float(_nrmSize) );
+    normalizeChannel( _prob_new_infection_label, float(_nrmSize) );
 
     // add derived channels
     addDerivedLogScaleSummaryChannel("Infected", _log_prev_label);
@@ -207,7 +205,7 @@ Report::postProcessAccumulatedData()
     NormalizeSEIRWChannels();
 }
 
-void Report::UpdateSEIRW( const Kernel::IndividualHuman * individual, float monte_carlo_weight )
+void Report::UpdateSEIRW( const Kernel::IIndividualHuman* individual, float monte_carlo_weight )
 {
     if (!individual->IsInfected())  // Susceptible, Recovered (Immune), or Waning
     {
@@ -271,8 +269,7 @@ void Report::NormalizeSEIRWChannels()
     normalizeChannel(_waning_pop_label,      _stat_pop_label);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Report)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, Report& report, const unsigned int v)
 {

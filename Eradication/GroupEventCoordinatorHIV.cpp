@@ -17,7 +17,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ConfigurationImpl.h"
 #include "FactorySupport.h"
 #include "InterventionFactory.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
+#include "NodeDemographics.h"
 #include "NodeEventContext.h"
 #include "Log.h"
 #include "TBContexts.h"
@@ -44,11 +45,7 @@ namespace Kernel
     GroupInterventionDistributionEventCoordinatorHIV::Configure( const Configuration * inputJson)
     {
         initConfig("Target_Group", target_group, inputJson, MetadataDescriptor::Enum("target_group", Target_Group_DESC_TEXT, MDD_ENUM_ARGS(TargetGroupType))) ;
-        initConfig("Target_Gender", target_gender, inputJson, MetadataDescriptor::Enum("target_gender", Target_Gender_DESC_TEXT, MDD_ENUM_ARGS(TargetGender)));
-        initConfigTypeMap("Target_Age_Min", &target_age_min, Target_Age_Min_DESC_TEXT, 0.0f, 200.0f, 0 ); // 
-        initConfigTypeMap("Target_Age_Max", &target_age_max, Target_Age_Max_DESC_TEXT, 0.0f, 200.0f, 200.0f);
         initConfigTypeMap("Time_Offset", &time_offset, Time_Offset_DESC_TEXT, 0.0f, FLT_MAX, 0.0f);
-        //initConfigTypeMap("Property_Restrictions", &property_restrictions, Property_Restriction_DESC_TEXT );
         
         bool retValue = StandardInterventionDistributionEventCoordinator::Configure(inputJson);
         return retValue;
@@ -56,10 +53,20 @@ namespace Kernel
 
     // ctor
     GroupInterventionDistributionEventCoordinatorHIV::GroupInterventionDistributionEventCoordinatorHIV()
+        : StandardInterventionDistributionEventCoordinator()
+        , target_group(TargetGroupType::Everyone)
+        , time_offset(0.0f)
     {
         LOG_DEBUG("GroupInterventionDistributionEventCoordinatorHIV ctor\n"); 
     } 
    
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!! 1/11/2016 DMB
+    // !!! This method does not get called.  The class is not a subclass of 
+    // !!! GroupInterventionDistributionEventCoordinator so it is not being
+    // !!! restricted by the restrictions there.  We should consider whether
+    // !!! we want to extend DemographicRestrictions.
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     bool
     GroupInterventionDistributionEventCoordinatorHIV::qualifiesByGroup(
         const IIndividualHumanEventContext * const pIndividual
@@ -68,33 +75,40 @@ namespace Kernel
     {
         bool retQualifies = true;
 
-
-        IIndividualHumanCoinfection* Coinf_ind = NULL;
-        if(const_cast<IIndividualHumanEventContext*>(pIndividual)->QueryInterface( GET_IID( IIndividualHumanCoinfection ), (void**)&Coinf_ind ) != s_OK)
-        { //error here
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHumanCoinfection", "IIndividualHumanEventContext" );
+        if( (pIndividual->GetAge() < demographic_restrictions.GetMinimumAge() * DAYSPERYEAR) || 
+            (pIndividual->GetAge() > demographic_restrictions.GetMaximumAge() * DAYSPERYEAR) ) 
+        {
+            return false;
         }
 
-    
+        if( (pIndividual->GetGender()                        == Gender::FEMALE    ) &&
+            (demographic_restrictions.GetTargetDemographic() == TargetGender::Male) ) 
+        {
+            return false;
+        }
 
-        if (pIndividual->GetAge() < target_age_min * DAYSPERYEAR || pIndividual->GetAge() > target_age_max * DAYSPERYEAR) {return false; }
-        
-        
+        if( (pIndividual->GetGender()                        == Gender::MALE        ) &&
+            (demographic_restrictions.GetTargetDemographic() == TargetGender::Female) ) 
+        {
+            return false;
+        }
 
-        if (pIndividual->GetGender() == Gender::FEMALE && target_gender == TargetGender::Male ) {return false;}
-
-        if (pIndividual->GetGender() == Gender::MALE && target_gender == TargetGender::Female) {return false;}
-        
-
-        if (target_group == TargetGroupType::HIVNegative )
+        if( target_group == TargetGroupType::HIVNegative )
         {    
-            if (Coinf_ind->HasHIV() ) {return false;}
+            IIndividualHumanCoinfection* Coinf_ind = NULL;
+            if(const_cast<IIndividualHumanEventContext*>(pIndividual)->QueryInterface( GET_IID( IIndividualHumanCoinfection ), (void**)&Coinf_ind ) != s_OK)
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHumanCoinfection", "IIndividualHumanEventContext" );
+            }
+
+            if( Coinf_ind->HasHIV() )
+            {
+                return false;
+            }
         }
         
         //also check the base class
-
         //retQualifies = StandardInterventionDistributionEventCoordinator::qualifiesDemographically( pIndividual );
-        
 
         return retQualifies;
     }
@@ -106,18 +120,17 @@ namespace Kernel
         ICampaignCostObserver * pICCO
     )
    {
-            bool retValue = true;
+        bool retValue = true;
 
-            IIndividualHumanContext* pIndHu;
+        IIndividualHumanContext* pIndHu = nullptr;
 
-            if (const_cast<IIndividualHumanEventContext*>(ihec)->QueryInterface( GET_IID( IIndividualHumanContext ), (void**)&pIndHu ) != s_OK)
-        { //error here
+        if (const_cast<IIndividualHumanEventContext*>(ihec)->QueryInterface( GET_IID( IIndividualHumanContext ), (void**)&pIndHu ) != s_OK)
+        {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pIndividual", "IIndividualHumanCoinfection", "IIndividualHumanEventContext" );
         }
-            
-            demographic_coverage = pIndHu->GetDemographicsDistribution(NodeDemographicsDistribution::HIVCoinfectionDistribution)->DrawResultValue(ihec->GetGender() == Gender::FEMALE, (parent->GetSimulationTime().time - time_offset), ihec->GetAge() );
         
-        
+        float dc = pIndHu->GetDemographicsDistribution(NodeDemographicsDistribution::HIVCoinfectionDistribution)->DrawResultValue( ihec->GetGender() == Gender::FEMALE, (parent->GetSimulationTime().time - time_offset), ihec->GetAge() );
+        demographic_restrictions.SetDemographicCoverage( dc );
         
         retValue = StandardInterventionDistributionEventCoordinator::visitIndividualCallback( ihec, incrementalCostOut, pICCO);
         
@@ -126,18 +139,12 @@ namespace Kernel
 }
  
 
-#if USE_BOOST_SERIALIZATION
-// TODO: Consolidate with serialization code in header.
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::GroupInterventionDistributionEventCoordinator);
-
+#if 0
 namespace Kernel
 {
-
     template<class Archive>
     void serialize(Archive &ar, GroupInterventionDistributionEventCoordinatorHIV &ec, const unsigned int v)
     {
-        boost::serialization::void_cast_register<GroupInterventionDistributionEventCoordinatorHIV, IEventCoordinator>();
         ar & ec.target_disease_state;
 
         ar & ec.node_suids;
@@ -145,5 +152,4 @@ namespace Kernel
         ar & boost::serialization::base_object<StandardInterventionDistributionEventCoordinator>(ec);
     }
 }
-
 #endif

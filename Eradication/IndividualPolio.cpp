@@ -50,10 +50,11 @@ namespace Kernel
         return JsonConfigurable::Configure( config );
     }
 
-    IndividualHumanPolio::IndividualHumanPolio(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
-        IndividualHumanEnvironmental(_suid, monte_carlo_weight, initial_age, gender, initial_poverty),
-        age_most_recent_infection(0),
-        polio_susceptibility(NULL)
+    IndividualHumanPolio::IndividualHumanPolio(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
+        : IndividualHumanEnvironmental(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
+        , age_most_recent_infection(0)
+        , paralysisVirusTypeMask(0)
+        , polio_susceptibility(nullptr)
     {
     }
 
@@ -72,7 +73,7 @@ namespace Kernel
         IndividualHuman::PropagateContextToDependents();
 
 #if 0
-        //if( polio_susceptibility == NULL && susceptibility != NULL)
+        //if( polio_susceptibility == nullptr && susceptibility != nullptr)
         {
             if ( s_OK != susceptibility->QueryInterface(GET_IID(ISusceptibilityPolio), (void**)&polio_susceptibility) )
             {
@@ -99,6 +100,16 @@ namespace Kernel
     {
         interventions = _new_ PolioInterventionsContainer();
     }
+
+    REGISTER_SERIALIZABLE(IndividualHumanPolio);
+
+    void IndividualHumanPolio::serialize(IArchive& ar, IndividualHumanPolio* obj)
+    {
+        IndividualHumanEnvironmental::serialize(ar, obj);
+        IndividualHumanPolio& individual = *obj;
+        ar.labelElement("age_most_recent_infection") & individual.age_most_recent_infection;
+        ar.labelElement("paralysisVirusTypeMask") & individual.paralysisVirusTypeMask;
+    }
 }
 
 void Kernel::IndividualHumanPolio::CreateSusceptibility(float imm_mod, float risk_mod)
@@ -110,7 +121,7 @@ void Kernel::IndividualHumanPolio::CreateSusceptibility(float imm_mod, float ris
 
 int Kernel::IndividualHumanPolio::CountInfections(void) const
 {
-    return (int)infections.size();
+    return int(infections.size());
 }
 
 void Kernel::IndividualHumanPolio::ClearAllNewInfectionByStrain(void)
@@ -143,7 +154,7 @@ const Kernel::infection_polio_reportable_list_t *Kernel::IndividualHumanPolio::G
     // Loop over infections, find new ones - push on new_reportable_infections
     for (auto infection : infections)
     {
-        IInfectionPolioReportable *ipr = NULL;
+        IInfectionPolioReportable *ipr = nullptr;
         if( infection->QueryInterface( GET_IID( IInfectionPolioReportable ), (void**)&ipr ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "Infection", "IInfectionPolio", "*it" );
@@ -195,9 +206,7 @@ void Kernel::IndividualHumanPolio::Expose( const IContagionPopulation* cp, float
     {
         float acquired_virus;
         float infection_prob;
-        float acquisition_rate=0.0f;
-
-        acquisition_rate = polio_susceptibility->GetDefaultAcquireRate();
+        float acquisition_rate = polio_susceptibility->GetDefaultAcquireRate();
 
         //dt contains x_acquisition_scaling so we only need one acquisition rate, see pool.cpp
         acquired_virus = cp->GetTotalContagion() * acquisition_rate;
@@ -245,7 +254,7 @@ void Kernel::IndividualHumanPolio::ExposeToInfectivity(float dt, const Transmiss
 void Kernel::IndividualHumanPolio::ReportInfectionState()
 {
     IndividualHumanEnvironmental::ReportInfectionState();
-    age_most_recent_infection = (float) m_age;
+    age_most_recent_infection = float(m_age);
 }
 
 bool Kernel::IndividualHumanPolio::SetNewInfectionState(InfectionStateChange::_enum inf_state_change)
@@ -292,67 +301,12 @@ float Kernel::IndividualHumanPolio::GetAgeOfMostRecentInfection(void)
     return age_most_recent_infection;
 }
 
-Kernel::Infection* Kernel::IndividualHumanPolio::createInfection( suids::suid _suid )
+Kernel::IInfection* Kernel::IndividualHumanPolio::createInfection( suids::suid _suid )
 {
     InfectionPolio *ip = InfectionPolio::CreateInfection(this, _suid);
     ip->CacheMCWeightOfHost(float(m_mc_weight));
     paralysisVirusTypeMask = 0; // Clear the paralysis mask
     return ip;
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include "InfectionPolio.h"
-#include "SusceptibilityPolio.h"
-#include "PolioInterventionsContainer.h"
-
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanPolio)
-
-namespace Kernel
-{
-    /*template<class Archive>
-    void serialize(Archive & ar, IndividualHumanFlagsPolio& flags, const unsigned int  file_version )
-    {
-        ar & flags.age_most_recent_infection;
-        ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmentalFlags>(flags);
-    }*/
-
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanPolio& human, const unsigned int  file_version )
-    {
-        LOG_DEBUG("(De)serializing IndividualHumanPolio\n");
-
-        ar.template register_type<Kernel::InfectionPolio>();
-        ar.template register_type<Kernel::SusceptibilityPolio>();
-        ar.template register_type<Kernel::PolioInterventionsContainer>();
-            
-        // Serialize fields - N/A
-        ar & human.paralysisVirusTypeMask;
-
-        // Serialize base class
-        ar & human.age_most_recent_infection;
-        ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
-    }
-}
-
-#endif
-
-#if 0
-template<class Archive>
-void Kernel::IndividualHumanPolio::serialize( Archive & ar, const unsigned int file_version )
-{
-    ar.template register_type<InfectionPolio>();
-    ar.template register_type<SusceptibilityPolio>();
-    ar.template register_type<Kernel::PolioInterventionsContainer>();
-
-    ar & boost::serialization::base_object<IndividualHumanEnvironmental>(*this);
-    typemap.serialize(this, ar, file_version);
-}
-
-INSTANTIATE_BOOST_SERIALIZATION_HACKS(Kernel::IndividualHumanPolio);
-
-INSTANTIATE_SERIALIZER(Kernel::IndividualHumanPolio, boost::mpi::packed_iarchive)
-INSTANTIATE_SERIALIZER(Kernel::IndividualHumanPolio, boost::mpi::packed_oarchive)
-#endif
 
 #endif // ENABLE_POLIO

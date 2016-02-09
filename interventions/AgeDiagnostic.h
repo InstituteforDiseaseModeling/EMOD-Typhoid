@@ -18,7 +18,6 @@ namespace Kernel
 {
     class AgeThresholds : public JsonConfigurable
     {
-        friend class ::boost::serialization::access;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
 
@@ -45,15 +44,5 @@ namespace Kernel
     protected:
         virtual bool positiveTestResult();
         AgeThresholds age_thresholds;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, AgeDiagnostic &obj, const unsigned int v);
-#endif
     };
 }
-
-

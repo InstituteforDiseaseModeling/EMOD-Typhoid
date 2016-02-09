@@ -12,15 +12,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InfectionHIV.h"
 
 #include "Interventions.h"
-#include "InterventionsContainer.h"
-#include "SimulationConfig.h"
 #include "RANDOM.h"
 #include "Exceptions.h"
 #include "IndividualEventContext.h"
 #include "IIndividualHumanHIV.h"
 #include "HIVInterventionsContainer.h"
 #include "IIndividualHuman.h"
-#include "NodeEventContext.h"
 
 #include "Types.h" // for ProbabilityNumber and NaturalNumber
 #include "Debug.h" // for release_assert
@@ -114,8 +111,8 @@ namespace Kernel
         try
         {
             // These two constants will both need to be configurable in next checkin.
-            m_acute_duration    = acute_duration_in_months * DAYSPERYEAR / (float)MONTHSPERYEAR;
-            m_aids_duration     = AIDS_duration_in_months * DAYSPERYEAR / (float)MONTHSPERYEAR;
+            m_acute_duration    = acute_duration_in_months * DAYSPERYEAR / float(MONTHSPERYEAR);
+            m_aids_duration     = AIDS_duration_in_months * DAYSPERYEAR / float(MONTHSPERYEAR);
 
             IIndividualHumanEventContext* HumanEventContextWhoKnowsItsAge  = parent->GetEventContext();
             float age_at_HIV_infection = HumanEventContextWhoKnowsItsAge->GetAge();
@@ -151,7 +148,7 @@ namespace Kernel
             }
             //NO_LESS_THAN( remaining_fraction, 0 );
 
-            m_fraction_of_prognosis_spent_in_stage[ NUM_WHO_STAGES-1 ] = std::max<float>( 0.0f, (float) remaining_fraction );
+            m_fraction_of_prognosis_spent_in_stage[ NUM_WHO_STAGES-1 ] = std::max<float>( 0.0f, float(remaining_fraction) );
 
             std::ostringstream msg;
             for( int idx=0; idx<=NUM_WHO_STAGES-1; idx++ )
@@ -281,7 +278,7 @@ namespace Kernel
         m_infection_stage = HIVInfectionStage::AIDS;
     }
 
-    void InfectionHIV::Update(float dt, Susceptibility* immunity)
+    void InfectionHIV::Update(float dt, ISusceptibilityContext* immunity)
     {
         InfectionSTI::Update(dt, immunity);
 
@@ -319,7 +316,7 @@ namespace Kernel
         // Prefer instead to apply the _effects_ of art, and prefer to keep all ART knowledge encapsulated inside
         // the HIVInterventionsContainer.
         // TBD: Use QI instead of cast
-        IHIVInterventionsContainer * pHIC = NULL;
+        IHIVInterventionsContainer * pHIC = nullptr;
         if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IHIVInterventionsContainer), (void**)&pHIC) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionsContext()", "IHIVInterventionsContainer", "IIndividualHumanInterventionsContext" );
@@ -375,7 +372,7 @@ namespace Kernel
         return m_infection_stage;
     }
 
-    bool InfectionHIV::ApplyDrugEffects(float dt, Susceptibility* immunity)
+    bool InfectionHIV::ApplyDrugEffects(float dt, ISusceptibilityContext* immunity)
     {
         // Check for valid inputs
         if (dt <= 0 || !immunity) 
@@ -384,14 +381,9 @@ namespace Kernel
             return false;
         }
 
-        float HIV_drug_inactivation_rate = 0;
-        float HIV_drug_clearance_rate = 0;
-
         // Query for drug effects
-        IIndividualHumanContext *patient = nullptr;
+        IIndividualHumanContext *patient = GetParent();
         IHIVDrugEffects *ihivde = nullptr;
-
-        patient = GetParent();
 
         if (!patient->GetInterventionsContext()) 
         {
@@ -408,9 +400,8 @@ namespace Kernel
             }
         }
 
-        HIV_drug_inactivation_rate = ihivde->GetDrugInactivationRate(); //no action for Drug Inactivation for now
-        HIV_drug_clearance_rate    = ihivde->GetDrugClearanceRate();
-
+        // float HIV_drug_inactivation_rate = ihivde->GetDrugInactivationRate(); //no action for Drug Inactivation for now
+        float HIV_drug_clearance_rate    = ihivde->GetDrugClearanceRate();
 
         if ( HIV_drug_clearance_rate > 0 && randgen->e() < dt * HIV_drug_clearance_rate)
         {
@@ -427,20 +418,20 @@ namespace Kernel
     InfectionHIV::~InfectionHIV(void) { }
     InfectionHIV::InfectionHIV()
         : ViralLoad(0)
-        , hiv_parent( NULL )
-        , HIV_duration_until_mortality_without_TB( (INACTIVE_DURATION) ) // need some value that says Ignore-Me
-        , HIV_natural_duration_until_mortality( (INACTIVE_DURATION) )
-        , HIV_duration_until_mortality_with_viral_suppression( (INACTIVE_DURATION) )
+        , HIV_duration_until_mortality_without_TB(INACTIVE_DURATION )
+        , HIV_natural_duration_until_mortality(INACTIVE_DURATION ) // need some value that says Ignore-Me
+        , HIV_duration_until_mortality_with_viral_suppression(INACTIVE_DURATION )
         , m_time_infected ( 0 )
+        , hiv_parent( nullptr )
     {
     }
 
     InfectionHIV::InfectionHIV(IIndividualHumanContext *context)
         : InfectionSTI(context)
-        , hiv_parent( NULL )
-        , HIV_duration_until_mortality_without_TB( (INACTIVE_DURATION) ) // need some value that says Ignore-Me
-        , HIV_natural_duration_until_mortality( (INACTIVE_DURATION) )
-        , HIV_duration_until_mortality_with_viral_suppression( (INACTIVE_DURATION) )
+        , HIV_duration_until_mortality_without_TB(INACTIVE_DURATION )
+        , HIV_natural_duration_until_mortality(INACTIVE_DURATION ) // need some value that says Ignore-Me
+        , HIV_duration_until_mortality_with_viral_suppression(INACTIVE_DURATION )
+        , hiv_parent( nullptr )
     {
         // TODO: Consider moving m_time_infected to Infection layer.  Alternatively, track only in reporters.
         IIndividualHuman *human_parent;
@@ -482,7 +473,7 @@ namespace Kernel
                 ret = stage; // max 2
                 break;
             }
-            release_assert( (int) stage_idx < NUM_WHO_STAGES-1 );
+            release_assert( int(stage_idx) < NUM_WHO_STAGES-1 );
             //LOG_DEBUG_F( "cum_stage now = %f after adding %f because fraction_completed = %f, stage_idx = %d\n", (float) cum_stage, (float) m_fraction_of_prognosis_spent_in_stage[ stage_idx ], (float) fractionOfPrognosisCompleted, (int) stage_idx );
         }
         
@@ -529,8 +520,8 @@ namespace Kernel
         // !!! SEE BELOW FOR EXPLANATION !!!
         float weights[] = { 65.0f, 62.1f, 57.0f, 50.0f, 40.1f }; // Kg
 
-        int left  = (int)floor(whoStage)-1;
-        int right = (int)ceil(whoStage)-1;
+        int left  = int(floor(whoStage))-1;
+        int right = int(ceil(whoStage))-1;
 
         float weightInKilograms = weights[ left ] + (weights[ right ] - weights[ left ]) * (whoStage - floor(whoStage));
         LOG_DEBUG_F( "%s returning %f for stage %f\n", __FUNCTION__, weightInKilograms, whoStage );
@@ -587,7 +578,7 @@ namespace Kernel
         {
             LOG_WARN_F( "Individual %d had high CD4 at ART enrollment: %f\n", parent->GetSuid().data, cd4AtArtEnrollment );
         }
-        float multiplier = (float)exp( COX_PROP_CONSTANT_1 * min(max_CD4_cox, cd4AtArtEnrollment) + COX_PROP_CONSTANT_2); // Stop at 350
+        float multiplier = float(exp( COX_PROP_CONSTANT_1 * min(max_CD4_cox, cd4AtArtEnrollment) + COX_PROP_CONSTANT_2)); // Stop at 350
         release_assert( multiplier > 0.0f );
         //release_assert( multiplier < 10.0f );
 
@@ -609,7 +600,7 @@ namespace Kernel
             multiplier *= IEDEA_STAGE_3_PLUS_MULTIPLIER;
         }
 
-        multiplier *= (float)exp( COX_PROP_CONSTANT_3 * weight + COX_PROP_CONSTANT_4);
+        multiplier *= float(exp( COX_PROP_CONSTANT_3 * weight + COX_PROP_CONSTANT_4));
         LOG_DEBUG_F( "multiplier = %f\n", multiplier );
         float lambda_divisor = pow(multiplier, 1.0f/IEDEA_KAPPA);
 

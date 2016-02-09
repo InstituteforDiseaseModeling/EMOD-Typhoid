@@ -23,13 +23,8 @@ namespace Kernel
 
         SusceptibilityEnvironmental();
         SusceptibilityEnvironmental(IIndividualHumanContext *context);
-        void Initialize(float age, float immmod, float riskmod);
+        /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityEnvironmental& sus, const unsigned int file_version );
-#endif
+        DECLARE_SERIALIZABLE(SusceptibilityEnvironmental);
     };
 }

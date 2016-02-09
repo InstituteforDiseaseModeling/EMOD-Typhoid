@@ -321,8 +321,7 @@ namespace Kernel {
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_EXPORT_CLASS(Kernel::ClimateKoppen)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, ClimateKoppen & climate, const unsigned int file_version)

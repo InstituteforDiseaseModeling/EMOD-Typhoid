@@ -112,13 +112,13 @@ namespace Kernel
     }
 
     void
-        ReportTBHIV::LogIndividualData( IndividualHuman * individual )
+        ReportTBHIV::LogIndividualData( IIndividualHuman* individual )
     {
 
         // Cast from IndividualHuman to IndividualHumanCoinfection
         float mc_weight = (float) individual->GetMonteCarloWeight();
 
-        IIndividualHumanCoinfection* tb_ind = NULL;
+        IIndividualHumanCoinfection* tb_ind = nullptr;
         if( individual->QueryInterface( GET_IID(IIndividualHumanCoinfection), (void**) &tb_ind ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualHumanCoinfection", "IndividualHuman" );
@@ -132,7 +132,7 @@ namespace Kernel
         auto suslist = tb_ind->Getsusceptibilitylist();
         for (auto psusceptibility : suslist)
         {
-            ISusceptibilityHIV* susHIV = NULL;
+            ISusceptibilityHIV* susHIV = nullptr;
             if( psusceptibility->QueryInterface( GET_IID(ISusceptibilityHIV), (void**) &susHIV ) != s_OK )
             {
                 continue;

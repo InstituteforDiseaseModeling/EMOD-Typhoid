@@ -51,7 +51,7 @@ namespace Kernel
 
         // Apply diagnostic test with given specificity/sensitivity
 
-        IIndividualHumanTB* tb_ind = NULL;
+        IIndividualHumanTB* tb_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanTB ), (void**)&tb_ind ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanTB", "IIndividualHuman" );
@@ -72,20 +72,11 @@ namespace Kernel
         { return false;}
     }
 
+    REGISTER_SERIALIZABLE(SmearDiagnostic);
 
-}
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SmearDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SmearDiagnostic& obj, const unsigned int v)
+    void SmearDiagnostic::serialize(IArchive& ar, SmearDiagnostic* obj)
     {
-
-        boost::serialization::void_cast_register<SmearDiagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+        SimpleDiagnostic::serialize( ar, obj );
+        // No SmearDiagnostic specific fields yet.
     }
 }
-#endif

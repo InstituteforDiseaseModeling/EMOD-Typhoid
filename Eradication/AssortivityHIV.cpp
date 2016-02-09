@@ -15,9 +15,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEventContext.h"
 #include "SimulationConfig.h"
 
+static const char * _module = "AssortivityHIV";
+
 namespace Kernel 
 {
-    static const char * _module = "AssortivityHIV";
+    BEGIN_QUERY_INTERFACE_DERIVED(AssortivityHIV,Assortivity)
+    END_QUERY_INTERFACE_DERIVED(AssortivityHIV,Assortivity)
 
     AssortivityHIV::AssortivityHIV( RelationshipType::Enum relType, RANDOMBASE* prng )
         : Assortivity( relType, prng )
@@ -186,5 +189,15 @@ namespace Kernel
         }
 
         return p_partner_B ;
+    }
+
+    REGISTER_SERIALIZABLE(AssortivityHIV);
+
+    void AssortivityHIV::serialize(IArchive& ar, AssortivityHIV* obj)
+    {
+        Assortivity::serialize( ar, obj );
+        AssortivityHIV& hiv = *obj;
+        ar.labelElement("m_StartYear"  ) & hiv.m_StartYear;
+        ar.labelElement("m_StartUsing" ) & hiv.m_StartUsing;
     }
 }

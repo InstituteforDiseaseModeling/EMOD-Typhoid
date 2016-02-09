@@ -9,18 +9,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include <string>
-#include <list>
-#include <vector>
 #include <functional>
 
 #include "ISupports.h"
 #include "Debug.h"
 #include "EnumSupport.h"
-#include "SimpleTypemapRegistration.h"
 #include "Environment.h"
-//#include "CajunIncludes.h"
 #include "Sugar.h"
-//#include "ValidationLog.h"
 #include "Log.h"
 #include "Configuration.h"
 #include "Configure.h"
@@ -52,7 +47,7 @@ namespace Kernel
 
     using namespace std;
     // CampaignEventFactory
-    ICampaignEventFactory * CampaignEventFactory::_instance = NULL;
+    ICampaignEventFactory * CampaignEventFactory::_instance = nullptr;
     CampaignEvent* CampaignEventFactory::CreateInstance(const Configuration * config)
     {
         CampaignEvent *ce = CreateInstanceFromSpecs<CampaignEvent>(config, getRegisteredClasses(), false);
@@ -82,7 +77,7 @@ namespace Kernel
             if (!ce->nodeset || !ce->event_coordinator)
             {               
                 ce->Release();
-                return NULL;
+                return nullptr;
             }
         }
         return ce;
@@ -151,9 +146,12 @@ namespace Kernel
     IMPL_QUERY_INTERFACE1(CampaignEvent, IConfigurable)
 
     CampaignEvent::CampaignEvent()
-    : nodeset(NULL)
-    , event_coordinator(NULL)
-    , event_index(0)
+        : start_day(0.0f)
+        , event_index(0)
+        , nodeset(nullptr)
+        , event_coordinator(nullptr)
+        , nodeset_config()
+        , event_coordinator_config()
     {
     }
 
@@ -194,8 +192,8 @@ namespace Kernel
 
     CampaignEvent::~CampaignEvent()
     {
-        if (event_coordinator) { event_coordinator->Release(); event_coordinator = NULL; }
-        if (nodeset) { nodeset->Release(); nodeset = NULL; }
+        if (event_coordinator) { event_coordinator->Release(); event_coordinator = nullptr; }
+        if (nodeset) { nodeset->Release(); nodeset = nullptr; }
     }
 
     float
@@ -206,65 +204,9 @@ namespace Kernel
 
     void
     CampaignEvent::SetEventIndex(int index) { event_index = index; }
-
-#if USE_JSON_SERIALIZATION
-
-    // IJsonSerializable Interfaces
-    void CampaignEvent::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("nodeset");
-
-        // We should do this better by using QI later
-        string nsClassName = json::QuickInterpreter(nodeset_config._json)["class"].As<String>();
-        if (nsClassName.compare("NodeSetAll") == 0)
-        {
-            ((NodeSetAll*)nodeset)->JSerialize(root, helper);
-        }
-        else if (nsClassName.compare("NodeSetPolygon") == 0)
-        {
-            ((NodeSetPolygon*)nodeset)->JSerialize(root, helper);
-        }
-        else if (nsClassName.compare("NodeSetNodeList") == 0)
-        {
-            ((NodeSetNodeList*)nodeset)->JSerialize(root, helper);
-        }
-        else
-        {
-            throw GeneralConfigurationException(__FILE__, __LINE__, __FUNCTION__, nsClassName.c_str());
-        }
-
-        root->Insert("event_coordinator");
-
-        string ecClassName = json::QuickInterpreter(event_coordinator_config._json)["class"].As<String>();
-        if (ecClassName.compare("StandardInterventionDistributionEventCoordinator") == 0)
-        {
-            ((StandardInterventionDistributionEventCoordinator*)event_coordinator)->JSerialize(root, helper);
-        }
-        else if (ecClassName.compare("SimpleInterventionDistributionEventCoordinator") == 0)
-        {
-            ((SimpleInterventionDistributionEventCoordinator*)event_coordinator)->JSerialize(root, helper);
-        }
-        else
-        {
-            throw GeneralConfigurationException(__FILE__, __LINE__, __FUNCTION__, ecClassName.c_str());
-        }
-
-        root->Insert("start_day", start_day);
-        root->Insert("event_index", event_index);
-
-        root->EndObject();
-    }
-
-    void CampaignEvent::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::CampaignEvent)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, CampaignEvent& event, const unsigned int v)

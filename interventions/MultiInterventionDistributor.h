@@ -34,13 +34,6 @@ namespace Kernel
         virtual void Expire();
 
         IIndividualHumanContext *parent;
-		IndividualInterventionConfig intervention_list; // TBD
-
-    private:
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, MultiInterventionDistributor &obj, const unsigned int v);
-#endif
+        IndividualInterventionConfig intervention_list; // TBD
     };
 }

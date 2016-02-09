@@ -43,7 +43,7 @@ namespace Kernel
         void AggregatePropertyMatrixWithCumulativeMatrix( const ScalingMatrix_t& propertyMatrix, ScalingMatrix_t& cumulativeMatrix );
 
     protected:
-        class ContagionPopulationImpl : IContagionPopulation
+        class ContagionPopulationImpl : public IContagionPopulation
         {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

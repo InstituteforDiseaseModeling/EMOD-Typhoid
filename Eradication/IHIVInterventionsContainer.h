@@ -24,13 +24,14 @@ namespace Kernel
     struct IHIVIntervention: public ISupports
     {};
 
-    /*struct IHIVDrugEffects : public ISupports
+    struct IHIVDrugEffects : ISupports
     {
         //virtual HIVDrugTypeParameters::tHIVDTPMap& GetHIVdtParams() = 0;
         virtual float GetDrugInactivationRate() = 0;
         virtual float GetDrugClearanceRate() = 0;
         virtual ~IHIVDrugEffects() { }
-    };*/
+    };
+
 
     // interface for HIV medical chart queries and updates
     struct IHIVMedicalHistory : public ISupports

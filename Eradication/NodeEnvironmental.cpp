@@ -13,8 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "NodeEnvironmental.h"
 #include "IndividualEnvironmental.h"
-#include "SusceptibilityEnvironmental.h"
-#include "InfectionEnvironmental.h"
 #include "TransmissionGroupsFactory.h"
 #include "SimulationConfig.h"
 
@@ -53,7 +51,7 @@ namespace Kernel
         return Node::Configure( config );
     }
 
-    IndividualHuman* NodeEnvironmental::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty )
+    IIndividualHuman* NodeEnvironmental::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty )
     {
         return IndividualHumanEnvironmental::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -68,7 +66,7 @@ namespace Kernel
 
         float correction = 1.0f;
 
-        if ( localWeather == NULL )
+        if ( localWeather == nullptr )
         {
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "localWeather", "Climate");
             //throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "climate_structure", "CLIMATE_OFF", "infectivity_scaling", "FUNCTION_OF_CLIMATE");
@@ -138,7 +136,7 @@ namespace Kernel
 
                         for (int iSink = 0; iSink < valueCount; iSink++)
                         {
-                            matrixRow.push_back((float)scalingMatrixRow[iSink].AsDouble());
+                            matrixRow.push_back(float(scalingMatrixRow[iSink].AsDouble()));
                         }
 
                         scalingMatrix.push_back(matrixRow);
@@ -175,17 +173,25 @@ namespace Kernel
     {
         Node::ValidateIntranodeTransmissionConfiguration();
     }
+
+    REGISTER_SERIALIZABLE(NodeEnvironmental);
+
+    void NodeEnvironmental::serialize(IArchive& ar, NodeEnvironmental* obj)
+    {
+        Node::serialize(ar, obj);
+        NodeEnvironmental& node = *obj;
+        ar.labelElement("contagion") & node.contagion;
+        ar.labelElement("node_contagion_decay_fraction") & node.node_contagion_decay_fraction;
+    }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeEnvironmental)
+#if 0
 namespace Kernel {
     template <typename Archive>
     void serialize(Archive & ar, NodeEnvironmental& node, const unsigned int /* file_version */)
     {
         ar & node.contagion;
         ar & node.node_contagion_decay_fraction;
-        //ar.template register_type<IndividualHumanEnvironmental>();
         ar & boost::serialization::base_object<Node>(node);
     }
 }

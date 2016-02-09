@@ -12,15 +12,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <string>
 #include <map>
 
-#include "BoostLibWrapper.h"
-#include "ISupports.h"
+#include "ISerializable.h"
 #include "Configuration.h"
 #include "Configure.h"
 #include "FactorySupport.h"
 
 namespace Kernel
 {
-    struct IWaningEffect : public ISupports
+    struct IWaningEffect : ISerializable
     {
         virtual void  Update(float dt) = 0;
         virtual float Current() const  = 0;
@@ -66,18 +65,13 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectConstant& we, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(WaningEffectConstant);
     };
 
     // --------------------------- WaningEffectExponential ---------------------------
@@ -90,19 +84,14 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;
         float decayTimeConstant;
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectExponential& we, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(WaningEffectExponential);
     };
 
     // --------------------------- WaningEffectBox ---------------------------
@@ -115,19 +104,14 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;
         float boxDuration;
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectBox& we, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(WaningEffectBox);
     };
 
     // --------------------------- WaningEffectBoxExponential ---------------------------
@@ -140,19 +124,14 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-        virtual void  Update(float dt);
-        virtual float Current() const;
+        virtual void  Update(float dt) override;
+        virtual float Current() const override;
 
     protected:
         float currentEffect;
         float boxDuration;
         float decayTimeConstant;
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, WaningEffectBoxExponential& we, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(WaningEffectBoxExponential);
     };
 }

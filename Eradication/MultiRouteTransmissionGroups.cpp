@@ -11,6 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 #include "Exceptions.h"
 #include "MultiRouteTransmissionGroups.h"
+#include "Log.h"
 
 static const char* _module = "MultiRouteTransmissionGroups";
 
@@ -49,7 +50,7 @@ namespace Kernel
         // create impression that this is a legitimate solution for other code paths.
         if( routeNameToIndexMap.find( route ) == routeNameToIndexMap.end() )
         {
-            routeNameToIndexMap.insert( make_pair( route, (int) routeNameToIndexMap.size() ) );
+            routeNameToIndexMap.insert( make_pair( route, int(routeNameToIndexMap.size()) ) );
         }
 
         RouteIndex routeIndex = routeNameToIndexMap.at(route);
@@ -70,7 +71,7 @@ namespace Kernel
     void MultiRouteTransmissionGroups::AddRoute( const string& route )
     {
         LOG_DEBUG_F( "Adding route %s\n", route.c_str() );
-        routeNameToIndexMap.insert( make_pair( route, (int)routeNameToIndexMap.size() ) );
+        routeNameToIndexMap.insert( make_pair( route, int(routeNameToIndexMap.size()) ) );
         routeNames.push_back(route); // note: AddProperty above doesn't populate routeNames because only VectorTransmissionGroups uses it and that goes through this path.
 
         // Do an implicit AddProperty here. Motivated by polio.
@@ -221,7 +222,7 @@ namespace Kernel
         for (const auto& entry : (*transmissionGroupMembership))
         {
             RouteIndex routeIndex = entry.first;
-            GroupIndex groupIndex = entry.second;
+            // GroupIndex groupIndex = entry.second;
             populationSizeByRoute[routeIndex] += size_changes * mc_weight;
         }
     }
@@ -261,10 +262,10 @@ namespace Kernel
             infectionRateForGroups += infectionRateByRoute[routeIndex][groupIndex];
         }
 
-        if ((infectionRateForGroups > 0) && (candidate != NULL))
+        if ((infectionRateForGroups > 0) && (candidate != nullptr))
         {
             ContagionPopulationImpl contagionPopulation(infectionRateForGroups);
-            candidate->Expose((IContagionPopulation*)&contagionPopulation, deltaTee, TransmissionRoute::TRANSMISSIONROUTE_ALL);
+            candidate->Expose(static_cast<IContagionPopulation*>(&contagionPopulation), deltaTee, TransmissionRoute::TRANSMISSIONROUTE_ALL);
         }
     }
 

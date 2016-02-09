@@ -19,7 +19,7 @@ public:
 
     virtual void Initialize( unsigned int nrmSize );
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void EndTimestep( float currentTime, float dt );
     virtual void Finalize();
 

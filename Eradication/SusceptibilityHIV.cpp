@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualCoinfection.h"
 #endif
 #include "IIndividualHumanHIV.h"
-#include "Individual.h" // for GetGender
+#include "IIndividualHuman.h"
 #include "InfectionHIV.h"
 #include "HIVInterventionsContainer.h"
 #include "Common.h"
@@ -183,7 +183,8 @@ namespace Kernel
 
         if( hiv_parent->GetHIVInterventionsContainer()->ShouldReconstituteCD4() )
         {
-            float months_since_starting_ART = hiv_parent->GetHIVInterventionsContainer()->GetDurationSinceLastStartingART() / IDEALDAYSPERMONTH;
+            // Adding dt because the interventions container updates after susceptibility.  Fixes rare assertion failure.
+            float months_since_starting_ART = (hiv_parent->GetHIVInterventionsContainer()->GetDurationSinceLastStartingART() + dt) / IDEALDAYSPERMONTH;
             NO_MORE_THAN( months_since_starting_ART, MONTHS_ON_ART_UNTIL_CD4_RECONSTITUTION_SATURATES )
             release_assert( months_since_starting_ART >= 0 );
 
@@ -314,7 +315,7 @@ namespace Kernel
     {
         // DJK: What is the purpose of this function?  What if an individual goes on ART?
 #ifdef ENABLE_TBHIV
-        IIndividualHumanCoinfection *pihc = NULL;
+        IIndividualHumanCoinfection *pihc = nullptr;
         if ( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanCoinfection), (void**)&pihc) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanCoinfection", "IndividualHumanCoinfection" );
@@ -327,23 +328,22 @@ namespace Kernel
         int jj = 0;
         for (auto& vit : v_CD4)
         {
-            vit = GetCD4count() - CD4_MINIMUM/DAYSPERYEAR * CD4_time_step * ( (float)jj++ );  // need to add more realistic CD4 dynamics later
+            vit = GetCD4count() - CD4_MINIMUM/DAYSPERYEAR * CD4_time_step * float(jj++);  // need to add more realistic CD4 dynamics later
         }
 
         pihc->Set_forward_CD4(v_CD4);
 #endif
     }
 
-    const ProbabilityNumber
+    ProbabilityNumber
     SusceptibilityHIV::GetPrognosisCompletedFraction()
     const
     {
         release_assert( sqrtCD4_PostInfection != sqrtCD4_AtDiseaseDeath );
 
-        ProbabilityNumber fraction_completed = 0.0f;
         float fraction = max(0.0f, (sqrtCD4_PostInfection - sqrtCD4_Current)) / (sqrtCD4_PostInfection - sqrtCD4_AtDiseaseDeath);
         NO_MORE_THAN( fraction, 1.0f )
-        fraction_completed = fraction;
+        ProbabilityNumber fraction_completed = fraction;
 
         LOG_DEBUG_F( "Individual %d in GetPrognosisCompletedFraction: sqrtCD4_PostInfection=%f, sqrtCD4_AtDiseaseDeath=%f, sqrtCD4_Current=%f --> fraction=%f\n", 
                      parent->GetSuid().data, sqrtCD4_PostInfection, sqrtCD4_AtDiseaseDeath, sqrtCD4_Current, float(fraction_completed) );
@@ -372,44 +372,24 @@ namespace Kernel
 
     SusceptibilityHIV::SusceptibilityHIV()
         : SusceptibilitySTI()
+        , hiv_parent( nullptr )
         , days_between_symptomatic_and_death(0)
         , sqrtCD4_Current( 0 )
         , sqrtCD4_Rate( UNINITIALIZED_RATE )
         , sqrtCD4_PostInfection( 0 )
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
-        , hiv_parent( NULL )
     { 
     }
 
     SusceptibilityHIV::SusceptibilityHIV(IIndividualHumanContext *context)
         : SusceptibilitySTI(context)
+        , hiv_parent( nullptr )
         , days_between_symptomatic_and_death(0)
         , sqrtCD4_Current( 0 )
         , sqrtCD4_Rate( UNINITIALIZED_RATE )
         , sqrtCD4_PostInfection( 0 )
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
-        , hiv_parent( NULL )
         { }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityHIV &sus, const unsigned int  file_version )
-    {
-        // Serialize fields
-//        ar & sus.m_is_immune_competent;
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::SusceptibilitySTI>(sus);
-    }
-
-    INSTANTIATE_BOOST_SERIALIZATION_HACKS(SusceptibilityHIV);
-    //INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::mpi::packed_iarchive);
-    //INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::mpi::packed_oarchive);
-    template void serialize( boost::mpi::packed_iarchive&, SusceptibilityHIV &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, SusceptibilityHIV &obj, unsigned int file_version );
-    INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::archive::binary_iarchive);
-    INSTANTIATE_SERIALIZER(SusceptibilityHIV, boost::archive::binary_oarchive);
-#endif
 }

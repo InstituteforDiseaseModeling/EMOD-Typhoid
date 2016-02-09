@@ -14,14 +14,23 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
-#include "InterventionEnums.h"
+#include "VectorEnums.h"
 #include "Configure.h"
 
 namespace Kernel
 {
+    ENUM_DEFINE(SpaceSprayTarget,
+        ENUM_VALUE_SPEC(SpaceSpray_FemalesOnly       , 11)
+        ENUM_VALUE_SPEC(SpaceSpray_MalesOnly         , 12)
+        ENUM_VALUE_SPEC(SpaceSpray_FemalesAndMales   , 13))
+
+    ENUM_DEFINE(ArtificialDietTarget,
+        //ENUM_VALUE_SPEC(AD_WithinHouse             , 20) // to be handled as individual rather than node-targeted intervention
+        ENUM_VALUE_SPEC(AD_WithinVillage             , 21)
+        ENUM_VALUE_SPEC(AD_OutsideVillage            , 22))
+
     class INodeVectorInterventionEffectsApply;
 
     class SimpleVectorControlNode : public BaseNodeIntervention
@@ -33,11 +42,11 @@ namespace Kernel
         virtual ~SimpleVectorControlNode();
 
         // INodeDistributableIntervention
-        bool Configure( const Configuration * config );
-        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC=NULL); 
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        virtual void SetContextTo(INodeEventContext *context);
-        virtual void Update(float dt);
+        virtual bool Configure( const Configuration * config ) override;
+        virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC=nullptr) override; 
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual void SetContextTo(INodeEventContext *context) override;
+        virtual void Update(float dt) override;
 
     protected:
         virtual void ApplyEffects();
@@ -54,12 +63,6 @@ namespace Kernel
         float secondary_decay_time_constant;
          
         INodeVectorInterventionEffectsApply *invic;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleVectorControlNode& vcn, const unsigned int v);
-#endif
     };
 
     class Larvicides : public SimpleVectorControlNode
@@ -67,8 +70,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, Larvicides, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
     };
 
     class SpaceSpraying : public SimpleVectorControlNode
@@ -76,8 +79,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SpaceSpraying, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
         SpaceSprayTarget::Enum GetKillTarget() const;
 
     protected:
@@ -89,8 +92,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SpatialRepellent, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
     };
 
     class ArtificialDiet : public SimpleVectorControlNode
@@ -98,8 +101,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, ArtificialDiet, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
         ArtificialDietTarget::Enum GetAttractionTarget() const;
     protected:
         ArtificialDietTarget::Enum attraction_target;
@@ -110,8 +113,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, InsectKillingFence, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
     };
 
     class SugarTrap : public SimpleVectorControlNode
@@ -119,8 +122,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SugarTrap, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
     };
 
     class OvipositionTrap : public SimpleVectorControlNode
@@ -128,8 +131,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, OvipositionTrap, INodeDistributableIntervention) 
         
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
     };
 
     class OutdoorRestKill : public SimpleVectorControlNode
@@ -137,8 +140,8 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, OutdoorRestKill, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
     };
 
     class AnimalFeedKill : public SimpleVectorControlNode
@@ -146,7 +149,7 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, AnimalFeedKill, INodeDistributableIntervention) 
 
     public:
-        virtual bool Configure( const Configuration * config );
-        virtual void ApplyEffects();
+        virtual bool Configure( const Configuration * config ) override;
+        virtual void ApplyEffects() override;
     };
 }

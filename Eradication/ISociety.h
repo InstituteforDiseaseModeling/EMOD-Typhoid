@@ -10,13 +10,17 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "IdmApi.h"
-#include "IPairFormationRateTable.h"
-#include "IPairFormationAgent.h"
-#include "IPairFormationStats.h"
-#include "HIVEnums.h"
+#include "IdmDateTime.h"
 #include "Configure.h"
+#include "IRelationship.h"
 
 namespace Kernel {
+
+    struct IIdGeneratorSTI;
+    struct IPairFormationRateTable;
+    struct IPairFormationAgent;
+    struct IPairFormationStats;
+    struct IRelationshipParameters;
 
     struct IDMAPI ISociety : public JsonConfigurable
     {
@@ -28,7 +32,8 @@ namespace Kernel {
         virtual IPairFormationAgent* GetPFA(RelationshipType::Enum) = 0;
         virtual IPairFormationStats* GetStats(RelationshipType::Enum) = 0;
 
-        virtual void SetParameters( const Configuration* config ) = 0;
+        virtual void SetParameters( IIdGeneratorSTI* pIdGen, const Configuration* config ) = 0;
+        virtual IRelationshipParameters* GetRelationshipParameters( RelationshipType::Enum type ) = 0;
 
         // JsonConfigurable - making public
         virtual bool Configure(const Configuration *config) = 0;

@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 #include <string>
 #include "IRelationship.h"
+#include "INodeContext.h"
 
 namespace Kernel
 {
@@ -44,16 +45,17 @@ namespace Kernel
         unsigned int relationship_type;
         ParticipantInfo participant_a;
         ParticipantInfo participant_b;
-        unsigned int original_node_id;
-
+        ExternalNodeId_t original_node_id;
+        ExternalNodeId_t current_node_id;
     };
 
     struct RelationshipEndInfo
     {
         float end_time;
         float start_time;
-        float scheduled_end_time;        
+        float scheduled_end_time;
         unsigned int id;
+        ExternalNodeId_t node_id;
         unsigned int relationship_type;
         unsigned int male_id;
         unsigned int female_id;

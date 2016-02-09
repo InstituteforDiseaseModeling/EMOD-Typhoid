@@ -14,9 +14,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "INodeSTI.h"
 #include "NodeEventContext.h"
+#include "IPairFormationAgent.h"
 
 #include "Environment.h"
 #include "DllInterfaceHelper.h"
+#include "FactorySupport.h"
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !!! CREATING NEW REPORTS

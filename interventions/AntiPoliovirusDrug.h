@@ -33,6 +33,7 @@ namespace Kernel
         virtual void  ConfigureDrugTreatment();  // read in PkPd and drug-killing parameters from Susceptibility Flags
 
     protected:
+
         // These have same names as analogous methods on container but are internal for the drug itself.
 
         float adherence_rate;
@@ -43,13 +44,5 @@ namespace Kernel
         virtual void ApplyEffects();
         virtual void ResetForNextDose(float dt);
         IPolioDrugEffectsApply * ipda;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, AntipoliovirusDrug& drug, const unsigned int v);
-#endif
     };
 }

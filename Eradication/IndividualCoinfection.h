@@ -58,7 +58,7 @@ namespace Kernel
         virtual bool HasEverTestedPositiveForHIV() const = 0;
         virtual void TakeHIVDiagnosticTest() = 0;*/
         virtual void InitiateART() = 0;
-        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = NULL, int incubation_period_override = -1) = 0;
+        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1) = 0;
         virtual bool HasActivePresymptomaticInfection() const = 0;
         virtual bool HasExtrapulmonaryInfection() const = 0;
         virtual void SetTBactivationvector( const std::vector<float>& ) = 0;
@@ -82,8 +82,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config );
 
         // Infections and Susceptibility
-        virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
-        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
+        virtual void AcquireNewInfection(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1);
+        virtual void AcquireNewInfectionHIV(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1);
         virtual void CreateSusceptibility(float=1.0, float=1.0);
         virtual void UpdateInfectiousness(float dt);
         virtual void Update(float currenttime, float dt);
@@ -166,7 +166,7 @@ namespace Kernel
         IndividualHumanCoinfection(suids::suid _suid = suids::nil_suid(), float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
 
         // Factory methods
-        virtual Infection* createInfection(suids::suid _suid);
+        virtual IInfection* createInfection(suids::suid _suid);
         virtual bool createInfection( suids::suid _suid, infection_list_t &newInfections );
         virtual void setupInterventionsContainer();
         virtual bool SetNewInfectionState(InfectionStateChange::_enum inf_state_change);
@@ -175,8 +175,8 @@ namespace Kernel
         std::list< Susceptibility* > susceptibilitylist;
         //std::list< InterventionsContainer* > interventionslist;
 
-        std::map< Infection*, Susceptibility*> infection2susceptibilitymap;
-        std::map< Infection*, InterventionsContainer*> infection2interventionsmap;
+        std::map< IInfection*, ISusceptibilityContext*> infection2susceptibilitymap;
+        std::map< IInfection*, InterventionsContainer*> infection2interventionsmap;
 
         //future, please use the list not the individual ones
         Susceptibility* susceptibility_tb;
@@ -194,35 +194,17 @@ namespace Kernel
         bool m_is_on_ART;
         bool m_has_ever_been_onART;
         bool m_has_ever_tested_positive_for_HIV;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanCoinfection& human, const unsigned int  file_version );
-#endif
     };
-
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+#if 0
 namespace Kernel
 {
     template<class Archive>
     void serialize(Archive & ar, IndividualHumanCoinfection& human, const unsigned int  file_version )
     {
-        ar.template register_type<InfectionTB>();
-        ar.template register_type<SusceptibilityTB>();
-        ar.template register_type<TBInterventionsContainer>();
-
-        ar.template register_type<InfectionHIV>();
-        ar.template register_type<SusceptibilityHIV>();
-        ar.template register_type<HIVInterventionsContainer>();
-            
         // Serialize fields - N/A
 
-        // Serialize base class
         ar & boost::serialization::base_object<IndividualHumanAirborne>(human);
     }
 }

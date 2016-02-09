@@ -150,12 +150,10 @@ void BaseChannelReport::SetAugmentor( IChannelDataMapOutputAugmentor* pAugmentor
     channelDataMap.SetAugmentor( pAugmentor );
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Report)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, Report& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<Report,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

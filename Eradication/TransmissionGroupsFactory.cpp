@@ -18,7 +18,7 @@ namespace Kernel
 {
     ITransmissionGroups* TransmissionGroupsFactory::CreateNodeGroups(TransmissionGroupType::Enum groupsType)
     {
-        ITransmissionGroups* groups = NULL;
+        ITransmissionGroups* groups = nullptr;
 
         switch (groupsType)
         {

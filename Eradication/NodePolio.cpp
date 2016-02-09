@@ -69,6 +69,26 @@ namespace Kernel
     {
         return mean_age_infection;
     }
+
+    REGISTER_SERIALIZABLE(NodePolio);
+
+    void NodePolio::serialize(IArchive& ar, NodePolio* obj)
+    {
+        NodeEnvironmental::serialize(ar, obj);
+        NodePolio& node = *obj;
+        ar.labelElement("virus_lastReportTime") & node.virus_lastReportTime;
+        ar.labelElement("newDiseaseSusceptibleInfections") & node.newDiseaseSusceptibleInfections;
+        ar.labelElement("newDiseaseSusceptibleInfectionsUnder5") & node.newDiseaseSusceptibleInfectionsUnder5;
+        ar.labelElement("newDiseaseSusceptibleInfectionsOver5") & node.newDiseaseSusceptibleInfectionsOver5;
+        ar.labelElement("infectionsTotal") & node.infectionsTotal;
+        ar.labelElement("mean_age_infection") & node.mean_age_infection;
+        ar.labelElement("n_people_age_infection") & node.n_people_age_infection;
+        ar.labelElement("newInfectedPeople") & node.newInfectedPeople;
+        ar.labelElement("newInfectedPeopleAgeProduct") & node.newInfectedPeopleAgeProduct;
+        ar.labelElement("window_index") & node.window_index;
+// clorton        ar.labelElement("infected_people_prior") & node.infected_people_prior;
+// clorton        ar.labelElement("infected_age_people_prior") & node.infected_age_people_prior;
+    }
 }
 
 Kernel::NodePolio::~NodePolio(void)
@@ -90,10 +110,10 @@ void Kernel::NodePolio::resetNodeStateCounters(void)
     newDiseaseSusceptibleInfectionsOver5 = 0.0f;
 }
 
-void Kernel::NodePolio::updateNodeStateCounters(IndividualHuman *ih)
+void Kernel::NodePolio::updateNodeStateCounters( IIndividualHuman *ih )
 {
     float mc_weight                = float(ih->GetMonteCarloWeight());
-    IIndividualHumanPolio *tempind2 = NULL;
+    IIndividualHumanPolio *tempind2 = nullptr;
     if( ih->QueryInterface( GET_IID( IIndividualHumanPolio ), (void**)&tempind2 ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "tempind2", "IndividualHumanPolio", "IndividualHuman" );
@@ -119,7 +139,7 @@ void Kernel::NodePolio::finalizeNodeStateCounters(void)
     Kernel::NodeEnvironmental::finalizeNodeStateCounters();
    
     // rolling average of the age of infection, over number of time steps = infection_averaging_window
-    infected_people_prior.push_back( (float)newInfectedPeople );
+    infected_people_prior.push_back( float(newInfectedPeople) );
     if( infected_people_prior.size() > 30 )
     {
         infected_people_prior.pop_front();
@@ -129,7 +149,7 @@ void Kernel::NodePolio::finalizeNodeStateCounters(void)
         throw CalculatedValueOutOfRangeException( __FILE__, __LINE__, __FUNCTION__, "newInfectedPeopleAgeProduct", newInfectedPeopleAgeProduct, 0 );
     }
 
-    infected_age_people_prior.push_back( (float)newInfectedPeopleAgeProduct );
+    infected_age_people_prior.push_back( float(newInfectedPeopleAgeProduct) );
     if( infected_age_people_prior.size() > 30 )
     {
         infected_age_people_prior.pop_front();
@@ -189,7 +209,7 @@ float Kernel::NodePolio::drawInitialImmunity(float ind_init_age)
     return 1.0f;
 }
 
-Kernel::IndividualHuman *Kernel::NodePolio::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+Kernel::IIndividualHuman* Kernel::NodePolio::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
 {
     return Kernel::IndividualHumanPolio::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
 }
@@ -201,13 +221,11 @@ NodePolio::params()
     return GET_CONFIGURABLE(SimulationConfig);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodePolio)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, NodePolio& node, const unsigned int /* file_version */)
     { 
-        ar.template register_type<IndividualHumanPolio>();
         ar & boost::serialization::base_object<NodeEnvironmental>(node);
         ar & node.mean_age_infection;
         ar & node.n_people_age_infection;

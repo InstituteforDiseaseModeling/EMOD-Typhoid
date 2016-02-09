@@ -42,11 +42,6 @@ namespace Kernel
         IWaningEffect* killing_effect;
         IVectorInterventionEffectsSetter *ivies; // aka individual vector interventions container
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, Ivermectin& ivm, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(Ivermectin);
     };
 }

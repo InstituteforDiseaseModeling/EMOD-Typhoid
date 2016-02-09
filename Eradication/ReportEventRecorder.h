@@ -36,7 +36,7 @@ namespace Kernel
     protected:
         virtual std::string GetOtherData( IIndividualHumanEventContext *context, const std::string& StateChange );
 
-        JsonConfigurable::tDynamicStringSet properties_to_report;
+        jsonConfigurable::tDynamicStringSet properties_to_report;
 
     private:
         bool ignore_events_in_list ;

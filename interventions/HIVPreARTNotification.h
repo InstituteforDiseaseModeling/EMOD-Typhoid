@@ -36,12 +36,5 @@ namespace Kernel
 
     protected:
         bool startingPreART;
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, HIVPreARTNotification& obj, unsigned int version );
-#endif
     };
 }

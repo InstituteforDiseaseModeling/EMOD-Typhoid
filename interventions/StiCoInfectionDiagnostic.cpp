@@ -27,7 +27,12 @@ namespace Kernel
     )
     {
         ConfigurePositiveEventOrConfig( inputJson );
-        return JsonConfigurable::Configure(inputJson); 
+        bool ret = JsonConfigurable::Configure(inputJson); 
+        if( ret )
+        {
+            CheckPostiveEventConfig();
+        }
+        return ret;
     }
 
     StiCoInfectionDiagnostic::StiCoInfectionDiagnostic() : SimpleDiagnostic()
@@ -49,7 +54,7 @@ namespace Kernel
     {
         LOG_DEBUG("Positive test Result function\n");
 
-        IIndividualHumanSTI* sti_ind = NULL;
+        IIndividualHumanSTI* sti_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanSTI ), (void**)&sti_ind ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanSTI", "IIndividualHuman" );
@@ -63,20 +68,12 @@ namespace Kernel
         return positiveTest;
 
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::StiCoInfectionDiagnostic)
+    REGISTER_SERIALIZABLE(StiCoInfectionDiagnostic);
 
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, StiCoInfectionDiagnostic& obj, const unsigned int v)
+    void StiCoInfectionDiagnostic::serialize(IArchive& ar, StiCoInfectionDiagnostic* obj)
     {
-
-        boost::serialization::void_cast_register<StiCoInfectionDiagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+        BaseIntervention::serialize( ar, obj );
+        StiCoInfectionDiagnostic& diag = *obj;
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::StiCoInfectionDiagnostic&, unsigned int);
 }
-#endif

@@ -17,9 +17,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationEnums.h"
 #include "InterventionFactory.h"
 #include "Log.h"
-#include "SimpleTypemapRegistration.h"
 #include "Sugar.h"
 #include "IndividualSTI.h"
+#include "IRelationshipParameters.h"
 
 static const char * _module = "STIInterventionsContainer";
 
@@ -57,7 +57,7 @@ namespace Kernel
 
         // NOTE: Calling this AFTER the QI/GiveDrug crashes!!! Both win and linux. Says SetContextTo suddenly became a pure virtual.
 
-        ICircumcision * pCirc = NULL;
+        ICircumcision * pCirc = nullptr;
         if( s_OK == pIV->QueryInterface(GET_IID(ICircumcision), (void**) &pCirc) )
         {
             LOG_DEBUG("Getting circumcised\n");
@@ -70,52 +70,28 @@ namespace Kernel
     void
     STIInterventionsContainer::UpdateSTIBarrierProbabilitiesByType(
         RelationshipType::Enum rel_type,
-        SigmoidConfig config_overrides
+        const Sigmoid& config_overrides
     )
     {
         STI_blocking_overrides[ rel_type ] = config_overrides;
     }
 
-    SigmoidConfig
+    const Sigmoid&
     STIInterventionsContainer::GetSTIBarrierProbabilitiesByRelType(
-        RelationshipType::Enum rel_type
+        const IRelationshipParameters* pRelParams
     )
     const
     {
-        SigmoidConfig ret;
-
-        if( STI_blocking_overrides.find( rel_type ) != STI_blocking_overrides.end() )
+        if( STI_blocking_overrides.find( pRelParams->GetType() ) != STI_blocking_overrides.end() )
         {
             LOG_DEBUG( "Using override condom config values from campaign.\n" );
-            ret = STI_blocking_overrides.at( rel_type );
+            return STI_blocking_overrides.at( pRelParams->GetType() );
         }
         else
         {
             LOG_DEBUG( "Using static (default/config.json) condom config values.\n" );
-            switch( rel_type )
-            {
-                case RelationshipType::MARITAL:
-                    ret.midyear = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_midyear;
-                    ret.rate = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_rate;
-                    ret.early = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_early;
-                    ret.late = IndividualHumanSTIConfig::condom_usage_probability_in_marital_relationships_late;
-                break;
-                case RelationshipType::INFORMAL:
-                    ret.midyear = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_midyear;
-                    ret.rate = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_rate;
-                    ret.early = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_early;
-                    ret.late = IndividualHumanSTIConfig::condom_usage_probability_in_informal_relationships_late;
-                break;
-                case RelationshipType::TRANSITORY:
-                    ret.midyear = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_midyear;
-                    ret.rate = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_rate;
-                    ret.early = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_early;
-                    ret.late = IndividualHumanSTIConfig::condom_usage_probability_in_transitory_relationships_late;
-                break;
-            }
+            return pRelParams->GetCondomUsage();
         }
-        //LOG_DEBUG_F( "%s returning %f for type %s\n", __FUNCTION__, (float)ret, rel_type );
-        return ret;
     }
 
     float
@@ -138,7 +114,7 @@ namespace Kernel
 
     bool STIInterventionsContainer::ApplyCircumcision( ICircumcision *pCirc ) {
         // Need to get gender
-        IIndividualHuman *ih = NULL;
+        IIndividualHuman *ih = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHuman), (void**) &ih) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHuman", "IIndividualHuman" );
@@ -160,7 +136,7 @@ namespace Kernel
 
     void STIInterventionsContainer::ChangeProperty( const char *prop, const char* new_value)
     {
-        IIndividualHumanSTI *ihsti = NULL;
+        IIndividualHumanSTI *ihsti = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanSTI), (void**) &ihsti) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanContext", "IIndividualHumanSTI" );
@@ -173,7 +149,7 @@ namespace Kernel
     void
     STIInterventionsContainer::SpreadStiCoInfection()
     {
-        IIndividualHumanSTI *ihsti = NULL;
+        IIndividualHumanSTI *ihsti = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanSTI), (void**) &ihsti) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanContext", "IIndividualHumanSTI" );
@@ -184,24 +160,63 @@ namespace Kernel
     void
     STIInterventionsContainer::CureStiCoInfection()
     {
-        IIndividualHumanSTI *ihsti = NULL;
+        IIndividualHumanSTI *ihsti = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanSTI), (void**) &ihsti) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanContext", "IIndividualHumanSTI" );
         }
         ihsti->ClearStiCoInfectionState();
     }
+
+    REGISTER_SERIALIZABLE(STIInterventionsContainer);
+
+    void serialize_overrides( IArchive& ar, std::map< RelationshipType::Enum, Sigmoid >& blocking_overrides )
+    {
+        size_t count = ar.IsWriter() ? blocking_overrides.size() : -1;
+
+        ar.startArray(count);
+        if (ar.IsWriter())
+        {
+            for (auto& entry : blocking_overrides)
+            {
+                std::string key = RelationshipType::pairs::lookup_key( entry.first );
+                ar.startObject();
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & entry.second;
+                ar.endObject();
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                std::string key;
+                Sigmoid value;
+                ar.startObject();
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & value;
+                ar.endObject();
+                RelationshipType::Enum rt = (RelationshipType::Enum)RelationshipType::pairs::lookup_value( key.c_str() );
+                blocking_overrides[ rt ] = value;
+            }
+        }
+        ar.endArray();
+    }
+
+    void STIInterventionsContainer::serialize(IArchive& ar, STIInterventionsContainer* obj)
+    {
+        InterventionsContainer::serialize( ar, obj );
+        STIInterventionsContainer& container = *obj;
+        ar.labelElement("is_circumcised") & container.is_circumcised;
+        ar.labelElement("STI_blocking_overrides"); serialize_overrides( ar, container.STI_blocking_overrides );
+    }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::STIInterventionsContainer)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, STIInterventionsContainer& container, const unsigned int v)
     {
-        static const char * _module = "STIInterventionsContainer";
-        LOG_DEBUG("(De)serializing STIInterventionsContainer\n");
-
         ar & container.is_circumcised;
 
         ar & boost::serialization::base_object<InterventionsContainer>(container);

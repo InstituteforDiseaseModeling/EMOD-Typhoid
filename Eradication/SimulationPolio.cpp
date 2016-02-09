@@ -127,7 +127,7 @@ namespace Kernel
 
     SimulationPolio *SimulationPolio::CreateSimulation(const ::Configuration *config)
     {
-        SimulationPolio *newsimulation = NULL;
+        SimulationPolio *newsimulation = nullptr;
 
        
        newsimulation = _new_ SimulationPolio();
@@ -139,7 +139,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
        }
 
@@ -162,32 +162,6 @@ namespace Kernel
     void SimulationPolio::InitializeFlags( const ::Configuration *config )
     {
     }
-
-
-    void SimulationPolio::resolveMigration()
-    {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-    }
-
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationPolio)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationPolio& sim, const unsigned int  file_version )
-    {
-        // must register all derived type serialized through base class pointer members
-        ar.template register_type<NodePolio>();
-        ar.template register_type<SimulationPolioFlags>();
-        ar.template register_type<NodePolioFlags>();
-        ar.template register_type<IndividualHumanPolioFlags>();
-        ar.template register_type<InfectionPolioFlags>();
-        ar.template register_type<SusceptibilityPolioFlags>();
-
-        ar & boost::serialization::base_object<Simulation>(sim);
-    }
-}
-#endif
 
 #endif // ENABLE_POLIO

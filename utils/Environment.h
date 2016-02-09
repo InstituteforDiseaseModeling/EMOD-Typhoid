@@ -35,8 +35,6 @@ public:
     {
         int NumTasks;
         int Rank;
-        mutable boost::mpi::communicator *World;
-        mutable boost::mpi::environment *Environment;
     } MPI;
 
     SimpleLogger *Log;
@@ -60,8 +58,6 @@ public:
 
     // Sets up the environment for this process. Returns false if something went wrong
     static bool Initialize(
-        boost::mpi::environment *mpienv,
-        boost::mpi::communicator *world,
         std::string configFileName,
         std::string inputPath,
         std::string outputPath,
@@ -73,7 +69,7 @@ public:
     // Cleans up open files, handles, memory, etc held by the environment
     static void Finalize();
 
-    static void setLogger(SimpleLogger* log) { if(localEnv == NULL) localEnv = new Environment();  localEnv->Log = log; }
+    static void setLogger(SimpleLogger* log) { if(localEnv == nullptr) localEnv = new Environment();  localEnv->Log = log; }
     static const Configuration* getConfiguration() { return localEnv->Config ; }
     static Configuration* CopyFromElement( const json::Element& rElement );
     static Configuration* LoadConfigurationFile( const std::string& rFileName );

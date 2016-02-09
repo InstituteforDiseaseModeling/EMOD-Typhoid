@@ -36,7 +36,7 @@ public:
     virtual void BeginTimestep();
     virtual void LogNodeData( Kernel::INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void EndTimestep( float currentTime, float dt );
 
     virtual void Finalize();
@@ -51,7 +51,7 @@ protected:
 
     virtual void initChannelBins();
     void clearChannelsBins();
-    virtual int calcBinIndex(Kernel::IndividualHuman * individual);
+    virtual int calcBinIndex(Kernel::IIndividualHuman* individual);
 
     // TODO: should return-type be something generic (void* ?) so e.g. MATLAB plugin can follow this pattern?
     virtual json::Element formatChannelDataBins(const float data[], std::vector<int>& dims, int start_axis, int num_remaining_bins);

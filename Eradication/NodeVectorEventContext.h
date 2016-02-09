@@ -22,6 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "NodeEventContextHost.h"
 #include "VectorEnums.h"
+#include "VectorContexts.h"
 #include "VectorMatingStructure.h"
 #include "Types.h"
 
@@ -116,13 +117,6 @@ namespace Kernel
         float pOutdoorRestKilling;
 
     private:
-        NodeVectorEventContextHost() : NodeEventContextHost(NULL) { }
-
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive &ar, NodeVectorEventContextHost &context, const unsigned int v);
-#endif    
+        NodeVectorEventContextHost() : NodeEventContextHost(nullptr) { }
     };
 }

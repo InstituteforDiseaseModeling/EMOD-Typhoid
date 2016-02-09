@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
@@ -23,7 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IVectorInterventionEffectsSetter; 
+    struct IVectorInterventionEffectsSetter;
 
     /* Keep around as an identity solution??? */
     struct IHumanHostSeekingTrap : public ISupports
@@ -53,11 +52,6 @@ namespace Kernel
         InterventionDurabilityProfile::Enum durability_time_profile;
         IVectorInterventionEffectsSetter *ivies;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<typename Archive>
-        friend void serialize( Archive &ar, HumanHostSeekingTrap& obj, unsigned int version );
-#endif    
+        DECLARE_SERIALIZABLE(HumanHostSeekingTrap);
     };
 }

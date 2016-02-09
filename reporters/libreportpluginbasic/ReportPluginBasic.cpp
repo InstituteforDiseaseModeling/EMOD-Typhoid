@@ -16,8 +16,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Report.h"
 #include "Sugar.h"
 #include "Environment.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "Climate.h"
+#include "Interventions.h"
 
 #include "DllInterfaceHelper.h"
 #include "DllDefs.h"
@@ -160,7 +161,7 @@ CustomReport::LogNodeData(
 
 void 
 CustomReport::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     LOG_DEBUG( "LogIndividualData\n" );

@@ -11,8 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "NodeTB.h"
-#include "IndividualTB.h" // for serialization junk
-
 
 namespace Kernel
 {
@@ -30,7 +28,7 @@ namespace Kernel
     public:
         virtual ~NodeTBHIV(void);
         static NodeTBHIV *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
-        bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
         //virtual void SetupIntranodeTransmission();
 
@@ -43,15 +41,8 @@ namespace Kernel
         //void Initialize();
 
         // Factory methods
-        virtual IndividualHuman *createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
+        virtual IIndividualHuman* createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
 
         //const SimulationConfig* params();
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeTBHIV& node, const unsigned int  file_version );
-#endif
     };
 }

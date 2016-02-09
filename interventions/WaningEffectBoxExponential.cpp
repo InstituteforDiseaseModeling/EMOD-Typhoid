@@ -54,21 +54,14 @@ namespace Kernel
     {
         return currentEffect;
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::WaningEffectBoxExponential)
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:IWaningEffect);
+    REGISTER_SERIALIZABLE(WaningEffectBoxExponential);
 
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, WaningEffectBoxExponential& we, const unsigned int v)
+    void WaningEffectBoxExponential::serialize(IArchive& ar, WaningEffectBoxExponential* obj)
     {
-        boost::serialization::void_cast_register<WaningEffectBoxExponential, IWaningEffect>();
-        ar & we.currentEffect;
-        ar & we.boxDuration;
-        ar & we.decayTimeConstant;
+        WaningEffectBoxExponential& effect = *obj;
+        ar.labelElement("currentEffect") & effect.currentEffect;
+        ar.labelElement("boxDuration") & effect.boxDuration;
+        ar.labelElement("decayTimeConstant") & effect.decayTimeConstant;
     }
 }
-#endif

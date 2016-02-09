@@ -24,7 +24,7 @@ using namespace std;
 using namespace Kernel; 
 
 // maybe these shouldn't be protected in Simulation.h
-typedef boost::bimap<uint32_t, suids::suid> nodeid_suid_map_t;
+typedef boost::bimap<ExternalNodeId_t, suids::suid> nodeid_suid_map_t;
 typedef nodeid_suid_map_t::value_type nodeid_suid_pair;
 
 
@@ -47,7 +47,8 @@ SUITE(AssortivityTest)
             , m_human_list()
             , m_pSimulationConfig( new SimulationConfig() )
         {
-            Environment::setLogger( new SimpleLogger() );
+            Environment::Finalize();
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
             m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
             Environment::setSimulationConfig( m_pSimulationConfig );
             Node::TestOnly_ClearProperties();
@@ -67,7 +68,7 @@ SUITE(AssortivityTest)
             }
             m_human_list.clear();
             Node::TestOnly_ClearProperties();
-            Environment::setInstance( nullptr );
+            Environment::Finalize();
         }
 
         IIndividualHumanSTI* CreateHuman( int gender, 

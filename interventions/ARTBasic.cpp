@@ -28,7 +28,7 @@ namespace Kernel
 
     ARTBasic::ARTBasic()
     : GenericDrug()
-    , itbda(NULL)
+    , itbda(nullptr)
     , viral_suppression(true)
     , days_to_achieve_suppression(183.0f)
     {
@@ -96,18 +96,5 @@ namespace Kernel
         //itbda->ApplyDrugClearanceRateEffect( GetDrugClearanceRate() );
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::ARTBasic)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, ARTBasic& drug, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<ARTBasic, IDrug>();
-        //ar & drug.drug_type;
-        ar & boost::serialization::base_object<GenericDrug>(drug);
-    }
-}
-#endif
 
 //#endif // ENABLE_STI

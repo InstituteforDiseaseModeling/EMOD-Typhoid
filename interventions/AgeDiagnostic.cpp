@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
-#include "SimulationConfig.h"
 
 static const char * _module = "AgeDiagnostic";
 
@@ -33,9 +32,7 @@ namespace Kernel
         assert( a_qi.As<json::Array>().Size() );
         for( unsigned int idx=0; idx<a_qi.As<json::Array>().Size(); idx++ )
         {
-            ConstrainedString signal = "UNITIALIZED";
-            signal.constraints = "<configuration>:Listed_Events.*";
-            signal.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->listed_events;
+            EventTrigger signal;
             initConfigTypeMap( "Event", &signal, HIV_Age_Diagnostic_Event_Name_DESC_TEXT );
             auto obj = Configuration::CopyFromElement((threshJson)[idx]);
             JsonConfigurable::Configure( obj );
@@ -47,7 +44,7 @@ namespace Kernel
             if( high <= low )
             {
                 throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__,
-                                                        "low",  std::to_string( low ).c_str(), 
+                                                        "low",  std::to_string( low ).c_str(),
                                                         "high", std::to_string( high ).c_str(),
                                                         "High value must be higher than Low value." );
             }
@@ -106,9 +103,9 @@ namespace Kernel
     {
         age_thresholds = master.age_thresholds;
     }
-        
+
     AgeDiagnostic::~AgeDiagnostic()
-    { 
+    {
         LOG_DEBUG("Destructing Age Diagnostic \n");
     }
 
@@ -119,7 +116,7 @@ namespace Kernel
         // Apply diagnostic test with given specificity/sensitivity
         bool test_pos = false;
 
-        IIndividualHumanEventContext* ind_hec = NULL;
+        IIndividualHumanEventContext* ind_hec = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanEventContext ), (void**)&ind_hec ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanEventContext", "IIndividualHuman" );
@@ -156,18 +153,3 @@ namespace Kernel
         return positiveTest;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::AgeDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, AgeDiagnostic& obj, const unsigned int v)
-    {
-
-        boost::serialization::void_cast_register<AgeDiagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
-    }
-}
-#endif

@@ -9,13 +9,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "Simulation.h"
+#include "IIdGeneratorSTI.h"
 #include "Sugar.h" // for DECLARE_VIRTUAL_BASE
 
 namespace Kernel
 {
     class IndividualHumanSTI;
     struct IRelationship;
-    class SimulationSTI : public Simulation
+    class SimulationSTI : public Simulation, public IIdGeneratorSTI
     {
         GET_SCHEMA_STATIC_WRAPPER(SimulationSTI)
     public:
@@ -23,12 +24,14 @@ namespace Kernel
         static SimulationSTI *CreateSimulation();
         static SimulationSTI *CreateSimulation(const ::Configuration *config);
         SimulationSTI();
+
+        // methods of IIdGeneratorSTI
         virtual suids::suid GetNextRelationshipSuid();
 
     protected:
 
-        virtual void Initialize();
-        virtual void Initialize(const ::Configuration *config);
+        virtual void Initialize() override;
+        virtual void Initialize(const ::Configuration *config) override;
         virtual bool Configure( const ::Configuration *json );
         virtual void Reports_CreateBuiltIn();
 
@@ -37,22 +40,11 @@ namespace Kernel
         // Allows correct type of Node to be added by classes derived from Simulation
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
 
-        virtual void resolveMigration();
-
         suids::distributed_generator<IRelationship> relationshipSuidGenerator;
 
         bool report_relationship_start;
         bool report_relationship_end;
         bool report_relationship_consummated;
         bool report_transmission;
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationSTI &sim, const unsigned int  file_version );
-#endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanSTI> typed_migration_queue_storage;
     };
 }
-
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationSTI)

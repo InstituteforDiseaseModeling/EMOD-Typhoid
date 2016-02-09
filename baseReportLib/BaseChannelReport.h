@@ -61,16 +61,4 @@ protected:
     unsigned int _nrmSize;
 
     ChannelDataMap channelDataMap ;
-
-private:
-#if USE_BOOST_SERIALIZATION
-    ///////////////////////////////////////////////////////////////////////////
-    // Serialization
-    friend class ::boost::serialization::access;
-
-    template<class Archive>
-    friend void serialize(Archive &ar, Report& report, const unsigned int v);
-    ///////////////////////////////////////////////////////////////////////////
-#endif
 };
-

@@ -38,9 +38,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Report.h"
 #include "Sugar.h"
 #include "Environment.h"
-#include "Node.h"
+#include "INodeContext.h"
 #include "NodePolio.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "IndividualPolio.h"
 #include "suids.hpp"
 #include <stdio.h> // for sscanf
@@ -184,7 +184,7 @@ TajikReporter::LogNodeData(
 
 void 
 TajikReporter::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
 }
@@ -224,12 +224,30 @@ TajikReporter::Reduce()
 
 //LOG_INFO_F( "REDUCESPATIAL:send_buffer: %s\n", node_data_pair_send_buffer.c_str() );
 
-        boost::mpi::reduce(
-            *(EnvPtr->MPI.World), // communicator
-            node_data_pair_send_buffer, // local value to be combined with local values of every other process
-            node_data_pair_receive_buffer, // local value to be combined with local values of every other process
-            std::plus< std::string >(),
-            0); // root rank, 0 not surprisingly
+    int32_t length = (int32_t)node_data_pair_send_buffer.size();
+
+    if (EnvPtr->MPI.Rank > 0)
+    {
+        MPI_Gather((void*)&length, 1, MPI_INTEGER4, nullptr, EnvPtr->MPI.NumTasks, MPI_INTEGER4, 0, MPI_COMM_WORLD);
+        MPI_Gatherv((void*)node_data_pair_send_buffer.c_str(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD);
+    }
+    else
+    {
+        std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
+        MPI_Gather((void*)&length, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, 0, MPI_COMM_WORLD);
+        int32_t total = 0;
+        std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
+        for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
+        {
+            displs[i] = total;
+            total += lengths[i];
+        }
+        std::vector<char> buffer(total + 1);
+        MPI_Gatherv((void*)node_data_pair_send_buffer.c_str(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
+        buffer[total] = '\0';
+
+        node_data_pair_receive_buffer = buffer.data();
+    }
 
 //LOG_INFO_F( "REDUCESPATIAL:receive_buffer: %s\n", node_data_pair_receive_buffer.c_str());
 

@@ -20,7 +20,7 @@ static const char * _module = "MalariaBarcode";
 
 namespace Kernel 
 {
-    MalariaBarcode * MalariaBarcode::_instance = NULL;
+    MalariaBarcode * MalariaBarcode::_instance = nullptr;
 
     std::string MalariaBarcode::toBits(uint32_t id)
     {

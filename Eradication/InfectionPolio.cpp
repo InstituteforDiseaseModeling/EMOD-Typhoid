@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "InfectionPolio.h"
 #include "SusceptibilityPolio.h"
-#include "InterventionsContainer.h"
+#include "PolioInterventionsContainer.h"
 #include "PolioDefs.h"
 #include "Environment.h"
 #include "Debug.h"
@@ -33,9 +33,9 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_BODY(InfectionPolioConfig)
     END_QUERY_INTERFACE_BODY(InfectionPolioConfig)
 
-    bool           InfectionPolioConfig::tracecontact_mode = 0.0f;          // flag for genome mutation algorithm for serial infection tracing
-    int            InfectionPolioConfig::default_antigen = 0.0f;            // default infection antigenID
-    int            InfectionPolioConfig::default_genome = 0.0f;             // default infection genomeID
+    bool           InfectionPolioConfig::tracecontact_mode = false;         // flag for genome mutation algorithm for serial infection tracing
+    int            InfectionPolioConfig::default_antigen = 0;               // default infection antigenID
+    int            InfectionPolioConfig::default_genome = 0;                // default infection genomeID
     float          InfectionPolioConfig::paralytic_case_mortality = 0.0f;   // (dimensionless) fraction of paralytic cases resulting in death
     float          InfectionPolioConfig::evolutionWPVLinearRate = 0.0f;     // (bits / day) mutation rate in the model genome
     float          InfectionPolioConfig::evolutionSabinLinearRate[N_POLIO_SEROTYPES];   // (bits / day) maximum mutation rate in model genome, Sabin reversion
@@ -73,6 +73,22 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(InfectionPolio)
 
     InfectionPolio::InfectionPolio()
+        : shed_genome_traceContactMode(-1)
+        , immunity_updated(0)
+        , paralysis_reported(0)
+        , paralysis_time(-1.0f)
+        , initial_infectiousness(0.0f)
+        , cached_mucosal_immunity(0.0f)
+        , cached_humoral_immunity(0.0f)
+        , host_mc_weight(0.0f)
+        , peakFecalLog10VirusTiter(0.0f)
+        , peakOralLog10VirusTiter(0.0f)
+        , durationFecalInfection(0.0f)
+        , durationOralInfection(0.0f)
+        , paralysis_probability(-1.0f)
+        , drug_titer_reduction(0.0f)
+        , drug_infection_duration_reduction(0.0f)
+        , drug_flag(false)
     {
     }
 
@@ -82,23 +98,25 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    InfectionPolio::InfectionPolio(IIndividualHumanContext *context) : InfectionEnvironmental(context)
+    InfectionPolio::InfectionPolio(IIndividualHumanContext *context)
+        : InfectionEnvironmental(context)
+        , shed_genome_traceContactMode(-1)
+        , immunity_updated(0)
+        , paralysis_reported(0)
+        , paralysis_time(-1.0f)
+        , initial_infectiousness(0.0f)
+        , cached_mucosal_immunity(0.0f)
+        , cached_humoral_immunity(0.0f)
+        , host_mc_weight(0.0f)
+        , peakFecalLog10VirusTiter(0.0f)
+        , peakOralLog10VirusTiter(0.0f)
+        , durationFecalInfection(0.0f)
+        , durationOralInfection(0.0f)
+        , paralysis_probability(-1.0f)
+        , drug_titer_reduction(0.0f)
+        , drug_infection_duration_reduction(0.0f)
+        , drug_flag(false)
     {
-        duration = 0.0; // time counter of infection
-        immunity_updated = 0;
-        paralysis_reported = 0;
-        paralysis_time = -1.0f;
-        host_mc_weight = 0.0f;
-        peakFecalLog10VirusTiter = 0.0f;
-        peakOralLog10VirusTiter = 0.0f;
-        durationFecalInfection = 0.0f;
-        durationOralInfection = 0.0f;
-        shed_genome_traceContactMode = -1; // invalid value (-1) indicates the shed genome has not been set
-        paralysis_probability = -1.0f;
-        drug_titer_reduction = 0.0f;
-        drug_infection_duration_reduction = 0.0f;
-
-        drug_flag = false;
     }
 
     void InfectionPolio::Initialize(suids::suid _suid)
@@ -119,12 +137,36 @@ namespace Kernel
     InfectionPolio::~InfectionPolio()
     {
     }
+
+    REGISTER_SERIALIZABLE(InfectionPolio);
+
+    void InfectionPolio::serialize(IArchive& ar, InfectionPolio* obj)
+    {
+        InfectionEnvironmental::serialize(ar, obj);
+        InfectionPolio& infection = *obj;
+        ar.labelElement("shed_genome_traceContactMode") & infection.shed_genome_traceContactMode;
+        ar.labelElement("immunity_updated") & infection.immunity_updated;
+        ar.labelElement("paralysis_reported") & infection.paralysis_reported;
+        ar.labelElement("paralysis_time") & infection.paralysis_time;
+        ar.labelElement("initial_infectiousness") & infection.initial_infectiousness;
+// Boost serialization didn't include this member            ar.labelElement("cached_mucosal_immunity") & infection.cached_mucosal_immunity;
+// Boost serialization didn't include this member            ar.labelElement("cached_humoral_immunity") & infection.cached_humoral_immunity;
+        ar.labelElement("host_mc_weight") & infection.host_mc_weight;
+        ar.labelElement("peakFecalLog10VirusTiter") & infection.peakFecalLog10VirusTiter;
+        ar.labelElement("peakOralLog10VirusTiter") & infection.peakOralLog10VirusTiter;
+        ar.labelElement("durationFecalInfection") & infection.durationFecalInfection;
+        ar.labelElement("durationOralInfection") & infection.durationOralInfection;
+        ar.labelElement("paralysis_probability") & infection.paralysis_probability;
+// Boost serialization didn't include this member            ar.labelElement("drug_titer_reduction") & infection.drug_titer_reduction;
+// Boost serialization didn't include this member            ar.labelElement("drug_infection_duration_reduction") & infection.drug_infection_duration_reduction;
+// Boost serialization didn't include this member            ar.labelElement("drug_flag") & infection.drug_flag;
+    }
 }
 
 void Kernel::InfectionPolio::SetParameters(StrainIdentity* infstrain, int incubation_period_override)
 {
     InfectionEnvironmental::SetParameters(infstrain, incubation_period_override); // setup infection timers and infection state
-    if(infstrain == NULL)
+    if(infstrain == nullptr)
     {
         // using default strainIDs
         infection_strain->SetAntigenID(default_antigen);
@@ -136,9 +178,9 @@ void Kernel::InfectionPolio::SetParameters(StrainIdentity* infstrain, int incuba
     }
 }
 
-void Kernel::InfectionPolio::InitInfectionImmunology(Susceptibility* _immunity)
+void Kernel::InfectionPolio::InitInfectionImmunology(ISusceptibilityContext* _immunity)
 {
-    ISusceptibilityPolio* immunity = NULL;
+    ISusceptibilityPolio* immunity = nullptr;
     if( _immunity->QueryInterface( GET_IID( ISusceptibilityPolio ), (void**)&immunity ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "ISusceptibilityPolio", "Susceptibility" );
@@ -168,10 +210,10 @@ void Kernel::InfectionPolio::InitInfectionImmunology(Susceptibility* _immunity)
     //cached_humoral_immunity = immunity->GetHumoralImmunity(infection_strain);
 }
 
-void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
+void Kernel::InfectionPolio::Update(float dt, ISusceptibilityContext* _immunity)
 {
     StateChange = InfectionStateChange::None;
-    ISusceptibilityPolio* immunity = NULL;
+    ISusceptibilityPolio* immunity = nullptr;
     if( _immunity->QueryInterface( GET_IID( ISusceptibilityPolio ), (void**)&immunity ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "Susceptibility", "SusceptibilityPolio" );
@@ -188,11 +230,9 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
     drug_infection_duration_reduction = 0.0f;
 
     // Query for drug present effects
-    IIndividualHumanContext *patient = NULL;
-    IIndividualHumanInterventionsContext *context = NULL;
-    IPolioDrugEffects *ipde = NULL;
-
-    context = GetParent()->GetInterventionsContext();
+    IIndividualHumanContext *patient = GetParent();
+    IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
+    IPolioDrugEffects *ipde = nullptr;
 
     if (s_OK ==  context->QueryInterface(GET_IID(IPolioDrugEffects), (void **)&ipde))
     {
@@ -248,7 +288,7 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
     {
         switch (infection_strain->GetAntigenID())
         {
-			case PolioVirusTypes::WPV1:  
+            case PolioVirusTypes::WPV1:  
                 StateChange = InfectionStateChange::PolioParalysis_WPV1;
                 break;
 
@@ -284,7 +324,7 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
         if(paralysis_reported && params()->vital_disease_mortality)
         {
             // To query for mortality-reducing effects of drugs or vaccines
-            IDrugVaccineInterventionEffects* idvie = NULL;
+            IDrugVaccineInterventionEffects* idvie = nullptr;
             if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IDrugVaccineInterventionEffects), (void**)&idvie) )
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionsContext()", "IDrugVaccineInterventionEffects", "IIndividualHumanEventContext" );
@@ -320,17 +360,11 @@ void Kernel::InfectionPolio::Update(float dt, Susceptibility* _immunity)
         immunity->DecrementInfection(infection_strain);
     }
 
-    evolveStrain(_immunity, dt); // genetic modifications
+    evolveStrain(immunity, dt); // genetic modifications
 }
 
-void Kernel::InfectionPolio::evolveStrain(Susceptibility* _immunity, float dt)
+void Kernel::InfectionPolio::evolveStrain(ISusceptibilityPolio* immunity, float dt)
 {
-    ISusceptibilityPolio* immunity = NULL;
-    if( _immunity->QueryInterface( GET_IID( ISusceptibilityPolio ), (void**)&immunity ) != s_OK )
-    {
-        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "ISusceptibilityPolio", "Susceptibility" );
-    }
-
     if(params()->number_substrains > 1)
     {
         int serotype = infection_strain->GetAntigenID();
@@ -344,7 +378,7 @@ void Kernel::InfectionPolio::evolveStrain(Susceptibility* _immunity, float dt)
             vdpv_state = uint16_t(1) << uint16_t(params()->reversionSteps_cVDPV[serotype] - 1);
         } // minimum genome value for fully reverted VDPV
         
-        float prob_mutation = 0.0f;
+        float prob_mutation;
         if( IS_WILD_TYPE( infection_strain->GetAntigenID() ) )
         {
             prob_mutation = evolutionWPVLinearRate * dt; // wild type only uses linear mutation
@@ -362,11 +396,11 @@ void Kernel::InfectionPolio::evolveStrain(Susceptibility* _immunity, float dt)
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_IMMUNITY:
-                    prob_mutation = (float)((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2));
+                    prob_mutation = float((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2));
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_REVERSION_AND_IMMUNITY:
-                    prob_mutation = (float)((evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + evolutionHalfmaxReversion)) * ((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2)));
+                    prob_mutation = float((evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + evolutionHalfmaxReversion)) * ((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2)));
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_REVERSION:
@@ -512,34 +546,10 @@ void Kernel::InfectionPolio::CacheMCWeightOfHost(float ind_mc_weight)
     host_mc_weight = ind_mc_weight;
 }
 
-const float Kernel::InfectionPolio::GetMusocalImmunity() const
+float Kernel::InfectionPolio::GetMucosalImmunity() const
 {
     LOG_DEBUG_F( "Individual %lu returning %f for (cached) mucosal immunity.\n", parent->GetSuid().data, cached_mucosal_immunity );
     return cached_mucosal_immunity;
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionPolio)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionPolio& inf, const unsigned int file_version )
-    {
-        ar & inf.shed_genome_traceContactMode; // genomeID that is shed for contact tracing purposes
-        ar & inf.immunity_updated; // takes values 0,1
-        ar & inf.paralysis_reported; // takes values 0,1
-        ar & inf.paralysis_time; // delay from infection to paralysis. individual will be paralyzed if this value is greater than 0
-        ar & inf.initial_infectiousness; // base value of infectiousness based on antibody titer before infection
-        ar & inf.host_mc_weight; // (days) stores the MC weight of the individual, use for reporting infections only
-        ar & inf.peakFecalLog10VirusTiter; // (TCID50 at the base infectivity pinf of the virus type) the true TCID50 is found by multiplying by relative infectivity for the genome being shed
-        ar & inf.peakOralLog10VirusTiter; //
-        ar & inf.durationFecalInfection; //
-        ar & inf.durationOralInfection; //
-        ar & inf.paralysis_probability; // Probability of paralysis. This was in InitInfectionImmunology, moved to Update, but still only want to calc one time.
-        ar & boost::serialization::base_object<Kernel::InfectionEnvironmental>(inf);
-    }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionPolio&, unsigned int);
-}
-#endif
 
 #endif // ENABLE_POLIO

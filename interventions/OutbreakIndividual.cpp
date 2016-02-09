@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 
 #include "OutbreakIndividual.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "InterventionFactory.h"
 #include "ConfigurationImpl.h"
 #include "NodeEventContext.h"
@@ -61,7 +61,7 @@ namespace Kernel
     {
         bool success = true;
         // TBD: Get individual from context, and infect
-        IndividualHuman* individual = dynamic_cast<IndividualHuman*>(context->GetParent()); // QI in new code
+        IIndividualHuman* individual = dynamic_cast<IIndividualHuman*>(context->GetParent()); // QI in new code
         INodeEventContext * pContext = individual->GetParent()->GetEventContext();
         StrainIdentity* strain_identity = GetNewStrainIdentity(pContext);   // JPS: no need to create strain before we call this if we're calling into node...?
         LOG_DEBUG( "Infecting individual from Outbreak.\n" );
@@ -78,12 +78,12 @@ namespace Kernel
 
     Kernel::StrainIdentity* OutbreakIndividual::GetNewStrainIdentity(INodeEventContext *context)
     {
-        StrainIdentity *outbreakIndividual_strainID = NULL;
+        StrainIdentity *outbreakIndividual_strainID = nullptr;
 
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
         // NO usage of GET_CONFIGURABLE(SimulationConfig)->number_substrains in DLL
-        IGlobalContext *pGC = NULL;
-        const SimulationConfig* simConfigObj = NULL;
+        IGlobalContext *pGC = nullptr;
+        const SimulationConfig* simConfigObj = nullptr;
         if (s_OK == context->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             simConfigObj = pGC->GetSimulationConfigObj();
@@ -120,13 +120,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::OutbreakIndividual)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, OutbreakIndividual &ob, const unsigned int v)
     {
-        boost::serialization::void_cast_register<OutbreakIndividual, IDistributableIntervention>();
         ar & ob.antigen;
         ar & ob.genome;
         ar & ob.incubation_period_override;

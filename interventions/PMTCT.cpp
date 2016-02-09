@@ -83,22 +83,14 @@ namespace Kernel
             expired = true;
         }
     }
-
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::PMTCT)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, PMTCT& obj, const unsigned int v)
     {
-        static const char * _module = "PMTCT";
-        LOG_DEBUG("(De)serializing PMTCT\n");
-
-        boost::serialization::void_cast_register<PMTCT, IDistributableIntervention>();
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::PMTCT&, unsigned int);
 }
 #endif

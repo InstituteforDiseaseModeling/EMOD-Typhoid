@@ -12,7 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "NodeEventContext.h"  // for INodeEventContext
 #include "SimulationEnums.h"
-#include "MathFunctions.h"
+#include "Sigmoid.h"
 
 static const char * _module = "HIVSigmoidByYearAndSexDiagnostic";
 
@@ -75,17 +75,11 @@ namespace Kernel
 
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVSigmoidByYearAndSexDiagnostic)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, HIVSigmoidByYearAndSexDiagnostic& obj, const unsigned int v)
     {
-        static const char * _module = "HIVSigmoidByYearAndSexDiagnostic";
-        LOG_DEBUG("(De)serializing HIVSigmoidByYearAndSexDiagnostic\n");
-
-        boost::serialization::void_cast_register<HIVSigmoidByYearAndSexDiagnostic, IDistributableIntervention>();
         ar & obj.rampMin;
         ar & obj.rampMax;
         ar & obj.rampMidYear;
@@ -93,6 +87,5 @@ namespace Kernel {
         ar & obj.femaleMultiplier;
         ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVSigmoidByYearAndSexDiagnostic&, unsigned int);
 }
 #endif

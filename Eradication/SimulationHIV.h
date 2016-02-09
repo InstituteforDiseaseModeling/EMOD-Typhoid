@@ -18,8 +18,8 @@ namespace Kernel
     struct IHIVCascadeStateIntervention ;
     class IndividualHumanHIV;
 
-    class SimulationHIV : public SimulationSTI, 
-                          public IDiseaseSpecificValidator, 
+    class SimulationHIV : public SimulationSTI,
+                          public IDiseaseSpecificValidator,
                           public IChannelDataMapOutputAugmentor
     {
         GET_SCHEMA_STATIC_WRAPPER(SimulationHIV)
@@ -36,9 +36,9 @@ namespace Kernel
         virtual void Reports_CreateBuiltIn();
 
         // IDiseaseSpecificValidator
-        virtual void Validate( const std::string& rClassName, 
+        virtual void Validate( const std::string& rClassName,
                                IDistributableIntervention* pInterventionToValidate ) ;
-        virtual void Validate( const std::string& rClassName, 
+        virtual void Validate( const std::string& rClassName,
                                INodeDistributableIntervention* pInterventionToValidate ) ;
 
         // IChannelDataMapOutputAugmentor
@@ -47,14 +47,12 @@ namespace Kernel
         static float base_year;
 
     protected:
-        virtual void Initialize();
-        virtual void Initialize(const ::Configuration *config);
+        virtual void Initialize() override;
+        virtual void Initialize(const ::Configuration *config) override;
         static bool ValidateConfiguration(const ::Configuration *config);
 
         // Allows correct type of Node to be added by classes derived from Simulation
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
-
-        virtual void resolveMigration();
 
         bool report_hiv_by_age_and_gender;
         bool report_hiv_ART;
@@ -62,7 +60,7 @@ namespace Kernel
         bool report_hiv_mortality;
         float report_hiv_period;
 
-        JsonConfigurable::tFixedStringSet valid_cascade_states ;
+        jsonConfigurable::tFixedStringSet valid_cascade_states ;
 
     private:
         void Validate( const std::string& rClassName,
@@ -70,13 +68,5 @@ namespace Kernel
         void CheckState( const std::string& rClassName,
                          const char* pVarName,
                          const std::string& rState );
-
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationHIV &sim, const unsigned int  file_version );
-#endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanHIV> typed_migration_queue_storage;
     };
 }
-
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationHIV)

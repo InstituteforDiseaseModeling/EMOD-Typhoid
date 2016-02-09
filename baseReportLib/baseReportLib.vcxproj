@@ -51,7 +51,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>ENABLE_TB;ENABLE_TBHIV;IDM_EXPORT;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_TB;ENABLE_TBHIV;IDM_EXPORT;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\boost\boost_1_51_0;..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\campaign;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <FloatingPointModel>Precise</FloatingPointModel>
@@ -71,7 +71,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>ENABLE_TB;ENABLE_TBHIV;IDM_EXPORT;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_TB;ENABLE_TBHIV;IDM_EXPORT;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\boost\boost_1_51_0;..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\campaign;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
@@ -129,7 +129,6 @@
     <ClInclude Include="..\utils\ProgVersion.h" />
     <ClInclude Include="..\utils\RANDOM.h" />
     <ClInclude Include="..\utils\RapidJsonImpl.h" />
-    <ClInclude Include="..\utils\SimpleTypemapRegistration.h" />
     <ClInclude Include="..\utils\Sugar.h" />
     <ClInclude Include="..\utils\Types.h" />
     <ClInclude Include="..\utils\ValidationLog.h" />

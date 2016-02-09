@@ -35,7 +35,7 @@ namespace Kernel
 
         virtual void BeginTimestep() {};
         virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return false; };
-        virtual void LogIndividualData( IndividualHuman* individual ) {};
+        virtual void LogIndividualData( IIndividualHuman* individual ) {};
         virtual void LogNodeData( INodeContext* pNC ) {};
 
         virtual std::string GetReportName() const { return report_name; }

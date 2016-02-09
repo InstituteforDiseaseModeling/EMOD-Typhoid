@@ -15,10 +15,9 @@ namespace Kernel {
 
     const IPairFormationParameters* PairFormationParamsFactory::Create( RelationshipType::Enum relType,
                                                                         const Configuration* pConfig, 
-                                                                        float base_rate, 
                                                                         float rate_ratio_male, 
                                                                         float rate_ratio_female )
     {
-        return PairFormationParametersImpl::CreateParameters( relType, pConfig, base_rate, rate_ratio_male, rate_ratio_female );
+        return PairFormationParametersImpl::CreateParameters( relType, pConfig, rate_ratio_male, rate_ratio_female );
     }
 }

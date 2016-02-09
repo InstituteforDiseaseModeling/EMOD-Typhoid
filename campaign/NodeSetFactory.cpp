@@ -79,5 +79,5 @@ namespace Kernel
     }
 
     // NodeSet
-    INodeSetFactory * NodeSetFactory::_instance = NULL;
+    INodeSetFactory * NodeSetFactory::_instance = nullptr;
 }
