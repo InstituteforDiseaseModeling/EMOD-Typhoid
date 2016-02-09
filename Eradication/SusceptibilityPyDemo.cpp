@@ -36,7 +36,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "SusceptibilityPyDemo.h"
 
 static const char * _module = "SusceptibilityPyDemo";
-#ifdef ENABLE_POLIO
+#ifdef ENABLE_PYTHON
 
 namespace Kernel
 {
@@ -110,4 +110,4 @@ namespace Kernel {
 }*/
 #endif
 
-#endif // ENABLE_POLIO
+#endif // ENABLE_PYTHON

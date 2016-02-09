@@ -15,7 +15,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "stdafx.h"
 
-#ifdef ENABLE_POLIO
+#ifdef ENABLE_PYTHON
 
 #include <functional>
 #include <numeric>
@@ -107,4 +107,4 @@ void serialize(Archive &ar, SpatialReportPyDemo& report, const unsigned int v)
 
 }
 
-#endif // ENABLE_POLIO
+#endif // ENABLE_PYTHON

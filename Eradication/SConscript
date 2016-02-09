@@ -345,11 +345,24 @@ else:
                             "../interventions/PMTCT.cpp"
     ]
 
+    pyDemoSrcFiles = [
+        "BinnedReportPyDemo.cpp",
+        "IndividualPyDemo.cpp",
+        "InfectionPyDemo.cpp",
+        "NodePyDemo.cpp",
+        "PyDemoInterventionsContainer.cpp",
+        "ReportPyDemo.cpp",
+        "SimulationPyDemo.cpp",
+        "SpatialReportPyDemo.cpp",
+        "SusceptibilityPyDemo.cpp"
+    ]
+
     eradicationSrcFiles.extend( hivSrcFiles )
     eradicationSrcFiles.extend( malariaSrcFiles )
     eradicationSrcFiles.extend( polioSrcFiles )
     eradicationSrcFiles.extend( tbSrcFiles )
     eradicationSrcFiles.extend( tbhivSrcFiles )
+    eradicationSrcFiles.extend( pyDemoSrcFiles )
 
     # Monolithic
     eradicationExe = env.Program('Eradication', eradicationSrcFiles)

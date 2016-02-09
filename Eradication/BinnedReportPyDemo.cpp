@@ -15,7 +15,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "stdafx.h"
 
-#ifdef ENABLE_POLIO
+#ifdef ENABLE_PYTHON
 
 #include "BinnedReportPyDemo.h"
 
@@ -145,4 +145,4 @@ void BinnedReportPyDemo::postProcessAccumulatedData()
 {
 }
 
-#endif // ENABLE_POLIO
+#endif // ENABLE_PYTHON

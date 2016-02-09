@@ -15,7 +15,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "stdafx.h"
 
-#ifdef ENABLE_POLIO
+#ifdef ENABLE_PYTHON
 
 #include <math.h>
 #include <numeric> // for std::accumulate
@@ -38,7 +38,7 @@ IdmPyInit(
     const char * python_function_name
 );
 
-#define ENABLE_PYTHOID 1
+#define ENABLE_TOYPHOID 1
 namespace Kernel
 {
     BEGIN_QUERY_INTERFACE_DERIVED(NodePyDemo, Node)
@@ -46,22 +46,22 @@ namespace Kernel
     END_QUERY_INTERFACE_DERIVED(NodePyDemo, Node)
 
 
-    NodePyDemo::NodePyDemo() : NodeEnvironmental() { }
+    NodePyDemo::NodePyDemo() : Node() { }
 
-    NodePyDemo::NodePyDemo(ISimulationContext *_parent_sim, suids::suid node_suid) : NodeEnvironmental(_parent_sim, node_suid)
+    NodePyDemo::NodePyDemo(ISimulationContext *_parent_sim, suids::suid node_suid) : Node(_parent_sim, node_suid)
     {
     }
 
     void NodePyDemo::Initialize()
     {
-        NodeEnvironmental::Initialize();
+        Node::Initialize();
     }
 
     bool NodePyDemo::Configure(
         const Configuration* config
     )
     {
-        return NodeEnvironmental::Configure( config );
+        return Node::Configure( config );
     }
 
     NodePyDemo *NodePyDemo::CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid)
@@ -167,8 +167,8 @@ namespace Kernel
 
     void NodePyDemo::resetNodeStateCounters(void)
     {
-        // This is a chance to do a single call into Pythoid at start of timestep
-#ifdef ENABLE_PYTHOID
+        // This is a chance to do a single call into TOYPHOID at start of timestep
+#ifdef ENABLE_TOYPHOID
         static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "start_timestep" );
         if( pFunc )
         {
@@ -176,7 +176,7 @@ namespace Kernel
         }
 #endif
 
-        NodeEnvironmental::resetNodeStateCounters();
+        Node::resetNodeStateCounters();
     }
 
     void NodePyDemo::updateNodeStateCounters(IndividualHuman *ih)
@@ -188,13 +188,13 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "tempind2", "IndividualHumanPyDemo", "IndividualHuman" );
         }
 
-        NodeEnvironmental::updateNodeStateCounters(ih);
+        Node::updateNodeStateCounters(ih);
     }
 
 
     void NodePyDemo::finalizeNodeStateCounters(void)
     {
-        NodeEnvironmental::finalizeNodeStateCounters();
+        Node::finalizeNodeStateCounters();
        
     }
 
@@ -237,7 +237,7 @@ namespace Kernel
         void serialize(Archive & ar, NodePyDemo& node, const unsigned int /* file_version */)
         { 
             ar.template register_type<IndividualHumanPyDemo>();
-            ar & boost::serialization::base_object<NodeEnvironmental>(node);
+            ar & boost::serialization::base_object<Node>(node);
         }
     }
 #endif
@@ -261,4 +261,4 @@ namespace Kernel
         }
     }
 }
-#endif // ENABLE_POLIO
+#endif // ENABLE_PYTHON

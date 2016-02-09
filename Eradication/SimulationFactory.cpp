@@ -40,6 +40,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #endif
 
+#ifdef ENABLE_PYTHON
+#include "SimulationPyDemo.h"
+#endif
+
 #include "DllLoader.h"
 
 static const char * _module = "SimulationFactory";
@@ -89,6 +93,10 @@ namespace Kernel
             else if (sSimType == "HIV_SIM")
                 sim_type = SimType::HIV_SIM;
 #endif // HIV
+#ifdef ENABLE_PYTHON
+            else if (sSimType == "PYDEMO_SIM")
+                sim_type = SimType::PYDEMO_SIM;
+#endif
             else
             {
                 std::ostringstream msg;
@@ -163,7 +171,11 @@ namespace Kernel
                     newsim = SimulationHIV::CreateSimulation(EnvPtr->Config);
                 break;
 #endif // HIV
-
+#ifdef ENABLE_PYTHON 
+                case SimType::PYDEMO_SIM:
+                    newsim = SimulationPyDemo::CreateSimulation(EnvPtr->Config);
+                break;
+#endif
                 default: 
                 // Is it even possible to get here anymore?  Won't the SimulationConfig error out earlier parsing the parameter-string?
                 //("SimulationFactory::CreateSimulation(): Error, Simulation_Type %d is not implemented.\n", sim_type);

@@ -15,7 +15,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "stdafx.h"
 
-#ifdef ENABLE_POLIO
+#ifdef ENABLE_PYTHON
 
 #include <numeric> // for std::accumulate
 #include "ReportPyDemo.h" // for base class
@@ -139,4 +139,4 @@ void serialize(Archive &ar, ReportPyDemo& report, const unsigned int v)
 
 }
 
-#endif // ENABLE_POLIO
+#endif // ENABLE_PYTHON
