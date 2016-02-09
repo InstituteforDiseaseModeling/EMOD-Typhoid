@@ -144,6 +144,7 @@ namespace Kernel
 
     void InterventionConfig::serialize(IArchive& ar, InterventionConfig& config)
     {
+#if defined(WIN32)
         if ( ar.IsWriter() )
         {
             std::ostringstream string_stream;
@@ -157,6 +158,7 @@ namespace Kernel
             std::istringstream string_stream( json );
             json::Reader::Read( config._json, string_stream );
         }
+#endif
     }
 
 // clorton    template < class Archive >

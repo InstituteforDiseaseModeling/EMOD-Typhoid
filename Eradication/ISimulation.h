@@ -26,7 +26,6 @@ namespace Kernel
         virtual void  Update(float time_step) = 0;
 
         virtual int  GetSimulationTimestep() const = 0;
-        virtual void LoadCampaignFile() = 0;
         virtual IdmDateTime GetSimulationTime() const = 0;
 
         typedef std::function<void(INodeContext*)> callback_t;

@@ -300,18 +300,7 @@ namespace Kernel
                     return false;
                 }
             }
-            LOG_DEBUG("Individual meets demographic targeting criteria\n");
-
-            // optionally filter out individuals who already have this intervention
-            if( avoid_duplicates )
-            {
-                bool already_has_this = ( ihec->GetInterventionsContext()->GetInterventionsByType( typeid( *_di ).name() ).size() > 0 ? true : false );
-                if( already_has_this  )
-                {
-                    LOG_DEBUG_F( "Individual already has intervention, skipping.\n" );
-                    return false;
-                }
-            }
+            LOG_DEBUG("Individual meets demographic targeting criteria\n"); 
 
             if (!TargetedIndividualIsCovered(ihec))
             {

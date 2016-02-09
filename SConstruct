@@ -219,14 +219,14 @@ else:
     env['SVN_BRANCH'] = SVN_BRANCH
     env['OS_FAMILY'] = 'posix'
     env['CC'] = "mpicxx"
-    #env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
-    env['CXX'] = "/usr/lib64/mpi/gcc/openmpi/bin/mpicxx"
+    env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
+    #env['CXX'] = "/usr/lib64/mpi/gcc/openmpi/bin/mpicxx"
     env.Append( CCFLAGS=["-fpermissive"] )
     env.Append( CCFLAGS=["--std=c++0x"] )
     env.Append( CCFLAGS=["-w"] )
     env.Append( CCFLAGS=["-ffloat-store"] )
     env.Append( CCFLAGS=["-Wno-unknown-pragmas"] )
-    #env.Append( CCFLAGS=["-save-temps"] )
+    env.Append( CCFLAGS=["-save-temps"] )
     env.Append( EXTRACPPPATH=[
                           "#/Eradication",
                           "#/interventions",

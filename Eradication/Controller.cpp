@@ -176,6 +176,7 @@ FILE* OpenFileForWriting( const char* filename )
 
 void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool compress)
 {
+#if defined(WIN32)
     char* filename = GenerateFilename( time_step );
     LOG_INFO_F( "Writing state to '%s'\n", filename );
     FILE* f = OpenFileForWriting( filename );
@@ -223,6 +224,7 @@ void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool com
     fclose( f );
 
     free( filename );
+#endif
 }
 
 void StepSimulation(ISimulation* sim, float dt);
@@ -1320,5 +1322,4 @@ void * start_routine(void* args )
 }
 
 #endif
-=======
->>>>>>> upstream/tffkas
+
