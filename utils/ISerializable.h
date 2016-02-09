@@ -102,10 +102,8 @@ namespace Kernel {
         static SerializationRegistrationCaller<classname> serialization_registration_caller; \
         friend PoolManager<classname>; \
         static ISerializable* construct() { return dynamic_cast<ISerializable*>(PoolManager<classname>::_allocate()); }    \
-        virtual void Recycle() override { \
-            /*PoolManager<classname>::_recycle(this);*/ \
-        } \
-    protected:                                                                      \ 
+        virtual void Recycle() override { PoolManager<classname>::_recycle(this); } \
+    protected: \
         static void serialize(IArchive&, classname*);                               
 
 #define REGISTER_SERIALIZABLE(classname)                                                     \
