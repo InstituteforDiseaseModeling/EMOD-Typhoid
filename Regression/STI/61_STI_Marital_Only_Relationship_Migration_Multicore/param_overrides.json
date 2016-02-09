@@ -5,7 +5,7 @@
         "____________SIMULATION___________": "",
         "Simulation_Duration": 7300, 
         "Simulation_Timestep": 1,
-        "Num_Cores": 1, 
+        "Num_Cores": 2, 
         "Run_Number": 1, 
         "logLevel_default": "WARNING", 
         
@@ -59,7 +59,7 @@
         "____________REPLICATION_AND_DRUGS___________": "",
 
         "____________RARELY_CHANGED___________": "",
-        "Config_Name": "57_STI_Marital_Only_Relationship_Migration",
+        "Config_Name": "61_STI_Marital_Only_Relationship_Migration_Multicore",
         "Geography": "MigrationTest"
     }
 }
