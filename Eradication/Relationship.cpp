@@ -517,6 +517,16 @@ namespace Kernel {
     {
         LOG_INFO_F( "%s: terminating relationship %d between individual %d and individual %d.\n", __FUNCTION__, GetSuid().data, MALE_PARTNER_ID().data, FEMALE_PARTNER_ID().data );
 
+        // -----------------------------------------------------------------------
+        // --- Migrating would have set these values so we want to clear them to
+        // --- make sure it is clear that the relationship has been terminated.
+        // -----------------------------------------------------------------------
+        if( state == RelationshipState::MIGRATING )
+        {
+            absent_male_partner_id = suids::nil_suid();
+            absent_female_partner_id = suids::nil_suid();
+        }
+
         state = RelationshipState::TERMINATED;
 
         if( relMan != nullptr )
@@ -552,6 +562,19 @@ namespace Kernel {
         {
             state = RelationshipState::MIGRATING;
             relMan->RemoveRelationship( this );
+
+            absent_male_partner_id = male_partner->GetSuid();
+            absent_female_partner_id = female_partner->GetSuid();
+
+            // -------------------------------------------------------------------
+            // --- Don't set these to nullptr because if one of the partners dies
+            // --- before they migrate, then we need the pointers so we can remove
+            // --- the relationship.
+            // -------------------------------------------------------------------
+            //male_partner = nullptr;
+            //female_partner = nullptr;
+            // -------------------------------------------------------------------
+
             SetManager( nullptr, nullptr );
         }
         else if( state != RelationshipState::MIGRATING )
