@@ -1,5 +1,5 @@
 {
-    "Default_Config_Path":"defaults\\tb_default_config.json",
+    "Default_Config_Path":"defaults/tb_default_config.json",
     "parameters":{
         "DEMOGRAPHICS":{
             "Base_Population_Scale_Factor":10,

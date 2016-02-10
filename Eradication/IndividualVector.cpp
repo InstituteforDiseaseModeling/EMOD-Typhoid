@@ -291,7 +291,9 @@ namespace Kernel
             ar.startObject();
             StrainIdentity* strain = &entry.first;
             ar.labelElement("strain");
+#if defined(WIN32)
             Kernel::serialize(ar, strain);
+#endif
             ar.labelElement("weight") & entry.second;
             ar.endObject();
         }

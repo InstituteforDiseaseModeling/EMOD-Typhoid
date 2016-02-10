@@ -269,7 +269,10 @@ namespace Kernel
         // clorton TODO - perhaps the cohort should always have a non-null m_strain, just use a dummy StrainIdentity when there's no infection.
         if (has_strain)
         {
-            ar.labelElement("m_strain"); Kernel::serialize(ar, cohort.m_strain);
+            ar.labelElement("m_strain");
+#if defined(WIN32)
+            Kernel::serialize(ar, cohort.m_strain);
+#endif
         }
     }
 }

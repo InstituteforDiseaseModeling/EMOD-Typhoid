@@ -58,10 +58,14 @@ namespace Kernel {
         }
         static void in_class_registration_hook()
         {
+            // typename breaks gcc -- need to make cross-platform
             SerializationRegistrar::_register(
-                typename Derived::_class_name,
-                [](IArchive& ar, ISerializable* obj) { return Derived::serialize(ar, dynamic_cast<Derived*>(obj)); },
-                typename Derived::construct);
+                /*typename*/ Derived::_class_name,
+                [](IArchive& ar, ISerializable* obj)
+                {
+                    return Derived::serialize(ar, dynamic_cast<Derived*>(obj));
+                },
+                /*typename*/  Derived::construct); 
         }
     };
 
@@ -89,6 +93,7 @@ namespace Kernel {
         static std::stack<T*> _pool;
     };
 
+#if defined(WIN32)
 #define DECLARE_SERIALIZABLE(classname)                                             \
     private:                                                                        \
         virtual const char* GetClassName() override { return _class_name; }         \
@@ -98,13 +103,21 @@ namespace Kernel {
         friend PoolManager<classname>; \
         static ISerializable* construct() { return dynamic_cast<ISerializable*>(PoolManager<classname>::_allocate()); }    \
         virtual void Recycle() override { PoolManager<classname>::_recycle(this); } \
-    protected:                                                                      \
-        static void serialize(IArchive&, classname*);                               \
-
+    protected: \
+        static void serialize(IArchive&, classname*);                               
 
 #define REGISTER_SERIALIZABLE(classname)                                                     \
     char* classname::_class_name = #classname;                                               \
     SerializationRegistrationCaller<classname> classname::serialization_registration_caller; \
-    std::stack<classname*> PoolManager<classname>::_pool;                                    \
-
+    std::stack<classname*> PoolManager<classname>::_pool;                                    
+#else
+#define DECLARE_SERIALIZABLE(classname)                                             \
+    protected:                                                                      \ 
+        static void serialize(IArchive&, classname*);                               
+#define REGISTER_SERIALIZABLE(classname)                                                     
+    /*char* classname::_class_name = #classname;                                               \
+    SerializationRegistrationCaller<classname> classname::serialization_registration_caller; \
+    template<> std::stack< classname* > PoolManager< classname >::_pool;                     \
+    */
+#endif
 }

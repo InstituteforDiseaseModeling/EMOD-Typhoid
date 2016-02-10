@@ -1,5 +1,5 @@
 {
-    "Default_Config_Path":"defaults\\tb_scenario_default_config.json",
+    "Default_Config_Path":"defaults/tb_scenario_default_config.json",
     "parameters":{
         "Age_Initialization_Distribution_Type":"DISTRIBUTION_COMPLEX",
         "Base_Individual_Sample_Rate":0.05,

@@ -117,6 +117,9 @@ bool call_templated_functor_with_sim_type_hack(ControllerExecuteFunctorT &cef)
 
 #include <functional>
 
+//#pragma comment(lib, "Ws2_32.lib")
+
+
 char* GenerateFilename( uint32_t time_step )
 {
     size_t length = EnvPtr->OutputPath.size() + 32;
@@ -155,6 +158,7 @@ FILE* OpenFileForWriting( const char* filename )
 
 void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool compress)
 {
+#if defined(WIN32)
     char* filename = GenerateFilename( time_step );
     LOG_INFO_F( "Writing state to '%s'\n", filename );
     FILE* f = OpenFileForWriting( filename );
@@ -202,9 +206,19 @@ void WriteIdtkFile(const char* data, size_t length, uint32_t time_step, bool com
     fclose( f );
 
     free( filename );
+#endif
 }
 
 void StepSimulation(ISimulation* sim, float dt);
+
+typedef enum {
+    paused,
+    stepping,
+    stepping_and_reloading,
+    playing
+} tPlayback;
+
+tPlayback playback = playing;
 
 // Basic simulation main loop with reporting
 template <class SimulationT> 
@@ -890,3 +904,107 @@ std::function<bool(SimulationT&,float)>
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Burnin" );
     }
 }
+
+
+#if USE_BOOST_SERIALIZATION
+
+// R: Note: this could probably be obviated with use of BOOST_CLASS_EXPORT for these top level classes
+template <class Archive>
+void registerSimTypes(Archive &ar)
+{
+#ifndef _DLLS_
+    ar.template register_type<Simulation>();
+    ar.template register_type<SimulationEnvironmental>();  // IF ONLY THIS WORKED
+    ar.template register_type<SimulationPolio>();       // IF ONLY THIS WORKED
+    ar.template register_type<SimulationVector>();
+    ar.template register_type<SimulationMalaria>();
+#ifdef ENABLE_TB
+    ar.template register_type<SimulationAirborne>();
+    ar.template register_type<SimulationTB>();
+#endif
+#endif
+}
+
+template<class OArchiveT, class SimulationT>
+bool save_sim(/*const breaks if I cant make serialize() const?*/ SimulationT *sim, const char * filename)
+{
+    // make an archive
+    std::ofstream ofs(filename, std::ios::binary);
+    if (!ofs.is_open()) 
+    {
+        // ERROR ("save_sim() failed to open file %s for writing.\n", filename);
+        throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Saving" );
+    }
+
+    OArchiveT oa(ofs);
+    registerSimTypes(oa);
+    oa << (*sim);
+    return true;
+}
+
+
+/* R: TODO: experiment with better boost class registration to clean up serialization mess <ERAD-326>
+
+Noticed this gem in the boost docs:
+(see: http://www.boost.org/doc/libs/1_42_0/libs/serialization/doc/special.html#plugins)
+
+Plugins
+
+In order to implement the library, various facilities for runtime manipulation of types are runtime were required. These are extended_type_info for associating classes with external identifying strings (GUID) and void_cast for casting between pointers of related types. To complete the functionality of extended_type_info the ability to construct and destroy corresponding types has been added. In order to use this functionality, one must specify how each type is created. This should be done at the time a class is exported. So, a more complete example of the code above would be:
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+... // other archives
+
+#include "a.hpp" // header declaration for class a
+
+// this class has a default constructor
+BOOST_SERIALIZATION_FACTORY_0(a)
+// as well as one that takes one integer argument
+BOOST_SERIALIZATION_FACTORY_1(a, int)
+
+// specify the GUID for this class
+BOOST_CLASS_EXPORT(a)
+... // other class headers and exports
+
+---> With this in place, one can construct, serialize and destroy about which only is know the GUID and a base class. <---
+
+If this actually works, a lot of the templates in this file can go away!
+
+*/
+
+template<class IArchiveT, class SimulationT>
+ISimulation* load_sim(const char * filename)
+{
+    // open the archive
+    std::ifstream ifs(filename, std::ios::binary);
+    if (!ifs.is_open())
+    {
+        // ERROR: ("load_sim() failed to open file %s for reading.\n", filename);
+        throw SerializationException( __FILE__, __LINE__, __FUNCTION__, "Loading" );
+        return NULL;
+    }
+
+    IArchiveT ia(ifs);
+    registerSimTypes(ia);
+
+    // restore the schedule from the archive
+#ifdef _DLLS_
+    return NULL; // just testing
+#else
+    return SimulationFactory::CreateSimulationFromArchive<IArchiveT, SimulationT>(ia);
+#endif
+}
+
+#endif // end of USE_BOOST_SERIALIZATION
+
+
+
+// for DLL build
+#if USE_BOOST_SERIALIZATION
+template void Kernel::serialize( boost::archive::binary_oarchive & ar, Simulation& sim, const unsigned int file_version);
+template void Kernel::serialize( boost::archive::binary_iarchive & ar, Simulation& sim, const unsigned int file_version);
+#endif
+
+
+
