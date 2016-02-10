@@ -23,6 +23,7 @@ utilsSrcFiles = [
     "Configuration.cpp",
     "Configure.cpp",
     "Coredump.cpp",
+    "DurationDistribution.cpp",
     "Environment.cpp",
     "Exceptions.cpp",
     "FileSystem.cpp",
