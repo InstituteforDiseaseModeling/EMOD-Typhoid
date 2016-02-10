@@ -133,9 +133,8 @@ namespace Kernel
         virtual void resolveMigration(); // derived classes override this...
 
         // Campaign input file parsing
-        virtual void   loadCampaignFromFile( const std::string& campaign_filename );
-
         virtual void notifyNewNodeObservers(INodeContext*);
+        virtual void loadCampaignFromFile( const std::string& campaign_filename );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details

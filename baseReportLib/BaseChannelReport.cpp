@@ -56,7 +56,30 @@ void BaseChannelReport::LogNodeData(
 
 void BaseChannelReport::EndTimestep( float currentTime, float dt )
 {
+#if 1
+    // This is experimental for sending data via stdout. Don't check in without config option.
+    auto * jsonSerializer = Kernel::CreateJsonObjAdapter();
+    jsonSerializer->CreateNewWriter();
+    jsonSerializer->BeginObject();
+    for (auto& entry : channelDataMap.channel_data_map)
+    {
+        //auto last = GetLastValue( entry.first );
+        auto vector_of_data = entry.second;
+        auto last = vector_of_data[ vector_of_data.size() - 1 ];
+        //JBJsonTool( entry.first , last );
+        jsonSerializer->Insert( entry.first.c_str(), last );
+    }
+    jsonSerializer->EndObject();
 
+    //std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
+
+#ifdef WIN32
+    _putenv_s( "JSON_SER_REPORT1", jsonSerializer->ToString() );
+#else
+    setenv( "JSON_SER_REPORT1", jsonSerializer->ToString(), 1 );
+#endif
+    delete jsonSerializer;
+#endif
 }
 
 void BaseChannelReport::Reduce()

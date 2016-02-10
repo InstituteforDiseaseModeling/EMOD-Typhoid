@@ -33,12 +33,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimpleEventCoordinator.h"
 #include "CoverageByNodeEventCoordinator.h"
 #include "CalendarEventCoordinator.h"
+#include "NodeSet.h"
 
 static const char * _module = "CampaignEvent";
 json::Object Kernel::CampaignEventFactory::ceSchema;
 
 namespace Kernel
 {
+    // silly hack to get GCC not to resolve these whole classes away as unused.
+    //IMPLEMENT_FACTORY_REGISTERED(NodeSetAll)
+    //IMPLEMENT_FACTORY_REGISTERED(NodeSetNodeList)
+    //IMPLEMENT_FACTORY_REGISTERED(NodeSetPolygon)
+
     using namespace std;
     // CampaignEventFactory
     ICampaignEventFactory * CampaignEventFactory::_instance = nullptr;

@@ -1,0 +1,54 @@
+{
+    "Campaign_Name": "Initial Seeding", 
+    "Events": [
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.05, 
+                "Intervention_Config": {
+                    "Antigen": 0, 
+                    "Genome": 0, 
+                    "Outbreak_Source": "PrevalenceIncrease", 
+                    "class": "OutbreakIndividual"
+                }, 
+                "Target_Demographic": "Everyone", 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "Outbreak", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Day": 4, 
+            "class": "CampaignEvent"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 1.0, 
+                "Intervention_Config": {
+                    "Actual_IndividualIntervention_Configs": [
+                        {
+                            "Dosing_Type": "FullTreatmentParasiteDetect", 
+                            "Drug_Type": "Chloroquine", 
+                            "class": "AntimalarialDrug"
+                        }
+                    ], 
+                    "Delay_Distribution": "UNIFORM_DURATION", 
+                    "Delay_Period_Max": 1, 
+                    "Delay_Period_Min": 0, 
+                    "class": "DelayedIntervention"
+                }, 
+                "Number_Repetitions": 2, 
+                "Target_Age_Max": 125, 
+                "Target_Age_Min": 0, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 40, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Day": 30, 
+            "class": "CampaignEvent"
+        }
+    ], 
+    "Use_Defaults": 1
+}

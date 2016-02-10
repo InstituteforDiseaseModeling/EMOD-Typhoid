@@ -15,7 +15,7 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
         "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_COMPLEX" 
     },
-    "Default_Config_Path": "defaults\\malaria_default_config.json",
+    "Default_Config_Path": "defaults/malaria_default_config.json",
     "PRIMARY": {
         "Config_Name": "68_Malaria_Barcode_Genetics",
         "Custom_Reports_Filename" : "custom_reports.json",

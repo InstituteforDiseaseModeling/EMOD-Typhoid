@@ -45,7 +45,7 @@ namespace Kernel
     }
 
     // ctor
-    StandardInterventionDistributionEventCoordinator::StandardInterventionDistributionEventCoordinator()
+    StandardInterventionDistributionEventCoordinator::StandardInterventionDistributionEventCoordinator() 
     : parent(nullptr)
     , distribution_complete(false)
     , num_repetitions(-1)
@@ -54,7 +54,7 @@ namespace Kernel
     , tsteps_since_last(0)
     , include_emigrants(false)
     , include_immigrants(false)
-    , _di( nullptr )
+    , _di( nullptr ) 
     , demographic_restrictions()
     {
         LOG_DEBUG("StandardInterventionDistributionEventCoordinator ctor\n");
@@ -300,7 +300,7 @@ namespace Kernel
                     return false;
                 }
             }
-            LOG_DEBUG("Individual meets demographic targeting criteria\n");
+            LOG_DEBUG("Individual meets demographic targeting criteria\n"); 
 
             if (!TargetedIndividualIsCovered(ihec))
             {
@@ -455,7 +455,7 @@ namespace Kernel
     )
     {
         LOG_INFO("Individual arriving at node receiving intervention. TODO: enforce demographic and other qualifiers.\n");
-        float incrementalCostOut = 0.0f;
+        float incrementalCostOut = 0.0f; 
         visitIndividualCallback( pInd, incrementalCostOut, nullptr /* campaign cost observer */ );
     }
 }
@@ -485,5 +485,5 @@ namespace Kernel
         ar & ec.node_suids;
     }
 }
-
 #endif
+

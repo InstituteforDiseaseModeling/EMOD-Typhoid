@@ -242,6 +242,7 @@ time.txt
 status.txt
 Transitions.json
 
+.hg
 /Regression/reports/
 componentTests/testdata/NodeDemographicsTest/output/DefaultDemographics.json
 componentTests/invalid.json

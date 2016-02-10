@@ -97,7 +97,9 @@ namespace Kernel
 
     IArchive& JsonFullWriter::operator&(uint64_t& u64)
     {
+#if defined(WIN32)
         m_writer->Uint64(u64);
+#endif
         return *this;
     }
 
@@ -121,7 +123,9 @@ namespace Kernel
 
     IArchive& JsonFullWriter::operator&( jsonConfigurable::ConstrainedString& cs )
     {
+#if defined(WIN32)
         this->operator&( (std::string)cs );
+#endif
         return *this;
     }
 
