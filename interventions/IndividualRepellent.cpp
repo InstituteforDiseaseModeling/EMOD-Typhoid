@@ -26,23 +26,34 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfig( "Durability_Time_Profile", durability_time_profile, inputJson, MetadataDescriptor::Enum("Durability_Time_Profile", SIR_Durability_Time_Profile_DESC_TEXT, MDD_ENUM_ARGS(InterventionDurabilityProfile)) );
-        return JsonConfigurable::Configure( inputJson );
+        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+        }
+        return configured;
     }
 
     SimpleIndividualRepellent::SimpleIndividualRepellent()
-        : durability_time_profile( InterventionDurabilityProfile::BOXDURABILITY )
-        , current_blockingrate(0.0f)
-        , current_killingrate(0.0f)
-        , primary_decay_time_constant(0.0f)
-        , secondary_decay_time_constant(0.0f)
+        : killing_effect( nullptr )
+        , blocking_effect( nullptr )
+        , current_killingrate( 0.0f )
+        , current_blockingrate( 0.0f )
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
-        initConfigTypeMap("Primary_Decay_Time_Constant", &primary_decay_time_constant, SIR_Primary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
-        initConfigTypeMap("Secondary_Decay_Time_Constant", &secondary_decay_time_constant, SIR_Secondary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
-        initConfigTypeMap("Blocking_Rate", &current_blockingrate, SIR_Blocking_Rate_DESC_TEXT, 0.0, 1.0, 1.0);
-        //initConfigTypeMap("Killing_Rate", &current_killingrate, SIR_Killing_Rate_DESC_TEXT, 0.0, 1.0, 0.0); // Force individual repellent to have no configurable killing here (EAW)
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, SIR_Cost_To_Consumer_DESC_TEXT, 0, 999999, 8.0);
+    }
+
+    SimpleIndividualRepellent::SimpleIndividualRepellent( const SimpleIndividualRepellent& master )
+    : BaseIntervention( master )
+    {
+        killing_config = master.killing_config;
+        killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        blocking_config = master.blocking_config;
+        blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
     }
 
     bool
@@ -67,52 +78,17 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IIndividualRepellentConsumer", "IIndividualHumanContext" );
         }
+        current_killingrate = killing_effect->Current();
+        current_blockingrate = blocking_effect->Current();
     }
 
     void SimpleIndividualRepellent::Update( float dt )
     {
-        if(durability_time_profile == (int)(InterventionDurabilityProfile::BOXDECAYDURABILITY))
-        {
-            if(primary_decay_time_constant > 0)
-            {
-                primary_decay_time_constant -= dt;
-            }
-            else
-            {
-                if(secondary_decay_time_constant > dt)
-                {
-                    current_killingrate *= (1-dt/secondary_decay_time_constant);
-                    current_blockingrate *= (1-dt/secondary_decay_time_constant);
-                }
-                else
-                {
-                    current_killingrate = 0;
-                    current_blockingrate = 0;
-                }
-            }
-        }
-        else if(durability_time_profile == (int)(InterventionDurabilityProfile::DECAYDURABILITY))
-        {
-            if(primary_decay_time_constant > dt)
-                current_killingrate *= (1-dt/primary_decay_time_constant);
-            else
-                current_killingrate = 0;
+        killing_effect->Update(dt);
+        blocking_effect->Update(dt);
+        current_killingrate = killing_effect->Current();
+        current_blockingrate = blocking_effect->Current();
 
-            if(secondary_decay_time_constant > dt)
-                current_blockingrate *= (1-dt/secondary_decay_time_constant);
-            else
-                current_blockingrate = 0;
-        }
-        else if(durability_time_profile == (int)(InterventionDurabilityProfile::BOXDURABILITY))
-        {
-            primary_decay_time_constant -= dt;
-            if(primary_decay_time_constant < 0)
-                current_killingrate = 0;
-
-            secondary_decay_time_constant -= dt;
-            if(secondary_decay_time_constant < 0)
-                current_blockingrate = 0;
-        }
         if( ihmc )
         {
             ihmc->UpdateProbabilityOfIndRepBlocking( current_blockingrate );
@@ -176,11 +152,8 @@ namespace Kernel {
         LOG_DEBUG("(De)serializing SimpleIndividualRepellent\n");
 
         boost::serialization::void_cast_register<SimpleIndividualRepellent, IDistributableIntervention>();
-        ar & obj.durability_time_profile;
-        ar & obj.current_blockingrate;
-        ar & obj.current_killingrate;
-        ar & obj.primary_decay_time_constant;
-        ar & obj.secondary_decay_time_constant;
+        ar & obj.blocking_effect;
+        ar & obj.killing_effect;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
     }
 }

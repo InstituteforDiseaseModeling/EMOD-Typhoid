@@ -20,6 +20,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
 #include "Configure.h"
+#include "WaningEffect.h"
 
 namespace Kernel
 {
@@ -44,6 +45,7 @@ namespace Kernel
 
     public:
         SimpleVaccine();
+        SimpleVaccine( const SimpleVaccine& );
         virtual ~SimpleVaccine() { }
         virtual int AddRef() { return BaseIntervention::AddRef(); }
         virtual int Release() { return BaseIntervention::Release(); }
@@ -65,15 +67,13 @@ namespace Kernel
         // context for this intervention--does not need to be reset upon migration, it is just for GiveVaccine()
         IIndividualHumanContext *parent;
 
-    protected:
         int   vaccine_type;
         float vaccine_take;
         float current_reducedacquire;
         float current_reducedtransmit;
         float current_reducedmortality;
-        InterventionDurabilityProfile::Enum durability_time_profile;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
+        WaningConfig   waning_config;
+        IWaningEffect* waning_effect;
         IVaccineConsumer * ivc; // interventions container
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

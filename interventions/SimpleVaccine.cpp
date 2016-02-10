@@ -42,12 +42,7 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfigTypeMap("Vaccine_Take", &vaccine_take, SV_Vaccine_Take_DESC_TEXT, 0.0, 1.0, 1.0 );
-        initConfig( "Durability_Time_Profile", durability_time_profile, inputJson, MetadataDescriptor::Enum("Durability_Time_Profile", SV_Durability_Time_Profile_DESC_TEXT, MDD_ENUM_ARGS(InterventionDurabilityProfile) ) );
-        if ( durability_time_profile == InterventionDurabilityProfile::BOXDECAYDURABILITY || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap("Secondary_Decay_Time_Constant", &secondary_decay_time_constant, SV_Secondary_Decay_Time_Constant_DESC_TEXT, 0, INFINITE_TIME);
-        }
+        initConfigTypeMap("Vaccine_Take", &vaccine_take, SV_Vaccine_Take_DESC_TEXT, 0.0, 1.0, 1.0 ); 
 
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("Vaccine_Type", SV_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(SimpleVaccineType)));
     
@@ -73,15 +68,21 @@ namespace Kernel
     }
 
     SimpleVaccine::SimpleVaccine()
-    : parent(NULL)
+    : parent( nullptr )
     , vaccine_type(SimpleVaccineType::Generic)
     , current_reducedtransmit(0.0)
     , current_reducedacquire(0.0)
     , current_reducedmortality(0.0)
-    , secondary_decay_time_constant(0.0)
+    , waning_effect( nullptr )
     {
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, SV_Cost_To_Consumer_DESC_TEXT, 0, 999999, 10.0);
-        initConfigTypeMap("Primary_Decay_Time_Constant", &primary_decay_time_constant, SV_Primary_Decay_Time_Constant_DESC_TEXT, 0, INFINITE_TIME);
+    }
+
+    SimpleVaccine::SimpleVaccine( const SimpleVaccine& master )
+    : BaseIntervention( master )
+    {
+        waning_config = master.waning_config;
+        waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
@@ -114,56 +115,15 @@ namespace Kernel
         return success;
     }
 
-
     void SimpleVaccine::Update( float dt )
     {
-        if(durability_time_profile == InterventionDurabilityProfile::BOXDECAYDURABILITY)
-        {
-            if(primary_decay_time_constant > 0)
-            {
-                primary_decay_time_constant -= dt;
-            }
-            else
-            {
-                if(secondary_decay_time_constant > dt)
-                {
-                    current_reducedacquire   *= (1-dt/secondary_decay_time_constant);
-                    current_reducedtransmit  *= (1-dt/secondary_decay_time_constant);
-                    current_reducedmortality *= (1-dt/secondary_decay_time_constant);
-                }
-                else
-                {
-                    current_reducedacquire   = 0;
-                    current_reducedtransmit  = 0;
-                    current_reducedmortality = 0;
-                }
-            }
-        }
-        else if(durability_time_profile == InterventionDurabilityProfile::DECAYDURABILITY)
-        {
-            if(primary_decay_time_constant > dt)
-            {
-                current_reducedacquire   *= (1-dt/primary_decay_time_constant);
-                current_reducedtransmit  *= (1-dt/primary_decay_time_constant);
-                current_reducedmortality *= (1-dt/primary_decay_time_constant);
-            }
-            else
-            {
-                current_reducedacquire   = 0;
-                current_reducedtransmit  = 0;
-                current_reducedmortality = 0;
-            }
-        }
-        else if(durability_time_profile == InterventionDurabilityProfile::BOXDURABILITY)
-        {
-            primary_decay_time_constant -= dt;
-            if(primary_decay_time_constant < 0)
-            {
-                current_reducedacquire   = 0;
-                current_reducedtransmit  = 0;
-                current_reducedmortality = 0;
-            }
-        }
+        waning_effect->Update(dt);
+
+        current_reducedacquire = waning_effect->Current();
+        current_reducedtransmit  = waning_effect->Current();
+        current_reducedmortality  = waning_effect->Current();
+        // TBD: This is wrong for case of vaccine that has all 3 effects.
+
         assert(ivc);
         ivc->UpdateVaccineAcquireRate( current_reducedacquire );
         ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
@@ -241,9 +201,6 @@ namespace Kernel
         root->Insert("current_reducedacquire", current_reducedacquire);
         root->Insert("current_reducedtransmit",current_reducedtransmit);
         root->Insert("current_reducedmortality",current_reducedmortality);
-        root->Insert("durability_time_profile", (int)durability_time_profile);
-        root->Insert("primary_decay_time_constant",primary_decay_time_constant);
-        root->Insert("secondary_decay_time_constant", secondary_decay_time_constant);
         
         root->Insert("BaseIntervention");
         BaseIntervention::JSerialize(root, helper);
@@ -260,10 +217,6 @@ namespace Kernel
         current_reducedacquire = (*doc)["current_reducedacquire"].GetDouble();
         current_reducedtransmit = (*doc)["current_reducedtransmit"].GetDouble();
         current_reducedmortality = (*doc)["current_reducedmortality"].GetDouble();
-        durability_time_profile = (InterventionDurabilityProfile::Enum)((*doc)["durability_time_profile"].GetInt());
-
-        primary_decay_time_constant = (*doc)["primary_decay_time_constant"].GetDouble();
-        secondary_decay_time_constant = (*doc)["secondary_decay_time_constant"].GetDouble();
 
         // Deserialize the base class
         BaseIntervention::JDeserialize((IJsonObjectAdapter*)&(*doc)["BaseIntervention"],helper);
@@ -290,9 +243,7 @@ namespace Kernel {
         ar& vacc.current_reducedacquire;
         ar& vacc.current_reducedtransmit;
         ar& vacc.current_reducedmortality;
-        ar& vacc.durability_time_profile;
-        ar& vacc.primary_decay_time_constant;
-        ar& vacc.secondary_decay_time_constant;
+        ar& vacc.waning_effect;
         ar & boost::serialization::base_object<BaseIntervention>(vacc);
     }
     template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, Kernel::SimpleVaccine&, unsigned int);

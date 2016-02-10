@@ -142,7 +142,6 @@ namespace Kernel {
 
         boost::serialization::void_cast_register<SimpleBednet, IDistributableIntervention>();
         ar & bn.bednet_type;
-        ar & bn.durability_time_profile;
         ar & bn.blocking_effect;
         ar & bn.killing_effect;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(bn);

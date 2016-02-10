@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
 #include "Configure.h"
+#include "WaningEffect.h"
 
 namespace Kernel
 {
@@ -30,6 +31,7 @@ namespace Kernel
 
     public:        
         SimpleVectorControlNode();
+        SimpleVectorControlNode( const SimpleVectorControlNode& );
         virtual ~SimpleVectorControlNode();
 
         // INodeDistributableIntervention
@@ -49,9 +51,10 @@ namespace Kernel
         float killing;
         float reduction;
         VectorHabitatType::Enum habitat_target;
-        InterventionDurabilityProfile::Enum durability_time_profile;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   blocking_config;
+        IWaningEffect* blocking_effect;
          
         INodeVectorInterventionEffectsApply *invic;
 

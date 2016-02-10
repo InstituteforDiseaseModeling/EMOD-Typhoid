@@ -33,11 +33,6 @@ namespace Kernel
     {
         vaccine_take = 1.0; // immunoglobulin always takes in the model
 
-        initConfig( "Durability_Time_Profile", durability_time_profile, inputJson, MetadataDescriptor::Enum("Durability_Time_Profile", SI_Durability_Time_Profile_DESC_TEXT, MDD_ENUM_ARGS(InterventionDurabilityProfile) ) );
-        if ( durability_time_profile == InterventionDurabilityProfile::BOXDECAYDURABILITY || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap("Secondary_Decay_Time_Constant", &secondary_decay_time_constant, SI_Secondary_Decay_Time_Constant_DESC_TEXT, 0, INFINITE_TIME);
-        }
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("immunoglobulin_type", SI_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(ImmunoglobulinType))); // required? 
     
         initConfigTypeMap("Reduced_Acquire", &current_reducedacquire, SI_Reduced_Acquire_DESC_TEXT, 0, 1, 1);

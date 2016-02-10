@@ -33,23 +33,32 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfig( "Durability_Time_Profile", durability_time_profile, inputJson, MetadataDescriptor::Enum("Durability_Time_Profile", HM_Durability_Time_Profile_DESC_TEXT, MDD_ENUM_ARGS(InterventionDurabilityProfile)) );
+        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+        }
         return JsonConfigurable::Configure( inputJson );
     }
 
     SimpleHousingModification::SimpleHousingModification()
-        : durability_time_profile( InterventionDurabilityProfile::BOXDURABILITY )
-        , current_blockingrate(0.0f)
-        , current_killingrate(0.0f)
-        , primary_decay_time_constant(0.0f)
-        , secondary_decay_time_constant(0.0f)
+        : killing_effect( nullptr )
+        , blocking_effect( nullptr )
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
-        initConfigTypeMap("Primary_Decay_Time_Constant", &primary_decay_time_constant, HM_Primary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
-        initConfigTypeMap("Secondary_Decay_Time_Constant", &secondary_decay_time_constant, HM_Secondary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650);
-        initConfigTypeMap("Blocking_Rate", &current_blockingrate, HM_Blocking_Rate_DESC_TEXT, 0.0, 1.0, 1.0);
-        initConfigTypeMap("Killing_Rate", &current_killingrate, HM_Killing_Rate_DESC_TEXT, 0.0, 1.0, 1.0);
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, HM_Cost_To_Consumer_DESC_TEXT, 0, 999999, 8.0);
+    }
+
+    SimpleHousingModification::SimpleHousingModification( const SimpleHousingModification& master )
+    : BaseIntervention( master )
+    {
+        killing_config = master.killing_config;
+        killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        blocking_config = master.blocking_config;
+        blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
     }
 
     bool
@@ -80,48 +89,11 @@ namespace Kernel
 
     void SimpleHousingModification::Update( float dt )
     {
-        if(durability_time_profile == (int)(InterventionDurabilityProfile::BOXDECAYDURABILITY))
-        {
-            if(primary_decay_time_constant > 0)
-            {
-                primary_decay_time_constant -= dt;
-            }
-            else
-            {
-                if(secondary_decay_time_constant > dt)
-                {
-                    current_killingrate *= (1-dt/secondary_decay_time_constant);
-                    current_blockingrate *= (1-dt/secondary_decay_time_constant);
-                }
-                else
-                {
-                    current_killingrate = 0;
-                    current_blockingrate = 0;
-                }
-            }
-        }
-        else if(durability_time_profile == (int)(InterventionDurabilityProfile::DECAYDURABILITY))
-        {
-            if(primary_decay_time_constant > dt)
-                current_killingrate *= (1-dt/primary_decay_time_constant);
-            else
-                current_killingrate = 0;
+        killing_effect->Update(dt);
+        blocking_effect->Update(dt);
+        float current_killingrate = killing_effect->Current();
+        float current_blockingrate = blocking_effect->Current();
 
-            if(secondary_decay_time_constant > dt)
-                current_blockingrate *= (1-dt/secondary_decay_time_constant);
-            else
-                current_blockingrate = 0;
-        }
-        else if(durability_time_profile == (int)(InterventionDurabilityProfile::BOXDURABILITY))
-        {
-            primary_decay_time_constant -= dt;
-            if(primary_decay_time_constant < 0)
-                current_killingrate = 0;
-
-            secondary_decay_time_constant -= dt;
-            if(secondary_decay_time_constant < 0)
-                current_blockingrate = 0;
-        }
         if( ihmc )
         {
             ihmc->ApplyHouseBlockingProbability( current_blockingrate );
