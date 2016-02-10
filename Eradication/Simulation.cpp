@@ -107,6 +107,7 @@ namespace Kernel
         , campaign_filename()
         , loadbalance_filename()
         , Run_Number(0)
+        , can_support_family_trips( false )
         , demographics_factory(nullptr)
         , new_node_observers()
     {
@@ -965,6 +966,8 @@ namespace Kernel
             throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "IMigrationInfoFactory" );
         }
 
+        can_support_family_trips = IndividualHumanConfig::CanSupportFamilyTrips( migration_factory );
+
         release_assert( m_simConfigObj );
         if( (m_simConfigObj->migration_structure != MigrationStructure::NO_MIGRATION) &&
             m_simConfigObj->demographics_initial &&
@@ -1131,6 +1134,11 @@ namespace Kernel
     void Simulation::PostMigratingIndividualHuman(IIndividualHuman *i)
     {
         migratingIndividualQueues[nodeRankMap.GetRankFromNodeSuid(i->GetMigrationDestination())].push_back(i);
+    }
+
+    bool Simulation::CanSupportFamilyTrips() const
+    {
+        return can_support_family_trips;
     }
 
     //------------------------------------------------------------------

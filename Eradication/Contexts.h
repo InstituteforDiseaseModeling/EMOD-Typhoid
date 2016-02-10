@@ -72,6 +72,7 @@ namespace Kernel
 
         // migration
         virtual void PostMigratingIndividualHuman(IIndividualHuman *i) = 0;
+        virtual bool CanSupportFamilyTrips() const = 0;
 
         // events
         virtual void DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier ) = 0;

@@ -211,7 +211,7 @@ namespace Kernel
     {
         event_context_host->TriggerNodeEventObservers( individual->GetEventContext(), IndividualEventTriggerType::STIPreEmigrating );
 
-        IIndividualHumanSTI* sti_individual;
+        IIndividualHumanSTI* sti_individual=nullptr;
         if (individual->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualSTI", "IndividualHuman" );

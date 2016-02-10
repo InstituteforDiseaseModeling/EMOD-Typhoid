@@ -198,5 +198,13 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
 SConscript('Eradication/SConscript')
 if os.sys.platform == 'win32':
     SConscript('reporters/STI_Reports_SConscript')
-    #SConscript('reporters/TB_Reports_SConscript')
-
+    SConscript('reporters/TB_Reports_SConscript')
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # !!! Beware on scenarios with large nodes and populations
+    # !!! These can create gigabytes of data and cause scenarios
+    # !!! to take twice as long.
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #SConscript('reporters/NodeDemographics_Reports_SConscript')
+    #SConscript('reporters/VectorStats_Reports_SConscript')
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    

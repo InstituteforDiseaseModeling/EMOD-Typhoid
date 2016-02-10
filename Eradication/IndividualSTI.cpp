@@ -845,7 +845,10 @@ namespace Kernel
         auto society = sti_node->GetSociety();
         auto manager = sti_node->GetRelationshipManager();
 
-        for( auto p_rel : GetRelationships() )
+        // copy the set of pointers so we can iterate through one and delete from the other.
+        RelationshipSet_t tmp_relationships = relationships;
+
+        for( auto p_rel : tmp_relationships )
         {
             IRelationship* p_existing_rel = manager->Immigrate( p_rel );
             p_existing_rel->Resume( manager, society, this );
@@ -856,10 +859,10 @@ namespace Kernel
             // ------------------------------------------------------------------------
             if( p_rel != p_existing_rel )
             {
-                // MULTI-CORE:  this is what we want to do but let's think about this more
-                release_assert( false );
-                RemoveRelationship( p_rel );
-                AddRelationship( p_existing_rel );
+                relationships.erase( p_rel );
+                relationships.insert( p_existing_rel );
+                delete p_rel;
+                p_rel = nullptr;
             }
         }
     }
