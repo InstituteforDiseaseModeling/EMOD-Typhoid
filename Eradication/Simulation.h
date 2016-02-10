@@ -75,6 +75,7 @@ namespace Kernel
 
         // Migration
         virtual void PostMigratingIndividualHuman(IIndividualHuman *i) override;
+        virtual bool CanSupportFamilyTrips() const override;
 
         virtual void DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier ) override;
         virtual void UpdateNodeEvents() override;
@@ -214,6 +215,7 @@ namespace Kernel
         std::string campaign_filename;
         std::string loadbalance_filename;
         int Run_Number;
+        bool can_support_family_trips;
 
         NodeDemographicsFactory* demographics_factory;
 #pragma warning( pop )

@@ -42,10 +42,12 @@ namespace Kernel
     float IndividualHumanConfig::air_roundtrip_prob = 0.0f;
     float IndividualHumanConfig::region_roundtrip_prob = 0.0f;
     float IndividualHumanConfig::sea_roundtrip_prob = 0.0f;
+    float IndividualHumanConfig::family_roundtrip_prob = 0.0f;
     float IndividualHumanConfig::local_roundtrip_duration_rate = 0.0f;
     float IndividualHumanConfig::air_roundtrip_duration_rate = 0.0f;
     float IndividualHumanConfig::region_roundtrip_duration_rate = 0.0f;
     float IndividualHumanConfig::sea_roundtrip_duration_rate = 0.0f;
+    float IndividualHumanConfig::family_roundtrip_duration_rate = 0.0f;
     int IndividualHumanConfig::infection_updates_per_tstep = 0.0f;
     MigrationPattern::Enum IndividualHumanConfig::migration_pattern = MigrationPattern::RANDOM_WALK_DIFFUSION;
     bool IndividualHumanConfig::immunity = false;
@@ -63,6 +65,29 @@ namespace Kernel
     bool IndividualHumanConfig::IsAdultAge( float years )
     {
         return (min_adult_age_years <= years);
+    }
+
+    bool IndividualHumanConfig::CanSupportFamilyTrips( IMigrationInfoFactory* pmif )
+    {
+        bool not_supported = (migration_pattern != MigrationPattern::SINGLE_ROUND_TRIPS)
+                          || (pmif->IsEnabled( MigrationType::LOCAL_MIGRATION    ) && (local_roundtrip_prob  != 1.0))
+                          || (pmif->IsEnabled( MigrationType::AIR_MIGRATION      ) && (air_roundtrip_prob    != 1.0))
+                          || (pmif->IsEnabled( MigrationType::REGIONAL_MIGRATION ) && (region_roundtrip_prob != 1.0))
+                          || (pmif->IsEnabled( MigrationType::SEA_MIGRATION      ) && (sea_roundtrip_prob    != 1.0));
+
+        if( not_supported && pmif->IsEnabled( MigrationType::FAMILY_MIGRATION ) )
+        {
+            std::stringstream msg;
+            msg << "Invalid Configuration for Family Trips." << std::endl;
+            msg << "Migration_Pattern must be SINGLE_ROUND_TRIPS and the 'XXX_Migration_Roundtrip_Probability' must equal 1.0 if that Migration Type is enabled." << std::endl;
+            msg << "Migration_Pattern = " << MigrationPattern::pairs::lookup_key( migration_pattern ) << std::endl;
+            msg << "Enable_Local_Migration = "    << pmif->IsEnabled( MigrationType::LOCAL_MIGRATION    ) << " and Local_Migration_Roundtrip_Probability = "    << local_roundtrip_prob  << std::endl;
+            msg << "Enable_Air_Migration = "      << pmif->IsEnabled( MigrationType::AIR_MIGRATION      ) << " and Air_Migration_Roundtrip_Probability = "      << air_roundtrip_prob    << std::endl;
+            msg << "Enable_Regional_Migration = " << pmif->IsEnabled( MigrationType::REGIONAL_MIGRATION ) << " and Regional_Migration_Roundtrip_Probability = " << region_roundtrip_prob << std::endl;
+            msg << "Enable_Sea_Migration = "      << pmif->IsEnabled( MigrationType::SEA_MIGRATION      ) << " and Sea_Migration_Roundtrip_Probability = "      << sea_roundtrip_prob    << std::endl;
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        }
+        return !not_supported;
     }
 
     //------------------------------------------------------------------
@@ -120,11 +145,13 @@ namespace Kernel
                 air_roundtrip_prob        = 1.0f;
                 region_roundtrip_prob     = 1.0f;
                 sea_roundtrip_prob        = 1.0f;
+                family_roundtrip_prob     = 1.0f;
 
                 local_roundtrip_duration_rate  = 0.0f;
                 air_roundtrip_duration_rate    = 0.0f;
                 region_roundtrip_duration_rate = 0.0f;
                 sea_roundtrip_duration_rate    = 0.0f;
+                family_roundtrip_duration_rate = 0.0f;
 
                 RegisterWaypointsHomeParameters();
             }
@@ -146,6 +173,10 @@ namespace Kernel
         if( sea_roundtrip_duration_rate != 0 )
         {
              sea_roundtrip_duration_rate = 1.0f/sea_roundtrip_duration_rate;
+        }
+        if( family_roundtrip_duration_rate != 0 )
+        {
+             family_roundtrip_duration_rate = 1.0f/family_roundtrip_duration_rate;
         }
 
         if (superinfection && (max_ind_inf < 2))
@@ -172,11 +203,14 @@ namespace Kernel
         initConfigTypeMap( "Air_Migration_Roundtrip_Probability", &air_roundtrip_prob, Air_Migration_Roundtrip_Probability_DESC_TEXT, 0.0f, 1.0f, 0.8f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
         initConfigTypeMap( "Regional_Migration_Roundtrip_Probability", &region_roundtrip_prob, Regional_Migration_Roundtrip_Probability_DESC_TEXT, 0.0f, 1.0f, 0.1f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
         initConfigTypeMap( "Sea_Migration_Roundtrip_Probability", &sea_roundtrip_prob, Sea_Migration_Roundtrip_Probability_DESC_TEXT, 0.0f, 1.0f, 0.25f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
+        //initConfigTypeMap( "Family_Migration_Roundtrip_Probability", &family_roundtrip_prob, Family_Migration_Roundtrip_Probability_DESC_TEXT, 0.0f, 1.0f, 0.25f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
+        family_roundtrip_prob = 1.0;
 
         initConfigTypeMap( "Local_Migration_Roundtrip_Duration", &local_roundtrip_duration_rate, Local_Migration_Roundtrip_Duration_DESC_TEXT, 0.0f, 10000.0f, 1.0f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
         initConfigTypeMap( "Air_Migration_Roundtrip_Duration", &air_roundtrip_duration_rate, Air_Migration_Roundtrip_Duration_DESC_TEXT, 0.0f, 10000.0f, 1.0f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
         initConfigTypeMap( "Regional_Migration_Roundtrip_Duration", &region_roundtrip_duration_rate, Regional_Migration_Roundtrip_Duration_DESC_TEXT, 0.0f, 10000.0f, 1.0f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
         initConfigTypeMap( "Sea_Migration_Roundtrip_Duration", &sea_roundtrip_duration_rate, Sea_Migration_Roundtrip_Duration_DESC_TEXT, 0.0f, 10000.0f, 1.0f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
+        initConfigTypeMap( "Family_Migration_Roundtrip_Duration", &family_roundtrip_duration_rate, Family_Migration_Roundtrip_Duration_DESC_TEXT, 0.0f, 10000.0f, 1.0f, "Migration_Pattern", "SINGLE_ROUND_TRIPS"  );
     }
 
     void IndividualHumanConfig::RegisterWaypointsHomeParameters()
@@ -850,7 +884,7 @@ namespace Kernel
                 {
                     return ;
                 }
-                if( migration_type == migration_info->GetFamilyMigrationType() )
+                else if( migration_type == MigrationType::FAMILY_MIGRATION )
                 {
                     waiting_for_family_trip = true ;
 
@@ -875,6 +909,8 @@ namespace Kernel
                         case MigrationType::AIR_MIGRATION:      return_prob = air_roundtrip_prob;    break;
                         case MigrationType::REGIONAL_MIGRATION: return_prob = region_roundtrip_prob; break;
                         case MigrationType::SEA_MIGRATION:      return_prob = sea_roundtrip_prob;    break;
+                        case MigrationType::FAMILY_MIGRATION:   return_prob = family_roundtrip_prob; break;
+                        case MigrationType::INTERVENTION_MIGRATION:
                         default:
                             throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "migration_type", migration_type, "MigrationType" );
                     }
@@ -917,6 +953,8 @@ namespace Kernel
             case MigrationType::AIR_MIGRATION:      return_duration_rate = air_roundtrip_duration_rate;    break;
             case MigrationType::REGIONAL_MIGRATION: return_duration_rate = region_roundtrip_duration_rate; break;
             case MigrationType::SEA_MIGRATION:      return_duration_rate = sea_roundtrip_duration_rate;    break;
+            case MigrationType::FAMILY_MIGRATION:   return_duration_rate = family_roundtrip_duration_rate; break;
+            case MigrationType::INTERVENTION_MIGRATION:
             default:
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "trip_type", trip_type, "MigrationType" );
         }

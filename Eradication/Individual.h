@@ -49,6 +49,7 @@ namespace Kernel
 
     public:
         static bool IsAdultAge( float years );
+        static bool CanSupportFamilyTrips( IMigrationInfoFactory* pmi );
 
     protected:
         static bool aging;
@@ -61,12 +62,14 @@ namespace Kernel
         static float air_roundtrip_prob;
         static float region_roundtrip_prob;
         static float sea_roundtrip_prob;
+        static float family_roundtrip_prob;
 
         // duration rates
         static float local_roundtrip_duration_rate;
         static float air_roundtrip_duration_rate;
         static float region_roundtrip_duration_rate;
         static float sea_roundtrip_duration_rate;
+        static float family_roundtrip_duration_rate;
 
         static int infection_updates_per_tstep;
         static bool immunity;

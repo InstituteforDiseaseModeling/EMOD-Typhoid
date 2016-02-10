@@ -17,7 +17,10 @@
             "Migration_Model": "FIXED_RATE_MIGRATION", 
             "Migration_Pattern": "SINGLE_ROUND_TRIPS", 
             "Enable_Migration_Heterogeneity": 0, 
-            "Family_Migration_Type" : "NO_MIGRATION",
+            "Enable_Family_Migration": 0, 
+            "Family_Migration_Filename": "", 
+            "Family_Migration_Roundtrip_Duration" : 0.0,
+            "x_Family_Migration": 1,
 
             "Enable_Local_Migration": 1, 
             "Local_Migration_Filename": "3X3_Gender_Local.bin", 

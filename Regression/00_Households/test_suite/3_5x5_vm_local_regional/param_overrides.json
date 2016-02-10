@@ -33,17 +33,19 @@
                "Regional_Migration_Roundtrip_Probability" : 1.0,
                "Sea_Migration_Roundtrip_Duration"         : 100.0,
                "Sea_Migration_Roundtrip_Probability"      : 1.0,
-               "Family_Migration_Type"                    : "SEA_MIGRATION",
+               "Family_Migration_Roundtrip_Duration"      : 100.0,
 
-
+               "Enable_Family_Migration": 1, 
+               "Family_Migration_Filename": "Work_Migration.bin", 
+               "x_Family_Migration": 1,
 
                "REGIONAL": {
                     "Enable_Regional_Migration": 1,
                     "Regional_Migration_Filename": "Regional_Migration.bin"
                }, 
                "SEA": {
-                    "Enable_Sea_Migration": 1,
-                    "Sea_Migration_Filename": "Work_Migration.bin"
+                    "Enable_Sea_Migration": 0,
+                    "Sea_Migration_Filename": ""
                }
           }, 
           "PRIMARY": {
