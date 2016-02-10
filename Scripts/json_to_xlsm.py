@@ -56,22 +56,28 @@ with zipfile.ZipFile(config_xlsm_path, "r") as z:
 cj = json.loads( open( config_json_path ).read() )["parameters"]
 print( "Converting json to xlsx file...." )
 
+control_sheet = 0
+sheet_num = 0
 # STEP 3) Create an xlsx file first by looking at every value in the reference workbook and replacing with the value in the json.
 wb = xlrd.open_workbook( sys.argv[1] ) 
 for sheet in wb.sheets():
-    for row_id in range(0,sheet.nrows):
-        row = sheet.row(row_id)
-        param_name = row[0].value
-        # param_value = row[1].value
-        # find param_name in config.json
-        if param_name in cj:
-	    if row[1].value != cj[ param_name ]:
-	        if not isinstance(cj[param_name],list):
-	            #print( "Replacing default value for " + param_name + " with config.json value of " + str( cj[ param_name ] ) )
-                    sheet._cell_values[row_id][1] = cj[ param_name ]
-	            print( "Replaced default value for " + param_name + " with config.json value of " + str( sheet.row(row_id)[1].value ) )
-	        else:
-                    sheet._cell_values[row_id][1] = str(cj[ param_name ])
+    sheet_num = sheet_num + 1
+    if sheet.name=="CONTROL":
+        control_sheet = sheet_num
+    else:
+        for row_id in range(0,sheet.nrows):
+            row = sheet.row(row_id)
+            param_name = row[0].value
+            # param_value = row[1].value
+            # find param_name in config.json
+            if param_name in cj:
+                if row[1].value != cj[ param_name ]:
+                    if not isinstance(cj[param_name],list):
+                        #print( "Replacing default value for " + param_name + " with config.json value of " + str( cj[ param_name ] ) )
+                        sheet._cell_values[row_id][1] = cj[ param_name ]
+                        print( "Replaced default value for " + param_name + " with config.json value of " + str( sheet.row(row_id)[1].value ) )
+                    else:
+                        sheet._cell_values[row_id][1] = str(cj[ param_name ])
 
 xlsBook = wb
 workbook = Workbook()
@@ -104,7 +110,7 @@ with zipfile.ZipFile(xlsx_path, "r") as z:
 subdir_path = os.path.join( xlsx_outpath, "xl/worksheets" )
 for ws_file in os.listdir( subdir_path ):
     if ws_file.startswith( "sheet" ) and ws_file.endswith( ".xml" ):
-        if ws_file == "sheet7.xml":
+        if ws_file == "sheet" + str(control_sheet) +".xml":
             continue
         src_path = os.path.join( subdir_path, ws_file )
         dest_path = os.path.join( outpath, "xl/worksheets", ws_file )
