@@ -5,7 +5,7 @@
         "____________SIMULATION___________": "",
         "Simulation_Duration": 7300, 
         "Simulation_Timestep": 1,
-        "Num_Cores": 1, 
+        "Num_Cores": 2, 
         "Run_Number": 1, 
         "logLevel_default": "WARNING", 
         
@@ -26,6 +26,7 @@
         "Migration_Model": "FIXED_RATE_MIGRATION",
         "Migration_Pattern": "SINGLE_ROUND_TRIPS",
         "Enable_Migration_Heterogeneity": 1, 
+        "Family_Migration_Type" : "NO_MIGRATION",
 
         "Local_Migration_Roundtrip_Duration"       : 100.0,
         "Local_Migration_Roundtrip_Probability"    : 1.0,
@@ -35,7 +36,6 @@
         "Sea_Migration_Roundtrip_Probability"      : 0.0,
         "Air_Migration_Roundtrip_Duration"         : 0.0,
         "Air_Migration_Roundtrip_Probability"      : 0.0,
-        "Family_Migration_Roundtrip_Duration"      : 0.0,
 
         "Enable_Local_Migration": 1,
         "Local_Migration_Filename": "LocalMigration_2_Nodes.bin",
@@ -53,17 +53,13 @@
         "Air_Migration_Filename": "",
         "x_Air_Migration": 1, 
 
-        "Enable_Family_Migration": 0, 
-        "Family_Migration_Filename": "", 
-        "x_Family_Migration": 1,
-
         "____________REPORTING___________": "",
 
 
         "____________REPLICATION_AND_DRUGS___________": "",
 
         "____________RARELY_CHANGED___________": "",
-        "Config_Name": "57_STI_Marital_Only_Relationship_Migration",
+        "Config_Name": "61_STI_Marital_Only_Relationship_Migration_Multicore",
         "Geography": "MigrationTest"
     }
 }
