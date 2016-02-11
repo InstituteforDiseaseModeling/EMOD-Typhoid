@@ -12,9 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <iomanip>      // std::setprecision
 
-#ifdef WIN32
-#endif
-
 #include "FileSystem.h"
 #include "Debug.h"
 #include "Report.h"
@@ -785,11 +782,13 @@ namespace Kernel
             LOG_VALID_F( "Serializing %d id-suid bimap entries.\n", count );
             for (auto& entry : local_map)
             {
+#if defined(WIN32)
                 writer_archive.startObject();
                     writer_archive.labelElement( "id" ) & uint32_t(entry.left);
                     uint32_t suid = entry.right.data;
                     writer_archive.labelElement( "suid") & suid;
                 writer_archive.endObject();
+#endif
             }
             writer_archive.endArray();
 
@@ -1022,12 +1021,7 @@ namespace Kernel
         nodeRankMap.Add( EnvPtr->MPI.Rank, node );
 
         notifyNewNodeObservers(node);
-    }
-
-    void Simulation::LoadCampaignFile()
-    {
-        loadCampaignFromFile( "campaign.json" );
-    }
+    } 
 
     void Simulation::loadCampaignFromFile( const std::string& campaignfilename )
     {
