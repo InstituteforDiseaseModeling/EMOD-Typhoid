@@ -3,6 +3,7 @@
 import SocketServer
 import socket
 import os
+import sys
 import time
 import json
 import shutil
@@ -15,6 +16,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
     running = False
     state = "STOPPED"
     timestep = 0
+    game_port = -1
 
     """
     The RequestHandler class for our server.
@@ -32,7 +34,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             return
 
         self.running = True
-        self.request.sendall( "hello!\nType \"RUN\", \"STEP\", or \"KILL\"\n" )
+        self.request.sendall( "hello!\nType \"RUN\", \"STEP\", \"KILL\", \"NEW_EVENT\", \"NEW_EVENT_COST\", or \"GET_BASELINE\".\n" )
+        self.ref_json = json.loads( open( "output/BinnedReport.json" ).read() )["Channels"]
         #self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
             # self.request is the TCP socket connected to the client
@@ -50,11 +53,15 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                     msg = self.kill_dtk() + "\n"
                 elif self.data == "STEP":
                     msg = self.pass_through( self.data )
+                elif self.data == "GET_BASELINE":
+                    msg = self.get_baseline( self.data )
                 elif self.data.startswith( "NEW_EVENT:" ):
                     print( "Received NEW_EVENT. Everything after colon better be valid json." )
-                    #pdb.set_trace()
                     msg = self.insert_new_camp_event_and_step_reload( self.data.strip( "NEW_EVENT:" ) )
                     print( msg )
+                elif self.data.startswith( "NEW_EVENT_COST:" ):
+                    print( "Received NEW_EVENT_COST. Everything after colon better be valid json." )
+                    msg = self.cost_proposed_event( self.data.strip( "NEW_EVENT_COST:" ) ) + "\n"
                 else:
                     msg = self.data + " is not a recognized command.\n"
                     print( msg )
@@ -67,21 +74,22 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
     def run_dtk(self):
         shutil.copy( "campaign_master.json", "campaign.json" )
-        game_port = 7886
-        os.putenv( "GAME_PORT", str(game_port) )
+        os.putenv( "GAME_PORT", str(self.game_port) )
         #exec_string = "../../build/Eradication_game --config config.json -I . -O testing &"
         #exec_string = "/home2/jbloedow/trunk/build/Eradication_game --config config.json -I . -O testing &"
-        exec_string = "/home2/jbloedow/trunk/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
+        #exec_string = "/home2/jbloedow/trunk/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
+        exec_string = "/home/jbloedow/EMOD/DtkTrunk-IDM/build/x64/Release/Eradication/Eradication --config config.json -I . -O testing &"
         dtk_run = os.system( exec_string )
         time.sleep(2)
         self.dtk_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.dtk_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.dtk_socket.connect(("localhost", game_port))
+        self.dtk_socket.connect(("localhost", self.game_port))
         status_report = json.loads( "{}" )
         status_report["status"] = "running"
+        status_report["Age_Bins_Max_Ages"] = [ 5*365.0, 12*365.0, 20*365.0, 55*365.0, 999999.0 ]
         self.state = "RUNNING"
         self.timestep = 0
-        return str( status_report )
+        return json.dumps( status_report )
 
     def kill_dtk(self):
         print( "Terminating all DTK instances." )
@@ -92,15 +100,35 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         status_report["status"] = "stopped"
         self.running = False
         self.state = "STOPPED"
-        return str( status_report )
+        return json.dumps( status_report )
+
+    def get_baseline(self, msg):
+        # open and read BinnedReport.json and send it back
+        return json.dumps( self.ref_json )
 
     def pass_through(self, msg):
+        #pdb.set_trace()
         self.dtk_socket.sendall( msg )
         data = self.dtk_socket.recv( 2000 )
-        data_json = json.loads(data)
-        data_json["Timestep"] = self.timestep
+        ic_json = json.loads(data.split('\n')[0])
+        binned_json = json.loads(data.split('\n')[1])
+
+        #print( "Not including averted cases yet since move to Binned Report. TBD. Pls be patient." )
+        cur = binned_json["New Clinical Cases"][0]
+        ref = self.ref_json["New Clinical Cases"]["Data"]
+        binned_json["New Clinical Cases Averted"] = []
+        for idx in range(0,5):
+            binned_json["New Clinical Cases Averted"].append( ref[idx][self.timestep] )
+
+        return_packet = {}
+        return_packet["InsetChart"] = ic_json
+        return_packet["Binned"] = json.dumps(binned_json).replace( "[[", "[" ).replace( "]]", "]")
+        return_packet["Timestep"] = self.timestep
+
+        return_string = (json.dumps(return_packet) + "\n").replace( "u'", "'" )
         self.timestep = self.timestep + 1
-        return (str(data_json) + "\n").replace( "u'", "'" )
+
+        return return_string
 
     def insert_new_camp_event_and_step_reload( self, new_event_params ):
         """
@@ -114,7 +142,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                      "Intervention": "BEDNET",
                      "Length_Of_Rollout_In_Days": 21
                    }
-        NEW_EVENT: { "Rollout_Distribution": "BOX", "Percentage_Of_Target_Population_Reached": 1.0, "Target_Population_Min_Age_In_Years": 0, "Target_Population_Max_Age_In_Years": 125, "Timesteps_From_Now": 10, "Intervention_Quality": "High", "Intervention": "DRUG", "Length_Of_Rollout_In_Days": 1 }
+        NEW_EVENT: { "Rollout_Distribution": "BOX", "Percentage_Of_Target_Population_Reached": 1.0, "Target_Population_Min_Age_In_Years": 0, "Target_Population_Max_Age_In_Years": 125, "Timesteps_From_Now": 1, "Intervention_Quality": "High", "Intervention": "BEDNET", "Length_Of_Rollout_In_Days": 1 }
         """
         print( "json?: " + new_event_params )
         event_params_json = json.loads( new_event_params )
@@ -128,21 +156,18 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             handle.write( json.dumps( campaign_json, indent=4, sort_keys=True ) )
 
         print( "Tell DTK to STEP_RELOAD" )
-        self.dtk_socket.sendall( "STEP_RELOAD"  )
-        data = self.dtk_socket.recv( 2000 )
-        print( "DTK returned: " + data )
-        data_json = json.loads(data)
-        data_json["Timestep"] = self.timestep
-        self.timestep = self.timestep + 1
-        print( "Returning: " + str(data_json) )
-        return (str(data_json) + "\n").replace( "u'", "'" )
+        return self.pass_through( "STEP_RELOAD" )
         
     def create_event_from_json( self, epj ):
-        camp_event = json.loads( '{"Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "StandardInterventionDistributionEventCoordinator" }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }' )
+        reference_campaign_string = """
+        { "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "ReferenceTrackingEventCoordinator", "Update_Period": 1, "Duration": 1, "Time_Value_Map": { "Times": [ 0 ], "Values": [ 0 ] } }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
+        """
+        #{ "Event_Coordinator_Config": { "Demographic_Coverage": 1.0, "Intervention_Config": { "class": "DelayedIntervention" }, "Target_Demographic": "ExplicitAgeRanges", "class": "StandardInterventionDistributionEventCoordinator" }, "Nodeset_Config": { "class": "NodeSetAll" }, "Start_Day": 9999, "class": "CampaignEvent" }
+        camp_event = json.loads( reference_campaign_string.strip()  )
         camp_event["Start_Day"] = self.timestep + epj["Timesteps_From_Now"]
 
         if not (epj["Intervention"] == "DRUG" and epj["Intervention_Quality"] == "Low"):
-            camp_event["Event_Coordinator_Config"]["Demographic_Coverage"] = epj["Percentage_Of_Target_Population_Reached"]
+            #camp_event["Event_Coordinator_Config"]["Demographic_Coverage"] = epj["Percentage_Of_Target_Population_Reached"]
             camp_event["Event_Coordinator_Config"]["Target_Age_Min"] = epj["Target_Population_Min_Age_In_Years"]
             camp_event["Event_Coordinator_Config"]["Target_Age_Max"] = epj["Target_Population_Max_Age_In_Years"]
             camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Actual_IndividualIntervention_Configs"] = []
@@ -151,7 +176,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Distribution"] = "UNIFORM_DURATION"
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Min"] = 0
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Max"] = epj["Length_Of_Rollout_In_Days"]
-            if epj["Rollout_Distribution"] == "GAUSSIAN":
+            elif epj["Rollout_Distribution"] == "GAUSSIAN":
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Distribution"] = "GAUSSIAN_DURATION"
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Mean"] = epj["Length_Of_Rollout_In_Days"]/2
                 camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Delay_Period_Std_Dev"] = epj["Length_Of_Rollout_In_Days"]/4
@@ -174,6 +199,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                 actual_intervention_config[ "Killing_Rate" ] = 0.0
                 actual_intervention_config[ "Blocking_Rate" ] = 0.9
             camp_event["Event_Coordinator_Config"]["Intervention_Config"]["Actual_IndividualIntervention_Configs"].append( actual_intervention_config )
+            camp_event["Event_Coordinator_Config"]["Time_Value_Map"]["Values"][0] = epj["Percentage_Of_Target_Population_Reached"]
 
         elif epj["Intervention"] == "IRS":
             actual_intervention_config = {}
@@ -234,8 +260,70 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
         return camp_event
 
+    def cost_proposed_event( self, proposed_campaign ):
+        #pdb.set_trace()
+        try:
+            return_msg = json.loads( "{}" )
+            return_value = -1
+
+            event_params_json = None
+            try:
+                event_params_json = json.loads( proposed_campaign )
+            except Exception as ex:
+                return_msg["error"] = str(ex)
+
+            iq       = event_params_json["Intervention_Quality"]
+            iv       = event_params_json["Intervention"]
+            coverage = event_params_json["Percentage_Of_Target_Population_Reached"]
+            age_min  = event_params_json["Target_Population_Min_Age_In_Years"]
+            age_max  = event_params_json["Target_Population_Max_Age_In_Years"]
+            rollout  = event_params_json["Rollout_Distribution"]
+            rollout_length = event_params_json["Length_Of_Rollout_In_Days"]
+
+            cost = 0
+
+            if iv == "BEDNET":
+                cost = 5
+            elif iv == "IRS":
+                cost = 15
+            elif iv == "DRUG":
+                cost = 10
+
+            if iq == "Low":
+                cost *= 1
+            elif iq == "Medium":
+                cost *= 2
+            elif iq == "High":
+                cost *= 3
+
+            num_individuals = 1000
+            num_individuals *= coverage
+            num_individuals *= (age_max-age_min)/100.0
+
+            cost *= num_individuals
+
+            cost *= 2.0/rollout_length
+
+            return_value = cost
+
+            print( "Calculated projected cost of campaign as: " + str(return_value) )
+            return_msg["Projected_Cost"] = return_value
+
+        except Exception as ex:
+            return_msg["error"] = "Missing Key: " + str(ex)
+
+        return json.dumps( return_msg )
+
 if __name__ == "__main__":
     HOST, PORT = "10.129.110.137", 7777
+
+    if len( sys.argv ) > 1:
+        PORT = int(sys.argv[1])
+        print( "Using " + str(PORT) + " as python server port." )
+    if len( sys.argv ) > 2:
+        HOST = sys.argv[2]
+        print( "Using " + HOST + " as python server host IP." )
+    MyTCPHandler.game_port = PORT + 100
 
     # Create the server, binding to localhost on port 9999
     SocketServer.TCPServer.allow_reuse_address = True

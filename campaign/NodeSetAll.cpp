@@ -14,7 +14,7 @@ static const char* _module = "NodeSetAll";
 
 namespace Kernel
 {
-    // NodeSetAll
+    // NodeSetAll 
     IMPLEMENT_FACTORY_REGISTERED(NodeSetAll)
     IMPLEMENT_FACTORY_REGISTERED(NodeSetNodeList)
     IMPLEMENT_FACTORY_REGISTERED(NodeSetPolygon)

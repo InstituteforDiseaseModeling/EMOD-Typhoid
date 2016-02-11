@@ -775,6 +775,7 @@ namespace Kernel
 
     void Simulation::MergeNodeIdSuidBimaps(nodeid_suid_map_t& local_map, nodeid_suid_map_t& merged_map)
     {
+#if defined(WIN32)
         merged_map = local_map;
 
         if (EnvPtr->MPI.NumTasks > 1)
@@ -834,6 +835,7 @@ namespace Kernel
 
             delete json_writer;
         }
+#endif
     }
 
     IMigrationInfoFactory* Simulation::CreateMigrationInfoFactory ( const std::string& idreference,
@@ -1025,7 +1027,7 @@ namespace Kernel
         nodeRankMap.Add( EnvPtr->MPI.Rank, node );
 
         notifyNewNodeObservers(node);
-    }
+    } 
 
     void Simulation::loadCampaignFromFile( const std::string& campaignfilename )
     {

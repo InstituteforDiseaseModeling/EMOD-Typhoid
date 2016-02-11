@@ -1,5 +1,5 @@
 {
-    "Default_Config_Path":"defaults\\tb_scenario_default_config.json",
+    "Default_Config_Path":"defaults/tb_scenario_default_config.json",
     "parameters":{
         "Config_Name":"01_BasicModel_B_Presentation",
         "Demographics_Filename":"TB_01_BasicModel_demographics.json",

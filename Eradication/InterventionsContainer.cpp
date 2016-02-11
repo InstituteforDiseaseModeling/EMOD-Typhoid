@@ -16,6 +16,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionsContainer.h"
 #include "IIndividualHuman.h"                // for IIndividualHumanContext functions e.g. GetEventContext()
 #include <typeinfo>
+#ifndef WIN32
+#include <cxxabi.h>
+#endif
 #include "NodeEventContext.h"
 #include "INodeContext.h"
 
@@ -88,6 +91,9 @@ namespace Kernel
         for (auto intervention : interventions)
         {
             std::string cur_iv_type_name = typeid( *intervention ).name();
+#ifndef WIN32
+            cur_iv_type_name = abi::__cxa_demangle(cur_iv_type_name.c_str(), 0, 0, nullptr );
+#endif
             LOG_DEBUG_F("intervention name = %s\n", cur_iv_type_name.c_str());
             if( cur_iv_type_name == type_name )
             {

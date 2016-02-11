@@ -16,7 +16,6 @@ static const char* _module = "NodeSetNodeList";
 namespace Kernel
 {
     using namespace std;
-
     IMPL_QUERY_INTERFACE2(NodeSetNodeList, INodeSet, IConfigurable)
 
     void

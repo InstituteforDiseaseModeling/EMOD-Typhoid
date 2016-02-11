@@ -1,5 +1,5 @@
 {
-    "Default_Config_Path":"defaults\\tb_default_config.json",
+    "Default_Config_Path":"defaults/tb_default_config.json",
     "parameters":{
         "CLIMATE":{
             "Climate_Model":"CLIMATE_OFF",
@@ -41,7 +41,7 @@
             },
             "Max_Individual_Infections":3
         },
-        "Default_Config_Path":"defaults\\tb_default_config.json",
+        "Default_Config_Path":"defaults/tb_default_config.json",
         "Enable_Mixing_Pools":0,
         "Individual_Mixing_Pool_Link_Update_Frequency":0,
         "MIGRATION":{

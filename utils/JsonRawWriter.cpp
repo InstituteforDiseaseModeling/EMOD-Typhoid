@@ -96,7 +96,9 @@ namespace Kernel
 
     IArchive& JsonRawWriter::operator&( jsonConfigurable::ConstrainedString& cs )
     {
+#if defined(WIN32)
         this->operator&( (std::string)cs );
+#endif
         return *this;
     }
 

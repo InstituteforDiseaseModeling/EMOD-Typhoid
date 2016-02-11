@@ -62,7 +62,7 @@ namespace Kernel
     protected:
         ISimulationEventContext  *parent;
         virtual float getDemographicCoverageForIndividual( const IIndividualHumanEventContext *pInd ) const;
-        virtual void preDistribute();
+        virtual void preDistribute(); 
         virtual bool HasNodeLevelIntervention() const;
 
         bool distribution_complete;
@@ -77,6 +77,7 @@ namespace Kernel
         std::vector<suids::suid> node_suids; // to help with serialization
         IDistributableIntervention *_di;
         DemographicRestrictions demographic_restrictions;
+        float demographic_coverage;
 
         // helpers
         void regenerateCachedNodeContextPointers();
@@ -84,6 +85,7 @@ namespace Kernel
         virtual void initializeInterventionConfig( const Configuration * inputJson );
         virtual void validateInterventionConfig( const json::Element& rElement );
         virtual bool TargetedIndividualIsCovered(IIndividualHumanEventContext *ihec);
+        bool avoid_duplicates;
 
     };
 }

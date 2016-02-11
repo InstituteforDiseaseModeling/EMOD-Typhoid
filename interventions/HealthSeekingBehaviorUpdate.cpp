@@ -66,7 +66,7 @@ namespace Kernel
     void HealthSeekingBehaviorUpdate::Update( float dt )
     {
         ihsbuea->UpdateHealthSeekingBehaviors( new_probability_of_seeking );
-        LOG_DEBUG("Update the HSB tendency\n");
+        LOG_DEBUG_F( "Update the HSB tendency with value %f\n", new_probability_of_seeking );
         expired = true;
     }
 
