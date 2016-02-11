@@ -468,3 +468,7 @@ EXPONENTIAL_DURATION"
 #define DAN_Exponential_Period_DESC_TEXT "TBD"
 #define DAN_Poisson_Mean_DESC_TEXT "TBD"
 
+#define Male_Circumcision_Reduced_Acquire_DESC_TEXT "Reduction of susceptibility to HIV by VMMC."
+#define Male_Circumcision_Distributed_Event_Trigger_DESC_TEXT "TBD"
+#define Male_Circumcision_Apply_If_Higher_Reduced_Acquire_DESC_TEXT "TBD"
+

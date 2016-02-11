@@ -47,8 +47,6 @@
             "Male_To_Female_Relative_Infectivity_Multipliers": [ 5, 1, 0.5 ],
             "STI_Coinfection_Multiplier": 10,
 
-            "Circumcision_Reduced_Acquire": 0.6,
-
             "Heterogeneous_Infectiousness_Weibull_Scale": 1,
             "Heterogeneous_Infectiousness_Weibull_Heterogeneity": 0,
 

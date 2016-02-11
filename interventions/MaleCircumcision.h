@@ -21,15 +21,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "FactorySupport.h"
 #include "Configure.h"
+#include "EventTrigger.h"
 
 namespace Kernel
 {
+    struct ISTICircumcisionConsumer;
 
-    struct ICircumcision : public ISupports
-    {
-    };
-
-    class MaleCircumcision : public BaseIntervention, public ICircumcision
+    class MaleCircumcision : public BaseIntervention
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, MaleCircumcision, IDistributableIntervention)
@@ -42,10 +40,17 @@ namespace Kernel
 
         // IDistributableIntervention
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
+        virtual bool Distribute( IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
         virtual void SetContextTo(IIndividualHumanContext *context) override;
         virtual void Update(float dt) override;
 
     protected:
+        float m_ReducedAcquire;
+        bool m_ApplyIfHigherReducedAcquire;
+        EventTrigger m_DistrbutedEventTrigger;
+        ISTICircumcisionConsumer* m_pCircumcisionConsumer;
+        bool has_been_applied;
+
         DECLARE_SERIALIZABLE(MaleCircumcision);
     };
 }

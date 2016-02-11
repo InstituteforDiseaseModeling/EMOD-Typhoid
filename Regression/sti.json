@@ -60,7 +60,8 @@
         { "path": "STI/58_STI_Informal_Only_Relationship_Pause" },
         { "path": "STI/59_STI_Transitory_Only_Relationship_Terminate" },
         { "path": "STI/60_STI_All_Rel_Types_All_Rel_States" },
-        { "path": "STI/61_STI_Marital_Only_Relationship_Migration_Multicore" }
+        { "path": "STI/61_STI_Marital_Only_Relationship_Migration_Multicore" },
+        { "path": "STI/101_MaleCircumcision" }
     ],
     "ENABLE_PYTHON": [
         { "path": "STI/44_STI_PFA_Report" },

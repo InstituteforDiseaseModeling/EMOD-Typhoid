@@ -13,7 +13,6 @@
         "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
         "Birth_Rate_Time_Dependence": "NONE", 
         "Campaign_Filename": "campaign.json", 
-        "Circumcision_Reduced_Acquire": 0.6, 
         "Climate_Model": "CLIMATE_OFF", 
         "Coital_Dilution_Factor_2_Partners": 0.5, 
         "Coital_Dilution_Factor_3_Partners": 0.33, 
