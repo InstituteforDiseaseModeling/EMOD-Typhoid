@@ -24,7 +24,6 @@ namespace Kernel
     , target_coverage( 0.0 ) // no great reason for this value
     , end_year(0.0)
     {
-        avoid_duplicates = true;
     }
 
     QuickBuilder
@@ -123,5 +122,6 @@ namespace Kernel
                     float(totalWithIntervention)
                 );
     }
+
 }
 
