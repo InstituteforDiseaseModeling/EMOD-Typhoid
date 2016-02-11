@@ -612,7 +612,7 @@ namespace Kernel
 
         // now adjust population and eggs
         if (dead_mosquitoes > 0) { queue->SetPopulation( queue->GetPopulation() - dead_mosquitoes); }
-        unsigned long int tempeggs = unsigned long(species()->eggbatchsize * x_infectedeggbatchmod * (successful_human_feed + successful_AD_feed * ADfeed_eggbatchmod + successful_animal_feed * animalfeed_eggbatchmod));
+        unsigned long int tempeggs = (unsigned long)(species()->eggbatchsize * x_infectedeggbatchmod * (successful_human_feed + successful_AD_feed * ADfeed_eggbatchmod + successful_animal_feed * animalfeed_eggbatchmod));
         neweggs += tempeggs;
         gender_mating_eggs[queue->GetVectorGenetics().GetIndex()] += tempeggs;
         LOG_DEBUG_F("adding %d eggs to vector genetics index %d.  current total=%d\n", tempeggs, queue->GetVectorGenetics().GetIndex(), gender_mating_eggs[queue->GetVectorGenetics().GetIndex()]);

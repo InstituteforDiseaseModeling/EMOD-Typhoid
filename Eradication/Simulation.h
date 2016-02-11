@@ -75,6 +75,7 @@ namespace Kernel
 
         // Migration
         virtual void PostMigratingIndividualHuman(IIndividualHuman *i) override;
+        virtual bool CanSupportFamilyTrips() const override;
 
         virtual void DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier ) override;
         virtual void UpdateNodeEvents() override;
@@ -132,9 +133,8 @@ namespace Kernel
         virtual void resolveMigration(); // derived classes override this...
 
         // Campaign input file parsing
-        virtual void   loadCampaignFromFile( const std::string& campaign_filename );
-
         virtual void notifyNewNodeObservers(INodeContext*);
+        virtual void loadCampaignFromFile( const std::string& campaign_filename );
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -214,6 +214,7 @@ namespace Kernel
         std::string campaign_filename;
         std::string loadbalance_filename;
         int Run_Number;
+        bool can_support_family_trips;
 
         NodeDemographicsFactory* demographics_factory;
 #pragma warning( pop )

@@ -145,11 +145,6 @@ namespace Kernel
         return false;
     }
 
-    MigrationType::Enum MigrationInfoNull::GetFamilyMigrationType() const
-    {
-        return MigrationType::NO_MIGRATION;
-    }
-
     // ------------------------------------------------------------------------
     // --- MigrationInfoFixedRate
     // ------------------------------------------------------------------------
@@ -158,11 +153,9 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(MigrationInfoFixedRate)
 
     MigrationInfoFixedRate::MigrationInfoFixedRate( INodeContext * _parent, 
-                                                    bool isHeterogeneityEnabled,
-                                                    MigrationType::Enum familyType ) 
+                                                    bool isHeterogeneityEnabled ) 
         : m_Parent(_parent) 
         , m_IsHeterogeneityEnabled( isHeterogeneityEnabled )
-        , m_FamilyMigrationType( familyType )
         , m_ReachableNodes()
         , m_MigrationTypes()
         , m_RateCDF()
@@ -312,11 +305,6 @@ namespace Kernel
         return m_MigrationTypes;
     }
 
-    MigrationType::Enum MigrationInfoFixedRate::GetFamilyMigrationType() const
-    {
-        return m_FamilyMigrationType;
-    }
-
     // ------------------------------------------------------------------------
     // --- MigrationInfoAgeAndGender
     // ------------------------------------------------------------------------
@@ -325,9 +313,8 @@ namespace Kernel
     END_QUERY_INTERFACE_DERIVED(MigrationInfoAgeAndGender, MigrationInfoFixedRate)
 
     MigrationInfoAgeAndGender::MigrationInfoAgeAndGender( INodeContext * _parent, 
-                                                          bool isHeterogeneityEnabled,
-                                                          MigrationType::Enum familyType ) 
-        : MigrationInfoFixedRate( _parent, isHeterogeneityEnabled, familyType ) 
+                                                          bool isHeterogeneityEnabled ) 
+        : MigrationInfoFixedRate( _parent, isHeterogeneityEnabled ) 
         , m_RateData()
         , m_ReachableNodesFemale()
         , m_MigrationTypesFemale()
@@ -840,6 +827,7 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
         m_InfoFileList.push_back( new MigrationInfoFile( MigrationType::AIR_MIGRATION,      MAX_AIR_MIGRATION_DESTINATIONS      ) );
         m_InfoFileList.push_back( new MigrationInfoFile( MigrationType::REGIONAL_MIGRATION, MAX_REGIONAL_MIGRATION_DESTINATIONS ) );
         m_InfoFileList.push_back( new MigrationInfoFile( MigrationType::SEA_MIGRATION,      MAX_SEA_MIGRATION_DESTINATIONS      ) );
+        m_InfoFileList.push_back( new MigrationInfoFile( MigrationType::FAMILY_MIGRATION,   MAX_SEA_MIGRATION_DESTINATIONS      ) );
     }
 
     void MigrationInfoFactoryFile::InitializeInfoFileList( bool enableHumanMigration, const Configuration* config )
@@ -854,37 +842,38 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
             initConfigTypeMap( "Enable_Air_Migration",        &(m_InfoFileList[1]->m_IsEnabled), Enable_Air_Migration_DESC_TEXT,      false );
             initConfigTypeMap( "Enable_Regional_Migration",   &(m_InfoFileList[2]->m_IsEnabled), Enable_Regional_Migration_DESC_TEXT, false );
             initConfigTypeMap( "Enable_Sea_Migration",        &(m_InfoFileList[3]->m_IsEnabled), Enable_Sea_Migration_DESC_TEXT,      false );
+            initConfigTypeMap( "Enable_Family_Migration",     &(m_InfoFileList[4]->m_IsEnabled), Enable_Family_Migration_DESC_TEXT,   false );
 
             initConfigTypeMap( "Local_Migration_Filename",    &(m_InfoFileList[0]->m_Filename),  Local_Migration_Filename_DESC_TEXT    );
             initConfigTypeMap( "Air_Migration_Filename",      &(m_InfoFileList[1]->m_Filename),  Air_Migration_Filename_DESC_TEXT      );
             initConfigTypeMap( "Regional_Migration_Filename", &(m_InfoFileList[2]->m_Filename),  Regional_Migration_Filename_DESC_TEXT );
             initConfigTypeMap( "Sea_Migration_Filename",      &(m_InfoFileList[3]->m_Filename),  Sea_Migration_Filename_DESC_TEXT      );
+            initConfigTypeMap( "Family_Migration_Filename",   &(m_InfoFileList[4]->m_Filename),  Family_Migration_Filename_DESC_TEXT   );
 
             initConfigTypeMap( "x_Local_Migration",           &(m_InfoFileList[0]->m_xModifier), x_Local_Migration_DESC_TEXT,    0.0f, FLT_MAX, 1.0f );
             initConfigTypeMap( "x_Air_Migration",             &(m_InfoFileList[1]->m_xModifier), x_Air_Migration_DESC_TEXT,      0.0f, FLT_MAX, 1.0f );
             initConfigTypeMap( "x_Regional_Migration",        &(m_InfoFileList[2]->m_xModifier), x_Regional_Migration_DESC_TEXT, 0.0f, FLT_MAX, 1.0f );
             initConfigTypeMap( "x_Sea_Migration",             &(m_InfoFileList[3]->m_xModifier), x_Sea_Migration_DESC_TEXT,      0.0f, FLT_MAX, 1.0f );
+            initConfigTypeMap( "x_Family_Migration",          &(m_InfoFileList[4]->m_xModifier), x_Family_Migration_DESC_TEXT,   0.0f, FLT_MAX, 1.0f );
         }
 
         m_InfoFileList[0]->SetEnableParameterName( "Enable_Local_Migration"    );
         m_InfoFileList[1]->SetEnableParameterName( "Enable_Air_Migration"      );
         m_InfoFileList[2]->SetEnableParameterName( "Enable_Regional_Migration" );
         m_InfoFileList[3]->SetEnableParameterName( "Enable_Sea_Migration"      );
+        m_InfoFileList[4]->SetEnableParameterName( "Enable_Family_Migration"   );
 
         m_InfoFileList[0]->SetFilenameParameterName( "Local_Migration_Filename"    );
         m_InfoFileList[1]->SetFilenameParameterName( "Air_Migration_Filename"      );
         m_InfoFileList[2]->SetFilenameParameterName( "Regional_Migration_Filename" );
         m_InfoFileList[3]->SetFilenameParameterName( "Sea_Migration_Filename"      );
+        m_InfoFileList[4]->SetFilenameParameterName( "Family_Migration_Filename"   );
     }
 
     bool MigrationInfoFactoryFile::Configure( const Configuration* config )
     {
         InitializeInfoFileList( m_EnableHumanMigration, config );
 
-        if( m_EnableHumanMigration )
-        {
-            initConfig( "Family_Migration_Type", m_FamilyMigrationType, config, MetadataDescriptor::Enum("Family_Migration_Type", Family_Migration_Type_DESC_TEXT, MDD_ENUM_ARGS(MigrationType)) );
-        }
         bool ret = JsonConfigurable::Configure( config );
 
         return ret;
@@ -899,6 +888,17 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
         }
         return false;
     }
+
+    bool MigrationInfoFactoryFile::IsEnabled( MigrationType::Enum mt ) const
+    {
+        for( auto mif : m_InfoFileList )
+        {
+            if( (mif->GetMigrationType() == mt) && mif->m_IsEnabled )
+                return true;
+        }
+        return false;
+    }
+
 
     void MigrationInfoFactoryFile::Initialize( const ::Configuration* config, const string& idreference )
     {
@@ -929,17 +929,13 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
         {
             if( is_fixed_rate )
             {
-                MigrationInfoFixedRate* p_mifr = _new_ MigrationInfoFixedRate( pParentNode, 
-                                                                               m_IsHeterogeneityEnabled, 
-                                                                               m_FamilyMigrationType );
+                MigrationInfoFixedRate* p_mifr = _new_ MigrationInfoFixedRate( pParentNode, m_IsHeterogeneityEnabled );
                 p_mifr->Initialize( rate_data ); 
                 p_new_migration_info = p_mifr;
             }
             else
             {
-                MigrationInfoAgeAndGender* p_miag = _new_ MigrationInfoAgeAndGender( pParentNode,
-                                                                                     m_IsHeterogeneityEnabled, 
-                                                                                     m_FamilyMigrationType );
+                MigrationInfoAgeAndGender* p_miag = _new_ MigrationInfoAgeAndGender( pParentNode, m_IsHeterogeneityEnabled );
                 p_miag->Initialize( rate_data );
                 p_new_migration_info = p_miag;
             }
@@ -1039,14 +1035,17 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
         return false;
     }
 
+    bool MigrationInfoFactoryDefault::IsEnabled( MigrationType::Enum mt ) const
+    {
+        return (mt == MigrationType::LOCAL_MIGRATION);
+    }
+
     IMigrationInfo* MigrationInfoFactoryDefault::CreateMigrationInfo( INodeContext *pParentNode, 
                                                                       const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap )
     {
         std::vector<std::vector<MigrationRateData>> rate_data = GetRateData( pParentNode, rNodeIdSuidMap, m_xLocalModifier );
 
-        MigrationInfoFixedRate* new_migration_info = _new_ MigrationInfoFixedRate( pParentNode, 
-                                                                                   m_IsHeterogeneityEnabled,
-                                                                                   MigrationType::NO_MIGRATION );
+        MigrationInfoFixedRate* new_migration_info = _new_ MigrationInfoFixedRate( pParentNode, m_IsHeterogeneityEnabled );
         new_migration_info->Initialize( rate_data );
 
         return new_migration_info;

@@ -34,6 +34,7 @@ namespace Kernel
         // IDistributingDistributableIntervention
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
         virtual void SetContextTo(INodeEventContext *context) override { parent = context; }
+        virtual bool Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC ) override;
         virtual void Update(float dt) override;
 
     protected:

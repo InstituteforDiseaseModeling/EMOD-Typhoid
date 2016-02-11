@@ -104,6 +104,7 @@ namespace Kernel
         , campaign_filename()
         , loadbalance_filename()
         , Run_Number(0)
+        , can_support_family_trips( false )
         , demographics_factory(nullptr)
         , new_node_observers()
     {
@@ -771,6 +772,7 @@ namespace Kernel
 
     void Simulation::MergeNodeIdSuidBimaps(nodeid_suid_map_t& local_map, nodeid_suid_map_t& merged_map)
     {
+#if defined(WIN32)
         merged_map = local_map;
 
         if (EnvPtr->MPI.NumTasks > 1)
@@ -832,6 +834,7 @@ namespace Kernel
 
             delete json_writer;
         }
+#endif
     }
 
     IMigrationInfoFactory* Simulation::CreateMigrationInfoFactory ( const std::string& idreference,
@@ -963,6 +966,8 @@ namespace Kernel
         {
             throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "IMigrationInfoFactory" );
         }
+
+        can_support_family_trips = IndividualHumanConfig::CanSupportFamilyTrips( migration_factory );
 
         release_assert( m_simConfigObj );
         if( (m_simConfigObj->migration_structure != MigrationStructure::NO_MIGRATION) &&
@@ -1125,6 +1130,11 @@ namespace Kernel
     void Simulation::PostMigratingIndividualHuman(IIndividualHuman *i)
     {
         migratingIndividualQueues[nodeRankMap.GetRankFromNodeSuid(i->GetMigrationDestination())].push_back(i);
+    }
+
+    bool Simulation::CanSupportFamilyTrips() const
+    {
+        return can_support_family_trips;
     }
 
     //------------------------------------------------------------------

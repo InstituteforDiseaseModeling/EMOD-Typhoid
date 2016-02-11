@@ -32,7 +32,7 @@ namespace Kernel
                                               float stayPutModifier,
                                               bool enableLocalVectorMigration,
                                               bool isFileBased ) 
-    : MigrationInfoFixedRate( _parent, false, MigrationType::NO_MIGRATION ) 
+    : MigrationInfoFixedRate( _parent, false ) 
     , m_RawMigrationRate()
     , m_ThisNodeId(suids::nil_suid())
     , m_ModifierEquation(equation)
@@ -299,6 +299,7 @@ namespace Kernel
         m_InfoFileListVector.push_back( new MigrationInfoFile( MigrationType::LOCAL_MIGRATION,    MAX_LOCAL_MIGRATION_DESTINATIONS    ) );
         m_InfoFileListVector.push_back( nullptr );
         m_InfoFileListVector.push_back( new MigrationInfoFile( MigrationType::REGIONAL_MIGRATION, MAX_REGIONAL_MIGRATION_DESTINATIONS ) );
+        m_InfoFileListVector.push_back( nullptr );
         m_InfoFileListVector.push_back( nullptr );
     }
 
