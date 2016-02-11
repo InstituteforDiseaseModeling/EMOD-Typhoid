@@ -1027,11 +1027,6 @@ namespace Kernel
         notifyNewNodeObservers(node);
     }
 
-    void Simulation::LoadCampaignFile()
-    {
-        loadCampaignFromFile( "campaign.json" );
-    }
-
     void Simulation::loadCampaignFromFile( const std::string& campaignfilename )
     {
         // load in the configuration
