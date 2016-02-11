@@ -157,6 +157,12 @@ namespace Kernel
         {
             return;
         }*/
+        if( cp->GetTotalContagion() == 0 )
+        {
+            return;
+        }
+
+        LOG_DEBUG_F( "Calling py:expose with contagion pop %f\n", cp->GetTotalContagion() );
 
         static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "expose" );
         if( pFunc )
@@ -221,8 +227,11 @@ namespace Kernel
                 infectiousness += val;
                 StrainIdentity tmp_strainID;
                 release_assert( transmissionGroupMembershipByRoute.find( route ) != transmissionGroupMembershipByRoute.end() );
-                LOG_DEBUG_F("Depositing %f to route %s: (antigen=%d, substain=%d)\n", val, route.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());
-                parent->DepositFromIndividual( &tmp_strainID, (float) val, &transmissionGroupMembershipByRoute.at( route ) );
+                if( val > 0 )
+                {
+                    LOG_DEBUG_F("Depositing %f to route %s: (antigen=%d, substain=%d)\n", val, route.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());
+                    parent->DepositFromIndividual( &tmp_strainID, (float) val, &transmissionGroupMembershipByRoute.at( route ) );
+                }
                 //Py_DECREF( vars );
                 //Py_DECREF( py_existing_id_str );
                 //Py_DECREF( py_route_str );
