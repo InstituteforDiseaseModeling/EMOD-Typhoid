@@ -14,7 +14,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 *****************************************************************************/
 
 #pragma once
-#include "InfectionEnvironmental.h"
+#include "Infection.h"
 #include "PyDemoDefs.h" // for N_TYPHOID_SEROTYPES
 
 namespace Kernel
@@ -40,7 +40,7 @@ namespace Kernel
     };
 
     class InfectionPyDemo
-        : public InfectionEnvironmental
+        : public Infection
         , public IInfectionPyDemo 
         , protected InfectionPyDemoConfig
     {

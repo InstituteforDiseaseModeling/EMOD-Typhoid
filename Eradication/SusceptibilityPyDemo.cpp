@@ -17,25 +17,10 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <string>
 
 
-/*#include "Debug.h"
-#include "MathFunctions.h"
-#include "Environment.h"
-#include "Types.h"
-
-#include "Interventions.h"
-#include "NodeDemographics.h"
-#include "Common.h"
-#include "Exceptions.h"
-#include "Individual.h" // for IIndividualHumanEventContext
-#include "NodeDemographics.h" // for static strings e.g. tOPV_dose_distribution
-#include "RANDOM.h"
-#include "SimulationConfig.h"
-#include "Vaccine.h"
-*/
-
 #include "SusceptibilityPyDemo.h"
 
 static const char * _module = "SusceptibilityPyDemo";
+
 #ifdef ENABLE_PYTHON
 
 namespace Kernel
@@ -59,13 +44,8 @@ namespace Kernel
         HANDLE_INTERFACE(ISusceptibilityPyDemoReportable)
     END_QUERY_INTERFACE_BODY(SusceptibilityPyDemo)
 
-    /*SusceptibilityPyDemo::SusceptibilityPyDemo()
-        : SusceptibilityEnvironmental()
-    {
-    }*/
-
     SusceptibilityPyDemo::SusceptibilityPyDemo(IIndividualHumanContext *context)
-        : SusceptibilityEnvironmental(context) 
+        : Susceptibility(context) 
     {
         // Everything initialized to 0 in Initialize
     }
@@ -73,7 +53,7 @@ namespace Kernel
     void SusceptibilityPyDemo::Initialize(float _age, float _immmod, float _riskmod)
     {
         LOG_DEBUG_F( "Initializing PyDemo immunity object for new individual: id=%lu, age=%f, immunity modifier=%f, risk modifier=%f\n", parent->GetSuid().data, _age, _immmod, _riskmod );
-        SusceptibilityEnvironmental::Initialize(_age, _immmod, _riskmod);
+        Susceptibility::Initialize(_age, _immmod, _riskmod);
 
         // throws exception on error, no return type. 
     }

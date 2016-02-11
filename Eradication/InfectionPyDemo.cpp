@@ -64,13 +64,13 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    InfectionPyDemo::InfectionPyDemo(IIndividualHumanContext *context) : InfectionEnvironmental(context)
+    InfectionPyDemo::InfectionPyDemo(IIndividualHumanContext *context) : Infection(context)
     {
     }
 
     void InfectionPyDemo::Initialize(suids::suid _suid)
     {
-        InfectionEnvironmental::Initialize(_suid);
+        Infection::Initialize(_suid);
     }
 
     InfectionPyDemo *InfectionPyDemo::CreateInfection(IIndividualHumanContext *context, suids::suid _suid)
@@ -89,7 +89,7 @@ namespace Kernel
 
     void InfectionPyDemo::SetParameters(StrainIdentity* infstrain, int incubation_period_override)
     {
-        InfectionEnvironmental::SetParameters(infstrain, incubation_period_override); // setup infection timers and infection state
+        Infection::SetParameters(infstrain, incubation_period_override); // setup infection timers and infection state
         if(infstrain == NULL)
         {
             // using default strainIDs
@@ -110,7 +110,7 @@ namespace Kernel
         }
 
         StateChange = InfectionStateChange::New;
-        return InfectionEnvironmental::InitInfectionImmunology( _immunity );
+        return Infection::InitInfectionImmunology( _immunity );
     }
 
     void InfectionPyDemo::Update(float dt, Susceptibility* _immunity)
@@ -139,7 +139,7 @@ namespace Kernel
     template<class Archive>
     void serialize(Archive & ar, InfectionPyDemo& inf, const unsigned int file_version )
     {
-        ar & boost::serialization::base_object<Kernel::InfectionEnvironmental>(inf);
+        ar & boost::serialization::base_object<Kernel::Infection>(inf);
     }
     template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionPyDemo&, unsigned int);
 }

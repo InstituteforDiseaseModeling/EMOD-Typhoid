@@ -15,11 +15,11 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #pragma once
 
-#include "SusceptibilityEnvironmental.h"
+#include "Susceptibility.h"
 #include "StrainIdentity.h"
 #include "PyDemoDefs.h"
 
-#ifdef ENABLE_TYPHOID
+#ifdef ENABLE_PYTHON
 
 namespace Kernel
 {
@@ -50,7 +50,7 @@ namespace Kernel
     };
 
     class SusceptibilityPyDemo :
-        public SusceptibilityEnvironmental,
+        public Susceptibility,
         public SusceptibilityPyDemoConfig,
         public ISusceptibilityPyDemo,
         public ISusceptibilityPyDemoReportable

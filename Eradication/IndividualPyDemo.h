@@ -68,9 +68,9 @@ namespace Kernel
 
 		std::string processPrePatent( float dt );
 
-        // typhoid infection state
-        std::string state_to_report; // typhoid status of individual
-        std::string last_state_reported; // previous typhoid status of individual
+        // pydemo infection state
+        std::string state_to_report; // pydemo status of individual
+        std::string last_state_reported; // previous pydemo status of individual
         int chronic_timer;
         int subclinical_timer;
         int acute_timer;
@@ -86,52 +86,8 @@ namespace Kernel
         bool isDead;  // is this individual dead?
         bool state_changed;
 
-        // typhoid constants
-        static const float P1; // probability that an infection becomes clinical
-        static const float P5; // probability of typhoid death
-        //////////JG REMOVE static const float P6; // probability of sterile immunity after acute infection
-        static const float P7; // probability of clinical immunity after acute infection
-        //////////JG REMOVE static const float P8; // probability of sterile immunity from a subclinical infectin in the clinically immune
-        //////////JG REMOVE static const float P9; // probability of sterile immunity from a subclinical infection
-        static const float P10; // probability of clinical immunity from a subclinical infection
-
-        static const int _chronic_duration;
-        static const int _clinical_immunity_duration;
-
-        // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
-        // mean and std dev of log normal distribution
-        static const float mpe;
-        static const float spe;
-        static const float mpf;
-        static const float spf;
-
-        // Subclinical infectious duration parameters: mean and standard deviation under and over 30
-        static const float mso30;
-        static const float sso30;
-        static const float msu30;
-        static const float ssu30;
-
-        // Acute infectious duration parameters: mean and standard deviation under and over 30
-        static const float mao30;
-        static const float sao30;
-        static const float mau30;
-        static const float sau30;
-
-        static const int acute_symptoms_duration; // how long people are symptomatic in days
-        static const float CFRU;   // case fatality rate?
-        static const float CFRH; // hospitalized case fatality rate?
-        static const float treatmentprobability;  // probability of treatment
-
-        // typhoid constants from "OutBase.csv" file
-        //////////JG REMOVE static float agechronicmale[200]; //probability of becoming chronic carrier, male
-        //////////JG REMOVE static float agechronicfemale[200]; //probability of becoming chronic carrier, female
-
-        // environmental exposure constants
-        static const int N50;
-        static const float alpha;
-
     private:
-        SusceptibilityPyDemo * typhoid_susceptibility;
+        SusceptibilityPyDemo * pydemo_susceptibility;
         std::map< TransmissionRoute::Enum, float > contagion_population_by_route;
 
         virtual bool Configure( const Configuration* config );

@@ -47,7 +47,7 @@ bool ReportPyDemo::Configure( const Configuration * inputJson )
 
 void ReportPyDemo::EndTimestep( float currentTime, float dt )
 {
-    ReportEnvironmental::EndTimestep( currentTime, dt );
+    Report::EndTimestep( currentTime, dt );
     
 	// Make sure we push at least one zero per timestep
 	Accumulate( _num_chronic_carriers_label, 0 );
@@ -59,7 +59,7 @@ void
 ReportPyDemo::postProcessAccumulatedData()
 {
     LOG_DEBUG( "postProcessAccumulatedData\n" );
-    ReportEnvironmental::postProcessAccumulatedData();
+    Report::postProcessAccumulatedData();
 
     // pass through normalization
     // order matters, since we're changing channels in place (not like old way)
@@ -72,7 +72,7 @@ ReportPyDemo::populateSummaryDataUnitsMap(
     std::map<std::string, std::string> &units_map
 )
 {
-    ReportEnvironmental::populateSummaryDataUnitsMap(units_map);
+    Report::populateSummaryDataUnitsMap(units_map);
     
     // Additional malaria channels
     //units_map[_wpv1_prev_label]                 = _infected_fraction_label;
@@ -83,7 +83,7 @@ ReportPyDemo::LogIndividualData(
     IndividualHuman * individual
 )
 {
-    ReportEnvironmental::LogIndividualData( individual );
+    Report::LogIndividualData( individual );
     IIndividualHumanPyDemo* typhoid_individual = NULL;
     if( individual->QueryInterface( GET_IID( IIndividualHumanPyDemo ), (void**)&typhoid_individual ) != s_OK )
     {
@@ -114,16 +114,16 @@ ReportPyDemo::LogNodeData(
     INodeContext * pNC
 )
 {
-    ReportEnvironmental::LogNodeData( pNC );
+    Report::LogNodeData( pNC );
     const INodePyDemo * pPyDemoNode = NULL; // TBD: Use limited read-only interface, not full NodePyDemo
     if( pNC->QueryInterface( GET_IID( INodePyDemo), (void**) &pPyDemoNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePyDemo", "INodeContext" );
     }
 
-    auto contactContagionPop = pNC->GetTotalContagion();
-    Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
-    Accumulate( "Environmental Contagion Population", contactContagionPop["environmental"] );
+    //auto contactContagionPop = pNC->GetTotalContagion();
+    //Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
+    //Accumulate( "Environmental Contagion Population", contactContagionPop["environmental"] );
     //Accumulate( _aoi_label, pPyDemoNode->GetMeanAgeInfection() * total_infections ); // weight the age of infection by the number of infections in the node. global normalization happens in SimulationPyDemo
 }
 

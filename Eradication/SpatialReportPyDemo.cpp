@@ -49,19 +49,19 @@ SpatialReportPyDemo::CreateReport()
 }
 
 SpatialReportPyDemo::SpatialReportPyDemo()
-: SpatialReportEnvironmental()
+: SpatialReport()
 {
 }
 
 void SpatialReportPyDemo::populateChannelInfos(tChanInfoMap &channel_infos)
 {
-    SpatialReportEnvironmental::populateChannelInfos(channel_infos);
+    SpatialReport::populateChannelInfos(channel_infos);
 }
 
 
 void SpatialReportPyDemo::LogIndividualData( Kernel::IndividualHuman * individual )
 {
-    SpatialReportEnvironmental::LogIndividualData(individual);
+    SpatialReport::LogIndividualData(individual);
 
     float monte_carlo_weight = (float)individual->GetMonteCarloWeight();
 

@@ -26,7 +26,6 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "ReportPyDemo.h"
 #include "BinnedReportPyDemo.h"
 #include "SpatialReportPyDemo.h"
-#include "ReportPyDemoByAgeAndGender.h"
 #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
@@ -104,7 +103,7 @@ GetSchema()
 
 namespace Kernel
 {
-    SimulationPyDemo::SimulationPyDemo() : SimulationEnvironmental()
+    SimulationPyDemo::SimulationPyDemo() : Simulation()
     {
         reportClassCreator = ReportPyDemo::CreateReport;
         binnedReportClassCreator = BinnedReportPyDemo::CreateReport;
@@ -113,12 +112,12 @@ namespace Kernel
 
     void SimulationPyDemo::Initialize()
     {
-        SimulationEnvironmental::Initialize();
+        Simulation::Initialize();
     }
 
     void SimulationPyDemo::Initialize(const ::Configuration *config)
     {
-        SimulationEnvironmental::Initialize(config);
+        Simulation::Initialize(config);
         IndividualHumanPyDemo fakeHuman;
         LOG_INFO( "Calling Configure on fakeHuman\n" );
         fakeHuman.Configure( config );
@@ -154,7 +153,7 @@ namespace Kernel
 
     bool SimulationPyDemo::ValidateConfiguration(const ::Configuration *config)
     {
-        return Kernel::SimulationEnvironmental::ValidateConfiguration(config);
+        return Kernel::Simulation::ValidateConfiguration(config);
     }
 
     // called by demographic file Populate()
@@ -177,8 +176,7 @@ namespace Kernel
 
     void SimulationPyDemo::Reports_CreateBuiltIn()
     {
-        reports.push_back(ReportPyDemoByAgeAndGender::Create(this,DAYSPERYEAR));
-        return SimulationEnvironmental::Reports_CreateBuiltIn();
+        return Simulation::Reports_CreateBuiltIn();
     }
 }
 

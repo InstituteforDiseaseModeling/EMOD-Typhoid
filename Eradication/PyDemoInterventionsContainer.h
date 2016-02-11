@@ -15,7 +15,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #pragma once
 
-#ifdef ENABLE_TYPHOID
+#ifdef ENABLE_PYTHON
 #include <string>
 #include <list>
 #include <vector>

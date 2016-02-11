@@ -46,7 +46,7 @@ namespace Kernel
         virtual ~NodePyDemo(void);
         bool Configure( const Configuration* config );
 
-        virtual void SetupIntranodeTransmission();
+        //virtual void SetupIntranodeTransmission();
         virtual void resetNodeStateCounters(void);
         virtual void updateNodeStateCounters(IndividualHuman *ih);
         virtual void finalizeNodeStateCounters(void);

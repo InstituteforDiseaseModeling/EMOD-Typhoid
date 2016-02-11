@@ -26,8 +26,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 namespace Kernel {
 
-typedef SpatialReport SpatialReportEnvironmental;
-class SpatialReportPyDemo : public Generic
+class SpatialReportPyDemo : public SpatialReport
 {
     GET_SCHEMA_STATIC_WRAPPER(SpatialReportPyDemo)
 

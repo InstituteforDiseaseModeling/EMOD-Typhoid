@@ -23,7 +23,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 namespace Kernel {
 
-class ReportPyDemo : public Generic
+class ReportPyDemo : public Report
 {
     GET_SCHEMA_STATIC_WRAPPER(ReportPyDemo)
 public:
@@ -44,7 +44,7 @@ protected:
 
 private:
 
-    TransmissionGroupMembership_t memberships;
+    //TransmissionGroupMembership_t memberships;
 
 #if USE_BOOST_SERIALIZATION
     friend class ::boost::serialization::access;

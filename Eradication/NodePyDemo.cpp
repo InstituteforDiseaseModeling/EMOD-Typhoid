@@ -76,6 +76,7 @@ namespace Kernel
     {
     }
 
+#if 0
 #define ROUTE_NAME_ENVIRONMENTAL "environmental"
 #define ROUTE_NAME_CONTACT       "contact"
     void NodePyDemo::SetupIntranodeTransmission()
@@ -164,12 +165,13 @@ namespace Kernel
 
         transmissionGroups->Build(decayMap, GET_CONFIGURABLE(SimulationConfig)->number_basestrains, GET_CONFIGURABLE(SimulationConfig)->number_substrains);
     }
+#endif 
 
     void NodePyDemo::resetNodeStateCounters(void)
     {
         // This is a chance to do a single call into TOYPHOID at start of timestep
 #ifdef ENABLE_TOYPHOID
-        static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "start_timestep" );
+        static auto pFunc = IdmPyInit( "dtk_toyphoid_individual", "start_timestep" );
         if( pFunc )
         {
             PyObject_CallObject( pFunc, nullptr );

@@ -32,6 +32,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <sys/time.h>
 #endif
 
+#define ENABLE_TOYPHOID 1
 #ifdef ENABLE_TOYPHOID 
 #include "Python.h"
 extern PyObject *
@@ -50,71 +51,10 @@ static const char * _module = "IndividualPyDemo";
 
 namespace Kernel
 {
-inline float generateRandFromLogNormal(float m, float s) {
-  // inputs: m is mean of underlying distribution, s is std dev
-  return (exp((m)+randgen->eGauss()*s));
-}
-
-    class Stopwatch
-    {
-        public:
-            Stopwatch( const char* label )
-            {
-#ifndef WIN32
-                gettimeofday( &start_tv, nullptr );
-#endif
-                _label = label;
-            }
-            ~Stopwatch()
-            {
-#ifndef WIN32
-                struct timeval stop_tv;
-                gettimeofday( &stop_tv, nullptr );
-                float timespentinms = ( stop_tv.tv_sec - start_tv.tv_sec ) + 1e-06* ( stop_tv.tv_usec - start_tv.tv_usec );
-#endif
-                //std::cout << "[" << _label << "] duration = " << timespentinms << std::endl;
-            }
-#ifndef WIN32
-            struct timeval start_tv;
-#endif
-            std::string _label;
-    };
-
-    const float IndividualHumanPyDemo::P1 = 0.1111f; // probability that an infection becomes clinical
-    const float IndividualHumanPyDemo::P5 = 0.05f; // probability of typhoid death
-    const float IndividualHumanPyDemo::P7 = 0.0f; // probability of clinical immunity after acute infection
-    const float IndividualHumanPyDemo::P10 = 0.0f; // probability of clinical immunity from a subclinical infection
-
-    const int IndividualHumanPyDemo::_chronic_duration = 100000000;
-    const int IndividualHumanPyDemo::_clinical_immunity_duration = 160*30;
-
-    // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
-    // mean and std dev of log normal distribution
-    const float IndividualHumanPyDemo::mpe = 2.23f;
-    const float IndividualHumanPyDemo::spe = 0.05192995f;
-    const float IndividualHumanPyDemo::mpf = 1.55f; // math.log(4.7)
-    const float IndividualHumanPyDemo::spf = 0.0696814f;
-
-    // Subclinical infectious duration parameters: mean and standard deviation under and over 30
-    const float IndividualHumanPyDemo::mso30=3.430830f;
-    const float IndividualHumanPyDemo::sso30=0.922945f;
-    const float IndividualHumanPyDemo::msu30=3.1692211f;
-    const float IndividualHumanPyDemo::ssu30=0.5385523f;
-
-    // Acute infectious duration parameters: mean and standard deviation under and over 30
-    const float IndividualHumanPyDemo::mao30=3.430830f;
-    const float IndividualHumanPyDemo::sao30=0.922945f;
-    const float IndividualHumanPyDemo::mau30=3.1692211f;
-    const float IndividualHumanPyDemo::sau30=0.5385523f;
-
-    const int IndividualHumanPyDemo::acute_symptoms_duration = 5; // how long people are symptomatic in days
-    const float IndividualHumanPyDemo::CFRU = 0.1f;   // case fatality rate?
-    const float IndividualHumanPyDemo::CFRH = 0.005f; // hospitalized case fatality rate?
-    const float IndividualHumanPyDemo::treatmentprobability = 0.9f;  // probability of treatment
-
-    // environmental exposure constants
-    const int IndividualHumanPyDemo::N50 = 1110000;
-    const float IndividualHumanPyDemo::alpha = 0.175f;
+    inline float generateRandFromLogNormal(float m, float s) {
+        // inputs: m is mean of underlying distribution, s is std dev
+        return (exp((m)+randgen->eGauss()*s));
+    }
 
     GET_SCHEMA_STATIC_WRAPPER_IMPL(PyDemo.Individual,IndividualHumanPyDemo)
     BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanPyDemo, IndividualHuman)
@@ -125,9 +65,8 @@ inline float generateRandFromLogNormal(float m, float s) {
         IndividualHuman(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
     {
 #ifdef ENABLE_TOYPHOID
-        volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
         // Call into python script to notify of new individual
-        static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "create" );
+        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "create" );
         if( pFunc )
         {
             // pass individual id
@@ -149,16 +88,14 @@ inline float generateRandFromLogNormal(float m, float s) {
             //Py_DECREF( py_newage_str );
             PyErr_Print();
         }
-        delete check;
 #endif
     }
 
     IndividualHumanPyDemo::~IndividualHumanPyDemo()
     {
 #ifdef ENABLE_TOYPHOID
-        volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
         // Call into python script to notify of new individual
-        static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "destroy" );
+        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "destroy" );
         if( pFunc )
         {
             static PyObject * vars = PyTuple_New(1);
@@ -169,7 +106,6 @@ inline float generateRandFromLogNormal(float m, float s) {
             //Py_DECREF( py_id_str  );
             PyErr_Print();
         }
-        delete check;
 #endif
     }
 
@@ -177,7 +113,7 @@ inline float generateRandFromLogNormal(float m, float s) {
     IndividualHumanPyDemo::Configure( const Configuration* config ) // just called once!
     {
         LOG_DEBUG( "Configure\n" );
-        // typhoid
+        // pydemo
         SusceptibilityPyDemoConfig fakeImmunity;
         fakeImmunity.Configure( config );
         InfectionPyDemoConfig fakeInfection;
@@ -199,7 +135,7 @@ inline float generateRandFromLogNormal(float m, float s) {
     void IndividualHumanPyDemo::PropagateContextToDependents()
     {
         IndividualHuman::PropagateContextToDependents();
-        typhoid_susceptibility = static_cast<SusceptibilityPyDemo*>(susceptibility);
+        pydemo_susceptibility = static_cast<SusceptibilityPyDemo*>(susceptibility);
     }
 
     void IndividualHumanPyDemo::setupInterventionsContainer()
@@ -210,20 +146,19 @@ inline float generateRandFromLogNormal(float m, float s) {
     void IndividualHumanPyDemo::CreateSusceptibility(float imm_mod, float risk_mod)
     {
         SusceptibilityPyDemo *newsusceptibility = SusceptibilityPyDemo::CreateSusceptibility(this, m_age, imm_mod, risk_mod);
-        typhoid_susceptibility = newsusceptibility;
+        pydemo_susceptibility = newsusceptibility;
         susceptibility = newsusceptibility;
     }
 
     void IndividualHumanPyDemo::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
     { 
 #ifdef ENABLE_TOYPHOID
-        if( randgen->e() > GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_fraction )
+        /*if( randgen->e() > GET_CONFIGURABLE(SimulationConfig)->pydemo_exposure_fraction )
         {
             return;
-        }
+        }*/
 
-        volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
-        static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "expose" );
+        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "expose" );
         if( pFunc )
         {
             // pass individual id AND dt
@@ -257,7 +192,6 @@ inline float generateRandFromLogNormal(float m, float s) {
             //Py_DECREF( py_tx_route );
             Py_DECREF( retVal );
         }
-        delete check;
         return;
 #endif
     }
@@ -270,10 +204,9 @@ inline float generateRandFromLogNormal(float m, float s) {
     void IndividualHumanPyDemo::UpdateInfectiousness(float dt)
     {
 #ifdef ENABLE_TOYPHOID
-        //volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
         for( auto &route: parent->GetTransmissionRoutes() )
         {
-            static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "update_and_return_infectiousness" );
+            static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "update_and_return_infectiousness" );
             if( pFunc )
             {
                 // pass individual id ONLY
@@ -296,7 +229,6 @@ inline float generateRandFromLogNormal(float m, float s) {
                 Py_DECREF( retVal );
             }
         }
-        //delete check;
         return;
 #endif
     }
@@ -314,8 +246,7 @@ inline float generateRandFromLogNormal(float m, float s) {
     void IndividualHumanPyDemo::Update( float currenttime, float dt)
     {
 #ifdef ENABLE_TOYPHOID
-        volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
-        static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "update" );
+        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "update" );
         if( pFunc )
         {
             // pass individual id AND dt
@@ -345,20 +276,19 @@ inline float generateRandFromLogNormal(float m, float s) {
             //Py_DECREF( py_dt_str );
             PyErr_Print();
         }
-        delete check;
         LOG_DEBUG_F( "state_to_report for individual %d = %s; Infected = %d.\n", GetSuid().data, state_to_report.c_str(), IsInfected() );
 
         if( state_to_report == "S" && state_changed && GetInfections().size() > 0 )
         {
             // ClearInfection
             auto inf = GetInfections().front();
-            IInfectionPyDemo * inf_typhoid  = NULL;
-            if (s_OK != inf->QueryInterface(GET_IID(IInfectionPyDemo ), (void**)&inf_typhoid) )
+            IInfectionPyDemo * inf_pydemo  = NULL;
+            if (s_OK != inf->QueryInterface(GET_IID(IInfectionPyDemo ), (void**)&inf_pydemo) )
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionPyDemo ", "Infection" );
             }
             // get InfectionPyDemo pointer
-            inf_typhoid->Clear();
+            inf_pydemo->Clear();
         }
         else if( state_to_report == "D" && state_changed )
         {
@@ -373,8 +303,7 @@ inline float generateRandFromLogNormal(float m, float s) {
         LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
         IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
 #ifdef ENABLE_TOYPHOID
-        volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
-        static auto pFunc = IdmPyInit( "dtk_typhoid_individual", "acquire_infection" );
+        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "acquire_infection" );
         if( pFunc )
         {
             // pass individual id ONLY
@@ -384,7 +313,6 @@ inline float generateRandFromLogNormal(float m, float s) {
             PyObject_CallObject( pFunc, vars );
             //Py_DECREF( vars );
         }
-        delete check;
 #endif
     }
 
