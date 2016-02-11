@@ -25,7 +25,6 @@
         "CD4_Post_Infection_Weibull_Heterogeneity": 0.0, 
         "CD4_Post_Infection_Weibull_Scale": 540.55, 
         "Campaign_Filename": "campaign.json", 
-        "Circumcision_Reduced_Acquire": 0.6, 
         "Climate_Model": "CLIMATE_OFF", 
         "Coital_Dilution_Factor_2_Partners": 0.75, 
         "Coital_Dilution_Factor_3_Partners": 0.6, 

@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationHIV.h" // for base_year
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
+#include "EventTrigger.h"
 
 static const char* _module = "ReportHIVByAgeAndGender";
 
@@ -67,6 +68,11 @@ namespace Kernel
                            Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT, 
                            false );
 
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Event_Counter_List",
+                           &event_list,  
+                           Report_HIV_ByAgeAndGender_Event_Counter_List_DESC_TEXT, 
+                           false );
+
         bool ret = JsonConfigurable::Configure( inputJson );
 
         if( ret )
@@ -80,6 +86,18 @@ namespace Kernel
                  throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
                                                          "Report_HIV_ByAgeAndGender_Start_Year", startYear, 
                                                          "Report_HIV_ByAgeAndGender_Stop_Year", stopYear );
+            }
+
+            // -----------------------------------------------------------------------------
+            // --- check that the events defined for the report exist in the known event list
+            // -----------------------------------------------------------------------------
+            EventTrigger tmp;
+            for( auto ev : event_list )
+            {
+                // exception will be thrown if ev not in listed_events
+                tmp = ev;
+
+                eventTriggerList.push_back( ev );
             }
         }
 
@@ -207,9 +225,8 @@ namespace Kernel
                    << "Infected CD4 200 To 349 (Not On ART)"    << ", "
                    << "Infected CD4 350 To 499 (Not On ART)"    << ", "
                    << "Infected CD4 500 Plus (Not On ART)"      << ", ";
-        } else {
-            header << "Infected" << ", ";
         }
+        header << "Infected" << ", ";
 
         header << "Newly Infected"   << ", "
                << "On_ART"           << ", "
@@ -220,6 +237,11 @@ namespace Kernel
                << "Tested Ever HIVNeg" << ", "
                << "Tested Positive" << ", "
                << "Tested Negative";
+
+        for( auto ev : event_list )
+        {
+            header << "," << ev ;
+        }
 
         return header.str();
     }
@@ -300,9 +322,8 @@ namespace Kernel
                                               << "," << rd.infected_noART_cd4_200_to_350
                                               << "," << rd.infected_noART_cd4_350_to_500
                                               << "," << rd.infected_noART_cd4_above_500;
-                        } else {
-                            GetOutputStream() << "," << rd.infected;
                         }
+                        GetOutputStream() << "," << rd.infected;
 
 
                         GetOutputStream() << "," << rd.newly_infected
@@ -313,8 +334,14 @@ namespace Kernel
                                           << "," << rd.tested_ever_HIVpos
                                           << "," << rd.tested_ever_HIVneg
                                           << "," << rd.tested_positive
-                                          << "," << rd.tested_negative
-                                          << endl;
+                                          << "," << rd.tested_negative;
+
+                        for( auto ev : event_list )
+                        {
+                            GetOutputStream() << "," << rd.event_counter_map[ ev ];
+                        }
+
+                        GetOutputStream() << endl;
                     }
                 }
                 // ------------------------------------------------
@@ -380,11 +407,8 @@ namespace Kernel
                         data_map[ map_key ].infected_noART_cd4_above_500 += mc_weight;
                 }
             }
-            else
-            {
                 data_map[ map_key ].infected += mc_weight;
             }
-        }
 
         if( isOnART )
             data_map[ map_key ].on_ART += mc_weight;
@@ -440,6 +464,10 @@ namespace Kernel
         else if( StateChange == "HIVTestedNegative" )
         {
             data_map[ map_key ].tested_negative += mc_weight;
+        }
+        else if( std::find( event_list.begin(), event_list.end(), StateChange ) != event_list.end() )
+        {
+             data_map[ map_key ].event_counter_map[ StateChange ] += mc_weight;
         }
  
         return true;

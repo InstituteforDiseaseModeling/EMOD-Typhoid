@@ -13,8 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "MathFunctions.h"
 #include "Sigmoid.h"
 
-class ICircumcision;
-
 namespace Kernel
 {
     struct IRelationshipParameters;
@@ -31,12 +29,12 @@ namespace Kernel
     struct ISTICircumcisionConsumer : public ISupports
     {
         virtual bool IsCircumcised( void ) const = 0;
-        virtual bool ApplyCircumcision( ICircumcision *) = 0;
+        virtual float GetCircumcisedReducedAcquire() const = 0;
+        virtual void ApplyCircumcision( float reduceAcquire ) = 0;
     };
 
-    class ISTICoInfectionStatusChangeApply : public ISupports
+    struct ISTICoInfectionStatusChangeApply : public ISupports
     {
-        public:
         virtual void SpreadStiCoInfection() = 0;
         virtual void CureStiCoInfection() = 0;
     };

@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Debug.h"
 #include "MathFunctions.h"
+#include "IndividualEventContext.h"
 #include "IIndividualHuman.h"
 #include "InfectionSTI.h"
 #include "NodeEventContext.h"
@@ -56,8 +57,6 @@ namespace Kernel
 
     float IndividualHumanSTIConfig::sti_coinfection_mult = 0.10f;
 
-    float IndividualHumanSTIConfig::circumcision_reduced_acquire = 0.60f;
-
     float IndividualHumanSTIConfig::min_days_between_adding_relationships = 60.0f;
 
     float IndividualHumanSTIConfig::condom_transmission_blocking_probability = 0.0f;
@@ -81,8 +80,6 @@ namespace Kernel
         initConfigTypeMap( "Sexual_Debut_Age_Min", &debutAgeYrsMin, STI_Sexual_Debut_Age_Min_DESC_TEXT, 0.0f, FLT_MAX, 13.0f );
 
         initConfigTypeMap( "STI_Coinfection_Multiplier", &sti_coinfection_mult, STI_Coinfection_Multiplier_DESC_TEXT, 0.0f, 100.0f, 10.0f );
-
-        initConfigTypeMap( "Circumcision_Reduced_Acquire", &circumcision_reduced_acquire, STI_Circumcision_Reduced_Acquire_DESC_TEXT, 0.0f, 1.0f, 0.60f );
 
         initConfigTypeMap( "Min_Days_Between_Adding_Relationships", &min_days_between_adding_relationships, STI_Min_Days_Between_Adding_Relationships_DESC_TEXT, 0.0f, 365.0f, 60.0f );
 
@@ -243,7 +240,12 @@ namespace Kernel
         {
             if( IsCircumcised() )
             {
-                mult *= 1 - circumcision_reduced_acquire;
+                ISTICircumcisionConsumer *ic = NULL;
+                if (s_OK != interventions->QueryInterface(GET_IID( ISTICircumcisionConsumer ), (void**)&ic) )
+                {
+                    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTICircumcisionConsumer", "InterventionsContainer" );
+                }
+                mult *= (1.0 - ic->GetCircumcisedReducedAcquire());
             }
         }
         else if( maleToFemaleRelativeInfectivityAges.size() > 0 )
