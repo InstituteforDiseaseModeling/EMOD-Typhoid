@@ -16,6 +16,144 @@
         {
             "Test" :
             {
+                "__class__" : "HIVInterventionsContainer",
+                "drugVaccineReducedAcquire"   : 0.1,
+                "drugVaccineReducedTransmit"  : 0.2,
+                "drugVaccineReducedMortality" : 0.3,
+                "interventions":
+                [
+                    {
+                        "__class__" : "MaleCircumcision",
+                        "cost_per_unit"                 : 1,
+                        "expired"                       : false,
+                        "dont_allow_duplicates"         : false,
+                        "m_ReducedAcquire"              : 0.7,
+                        "m_ApplyIfHigherReducedAcquire" : true,
+                        "m_DistrbutedEventTrigger"      : "Event_9"
+                    },
+                    {
+                        "__class__" : "ModifyStiCoInfectionStatus",
+                        "cost_per_unit" : 2,
+                        "expired"       : false,
+                        "dont_allow_duplicates" : false,
+                        "set_flag_to"   : true
+                    },
+                    {
+                        "__class__":"HIVDelayedIntervention",
+                        "cost_per_unit":1,
+                        "expired":false,
+                        "dont_allow_duplicates" : true,
+                        "remaining_delay_days"  : 52,
+                        "coverage"              : 0.52,
+                        "delay_distribution"    :
+                        {
+                            "m_Type"     : 0,
+                            "m_Param1"   : 9.0,
+                            "m_Param2"   : 0.0
+                        },
+                        "actual_intervention_config" : "null",
+                        "year2DelayMap" :
+                        [
+                            { "key" : 1991, "value" : 10 },
+                            { "key" : 1992, "value" : 20 },
+                            { "key" : 1993, "value" : 30 }
+                        ],
+                        "abortStates" :
+                        {
+                            "values" :
+                            [
+                                "State_7",
+                                "State_8",
+                                "State_9"
+                            ],
+                            "value_source" : "ValidCascadeStates"
+                        },
+                        "cascadeState"                  : "State_4",
+                        "days_remaining"                : 99,
+                        "firstUpdate"                   : true,
+                        "broadcast_event"               : "Event_1",
+                        "broadcast_on_expiration_event" : "Event_2"
+                    }
+                ],
+                "is_circumcised" : true,
+                "circumcision_reduced_require" : 0.7,
+                "STI_blocking_overrides" :
+                [
+                    {
+                        "key" : "TRANSITORY", 
+                        "value" :
+                        {
+                            "m_Min"  : 0.1,
+                            "m_Max"  : 0.2,
+                            "m_Mid"  : 2003.0,
+                            "m_Rate" : 0.3
+                        }
+                    },
+                    {
+                        "key" : "INFORMAL", 
+                        "value" :
+                        {
+                            "m_Min"  : 0.4,
+                            "m_Max"  : 0.5,
+                            "m_Mid"  : 2001.0,
+                            "m_Rate" : 0.6
+                        }
+                    },
+                    {
+                        "key" : "MARITAL", 
+                        "value" :
+                        {
+                            "m_Min"  : 0.7,
+                            "m_Max"  : 0.8,
+                            "m_Mid"  : 2002.0,
+                            "m_Rate" : 0.9
+                        }
+                    }
+                ],
+                "HIV_drug_inactivation_rate"        : 0.1,
+                "HIV_drug_clearance_rate"           : 0.2,
+                "ART_status"                        : 2,
+                "full_suppression_timer"            : 0.3,
+                "days_to_achieve_suppression"       : 0.4,
+                "days_since_most_recent_ART_start"  : 0.5,
+                "m_suppression_failure_timer"       : 0.6,
+                "maternal_transmission_suppression" :
+                {
+                    "_value"     : 0.5,
+                    "_min_value" : 0,
+                    "_max_value" : 1.0
+                },
+                "cascade_state"                     : "State_1",
+                "campaign_semaphores"               : 
+                [
+                    { "key" : "muxer_1", "value" : 1 },
+                    { "key" : "muxer_2", "value" : 2 }
+                ],
+                "on_PreART"                         : true,
+                "ever_tested_HIV_positive"          : true,
+                "ever_tested"                       : true,
+                "ever_received_CD4"                 : true,
+                "ever_staged_for_ART"               : false,
+                "ever_staged"                       : false,
+                "ever_been_on_PreART"               : true,
+                "ever_been_on_ART"                  : false,
+                "time_of_most_recent_test"          : 1,
+                "time_of_most_recent_CD4"           : 2,
+                "time_last_seen_by_healthcare"      : 3,
+                "time_first_started_ART"            : 4,
+                "time_last_started_ART"             : 5,
+                "total_time_on_ART"                 : 6,
+                "last_recorded_WHO_stage"           : 7,
+                "lowest_recorded_CD4"               : 8,
+                "first_recorded_CD4"                : 9,
+                "last_recorded_CD4"                 : 10,
+                "num_times_started_ART"             : 11,
+                "received_HIV_test_results"         : 2
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"InfectionHIV",
                 "suid": 5,
                 "duration"        : 1.1,
