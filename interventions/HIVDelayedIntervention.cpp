@@ -291,18 +291,19 @@ namespace Kernel
         return abortStates;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVDelayedIntervention);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVDelayedIntervention& obj, const unsigned int v)
+    void HIVDelayedIntervention::serialize(IArchive& ar, HIVDelayedIntervention* obj)
     {
-        //ar & obj.year2DelayMap;     // todo: serialize this!
-        //ar & obj.abortStates;
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::DelayedIntervention>(obj);
+        DelayedIntervention::serialize( ar, obj );
+        HIVDelayedIntervention& delayed = *obj;
+
+        ar.labelElement("year2DelayMap"                 ) & delayed.year2DelayMap;
+        ar.labelElement("abortStates"                   ) & delayed.abortStates;
+        ar.labelElement("cascadeState"                  ) & delayed.cascadeState;
+        ar.labelElement("days_remaining"                ) & delayed.days_remaining;
+        ar.labelElement("firstUpdate"                   ) & delayed.firstUpdate;
+        ar.labelElement("broadcast_event"               ) & delayed.broadcast_event;
+        ar.labelElement("broadcast_on_expiration_event" ) & delayed.broadcast_on_expiration_event;
     }
 }
-#endif

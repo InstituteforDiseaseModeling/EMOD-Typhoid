@@ -16,6 +16,45 @@
         {
             "Test" :
             {
+                "__class__":"HIVDelayedIntervention",
+                "cost_per_unit":1,
+                "expired":false,
+                "dont_allow_duplicates" : true,
+                "remaining_delay_days"  : 52,
+                "coverage"              : 0.52,
+                "delay_distribution"    :
+                {
+                    "m_Type"     : 0,
+                    "m_Param1"   : 9.0,
+                    "m_Param2"   : 0.0
+                },
+                "actual_intervention_config" : "null",
+                "year2DelayMap" :
+                [
+                    { "key" : 1991, "value" : 10 },
+                    { "key" : 1992, "value" : 20 },
+                    { "key" : 1993, "value" : 30 }
+                ],
+                "abortStates" :
+                {
+                    "values" :
+                    [
+                        "State_7",
+                        "State_8",
+                        "State_9"
+                    ],
+                    "value_source" : "ValidCascadeStates"
+                },
+                "cascadeState"                  : "State_4",
+                "days_remaining"                : 99,
+                "firstUpdate"                   : true,
+                "broadcast_event"               : "Event_1",
+                "broadcast_on_expiration_event" : "Event_2"
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"DelayedIntervention",
                 "cost_per_unit":9,
                 "expired":false,
