@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 
 static const char * _module = "HIVARTStagingCD4AgnosticDiagnostic";
 

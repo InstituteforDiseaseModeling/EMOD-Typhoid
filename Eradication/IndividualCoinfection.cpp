@@ -29,6 +29,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Log.h"
 
+// These includes are only used for serialization
+#include "InfectionTB.h"
+#include "SusceptibilityTB.h"
+#include "TBInterventionsContainer.h"
+
+// GHH added: These includes are only used for serialization
+#include "InfectionHIV.h"
+#include "SusceptibilityHIV.h"
+#include "HIVInterventionsContainer.h"
+
+
+
 static const char* _module = "IndividualHumanCoinfection";
 
 namespace Kernel

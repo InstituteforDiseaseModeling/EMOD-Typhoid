@@ -9,7 +9,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "PMTCT.h"
-#include "HIVInterventionsContainer.h"
+#include "Common.h"
+#include "IHIVInterventionsContainer.h"
+#include "Contexts.h"
 
 static const char * _module = "PMTCT";
 

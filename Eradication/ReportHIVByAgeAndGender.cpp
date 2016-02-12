@@ -13,8 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "ReportHIVByAgeAndGender.h"
 #include "NodeHIV.h"
-#include "HIVInterventionsContainer.h"
-#include "NodeLevelHealthTriggeredIV.h"
+#include "IHIVInterventionsContainer.h"
 #include "ISimulation.h"
 #include "SimulationHIV.h" // for base_year
 #include "IIndividualHumanHIV.h"
