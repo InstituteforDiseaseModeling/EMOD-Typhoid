@@ -16,6 +16,53 @@
         {
             "Test" :
             {
+                "__class__":"HIVSetCascadeState",
+                "cost_per_unit":7,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "diagnostic_type":0,
+                "base_specificity":
+                {
+                    "_value":0.4,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "base_sensitivity":
+                {
+                    "_value":0.3,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "treatment_fraction":
+                {
+                    "_value":0.2,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "days_to_diagnosis":3,
+                "positive_diagnosis_config":"null",
+                "positive_diagnosis_event":"Event_9",
+                "abortStates" :
+                {
+                    "values" :
+                    [
+                        "State_51",
+                        "State_52",
+                        "State_53"
+                    ],
+                    "value_source" : "ValidCascadeStates"
+                },
+                "cascadeState"               : "State_22",
+                "firstUpdate"                : false,
+                "result_of_positive_test"    : true,
+                "original_days_to_diagnosis" : 11,
+                "absoluteDuration"           : 44,
+                "negative_diagnosis_event"   : "Event_2"
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVRapidHIVDiagnostic",
                 "cost_per_unit":7,
                 "expired":false,
