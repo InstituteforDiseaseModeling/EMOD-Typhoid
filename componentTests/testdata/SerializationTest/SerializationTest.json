@@ -16,6 +16,47 @@
         {
             "Test" :
             {
+                "__class__":"HIVMuxer",
+                "cost_per_unit":5,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "remaining_delay_days"  : 23,
+                "coverage"              : 0.32,
+                "delay_distribution"    :
+                {
+                    "m_Type"     : 1,
+                    "m_Param1"   : 0.0,
+                    "m_Param2"   : 5.0
+                },
+                "actual_intervention_config" : "null",
+                "year2DelayMap" :
+                [
+                    { "key" : 1994, "value" : 15 },
+                    { "key" : 1995, "value" : 25 },
+                    { "key" : 1996, "value" : 35 }
+                ],
+                "abortStates" :
+                {
+                    "values" :
+                    [
+                        "State_7",
+                        "State_8",
+                        "State_9"
+                    ],
+                    "value_source" : "ValidCascadeStates"
+                },
+                "cascadeState"                  : "State_4",
+                "days_remaining"                : 99,
+                "firstUpdate"                   : true,
+                "broadcast_event"               : "Event_3",
+                "broadcast_on_expiration_event" : "Event_4",
+                "max_entries"                   : 2,
+                "muxer_name"                    : "Seahawks"
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVDrawBlood",
                 "cost_per_unit":4,
                 "expired":false,

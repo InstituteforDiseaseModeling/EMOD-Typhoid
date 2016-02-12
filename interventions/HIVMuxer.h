@@ -38,5 +38,7 @@ namespace Kernel
 
         int max_entries;
         std::string muxer_name;
+
+        DECLARE_SERIALIZABLE(HIVMuxer);
     };
 }
