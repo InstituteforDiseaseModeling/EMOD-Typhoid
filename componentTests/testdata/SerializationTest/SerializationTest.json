@@ -16,6 +16,53 @@
         {
             "Test" :
             {
+                "__class__":"HIVDrawBlood",
+                "cost_per_unit":4,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "diagnostic_type":2,
+                "base_specificity":
+                {
+                    "_value":0.9,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "base_sensitivity":
+                {
+                    "_value":0.8,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "treatment_fraction":
+                {
+                    "_value":0.7,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "days_to_diagnosis":4,
+                "positive_diagnosis_config":"null",
+                "positive_diagnosis_event":"Event_6",
+                "abortStates" :
+                {
+                    "values" :
+                    [
+                        "State_11",
+                        "State_21",
+                        "State_31"
+                    ],
+                    "value_source" : "ValidCascadeStates"
+                },
+                "cascadeState"               : "State_4",
+                "firstUpdate"                : false,
+                "result_of_positive_test"    : true,
+                "original_days_to_diagnosis" : 22,
+                "absoluteDuration"           : 33,
+                "negative_diagnosis_event"   : "Event_8"
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVDelayedIntervention",
                 "cost_per_unit":1,
                 "expired":false,

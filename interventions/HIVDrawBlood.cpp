@@ -72,15 +72,14 @@ namespace Kernel
 
         HIVSimpleDiagnostic::positiveTestDistribute();
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVDrawBlood& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(HIVDrawBlood);
+
+    void HIVDrawBlood::serialize(IArchive& ar, HIVDrawBlood* obj)
     {
-        //ar & obj.event2ProbabilityMap;     // todo: serialize this!
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVDrawBlood& blood = *obj;
+
+        //ar.labelElement("xxx") & delayed.xxx;
     }
 }
-#endif
