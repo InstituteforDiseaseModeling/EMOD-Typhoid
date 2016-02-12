@@ -48,4 +48,14 @@ namespace Kernel
 
         return JsonConfigurable::Configure( inputJson );
     }
+
+    REGISTER_SERIALIZABLE(SimpleImmunoglobulin);
+
+    void SimpleImmunoglobulin::serialize(IArchive& ar, SimpleImmunoglobulin* obj)
+    {
+        SimpleVaccine::serialize( ar, obj );
+        SimpleImmunoglobulin& simple = *obj;
+
+        //ar.labelElement("xxx") & simple.xxx;
+    }
 }

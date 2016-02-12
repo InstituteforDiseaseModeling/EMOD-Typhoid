@@ -13,11 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    // Not used anywhere as of this time, but creating for consistency.
-    class ISimpleImmunoglobulin : public ISupports
-    {
-    };
-
     class SimpleImmunoglobulin : public SimpleVaccine
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleImmunoglobulin, IDistributableIntervention)
@@ -25,5 +20,8 @@ namespace Kernel
     public:
         SimpleImmunoglobulin();
         bool Configure( const Configuration* pConfig );
+
+    protected:
+        DECLARE_SERIALIZABLE(SimpleImmunoglobulin);
     };
 }
