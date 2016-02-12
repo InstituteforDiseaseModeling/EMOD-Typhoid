@@ -17,20 +17,20 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <string>
 
 
-#include "SusceptibilityPyDemo.h"
+#include "SusceptibilityPy.h"
 
-static const char * _module = "SusceptibilityPyDemo";
+static const char * _module = "SusceptibilityPy";
 
 #ifdef ENABLE_PYTHON
 
 namespace Kernel
 {
-    GET_SCHEMA_STATIC_WRAPPER_IMPL(PyDemo.Susceptibility,SusceptibilityPyDemoConfig)
-    BEGIN_QUERY_INTERFACE_BODY(SusceptibilityPyDemoConfig)
-    END_QUERY_INTERFACE_BODY(SusceptibilityPyDemoConfig)
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(Py.Susceptibility,SusceptibilityPyConfig)
+    BEGIN_QUERY_INTERFACE_BODY(SusceptibilityPyConfig)
+    END_QUERY_INTERFACE_BODY(SusceptibilityPyConfig)
 
     bool
-    SusceptibilityPyDemoConfig::Configure(
+    SusceptibilityPyConfig::Configure(
         const Configuration* config
     )
     {
@@ -39,55 +39,56 @@ namespace Kernel
         return JsonConfigurable::Configure( config );
     }
 
-    BEGIN_QUERY_INTERFACE_BODY(SusceptibilityPyDemo)
-        HANDLE_INTERFACE(ISusceptibilityPyDemo)
-        HANDLE_INTERFACE(ISusceptibilityPyDemoReportable)
-    END_QUERY_INTERFACE_BODY(SusceptibilityPyDemo)
+    BEGIN_QUERY_INTERFACE_BODY(SusceptibilityPy)
+        HANDLE_INTERFACE(ISusceptibilityPy)
+        HANDLE_INTERFACE(ISusceptibilityPyReportable)
+    END_QUERY_INTERFACE_BODY(SusceptibilityPy)
 
-    SusceptibilityPyDemo::SusceptibilityPyDemo(IIndividualHumanContext *context)
+    SusceptibilityPy::SusceptibilityPy(IIndividualHumanContext *context)
         : Susceptibility(context) 
     {
         // Everything initialized to 0 in Initialize
     }
 
-    void SusceptibilityPyDemo::Initialize(float _age, float _immmod, float _riskmod)
+    void SusceptibilityPy::Initialize(float _age, float _immmod, float _riskmod)
     {
-        LOG_DEBUG_F( "Initializing PyDemo immunity object for new individual: id=%lu, age=%f, immunity modifier=%f, risk modifier=%f\n", parent->GetSuid().data, _age, _immmod, _riskmod );
+        LOG_DEBUG_F( "Initializing Py immunity object for new individual: id=%lu, age=%f, immunity modifier=%f, risk modifier=%f\n", parent->GetSuid().data, _age, _immmod, _riskmod );
         Susceptibility::Initialize(_age, _immmod, _riskmod);
 
         // throws exception on error, no return type. 
     }
 
-    SusceptibilityPyDemo::~SusceptibilityPyDemo(void)
+    SusceptibilityPy::~SusceptibilityPy(void)
     {
     }
 
-    SusceptibilityPyDemo *SusceptibilityPyDemo::CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod)
+    SusceptibilityPy *SusceptibilityPy::CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod)
     {
-        //LOG_DEBUG_F( "Creating PyDemo immunity object for new individual: age=%f, immunity modifier=%f, risk modifier=%f\n", age, immmod, riskmod );
-        SusceptibilityPyDemo *newsusceptibility = _new_ SusceptibilityPyDemo(context);
+        //LOG_DEBUG_F( "Creating Py immunity object for new individual: age=%f, immunity modifier=%f, risk modifier=%f\n", age, immmod, riskmod );
+        SusceptibilityPy *newsusceptibility = _new_ SusceptibilityPy(context);
         newsusceptibility->Initialize(age, immmod, riskmod);
 
         return newsusceptibility;
     }
 
-    void SusceptibilityPyDemo::Update(float dt)
+    void SusceptibilityPy::Update(float dt)
     {
         age += dt; // tracks age for immune purposes
     }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityPyDemo)
-/*
-namespace Kernel {
+BOOST_CLASS_EXPORT(Kernel::SusceptibilityPy)
 
+namespace Kernel {
+/*
     template<class Archive>
-    void serialize(Archive & ar, SusceptibilityPyDemo &sus, const unsigned int  file_version )
+    void serialize(Archive & ar, SusceptibilityPy &sus, const unsigned int  file_version )
     {
         ar & boost::serialization::base_object<SusceptibilityEnvironmental>(sus);
-    }
-}*/
+}
+*/
+}
 #endif
 
 #endif // ENABLE_PYTHON

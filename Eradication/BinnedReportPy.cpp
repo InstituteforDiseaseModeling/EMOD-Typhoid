@@ -17,7 +17,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #ifdef ENABLE_PYTHON
 
-#include "BinnedReportPyDemo.h"
+#include "BinnedReportPy.h"
 
 #include <map>
 #include <string>
@@ -26,8 +26,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "Environment.h"
 #include "Exceptions.h"
 #include "Sugar.h"
-#include "PyDemoDefs.h"
-#include "IndividualPyDemo.h"
+#include "IndividualPy.h"
 #include "Common.h"
 
 using namespace std;
@@ -35,26 +34,26 @@ using namespace json;
 using namespace Kernel;
 
 // Module name for logging
-static const char * _module = "BinnedReportPyDemo"; 
+static const char * _module = "BinnedReportPy"; 
 
 static const std::string _num_chronic_carriers_label     = "Number of Chronic Carriers";
 static const std::string _num_subclinic_infections_label = "Number of New Sub-Clinical Infections";
 static const std::string _num_acute_infections_label     = "Number of New Acute Infections";
 
 Kernel::IReport*
-BinnedReportPyDemo::CreateReport()
+BinnedReportPy::CreateReport()
 {
-    return new BinnedReportPyDemo();
+    return new BinnedReportPy();
 }
 
 // Derived constructor calls base constructor to initialized reduced timesteps etc. 
-BinnedReportPyDemo::BinnedReportPyDemo() 
+BinnedReportPy::BinnedReportPy() 
     : BinnedReport()
     , carrier_bins( nullptr )
     , subclinical_bins( nullptr )
     , acute_bins( nullptr )
 {
-    LOG_DEBUG( "BinnedReportPyDemo ctor\n" );
+    LOG_DEBUG( "BinnedReportPy ctor\n" );
     _num_age_bins = 100;
 
     _age_bin_friendly_names.resize( _num_age_bins );
@@ -66,14 +65,14 @@ BinnedReportPyDemo::BinnedReportPyDemo()
     }
 }
 
-BinnedReportPyDemo::~BinnedReportPyDemo()
+BinnedReportPy::~BinnedReportPy()
 {
     delete[] carrier_bins;
     delete[] subclinical_bins;
     delete[] acute_bins;
 }
 
-void BinnedReportPyDemo::initChannelBins()
+void BinnedReportPy::initChannelBins()
 {
     carrier_bins = new float[num_total_bins];
     subclinical_bins = new float[num_total_bins];
@@ -84,14 +83,14 @@ void BinnedReportPyDemo::initChannelBins()
     clearChannelsBins();
 }
 
-void BinnedReportPyDemo::clearChannelsBins()
+void BinnedReportPy::clearChannelsBins()
 {
     memset(carrier_bins, 0, num_total_bins * sizeof(float));
     memset(subclinical_bins, 0, num_total_bins * sizeof(float));
     memset(acute_bins, 0, num_total_bins * sizeof(float));
 }
 
-void BinnedReportPyDemo::EndTimestep( float currentTime, float dt )
+void BinnedReportPy::EndTimestep( float currentTime, float dt )
 {
 	if (currentTime<6570){
 		num_timesteps--;
@@ -107,15 +106,15 @@ void BinnedReportPyDemo::EndTimestep( float currentTime, float dt )
     clearChannelsBins();
 }
 
-void  BinnedReportPyDemo::LogIndividualData( Kernel::IndividualHuman * individual )
+void  BinnedReportPy::LogIndividualData( Kernel::IndividualHuman * individual )
 {
-    LOG_DEBUG( "BinnedReportPyDemo::LogIndividualData\n" );
+    LOG_DEBUG( "BinnedReportPy::LogIndividualData\n" );
 
-    // Look ma, I can copy-paste code...(from ReportPyDemo.cpp, let's refactor)
-    Kernel::IIndividualHumanPyDemo* typhoid_individual = NULL;
-    if( individual->QueryInterface( GET_IID( Kernel::IIndividualHumanPyDemo ), (void**)&typhoid_individual ) != Kernel::s_OK )
+    // Look ma, I can copy-paste code...(from ReportPy.cpp, let's refactor)
+    Kernel::IIndividualHumanPy* typhoid_individual = NULL;
+    if( individual->QueryInterface( GET_IID( Kernel::IIndividualHumanPy ), (void**)&typhoid_individual ) != Kernel::s_OK )
     {
-        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualPyDemo", "IndividualHuman" );
+        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualPy", "IndividualHuman" );
     }
 
     auto mc_weight = individual->GetMonteCarloWeight();
@@ -141,7 +140,7 @@ void  BinnedReportPyDemo::LogIndividualData( Kernel::IndividualHuman * individua
     BinnedReport::LogIndividualData(individual);
 }
 
-void BinnedReportPyDemo::postProcessAccumulatedData()
+void BinnedReportPy::postProcessAccumulatedData()
 {
 }
 

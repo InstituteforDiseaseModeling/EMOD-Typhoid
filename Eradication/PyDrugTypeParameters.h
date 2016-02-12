@@ -17,28 +17,28 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #if 0
 #include "Configure.h"
 #include "InterventionEnums.h"
-#include "PyDemoDrugTypeParameters.h"
+#include "PyDrugTypeParameters.h"
 
 namespace Kernel {
-    class PyDemoDrugTypeParameters : public JsonConfigurable
+    class PyDrugTypeParameters : public JsonConfigurable
     {
         friend class SimulationConfig;
         friend class AntipoliovirusDrug;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
     public:
-        PyDemoDrugTypeParameters( const PyDemoDrugType::Enum& drugType );
-        static PyDemoDrugTypeParameters* CreatePyDemoDrugTypeParameters( const PyDemoDrugType::Enum& drugType );
-        virtual ~PyDemoDrugTypeParameters();
+        PyDrugTypeParameters( const PyDrugType::Enum& drugType );
+        static PyDrugTypeParameters* CreatePyDrugTypeParameters( const PyDrugType::Enum& drugType );
+        virtual ~PyDrugTypeParameters();
         bool Configure( const ::Configuration *json );
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
 
-        static map< int, PyDemoDrugTypeParameters* > _pdtMap;
+        static map< int, PyDrugTypeParameters* > _pdtMap;
 
 
     protected:
 
     private:
-        PyDemoDrugType::Enum _drugType;
+        PyDrugType::Enum _drugType;
     };
 }
 #endif

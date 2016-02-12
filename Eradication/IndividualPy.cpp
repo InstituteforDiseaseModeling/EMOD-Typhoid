@@ -20,11 +20,11 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "Contexts.h"
 #include "RANDOM.h"
 #include "Environment.h"
-#include "IndividualPyDemo.h"
-#include "SusceptibilityPyDemo.h"
-#include "InfectionPyDemo.h"
+#include "IndividualPy.h"
+#include "SusceptibilityPy.h"
+#include "InfectionPy.h"
 #include "IContagionPopulation.h"
-#include "PyDemoInterventionsContainer.h"
+#include "PyInterventionsContainer.h"
 #include "IdmString.h"
 #include "SimulationConfig.h"
 
@@ -44,7 +44,7 @@ IdmPyInit(
 
 #pragma warning(disable: 4244)
 
-static const char * _module = "IndividualPyDemo";
+static const char * _module = "IndividualPy";
 
 #define UNINIT_TIMER (-100.0f)
 
@@ -56,12 +56,12 @@ namespace Kernel
         return (exp((m)+randgen->eGauss()*s));
     }
 
-    GET_SCHEMA_STATIC_WRAPPER_IMPL(PyDemo.Individual,IndividualHumanPyDemo)
-    BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanPyDemo, IndividualHuman)
-        HANDLE_INTERFACE(IIndividualHumanPyDemo)
-    END_QUERY_INTERFACE_DERIVED(IndividualHumanPyDemo, IndividualHuman)
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(Py.Individual,IndividualHumanPy)
+    BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanPy, IndividualHuman)
+        HANDLE_INTERFACE(IIndividualHumanPy)
+    END_QUERY_INTERFACE_DERIVED(IndividualHumanPy, IndividualHuman)
 
-    IndividualHumanPyDemo::IndividualHumanPyDemo(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
+    IndividualHumanPy::IndividualHumanPy(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
         IndividualHuman(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
     {
 #ifdef ENABLE_TOYPHOID
@@ -91,7 +91,7 @@ namespace Kernel
 #endif
     }
 
-    IndividualHumanPyDemo::~IndividualHumanPyDemo()
+    IndividualHumanPy::~IndividualHumanPy()
     {
 #ifdef ENABLE_TOYPHOID
         // Call into python script to notify of new individual
@@ -110,47 +110,47 @@ namespace Kernel
     }
 
     bool
-    IndividualHumanPyDemo::Configure( const Configuration* config ) // just called once!
+    IndividualHumanPy::Configure( const Configuration* config ) // just called once!
     {
         LOG_DEBUG( "Configure\n" );
         // pydemo
-        SusceptibilityPyDemoConfig fakeImmunity;
+        SusceptibilityPyConfig fakeImmunity;
         fakeImmunity.Configure( config );
-        InfectionPyDemoConfig fakeInfection;
+        InfectionPyConfig fakeInfection;
         fakeInfection.Configure( config );
 
         //do we need to call initConfigTypeMap? DLC 
         return IndividualHuman::Configure( config );
     }
 
-    IndividualHumanPyDemo *IndividualHumanPyDemo::CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
+    IndividualHumanPy *IndividualHumanPy::CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
     {
-        IndividualHumanPyDemo *newhuman = _new_ IndividualHumanPyDemo(id, monte_carlo_weight, initial_age, gender, initial_poverty);
+        IndividualHumanPy *newhuman = _new_ IndividualHumanPy(id, monte_carlo_weight, initial_age, gender, initial_poverty);
         
         newhuman->SetContextTo(context);
         LOG_DEBUG_F( "Created human with age=%f\n", newhuman->m_age );
         return newhuman;
     }
 
-    void IndividualHumanPyDemo::PropagateContextToDependents()
+    void IndividualHumanPy::PropagateContextToDependents()
     {
         IndividualHuman::PropagateContextToDependents();
-        pydemo_susceptibility = static_cast<SusceptibilityPyDemo*>(susceptibility);
+        pydemo_susceptibility = static_cast<SusceptibilityPy*>(susceptibility);
     }
 
-    void IndividualHumanPyDemo::setupInterventionsContainer()
+    void IndividualHumanPy::setupInterventionsContainer()
     {
-        interventions = _new_ PyDemoInterventionsContainer();
+        interventions = _new_ PyInterventionsContainer();
     }
 
-    void IndividualHumanPyDemo::CreateSusceptibility(float imm_mod, float risk_mod)
+    void IndividualHumanPy::CreateSusceptibility(float imm_mod, float risk_mod)
     {
-        SusceptibilityPyDemo *newsusceptibility = SusceptibilityPyDemo::CreateSusceptibility(this, m_age, imm_mod, risk_mod);
+        SusceptibilityPy *newsusceptibility = SusceptibilityPy::CreateSusceptibility(this, m_age, imm_mod, risk_mod);
         pydemo_susceptibility = newsusceptibility;
         susceptibility = newsusceptibility;
     }
 
-    void IndividualHumanPyDemo::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
+    void IndividualHumanPy::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
     { 
 #ifdef ENABLE_TOYPHOID
         /*if( randgen->e() > GET_CONFIGURABLE(SimulationConfig)->pydemo_exposure_fraction )
@@ -202,12 +202,12 @@ namespace Kernel
 #endif
     }
 
-    void IndividualHumanPyDemo::ExposeToInfectivity(float dt, const TransmissionGroupMembership_t* transmissionGroupMembership)
+    void IndividualHumanPy::ExposeToInfectivity(float dt, const TransmissionGroupMembership_t* transmissionGroupMembership)
     {
         IndividualHuman::ExposeToInfectivity(dt, transmissionGroupMembership);
     }
 
-    void IndividualHumanPyDemo::UpdateInfectiousness(float dt)
+    void IndividualHumanPy::UpdateInfectiousness(float dt)
     {
 #ifdef ENABLE_TOYPHOID
         for( auto &route: parent->GetTransmissionRoutes() )
@@ -242,17 +242,17 @@ namespace Kernel
 #endif
     }
 
-    Infection* IndividualHumanPyDemo::createInfection( suids::suid _suid )
+    Infection* IndividualHumanPy::createInfection( suids::suid _suid )
     {
-        return InfectionPyDemo::CreateInfection(this, _suid);
+        return InfectionPy::CreateInfection(this, _suid);
     }
 
-    std::string IndividualHumanPyDemo::processPrePatent( float dt )
+    std::string IndividualHumanPy::processPrePatent( float dt )
     {
         return state_to_report;
     }
 
-    void IndividualHumanPyDemo::Update( float currenttime, float dt)
+    void IndividualHumanPy::Update( float currenttime, float dt)
     {
 #ifdef ENABLE_TOYPHOID
         static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "update" );
@@ -291,12 +291,12 @@ namespace Kernel
         {
             // ClearInfection
             auto inf = GetInfections().front();
-            IInfectionPyDemo * inf_pydemo  = NULL;
-            if (s_OK != inf->QueryInterface(GET_IID(IInfectionPyDemo ), (void**)&inf_pydemo) )
+            IInfectionPy * inf_pydemo  = NULL;
+            if (s_OK != inf->QueryInterface(GET_IID(IInfectionPy ), (void**)&inf_pydemo) )
             {
-                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionPyDemo ", "Infection" );
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionPy ", "Infection" );
             }
-            // get InfectionPyDemo pointer
+            // get InfectionPy pointer
             inf_pydemo->Clear();
         }
         else if( state_to_report == "D" && state_changed )
@@ -307,7 +307,7 @@ namespace Kernel
         return IndividualHuman::Update( currenttime, dt);
     }
 
-    void IndividualHumanPyDemo::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
+    void IndividualHumanPy::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
     {
         LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
         IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
@@ -325,7 +325,7 @@ namespace Kernel
 #endif
     }
 
-    HumanStateChange IndividualHumanPyDemo::GetStateChange() const
+    HumanStateChange IndividualHumanPy::GetStateChange() const
     {
         HumanStateChange retVal = StateChange;
         //auto parsed = IdmString(state_to_report).split();
@@ -337,7 +337,7 @@ namespace Kernel
         return retVal;
     }
 
-    bool IndividualHumanPyDemo::IsChronicCarrier( bool incidence_only ) const
+    bool IndividualHumanPy::IsChronicCarrier( bool incidence_only ) const
     {
         if( state_to_report == "C" &&
             ( ( incidence_only && state_changed ) ||
@@ -353,7 +353,7 @@ namespace Kernel
         }
     }
 
-    bool IndividualHumanPyDemo::IsSubClinical( bool incidence_only ) const
+    bool IndividualHumanPy::IsSubClinical( bool incidence_only ) const
     {
         if( state_to_report == "SUB" &&
             ( ( incidence_only && state_changed ) ||
@@ -369,7 +369,7 @@ namespace Kernel
         }
     }
 
-    bool IndividualHumanPyDemo::IsAcute( bool incidence_only ) const
+    bool IndividualHumanPy::IsAcute( bool incidence_only ) const
     {
         if( state_to_report == "A" &&
             ( ( incidence_only && state_changed ) ||
@@ -385,7 +385,7 @@ namespace Kernel
         }
     }
 
-    bool IndividualHumanPyDemo::IsPrePatent( bool incidence_only ) const
+    bool IndividualHumanPy::IsPrePatent( bool incidence_only ) const
     {
         if( state_to_report == "P" &&
             ( ( incidence_only && state_changed ) ||
@@ -403,24 +403,24 @@ namespace Kernel
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include "InfectionPyDemo.h"
-#include "SusceptibilityPyDemo.h"
-#include "PyDemoInterventionsContainer.h"
+#include "InfectionPy.h"
+#include "SusceptibilityPy.h"
+#include "PyInterventionsContainer.h"
 
 #include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanPyDemo)
+BOOST_CLASS_EXPORT(Kernel::IndividualHumanPy)
 
-/*
 namespace Kernel
 {
+/*
     template<class Archive>
-    void serialize(Archive & ar, IndividualHumanPyDemo& human, const unsigned int  file_version )
+    void serialize(Archive & ar, IndividualHumanPy& human, const unsigned int  file_version )
     {
-        LOG_DEBUG("(De)serializing IndividualHumanPyDemo\n");
+        LOG_DEBUG("(De)serializing IndividualHumanPy\n");
 
-        ar.template register_type<Kernel::InfectionPyDemo>();
-        ar.template register_type<Kernel::SusceptibilityPyDemo>();
-        ar.template register_type<Kernel::PyDemoInterventionsContainer>();
+        ar.template register_type<Kernel::InfectionPy>();
+        ar.template register_type<Kernel::SusceptibilityPy>();
+        ar.template register_type<Kernel::PyInterventionsContainer>();
             
         // Serialize fields - N/A
         
@@ -428,8 +428,8 @@ namespace Kernel
         // Serialize base class
         ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
     }
-}
 */
+}
 
 #endif
 

@@ -41,7 +41,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 
 #ifdef ENABLE_PYTHON
-#include "SimulationPyDemo.h"
+#include "SimulationPy.h"
 #endif
 
 #include "DllLoader.h"
@@ -94,8 +94,8 @@ namespace Kernel
                 sim_type = SimType::HIV_SIM;
 #endif // HIV
 #ifdef ENABLE_PYTHON
-            else if (sSimType == "PYDEMO_SIM")
-                sim_type = SimType::PYDEMO_SIM;
+            else if (sSimType == "PY_SIM")
+                sim_type = SimType::PY_SIM;
 #endif
             else
             {
@@ -172,8 +172,8 @@ namespace Kernel
                 break;
 #endif // HIV
 #ifdef ENABLE_PYTHON 
-                case SimType::PYDEMO_SIM:
-                    newsim = SimulationPyDemo::CreateSimulation(EnvPtr->Config);
+                case SimType::PY_SIM:
+                    newsim = SimulationPy::CreateSimulation(EnvPtr->Config);
                 break;
 #endif
                 default: 

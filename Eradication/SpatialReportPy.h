@@ -15,27 +15,42 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #pragma once
 
-#include "BinnedReport.h"
+#include <list>
+#include <map>
+#include <vector>
+#include <string>
+#include <fstream>
 
-class BinnedReportPyDemo : public BinnedReport
+#include "SpatialReport.h"
+#include "BoostLibWrapper.h"
+
+namespace Kernel {
+
+class SpatialReportPy : public SpatialReport
 {
+    GET_SCHEMA_STATIC_WRAPPER(SpatialReportPy)
+
 public:
     static IReport* CreateReport();
-    virtual ~BinnedReportPyDemo();
+    virtual ~SpatialReportPy() { }
 
     virtual void LogIndividualData( Kernel::IndividualHuman * individual );
-    virtual void EndTimestep( float currentTime, float dt );
+    virtual void LogNodeData( Kernel::INodeContext * pNC );
+
+protected:
+    SpatialReportPy();
 
     virtual void postProcessAccumulatedData();
 
-protected:
-    BinnedReportPyDemo();
+    virtual void populateChannelInfos(tChanInfoMap &channel_infos);
 
-    virtual void initChannelBins();
-    void clearChannelsBins();
+    // counters for LogIndividualData stuff 
 
-    float *carrier_bins;
-    float *subclinical_bins;
-    float *acute_bins;
-    // channels specific to this particular report-type
+private:
+#if USE_BOOST_SERIALIZATION
+    friend class ::boost::serialization::access;
+    template<class Archive>
+    friend void serialize(Archive &ar, SpatialReportPy& report, const unsigned int v);
+#endif
 };
+}

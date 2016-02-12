@@ -25,39 +25,39 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "Contexts.h"
 #include "InterventionFactory.h"
-#include "PyDemoInterventionsContainer.h"
+#include "PyInterventionsContainer.h"
 
 
 namespace Kernel
 {
-    static const char* _module = "PyDemoInterventionsContainer";
+    static const char* _module = "PyInterventionsContainer";
 
-    BEGIN_QUERY_INTERFACE_DERIVED(PyDemoInterventionsContainer, InterventionsContainer)
-        //HANDLE_INTERFACE(IPyDemoVaccineEffects)
-        //HANDLE_INTERFACE(IPyDemoDrugEffects)
-        HANDLE_INTERFACE(IPyDemoDrugEffectsApply)
-    END_QUERY_INTERFACE_DERIVED(PyDemoInterventionsContainer, InterventionsContainer)
+    BEGIN_QUERY_INTERFACE_DERIVED(PyInterventionsContainer, InterventionsContainer)
+        //HANDLE_INTERFACE(IPyVaccineEffects)
+        //HANDLE_INTERFACE(IPyDrugEffects)
+        HANDLE_INTERFACE(IPyDrugEffectsApply)
+    END_QUERY_INTERFACE_DERIVED(PyInterventionsContainer, InterventionsContainer)
 
-    PyDemoInterventionsContainer::PyDemoInterventionsContainer()
+    PyInterventionsContainer::PyInterventionsContainer()
     {
     }
 
-    PyDemoInterventionsContainer::~PyDemoInterventionsContainer()
+    PyInterventionsContainer::~PyInterventionsContainer()
     {
     }
 
-    void PyDemoInterventionsContainer::Update(float dt)
+    void PyInterventionsContainer::Update(float dt)
     {
         // call base level
         InterventionsContainer::Update(dt);
     }
 
-    bool PyDemoInterventionsContainer::GiveIntervention( IDistributableIntervention * pIV )
+    bool PyInterventionsContainer::GiveIntervention( IDistributableIntervention * pIV )
     {
         pIV->SetContextTo( parent );
 
         // Additionally, keep this newly-distributed polio-vaccine pointer in the 'new_vaccines' list.  
-        // IndividualHuman::applyNewInterventionEffects will come looking for these to apply to SusceptibilityPyDemo.
+        // IndividualHuman::applyNewInterventionEffects will come looking for these to apply to SusceptibilityPy.
         IDistributableIntervention* ipvac = nullptr;
 /*
         IDrug * pDrug = NULL;
@@ -70,33 +70,33 @@ namespace Kernel
         return InterventionsContainer::GiveIntervention(pIV);
     }
 
-    void PyDemoInterventionsContainer::GiveDrug(IDrug* drug)
+    void PyInterventionsContainer::GiveDrug(IDrug* drug)
     {
         drug->ConfigureDrugTreatment();
     }
 
-    void PyDemoInterventionsContainer::ApplyDrugVaccineReducedAcquireEffect( float rate )
+    void PyInterventionsContainer::ApplyDrugVaccineReducedAcquireEffect( float rate )
     {
     }
     
-    void PyDemoInterventionsContainer::ApplyDrugVaccineReducedTransmitEffect( float rate )
+    void PyInterventionsContainer::ApplyDrugVaccineReducedTransmitEffect( float rate )
     {
     }
 
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::PyDemoInterventionsContainer)
+BOOST_CLASS_EXPORT(Kernel::PyInterventionsContainer)
 namespace Kernel
 {
     template<class Archive>
-    void serialize(Archive &ar, PyDemoInterventionsContainer& cont, const unsigned int v)
+    void serialize(Archive &ar, PyInterventionsContainer& cont, const unsigned int v)
     {
-        static const char * _module = "PyDemoInterventionsContainer";
-        LOG_DEBUG("(De)serializing PyDemoInterventionsContainer\n");
+        static const char * _module = "PyInterventionsContainer";
+        LOG_DEBUG("(De)serializing PyInterventionsContainer\n");
 
-        //ar & cont.new_vaccines;  // SusceptibilityPyDemo update based on new vaccines done in same time step?
-        boost::serialization::void_cast_register<PyDemoInterventionsContainer, InterventionsContainer>();
+        //ar & cont.new_vaccines;  // SusceptibilityPy update based on new vaccines done in same time step?
+        boost::serialization::void_cast_register<PyInterventionsContainer, InterventionsContainer>();
         ar & boost::serialization::base_object<Kernel::InterventionsContainer>(cont);
     }
 }

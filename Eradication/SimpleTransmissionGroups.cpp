@@ -103,7 +103,7 @@ namespace Kernel
         memset(forceOfInfection.data(), 0, bucketCount * sizeof(float));
     }
 
-    void SimpleTransmissionGroups::GetGroupMembershipForProperties( RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut ) const
+    void SimpleTransmissionGroups::GetGroupMembershipForProperties( const RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut ) const
     {
         (*membershipOut)[0] = (GroupIndex)0; // map route 0 to index 0
         std::ostringstream* msg = NULL;

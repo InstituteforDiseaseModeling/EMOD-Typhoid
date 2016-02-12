@@ -16,14 +16,14 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #pragma once
 
 #include "Contexts.h"
-#include "InfectionPyDemo.h"
+#include "InfectionPy.h"
 #include "IndividualEnvironmental.h"
-#include "SusceptibilityPyDemo.h"
+#include "SusceptibilityPy.h"
 
 namespace Kernel
 {
-    class SusceptibilityPyDemo;
-    class IIndividualHumanPyDemo : public ISupports
+    class SusceptibilityPy;
+    class IIndividualHumanPy : public ISupports
     {
     public:
         virtual bool IsChronicCarrier( bool incidence_only = true ) const = 0;
@@ -32,16 +32,16 @@ namespace Kernel
         virtual bool IsPrePatent( bool incidence_only = true ) const = 0;
     };
 
-    class IndividualHumanPyDemo : public IndividualHuman, public IIndividualHumanPyDemo
+    class IndividualHumanPy : public IndividualHuman, public IIndividualHumanPy
     {
-        friend class SimulationPyDemo;
+        friend class SimulationPy;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
         DECLARE_QUERY_INTERFACE()
-        GET_SCHEMA_STATIC_WRAPPER(IndividualHumanPyDemo);
+        GET_SCHEMA_STATIC_WRAPPER(IndividualHumanPy);
 
     public:
-        static IndividualHumanPyDemo *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
-        virtual ~IndividualHumanPyDemo(void);
+        static IndividualHumanPy *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
+        virtual ~IndividualHumanPy(void);
 
         virtual void CreateSusceptibility(float imm_mod = 1.0, float risk_mod = 1.0);
         virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = NULL);
@@ -56,7 +56,7 @@ namespace Kernel
         // New Exposure Pattern
         virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route );
 
-        IndividualHumanPyDemo(suids::suid id = suids::nil_suid(), float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
+        IndividualHumanPy(suids::suid id = suids::nil_suid(), float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
         virtual void setupInterventionsContainer();
         virtual void PropagateContextToDependents();
 
@@ -87,7 +87,7 @@ namespace Kernel
         bool state_changed;
 
     private:
-        SusceptibilityPyDemo * pydemo_susceptibility;
+        SusceptibilityPy * pydemo_susceptibility;
         std::map< TransmissionRoute::Enum, float > contagion_population_by_route;
 
         virtual bool Configure( const Configuration* config );
@@ -95,8 +95,10 @@ namespace Kernel
         ///////////////////////////////////////////////////////////////////////////
         // Serialization
         friend class boost::serialization::access;
+	/*
         template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanPyDemo& flags, const unsigned int  file_version );
+        friend void serialize(Archive & ar, IndividualHumanPy& flags, const unsigned int  file_version );
+	*/
 
         ////////////////////////////////////////////////////////////////////////////
 #endif

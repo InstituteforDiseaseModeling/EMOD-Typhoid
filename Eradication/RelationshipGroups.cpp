@@ -160,7 +160,7 @@ namespace Kernel {
 
     void
     RelationshipGroups::GetGroupMembershipForProperties(
-        RouteList_t& route,
+        const RouteList_t& route,
         const tProperties* properties,
         TransmissionGroupMembership_t* membershipOut
     )

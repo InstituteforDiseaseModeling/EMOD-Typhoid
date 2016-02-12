@@ -22,15 +22,15 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <functional> // why not algorithm?
 #include "Sugar.h"
 #include "Exceptions.h"
-#include "NodePyDemo.h"
-#include "IndividualPyDemo.h"
+#include "NodePy.h"
+#include "IndividualPy.h"
 #include "TransmissionGroupsFactory.h"
 #include "SimulationConfig.h"
 #include "Python.h"
 
 using namespace Kernel;
 
-static const char* _module = "NodePyDemo";
+static const char* _module = "NodePy";
 
 extern PyObject *
 IdmPyInit(
@@ -41,45 +41,45 @@ IdmPyInit(
 #define ENABLE_TOYPHOID 1
 namespace Kernel
 {
-    BEGIN_QUERY_INTERFACE_DERIVED(NodePyDemo, Node)
-        HANDLE_INTERFACE(INodePyDemo)
-    END_QUERY_INTERFACE_DERIVED(NodePyDemo, Node)
+    BEGIN_QUERY_INTERFACE_DERIVED(NodePy, Node)
+        HANDLE_INTERFACE(INodePy)
+    END_QUERY_INTERFACE_DERIVED(NodePy, Node)
 
 
-    NodePyDemo::NodePyDemo() : Node() { }
+    NodePy::NodePy() : Node() { }
 
-    NodePyDemo::NodePyDemo(ISimulationContext *_parent_sim, suids::suid node_suid) : Node(_parent_sim, node_suid)
+    NodePy::NodePy(ISimulationContext *_parent_sim, suids::suid node_suid) : Node(_parent_sim, node_suid)
     {
     }
 
-    void NodePyDemo::Initialize()
+    void NodePy::Initialize()
     {
         Node::Initialize();
     }
 
-    bool NodePyDemo::Configure(
+    bool NodePy::Configure(
         const Configuration* config
     )
     {
         return Node::Configure( config );
     }
 
-    NodePyDemo *NodePyDemo::CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid)
+    NodePy *NodePy::CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid)
     {
-        NodePyDemo *newnode = _new_ NodePyDemo(_parent_sim, node_suid);
+        NodePy *newnode = _new_ NodePy(_parent_sim, node_suid);
         newnode->Initialize();
 
         return newnode;
     }
 
-    NodePyDemo::~NodePyDemo(void)
+    NodePy::~NodePy(void)
     {
     }
 
 #if 0
 #define ROUTE_NAME_ENVIRONMENTAL "environmental"
 #define ROUTE_NAME_CONTACT       "contact"
-    void NodePyDemo::SetupIntranodeTransmission()
+    void NodePy::SetupIntranodeTransmission()
     {
         //transmissionGroups = TransmissionGroupsFactory::CreateNodeGroups( TransmissionGroupType::MultiRouteGroups );
         transmissionGroups = TransmissionGroupsFactory::CreateNodeGroups( TransmissionGroupType::StrainAwareGroups );
@@ -167,7 +167,7 @@ namespace Kernel
     }
 #endif 
 
-    void NodePyDemo::resetNodeStateCounters(void)
+    void NodePy::resetNodeStateCounters(void)
     {
         // This is a chance to do a single call into TOYPHOID at start of timestep
 #ifdef ENABLE_TOYPHOID
@@ -181,44 +181,44 @@ namespace Kernel
         Node::resetNodeStateCounters();
     }
 
-    void NodePyDemo::updateNodeStateCounters(IndividualHuman *ih)
+    void NodePy::updateNodeStateCounters(IndividualHuman *ih)
     {
         float mc_weight                = float(ih->GetMonteCarloWeight());
-        IIndividualHumanPyDemo *tempind2 = NULL;
-        if( ih->QueryInterface( GET_IID( IIndividualHumanPyDemo ), (void**)&tempind2 ) != s_OK )
+        IIndividualHumanPy *tempind2 = NULL;
+        if( ih->QueryInterface( GET_IID( IIndividualHumanPy ), (void**)&tempind2 ) != s_OK )
         {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "tempind2", "IndividualHumanPyDemo", "IndividualHuman" );
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "tempind2", "IndividualHumanPy", "IndividualHuman" );
         }
 
         Node::updateNodeStateCounters(ih);
     }
 
 
-    void NodePyDemo::finalizeNodeStateCounters(void)
+    void NodePy::finalizeNodeStateCounters(void)
     {
         Node::finalizeNodeStateCounters();
        
     }
 
-    void NodePyDemo::populateNewIndividualsFromDemographics(int count_new_individuals)
+    void NodePy::populateNewIndividualsFromDemographics(int count_new_individuals)
     {
         // Populate the initial population
         Node::populateNewIndividualsFromDemographics(count_new_individuals);
     }
 
-    IndividualHuman *NodePyDemo::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+    IndividualHuman *NodePy::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
     {
-        return IndividualHumanPyDemo::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
+        return IndividualHumanPy::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
 
     std::map< std::string, float >
-    NodePyDemo::GetTotalContagion()
+    NodePy::GetTotalContagion()
     const
     {
         std::map< std::string, float > returnThis;
-        //auto routes = GetTransmissionRoutes();
+        auto routes = GetTransmissionRoutes();
         unsigned int route_idx = 0;
-        for( auto & route: GetTransmissionRoutes() )
+        for( auto & route: routes )
         {
             // how do we get membership? That's from an individual, but we are at node level here?????
             // Need to get proper mapping for route name, route idx, and group id. Just hacking it here.
@@ -227,33 +227,33 @@ namespace Kernel
             route_idx++;
             auto contagion = transmissionGroups->GetTotalContagion(&membership);
             returnThis.insert( std::make_pair( route, contagion ) );
-			///LOG_INFO_F("route and contagion %s, %f\n", route, contagion);
+            ///LOG_INFO_F("route and contagion %s, %f\n", route, contagion);
         }
         return returnThis;
     }
 
 #if USE_BOOST_SERIALIZATION
-    BOOST_CLASS_EXPORT(NodePyDemo)
+    BOOST_CLASS_EXPORT(NodePy)
     namespace Kernel {
         template<class Archive>
-        void serialize(Archive & ar, NodePyDemo& node, const unsigned int /* file_version */)
+        void serialize(Archive & ar, NodePy& node, const unsigned int /* file_version */)
         { 
-            ar.template register_type<IndividualHumanPyDemo>();
+            ar.template register_type<IndividualHumanPy>();
             ar & boost::serialization::base_object<Node>(node);
         }
     }
 #endif
 
-    NodePyDemoTest *
-    NodePyDemoTest::CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid)
+    NodePyTest *
+    NodePyTest::CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid)
     {
-        auto *newnode = _new_ NodePyDemoTest(_parent_sim, node_suid);
+        auto *newnode = _new_ NodePyTest(_parent_sim, node_suid);
         newnode->Initialize();
 
         return newnode;
     }
 
-    NodePyDemoTest::NodePyDemoTest(ISimulationContext *_parent_sim, suids::suid node_suid)
+    NodePyTest::NodePyTest(ISimulationContext *_parent_sim, suids::suid node_suid)
     {
         parent = _parent_sim;
         auto newPerson = configureAndAddNewIndividual(1.0F /*mc*/, 0 /*age*/, 0.0f /*prev*/, 0.5f /*gender*/); // N.B. temp_prevalence=0 without maternal_transmission flag

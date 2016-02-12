@@ -177,7 +177,7 @@ namespace Kernel
     }
 
     void
-    MultiRouteTransmissionGroups::GetGroupMembershipForProperties( RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut ) const
+    MultiRouteTransmissionGroups::GetGroupMembershipForProperties( const RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut ) const
     {
         //only initialize routes which are in specified routes
 

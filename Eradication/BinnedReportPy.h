@@ -15,16 +15,27 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #pragma once
 
-#define N_TYPHOID_SEROTYPES   (3)
+#include "BinnedReport.h"
 
-#define N_TYPHOID_VIRUS_TYPES (6)
+class BinnedReportPy : public BinnedReport
+{
+public:
+    static IReport* CreateReport();
+    virtual ~BinnedReportPy();
 
-#define N_TYPHOID_VACCINES    (6)
+    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void EndTimestep( float currentTime, float dt );
 
+    virtual void postProcessAccumulatedData();
 
-#define IS_WILD_TYPE( x ) ( x >= PyDemoVirusTypes::WPV1 && x <= PyDemoVirusTypes::WPV3 )
-#define IS_SABIN_TYPE( x ) ( x >= PyDemoVirusTypes::VRPV1 && x <= PyDemoVirusTypes::VRPV3 )
-#define MAX_TYPHOID_VACCINE_DOSES 12
-#define MAX_VACC_TARGET_AGE 5
-#define MAX_VACC_TARGET_AGE_IN_DAYS (MAX_VACC_TARGET_AGE*DAYSPERYEAR)
+protected:
+    BinnedReportPy();
 
+    virtual void initChannelBins();
+    void clearChannelsBins();
+
+    float *carrier_bins;
+    float *subclinical_bins;
+    float *acute_bins;
+    // channels specific to this particular report-type
+};

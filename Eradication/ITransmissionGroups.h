@@ -36,7 +36,7 @@ namespace Kernel
     {
         virtual void AddProperty(const string& property, const PropertyValueList_t& values, const ScalingMatrix_t& scalingMatrix, const string& route) = 0;
         virtual void Build(const RouteToContagionDecayMap_t& contagionDecayRatesByRoute, int numberOfAntigens, int numberOfSubstrains) = 0;
-        virtual void GetGroupMembershipForProperties(RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut) const = 0;
+        virtual void GetGroupMembershipForProperties(const RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut) const = 0;
         virtual void UpdatePopulationSize(const TransmissionGroupMembership_t* transmissionGroupMembership, float size_changes, float mc_weight) = 0;
         virtual float GetTotalContagion(const TransmissionGroupMembership_t* transmissionGroupMembership) = 0;
         virtual void DepositContagion(const StrainIdentity* strain, float amount, const TransmissionGroupMembership_t* transmissionGroupMembership) = 0;

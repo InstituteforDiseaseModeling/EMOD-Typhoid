@@ -132,7 +132,7 @@ namespace Kernel
         // Heterogeneous intra-node transmission
         virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt);
         virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual);
-        virtual void GetGroupMembershipForIndividual(RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut);
+        virtual void GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut);
         virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight);
         virtual void SetupIntranodeTransmission();
 
@@ -142,7 +142,7 @@ namespace Kernel
         virtual bool IsValidTransmissionRoute( string& transmissionRoute );
 
         virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership);
-        virtual RouteList_t& GetTransmissionRoutes();
+        virtual const RouteList_t& GetTransmissionRoutes() const;
         //Methods for implementing time dependence in various quantities; infectivity, birth rate, migration rate
         virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const;
         virtual float getBoxcarCorrection(float boxcar_amplitude, float boxcar_start_time, float boxcar_end_time) const;

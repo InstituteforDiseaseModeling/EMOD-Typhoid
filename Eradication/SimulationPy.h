@@ -16,23 +16,23 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #pragma once
 
 #include "SimulationEnvironmental.h"
-#include "IndividualPyDemo.h" // TODO: could eliminate need to include these headers if the TypedMigrationQueue template parameter was made a pointer type instead of a class type.  <ERAD-320>
-#include "NodePyDemo.h"
-#include "InfectionPyDemo.h"
-#include "SusceptibilityPyDemo.h"
+#include "IndividualPy.h" // TODO: could eliminate need to include these headers if the TypedMigrationQueue template parameter was made a pointer type instead of a class type.  <ERAD-320>
+#include "NodePy.h"
+#include "InfectionPy.h"
+#include "SusceptibilityPy.h"
 
 namespace Kernel
 {
-    class NodePyDemo;
-    class IndividualHumanPyDemo;
+    class NodePy;
+    class IndividualHumanPy;
 
-    class SimulationPyDemo : public Simulation
+    class SimulationPy : public Simulation
     {
     public:
-        SimulationPyDemo();
-        static SimulationPyDemo *CreateSimulation();
-        static SimulationPyDemo *CreateSimulation(const ::Configuration *config);
-        virtual ~SimulationPyDemo(void) { }
+        SimulationPy();
+        static SimulationPy *CreateSimulation();
+        static SimulationPy *CreateSimulation(const ::Configuration *config);
+        virtual ~SimulationPy(void) { }
         virtual void Reports_CreateBuiltIn();
 
     protected:
@@ -53,12 +53,12 @@ namespace Kernel
 
 #if USE_BOOST_SERIALIZATION
         template<class Archive>
-        friend void serialize(Archive & ar, SimulationPyDemo& sim, const unsigned int  file_version );
+        friend void serialize(Archive & ar, SimulationPy& sim, const unsigned int  file_version );
 #endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanPyDemo> typed_migration_queue_storage;
+        TypedPrivateMigrationQueueStorage<IndividualHumanPy> typed_migration_queue_storage;
     };
 }
 
 #ifndef WIN32
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPyDemo)
+DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPy)
 #endif

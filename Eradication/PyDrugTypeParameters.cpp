@@ -14,40 +14,40 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 *****************************************************************************/
 
 #include "stdafx.h"
-#include "PyDemoDrugTypeParameters.h"
+#include "PyDrugTypeParameters.h"
 
 #include "Exceptions.h"
 #include <algorithm> // for transform
 #include <cctype> // for tolower
 
-static const char * _module = "PyDemoDrugTypeParameters";
+static const char * _module = "PyDrugTypeParameters";
 
-std::map< int, Kernel::PyDemoDrugTypeParameters* > Kernel::PyDemoDrugTypeParameters::_pdtMap;
+std::map< int, Kernel::PyDrugTypeParameters* > Kernel::PyDrugTypeParameters::_pdtMap;
 
 namespace Kernel
 {
-    PyDemoDrugTypeParameters::PyDemoDrugTypeParameters(
-        const PyDemoDrugType::Enum &drugType
+    PyDrugTypeParameters::PyDrugTypeParameters(
+        const PyDrugType::Enum &drugType
     )
     { LOG_DEBUG( "ctor\n" );
     }
 
-    PyDemoDrugTypeParameters::~PyDemoDrugTypeParameters()
+    PyDrugTypeParameters::~PyDrugTypeParameters()
     { LOG_DEBUG( "dtor\n" );
     }
 
-    PyDemoDrugTypeParameters* PyDemoDrugTypeParameters::CreatePyDemoDrugTypeParameters(
-        const PyDemoDrugType::Enum &drugType
+    PyDrugTypeParameters* PyDrugTypeParameters::CreatePyDrugTypeParameters(
+        const PyDrugType::Enum &drugType
     )
     { 
         LOG_DEBUG( "Create\n" );
 
-        PyDemoDrugTypeParameters* params = NULL;
-        map< int, PyDemoDrugTypeParameters* >::const_iterator itMap = _pdtMap.find(drugType);
+        PyDrugTypeParameters* params = NULL;
+        map< int, PyDrugTypeParameters* >::const_iterator itMap = _pdtMap.find(drugType);
 
         if ( itMap == _pdtMap.end() )
         {
-            params = _new_ PyDemoDrugTypeParameters( drugType );
+            params = _new_ PyDrugTypeParameters( drugType );
             _pdtMap[ drugType ] = params;
             return params;
         }
@@ -58,7 +58,7 @@ namespace Kernel
     }
 
     bool
-    PyDemoDrugTypeParameters::Configure(
+    PyDrugTypeParameters::Configure(
         const ::Configuration *config
     )
     {
@@ -68,7 +68,7 @@ namespace Kernel
     }
 
     QueryResult
-    PyDemoDrugTypeParameters::QueryInterface(
+    PyDrugTypeParameters::QueryInterface(
         iid_t iid, void **ppvObject
     )
     {

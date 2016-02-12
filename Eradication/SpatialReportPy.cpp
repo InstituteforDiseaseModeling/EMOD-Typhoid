@@ -22,8 +22,8 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <map>
 #include "BoostLibWrapper.h"
 
-#include "SpatialReportPyDemo.h"
-#include "NodePyDemo.h"
+#include "SpatialReportPy.h"
+#include "NodePy.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "Exceptions.h"
@@ -33,33 +33,33 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 using namespace std;
 
-static const char * _module = "SpatialReportPyDemo";
+static const char * _module = "SpatialReportPy";
 
 namespace Kernel {
 
-GET_SCHEMA_STATIC_WRAPPER_IMPL(SpatialReportPyDemo,SpatialReportPyDemo)
+GET_SCHEMA_STATIC_WRAPPER_IMPL(SpatialReportPy,SpatialReportPy)
 
 /////////////////////////
 // Initialization methods
 /////////////////////////
 IReport*
-SpatialReportPyDemo::CreateReport()
+SpatialReportPy::CreateReport()
 {
-    return new SpatialReportPyDemo();
+    return new SpatialReportPy();
 }
 
-SpatialReportPyDemo::SpatialReportPyDemo()
+SpatialReportPy::SpatialReportPy()
 : SpatialReport()
 {
 }
 
-void SpatialReportPyDemo::populateChannelInfos(tChanInfoMap &channel_infos)
+void SpatialReportPy::populateChannelInfos(tChanInfoMap &channel_infos)
 {
     SpatialReport::populateChannelInfos(channel_infos);
 }
 
 
-void SpatialReportPyDemo::LogIndividualData( Kernel::IndividualHuman * individual )
+void SpatialReportPy::LogIndividualData( Kernel::IndividualHuman * individual )
 {
     SpatialReport::LogIndividualData(individual);
 
@@ -69,7 +69,7 @@ void SpatialReportPyDemo::LogIndividualData( Kernel::IndividualHuman * individua
 }
 
 void
-SpatialReportPyDemo::LogNodeData(
+SpatialReportPy::LogNodeData(
     Kernel::INodeContext * pNC
 )
 {
@@ -77,15 +77,15 @@ SpatialReportPyDemo::LogNodeData(
 
     int nodeid = pNC->GetExternalID();
 
-    const Kernel::INodePyDemo * pPyDemoNode = NULL;
-    if( pNC->QueryInterface( GET_IID( Kernel::INodePyDemo), (void**) &pPyDemoNode ) != Kernel::s_OK )
+    const Kernel::INodePy * pPyNode = NULL;
+    if( pNC->QueryInterface( GET_IID( Kernel::INodePy), (void**) &pPyNode ) != Kernel::s_OK )
     {
-        throw Kernel::QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePyDemo", "INodeContext" );
+        throw Kernel::QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePy", "INodeContext" );
     }
 }
 
 void
-SpatialReportPyDemo::postProcessAccumulatedData()
+SpatialReportPy::postProcessAccumulatedData()
 {
     SpatialReport::postProcessAccumulatedData();
 
@@ -96,9 +96,9 @@ SpatialReportPyDemo::postProcessAccumulatedData()
 #if USE_BOOST_SERIALIZATION
 BOOST_CLASS_EXPORT(SpatialReport)
 template<class Archive>
-void serialize(Archive &ar, SpatialReportPyDemo& report, const unsigned int v)
+void serialize(Archive &ar, SpatialReportPy& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReportPyDemo,IReport>();
+    boost::serialization::void_cast_register<SpatialReportPy,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

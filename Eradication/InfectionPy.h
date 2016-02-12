@@ -15,14 +15,13 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #pragma once
 #include "Infection.h"
-#include "PyDemoDefs.h" // for N_TYPHOID_SEROTYPES
 
 namespace Kernel
 {
-    class InfectionPyDemoConfig : public JsonConfigurable
+    class InfectionPyConfig : public JsonConfigurable
     {
-        friend class IndividualPyDemo;
-        GET_SCHEMA_STATIC_WRAPPER(InfectionPyDemoConfig)
+        friend class IndividualPy;
+        GET_SCHEMA_STATIC_WRAPPER(InfectionPyConfig)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
@@ -33,23 +32,23 @@ namespace Kernel
        
     };
 
-    class IInfectionPyDemo : public ISupports
+    class IInfectionPy : public ISupports
     {
         public:
         virtual void Clear() = 0;
     };
 
-    class InfectionPyDemo
+    class InfectionPy
         : public Infection
-        , public IInfectionPyDemo 
-        , protected InfectionPyDemoConfig
+        , public IInfectionPy 
+        , protected InfectionPyConfig
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
     public:
-        static InfectionPyDemo *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
-        virtual ~InfectionPyDemo(void);
+        static InfectionPy *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
+        virtual ~InfectionPy(void);
 
         virtual void SetParameters(StrainIdentity* infstrain = NULL, int incubation_period_override = -1);
         virtual void InitInfectionImmunology(Susceptibility* _immunity);
@@ -57,13 +56,13 @@ namespace Kernel
         void SetMCWeightOfHost(float ind_mc_weight);
         virtual void Clear();
 
-        // InfectionPyDemoReportable methods
+        // InfectionPyReportable methods
     protected:
-        InfectionPyDemo(); 
+        InfectionPy(); 
 
         const SimulationConfig* params();
 
-        InfectionPyDemo(IIndividualHumanContext *context);
+        InfectionPy(IIndividualHumanContext *context);
         void Initialize(suids::suid _suid);
 
     private:
@@ -71,7 +70,7 @@ namespace Kernel
         friend class boost::serialization::access;
 
         template<class Archive>
-        friend void serialize(Archive & ar, InfectionPyDemo& inf, const unsigned int file_version );
+        friend void serialize(Archive & ar, InfectionPy& inf, const unsigned int file_version );
 #endif
     };
 }

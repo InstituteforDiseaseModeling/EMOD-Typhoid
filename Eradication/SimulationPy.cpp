@@ -17,20 +17,20 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #ifdef ENABLE_PYTHON
 
-#include "SimulationPyDemo.h"
-#include "NodePyDemo.h"
-#include "IndividualPyDemo.h"
-#include "InfectionPyDemo.h"
-#include "SusceptibilityPyDemo.h"
+#include "SimulationPy.h"
+#include "NodePy.h"
+#include "IndividualPy.h"
+#include "InfectionPy.h"
+#include "SusceptibilityPy.h"
 #include "suids.hpp"
-#include "ReportPyDemo.h"
-#include "BinnedReportPyDemo.h"
-#include "SpatialReportPyDemo.h"
+#include "ReportPy.h"
+#include "BinnedReportPy.h"
+#include "SpatialReportPy.h"
 #include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
 
-static const char * _module = "SimulationPyDemo";
+static const char * _module = "SimulationPy";
 
 #ifdef _TYPHOID_DLL
 
@@ -51,7 +51,7 @@ CreateSimulation(
 {
     Environment::setInstance(const_cast<Environment*>(pEnv));
     LOG_INFO("CreateSimulation called for \n");
-    return Kernel::SimulationPyDemo::CreateSimulation( EnvPtr->Config );
+    return Kernel::SimulationPy::CreateSimulation( EnvPtr->Config );
 }
 
 DTK_DLLEXPORT
@@ -103,39 +103,39 @@ GetSchema()
 
 namespace Kernel
 {
-    SimulationPyDemo::SimulationPyDemo() : Simulation()
+    SimulationPy::SimulationPy() : Simulation()
     {
-        reportClassCreator = ReportPyDemo::CreateReport;
-        binnedReportClassCreator = BinnedReportPyDemo::CreateReport;
-        spatialReportClassCreator = SpatialReportPyDemo::CreateReport;
+        reportClassCreator = ReportPy::CreateReport;
+        binnedReportClassCreator = BinnedReportPy::CreateReport;
+        spatialReportClassCreator = SpatialReportPy::CreateReport;
     }
 
-    void SimulationPyDemo::Initialize()
+    void SimulationPy::Initialize()
     {
         Simulation::Initialize();
     }
 
-    void SimulationPyDemo::Initialize(const ::Configuration *config)
+    void SimulationPy::Initialize(const ::Configuration *config)
     {
         Simulation::Initialize(config);
-        IndividualHumanPyDemo fakeHuman;
+        IndividualHumanPy fakeHuman;
         LOG_INFO( "Calling Configure on fakeHuman\n" );
         fakeHuman.Configure( config );
     }
 
-    SimulationPyDemo *SimulationPyDemo::CreateSimulation()
+    SimulationPy *SimulationPy::CreateSimulation()
     {
-        SimulationPyDemo *newsimulation = _new_ SimulationPyDemo();
+        SimulationPy *newsimulation = _new_ SimulationPy();
         newsimulation->Initialize();
 
         return newsimulation;
     }
 
-    SimulationPyDemo *SimulationPyDemo::CreateSimulation(const ::Configuration *config)
+    SimulationPy *SimulationPy::CreateSimulation(const ::Configuration *config)
     {
-       SimulationPyDemo *newsimulation = NULL;
+       SimulationPy *newsimulation = NULL;
        
-       newsimulation = _new_ SimulationPyDemo();
+       newsimulation = _new_ SimulationPy();
        if (newsimulation)
        {
             // This sequence is important: first
@@ -151,48 +151,48 @@ namespace Kernel
         return newsimulation;
     }
 
-    bool SimulationPyDemo::ValidateConfiguration(const ::Configuration *config)
+    bool SimulationPy::ValidateConfiguration(const ::Configuration *config)
     {
         return Kernel::Simulation::ValidateConfiguration(config);
     }
 
     // called by demographic file Populate()
-    void SimulationPyDemo::addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory)
+    void SimulationPy::addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory)
     {
-        NodePyDemo *node = NodePyDemo::CreateNode(this, node_suid);
+        NodePy *node = NodePy::CreateNode(this, node_suid);
 
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationPyDemo::InitializeFlags( const ::Configuration *config )
+    void SimulationPy::InitializeFlags( const ::Configuration *config )
     {
     }
 
 
-    void SimulationPyDemo::resolveMigration()
+    void SimulationPy::resolveMigration()
     {
         resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
     }
 
-    void SimulationPyDemo::Reports_CreateBuiltIn()
+    void SimulationPy::Reports_CreateBuiltIn()
     {
         return Simulation::Reports_CreateBuiltIn();
     }
 }
 
 #if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationPyDemo)
+BOOST_CLASS_EXPORT(Kernel::SimulationPy)
 namespace Kernel {
     template<class Archive>
-    void serialize(Archive & ar, SimulationPyDemo& sim, const unsigned int  file_version )
+    void serialize(Archive & ar, SimulationPy& sim, const unsigned int  file_version )
     {
         // must register all derived type serialized through base class pointer members
-        ar.template register_type<NodePyDemo>();
-        ar.template register_type<SimulationPyDemoFlags>();
-        ar.template register_type<NodePyDemoFlags>();
-        ar.template register_type<IndividualHumanPyDemoFlags>();
-        ar.template register_type<InfectionPyDemoFlags>();
-        ar.template register_type<SusceptibilityPyDemoFlags>();
+        ar.template register_type<NodePy>();
+        ar.template register_type<SimulationPyFlags>();
+        ar.template register_type<NodePyFlags>();
+        ar.template register_type<IndividualHumanPyFlags>();
+        ar.template register_type<InfectionPyFlags>();
+        ar.template register_type<SusceptibilityPyFlags>();
 
         ar & boost::serialization::base_object<Simulation>(sim);
     }

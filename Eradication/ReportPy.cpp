@@ -18,11 +18,11 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #ifdef ENABLE_PYTHON
 
 #include <numeric> // for std::accumulate
-#include "ReportPyDemo.h" // for base class
-#include "NodePyDemo.h" // for base class
+#include "ReportPy.h" // for base class
+#include "NodePy.h" // for base class
 #include "Debug.h" // for base class
 
-static const char * _module = "ReportPyDemo";
+static const char * _module = "ReportPy";
 
 
 namespace Kernel {
@@ -32,20 +32,20 @@ static const std::string _num_subclinic_infections_label = "Number of New Sub-Cl
 static const std::string _num_acute_infections_label     = "Number of New Acute Infections";
 
 
-GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportPyDemo,ReportPyDemo)
+GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportPy,ReportPy)
 
 
-ReportPyDemo::ReportPyDemo()
+ReportPy::ReportPy()
 {
 }
 
-bool ReportPyDemo::Configure( const Configuration * inputJson )
+bool ReportPy::Configure( const Configuration * inputJson )
 {
     bool ret = JsonConfigurable::Configure( inputJson );
     return ret ;
 }
 
-void ReportPyDemo::EndTimestep( float currentTime, float dt )
+void ReportPy::EndTimestep( float currentTime, float dt )
 {
     Report::EndTimestep( currentTime, dt );
     
@@ -56,7 +56,7 @@ void ReportPyDemo::EndTimestep( float currentTime, float dt )
 }
 
 void
-ReportPyDemo::postProcessAccumulatedData()
+ReportPy::postProcessAccumulatedData()
 {
     LOG_DEBUG( "postProcessAccumulatedData\n" );
     Report::postProcessAccumulatedData();
@@ -68,7 +68,7 @@ ReportPyDemo::postProcessAccumulatedData()
 }
 
 void
-ReportPyDemo::populateSummaryDataUnitsMap(
+ReportPy::populateSummaryDataUnitsMap(
     std::map<std::string, std::string> &units_map
 )
 {
@@ -79,15 +79,15 @@ ReportPyDemo::populateSummaryDataUnitsMap(
 }
 
 void
-ReportPyDemo::LogIndividualData(
+ReportPy::LogIndividualData(
     IndividualHuman * individual
 )
 {
     Report::LogIndividualData( individual );
-    IIndividualHumanPyDemo* typhoid_individual = NULL;
-    if( individual->QueryInterface( GET_IID( IIndividualHumanPyDemo ), (void**)&typhoid_individual ) != s_OK )
+    IIndividualHumanPy* typhoid_individual = NULL;
+    if( individual->QueryInterface( GET_IID( IIndividualHumanPy ), (void**)&typhoid_individual ) != s_OK )
     {
-        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualPyDemo", "IndividualHuman" );
+        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualPy", "IndividualHuman" );
     }
 
     auto mc_weight = individual->GetMonteCarloWeight();
@@ -110,29 +110,29 @@ ReportPyDemo::LogIndividualData(
 }
 
 void
-ReportPyDemo::LogNodeData(
+ReportPy::LogNodeData(
     INodeContext * pNC
 )
 {
     Report::LogNodeData( pNC );
-    const INodePyDemo * pPyDemoNode = NULL; // TBD: Use limited read-only interface, not full NodePyDemo
-    if( pNC->QueryInterface( GET_IID( INodePyDemo), (void**) &pPyDemoNode ) != s_OK )
+    const INodePy * pPyNode = NULL; // TBD: Use limited read-only interface, not full NodePy
+    if( pNC->QueryInterface( GET_IID( INodePy), (void**) &pPyNode ) != s_OK )
     {
-        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePyDemo", "INodeContext" );
+        throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePy", "INodeContext" );
     }
 
     //auto contactContagionPop = pNC->GetTotalContagion();
     //Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
     //Accumulate( "Environmental Contagion Population", contactContagionPop["environmental"] );
-    //Accumulate( _aoi_label, pPyDemoNode->GetMeanAgeInfection() * total_infections ); // weight the age of infection by the number of infections in the node. global normalization happens in SimulationPyDemo
+    //Accumulate( _aoi_label, pPyNode->GetMeanAgeInfection() * total_infections ); // weight the age of infection by the number of infections in the node. global normalization happens in SimulationPy
 }
 
 #if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(ReportPyDemo)
+BOOST_CLASS_EXPORT(ReportPy)
 template<class Archive>
-void serialize(Archive &ar, ReportPyDemo& report, const unsigned int v)
+void serialize(Archive &ar, ReportPy& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<ReportPyDemo,IReport>();
+    boost::serialization::void_cast_register<ReportPy,IReport>();
     ar &boost::serialization::base_object<Report>(report);
 }
 #endif

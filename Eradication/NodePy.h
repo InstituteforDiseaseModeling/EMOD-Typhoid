@@ -15,35 +15,34 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #pragma once
 #include "NodeEnvironmental.h"
-#include "IndividualPyDemo.h"
-#include "PyDemoDefs.h"
+#include "IndividualPy.h"
 #include <iostream>
 #include <list>
 
-class ReportPyDemo;
+class ReportPy;
 
 namespace Kernel
 {
     class SimulationConfig;
-    class SpatialReportPyDemo;
+    class SpatialReportPy;
 
-    class INodePyDemo : public ISupports
+    class INodePy : public ISupports
     {
     public:
     };
 
-    class NodePyDemo : public Node, public INodePyDemo
+    class NodePy : public Node, public INodePy
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
         // TODO Get rid of friending and provide accessors for all these floats
-        friend class ::ReportPyDemo;
-        friend class Kernel::SpatialReportPyDemo;
+        friend class ::ReportPy;
+        friend class Kernel::SpatialReportPy;
 
     public:
-        static NodePyDemo *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
-        virtual ~NodePyDemo(void);
+        static NodePy *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
+        virtual ~NodePy(void);
         bool Configure( const Configuration* config );
 
         //virtual void SetupIntranodeTransmission();
@@ -53,8 +52,8 @@ namespace Kernel
         virtual std::map< std::string, float > GetTotalContagion() const;
 
     protected:
-        NodePyDemo();
-        NodePyDemo(ISimulationContext *_parent_sim, suids::suid node_suid);
+        NodePy();
+        NodePy(ISimulationContext *_parent_sim, suids::suid node_suid);
         void Initialize();
 
         const SimulationConfig* params();
@@ -69,16 +68,16 @@ namespace Kernel
 #if USE_BOOST_SERIALIZATION
         friend class boost::serialization::access;
         template<class Archive>
-        friend void serialize(Archive & ar, NodePyDemo &node, const unsigned int  file_version );
+        friend void serialize(Archive & ar, NodePy &node, const unsigned int  file_version );
 #endif
     };
 
-    class NodePyDemoTest : public NodePyDemo
+    class NodePyTest : public NodePy
     {
         public:
-            static NodePyDemoTest *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
+            static NodePyTest *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
         protected:
-            NodePyDemoTest(ISimulationContext *_parent_sim, suids::suid node_suid);
+            NodePyTest(ISimulationContext *_parent_sim, suids::suid node_suid);
         private:
     };
 }

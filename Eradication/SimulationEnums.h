@@ -152,7 +152,7 @@ namespace Kernel
         ENUM_VALUE_SPEC(TBHIV_SIM                                           , 7)
         ENUM_VALUE_SPEC(STI_SIM                                             , 8)
         ENUM_VALUE_SPEC(HIV_SIM                                             , 9)
-        ENUM_VALUE_SPEC(PYDEMO_SIM                                          , 10))
+        ENUM_VALUE_SPEC(PY_SIM                                          , 10))
 
     // ENUM defs for VDPV_virulence_model_type
     ENUM_DEFINE(VDPVVirulenceModelType, 

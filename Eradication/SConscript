@@ -346,15 +346,15 @@ else:
     ]
 
     pyDemoSrcFiles = [
-        "BinnedReportPyDemo.cpp",
-        "IndividualPyDemo.cpp",
-        "InfectionPyDemo.cpp",
-        "NodePyDemo.cpp",
-        "PyDemoInterventionsContainer.cpp",
-        "ReportPyDemo.cpp",
-        "SimulationPyDemo.cpp",
-        "SpatialReportPyDemo.cpp",
-        "SusceptibilityPyDemo.cpp"
+        "BinnedReportPy.cpp",
+        "IndividualPy.cpp",
+        "InfectionPy.cpp",
+        "NodePy.cpp",
+        "PyInterventionsContainer.cpp",
+        "ReportPy.cpp",
+        "SimulationPy.cpp",
+        "SpatialReportPy.cpp",
+        "SusceptibilityPy.cpp"
     ]
 
     eradicationSrcFiles.extend( hivSrcFiles )

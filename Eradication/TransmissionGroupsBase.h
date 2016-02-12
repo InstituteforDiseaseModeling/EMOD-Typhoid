@@ -89,7 +89,7 @@ namespace Kernel
         // ITransmissionGroups implementation
         virtual void AddProperty(const string& property, const PropertyValueList_t& values, const ScalingMatrix_t& scalingMatrix, const string& route) {}
         virtual void Build(const RouteToContagionDecayMap_t& contagionDecayRatesByRoute, int numberOfAntigens = 1, int numberOfSubstrains = 1) {}
-        virtual void GetGroupMembershipForProperties(RouteList_t& route, const tProperties* properties) const { }
+        virtual void GetGroupMembershipForProperties(const RouteList_t& route, const tProperties* properties) const { }
         virtual void DepositContagion(const StrainIdentity* strain, float amount, const TransmissionGroupMembership_t* transmissionGroupMembership) {}
         virtual void ExposeToContagion(IInfectable* candidate, const TransmissionGroupMembership_t* transmissionGroupMembership, float deltaTee) const {}
         virtual void CorrectInfectivityByGroup(float infectivityCorrection, const TransmissionGroupMembership_t* transmissionGroupMembership) {}

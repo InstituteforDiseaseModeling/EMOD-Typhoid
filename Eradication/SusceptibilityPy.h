@@ -17,17 +17,16 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "Susceptibility.h"
 #include "StrainIdentity.h"
-#include "PyDemoDefs.h"
 
 #ifdef ENABLE_PYTHON
 
 namespace Kernel
 {
-    class SusceptibilityPyDemoConfig: public JsonConfigurable
+    class SusceptibilityPyConfig: public JsonConfigurable
     {
-        GET_SCHEMA_STATIC_WRAPPER(SusceptibilityPyDemoConfig)
+        GET_SCHEMA_STATIC_WRAPPER(SusceptibilityPyConfig)
 
-        friend class IndividualHumanPyDemo;
+        friend class IndividualHumanPy;
 
     public:
         virtual bool Configure( const Configuration* config );
@@ -36,43 +35,45 @@ namespace Kernel
         static float x_population_immunity;
     };
 
-    class ISusceptibilityPyDemo : public ISupports
+    class ISusceptibilityPy : public ISupports
     {
     public:
         //virtual void SetNewInfectionByStrain(StrainIdentity* infection_strain) = 0;
         //immunity
    };
 
-    class ISusceptibilityPyDemoReportable : public ISupports
+    class ISusceptibilityPyReportable : public ISupports
     {
         public:
         //virtual void GetSheddingTiter(float sheddingTiters[])               const = 0; 
     };
 
-    class SusceptibilityPyDemo :
+    class SusceptibilityPy :
         public Susceptibility,
-        public SusceptibilityPyDemoConfig,
-        public ISusceptibilityPyDemo,
-        public ISusceptibilityPyDemoReportable
+        public SusceptibilityPyConfig,
+        public ISusceptibilityPy,
+        public ISusceptibilityPyReportable
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
 
     protected:
     public:
-        static SusceptibilityPyDemo *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);
+        static SusceptibilityPy *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);
         void Initialize(float _age, float _immmod, float _riskmod);
-        SusceptibilityPyDemo(IIndividualHumanContext *context);
-		SusceptibilityPyDemo() {}
-        virtual ~SusceptibilityPyDemo(void);
+        SusceptibilityPy(IIndividualHumanContext *context);
+	SusceptibilityPy() {}
+        virtual ~SusceptibilityPy(void);
 
         virtual void Update(float dt = 0.0);
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;
+	/*
         template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilityPyDemo&, const unsigned int  file_version );
+        friend void serialize(Archive & ar, SusceptibilityPy&, const unsigned int  file_version );
+	*/
 #endif
     };
 }

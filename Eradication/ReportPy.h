@@ -15,42 +15,41 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #pragma once
 
-#include <list>
+#include "ReportEnvironmental.h"
+#include "SimulationEnums.h" // for PyVirusTypes
+#include "TransmissionGroupMembership.h"
 #include <map>
-#include <vector>
-#include <string>
-#include <fstream>
-
-#include "SpatialReport.h"
-#include "BoostLibWrapper.h"
 
 namespace Kernel {
 
-class SpatialReportPyDemo : public SpatialReport
+class ReportPy : public Report
 {
-    GET_SCHEMA_STATIC_WRAPPER(SpatialReportPyDemo)
-
+    GET_SCHEMA_STATIC_WRAPPER(ReportPy)
 public:
-    static IReport* CreateReport();
-    virtual ~SpatialReportPyDemo() { }
+    ReportPy();
+    virtual ~ReportPy() {};
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    static IReport* ReportPy::CreateReport() { return new ReportPy(); }
+
+    virtual bool Configure( const Configuration * inputJson );
+    virtual void EndTimestep( float currentTime, float dt );
+
+    virtual void LogIndividualData( Kernel::IndividualHuman * individual);
     virtual void LogNodeData( Kernel::INodeContext * pNC );
 
 protected:
-    SpatialReportPyDemo();
-
+    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
     virtual void postProcessAccumulatedData();
 
-    virtual void populateChannelInfos(tChanInfoMap &channel_infos);
-
-    // counters for LogIndividualData stuff 
-
 private:
+
+    //TransmissionGroupMembership_t memberships;
+
 #if USE_BOOST_SERIALIZATION
     friend class ::boost::serialization::access;
     template<class Archive>
-    friend void serialize(Archive &ar, SpatialReportPyDemo& report, const unsigned int v);
+    friend void serialize(Archive &ar, ReportPy& report, const unsigned int v);
 #endif
 };
+
 }

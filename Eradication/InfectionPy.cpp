@@ -17,10 +17,9 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #ifdef ENABLE_PYTHON
 
-#include "InfectionPyDemo.h"
-#include "SusceptibilityPyDemo.h"
+#include "InfectionPy.h"
+#include "SusceptibilityPy.h"
 #include "InterventionsContainer.h"
-#include "PyDemoDefs.h"
 #include "Environment.h"
 #include "Debug.h"
 
@@ -31,16 +30,16 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "SimulationConfig.h"
 using namespace std;
 
-static const char* _module = "InfectionPyDemo";
+static const char* _module = "InfectionPy";
 
 namespace Kernel
 {
-    GET_SCHEMA_STATIC_WRAPPER_IMPL(PyDemo.Infection,InfectionPyDemoConfig)
-    BEGIN_QUERY_INTERFACE_BODY(InfectionPyDemoConfig)
-    END_QUERY_INTERFACE_BODY(InfectionPyDemoConfig)
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(Py.Infection,InfectionPyConfig)
+    BEGIN_QUERY_INTERFACE_BODY(InfectionPyConfig)
+    END_QUERY_INTERFACE_BODY(InfectionPyConfig)
 
     bool
-    InfectionPyDemoConfig::Configure(
+    InfectionPyConfig::Configure(
         const Configuration * config
     )
     {
@@ -50,44 +49,44 @@ namespace Kernel
         return bRet;
     }
 
-    BEGIN_QUERY_INTERFACE_BODY(InfectionPyDemo)
-        HANDLE_INTERFACE(IInfectionPyDemo)
-    END_QUERY_INTERFACE_BODY(InfectionPyDemo)
+    BEGIN_QUERY_INTERFACE_BODY(InfectionPy)
+        HANDLE_INTERFACE(IInfectionPy)
+    END_QUERY_INTERFACE_BODY(InfectionPy)
 
-    InfectionPyDemo::InfectionPyDemo()
+    InfectionPy::InfectionPy()
     {
     }
 
     const SimulationConfig*
-    InfectionPyDemo::params()
+    InfectionPy::params()
     {
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    InfectionPyDemo::InfectionPyDemo(IIndividualHumanContext *context) : Infection(context)
+    InfectionPy::InfectionPy(IIndividualHumanContext *context) : Infection(context)
     {
     }
 
-    void InfectionPyDemo::Initialize(suids::suid _suid)
+    void InfectionPy::Initialize(suids::suid _suid)
     {
         Infection::Initialize(_suid);
     }
 
-    InfectionPyDemo *InfectionPyDemo::CreateInfection(IIndividualHumanContext *context, suids::suid _suid)
+    InfectionPy *InfectionPy::CreateInfection(IIndividualHumanContext *context, suids::suid _suid)
     {
-        //VALIDATE(boost::format(">InfPyDemo::CreateInfection(%1%, %2%)") % context->GetSuid().data % _suid.data );
+        //VALIDATE(boost::format(">InfPy::CreateInfection(%1%, %2%)") % context->GetSuid().data % _suid.data );
 
-        InfectionPyDemo *newinfection = _new_ InfectionPyDemo(context);
+        InfectionPy *newinfection = _new_ InfectionPy(context);
         newinfection->Initialize(_suid);
 
         return newinfection;
     }
 
-    InfectionPyDemo::~InfectionPyDemo()
+    InfectionPy::~InfectionPy()
     {
     }
 
-    void InfectionPyDemo::SetParameters(StrainIdentity* infstrain, int incubation_period_override)
+    void InfectionPy::SetParameters(StrainIdentity* infstrain, int incubation_period_override)
     {
         Infection::SetParameters(infstrain, incubation_period_override); // setup infection timers and infection state
         if(infstrain == NULL)
@@ -101,47 +100,47 @@ namespace Kernel
         }
     }
 
-    void InfectionPyDemo::InitInfectionImmunology(Susceptibility* _immunity)
+    void InfectionPy::InitInfectionImmunology(Susceptibility* _immunity)
     {
-        ISusceptibilityPyDemo* immunity = NULL;
-        if( _immunity->QueryInterface( GET_IID( ISusceptibilityPyDemo ), (void**)&immunity ) != s_OK )
+        ISusceptibilityPy* immunity = NULL;
+        if( _immunity->QueryInterface( GET_IID( ISusceptibilityPy ), (void**)&immunity ) != s_OK )
         {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "ISusceptibilityPyDemo", "Susceptibility" );
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "ISusceptibilityPy", "Susceptibility" );
         }
 
         StateChange = InfectionStateChange::New;
         return Infection::InitInfectionImmunology( _immunity );
     }
 
-    void InfectionPyDemo::Update(float dt, Susceptibility* _immunity)
+    void InfectionPy::Update(float dt, Susceptibility* _immunity)
     {
         return;
         /*
         StateChange = InfectionStateChange::None;
-        ISusceptibilityPyDemo* immunity = NULL;
-        if( _immunity->QueryInterface( GET_IID( ISusceptibilityPyDemo ), (void**)&immunity ) != s_OK )
+        ISusceptibilityPy* immunity = NULL;
+        if( _immunity->QueryInterface( GET_IID( ISusceptibilityPy ), (void**)&immunity ) != s_OK )
         {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "Susceptibility", "SusceptibilityPyDemo" );
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "Susceptibility", "SusceptibilityPy" );
         } */
         //return InfectionEnvironmental::Update( dt, _immunity );
     }
 
-    void InfectionPyDemo::Clear()
+    void InfectionPy::Clear()
     {
         StateChange = InfectionStateChange::Cleared;
     }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionPyDemo)
+BOOST_CLASS_EXPORT(Kernel::InfectionPy)
 namespace Kernel
 {
     template<class Archive>
-    void serialize(Archive & ar, InfectionPyDemo& inf, const unsigned int file_version )
+    void serialize(Archive & ar, InfectionPy& inf, const unsigned int file_version )
     {
         ar & boost::serialization::base_object<Kernel::Infection>(inf);
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionPyDemo&, unsigned int);
+    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::InfectionPy&, unsigned int);
 }
 #endif
 

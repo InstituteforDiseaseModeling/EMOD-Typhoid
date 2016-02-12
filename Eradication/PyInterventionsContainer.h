@@ -29,34 +29,34 @@ namespace Kernel
 {
     // this container becomes a help implementation member of the relevant IndividualHuman class 
     // it needs to implement consumer interfaces for all the relevant intervention types
-    struct IPyDemoDrugEffectsApply : public ISupports
+    struct IPyDrugEffectsApply : public ISupports
     {
         virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ) = 0;
         virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ) = 0;
     };
 
-    class IPyDemoVaccine;
+    class IPyVaccine;
 
-    class PyDemoInterventionsContainer : public InterventionsContainer,
-                                          //public IPyDemoDrugEffects,
-                                          public IPyDemoDrugEffectsApply
+    class PyInterventionsContainer : public InterventionsContainer,
+                                          //public IPyDrugEffects,
+                                          public IPyDrugEffectsApply
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     public:
-        PyDemoInterventionsContainer();
-        virtual ~PyDemoInterventionsContainer();
+        PyInterventionsContainer();
+        virtual ~PyInterventionsContainer();
 
         virtual QueryResult QueryInterface(iid_t iid, void** pinstance);
 
         // IVaccineConsumer: not any more!
         virtual bool GiveIntervention( IDistributableIntervention * pIV );
 
-        // IPyDemoDrugEffectsApply
+        // IPyDrugEffectsApply
         virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ); // not used for anything
         virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ); // not used for anything
 
-        //IPyDemoDrugEffects(Get)
+        //IPyDrugEffects(Get)
 
         virtual void Update(float dt); // example of intervention timestep update
 
@@ -67,7 +67,7 @@ namespace Kernel
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class ::boost::serialization::access;
         template<class Archive>
-        void serialize(Archive &ar, PyDemoInterventionsContainer& cont, const unsigned int v);
+        void serialize(Archive &ar, PyInterventionsContainer& cont, const unsigned int v);
 #endif
     };
 }
