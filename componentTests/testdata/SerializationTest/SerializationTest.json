@@ -16,6 +16,80 @@
         {
             "Test" :
             {
+                "__class__":"AgeDiagnostic",
+                "cost_per_unit":9,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "diagnostic_type":1,
+                "base_specificity":
+                {
+                    "_value":0.1,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "base_sensitivity":
+                {
+                    "_value":0.2,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "treatment_fraction":
+                {
+                    "_value":0.3,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "days_to_diagnosis":4,
+                "positive_diagnosis_config":"null",
+                "positive_diagnosis_event":"Event_1",
+                "age_thresholds" :
+                {
+                    "thresholds" :
+                    [
+                        { "first" : 1, "second" : 2 },
+                        { "first" : 2, "second" : 4 },
+                        { "first" : 3, "second" : 6 }
+                    ],
+                    "thresh_events" :
+                    [
+                        "Event_1",
+                        "Event_2",
+                        "Event_3"
+                    ]
+                }
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"GenericDrug",
+                "cost_per_unit"             : 1,
+                "expired"                   : false,
+                "dont_allow_duplicates"     : false,
+                "drug_type"                 : 1,
+                "dosing_type"               : 2,
+                "durability_time_profile"   : 1,
+                "fast_decay_time_constant"  : 0.1,
+                "slow_decay_time_constant"  : 0.2,
+                "dosing_timer"              : 0.3,
+                "remaining_doses"           : 4,
+                "time_between_doses"        : 5.5,
+                "fast_component"            : 6.6,
+                "slow_component"            : 7.7,
+                "current_efficacy"          : 8.8,
+                "current_concentration"     : 9.9,
+                "current_reducedacquire"    : 1.1,
+                "current_reducedtransmit"   : 2.2,
+                "pk_rate_mod"               : 3.3,
+                "Cmax"                      : 4.4,
+                "Vd"                        : 1.23,
+                "drug_c50"                  : 2.34,
+                "fraction_defaulters"       : 3.45
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"BroadcastEventToOtherNodes",
                 "cost_per_unit":1,
                 "expired":false,
