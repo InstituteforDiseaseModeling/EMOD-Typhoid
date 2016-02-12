@@ -148,6 +148,7 @@ else:
                             "IndividualVector.cpp",
                             "InfectionVector.cpp",
                             "MigrationInfoVector.cpp",
+                            "NodeInfoVector.cpp",
                             "NodeVector.cpp",
                             "NodeVectorEventContext.cpp",
                             "ReportVector.cpp",

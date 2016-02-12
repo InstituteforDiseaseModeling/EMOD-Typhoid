@@ -11,6 +11,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "BinnedReport.h"
 
+namespace Kernel {
+
 class VectorSpeciesReport : public BinnedReport
 {
 public:
@@ -37,3 +39,5 @@ protected:
     float* daily_eir;
     float* daily_hbr;
 };
+
+} 
