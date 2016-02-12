@@ -12,9 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <iomanip>      // std::setprecision
 
-#ifdef WIN32
-#endif
-
 #include "FileSystem.h"
 #include "Debug.h"
 #include "Report.h"
@@ -775,7 +772,6 @@ namespace Kernel
 
     void Simulation::MergeNodeIdSuidBimaps(nodeid_suid_map_t& local_map, nodeid_suid_map_t& merged_map)
     {
-#if defined(WIN32)
         merged_map = local_map;
 
         if (EnvPtr->MPI.NumTasks > 1)
@@ -787,11 +783,13 @@ namespace Kernel
             LOG_VALID_F( "Serializing %d id-suid bimap entries.\n", count );
             for (auto& entry : local_map)
             {
+#if defined(WIN32)
                 writer_archive.startObject();
                     writer_archive.labelElement( "id" ) & uint32_t(entry.left);
                     uint32_t suid = entry.right.data;
                     writer_archive.labelElement( "suid") & suid;
                 writer_archive.endObject();
+#endif
             }
             writer_archive.endArray();
 
@@ -835,7 +833,6 @@ namespace Kernel
 
             delete json_writer;
         }
-#endif
     }
 
     IMigrationInfoFactory* Simulation::CreateMigrationInfoFactory ( const std::string& idreference,
