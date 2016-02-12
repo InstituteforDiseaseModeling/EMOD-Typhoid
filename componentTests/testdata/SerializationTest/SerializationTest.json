@@ -16,6 +16,29 @@
         {
             "Test" :
             {
+                "__class__":"MigrateIndividuals",
+                "cost_per_unit":1,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "destination_external_node_id" : 5,
+                "duration_before_leaving" :
+                {
+                    "m_Type"     : 0,
+                    "m_Param1"   : 9.0,
+                    "m_Param2"   : 0.0
+                },
+                "duration_at_node" :
+                {
+                    "m_Type"     : 1,
+                    "m_Param1"   : 0.0,
+                    "m_Param2"   : 1.0
+                },
+                "is_moving" : true
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"BroadcastEvent",
                 "cost_per_unit":1,
                 "expired":false,
