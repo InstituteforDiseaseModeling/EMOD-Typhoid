@@ -210,7 +210,7 @@ else:
 
     polioSrcFiles = environmentalSrcFiles + [
                             # Polio
-                            #"BinnedReportPolio.cpp",
+                            "BinnedReportPolio.cpp",
                             "IndividualPolio.cpp",
                             "InfectionPolio.cpp",
                             "NodePolio.cpp",

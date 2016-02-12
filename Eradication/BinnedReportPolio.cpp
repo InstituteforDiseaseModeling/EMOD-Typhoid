@@ -30,6 +30,8 @@ using namespace json;
 // Module name for logging
 static const char * _module = "BinnedReportPolio"; 
 
+namespace Kernel {
+
 Kernel::IReport*
 BinnedReportPolio::CreateReport()
 {
@@ -143,4 +145,6 @@ void BinnedReportPolio::postProcessAccumulatedData()
     //channelDataMap.erase("New Paralytic Cases");
 }
 
+}
 #endif // ENABLE_POLIO
+
