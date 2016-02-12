@@ -16,6 +16,16 @@
         {
             "Test" :
             {
+                "__class__":"BroadcastEvent",
+                "cost_per_unit":1,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "broadcast_event"       : "Event_8"
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"PMTCT",
                 "cost_per_unit":7,
                 "expired":false,
