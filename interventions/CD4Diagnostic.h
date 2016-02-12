@@ -27,6 +27,8 @@ namespace Kernel
             virtual json::QuickBuilder GetSchema();
             std::vector<std::pair< NaturalNumber, NaturalNumber > > thresholds;
             std::vector< std::string > thresh_events;
+
+            static void serialize(IArchive& ar, CD4Thresholds& obj);
     };
 
     class CD4Diagnostic : public SimpleDiagnostic 
@@ -44,5 +46,7 @@ namespace Kernel
     protected:
         virtual bool positiveTestResult();
         CD4Thresholds cd4_thresholds;
+
+        DECLARE_SERIALIZABLE(CD4Diagnostic);
     };
 }
