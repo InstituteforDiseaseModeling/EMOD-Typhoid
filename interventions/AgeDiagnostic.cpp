@@ -55,6 +55,33 @@ namespace Kernel
         LOG_DEBUG_F( "Found %d age thresholds\n", thresholds.size() );
     }
 
+    static void serialize_thresholds( IArchive& ar, std::vector<std::pair<NaturalNumber,NaturalNumber>>& thresholds )
+    {
+        size_t count = ar.IsWriter() ? thresholds.size() : -1;
+
+        ar.startArray(count);
+        if( !ar.IsWriter() ) 
+        {
+            thresholds.resize(count);
+        }
+        for( auto& entry : thresholds )
+        {
+            ar.startObject();
+            ar.labelElement("first" ) & entry.first;
+            ar.labelElement("second") & entry.second;
+            ar.endObject();
+        }
+        ar.endArray();
+    }
+
+    void AgeThresholds::serialize(IArchive& ar, AgeThresholds& obj)
+    {
+        ar.startObject();
+        ar.labelElement("thresholds"   ); serialize_thresholds( ar, obj.thresholds );
+        ar.labelElement("thresh_events") & obj.thresh_events;
+        ar.endObject();
+    }
+
     json::QuickBuilder
     AgeThresholds::GetSchema()
     {
@@ -151,5 +178,14 @@ namespace Kernel
         expired = true;
         bool positiveTest = applySensitivityAndSpecificity( test_pos );
         return positiveTest;
+    }
+
+    REGISTER_SERIALIZABLE(AgeDiagnostic);
+
+    void AgeDiagnostic::serialize(IArchive& ar, AgeDiagnostic* obj)
+    {
+        SimpleDiagnostic::serialize( ar, obj );
+        AgeDiagnostic& ad = *obj;
+        ar.labelElement("age_thresholds"); AgeThresholds::serialize( ar, ad.age_thresholds );
     }
 }

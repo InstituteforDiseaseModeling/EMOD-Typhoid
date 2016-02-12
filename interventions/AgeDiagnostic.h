@@ -27,6 +27,8 @@ namespace Kernel
             virtual json::QuickBuilder GetSchema();
             std::vector<std::pair< NaturalNumber, NaturalNumber > > thresholds;
             std::vector< std::string > thresh_events;
+
+            static void serialize(IArchive& ar, AgeThresholds& obj);
     };
 
     class AgeDiagnostic : public SimpleDiagnostic 
@@ -44,5 +46,7 @@ namespace Kernel
     protected:
         virtual bool positiveTestResult();
         AgeThresholds age_thresholds;
+
+        DECLARE_SERIALIZABLE(AgeDiagnostic);
     };
 }
