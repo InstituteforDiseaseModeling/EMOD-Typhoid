@@ -16,6 +16,34 @@
         {
             "Test" :
             {
+                "__class__":"ARTDropout",
+                "cost_per_unit"             : 2,
+                "expired"                   : false,
+                "dont_allow_duplicates"     : true,
+                "drug_type"                 : 2,
+                "dosing_type"               : 1,
+                "durability_time_profile"   : 9,
+                "fast_decay_time_constant"  : 0.3,
+                "slow_decay_time_constant"  : 0.2,
+                "dosing_timer"              : 0.1,
+                "remaining_doses"           : 5,
+                "time_between_doses"        : 1.5,
+                "fast_component"            : 2.6,
+                "slow_component"            : 3.7,
+                "current_efficacy"          : 4.8,
+                "current_concentration"     : 5.9,
+                "current_reducedacquire"    : 9.1,
+                "current_reducedtransmit"   : 8.2,
+                "pk_rate_mod"               : 7.3,
+                "Cmax"                      : 6.4,
+                "Vd"                        : 5.23,
+                "drug_c50"                  : 4.34,
+                "fraction_defaulters"       : 1.45
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"ARTBasic",
                 "cost_per_unit"             : 1,
                 "expired"                   : false,

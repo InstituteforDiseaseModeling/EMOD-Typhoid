@@ -90,6 +90,16 @@ namespace Kernel
         //itbda->ApplyDrugInactivationRateEffect( GetDrugInactivationRate() );
         //itbda->ApplyDrugClearanceRateEffect( GetDrugClearanceRate() );
     }
+
+    REGISTER_SERIALIZABLE(ARTDropout);
+
+    void ARTDropout::serialize(IArchive& ar, ARTDropout* obj)
+    {
+        GenericDrug::serialize( ar, obj );
+        ARTDropout& art = *obj;
+
+        // itbda set in SetContextTo
+    }
 }
 
 //#endif // ENABLE_STI
