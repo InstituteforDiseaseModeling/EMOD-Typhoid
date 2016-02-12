@@ -747,4 +747,45 @@ namespace Kernel
     {
         return maternal_transmission_suppression;
     }
+
+    REGISTER_SERIALIZABLE(HIVInterventionsContainer);
+
+    void HIVInterventionsContainer::serialize(IArchive& ar, HIVInterventionsContainer* obj)
+    {
+        STIInterventionsContainer::serialize( ar, obj );
+        HIVInterventionsContainer& container = *obj;
+
+        ar.labelElement("HIV_drug_inactivation_rate"       ) & container.HIV_drug_inactivation_rate;
+        ar.labelElement("HIV_drug_clearance_rate"          ) & container.HIV_drug_clearance_rate;
+        ar.labelElement("ART_status"                       ) & (uint32_t&)container.ART_status;
+        ar.labelElement("full_suppression_timer"           ) & container.full_suppression_timer;
+        ar.labelElement("days_to_achieve_suppression"      ) & container.days_to_achieve_suppression;
+        ar.labelElement("days_since_most_recent_ART_start" ) & container.days_since_most_recent_ART_start;
+        ar.labelElement("m_suppression_failure_timer"      ) & container.m_suppression_failure_timer;
+        ar.labelElement("maternal_transmission_suppression") & container.maternal_transmission_suppression;
+        ar.labelElement("cascade_state"                    ) & container.cascade_state;
+        ar.labelElement("campaign_semaphores"              ) & container.campaign_semaphores;
+        ar.labelElement("on_PreART"                        ) & container.on_PreART;
+        ar.labelElement("ever_tested_HIV_positive"         ) & container.ever_tested_HIV_positive;
+        ar.labelElement("ever_tested"                      ) & container.ever_tested;
+        ar.labelElement("ever_received_CD4"                ) & container.ever_received_CD4;
+        ar.labelElement("ever_staged_for_ART"              ) & container.ever_staged_for_ART;
+        ar.labelElement("ever_staged"                      ) & container.ever_staged;
+        ar.labelElement("ever_been_on_PreART"              ) & container.ever_been_on_PreART;
+        ar.labelElement("ever_been_on_ART"                 ) & container.ever_been_on_ART;
+        ar.labelElement("time_of_most_recent_test"         ) & container.time_of_most_recent_test;
+        ar.labelElement("time_of_most_recent_CD4"          ) & container.time_of_most_recent_CD4;
+        ar.labelElement("time_last_seen_by_healthcare"     ) & container.time_last_seen_by_healthcare;
+        ar.labelElement("time_first_started_ART"           ) & container.time_first_started_ART;
+        ar.labelElement("time_last_started_ART"            ) & container.time_last_started_ART;
+        ar.labelElement("total_time_on_ART"                ) & container.total_time_on_ART;
+        ar.labelElement("last_recorded_WHO_stage"          ) & container.last_recorded_WHO_stage;
+        ar.labelElement("lowest_recorded_CD4"              ) & container.lowest_recorded_CD4;
+        ar.labelElement("first_recorded_CD4"               ) & container.first_recorded_CD4;
+        ar.labelElement("last_recorded_CD4"                ) & container.last_recorded_CD4;
+        ar.labelElement("num_times_started_ART"            ) & container.num_times_started_ART;
+        ar.labelElement("received_HIV_test_results"        ) & (uint32_t&)container.received_HIV_test_results;
+
+        //hiv_parent set in SetContextTo
+    }
 }
