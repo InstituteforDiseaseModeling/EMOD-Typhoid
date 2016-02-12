@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualEventContext.h"
 #include "NodeEventContext.h"
 #include "RANDOM.h"
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 
 static const char * _module = "HIVDelayedIntervention";
 

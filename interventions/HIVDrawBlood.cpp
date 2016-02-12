@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "SusceptibilityHIV.h" // for time-date util function and access into IHIVCascadeOfCare
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 #include "IIndividualHumanHIV.h"
 
 static const char * _module = "HIVDrawBlood";

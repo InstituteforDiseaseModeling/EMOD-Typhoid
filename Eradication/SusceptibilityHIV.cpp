@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHumanHIV.h"
 #include "IIndividualHuman.h"
 #include "InfectionHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 #include "Common.h"
 #include "Debug.h"
 #include "RANDOM.h"

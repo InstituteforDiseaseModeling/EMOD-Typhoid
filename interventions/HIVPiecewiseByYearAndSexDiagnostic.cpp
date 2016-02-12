@@ -17,7 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 #include "SimulationEnums.h"
 
 static const char * _module = "HIVPiecewiseByYearAndSexDiagnostic";

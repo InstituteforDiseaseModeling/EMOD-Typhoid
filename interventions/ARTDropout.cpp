@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Contexts.h"                  // for IIndividualHumanContext, IIndividualHumanInterventionsContext
 #include "Debug.h"                  // for IIndividualHumanContext, IIndividualHumanInterventionsContext
-#include "HIVInterventionsContainer.h"  // for IHIVDrugEffectsApply methods
+#include "IHIVInterventionsContainer.h"  // for IHIVDrugEffectsApply methods
 
 static const char* _module = "ARTDropout";
 
