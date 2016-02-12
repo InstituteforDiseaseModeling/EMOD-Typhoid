@@ -16,6 +16,24 @@
         {
             "Test" :
             {
+                "__class__":"DelayedIntervention",
+                "cost_per_unit":9,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "remaining_delay_days"  : 5,
+                "coverage"              : 0.5,
+                "delay_distribution"    :
+                {
+                    "m_Type"     : 1,
+                    "m_Param1"   : 0.0,
+                    "m_Param2"   : 1.0
+                },
+                "actual_intervention_config" : "null"
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVARTStagingCD4AgnosticDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
