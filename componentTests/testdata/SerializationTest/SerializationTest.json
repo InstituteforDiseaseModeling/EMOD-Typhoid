@@ -16,6 +16,23 @@
         {
             "Test" :
             {
+                "__class__":"SimpleVaccine",
+                "cost_per_unit"                 : 1,
+                "expired"                       : false,
+                "dont_allow_duplicates"         : false,
+                "vaccine_type"                  : 2,
+                "vaccine_take"                  : 3.3,
+                "current_reducedacquire"        : 4.4,
+                "current_reducedtransmit"       : 5.5,
+                "current_reducedmortality"      : 6.6,
+                "durability_time_profile"       : 2,
+                "primary_decay_time_constant"   : 7.7,
+                "secondary_decay_time_constant" : 8.8
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"PropertyValueChanger",
                 "cost_per_unit"         : 1,
                 "expired"               : false,
