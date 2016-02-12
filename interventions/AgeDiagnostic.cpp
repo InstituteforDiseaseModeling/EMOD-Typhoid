@@ -80,6 +80,16 @@ namespace Kernel
         ar.labelElement("thresholds"   ); serialize_thresholds( ar, obj.thresholds );
         ar.labelElement("thresh_events") & obj.thresh_events;
         ar.endObject();
+
+        // verify events are valid
+        if( ar.IsReader() )
+        {
+            EventTrigger signal;
+            for( auto ev : obj.thresh_events )
+            {
+                signal = ev;
+            }
+        }
     }
 
     json::QuickBuilder
