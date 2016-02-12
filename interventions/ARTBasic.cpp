@@ -95,6 +95,18 @@ namespace Kernel
         //itbda->ApplyDrugInactivationRateEffect( GetDrugInactivationRate() );
         //itbda->ApplyDrugClearanceRateEffect( GetDrugClearanceRate() );
     }
+
+    REGISTER_SERIALIZABLE(ARTBasic);
+
+    void ARTBasic::serialize(IArchive& ar, ARTBasic* obj)
+    {
+        GenericDrug::serialize( ar, obj );
+        ARTBasic& art = *obj;
+        ar.labelElement("viral_suppression"          ) & art.viral_suppression;
+        ar.labelElement("days_to_achieve_suppression") & art.days_to_achieve_suppression;
+
+        // itbda set in SetContextTo
+    }
 }
 
 //#endif // ENABLE_STI
