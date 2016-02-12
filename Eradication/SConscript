@@ -351,7 +351,7 @@ else:
         "SusceptibilityPyDemo.cpp"
     ]
 
-    if 'Disease' in env:
+    if 'Disease' in env and len(env['Disease']) > 0:
         if env["Disease"] == "Generic":
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
@@ -404,8 +404,10 @@ else:
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
             env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
     else:
+        print( "Monolithic all-disease build." )
         env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
         env.Append( CPPDEFINES=["ENABLE_TOYPHOID" ] )
+        env.Append( CPPDEFINES=["ENABLE_TB" ] )
         env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
         eradicationSrcFiles.extend( malariaSrcFiles )
         eradicationSrcFiles.extend( hivSrcFiles )
