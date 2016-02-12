@@ -71,5 +71,7 @@ namespace Kernel
         // variables for reporting
         unsigned int pos_num_partners_while_CD4500plus;
         unsigned int neg_num_partners_while_CD4500plus;
+
+        DECLARE_SERIALIZABLE(IndividualHumanHIV);
     };
 }
