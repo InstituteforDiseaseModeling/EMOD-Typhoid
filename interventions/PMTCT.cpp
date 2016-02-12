@@ -66,6 +66,15 @@ namespace Kernel
         return success;
     }
 
+    void PMTCT::SetContextTo(IIndividualHumanContext *context)
+    {
+        if (s_OK != context->GetInterventionsContext()->QueryInterface(GET_IID(IHIVMTCTEffects), (void**)&ivc) )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IHIVMTCTEffects", "IIndividualHumanInterventionsContext" );
+        }
+        release_assert( ivc );
+    }
+
     void
     PMTCT::Update( float dt )
     {
@@ -83,14 +92,17 @@ namespace Kernel
             expired = true;
         }
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, PMTCT& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(PMTCT);
+
+    void PMTCT::serialize(IArchive& ar, PMTCT* obj)
     {
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        PMTCT& pmtct = *obj;
+
+        ar.labelElement("timer"   ) & pmtct.timer;
+        ar.labelElement("efficacy") & pmtct.efficacy;
+
+        // ivc gets set in SetContextTo
     }
 }
-#endif
