@@ -80,4 +80,14 @@ namespace Kernel
         // Nothing to do for this intervention, which doesn't have ongoing effects
         expired = true;
     }
+
+    REGISTER_SERIALIZABLE(HIVPreARTNotification);
+
+    void HIVPreARTNotification::serialize(IArchive& ar, HIVPreARTNotification* obj)
+    {
+        BaseIntervention::serialize( ar, obj );
+        HIVPreARTNotification& note = *obj;
+
+        ar.labelElement("startingPreART") & note.startingPreART;
+    }
 }

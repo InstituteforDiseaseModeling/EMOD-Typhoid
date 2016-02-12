@@ -16,6 +16,16 @@
         {
             "Test" :
             {
+                "__class__":"HIVPreARTNotification",
+                "cost_per_unit":3,
+                "expired":false,
+                "dont_allow_duplicates" : true,
+                "startingPreART" : true
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVPiecewiseByYearAndSexDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
