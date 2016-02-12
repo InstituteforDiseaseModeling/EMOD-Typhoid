@@ -20,6 +20,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Simulation.h"
 #include "SimulationFactory.h"
 #ifndef _DLLS_
+#ifndef DISABLE_VECTOR
+#include "SimulationVector.h"
+#endif
 #ifndef DISABLE_MALARIA
 #include "SimulationMalaria.h"
 #endif
