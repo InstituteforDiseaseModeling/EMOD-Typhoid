@@ -16,6 +16,59 @@
         {
             "Test" :
             {
+                "__class__":"HIVRandomChoice",
+                "cost_per_unit":9,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "diagnostic_type":1,
+                "base_specificity":
+                {
+                    "_value":0.6,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "base_sensitivity":
+                {
+                    "_value":0.5,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "treatment_fraction":
+                {
+                    "_value":0.4,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "days_to_diagnosis":4,
+                "positive_diagnosis_config":"null",
+                "positive_diagnosis_event":"Event_7",
+                "abortStates" :
+                {
+                    "values" :
+                    [
+                        "State_11",
+                        "State_21",
+                        "State_31"
+                    ],
+                    "value_source" : "ValidCascadeStates"
+                },
+                "cascadeState"               : "State_5",
+                "firstUpdate"                : true,
+                "result_of_positive_test"    : false,
+                "original_days_to_diagnosis" : 11,
+                "absoluteDuration"           : 22,
+                "negative_diagnosis_event"   : "Event_8",
+                "event2ProbabilityMap" :
+                [
+                    { "key" : "Event_1", "value" : 19 },
+                    { "key" : "Event_2", "value" : 29 },
+                    { "key" : "Event_3", "value" : 39 }
+                ]
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVPreARTNotification",
                 "cost_per_unit":3,
                 "expired":false,
