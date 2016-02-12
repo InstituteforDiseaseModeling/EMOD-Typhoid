@@ -23,6 +23,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #ifndef DISABLE_MALARIA
 #include "SimulationMalaria.h"
 #endif
+#ifndef DISABLE_VECTOR
+#include "SimulationVector.h"
+#endif
 #ifdef ENABLE_POLIO
 #include "SimulationPolio.h"
 #endif
