@@ -16,6 +16,42 @@
         {
             "Test" :
             {
+                "__class__":"InfectionHIV",
+                "suid": 5,
+                "duration"        : 1.1,
+                "total_duration"  : 2.2,
+                "incubation_timer": 3.3,
+                "infectious_timer": 4.4,
+                "infectiousness"  : 5.5,
+                "infectiousnessByRoute":
+                [
+                    {"key":"abc","value": 4.56},
+                    {"key":"def","value": 7.89},
+                    {"key":"ghi","value": 1.23}
+                ],
+                "StateChange":1,
+                "infection_strain":
+                {
+                    "antigenID":5,
+                    "geneticID":4
+                },
+                "ViralLoad"                                           : 1.2,
+                "HIV_duration_until_mortality_without_TB"             : 2.3,
+                "HIV_natural_duration_until_mortality"                : 3.4,
+                "HIV_duration_until_mortality_with_viral_suppression" : 4.5,
+                "m_time_infected"                                     : 5.6,
+                "prognosis_timer"                                     : 6.7,
+                "m_infection_stage"                                   : 3,
+                "m_fraction_of_prognosis_spent_in_stage"              : [ 4.4, 3.3, 2.2, 1.1 ],
+                "m_acute_duration"                                    : 9.8,
+                "m_latent_duration"                                   : 8.7,
+                "m_aids_duration"                                     : 7.6,
+                "m_hetero_infectivity_multiplier"                     : 6.5
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"SusceptibilityHIV",
                 "age"              : 36500.0,
                 "mod_acquire"      : 0.21,
