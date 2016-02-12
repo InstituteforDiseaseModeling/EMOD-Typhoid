@@ -34,5 +34,7 @@ namespace Kernel
         virtual void onReceivedResult( IHIVMedicalHistory* pMedHistory, bool resultIsHivPositive );
 
         float m_ProbReceivedResults;
+
+        DECLARE_SERIALIZABLE(HIVRapidHIVDiagnostic);
     };
 }

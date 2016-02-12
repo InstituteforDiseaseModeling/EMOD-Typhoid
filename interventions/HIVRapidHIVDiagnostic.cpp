@@ -95,18 +95,15 @@ namespace Kernel
             broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedNegative );
         }
     }
-}
 
+    REGISTER_SERIALIZABLE(HIVRapidHIVDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVRapidHIVDiagnostic& obj, const unsigned int v)
+    void HIVRapidHIVDiagnostic::serialize(IArchive& ar, HIVRapidHIVDiagnostic* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVRapidHIVDiagnostic& diag = *obj;
+
+        ar.labelElement("m_ProbReceivedResults") & diag.m_ProbReceivedResults;
     }
 }
-#endif
+
