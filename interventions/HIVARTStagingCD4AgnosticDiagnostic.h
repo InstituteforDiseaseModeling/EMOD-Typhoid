@@ -43,6 +43,8 @@ namespace Kernel
         InterpolatedValueMap adultByTB,        childByTB;
         InterpolatedValueMap adultByPregnant;
         InterpolatedValueMap childTreatUnderAgeThreshold;
+
+        DECLARE_SERIALIZABLE(HIVARTStagingCD4AgnosticDiagnostic);
 #pragma warning( pop )
     };
 }

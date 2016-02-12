@@ -123,17 +123,20 @@ namespace Kernel
 
         return result;
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVARTStagingCD4AgnosticDiagnostic& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(HIVARTStagingCD4AgnosticDiagnostic);
+
+    void HIVARTStagingCD4AgnosticDiagnostic::serialize(IArchive& ar, HIVARTStagingCD4AgnosticDiagnostic* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVARTStagingAbstract::serialize( ar, obj );
+        HIVARTStagingCD4AgnosticDiagnostic& diag = *obj;
+
+        ar.labelElement("adultAge"                    ) & diag.adultAge;
+        ar.labelElement("adultByWHOStage"             ) & diag.adultByWHOStage;
+        ar.labelElement("childByWHOStage"             ) & diag.childByWHOStage;
+        ar.labelElement("adultByTB"                   ) & diag.adultByTB;
+        ar.labelElement("childByTB"                   ) & diag.childByTB;
+        ar.labelElement("adultByPregnant"             ) & diag.adultByPregnant;
+        ar.labelElement("childTreatUnderAgeThreshold" ) & diag.childTreatUnderAgeThreshold;
     }
 }
-#endif
