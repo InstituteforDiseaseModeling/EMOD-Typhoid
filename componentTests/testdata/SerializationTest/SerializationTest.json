@@ -16,6 +16,22 @@
         {
             "Test" :
             {
+                "__class__":"PMTCT",
+                "cost_per_unit":7,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "timer"    :
+                {
+                    "_value"     : 33,
+                    "_min_value" : 0,
+                    "_max_value" : 3.4e+038
+                },
+                "efficacy" : 0.9
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVSigmoidByYearAndSexDiagnostic",
                 "cost_per_unit":7,
                 "expired":false,
