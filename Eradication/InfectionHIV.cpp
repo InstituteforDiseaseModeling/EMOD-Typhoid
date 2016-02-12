@@ -81,7 +81,7 @@ namespace Kernel
     void InfectionHIV::Initialize(suids::suid _suid)
     {
         InfectionSTI::Initialize(_suid);
-        // TBD: This pointer will need to be recreated in SetContextTo for migration to work!
+
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&hiv_parent) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanHIV", "IndividualHuman" );
@@ -96,6 +96,16 @@ namespace Kernel
         m_hetero_infectivity_multiplier = Environment::getInstance()->RNG->Weibull2( personal_infectivity_scale, personal_infectivity_heterogeneity );
 
         LOG_DEBUG_F( "Individual %d just entered (started) HIV Acute stage, heterogeneity multiplier = %f.\n", parent->GetSuid().data, m_hetero_infectivity_multiplier );
+    }
+
+    void InfectionHIV::SetContextTo( IIndividualHumanContext* context )
+    {
+        InfectionSTI::SetContextTo( context );
+
+        if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&hiv_parent) )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanHIV", "IndividualHuman" );
+        }
     }
 
 #define WHO_STAGE_KAPPA_0 (0.9664f)
@@ -619,5 +629,27 @@ namespace Kernel
                      lambda_corrected
                    );
         return ret;
+    }
+
+    REGISTER_SERIALIZABLE(InfectionHIV);
+
+    void InfectionHIV::serialize(IArchive& ar, InfectionHIV* obj)
+    {
+        InfectionSTI::serialize( ar, obj );
+        InfectionHIV& inf_hiv = *obj;
+        ar.labelElement("ViralLoad"                                          ) & inf_hiv.ViralLoad;
+        ar.labelElement("HIV_duration_until_mortality_without_TB"            ) & inf_hiv.HIV_duration_until_mortality_without_TB;
+        ar.labelElement("HIV_natural_duration_until_mortality"               ) & inf_hiv.HIV_natural_duration_until_mortality;
+        ar.labelElement("HIV_duration_until_mortality_with_viral_suppression") & inf_hiv.HIV_duration_until_mortality_with_viral_suppression;
+        ar.labelElement("m_time_infected"                                    ) & inf_hiv.m_time_infected;
+        ar.labelElement("prognosis_timer"                                    ) & inf_hiv.prognosis_timer;
+        ar.labelElement("m_infection_stage"                                  ) & (uint32_t&)inf_hiv.m_infection_stage;
+        ar.labelElement("m_fraction_of_prognosis_spent_in_stage"             ); ar.serialize( inf_hiv.m_fraction_of_prognosis_spent_in_stage, NUM_WHO_STAGES );
+        ar.labelElement("m_acute_duration"                                   ) & inf_hiv.m_acute_duration;
+        ar.labelElement("m_latent_duration"                                  ) & inf_hiv.m_latent_duration;
+        ar.labelElement("m_aids_duration"                                    ) & inf_hiv.m_aids_duration;
+        ar.labelElement("m_hetero_infectivity_multiplier"                    ) & inf_hiv.m_hetero_infectivity_multiplier;
+
+        //hiv_parent assigned in SetContextTo()
     }
 }
