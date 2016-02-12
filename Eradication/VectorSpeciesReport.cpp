@@ -26,6 +26,7 @@ static const std::string _report_name = "VectorSpeciesReport.json";   // Report 
 #ifndef _WIN32
 #define _countof(a) (sizeof(a)/sizeof(*(a)))
 #endif
+namespace Kernel {
 
 Kernel::IReport*
 VectorSpeciesReport::CreateReport( const Kernel::jsonConfigurable::tDynamicStringSet& rVectorSpeciesNames )
@@ -151,4 +152,6 @@ void VectorSpeciesReport::LogNodeData( Kernel::INodeContext * pNC )
         daily_hbr[bin_index]          +=          vectorpopulation->GetHBRByPool(Kernel::VectorPoolIdEnum::BOTH_VECTOR_POOLS);
         bin_index++;
     }
+}
+
 }

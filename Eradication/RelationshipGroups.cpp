@@ -26,7 +26,7 @@ extern void howlong(
 
 namespace Kernel {
 
-#ifndef DISABLE_HIV
+#ifndef DISABLE_STI
     //IContagionPopulation
     //IContagionProbabilities
     BEGIN_QUERY_INTERFACE_BODY(DiscreteContagionPopulation)
@@ -160,7 +160,7 @@ namespace Kernel {
 
     void
     RelationshipGroups::GetGroupMembershipForProperties(
-        RouteList_t& route,
+        const RouteList_t& route,
         const tProperties* properties,
         TransmissionGroupMembership_t* membershipOut
     )

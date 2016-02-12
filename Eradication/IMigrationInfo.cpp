@@ -10,7 +10,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "IMigrationInfo.h"
 #include "Migration.h"
+#ifndef DISABLE_VECTOR
 #include "MigrationInfoVector.h"
+#endif
 
 static const char * _module = "IMigrationInfo";
 
@@ -28,6 +30,7 @@ namespace Kernel
             bool enable_human_migration = (ms != MigrationStructure::NO_MIGRATION);
 
             IMigrationInfoFactory* p_mif = nullptr ;
+#ifndef DISABLE_VECTOR
             if( (sim_type == SimType::VECTOR_SIM) || (sim_type == SimType::MALARIA_SIM) )
             {
                 if( useDefaultMigration )
@@ -39,7 +42,9 @@ namespace Kernel
                     p_mif = new MigrationInfoFactoryVector( enable_human_migration );
                 }
             }
-            else if( useDefaultMigration )
+            else 
+#endif
+            if( useDefaultMigration )
             {
                 p_mif = new MigrationInfoFactoryDefault( enable_human_migration, defaultTorusSize );
             }
