@@ -253,3 +253,6 @@ Regression/Scenarios/InputFiles
 testing
 .config_from_excel.json
 .campaign_from_excel.json
+
+# compiled Python
+*.pyc
