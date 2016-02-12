@@ -48,14 +48,8 @@ if env['AllDlls'] or env['AllInterventions'] or env['Report'] !="" or ( 'Disease
 
 else:
 
+    print( env["Disease"] )
     env.Append( CPPDEFINES=["ENABLE_PYTHON" ] )
-    #env.Append( CPPDEFINES=["DISABLE_HIV" ] )
-    env.Append( CPPDEFINES=["ENABLE_TB" ] )
-    env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
-    env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
-    #env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
-    #env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
-    #env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
 
     eradicationSrcFiles = [
                             # Common
@@ -357,12 +351,70 @@ else:
         "SusceptibilityPy.cpp"
     ]
 
-    eradicationSrcFiles.extend( hivSrcFiles )
-    eradicationSrcFiles.extend( malariaSrcFiles )
-    eradicationSrcFiles.extend( polioSrcFiles )
-    eradicationSrcFiles.extend( tbSrcFiles )
-    eradicationSrcFiles.extend( tbhivSrcFiles )
-    eradicationSrcFiles.extend( pyDemoSrcFiles )
+    if 'Disease' in env and len(env['Disease']) > 0:
+        if env["Disease"] == "Generic":
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+
+        if env["Disease"] == "Vector":
+            eradicationSrcFiles.extend( vectorSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+
+        if env["Disease"] ==  "Malaria":
+            eradicationSrcFiles.extend( malariaSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+
+        if env["Disease"] == "HIV":
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+            eradicationSrcFiles.extend( hivSrcFiles )
+
+        if env["Disease"] == "Polio":
+            eradicationSrcFiles.extend( polioSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+            env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+        if env["Disease"] == "TB":
+            eradicationSrcFiles.extend( tbSrcFiles )
+            env.Append( CPPDEFINES=["ENABLE_TB" ] )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+        if env["Disease"] == "TBHIV":
+            env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
+            eradicationSrcFiles.extend( tbhivSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+        if env["Disease"] == "Py":
+            eradicationSrcFiles.extend( pyDemoSrcFiles )
+            env.Append( CPPDEFINES=["ENABLE_TOYPHOID" ] )
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+    else:
+        print( "Monolithic all-disease build." )
+        env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+        env.Append( CPPDEFINES=["ENABLE_TOYPHOID" ] )
+        env.Append( CPPDEFINES=["ENABLE_TB" ] )
+        env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
+        eradicationSrcFiles.extend( malariaSrcFiles )
+        eradicationSrcFiles.extend( hivSrcFiles )
+        eradicationSrcFiles.extend( tbSrcFiles )
+        eradicationSrcFiles.extend( tbhivSrcFiles )
+        eradicationSrcFiles.extend( polioSrcFiles )
+        eradicationSrcFiles.extend( pyDemoSrcFiles )
 
     # Monolithic
     eradicationExe = env.Program('Eradication', eradicationSrcFiles)

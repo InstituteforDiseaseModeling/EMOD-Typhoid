@@ -32,7 +32,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <sys/time.h>
 #endif
 
-#define ENABLE_TOYPHOID 1
+//#define ENABLE_TOYPHOID 1
 #ifdef ENABLE_TOYPHOID 
 #include "Python.h"
 extern PyObject *
