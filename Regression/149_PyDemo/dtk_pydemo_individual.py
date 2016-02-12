@@ -97,7 +97,7 @@ class ToyphoidIndividual(PyIndividual):
     def __init__(self, new_id_in, new_mcw_in, new_age_in, new_sex_in ):
         PyIndividual.__init__( self, new_id_in, new_mcw_in, new_age_in, new_sex_in )
 
-class ToyphoidIndividual(PyIndividual):
+class TyphoidIndividual(PyIndividual):
     # static config values ala config.json
     # note that this doesn't line up with anything in the C++ code
     #_acute_infectivity = 4000
@@ -115,7 +115,7 @@ class ToyphoidIndividual(PyIndividual):
     # P2 is age dependent so is determined below. Probability of becoming a chronic carrier from a SUBCLINICAL infection
     P3 = 0
     # P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
-    P5 = 0.05 #probability of Toyphoid death
+    P5 = 0.05 #probability of Typhoid death
     P6 = 0 #probability of sterile immunity after acute infection
     P7 = 00 #probability of clinical immunity after acute infection
     P8 = 00 #probability of sterile immunity from a subclinical infectin in the clinically immune
@@ -127,7 +127,7 @@ class ToyphoidIndividual(PyIndividual):
     #PST = 0.9 #probability of successful treatment: note that santiago does not have MDR strains at this point
     CFRU = 0.1
     CFRH = 0.005
-    #P5 is probability of Toyphoid death
+    #P5 is probability of Typhoid death
     #The rest remain infected and have a high chance of dying
 
     #Trying a different mechanism for immunity
@@ -303,7 +303,7 @@ class ToyphoidIndividual(PyIndividual):
                     self.death = 1
                     self.acute_timer = -1
                     state_to_report = "D"
-                    # print( "PY: " + str(self._id) + " DIED FROM Toyphoid (1)." )
+                    # print( "PY: " + str(self._id) + " DIED FROM Typhoid (1)." )
                 elif shift == 2:
                     self.acute_timer = -1
 
@@ -314,7 +314,7 @@ class ToyphoidIndividual(PyIndividual):
                 self.death = 1
                 self.acute_timer = -1
                 state_to_report = "D"
-                # print( "PY: " + str(self._id) + " DIED FROM Toyphoid (2)." )
+                # print( "PY: " + str(self._id) + " DIED FROM Typhoid (2)." )
             elif shift == 2: #if they survived, calculate probability of being a carrier
                 if chronic == 'Saul':
                     if self._sex == "FEMALE":
@@ -473,7 +473,7 @@ class ToyphoidIndividual(PyIndividual):
             #print(deposit)
         else:
             deposit = 0
-        print(deposit)
+
         return deposit
 
 """
@@ -482,7 +482,7 @@ This is the 'shim' layer between the C++ and Python code. It connects by individ
 def create( new_id, new_mcw, new_age, new_sex ):
     PyIndividual.create_call_count = PyIndividual.create_call_count + 1
     #print( "py: creating new individual: " + str(new_id) )
-    population[new_id] = ToyphoidIndividual( new_id, new_mcw, new_age, new_sex )
+    population[new_id] = TyphoidIndividual( new_id, new_mcw, new_age, new_sex )
     #population[new_id] = PyIndividual( new_id, new_mcw, new_age, new_sex )
 
 def destroy( dead_id ):
@@ -535,11 +535,11 @@ for param in ["Toyphoid_Acute_Infectivity","Toyphoid_Prepatent_Infectivity","Toy
         print( "Failed to find key (parameter) " + param + " in config.json." )
         sys.exit()
 
-ToyphoidIndividual._acute_infectivity = config_json["Toyphoid_Acute_Infectivity"]
-ToyphoidIndividual._prepatent_infectivity = config_json["Toyphoid_Prepatent_Infectivity"]
-ToyphoidIndividual._subclinical_infectivity = config_json["Toyphoid_Subclinical_Infectivity"]
-ToyphoidIndividual._chronic_infectivity = config_json["Toyphoid_Chronic_Infectivity"]
-ToyphoidIndividual.amp = config_json["Toyphoid_Environmental_Amplification"]
-ToyphoidIndividual.inf_protection = config_json["Toyphoid_Protection_Per_Infection"]
-ToyphoidIndividual.exposure = config_json["Toyphoid_Environmental_Exposure"]
+TyphoidIndividual._acute_infectivity = config_json["Toyphoid_Acute_Infectivity"]
+TyphoidIndividual._prepatent_infectivity = config_json["Toyphoid_Prepatent_Infectivity"]
+TyphoidIndividual._subclinical_infectivity = config_json["Toyphoid_Subclinical_Infectivity"]
+TyphoidIndividual._chronic_infectivity = config_json["Toyphoid_Chronic_Infectivity"]
+TyphoidIndividual.amp = config_json["Toyphoid_Environmental_Amplification"]
+TyphoidIndividual.inf_protection = config_json["Toyphoid_Protection_Per_Infection"]
+TyphoidIndividual.exposure = config_json["Toyphoid_Environmental_Exposure"]
 
