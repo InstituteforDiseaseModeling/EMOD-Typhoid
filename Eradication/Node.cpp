@@ -1261,7 +1261,7 @@ namespace Kernel
         transmissionGroups->Build(decayMap, 1, 1);
     }
 
-    void Node::GetGroupMembershipForIndividual(RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* transmissionGroupMembership)
+    void Node::GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* transmissionGroupMembership)
     {
         LOG_DEBUG_F( "Calling GetGroupMembershipForProperties\n" );
         transmissionGroups->GetGroupMembershipForProperties( route, properties, transmissionGroupMembership );
@@ -1272,7 +1272,7 @@ namespace Kernel
         return transmissionGroups->GetTotalContagion(membership);
     }
 
-    RouteList_t& Node::GetTransmissionRoutes()
+    const RouteList_t& Node::GetTransmissionRoutes() const
     {
         return routes;
     }
