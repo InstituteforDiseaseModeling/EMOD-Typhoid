@@ -16,6 +16,22 @@
         {
             "Test" :
             {
+                "__class__":"PropertyValueChanger",
+                "cost_per_unit"         : 1,
+                "expired"               : false,
+                "dont_allow_duplicates" : false,
+                "target_property_key"   : "Risk",
+                "target_property_value" : "HIGH",
+                "probability"           : 0.9,
+                "revert"                : 2.2,
+                "max_duration"          : 77.0,
+                "action_timer"          : 5.5,
+                "reversion_timer"       : 7.7
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"MigrateIndividuals",
                 "cost_per_unit":1,
                 "expired":false,
