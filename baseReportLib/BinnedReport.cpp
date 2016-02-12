@@ -27,7 +27,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "Sugar.h"
 #include "IIndividualHuman.h"
 #include "ProgVersion.h"
-#include "RapidJsonImpl.h"
+// clorton #include "RapidJsonImpl.h"
 
 using namespace std;
 using namespace json;
@@ -76,7 +76,7 @@ BinnedReport::BinnedReport()
     _age_bin_friendly_names.resize( _num_age_bins );
     _age_bin_upper_values = new float[100];
     memset( _age_bin_upper_values, 0, sizeof( float ) * 100 );
-    for( unsigned int idx = 0; idx < _num_age_bins ; idx++ )
+    for( int idx = 0; idx < _num_age_bins ; idx++ )
     {
         _age_bin_upper_values[idx] = __age_bin_upper_values[idx];
         _age_bin_friendly_names[idx] = __age_bin_friendly_names[idx];
@@ -294,7 +294,7 @@ void BinnedReport::Finalize()
     //   { "Timesteps" },      # of timestamps in data
     //   { "Channels" }        # of channels in data
     // }
-    time_t now = time(0);
+    time_t now = time(nullptr);
 #ifdef WIN32
     tm now2;
     localtime_s(&now2,&now);
@@ -322,7 +322,7 @@ void BinnedReport::Finalize()
     int timesteps = 0;
     if( !channelDataMap.IsEmpty() && num_total_bins > 0 )
     {
-        timesteps = (int)( (double)channelDataMap.GetChannelLength() / (double)num_total_bins);
+        timesteps = int(double(channelDataMap.GetChannelLength()) / double(num_total_bins));
     }
     pIJsonObj->Insert("Timesteps", timesteps);
 
@@ -367,7 +367,7 @@ void BinnedReport::Finalize()
     pIJsonObj->EndArray();
     pIJsonObj->EndObject(); // end of "Subchannel_Metadata"
 
-    pIJsonObj->Insert("Channels", (int)channelDataMap.GetNumChannels()); // this is "Header":"Channels" metadata
+    pIJsonObj->Insert("Channels", int(channelDataMap.GetNumChannels())); // this is "Header":"Channels" metadata
     pIJsonObj->EndObject(); // end of "Header"
 
     LOG_DEBUG("Iterating over channelDataMap\n");

@@ -11,9 +11,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BinnedReportMalaria.h"
 
 #include <map>
-#include <string>
+// clorton #include <string>
 
-#include "BoostLibWrapper.h"
+// clorton #include "BoostLibWrapper.h"
 #include "Environment.h"
 #include "Exceptions.h"
 #include "Sugar.h"
@@ -64,7 +64,7 @@ BinnedReportMalaria::BinnedReportMalaria()
     }
     _age_bin_upper_values = new float[ _num_age_bins ];
     memset( _age_bin_upper_values, 0, sizeof( float ) * _num_age_bins );
-    for( unsigned int idx = 0; idx < _num_age_bins ; idx++ )
+    for( int idx = 0; idx < _num_age_bins ; idx++ )
     {
         _age_bin_upper_values[idx] = __age_bin_upper_values[idx];
         _age_bin_friendly_names[idx] = __age_bin_friendly_names[idx];
@@ -150,7 +150,7 @@ void BinnedReportMalaria::LogIndividualData( Kernel::IIndividualHuman* individua
     BinnedReport::LogIndividualData(individual);
 
     // Get individual weight and bin variables
-    float mc_weight    = (float)individual->GetMonteCarloWeight();
+    float mc_weight    = float(individual->GetMonteCarloWeight());
 
     int bin_index = calcBinIndex(individual);
     LOG_DEBUG_F( "bin_index = %d\n", bin_index );
