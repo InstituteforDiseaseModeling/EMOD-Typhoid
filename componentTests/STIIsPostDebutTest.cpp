@@ -41,6 +41,7 @@ SUITE(StiIsPostDebutTest)
             , m_pSimulationConfig( new SimulationConfig() )
             //, m_Diag()
         {
+            JsonConfigurable::ClearMissingParameters();
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
             Environment::setSimulationConfig( m_pSimulationConfig );
