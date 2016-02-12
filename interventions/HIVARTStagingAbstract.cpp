@@ -144,17 +144,12 @@ namespace Kernel
         pMedHistory->OnStageForART(isPositiveTestResult);
     }
 
-}
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVARTStagingAbstract& obj, const unsigned int v)
+    void HIVARTStagingAbstract::serialize(IArchive& ar, HIVARTStagingAbstract* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVARTStagingAbstract& art = *obj;
+
+        ar.labelElement("ip_tb_key"           ) & art.ip_tb_key;
+        ar.labelElement("ip_tb_value_expected") & art.ip_tb_value_expected;
     }
 }
-#endif
