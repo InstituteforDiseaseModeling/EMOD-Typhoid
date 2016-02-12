@@ -33,5 +33,7 @@ namespace Kernel
         InterpolatedValueMap year2ValueMap;
         float period_between_trials;
         float value_multiplier;
+
+        DECLARE_SERIALIZABLE(HIVPiecewiseByYearAndSexDiagnostic);
     };
 }

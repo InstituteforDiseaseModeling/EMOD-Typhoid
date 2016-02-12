@@ -16,6 +16,64 @@
         {
             "Test" :
             {
+                "__class__":"HIVPiecewiseByYearAndSexDiagnostic",
+                "cost_per_unit":9,
+                "expired":false,
+                "dont_allow_duplicates" : false,
+                "diagnostic_type":1,
+                "base_specificity":
+                {
+                    "_value":0.1,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "base_sensitivity":
+                {
+                    "_value":0.2,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "treatment_fraction":
+                {
+                    "_value":0.3,
+                    "_min_value":0,
+                    "_max_value":1
+                },
+                "days_to_diagnosis":4,
+                "positive_diagnosis_config":"null",
+                "positive_diagnosis_event":"Event_1",
+                "abortStates" :
+                {
+                    "values" :
+                    [
+                        "State_1",
+                        "State_2",
+                        "State_3"
+                    ],
+                    "value_source" : "ValidCascadeStates"
+                },
+                "cascadeState"               : "State_4",
+                "firstUpdate"                : false,
+                "result_of_positive_test"    : true,
+                "original_days_to_diagnosis" : 55,
+                "absoluteDuration"           : 60,
+                "negative_diagnosis_event"   : "Event_1",
+                "interpolation_order"        : 1,
+                "female_multiplier"          : 2.5,
+                "default_value"              : 0,
+                "year2ValueMap"              : 
+                [
+                    { "key" : 1964, "value" : 17 },
+                    { "key" : 1965, "value" : 27 },
+                    { "key" : 1966, "value" : 37 }
+                ],
+                "period_between_trials"      : 5,
+                "value_multiplier"           : 1.5
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"HIVMuxer",
                 "cost_per_unit":5,
                 "expired":false,
