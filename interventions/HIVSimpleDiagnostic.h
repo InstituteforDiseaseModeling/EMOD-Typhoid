@@ -48,16 +48,13 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         jsonConfigurable::tDynamicStringSet abortStates;
         std::string cascadeState;
-#pragma warning( pop )
-
         bool firstUpdate;
         bool result_of_positive_test;
         float original_days_to_diagnosis;
         float absoluteDuration;
-
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
         EventTrigger negative_diagnosis_event;
+
+        DECLARE_SERIALIZABLE(HIVSimpleDiagnostic);
 #pragma warning( pop )
     };
 }
