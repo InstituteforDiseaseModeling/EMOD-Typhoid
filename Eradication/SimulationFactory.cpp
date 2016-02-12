@@ -40,7 +40,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #endif
 
-#ifdef ENABLE_PYTHON
+#ifdef ENABLE_TOYPHOID
 #include "SimulationPyDemo.h"
 #endif
 
@@ -171,7 +171,7 @@ namespace Kernel
                     newsim = SimulationHIV::CreateSimulation(EnvPtr->Config);
                 break;
 #endif // HIV
-#ifdef ENABLE_PYTHON 
+#ifdef ENABLE_TOYPHOID 
                 case SimType::PYDEMO_SIM:
                     newsim = SimulationPyDemo::CreateSimulation(EnvPtr->Config);
                 break;

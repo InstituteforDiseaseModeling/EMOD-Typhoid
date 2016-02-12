@@ -38,7 +38,7 @@ IdmPyInit(
     const char * python_function_name
 );
 
-#define ENABLE_TOYPHOID 1
+//#define ENABLE_TOYPHOID 1
 namespace Kernel
 {
     BEGIN_QUERY_INTERFACE_DERIVED(NodePyDemo, Node)
