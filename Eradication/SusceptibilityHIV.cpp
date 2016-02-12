@@ -127,6 +127,16 @@ namespace Kernel
         return newsusceptibility;
     }
 
+    void SusceptibilityHIV::SetContextTo(IIndividualHumanContext* context)
+    {
+        SusceptibilitySTI::SetContextTo( context );
+
+        if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&hiv_parent) )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanHIV", "IndividualHuman" );
+        }
+    }
+
     void SusceptibilityHIV::setCD4Rate(const IInfectionHIV * const pInf)
     {
         release_assert( pInf );
@@ -258,7 +268,7 @@ namespace Kernel
     void SusceptibilityHIV::Initialize(float _age, float _immmod, float _riskmod)
     {
         Susceptibility::Initialize(_age, _immmod, _riskmod);
-        // TBD: This pointer will need to be recreated in SetContextTo for migration to work!
+
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&hiv_parent) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanHIV", "IndividualHuman" );
@@ -392,4 +402,20 @@ namespace Kernel
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
         { }
+
+    REGISTER_SERIALIZABLE(SusceptibilityHIV);
+
+    void SusceptibilityHIV::serialize(IArchive& ar, SusceptibilityHIV* obj)
+    {
+        SusceptibilitySTI::serialize( ar, obj );
+        SusceptibilityHIV& suscep = *obj;
+        ar.labelElement("days_between_symptomatic_and_death") & suscep.days_between_symptomatic_and_death;
+        ar.labelElement("sqrtCD4_Current"                   ) & suscep.sqrtCD4_Current;
+        ar.labelElement("sqrtCD4_Rate"                      ) & suscep.sqrtCD4_Rate;
+        ar.labelElement("sqrtCD4_PostInfection"             ) & suscep.sqrtCD4_PostInfection;
+        ar.labelElement("sqrtCD4_AtDiseaseDeath"            ) & suscep.sqrtCD4_AtDiseaseDeath;
+        ar.labelElement("CD4count_at_ART_start"             ) & suscep.CD4count_at_ART_start;
+
+        // hiv_parent; - Updated in SetContextTo
+    }
 }

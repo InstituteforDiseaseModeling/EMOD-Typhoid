@@ -16,6 +16,26 @@
         {
             "Test" :
             {
+                "__class__":"SusceptibilityHIV",
+                "age"              : 36500.0,
+                "mod_acquire"      : 0.21,
+                "mod_transmit"     : 0.22,
+                "mod_mortality"    : 0.23,
+                "acqdecayoffset"   : 0.24,
+                "trandecayoffset"  : 0.25,
+                "mortdecayoffset"  : 0.26,
+                "demographic_risk" : 0.27,
+                "days_between_symptomatic_and_death" : 9.9,
+                "sqrtCD4_Current"                    : 8.8,
+                "sqrtCD4_Rate"                       : 7.7,
+                "sqrtCD4_PostInfection"              : 6.6,
+                "sqrtCD4_AtDiseaseDeath"             : 5.5,
+                "CD4count_at_ART_start"              : 4.4
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"SimpleImmunoglobulin",
                 "cost_per_unit"                 : 1,
                 "expired"                       : false,
