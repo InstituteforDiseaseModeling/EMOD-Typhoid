@@ -265,4 +265,23 @@ namespace Kernel
         return me.str();
 #endif
     }
+
+    REGISTER_SERIALIZABLE(IndividualHumanHIV);
+
+    void IndividualHumanHIV::serialize(IArchive& ar, IndividualHumanHIV* obj)
+    {
+        IndividualHumanSTI::serialize( ar, obj );
+        IndividualHumanHIV& ind_hiv = *obj;
+        ar.labelElement("has_active_TB"                     ) & ind_hiv.has_active_TB;
+        ar.labelElement("pos_num_partners_while_CD4500plus" ) & ind_hiv.pos_num_partners_while_CD4500plus;
+        ar.labelElement("neg_num_partners_while_CD4500plus" ) & ind_hiv.neg_num_partners_while_CD4500plus;
+
+        if( ar.IsReader() )
+        {
+            if ( ind_hiv.susceptibility->QueryInterface(GET_IID(ISusceptibilityHIV), (void**)&ind_hiv.hiv_susceptibility) != s_OK)
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "susc", "IHIVSusceptibilityHIV", "Susceptibility" );
+            }
+        }
+    }
 }
