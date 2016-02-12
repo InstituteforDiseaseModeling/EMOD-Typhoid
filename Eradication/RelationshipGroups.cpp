@@ -26,7 +26,7 @@ extern void howlong(
 
 namespace Kernel {
 
-#ifndef DISABLE_HIV
+#ifndef DISABLE_STI
     //IContagionPopulation
     //IContagionProbabilities
     BEGIN_QUERY_INTERFACE_BODY(DiscreteContagionPopulation)

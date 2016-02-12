@@ -291,6 +291,7 @@ else:
                             "RelationshipGroups.cpp",
                             "RelationshipManager.cpp",
                             "RelationshipManagerFactory.cpp",
+                            "RelationshipParameters.cpp",
                             "RelationshipReporting.cpp",
                             "SocietyFactory.cpp",
                             "SocietyImpl.cpp",
@@ -375,6 +376,13 @@ else:
         if env["Disease"] ==  "Malaria":
             eradicationSrcFiles.extend( malariaSrcFiles )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+
+        if env["Disease"] == "STI":
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            eradicationSrcFiles.extend( stiSrcFiles )
 
         if env["Disease"] == "HIV":
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
