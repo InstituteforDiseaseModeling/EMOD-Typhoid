@@ -17,25 +17,27 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "BinnedReport.h"
 
-class BinnedReportPy : public BinnedReport
-{
-public:
-    static IReport* CreateReport();
-    virtual ~BinnedReportPy();
+namespace Kernel {
+    class BinnedReportPy : public BinnedReport
+    {
+        public:
+            static IReport* CreateReport();
+            virtual ~BinnedReportPy();
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
-    virtual void EndTimestep( float currentTime, float dt );
+            virtual void LogIndividualData( IIndividualHuman * individual );
+            virtual void EndTimestep( float currentTime, float dt );
 
-    virtual void postProcessAccumulatedData();
+            virtual void postProcessAccumulatedData();
 
-protected:
-    BinnedReportPy();
+        protected:
+            BinnedReportPy();
 
-    virtual void initChannelBins();
-    void clearChannelsBins();
+            virtual void initChannelBins();
+            void clearChannelsBins();
 
-    float *carrier_bins;
-    float *subclinical_bins;
-    float *acute_bins;
-    // channels specific to this particular report-type
-};
+            float *carrier_bins;
+            float *subclinical_bins;
+            float *acute_bins;
+            // channels specific to this particular report-type
+    };
+}

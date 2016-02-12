@@ -55,10 +55,10 @@ namespace Kernel
         template<class Archive>
         friend void serialize(Archive & ar, SimulationPy& sim, const unsigned int  file_version );
 #endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanPy> typed_migration_queue_storage;
+        //TypedPrivateMigrationQueueStorage<IndividualHumanPy> typed_migration_queue_storage;
     };
 }
 
 #ifndef WIN32
-DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPy)
+//DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPy)
 #endif

@@ -39,10 +39,13 @@ static const std::string _report_name = "BinnedReport.json";
 
 static const char* _axis_labels[] = { "Age" };
 
+namespace Kernel {
+
 const char * BinnedReport::_pop_label = "Population";
 const char * BinnedReport::_infected_label = "Infected";
 const char * BinnedReport::_new_infections_label = "New Infections";
 const char * BinnedReport::_disease_deaths_label = "Disease Deaths";
+
 
 Kernel::IReport*
 BinnedReport::CreateReport()
@@ -468,3 +471,4 @@ void BinnedReport::formatChannelDataBins(Kernel::IJsonObjectAdapter* pIJsonObj, 
 
 void BinnedReport::populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) { }
 void BinnedReport::postProcessAccumulatedData() { }
+}

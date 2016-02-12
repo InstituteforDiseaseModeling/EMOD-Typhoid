@@ -80,7 +80,7 @@ ReportPy::populateSummaryDataUnitsMap(
 
 void
 ReportPy::LogIndividualData(
-    IndividualHuman * individual
+    IIndividualHuman * individual
 )
 {
     Report::LogIndividualData( individual );

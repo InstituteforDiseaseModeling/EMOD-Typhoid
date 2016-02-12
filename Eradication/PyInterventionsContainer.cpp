@@ -16,7 +16,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "stdafx.h"
 #ifdef ENABLE_PYTHON
 
-#include "SimpleTypemapRegistration.h"
+//#include "SimpleTypemapRegistration.h"
 #include "Sugar.h"
 #include "Debug.h"
 #include "Environment.h"

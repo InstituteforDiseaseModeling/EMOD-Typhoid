@@ -23,7 +23,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "Drugs.h"
 #include "Interventions.h"
 #include "InterventionsContainer.h"
-#include "SimpleTypemapRegistration.h"
+//#include "SimpleTypemapRegistration.h"
 
 namespace Kernel
 {

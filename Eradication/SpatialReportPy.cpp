@@ -59,7 +59,7 @@ void SpatialReportPy::populateChannelInfos(tChanInfoMap &channel_infos)
 }
 
 
-void SpatialReportPy::LogIndividualData( Kernel::IndividualHuman * individual )
+void SpatialReportPy::LogIndividualData( IIndividualHuman * individual )
 {
     SpatialReport::LogIndividualData(individual);
 
@@ -70,7 +70,7 @@ void SpatialReportPy::LogIndividualData( Kernel::IndividualHuman * individual )
 
 void
 SpatialReportPy::LogNodeData(
-    Kernel::INodeContext * pNC
+    INodeContext * pNC
 )
 {
     SpatialReport::LogNodeData(pNC);

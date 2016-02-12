@@ -34,8 +34,8 @@ public:
     virtual bool Configure( const Configuration * inputJson );
     virtual void EndTimestep( float currentTime, float dt );
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual);
-    virtual void LogNodeData( Kernel::INodeContext * pNC );
+    virtual void LogIndividualData( IIndividualHuman * individual);
+    virtual void LogNodeData( INodeContext * pNC );
 
 protected:
     virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );

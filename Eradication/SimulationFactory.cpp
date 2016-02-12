@@ -40,7 +40,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #endif
 
-#ifdef ENABLE_PYTHON
+#ifdef ENABLE_TOYPHOID
 #include "SimulationPy.h"
 #endif
 
@@ -93,7 +93,7 @@ namespace Kernel
             else if (sSimType == "HIV_SIM")
                 sim_type = SimType::HIV_SIM;
 #endif // HIV
-#ifdef ENABLE_PYTHON
+#ifdef ENABLE_TOYPHOID
             else if (sSimType == "PY_SIM")
                 sim_type = SimType::PY_SIM;
 #endif
@@ -171,7 +171,7 @@ namespace Kernel
                     newsim = SimulationHIV::CreateSimulation(EnvPtr->Config);
                 break;
 #endif // HIV
-#ifdef ENABLE_PYTHON 
+#ifdef ENABLE_TOYPHOID 
                 case SimType::PY_SIM:
                     newsim = SimulationPy::CreateSimulation(EnvPtr->Config);
                 break;

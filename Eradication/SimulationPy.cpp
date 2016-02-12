@@ -171,7 +171,7 @@ namespace Kernel
 
     void SimulationPy::resolveMigration()
     {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
+        //resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
     }
 
     void SimulationPy::Reports_CreateBuiltIn()

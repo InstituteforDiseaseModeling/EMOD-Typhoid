@@ -34,8 +34,8 @@ public:
     static IReport* CreateReport();
     virtual ~SpatialReportPy() { }
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
-    virtual void LogNodeData( Kernel::INodeContext * pNC );
+    virtual void LogIndividualData( IIndividualHuman * individual );
+    virtual void LogNodeData( INodeContext * pNC );
 
 protected:
     SpatialReportPy();

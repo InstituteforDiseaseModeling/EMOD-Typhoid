@@ -16,6 +16,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #pragma once
 
 #include "BaseChannelReport.h"
+#include "IIndividualHuman.h"
 
 namespace json {
     class Element;
@@ -23,7 +24,6 @@ namespace json {
 
 namespace Kernel {
     struct IJsonObjectAdapter;
-}
 
 class BinnedReport : public BaseChannelReport
 {
@@ -36,7 +36,7 @@ public:
     virtual void BeginTimestep();
     virtual void LogNodeData( Kernel::INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
+    virtual void LogIndividualData( IIndividualHuman* individual );
     virtual void EndTimestep( float currentTime, float dt );
 
     virtual void Finalize();
@@ -51,7 +51,7 @@ protected:
 
     virtual void initChannelBins();
     void clearChannelsBins();
-    virtual int calcBinIndex(Kernel::IIndividualHuman* individual);
+    virtual int calcBinIndex( IIndividualHuman* individual);
 
     // TODO: should return-type be something generic (void* ?) so e.g. MATLAB plugin can follow this pattern?
     virtual json::Element formatChannelDataBins(const float data[], std::vector<int>& dims, int start_axis, int num_remaining_bins);
@@ -88,3 +88,5 @@ protected:
     std::vector<std::string> _age_bin_friendly_names;
                                   
 };
+
+}

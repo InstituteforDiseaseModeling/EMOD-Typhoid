@@ -40,6 +40,8 @@ static const std::string _num_chronic_carriers_label     = "Number of Chronic Ca
 static const std::string _num_subclinic_infections_label = "Number of New Sub-Clinical Infections";
 static const std::string _num_acute_infections_label     = "Number of New Acute Infections";
 
+namespace Kernel {
+
 Kernel::IReport*
 BinnedReportPy::CreateReport()
 {
@@ -106,7 +108,7 @@ void BinnedReportPy::EndTimestep( float currentTime, float dt )
     clearChannelsBins();
 }
 
-void  BinnedReportPy::LogIndividualData( Kernel::IndividualHuman * individual )
+void  BinnedReportPy::LogIndividualData( IIndividualHuman * individual )
 {
     LOG_DEBUG( "BinnedReportPy::LogIndividualData\n" );
 
@@ -144,4 +146,5 @@ void BinnedReportPy::postProcessAccumulatedData()
 {
 }
 
+}
 #endif // ENABLE_PYTHON
