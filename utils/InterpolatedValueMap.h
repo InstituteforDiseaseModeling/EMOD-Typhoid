@@ -25,5 +25,7 @@ namespace Kernel
             float getValueLinearInterpolation( float year, float default_value = 0) const;
             virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
             virtual json::QuickBuilder GetSchema();
+
+            static void serialize( IArchive& ar, InterpolatedValueMap& map );
     };
 }

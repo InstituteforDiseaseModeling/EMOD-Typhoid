@@ -188,4 +188,36 @@ namespace Kernel
         return map_value;
     }
 
+    void InterpolatedValueMap::serialize( IArchive& ar, InterpolatedValueMap& mapping )
+    {
+        size_t count = ar.IsWriter() ? mapping.size() : -1;
+
+        ar.startArray(count);
+        if( ar.IsWriter() )
+        {
+            for( auto& entry : mapping )
+            {
+                float key   = entry.first;
+                float value = entry.second;
+                ar.startObject();
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & value;
+                ar.endObject();
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                float key=0.0;
+                float value=0.0;
+                ar.startObject();
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & value;
+                ar.endObject();
+                mapping[key] = value;
+            }
+        }
+        ar.endArray();
+    }
 }
