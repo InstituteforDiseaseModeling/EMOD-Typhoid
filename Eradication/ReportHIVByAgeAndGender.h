@@ -43,6 +43,7 @@ namespace Kernel {
         virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
         virtual void LogIndividualData( IIndividualHuman* individual );
         virtual void LogNodeData( INodeContext* pNC );
+        virtual void EndTimestep(float currentTime, float dt);
 
     protected:
 
@@ -99,7 +100,7 @@ namespace Kernel {
 
         bool GetNextIP( std::vector<int>& rKeyValueIndexList );
         uint32_t GetDataMapKey( IIndividualHumanEventContext* context );
-        uint32_t GetDataMapKey( int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList );
+        uint32_t GetDataMapKey( int nodeSuidIndex, int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList );
         void AddConstant();
 
         std::map<uint32_t,ReportData> data_map ;
