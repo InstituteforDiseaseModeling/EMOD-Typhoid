@@ -1,0 +1,26 @@
+{
+     "Use_Defaults": 1,
+     "Events": [
+          {
+               "Event_Coordinator_Config": {
+                    "Demographic_Coverage": 1.0, 
+                    "Intervention_Config": {
+                         "Blocking_Rate": 1, 
+                         "Cost_To_Consumer": 8, 
+                         "Durability_Time_Profile": "BOXDURABILITY", 
+                         "Killing_Rate": 1.0, 
+                         "Primary_Decay_Time_Constant": 365, 
+                         "class": "SimpleBednet"
+                    }, 
+                    "Target_Demographic": "Everyone",  
+		    "Property_Restrictions": [],
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 365, 
+               "class": "CampaignEvent"
+          }
+     ]
+}
