@@ -35,6 +35,8 @@
         { "path" : "HIV/40_HIV_CD4_Heterogeneity" },
         { "path" : "HIV/41_HIV_HIVSimpleDiagnostic" },
         { "path" : "HIV/42_HIV_MaleCircumcision"},
-        { "path" : "HIV/43_HIV_ProportionalAdjustmentEventCoordinator"}
+        { "path" : "HIV/43_HIV_ProportionalAdjustmentEventCoordinator"},
+        { "path" : "HIV/44_HIV_CascadeOfCare_MultiNode_SingleCore" },
+        { "path" : "HIV/45_HIV_CascadeOfCare_MultiNode_MultiCore" }
     ]
 }
