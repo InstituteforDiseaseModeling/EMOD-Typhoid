@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
 #include "EventTrigger.h"
+#include "NodeEventContext.h"
 
 static const char* _module = "ReportHIVByAgeAndGender";
 
@@ -181,6 +182,7 @@ namespace Kernel
         }
         AddConstant() ; // is_circumcised
         AddConstant() ; // gender
+        AddConstant() ; // node_id
 
         BaseTextReportEvents::Initialize( nrmSize );
     }
@@ -256,6 +258,7 @@ namespace Kernel
         float year = _parent->GetSimulationTime().Year();
 
         int nodeId = pNC->GetExternalID();
+        int node_suid_id = pNC->GetSuid().data;
 
         std::vector<int> key_value_index_list ;
         for( int i = 0 ; i < ip_key_list.size() ; i++ )
@@ -294,7 +297,7 @@ namespace Kernel
 
                     for( int age_bin = 0; age_bin < MAX_AGE; age_bin++ ) 
                     {
-                        uint32_t map_key = GetDataMapKey( gender, age_bin, circumcision_bin, key_value_index_list );
+                        uint32_t map_key = GetDataMapKey( node_suid_id, gender, age_bin, circumcision_bin, key_value_index_list );
                         ReportData rd ;
                         if( data_map.count( map_key ) > 0 )
                         {
@@ -349,7 +352,15 @@ namespace Kernel
                 done_with_ip = GetNextIP( key_value_index_list );
             }
         }
-        data_map.clear();
+    }
+
+    void ReportHIVByAgeAndGender::EndTimestep( float currentTime, float dt )
+    {
+        BaseTextReportEvents::EndTimestep( currentTime, dt );
+        if( is_collecting_data && doReport )
+        {
+            data_map.clear();
+        }
     }
 
     void ReportHIVByAgeAndGender::LogIndividualData( IIndividualHuman* individual )
@@ -527,12 +538,13 @@ namespace Kernel
             int index = std::find( ip_key_value_list_map[ key ].begin(), ip_key_value_list_map[ key ].end(), value ) - ip_key_value_list_map[ key ].begin() ;
             key_value_list_index.push_back( index );
         }
+        int node_suid_id = context->GetNodeEventContext()->GetId().data;
 
-        uint32_t map_key = GetDataMapKey( gender, age_bin, circumcision_bin, key_value_list_index );
+        uint32_t map_key = GetDataMapKey( node_suid_id, gender, age_bin, circumcision_bin, key_value_list_index );
         return map_key ;
     }
 
-    uint32_t ReportHIVByAgeAndGender::GetDataMapKey( int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList )
+    uint32_t ReportHIVByAgeAndGender::GetDataMapKey( int nodeSuidIndex, int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList )
     {
         // ------------------------------------------------------------------------------
         // --- I used factors of 100 in the map_key_constant so that one could look at
@@ -547,8 +559,9 @@ namespace Kernel
         {
             map_key += map_key_constants[ kvi ] * rKeyValueIndexList[ kvi ] ;
         }
-        map_key += map_key_constants[ rKeyValueIndexList.size()+0 ] * circIndex ;
-        map_key += map_key_constants[ rKeyValueIndexList.size()+1 ] * genderIndex ;
+        map_key += map_key_constants[ rKeyValueIndexList.size()+0 ] * circIndex;
+        map_key += map_key_constants[ rKeyValueIndexList.size()+1 ] * genderIndex;
+        map_key += map_key_constants[ rKeyValueIndexList.size()+2 ] * nodeSuidIndex;
 
         return map_key;
     }
