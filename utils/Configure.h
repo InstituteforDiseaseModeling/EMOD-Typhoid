@@ -112,6 +112,35 @@ namespace Kernel
                     return std::string( DYNAMIC_STRING_SET_LABEL );
                 }
                 std::string value_source;
+
+                static void serialize( IArchive& ar, tDynamicStringSet& dyn )
+                {
+                    ar.startObject();
+                    ar.labelElement("values");
+                    size_t count = ar.IsWriter() ? dyn.size() : -1;
+
+                    ar.startArray(count);
+                    if( ar.IsWriter() )
+                    {
+                        for (auto& entry : dyn)
+                        {
+                            std::string str = entry;
+                            ar & str;
+                        }
+                    }
+                    else
+                    {
+                        for (size_t i = 0; i < count; ++i)
+                        {
+                            std::string entry;
+                            ar & entry;
+                            dyn.insert( entry );
+                        }
+                    }
+                    ar.endArray();
+                    ar.labelElement("value_source") & dyn.value_source;
+                    ar.endObject();
+                }
         };
 
         class ConstrainedString : public std::string

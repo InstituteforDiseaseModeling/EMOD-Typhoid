@@ -27,5 +27,12 @@ namespace Kernel
 
         // IDistributingDistributableIntervention
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+
+    protected:
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+        DECLARE_SERIALIZABLE(HIVSetCascadeState);
+#pragma warning( pop )
     };
 }

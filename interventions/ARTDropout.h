@@ -39,5 +39,7 @@ namespace Kernel
         virtual void ApplyEffects();
 
         IHIVDrugEffectsApply * itbda;
+
+        DECLARE_SERIALIZABLE(ARTDropout);
     };
 }

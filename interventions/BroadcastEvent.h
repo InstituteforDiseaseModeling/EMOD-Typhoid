@@ -47,6 +47,8 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         IIndividualHumanContext *parent;
         EventTrigger broadcast_event;
+
+        DECLARE_SERIALIZABLE(BroadcastEvent);
 #pragma warning( pop )
     };
 }

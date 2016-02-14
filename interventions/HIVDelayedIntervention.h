@@ -58,5 +58,7 @@ namespace Kernel
 
         EventTrigger broadcast_event;
         EventTrigger broadcast_on_expiration_event;
+
+        DECLARE_SERIALIZABLE(HIVDelayedIntervention);
     };
 }

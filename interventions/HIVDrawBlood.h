@@ -29,5 +29,10 @@ namespace Kernel
         // HIVSimpleDiagnostic
         virtual bool positiveTestResult();
         virtual void positiveTestDistribute();
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+        DECLARE_SERIALIZABLE(HIVDrawBlood);
+#pragma warning( pop )
     };
 }

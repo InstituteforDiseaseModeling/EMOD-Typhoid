@@ -183,20 +183,17 @@ namespace Kernel
         BaseIntervention::serialize( ar, obj );
         PropertyValueChanger& changer = *obj;
 
-// clorton        jsonConfigurable::ConstrainedString target_property_key;
-// clorton        jsonConfigurable::ConstrainedString target_property_value;
-
-        ar.labelElement("target_property_key") & (std::string&)(changer.target_property_key);
-        ar.labelElement("target_property_value") & (std::string&)(changer.target_property_value);
-        ar.labelElement("probability") & changer.probability;
-        ar.labelElement("revert") & changer.revert;
-        ar.labelElement("max_duration") & changer.max_duration;
-        ar.labelElement("action_timer") & changer.action_timer;
-        ar.labelElement("reversion_timer") & changer.reversion_timer;
+        ar.labelElement("target_property_key"  ) & changer.target_property_key;
+        ar.labelElement("target_property_value") & changer.target_property_value;
+        ar.labelElement("probability"          ) & changer.probability;
+        ar.labelElement("revert"               ) & changer.revert;
+        ar.labelElement("max_duration"         ) & changer.max_duration;
+        ar.labelElement("action_timer"         ) & changer.action_timer;
+        ar.labelElement("reversion_timer"      ) & changer.reversion_timer;
 
         if( !ar.IsWriter() )
         {
-            changer.target_property_key.constraints = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>";
+            changer.target_property_key.constraints   = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>";
             changer.target_property_value.constraints = "<demographics>::Defaults.Individual_Properties.*.Value.<keys>";
 
             //TODO - Need to actual use the constrained string

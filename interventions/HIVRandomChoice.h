@@ -21,6 +21,8 @@ namespace Kernel
             Event2ProbabilityMapType() {}
             virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
             virtual json::QuickBuilder GetSchema();
+
+            static void serialize(IArchive& ar, Event2ProbabilityMapType& obj);
     };
 
     class HIVRandomChoice : public HIVSimpleDiagnostic
@@ -40,7 +42,8 @@ namespace Kernel
         virtual void positiveTestDistribute();
 
     protected:
-
         Event2ProbabilityMapType event2ProbabilityMap;
+
+        DECLARE_SERIALIZABLE(HIVRandomChoice);
     };
 }

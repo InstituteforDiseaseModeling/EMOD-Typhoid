@@ -37,6 +37,8 @@ namespace Kernel
         InterpolatedValueMap threshold;
         InterpolatedValueMap ifActiveTB;
         InterpolatedValueMap ifPregnant;
+
+        DECLARE_SERIALIZABLE(HIVARTStagingByCD4Diagnostic);
 #pragma warning( pop )
     };
 }

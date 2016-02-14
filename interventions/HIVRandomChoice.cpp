@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 
 static const char * _module = "HIVRandomChoice";
 
@@ -71,6 +71,44 @@ namespace Kernel
         {
             entry.second = entry.second / total ;
         }
+    }
+
+    void Event2ProbabilityMapType::serialize( IArchive& ar, Event2ProbabilityMapType& mapping )
+    {
+        size_t count = ar.IsWriter() ? mapping.size() : -1;
+
+        ar.startArray(count);
+        if( ar.IsWriter() )
+        {
+            for (auto& entry : mapping)
+            {
+                std::string key   = entry.first;
+                float value = entry.second;
+                ar.startObject();
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & value;
+                ar.endObject();
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < count; ++i)
+            {
+                std::string key;
+                float value = 0.0;
+                ar.startObject();
+                    ar.labelElement("key"  ) & key;
+                    ar.labelElement("value") & value;
+                ar.endObject();
+
+                EventTrigger event ;
+                event.parameter_name = "HIVRandomChoices::Choices::Event" ;
+                event = key;
+
+                mapping[key] = value;
+            }
+        }
+        ar.endArray();
     }
 
     json::QuickBuilder
@@ -153,15 +191,14 @@ namespace Kernel
             broadcaster->TriggerNodeEventObserversByString( parent->GetEventContext(), eventEnum );
         }
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVRandomChoice& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(HIVRandomChoice);
+
+    void HIVRandomChoice::serialize(IArchive& ar, HIVRandomChoice* obj)
     {
-        //ar & obj.event2ProbabilityMap;     // todo: serialize this!
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVRandomChoice& choice = *obj;
+
+        ar.labelElement("event2ProbabilityMap") & choice.event2ProbabilityMap;
     }
 }
-#endif

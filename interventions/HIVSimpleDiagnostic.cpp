@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 #include "IIndividualHumanHIV.h"  // for IndividualHIV access
 
 static const char * _module = "HIVSimpleDiagnostic";
@@ -268,17 +268,18 @@ namespace Kernel
         return abortStates;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVSimpleDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVSimpleDiagnostic& obj, const unsigned int v)
+    void HIVSimpleDiagnostic::serialize(IArchive& ar, HIVSimpleDiagnostic* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+        SimpleDiagnostic::serialize( ar, obj );
+        HIVSimpleDiagnostic& hsd = *obj;
+        ar.labelElement("abortStates"               ) & hsd.abortStates;
+        ar.labelElement("cascadeState"              ) & hsd.cascadeState;
+        ar.labelElement("firstUpdate"               ) & hsd.firstUpdate;
+        ar.labelElement("result_of_positive_test"   ) & hsd.result_of_positive_test;
+        ar.labelElement("original_days_to_diagnosis") & hsd.original_days_to_diagnosis;
+        ar.labelElement("absoluteDuration"          ) & hsd.absoluteDuration;
+        ar.labelElement("negative_diagnosis_event"  ) & hsd.negative_diagnosis_event;
     }
 }
-#endif

@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare and IHIVMedicalHistory
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare and IHIVMedicalHistory
 
 static const char * _module = "HIVARTStagingByCD4Diagnostic";
 
@@ -58,17 +58,14 @@ namespace Kernel
         return result ;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVARTStagingByCD4Diagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVARTStagingByCD4Diagnostic& obj, const unsigned int v)
+    void HIVARTStagingByCD4Diagnostic::serialize(IArchive& ar, HIVARTStagingByCD4Diagnostic* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVARTStagingAbstract::serialize( ar, obj );
+        HIVARTStagingByCD4Diagnostic& diag = *obj;
+        ar.labelElement("threshold" ) & diag.threshold;
+        ar.labelElement("ifActiveTB") & diag.ifActiveTB;
+        ar.labelElement("ifPregnant") & diag.ifPregnant;
     }
 }
-#endif
