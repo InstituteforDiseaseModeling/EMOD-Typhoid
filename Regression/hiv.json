@@ -33,6 +33,8 @@
         { "path" : "HIV/38_HIV_Risk_Stratification" },
         { "path" : "HIV/39_HIV_CD4_ART_Dropout" },
         { "path" : "HIV/40_HIV_CD4_Heterogeneity" },
-        { "path" : "HIV/41_HIV_HIVSimpleDiagnostic" }
+        { "path" : "HIV/41_HIV_HIVSimpleDiagnostic" },
+        { "path" : "HIV/42_HIV_MaleCircumcision"},
+        { "path" : "HIV/43_HIV_ProportionalAdjustmentEventCoordinator"}
     ]
 }

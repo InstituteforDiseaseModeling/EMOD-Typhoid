@@ -8,7 +8,8 @@
         "Event_5",
         "Event_6",
         "Event_7",
-        "Event_8"
+        "Event_8",
+        "Event_9"
     ],
     "Objects" :
     [
@@ -346,7 +347,10 @@
                             "__class__" : "MaleCircumcision",
                             "cost_per_unit" : 1,
                             "expired"       : false,
-                            "dont_allow_duplicates" : false
+                            "dont_allow_duplicates" : false,
+                            "m_ReducedAcquire"              : 0.7,
+                            "m_ApplyIfHigherReducedAcquire" : true,
+                            "m_DistrbutedEventTrigger"      : "Event_9"
                         },
                         {
                             "__class__" : "ModifyStiCoInfectionStatus",
@@ -357,6 +361,7 @@
                         }
                     ],
                     "is_circumcised" : true,
+                    "circumcision_reduced_require" : 0.7,
                     "STI_blocking_overrides" :
                     [
                         {
@@ -711,20 +716,23 @@
                         "__class__" : "MaleCircumcision",
                         "cost_per_unit" : 1,
                         "expired"       : false,
-                            "dont_allow_duplicates" : false
+                        "dont_allow_duplicates" : false,
+                        "m_ReducedAcquire"              : 0.7,
+                        "m_ApplyIfHigherReducedAcquire" : true,
+                        "m_DistrbutedEventTrigger"      : "Event_9"
                     },
                     {
                         "__class__" : "ModifyStiCoInfectionStatus",
                         "cost_per_unit" : 2,
                         "expired"       : false,
-                            "dont_allow_duplicates" : false,
+                        "dont_allow_duplicates" : false,
                         "set_flag_to"   : true
                     },
                     {
                         "__class__" : "STIBarrier",
                         "cost_per_unit" : 3,
                         "expired"       : false,
-                            "dont_allow_duplicates" : false,
+                         "dont_allow_duplicates" : false,
                         "early"         : 0.1,
                         "late"          : 0.2,
                         "midyear"       : 0.3,
@@ -735,13 +743,13 @@
                         "__class__" : "StiCoInfectionDiagnostic",
                         "cost_per_unit" : 4,
                         "expired"       : false,
-                            "dont_allow_duplicates" : false
+                        "dont_allow_duplicates" : false
                     },
                     {
                         "__class__" : "STIIsPostDebut",
                         "cost_per_unit" : 5,
                         "expired"       : false,
-                            "dont_allow_duplicates" : false,
+                        "dont_allow_duplicates" : false,
                         "diagnostic_type":1,
                         "base_specificity":
                         {
@@ -768,6 +776,7 @@
                     }
                 ],
                 "is_circumcised" : false,
+                "circumcision_reduced_require" : 0.8,
                 "STI_blocking_overrides" :
                 [
                     {

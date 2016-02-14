@@ -3732,13 +3732,6 @@
 				"max" : 100,
 				"default" : 10
 			},
-			"Circumcision_Reduced_Acquire" : {
-				"description" : "Reduction of susceptibility to HIV by VMMC.",
-				"type" : "float",
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.6
-			},
 			"Min_Days_Between_Adding_Relationships" : {
 				"description" : "Minimum number of days between adding two consecutive relationships as a means to control concurrency.  The constraint does not apply if an individual breaks an existing relationship.",
 				"type" : "float",
@@ -5518,6 +5511,10 @@
 				"description" : "TBD",
 				"type" : "bool",
 				"default" : 0
+			},
+			"Report_HIV_ByAgeAndGender_Event_Counter_List" : {
+				"description" : "TBD",
+				"type" : "vector string"
 			}
 		},
 		"ReportHIVInfection" : {
@@ -7123,6 +7120,175 @@
 						"type" : "idmType:Intervention"
 					},
 					"class" : "NodeEventCoordinator"
+				},
+				"ReferenceTrackingEventCoordinator" : {
+					"idmType:InterpolatedValueMap" : {
+						"Times" : [
+							{
+								"type" : "float",
+								"min" : 0,
+								"max" : 999999,
+								"description" : "An array of years."
+							}
+						],
+						"Values" : [
+							{
+								"type" : "float",
+								"min" : 0,
+								"max" : 3.40282e+038,
+								"description" : "An array of values to match the defined Times."
+							}
+						]
+					},
+					"Time_Value_Map" : {
+						"description" : "Map of times (years) to coverages.",
+						"type" : "idmType:InterpolatedValueMap"
+					},
+					"Update_Period" : {
+						"description" : "Gap between distribution updates.",
+						"type" : "float",
+						"min" : 1,
+						"max" : 3650,
+						"default" : 365
+					},
+					"End_Year" : {
+						"description" : "Final date at which this set of targeted coverages should be applied (expiration)",
+						"type" : "float",
+						"min" : 1900,
+						"max" : 2200,
+						"default" : 2100
+					},
+					"idmType:Intervention" : {
+						"base" : "interventions.idmAbstractType.Intervention"
+					},
+					"Intervention_Config" : {
+						"description" : "The nested json of the actual intervention to be distributed by this event coordinator.",
+						"type" : "idmType:Intervention"
+					},
+					"Number_Repetitions" : {
+						"description" : "Number of times intervention given, used with tsteps_between_reps.",
+						"type" : "integer",
+						"min" : -1,
+						"max" : 1000,
+						"default" : -1
+					},
+					"Timesteps_Between_Repetitions" : {
+						"description" : "Repetition interval.",
+						"type" : "integer",
+						"min" : -1,
+						"max" : 10000,
+						"default" : -1,
+						"depends-on" : {
+							"Number_Repetitions" : "<>0"
+						}
+					},
+					"Include_Departures" : {
+						"description" : "Distribute intervention to individuals departing from node (1=include node emigrants, 0=leave them alone).",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Include_Arrivals" : {
+						"description" : "Distribute intervention to individuals arriving at node (1=include node immigrants, 0=leave them alone).",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Demographic_Coverage" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Demographic" : {
+						"type" : "enum",
+						"enum" : [
+							"Everyone",
+							"ExplicitAgeRanges",
+							"ExplicitAgeRangesAndGender",
+							"ExplicitGender",
+							"PossibleMothers",
+							"ArrivingAirTravellers",
+							"DepartingAirTravellers",
+							"ArrivingRoadTravellers",
+							"DepartingRoadTravellers",
+							"AllArrivingTravellers",
+							"AllDepartingTravellers",
+							"ExplicitDiseaseState"
+						],
+						"description" : "The demographic group (from a list of possibles) targeted by this intervention (e.g., Infants)",
+						"default" : "Everyone",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Age_Min" : {
+						"description" : "Lower end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Age_Max" : {
+						"description" : "Upper end of age targeted for intervention, in years.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038,
+						"depends-on" : {
+							"Target_Demographic" : "ExplicitAgeRanges"
+						}
+					},
+					"Target_Gender" : {
+						"type" : "enum",
+						"enum" : [
+							"All",
+							"Male",
+							"Female"
+						],
+						"description" : "Specify the gender restriction for the intervention. Defaults to All.",
+						"default" : "All"
+					},
+					"Property_Restrictions" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "Dynamic String Set",
+						"default" : [],
+						"value_source" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"idmType:PropertyRestrictions" : [
+						{
+							"<key>" : {
+								"type" : "Constrained String",
+								"constraints" : "<demographics>::Defaults.Individual_Properties.*.Value.<keys>",
+								"description" : "Individual Property Key from demographics file."
+							},
+							"<value>" : {
+								"type" : "String",
+								"description" : "Individual Property Value from demographics file."
+							}
+						}
+					],
+					"Property_Restrictions_Within_Node" : {
+						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
+						"type" : "idmType:PropertyRestrictions",
+						"depends-on" : {
+							"Intervention_Config.*.iv_type" : "IndividualTargeted"
+						}
+					},
+					"Target_Residents_Only" : {
+						"description" : "If true, only distribute the intervention to those that claim the node as their residence - i.e. started in the node",
+						"type" : "bool",
+						"default" : 0
+					},
+					"class" : "ReferenceTrackingEventCoordinator"
 				},
 				"STIInterventionDistributionEventCoordinator" : {
 					"BSS_Targeting" : {
@@ -10706,6 +10872,24 @@
 						"description" : "TBD",
 						"type" : "bool",
 						"default" : 0
+					},
+					"Circumcision_Reduced_Acquire" : {
+						"description" : "Reduction of susceptibility to HIV by VMMC.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 0.6
+					},
+					"Apply_If_Higher_Reduced_Acquire" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Distributed_Event_Trigger" : {
+						"default" : "NoTrigger",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "MaleCircumcision"

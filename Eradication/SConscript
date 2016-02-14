@@ -82,6 +82,7 @@ else:
                             "SimulationEventContext.cpp",
                             "StandardEventCoordinator.cpp",
                             "CoverageByNodeEventCoordinator.cpp",
+                            "ReferenceTrackingEventCoordinator.cpp",
                             "DemographicRestrictions.cpp",
                             "../interventions/IndividualRepellent.cpp",
                             
