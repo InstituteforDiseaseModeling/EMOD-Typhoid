@@ -71,7 +71,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual void GetGroupMembershipForIndividual( RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) override
+    virtual void GetGroupMembershipForIndividual( const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) override
     {
         throw std::exception("The method or operation is not implemented.");
     }
@@ -86,7 +86,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual RouteList_t& GetTransmissionRoutes() override
+    virtual RouteList_t& GetTransmissionRoutes() const override
     {
         throw std::exception("The method or operation is not implemented.");
     }
