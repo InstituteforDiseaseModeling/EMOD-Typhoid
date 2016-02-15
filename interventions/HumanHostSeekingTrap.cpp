@@ -51,7 +51,7 @@ namespace Kernel
     )
     {
         initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("attract_Config",  &attract_config, "TBD" /*IVM_attract_Config_DESC_TEXT*/ );
+        initConfigComplexType("Attract_Config",  &attract_config, "TBD" /*IVM_attract_Config_DESC_TEXT*/ );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {

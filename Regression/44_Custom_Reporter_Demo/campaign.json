@@ -4,13 +4,19 @@
             "Event_Coordinator_Config": {
                 "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
-                    "Blocking_Rate": 0.0, 
                     "Cost_To_Consumer": 8.0, 
                     "Durability_Time_Profile": "BOXDURABILITY", 
-                    "Killing_Rate": 0.6, 
-                    "Primary_Decay_Time_Constant": 3650, 
-                    "Secondary_Decay_Time_Constant": 3650, 
-                    "class": "SimpleHousingModification"
+                    "class": "SimpleHousingModification",
+                    "Killing_Config": {
+                        "Box_Duration": 3650, 
+                        "Initial_Effect": 0.6, 
+                        "class": "WaningEffectBox"
+                    },
+                    "Blocking_Config": {
+                        "Box_Duration": 3650, 
+                        "Initial_Effect": 0.0, 
+                        "class": "WaningEffectBox"
+                    } 
                 }, 
                 "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"

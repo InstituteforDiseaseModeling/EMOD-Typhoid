@@ -4,11 +4,17 @@
             "Event_Coordinator_Config": {
                 "Demographic_Coverage": 0.7, 
                 "Intervention_Config": {
-                    "Attract_Rate": 0.6, 
                     "Cost_To_Consumer": 3.75, 
-                    "Durability_Time_Profile": "BOXDURABILITY", 
-                    "Killing_Rate": 0.9, 
-                    "Primary_Decay_Time_Constant": 3650, 
+                    "Attract_Config": {
+                        "Box_Duration": 3650, 
+                        "Initial_Effect": 0.6, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "Killing_Config": {
+                        "Box_Duration": 3650, 
+                        "Initial_Effect": 0.9, 
+                        "class": "WaningEffectBox"
+                    }, 
                     "class": "HumanHostSeekingTrap"
                 }, 
                 "Target_Demographic": "Everyone", 
@@ -24,13 +30,18 @@
             "Event_Coordinator_Config": {
                 "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
+                    "Blocking_Config": {
+                        "Box_Duration": 3650, 
+                        "Initial_Effect": 0.8, 
+                        "class": "WaningEffectBox"
+                    }, 
                     "Cost_To_Consumer": 3.75, 
-                    "Durability_Time_Profile": "BOXDURABILITY", 
                     "Habitat_Target": "ALL_HABITATS", 
-                    "Killing": 0.0, 
-                    "Primary_Decay_Time_Constant": 3650, 
-                    "Reduction": 0.8, 
-                    "Secondary_Decay_Time_Constant": 3650, 
+                    "Killing_Config": {
+                        "Box_Duration": 3650, 
+                        "Initial_Effect": 0.0, 
+                        "class": "WaningEffectBox"
+                    }, 
                     "class": "Larvicides"
                 }, 
                 "Number_Repetitions": 1, 
