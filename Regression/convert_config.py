@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
 import json
+import sys
 
-config = json.loads( open( "config.json" ).read() )
+config = json.loads( open( sys.argv[1] ).read() )
 
 for species in config["parameters"]["Vector_Species_Params"]:
     print( species )
