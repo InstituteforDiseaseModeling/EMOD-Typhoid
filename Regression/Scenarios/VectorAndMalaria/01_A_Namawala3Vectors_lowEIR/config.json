@@ -192,6 +192,9 @@
                 "Larval_Habitat_Types": {
                     "WATER_VEGETATION": 600000000
                 }, 
+                "Required_Habitat_Factor": [
+                    600000000
+                ], 
                 "Transmission_Rate": 0.5
             }, 
             "gambiae": {

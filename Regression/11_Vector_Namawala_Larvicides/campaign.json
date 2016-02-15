@@ -5,12 +5,18 @@
                 "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 3.75, 
-                    "Durability_Time_Profile": "BOXDURABILITY", 
                     "Habitat_Target": "ALL_HABITATS", 
-                    "Killing": 0.1, 
-                    "Primary_Decay_Time_Constant": 3650, 
+                    "Killing_Config": {
+                        "Box_Duration": 3650, 
+                        "Initial_Effect": 0.1, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "Blocking_Config": {
+                        "Box_Duration": 0, 
+                        "Initial_Effect": 0.0, 
+                        "class": "WaningEffectBox"
+                    }, 
                     "Reduction": 0, 
-                    "Secondary_Decay_Time_Constant": 3650, 
                     "class": "Larvicides"
                 }, 
                 "Target_Demographic": "Everyone", 

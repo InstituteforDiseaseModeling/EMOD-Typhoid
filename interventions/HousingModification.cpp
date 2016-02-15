@@ -160,11 +160,8 @@ namespace Kernel {
         static const char * _module = "SimpleHousingModification";
         LOG_DEBUG("(De)serializing SimpleHousingModification\n");
 
-        ar & hm.durability_time_profile;
-        ar & hm.current_blockingrate;
-        ar & hm.current_killingrate;
-        ar & hm.primary_decay_time_constant;
-        ar & hm.secondary_decay_time_constant;
+        ar & hm.killing_effect;
+        ar & hm.blocking_effect;
         ar & boost::serialization::base_object<BaseIntervention>(hm);
     }
 

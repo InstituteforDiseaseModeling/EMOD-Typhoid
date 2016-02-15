@@ -4,12 +4,19 @@
             "Event_Coordinator_Config": {
                 "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
-                    "Blocking_Rate": 0.5, 
+                    "Blocking_Config": {
+                        "Box_Duration": 100, 
+                        "Decay_Time_Constant": 150, 
+                        "Initial_Effect": 0.5, 
+                        "class": "WaningEffectBoxExponential"
+                    }, 
                     "Cost_To_Consumer": 10.0, 
-                    "Durability_Time_Profile": "BOXDECAYDURABILITY", 
-                    "Killing_Rate": 0.5, 
-                    "Primary_Decay_Time_Constant": 100, 
-                    "Secondary_Decay_Time_Constant": 150, 
+                    "Killing_Config": {
+                        "Box_Duration": 100, 
+                        "Decay_Time_Constant": 150, 
+                        "Initial_Effect": 0.5, 
+                        "class": "WaningEffectBoxExponential"
+                    }, 
                     "class": "ArtificialDietHousingModification"
                 }, 
                 "Target_Demographic": "Everyone", 

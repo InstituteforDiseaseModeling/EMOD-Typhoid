@@ -4,11 +4,12 @@
             "Event_Coordinator_Config": {
                 "Intervention_Config": {
                     "Cost_To_Consumer": 3.75, 
-                    "Durability_Time_Profile": "DECAYDURABILITY", 
                     "Habitat_Target": "WATER_VEGETATION", 
-                    "Killing": 0.95, 
-                    "Primary_Decay_Time_Constant": 2190, 
-                    "Secondary_Decay_Time_Constant": 3650, 
+                    "Killing_Config": {
+                        "Decay_Time_Constant": 2190, 
+                        "Initial_Effect": 0.95, 
+                        "class": "WaningEffectExponential"
+                    }, 
                     "class": "OvipositionTrap"
                 }, 
                 "Target_Demographic": "Everyone", 

@@ -26,7 +26,7 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
+        //initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
         initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
@@ -38,9 +38,9 @@ namespace Kernel
     }
 
     SimpleIndividualRepellent::SimpleIndividualRepellent()
-        : killing_effect( nullptr )
-        , blocking_effect( nullptr )
-        , current_killingrate( 0.0f )
+        //: killing_effect( nullptr )
+        : blocking_effect( nullptr )
+        //, current_killingrate( 0.0f )
         , current_blockingrate( 0.0f )
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
@@ -50,8 +50,8 @@ namespace Kernel
     SimpleIndividualRepellent::SimpleIndividualRepellent( const SimpleIndividualRepellent& master )
     : BaseIntervention( master )
     {
-        killing_config = master.killing_config;
-        killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        //killing_config = master.killing_config;
+        //killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
         blocking_config = master.blocking_config;
         blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
     }
@@ -78,21 +78,21 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IIndividualRepellentConsumer", "IIndividualHumanContext" );
         }
-        current_killingrate = killing_effect->Current();
+        //current_killingrate = killing_effect->Current();
         current_blockingrate = blocking_effect->Current();
     }
 
     void SimpleIndividualRepellent::Update( float dt )
     {
-        killing_effect->Update(dt);
+        //killing_effect->Update(dt);
         blocking_effect->Update(dt);
-        current_killingrate = killing_effect->Current();
+        //current_killingrate = killing_effect->Current();
         current_blockingrate = blocking_effect->Current();
 
         if( ihmc )
         {
             ihmc->UpdateProbabilityOfIndRepBlocking( current_blockingrate );
-            ihmc->UpdateProbabilityOfIndRepKilling( current_killingrate );
+            //ihmc->UpdateProbabilityOfIndRepKilling( current_killingrate );
         }
         else
         {
@@ -153,7 +153,7 @@ namespace Kernel {
 
         boost::serialization::void_cast_register<SimpleIndividualRepellent, IDistributableIntervention>();
         ar & obj.blocking_effect;
-        ar & obj.killing_effect;
+        //ar & obj.killing_effect;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
     }
 }

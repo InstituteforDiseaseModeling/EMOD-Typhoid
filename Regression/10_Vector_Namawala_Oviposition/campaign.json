@@ -5,11 +5,12 @@
                 "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 3.75, 
-                    "Durability_Time_Profile": "DECAYDURABILITY", 
                     "Habitat_Target": "ALL_HABITATS", 
-                    "Killing": 0.3, 
-                    "Primary_Decay_Time_Constant": 2190, 
-                    "Secondary_Decay_Time_Constant": 3650, 
+                    "Killing_Config": {
+                        "Decay_Time_Constant": 2190, 
+                        "Initial_Effect": 0.3, 
+                        "class": "WaningEffectExponential"
+                    }, 
                     "class": "OvipositionTrap"
                 }, 
                 "Target_Demographic": "Everyone", 

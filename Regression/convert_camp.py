@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import json
+import pdb
 
 
 def createWaningBlock( profile, const, init, extra ):
@@ -24,16 +25,22 @@ def createWaningBlock( profile, const, init, extra ):
 campaign = json.loads( open( "campaign.json" ).read() )
 
 for event in campaign["Events"]:
-    if event["Event_Coordinator_Config"]["Intervention_Config"]["class"] in [ "SimpleBednet", "IRSHousingModification", "SugarTrap", "InsectKillingFence", "Larvicides", "SpaceSpraying", "SpatialRepellent", "ArtificialDiet", "OvipositionTrap", "OutdoorRestKill", "AnimalFeedKill" ]:
+    if event["Event_Coordinator_Config"]["Intervention_Config"]["class"] in [ "SimpleBednet", "IRSHousingModification", "SugarTrap", "InsectKillingFence", "Larvicides", "SpaceSpraying", "SpatialRepellent", "ArtificialDiet", "OvipositionTrap", "OutdoorRestKill", "AnimalFeedKill", "SpatialRepellentHousingModification", "SimpleIndividualRepellent", "SimpleHousingModification", "ScreeningHousingModification", "InsectKillingFenceHousingModification", "ArtificialDietHousingModification" ]:
         iv = event["Event_Coordinator_Config"]["Intervention_Config"]
         profile = iv.pop("Durability_Time_Profile")
+	kill = None
         if "Killing" in iv:
             kill = iv.pop("Killing")
         elif "Killing_Rate" in iv:
             kill = iv.pop("Killing_Rate")
+
         block = None
         if "Blocking_Rate" in iv:
             block = iv.pop("Blocking_Rate")
+        elif "Repellency" in iv:
+            block = iv.pop("Repellency")
+        elif "Reduction" in iv:
+            block = iv.pop("Reduction")
 
         kill_const = 3650
         if "Primary_Decay_Time_Constant" in iv:
