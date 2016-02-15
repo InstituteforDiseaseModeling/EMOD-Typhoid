@@ -83,6 +83,8 @@ namespace Kernel
         blocking_effect->Update(dt);
         float current_killingrate = killing_effect->Current();
         float current_blockingrate = blocking_effect->Current();
+        LOG_DEBUG_F( "current_killingrate = %f\n", current_killingrate );
+        LOG_DEBUG_F( "current_blockingrate = %f\n", current_blockingrate );
         ibc->UpdateProbabilityOfKilling( current_killingrate );
         ibc->UpdateProbabilityOfBlocking( current_blockingrate );
     }

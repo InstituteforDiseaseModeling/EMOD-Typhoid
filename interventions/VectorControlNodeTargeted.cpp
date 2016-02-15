@@ -44,17 +44,7 @@ namespace Kernel
         //       in particular, for spatial repellents where there is reduction but not killing, the primary constant is un-used in BOX and DECAY (but not BOXDECAY)
         //       whereas, oviposition traps only have a killing effect.  (ERAD-599)
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, VCN_Cost_To_Consumer_DESC_TEXT, 0, 999999, 10.0);
-
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
-        bool configured = JsonConfigurable::Configure( inputJson );
-        if( !JsonConfigurable::_dryrun )
-        {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
-            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
-        }
-
-        return configured;
+        return JsonConfigurable::Configure( inputJson );;
     }
 
     SimpleVectorControlNode::SimpleVectorControlNode()
@@ -111,10 +101,16 @@ namespace Kernel
 
     void SimpleVectorControlNode::Update( float dt )
     {
-        killing_effect->Update(dt);
-        blocking_effect->Update(dt);
-        killing  = killing_effect->Current();
-        reduction = blocking_effect->Current();
+        if( killing_effect != nullptr )
+        {
+            killing_effect->Update(dt);
+            killing  = killing_effect->Current();
+        }
+        if( blocking_effect != nullptr )
+        {
+            blocking_effect->Update(dt);
+            reduction = blocking_effect->Current();
+        }
         
         ApplyEffects();
     }
@@ -130,8 +126,16 @@ namespace Kernel
     bool Larvicides::Configure( const Configuration * inputJson )
     {
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", LV_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
-        initConfigTypeMap("Killing", &killing, LV_Killing_DESC_TEXT, 0, 1, 0);
-        initConfigTypeMap("Reduction", &reduction, LV_Reduction_DESC_TEXT, 0, 1, 0);
+        //initConfigTypeMap("Killing", &killing, LV_Killing_DESC_TEXT, 0, 1, 0);
+        //initConfigTypeMap("Reduction", &reduction, LV_Reduction_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+        }
         return SimpleVectorControlNode::Configure( inputJson );
     }
 
@@ -152,9 +156,17 @@ namespace Kernel
     bool SpaceSpraying::Configure( const Configuration * inputJson )
     {
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", SS_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
-        initConfigTypeMap("Reduction", &reduction, SS_Reduction_DESC_TEXT, 0, 1, 0);
         initConfig( "Spray_Kill_Target", kill_target, inputJson, MetadataDescriptor::Enum("Spray_Kill_Target", SS_Kill_Target_DESC_TEXT, MDD_ENUM_ARGS(SpaceSprayTarget)) );
-        initConfigTypeMap("Killing", &killing, SS_Killing_DESC_TEXT, 0, 1, 0);
+        //initConfigTypeMap("Killing", &killing, SS_Killing_DESC_TEXT, 0, 1, 0);
+        //initConfigTypeMap("Reduction", &reduction, SS_Reduction_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Reduction_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+        }
         return SimpleVectorControlNode::Configure( inputJson );
     }
 
@@ -245,7 +257,13 @@ namespace Kernel
 
     bool InsectKillingFence::Configure( const Configuration * inputJson )
     {
-        initConfigTypeMap("Killing", &killing, VCN_Killing_DESC_TEXT, 0, 1, 0);
+        //initConfigTypeMap("Killing", &killing, VCN_Killing_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        }
         return SimpleVectorControlNode::Configure( inputJson );
     }
 
@@ -274,8 +292,14 @@ namespace Kernel
             }
         }
 
-        initConfigTypeMap("Killing", &killing, VCN_Killing_DESC_TEXT, 0, 1, 0);
-        return SimpleVectorControlNode::Configure( inputJson );
+        //initConfigTypeMap("Killing", &killing, VCN_Killing_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
+        bool configured = SimpleVectorControlNode::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        }
+        return configured;
     }
 
     void SugarTrap::ApplyEffects()
@@ -300,8 +324,14 @@ namespace Kernel
         }
 
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", OT_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
-        initConfigTypeMap("Killing", &killing, OT_Killing_DESC_TEXT, 0, 1, 0);
-        return SimpleVectorControlNode::Configure( inputJson );
+        //initConfigTypeMap("Killing", &killing, OT_Killing_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
+        bool configured = SimpleVectorControlNode::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        }
+        return configured;
     }
 
     void OvipositionTrap::ApplyEffects()
@@ -316,8 +346,14 @@ namespace Kernel
 
     bool OutdoorRestKill::Configure( const Configuration * inputJson )
     {
-        initConfigTypeMap("Killing", &killing, VCN_Killing_DESC_TEXT, 0, 1, 0);
-        return SimpleVectorControlNode::Configure( inputJson );
+        //initConfigTypeMap("Killing", &killing, VCN_Killing_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
+        bool configured = SimpleVectorControlNode::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        }
+        return configured;
     }
 
     void OutdoorRestKill::ApplyEffects()
@@ -332,8 +368,14 @@ namespace Kernel
 
     bool AnimalFeedKill::Configure( const Configuration * inputJson )
     {
-        initConfigTypeMap("Killing", &killing, AFK_Killing_DESC_TEXT, 0, 1, 0);
-        return SimpleVectorControlNode::Configure( inputJson );
+        //initConfigTypeMap("Killing", &killing, AFK_Killing_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
+        bool configured = SimpleVectorControlNode::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        }
+        return configured;
     }
 
     void AnimalFeedKill::ApplyEffects()

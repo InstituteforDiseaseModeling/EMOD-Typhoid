@@ -64,7 +64,13 @@ namespace Kernel
             initConfigTypeMap("Reduced_Transmit", &current_reducedtransmit, SV_Reduced_Transmit_DESC_TEXT, 0.0, 1.0, 1.0 );
             initConfigTypeMap("Reduced_Mortality", &current_reducedmortality, SV_Reduced_Mortality_DESC_TEXT, 0.0, 1.0, 1.0 );
         }
-        return JsonConfigurable::Configure( inputJson );
+        initConfigComplexType("Waning_Config",  &waning_config, IVM_Killing_Config_DESC_TEXT );
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
+        }
+        return configured;
     }
 
     SimpleVaccine::SimpleVaccine()
