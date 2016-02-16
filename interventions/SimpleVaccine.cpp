@@ -45,7 +45,7 @@ namespace Kernel
         initConfigTypeMap("Vaccine_Take", &vaccine_take, SV_Vaccine_Take_DESC_TEXT, 0.0, 1.0, 1.0 ); 
 
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("Vaccine_Type", SV_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(SimpleVaccineType)));
-    
+#if 0 
         if ( vaccine_type == SimpleVaccineType::AcquisitionBlocking ) 
         { 
             initConfigTypeMap("Reduced_Acquire", &current_reducedacquire, SV_Reduced_Acquire_DESC_TEXT, 0.0, 1.0, 1.0 );
@@ -64,6 +64,7 @@ namespace Kernel
             initConfigTypeMap("Reduced_Transmit", &current_reducedtransmit, SV_Reduced_Transmit_DESC_TEXT, 0.0, 1.0, 1.0 );
             initConfigTypeMap("Reduced_Mortality", &current_reducedmortality, SV_Reduced_Mortality_DESC_TEXT, 0.0, 1.0, 1.0 );
         }
+#endif
         initConfigComplexType("Waning_Config",  &waning_config, IVM_Killing_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
@@ -124,16 +125,35 @@ namespace Kernel
     void SimpleVaccine::Update( float dt )
     {
         waning_effect->Update(dt);
+	release_assert(ivc);
 
-        current_reducedacquire = waning_effect->Current();
-        current_reducedtransmit  = waning_effect->Current();
-        current_reducedmortality  = waning_effect->Current();
-        // TBD: This is wrong for case of vaccine that has all 3 effects.
+        switch( vaccine_type )
+	{
+	    case SimpleVaccineType::AcquisitionBlocking:
+		current_reducedacquire = waning_effect->Current();
+		ivc->UpdateVaccineAcquireRate( current_reducedacquire );
+	    break;
 
-        assert(ivc);
-        ivc->UpdateVaccineAcquireRate( current_reducedacquire );
-        ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
-        ivc->UpdateVaccineMortalityRate( current_reducedmortality );
+	    case SimpleVaccineType::TransmissionBlocking:
+		current_reducedtransmit  = waning_effect->Current();
+		ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
+	    break;
+
+	    case SimpleVaccineType::MortalityBlocking:
+		current_reducedmortality  = waning_effect->Current(); 
+		ivc->UpdateVaccineMortalityRate( current_reducedmortality );
+	    break;
+		// TBD: This is wrong for case of vaccine that has all 3 effects.
+
+            default:
+		current_reducedacquire = waning_effect->Current();
+		ivc->UpdateVaccineAcquireRate( current_reducedacquire );
+		current_reducedtransmit  = waning_effect->Current();
+		ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
+		current_reducedmortality  = waning_effect->Current(); 
+		ivc->UpdateVaccineMortalityRate( current_reducedmortality );
+	    break;
+	}
     }
 
 /*

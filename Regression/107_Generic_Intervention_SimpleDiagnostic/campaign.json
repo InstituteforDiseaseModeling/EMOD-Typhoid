@@ -19,7 +19,12 @@
                         "Secondary_Decay_Time_Constant": 1,
                         "Vaccine_Take": 1,
                         "Vaccine_Type": "Generic",
-                        "class": "SimpleVaccine"
+                        "class": "SimpleVaccine",
+			"Waning_Config": {
+			    "Box_Duration": 3650, 
+			    "Initial_Effect": 1, 
+			   "class": "WaningEffectBox"
+			}
                     },
                     "Treatment_Fraction": 0.7,
                     "class": "SimpleDiagnostic"
