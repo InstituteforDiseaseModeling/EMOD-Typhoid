@@ -12,8 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #ifdef ENABLE_TB
 
 #include "NodeTBHIV.h"
-#include "TransmissionGroupsFactory.h" //for SetupIntranodeTransmission
-#include "NodeEventContext.h" //for node level trigger
 #include "IndividualCoinfection.h"
 
 static const char* _module = "NodeTBHIV";
@@ -48,25 +46,10 @@ namespace Kernel
         NodeTB::Initialize();
     }*/
 
-    IndividualHuman *NodeTBHIV::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
+    IIndividualHuman* NodeTBHIV::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
     {
-        return IndividualHumanCoinfection::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
+        return IndividualHumanCoinfection::CreateHuman( this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeTBHIV)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, NodeTBHIV& node, const unsigned int  file_version )
-    {
-        // Register derived types // Really????
-        ar.template register_type<IndividualHumanTB>();
-
-        ar &boost::serialization::base_object<NodeTB>(node);    
-    }
-}
-#endif
 
 #endif // ENABLE_TB

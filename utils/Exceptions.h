@@ -77,7 +77,7 @@ namespace Kernel {
     class IDMAPI BadEnumInSwitchStatementException: public DetailedException
     {
     public:
-        BadEnumInSwitchStatementException( const char* file_name, int line_num, const char* function_name, const char* var_name = NULL, int bad_value = -1, const char* as_string = NULL );
+        BadEnumInSwitchStatementException( const char* file_name, int line_num, const char* function_name, const char* var_name = nullptr, int bad_value = -1, const char* as_string = nullptr );
     };
 
     // This is to be used when a map is searched for a key that is believed
@@ -85,7 +85,7 @@ namespace Kernel {
     class IDMAPI BadMapKeyException : public DetailedException
     {
     public:
-        BadMapKeyException( const char* file_name, int line_num, const char* function_name, const char* var_name = NULL, const char* value = NULL );
+        BadMapKeyException( const char* file_name, int line_num, const char* function_name, const char* var_name = nullptr, const char* value = nullptr );
     };
 
     // CalculatedValueOutOfRangeException is for variables with values that are the
@@ -93,7 +93,7 @@ namespace Kernel {
     class IDMAPI CalculatedValueOutOfRangeException: public DetailedException
     {
     public:
-        CalculatedValueOutOfRangeException( const char* file_name, int line_num, const char* function_name, const char* var_name = NULL, float bad_value = 0.0f, float range_violated = 0.0f );
+        CalculatedValueOutOfRangeException( const char* file_name, int line_num, const char* function_name, const char* var_name = nullptr, float bad_value = 0.0f, float range_violated = 0.0f );
     };
 
     // Similar to OutOfRangeException but specifically for when a value in the config.json has been detected
@@ -101,14 +101,14 @@ namespace Kernel {
     class IDMAPI ConfigurationRangeException : public DetailedException
     {
     public:
-        ConfigurationRangeException( const char * file_name, int line_num, const char * function_name = NULL, const char* var_name = NULL, float var_value = 0.0f, float test_value = 0.0f );
+        ConfigurationRangeException( const char * file_name, int line_num, const char * function_name = nullptr, const char* var_name = nullptr, float var_value = 0.0f, float test_value = 0.0f );
     };
 
     // All failures for dll loading operations.
     class IDMAPI DllLoadingException : public DetailedException
     {
     public:
-        DllLoadingException( const char * file_name, int line_num, const char * func_name, const char * msg = NULL );
+        DllLoadingException( const char * file_name, int line_num, const char * func_name, const char * msg = nullptr );
     };
 
     // In various places we have class factories that instantiate classes from a json blob. 
@@ -117,7 +117,7 @@ namespace Kernel {
     class IDMAPI FactoryCreateFromJsonException : public DetailedException
     {
     public:
-        FactoryCreateFromJsonException( const char* file_name, int line_num, const char* function_name, const char* note = NULL );
+        FactoryCreateFromJsonException( const char* file_name, int line_num, const char* function_name, const char* note = nullptr );
     };
 
     // Any exception during file reading or writing that is not a FileNotFoundException 
@@ -141,7 +141,7 @@ namespace Kernel {
     class IDMAPI GeneralConfigurationException : public DetailedException
     {
     public:
-        GeneralConfigurationException( const char * file_name, int line_num, const char* func_name = NULL, const char * msg = NULL );
+        GeneralConfigurationException( const char * file_name, int line_num, const char* func_name = nullptr, const char * msg = nullptr );
     };
 
     // An IllegalOperationException is appropriate for those code paths which should never be executed.
@@ -150,7 +150,7 @@ namespace Kernel {
     class IDMAPI IllegalOperationException : public DetailedException
     {
     public:
-        IllegalOperationException( const char * file_name, int line_num, const char* func_name, const char * msg = NULL );
+        IllegalOperationException( const char * file_name, int line_num, const char* func_name, const char * msg = nullptr );
     };
     
     // It's perfectly possible to pass in values in the config that are mutually incompatible. This exception
@@ -177,7 +177,7 @@ namespace Kernel {
     class IDMAPI InitializationException : public DetailedException
     {
     public:
-        InitializationException( const char * file_name, int line_num, const char * func_name, const char * msg = NULL );
+        InitializationException( const char * file_name, int line_num, const char * func_name, const char * msg = nullptr );
     };
 
     // This exception is to be used kind of like a parsing exception when data is being read in 
@@ -200,14 +200,14 @@ namespace Kernel {
     class IDMAPI MPIException : public DetailedException
     {
     public:
-        MPIException( const char* filename, int line_num, const char* function_name, const char* notes = NULL );
+        MPIException( const char* filename, int line_num, const char* function_name, const char* notes = nullptr );
     };
 
     // Hopefully this is self-explanatory.
     class IDMAPI NotYetImplementedException : public DetailedException
     {
     public:
-        NotYetImplementedException( const char * file_name, int line_num, const char* func_name, const char * msg = NULL );
+        NotYetImplementedException( const char * file_name, int line_num, const char* func_name, const char * msg = nullptr );
     };
 
     // Usually NullPointerExceptions are thrown by the system not by the application. At the app
@@ -220,7 +220,7 @@ namespace Kernel {
     class IDMAPI NullPointerException : public DetailedException
     {
     public:
-        NullPointerException( const char * file_name, int line_num, const char * func_name, const char* var_name = NULL, const char* type_name = NULL);
+        NullPointerException( const char * file_name, int line_num, const char * func_name, const char* var_name = nullptr, const char* type_name = nullptr);
     };
 
     // There is a std::out_of_range but it doesn't have the capability to provide a message,
@@ -234,7 +234,7 @@ namespace Kernel {
     class IDMAPI OutOfRangeException : public DetailedException
     {
     public:
-        OutOfRangeException( const char * file_name, int line_num, const char* func_name, const char* var_name = NULL, float value = 0.0f, float value_violated = 0.0f );
+        OutOfRangeException( const char * file_name, int line_num, const char* func_name, const char* var_name = nullptr, float value = 0.0f, float value_violated = 0.0f );
     };
 
     // QueryInterfaceException is for anywhere that a variable is QI-ed for an interface
@@ -243,7 +243,7 @@ namespace Kernel {
     class IDMAPI QueryInterfaceException: public DetailedException
     {
     public:
-        QueryInterfaceException( const char* file_name, int line_num, const char* function_name, const char* var_name = NULL, const char* queried_for_type = NULL, const char* variable_type = NULL );
+        QueryInterfaceException( const char* file_name, int line_num, const char* function_name, const char* var_name = nullptr, const char* queried_for_type = nullptr, const char* variable_type = nullptr );
     };
 
     // The SerializationException is used any time we get an unrecoverable failure during
@@ -251,7 +251,7 @@ namespace Kernel {
     class IDMAPI SerializationException : public DetailedException
     {
     public:
-        SerializationException( const char* filename, int line_num, const char* function_name, const char* notes = NULL );
+        SerializationException( const char* filename, int line_num, const char* function_name, const char* notes = nullptr );
     };
 
     class IDMAPI WarningException : public DetailedException

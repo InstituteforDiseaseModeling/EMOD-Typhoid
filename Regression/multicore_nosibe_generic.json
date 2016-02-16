@@ -1,0 +1,48 @@
+{
+    "tests": [
+        {
+            "path" : "Multicore_Nosibe/89_Generic_SimpleImmunoglobulin"
+        }, 
+        {
+            "path" : "Multicore_Nosibe/97_Generic_Intervention_ImportPressure"
+        },    
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/01_SIR"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/A_BaselineOutbreak"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/B_Vaccinations"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/02_SIR_Vaccinations/C_TargetedVaccinations"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/03_SEIR"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/04_SEIR_VitalDynamics"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/05_SIRS"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/06_SEIRS"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/08_SIS"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/09_DensityScaling"
+        },
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/10_Zoonosis"
+        }
+    ],
+    "long tests": [
+        {
+            "path" : "Multicore_Nosibe/Scenarios/Generic/07_SI"
+        }
+    ]
+}

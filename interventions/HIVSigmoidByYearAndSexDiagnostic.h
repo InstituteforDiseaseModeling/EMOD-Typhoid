@@ -33,11 +33,6 @@ namespace Kernel
         float rampRate;
         float femaleMultiplier;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVSigmoidByYearAndSexDiagnostic &obj, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(HIVSigmoidByYearAndSexDiagnostic);
     };
 }

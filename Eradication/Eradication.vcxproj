@@ -74,8 +74,8 @@
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\utils\;..\campaign\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;C:\python27\include;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\utils\;..\campaign\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\python27\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -87,8 +87,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;..\x64\Debug\;c:\python27\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;Ws2_32.lib;snappy.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;..\x64\Debug\;c:\python27\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -123,8 +123,8 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;C:\Python27\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\Python27\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -140,8 +140,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;..\x64\Release\;c:\python27\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Dbghelp.lib;python27.lib;msmpi.lib;psapi.lib;ws2_32.lib;snappy.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;..\x64\Release\;c:\python27\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <HeapReserveSize>100000000</HeapReserveSize>
@@ -176,13 +176,17 @@
     <ClCompile Include="..\interventions\BCGVaccine.cpp" />
     <ClCompile Include="..\interventions\BirthTriggeredIV.cpp" />
     <ClCompile Include="..\interventions\BroadcastEvent.cpp" />
+    <ClCompile Include="..\interventions\BroadcastEventToOtherNodes.cpp" />
     <ClCompile Include="..\interventions\CalendarIV.cpp" />
     <ClCompile Include="..\interventions\CD4Diagnostic.cpp" />
     <ClCompile Include="..\interventions\HIVARTStagingAbstract.cpp" />
+    <ClCompile Include="..\interventions\MalariaDiagnostic.cpp" />
+    <ClCompile Include="..\interventions\MigrateFamily.cpp" />
     <ClCompile Include="..\interventions\STIIsPostDebut.cpp" />
     <ClCompile Include="..\interventions\HIVMuxer.cpp" />
     <ClCompile Include="..\interventions\HIVPreARTNotification.cpp" />
     <ClCompile Include="..\interventions\HIVSetCascadeState.cpp" />
+    <ClCompile Include="..\interventions\MigrateIndividuals.cpp" />
     <ClCompile Include="..\interventions\ImportPressure.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBox.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBoxExponential.cpp" />
@@ -241,18 +245,32 @@
     <ClCompile Include="BinnedReportTB.cpp" />
     <ClCompile Include="CalendarEventCoordinator.cpp" />
     <ClCompile Include="CoverageByNodeEventCoordinator.cpp" />
+    <ClCompile Include="DemographicRestrictions.cpp" />
+    <ClCompile Include="EventsForOtherNodes.cpp" />
+    <ClCompile Include="EventTrigger.cpp" />
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="GroupEventCoordinatorHIV.cpp" />
     <ClCompile Include="HIVRelationshipStartReporter.cpp" />
     <ClCompile Include="HIVReportEventRecorder.cpp" />
     <ClCompile Include="HIVTransmissionReporter.cpp" />
     <ClCompile Include="IdmInitialize.cpp" />
+    <ClCompile Include="IIndividualHuman.cpp" />
+    <ClCompile Include="IInfection.cpp" />
+    <ClCompile Include="IMigrationInfo.cpp" />
+    <ClCompile Include="ISusceptibilityContext.cpp" />
     <ClCompile Include="JsonObjectDemog.cpp" />
+    <ClCompile Include="LoadBalanceScheme.cpp" />
     <ClCompile Include="MalariaBarcode.cpp" />
+    <ClCompile Include="MigrationInfoVector.cpp" />
+    <ClCompile Include="MpiDataExchanger.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
     <ClCompile Include="NodeEventCoordinator.cpp" />
+    <ClCompile Include="NodeInfo.cpp" />
+    <ClCompile Include="NodeInfoVector.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
+    <ClCompile Include="ReferenceTrackingEventCoordinator.cpp" />
+    <ClCompile Include="RelationshipParameters.cpp" />
     <ClCompile Include="ReportEventRecorder.cpp" />
     <ClCompile Include="ReportHIVART.cpp" />
     <ClCompile Include="ReportHIVByAgeAndGender.cpp" />
@@ -436,12 +454,15 @@
     <ClInclude Include="..\interventions\Bednet.h" />
     <ClInclude Include="..\interventions\BirthTriggeredIV.h" />
     <ClInclude Include="..\interventions\BroadcastEvent.h" />
+    <ClInclude Include="..\interventions\BroadcastEventToOtherNodes.h" />
     <ClInclude Include="..\interventions\CalendarIV.h" />
     <ClInclude Include="..\interventions\CD4Diagnostic.h" />
     <ClInclude Include="..\interventions\DelayedIntervention.h" />
     <ClInclude Include="..\interventions\HIVARTStagingAbstract.h" />
     <ClInclude Include="..\interventions\HIVARTStagingByCD4Diagnostic.h" />
     <ClInclude Include="..\interventions\HIVARTStagingCD4AgnosticDiagnostic.h" />
+    <ClInclude Include="..\interventions\MalariaDiagnostic.h" />
+    <ClInclude Include="..\interventions\MigrateFamily.h" />
     <ClInclude Include="..\interventions\STIIsPostDebut.h" />
     <ClInclude Include="..\interventions\HIVDelayedIntervention.h" />
     <ClInclude Include="..\interventions\Diagnostics.h" />
@@ -470,6 +491,7 @@
     <ClInclude Include="..\interventions\Ivermectin.h" />
     <ClInclude Include="..\interventions\MalariaChallenge.h" />
     <ClInclude Include="..\interventions\MaleCircumcision.h" />
+    <ClInclude Include="..\interventions\MigrateIndividuals.h" />
     <ClInclude Include="..\interventions\ModifyStiCoInfectionStatus.h" />
     <ClInclude Include="..\interventions\MosquitoRelease.h" />
     <ClInclude Include="..\interventions\MultiInterventionDistributor.h" />
@@ -514,7 +536,6 @@
     <ClInclude Include="..\utils\RANDOM.h" />
     <ClInclude Include="..\utils\RapidJsonImpl.h" />
     <ClInclude Include="..\utils\Serializer.h" />
-    <ClInclude Include="..\utils\SimpleTypemapRegistration.h" />
     <ClInclude Include="..\utils\StatusReporter.h" />
     <ClInclude Include="..\utils\stdafx.h" />
     <ClInclude Include="..\utils\Sugar.h" />
@@ -526,6 +547,9 @@
     <ClInclude Include="BinnedReportTB.h" />
     <ClInclude Include="..\utils\BoostLibWrapper.h" />
     <ClInclude Include="CalendarEventCoordinator.h" />
+    <ClInclude Include="DemographicRestrictions.h" />
+    <ClInclude Include="EventsForOtherNodes.h" />
+    <ClInclude Include="EventTrigger.h" />
     <ClInclude Include="FerrandAgeDependentDistribution.h" />
     <ClInclude Include="GroupEventCoordinatorHIV.h" />
     <ClInclude Include="HIVEnums.h" />
@@ -536,21 +560,36 @@
     <ClInclude Include="IAssortivity.h" />
     <ClInclude Include="IHIVInterventionsContainer.h" />
     <ClInclude Include="IIndividualHumanHIV.h" />
+    <ClInclude Include="IInfection.h" />
     <ClInclude Include="IInfectionHIV.h" />
+    <ClInclude Include="IMigrationInfo.h" />
+    <ClInclude Include="IMigrationInfoVector.h" />
     <ClInclude Include="INodeContext.h" />
     <ClInclude Include="INodeHIV.h" />
+    <ClInclude Include="INodeInfo.h" />
     <ClInclude Include="INodeSTI.h" />
     <ClInclude Include="IntranodeTransmissionTypes.h" />
     <ClInclude Include="IRelationshipManager.h" />
+    <ClInclude Include="IRelationshipParameters.h" />
+    <ClInclude Include="IIdGeneratorSTI.h" />
     <ClInclude Include="ISTIInterventionsContainer.h" />
+    <ClInclude Include="ISusceptibilityContext.h" />
     <ClInclude Include="JsonObjectDemog.h" />
+    <ClInclude Include="LoadBalanceScheme.h" />
     <ClInclude Include="MalariaBarcode.h" />
+    <ClInclude Include="MigrationInfoVector.h" />
+    <ClInclude Include="MpiDataExchanger.h" />
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />
+    <ClInclude Include="NodeInfo.h" />
+    <ClInclude Include="NodeInfoVector.h" />
     <ClInclude Include="NodeTBHIV.h" />
+    <ClInclude Include="PolioContexts.h" />
     <ClInclude Include="PropertyReportTB.h" />
+    <ClInclude Include="ReferenceTrackingEventCoordinator.h" />
     <ClInclude Include="RelationshipManager.h" />
     <ClInclude Include="RelationshipManagerFactory.h" />
+    <ClInclude Include="RelationshipParameters.h" />
     <ClInclude Include="RelationshipReporting.h" />
     <ClInclude Include="ReportEventRecorder.h" />
     <ClInclude Include="ReportHIVART.h" />

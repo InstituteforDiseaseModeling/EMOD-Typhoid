@@ -11,13 +11,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "BinnedReport.h"
 
+namespace Kernel {
+
 class BinnedReportPolio : public BinnedReport
 {
 public:
     static IReport* CreateReport();
     virtual ~BinnedReportPolio();
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void EndTimestep( float currentTime, float dt );
 
     virtual void postProcessAccumulatedData();
@@ -37,3 +39,5 @@ protected:
     float *vrpv3_bins;
     float *new_paralytic_cases;
 };
+
+}

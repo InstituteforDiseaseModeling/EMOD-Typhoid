@@ -10,9 +10,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "Configure.h"
-#include "InterventionEnums.h"
 
-namespace Kernel {
+namespace Kernel 
+{
+    ENUM_DEFINE(TBDrugType,
+        ENUM_VALUE_SPEC(DOTS                    , 1)
+        ENUM_VALUE_SPEC(DOTSImproved            , 2)
+        ENUM_VALUE_SPEC(EmpiricTreatment        , 3)
+        ENUM_VALUE_SPEC(FirstLineCombo          , 4)
+        ENUM_VALUE_SPEC(SecondLineCombo         , 5)
+        ENUM_VALUE_SPEC(ThirdLineCombo          , 6)
+        ENUM_VALUE_SPEC(LatentTreatment         , 7))
+
     class TBDrugTypeParameters : public JsonConfigurable
     {
         friend class SimulationConfig;
@@ -24,7 +33,7 @@ namespace Kernel {
         virtual ~TBDrugTypeParameters();
         bool Configure( const ::Configuration *json );
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
-        //typedef map< std::string, const TBDrugTypeParameters* > tTBDTPMap;
+
 
 
     protected:

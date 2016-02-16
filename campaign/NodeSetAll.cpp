@@ -9,24 +9,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "NodeSet.h"
-#if USE_BOOST_SERIALIZATION
-#include <boost/serialization/export.hpp>
-#endif
-#include "CajunIncludes.h"
-#include "ConfigurationImpl.h"
-#include "InterventionEnums.h"
-
-#if USE_BOOST_SERIALIZATION
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:INodeSet);
-BOOST_CLASS_EXPORT(Kernel::NodeSetAll) 
-#endif
 
 static const char* _module = "NodeSetAll";
 
 namespace Kernel
 {
-    // NodeSetAll
+    // NodeSetAll 
     IMPLEMENT_FACTORY_REGISTERED(NodeSetAll)
+    IMPLEMENT_FACTORY_REGISTERED(NodeSetNodeList)
+    IMPLEMENT_FACTORY_REGISTERED(NodeSetPolygon)
 
     IMPL_QUERY_INTERFACE2(NodeSetAll, INodeSet, IConfigurable)
 
@@ -53,15 +44,10 @@ namespace Kernel
         return true;
     }
 
-#if USE_JSON_SERIALIZATION
-    void NodeSetAll::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-        root->EndObject();
-    }
+    REGISTER_SERIALIZABLE(NodeSetAll);
 
-    void NodeSetAll::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
+    void NodeSetAll::serialize(IArchive& ar, NodeSetAll* obj)
     {
+        // Nothing to do here. NodeSetAll does its work in Contains()
     }
-#endif
 }

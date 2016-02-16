@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Configuration.h"
 #include "InterventionFactory.h"
 #include "InterventionEnums.h"
@@ -59,7 +58,7 @@ namespace Kernel
         virtual int getNumber() const;
 
     protected:
-        JsonConfigurable::ConstrainedString releasedSpecies;
+        jsonConfigurable::ConstrainedString releasedSpecies;
         VectorMatingStructure vector_genetics;
         ResistanceHegGenetics self;
         ResistanceHegGenetics mate;
@@ -67,12 +66,5 @@ namespace Kernel
 
         void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
         void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        void serialize_inner(Archive &ar, const unsigned int v);
-#endif
     };
 }

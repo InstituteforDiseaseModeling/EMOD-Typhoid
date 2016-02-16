@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 
 static const char * _module = "HIVRapidHIVDiagnostic";
 
@@ -79,26 +79,31 @@ namespace Kernel
         {
             pMedHistory->OnReceivedTestResultForHIV( resultIsHivPositive );
         }
+
+        INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+        if (s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeTriggeredInterventionConsumer", "INodeEventContext" );
+        }
+
+        if( resultIsHivPositive )
+        {
+            broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedPositive );
+        }
+        else
+        {
+            broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedNegative );
+        }
     }
-}
 
+    REGISTER_SERIALIZABLE(HIVRapidHIVDiagnostic);
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVRapidHIVDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVRapidHIVDiagnostic& obj, const unsigned int v)
+    void HIVRapidHIVDiagnostic::serialize(IArchive& ar, HIVRapidHIVDiagnostic* obj)
     {
-        static const char * _module = "HIVRapidHIVDiagnostic";
-        LOG_DEBUG("(De)serializing HIVRapidHIVDiagnostic\n");
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVRapidHIVDiagnostic& diag = *obj;
 
-        boost::serialization::void_cast_register<HIVRapidHIVDiagnostic, IDistributableIntervention>();
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        ar.labelElement("m_ProbReceivedResults") & diag.m_ProbReceivedResults;
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVRapidHIVDiagnostic&, unsigned int);
 }
-#endif
+

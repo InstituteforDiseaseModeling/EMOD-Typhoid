@@ -24,16 +24,11 @@ namespace Kernel
         NodeAirborne(ISimulationContext *_parent_sim, suids::suid node_suid);
 
         // Factory methods
-        virtual IndividualHuman *createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
+        virtual IIndividualHuman* createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
 
         // Effect of climate on infectivity in airborne disease
-        virtual float getClimateInfectivityCorrection()  const;
+        virtual float getClimateInfectivityCorrection() const override;
 
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeAirborne& node, const unsigned int file_version);
-#endif
+        DECLARE_SERIALIZABLE(NodeAirborne);
     };
 }

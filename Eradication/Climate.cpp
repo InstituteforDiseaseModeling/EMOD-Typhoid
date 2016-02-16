@@ -122,7 +122,7 @@ namespace Kernel {
         if(!factory->Initialize(config, idreference))
         {
             delete factory;
-            factory = NULL;
+            factory = nullptr;
         }
 
         return factory;
@@ -205,7 +205,7 @@ namespace Kernel {
                     throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "climate_structure", "ClimateStructure::CLIMATE_KOPPEN:", "climate_koppen_filename", "<empty>" );
                 }
                 string koppen_filepath = FileSystem::Concat( EnvPtr->InputPath, climate_koppen_filename );
-                ParseMetadataForFile(koppen_filepath, idreference, NULL, NULL, &num_nodes, koppentype_offsets);
+                ParseMetadataForFile(koppen_filepath, idreference, nullptr, nullptr, &num_nodes, koppentype_offsets);
 
                 if(!OpenClimateFile(koppen_filepath, num_nodes * sizeof(int), climate_koppentype_file))
                     return false;
@@ -293,7 +293,7 @@ namespace Kernel {
 
         Configuration* config = Configuration::Load(metadata_filepath);
 
-        if (config == NULL)
+        if (config == nullptr)
         {
             throw FileIOException( __FILE__, __LINE__, __FUNCTION__, metadata_filepath.c_str() );
         }
@@ -305,7 +305,7 @@ namespace Kernel {
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
         }
 
-        if(update_resolution != NULL)
+        if(update_resolution != nullptr)
         {
             string str_clim_res = (string)((*config)["Metadata"]["UpdateResolution"].As<json::String>());
             int md_updateres = ClimateUpdateResolution::pairs::lookup_value(str_clim_res.c_str());
@@ -316,7 +316,7 @@ namespace Kernel {
             }
         }
 
-        if(pNumDatavalues != NULL)
+        if(pNumDatavalues != nullptr)
         {
             int md_datavalues = (int)((*config)["Metadata"]["DatavalueCount"].As<json::Number>());
 
@@ -392,7 +392,7 @@ namespace Kernel {
     Climate* ClimateFactory::CreateClimate(INodeContext *parent_node, float altitude, float latitude)
     {
         LOG_DEBUG( "CreateClimate\n" );
-        Climate* new_climate = NULL;
+        Climate* new_climate = nullptr;
 
         release_assert(parent_node);
         suids::suid node_suid = parent_node->GetSuid();
@@ -463,7 +463,7 @@ namespace Kernel {
             }
         }
 
-        if(new_climate != NULL && !new_climate->IsPlausible())
+        if(new_climate != nullptr && !new_climate->IsPlausible())
             num_badnodes++;
 
         return new_climate;
@@ -491,37 +491,13 @@ namespace Kernel {
 
     void
     Climate::SetContextTo(INodeContext* _parent) { parent = _parent; }
-
-#if USE_JSON_SERIALIZATION
-
-    // IJsonSerializable Interfaces
-    void Climate::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-        root->Insert("m_airtemperature",m_airtemperature);
-        root->Insert("m_landtemperature",m_landtemperature);
-        root->Insert("m_accumulated_rainfall",m_accumulated_rainfall);
-        root->Insert("m_humidity",m_humidity);
-        root->Insert("resolution_correction",resolution_correction);
-        root->EndObject();
-    }
-
-    void Climate::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-
-#endif
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::Climate)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive & ar, Climate& climate, const unsigned int file_version)
     {
-        static const char * _module = "Climate";
-        LOG_DEBUG("(De)serializing Climate\n");
-
         ar & climate.m_airtemperature;
         ar & climate.m_landtemperature;
         ar & climate.m_accumulated_rainfall;

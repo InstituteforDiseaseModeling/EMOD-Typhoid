@@ -70,17 +70,5 @@ namespace Kernel
 
     private:
         void RoomUpDown(const float Ta, const float Tr, float &RoomUp, float &RoomDown);
-
-#if USE_BOOST_SERIALIZATION
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, ClimateKoppen & climate, const unsigned int file_version);
-        FORCE_POLYMORPHIC()
-        ///////////////////////////////////////////////////////////////////////////
-#endif
     };
 }
-

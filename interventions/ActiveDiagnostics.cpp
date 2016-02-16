@@ -46,7 +46,7 @@ namespace Kernel
         LOG_DEBUG("Positive test Result function\n");
 
         // Apply diagnostic test with given specificity/sensitivity
-        IIndividualHumanTB* tb_ind = NULL;
+        IIndividualHumanTB* tb_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanTB ), (void**)&tb_ind ) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanTB", "IIndividualHuman" );
@@ -60,22 +60,14 @@ namespace Kernel
         // True positive (sensitivity), or False positive (1-specificity)
         bool positiveTest = applySensitivityAndSpecificity( activeinf );
         LOG_DEBUG_F( "Individual %d is %s from human-level.\n", parent->GetSuid().data, ( positiveTest ? "positive" : "negative" ) );
+
         return positiveTest;
-
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::ActiveDiagnostic)
+    REGISTER_SERIALIZABLE(ActiveDiagnostic);
 
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, ActiveDiagnostic& obj, const unsigned int v)
+    void ActiveDiagnostic::serialize(IArchive& ar, ActiveDiagnostic* obj)
     {
-
-        boost::serialization::void_cast_register<ActiveDiagnostic, IDistributableIntervention>();
-
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+        SimpleDiagnostic::serialize(ar, obj);
     }
 }
-#endif

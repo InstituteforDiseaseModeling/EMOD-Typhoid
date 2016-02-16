@@ -14,24 +14,19 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "NodeEventContextHost.h"
 #include "Debug.h"
-#include "SimulationEventContext.h"
 #include "NodeDemographics.h"
 #include "Node.h"
-#include "Individual.h"
-//#include "IndividualCoinfection.h" // TBD: No disease-specific includes here.
-
-#include "Drugs.h"
+#include "IIndividualHuman.h"
 
 #include "Log.h"
 #include "Exceptions.h"
-#include "IdmString.h"
 
 static const char * _module = "NodeEventContext";
 
 namespace Kernel
 {
     NodeEventContextHost::NodeEventContextHost()
-    : node(NULL)
+    : node(nullptr)
     {
         arrival_distribution_sources.clear();
     }
@@ -68,7 +63,7 @@ namespace Kernel
         else if (iid == GET_IID(INodeContext))
             foundInterface = (INodeContext*)node;
         else
-            foundInterface = 0;
+            foundInterface = nullptr;
 
         QueryResult status = e_NOINTERFACE;
         if ( foundInterface )
@@ -114,7 +109,7 @@ namespace Kernel
         float probThreshold = 1.0;
         if( limit != -1 )
         {
-            probThreshold = ((float)limit)/nodePop;
+            probThreshold = float(limit)/nodePop;
         }
         float nodeCostThisInterventionThisTimestep = 0.0f;
         for( auto individual : node->individualHumans)
@@ -154,17 +149,11 @@ namespace Kernel
         {
             LOG_DEBUG("Campaign expense was incurred\n");
         }
-        IncrementCampaignCost( expenseIncurred * (float)pIndiv->GetMonteCarloWeight() );
+        IncrementCampaignCost( expenseIncurred * float(pIndiv->GetMonteCarloWeight()) );
     }
 
     // First cut of this function writes the intervention report to stdout. It is an abbreviated,
-    // 1-line-per-intervention report like:
-    // IVLOG:t=62,n=1,iv=PolioVaccine,subtype=mOPV_2,s=CAL,ra=3
-    // which would mean
-    // At timestep 62, in node 1, a Polio Vaccine (monovalent OPV type 2), was given by a Calendar intervention to an individual at age 3 days.
-    // From an implementation point of view, originally I wanted to do a QueryInterface on the distributed intervention (& distributor) to identify their
-    // classname, but not every subclass of Intervention implements a unique interface (e.g., PolioVaccine does not implement IPolioVaccine 
-    // (there is no IPolioVaccine), so the QI route does not provide a means to uniquely identify interventions.
+    // 1-line-per-intervention report.
     void NodeEventContextHost::notifyCampaignEventOccurred(
         /*const*/ ISupports * pDistributedIntervention,
         /*const*/ ISupports * pDistributor,// for tb, cool to know parent intervention that 'gave', including tendency if it's an HSB.
@@ -174,8 +163,8 @@ namespace Kernel
         {
             // intervention recipient
             std::stringstream msg;
-            float recipientAge = (float) pDistributeeIndividual->GetEventContext()->GetAge();
-            msg << ",hum_id="
+            float recipientAge = float(pDistributeeIndividual->GetEventContext()->GetAge());
+            msg << "hum_id="
                 << pDistributeeIndividual->GetSuid().data
                 << ",ra="
                 << recipientAge
@@ -196,7 +185,7 @@ namespace Kernel
         return node->suid;
     }
 
-    void NodeEventContextHost::ProcessArrivingIndividual( IndividualHuman *ih )
+    void NodeEventContextHost::ProcessArrivingIndividual( IIndividualHuman* ih )
     {
         for (auto& entry : arrival_distribution_sources)
         {
@@ -205,7 +194,7 @@ namespace Kernel
         }
     }
 
-    void NodeEventContextHost::ProcessDepartingIndividual( IndividualHuman *ih )
+    void NodeEventContextHost::ProcessDepartingIndividual( IIndividualHuman* ih )
     {
         //LOG_DEBUG( "ProcessDepartingIndividual\n" );
         for (auto& entry : departure_distribution_sources)
@@ -353,7 +342,7 @@ namespace Kernel
             for (auto &observer : observer_nvp.second) // observer_nvp.second is list, observer is intervention
             {
                 // QI for NDI to reset context
-                INodeDistributableIntervention * intervention = NULL;
+                INodeDistributableIntervention * intervention = nullptr;
                 if( s_OK == observer->QueryInterface(GET_IID(INodeDistributableIntervention), (void**)&intervention) )
                 {
                     intervention->SetContextTo(inec);
@@ -430,7 +419,7 @@ namespace Kernel
         node_interventions.push_back( iv );
         iv->AddRef();
 
-        IBaseIntervention * pBaseIV = NULL;
+        IBaseIntervention * pBaseIV = nullptr;
         if( iv->QueryInterface( GET_IID(IBaseIntervention), (void**)&pBaseIV ) == s_OK ) 
         {
             IncrementCampaignCost( pBaseIV->GetCostPerUnit() );
@@ -500,7 +489,7 @@ namespace Kernel
 
     NodeEventContextHost::travel_distribution_source_map_t* NodeEventContextHost::sourcesMapForType( INodeEventContext::TravelEventType type )
     {
-        travel_distribution_source_map_t *sources = NULL;
+        travel_distribution_source_map_t *sources = nullptr;
         switch (type)
         {
         case Arrival: sources = &arrival_distribution_sources; break;
@@ -529,7 +518,7 @@ namespace Kernel
     {
         for (int i = 0; i < num_cases_per_node; i++)
         {
-            IndividualHuman *new_individual = node->configureAndAddNewIndividual(1.0, import_age, 0.0, 0.5); // using age specified by Oubreak, but otherwise community demographics for import case (e.g. immune history)
+            IIndividualHuman* new_individual = node->configureAndAddNewIndividual(1.0, import_age, 0.0, 0.5); // using age specified by Oubreak, but otherwise community demographics for import case (e.g. immune history)
 
             // 0 = incubation_period_override, outbreaks are instantaneously mature
             new_individual->AcquireNewInfection(outbreak_strainID, 0 ); 
@@ -569,71 +558,23 @@ namespace Kernel
 
     INodeContext* NodeEventContextHost::GetNodeContext()
     {
-        return (INodeContext*) node;
+        return static_cast<INodeContext*>(node);
     }
 
     int NodeEventContextHost::GetIndividualHumanCount() const
     {
         size_t nodePop = node->individualHumans.size();
-        return (int)nodePop;
+        return int(nodePop);
     }
 
-    int NodeEventContextHost::GetExternalId() const
+    ExternalNodeId_t NodeEventContextHost::GetExternalId() const
     {
-        uint32_t nodeId = node->GetExternalID();
+        ExternalNodeId_t nodeId = node->GetExternalID();
         return nodeId;
     }
-
-#if USE_JSON_SERIALIZATION
-
-    // IJsonSerializable Interfaces
-    void NodeEventContextHost::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("arrival_distribution_sources");
-        root->BeginArray();
-        arrival_distribution_sources;
-        root->EndArray();
-
-        root->Insert("departure_distribution_sources");
-        root->BeginArray();
-        departure_distribution_sources;
-        root->EndArray();
-
-        root->Insert("individual_event_observers");
-        root->BeginArray();
-        individual_event_observers;
-        root->EndArray();
-
-        root->Insert("node_interventions");
-        root->BeginArray();
-        for (auto intervention : node_interventions)
-        {
-            intervention->JSerialize(root, helper);
-        }
-        root->EndArray();
-
-        root->EndObject();
-    }
-
-    void NodeEventContextHost::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
-
-    /*template void NodeEventContextHost::serialize(boost::archive::binary_oarchive &ar, unsigned int);
-    template void NodeEventContextHost::serialize(boost::archive::binary_iarchive &ar, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_skeleton_iarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_skeleton_oarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::detail::content_oarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_iarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::packed_oarchive&, unsigned int);
-    template void NodeEventContextHost::serialize(boost::mpi::detail::mpi_datatype_oarchive&, unsigned int);*/
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::NodeEventContextHost) // try to get rid of this, bloats bin size, but apparently needed for serialization
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, NodeEventContextHost& nec, const unsigned int v)

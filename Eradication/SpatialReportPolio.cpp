@@ -15,17 +15,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <numeric>
 #include <map>
 #include "BoostLibWrapper.h"
-// not in boost wrapper???
-#include <boost/math/special_functions/fpclassify.hpp>
 
 #include "SpatialReportPolio.h"
-#include "NodePolio.h"
+#include "PolioContexts.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "Exceptions.h"
-#include "Individual.h"
-#include "SimulationConfig.h"
-#include "ProgVersion.h"
+#include "IIndividualHuman.h"
 
 using namespace std;
 
@@ -88,15 +84,15 @@ void SpatialReportPolio::populateChannelInfos(tChanInfoMap &channel_infos)
 }
 
 
-void SpatialReportPolio::LogIndividualData( Kernel::IndividualHuman * individual )
+void SpatialReportPolio::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     SpatialReport::LogIndividualData(individual);
 
-    float monte_carlo_weight = (float)individual->GetMonteCarloWeight();
+    float monte_carlo_weight = float(individual->GetMonteCarloWeight());
 
     NewInfectionState::_enum nis = individual->GetNewInfectionState();
 
-    auto infectionsOfStrains = dynamic_cast<const IndividualHumanPolio*>(individual)->GetSusceptibilityReporting()->GetInfectionStrains();
+    auto infectionsOfStrains = dynamic_cast<const IIndividualHumanPolio*>(individual)->GetSusceptibilityReporting()->GetInfectionStrains();
 
     if(nis == NewInfectionState::NewlyDetected || nis == NewInfectionState::NewAndDetected)
         new_paralytic_cases += monte_carlo_weight;
@@ -133,9 +129,9 @@ SpatialReportPolio::LogNodeData(
 {
     SpatialReport::LogNodeData(pNC);
 
-    int nodeid = pNC->GetExternalID();
+    auto nodeid = pNC->GetExternalID();
 
-    const Kernel::INodePolio * pPolioNode = NULL;
+    const Kernel::INodePolio * pPolioNode = nullptr;
     if( pNC->QueryInterface( GET_IID( Kernel::INodePolio), (void**) &pPolioNode ) != Kernel::s_OK )
     {
         throw Kernel::QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePolio", "INodeContext" );
@@ -187,12 +183,10 @@ SpatialReportPolio::postProcessAccumulatedData()
         normalizeChannel(vrpv3_prevalence_info.name, population_info.name);
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(SpatialReport)
+#if 0
 template<class Archive>
 void serialize(Archive &ar, SpatialReportPolio& report, const unsigned int v)
 {
-    boost::serialization::void_cast_register<SpatialReportPolio,IReport>();
     ar & report.timesteps_reduced;
     ar & report.channelDataMap;
     ar & report._nrmSize;

@@ -1,0 +1,46 @@
+{
+     "Use_Defaults": 1,
+     "Events": [
+          {
+               "Event_Coordinator_Config": {
+                    "Intervention_Config": {
+                         "Outbreak_Source": "PrevalenceIncrease", 
+                         "class": "OutbreakIndividual",
+                         "Delay_Distribution": "UNIFORM_DURATION",
+                         "Delay_Period_Min": 1,
+                         "Delay_Period_Max": 30
+                    }, 
+                    "Demographic_Coverage": 0.001,
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Event_Name": "Outbreak", 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 1, 
+               "class": "CampaignEvent"
+          },
+          {
+               "Event_Coordinator_Config": {
+                    "Demographic_Coverage": 0.005, 
+                    "Intervention_Config": {
+                         "Cost_To_Consumer": 10.0, 
+                         "Durability_Time_Profile": "BOXDURABILITY", 
+                         "Primary_Decay_Time_Constant": 3650, 
+                         "Reduced_Acquire": 1, 
+                         "Reduced_Transmit": 0, 
+                         "Vaccine_Take": 1, 
+                         "Vaccine_Type": "AcquisitionBlocking", 
+                         "class": "SimpleVaccine"
+                    }, 
+                    "Target_Demographic": "Everyone", 
+                    "class": "StandardInterventionDistributionEventCoordinator"
+               }, 
+               "Nodeset_Config": {
+                    "class": "NodeSetAll"
+               }, 
+               "Start_Day": 6000000, 
+               "class": "CampaignEvent"
+          }
+     ]
+}

@@ -40,7 +40,7 @@ namespace Kernel
         return newnode;
     }
 
-    IndividualHuman *NodeAirborne::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
+    IIndividualHuman* NodeAirborne::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty)
     {
         return IndividualHumanAirborne::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -53,7 +53,7 @@ namespace Kernel
         //       - relative importance of settling, ventilation, inactivation
         //       - temperature/humidity effects on contagion viability
 
-        if ( localWeather == NULL )
+        if ( localWeather == nullptr )
         {
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "localWeather", "Climate");
             //throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "climate_structure", "CLIMATE_OFF", "infectivity_scaling", "FUNCTION_OF_CLIMATE");
@@ -67,22 +67,13 @@ namespace Kernel
 
         return correction;
     }
-}
 
-#if USE_BOOST_SERIALIZATION
-#include "IndividualAirborne.h"
-BOOST_CLASS_EXPORT(Kernel::NodeAirborne)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, NodeAirborne& node, const unsigned int file_version)
+    REGISTER_SERIALIZABLE(NodeAirborne);
+
+    void NodeAirborne::serialize(IArchive& ar, NodeAirborne* obj)
     {
-        // Register derived types
-        //ar.template register_type<IndividualHumanAirborne>();
-
-        // Serialize base class
-        ar &boost::serialization::base_object<Node>(node);    
+        Node::serialize(ar, obj);
     }
 }
-#endif
 
 #endif // ENABLE_TB

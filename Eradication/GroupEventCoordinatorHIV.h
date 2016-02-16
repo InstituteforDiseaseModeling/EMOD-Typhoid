@@ -17,10 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "EventCoordinator.h"
 #include "Configure.h"
-#include "NodeEventContext.h"
 #include "StandardEventCoordinator.h"
-#include "NodeEventContext.h"
-#include "Node.h"
 
 namespace Kernel
 {
@@ -50,43 +47,9 @@ namespace Kernel
 
     protected:
   
-    virtual bool qualifiesByGroup( const IIndividualHumanEventContext * pIndividual ) const;    
+        virtual bool qualifiesByGroup( const IIndividualHumanEventContext * pIndividual ) const;    
 
-    
-    TargetGender::Enum target_gender;
-    TargetGroupType::Enum target_group;
-    
-
-    float time_offset; //time used in demographic file matrix is simulation_time - time_offset
-
-
-
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive &ar, GroupInterventionDistributionEventCoordinatorHIV &ec, const unsigned int v);
-#endif
-
-       
+        TargetGroupType::Enum target_group;
+        float time_offset; //time used in demographic file matrix is simulation_time - time_offset
     };
 }
-
-#if USE_BOOST_SERIALIZATION
-namespace Kernel
-{
-
-    template<class Archive>
-    void serialize(Archive &ar, StandardInterventionDistributionEventCoordinator &ec, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<GroupInterventionDistributionEventCoordinatorHIV, IEventCoordinator>();
-        boost::serialization::void_cast_register<GroupInterventionDistributionEventCoordinatorHIV, ITravelLinkedDistributionSource>();
-        
-    }
-}
-#endif

@@ -37,13 +37,8 @@ namespace Kernel
         InterpolatedValueMap threshold;
         InterpolatedValueMap ifActiveTB;
         InterpolatedValueMap ifPregnant;
-#pragma warning( pop )
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVARTStagingByCD4Diagnostic &obj, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(HIVARTStagingByCD4Diagnostic);
+#pragma warning( pop )
     };
 }

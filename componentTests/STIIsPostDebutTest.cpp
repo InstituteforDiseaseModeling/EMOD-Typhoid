@@ -41,23 +41,27 @@ SUITE(StiIsPostDebutTest)
             , m_pSimulationConfig( new SimulationConfig() )
             //, m_Diag()
         {
+            JsonConfigurable::ClearMissingParameters();
+            Environment::Finalize();
+            Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
+            Environment::setSimulationConfig( m_pSimulationConfig );
+
             m_InterventionsContext.setCascadeState( "not_set" );
             m_InterventionsContext.SetContextTo( &m_Human );
 
-            Environment::setSimulationConfig( m_pSimulationConfig );
             m_pSimulationConfig->listed_events.insert( "Births"   );
             m_pSimulationConfig->listed_events.insert( "NonDiseaseDeaths" );
 
-			m_pDiag = new STIIsPostDebut();
-			m_pDiag->SetContextTo( &m_Human );
+            m_pDiag = new STIIsPostDebut();
+            m_pDiag->SetContextTo( &m_Human );
         }
 
         ~DiagnosticFixture()
         {
             m_pSimulationConfig->listed_events.clear();
             delete m_pSimulationConfig;
-            Environment::setSimulationConfig( nullptr );
-			delete m_pDiag;
+            Environment::Finalize();
+            delete m_pDiag;
         }
     };
 

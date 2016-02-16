@@ -36,7 +36,7 @@ namespace Kernel
 
     // ctor
     SimpleInterventionDistributionEventCoordinator::SimpleInterventionDistributionEventCoordinator()
-    : parent(NULL)
+    : parent(nullptr)
     , coverage(0)
     , distribution_complete(false)
     {
@@ -78,7 +78,7 @@ namespace Kernel
                 IDistributableIntervention *di = InterventionFactory::getInstance()->CreateIntervention(qi_as_config);
                 if (di)
                 {
-                    if (!di->Distribute(ihec->GetInterventionsContext(), NULL ))
+                    if (!di->Distribute(ihec->GetInterventionsContext(), nullptr ))
                     {
                         di->Release();
                     }
@@ -92,7 +92,7 @@ namespace Kernel
         };
 
         INodeDistributableIntervention *ndi = InterventionFactory::getInstance()->CreateNDIIntervention(qi_as_config);
-        INodeDistributableIntervention *ndi2 = NULL;
+        INodeDistributableIntervention *ndi2 = nullptr;
 
         for (auto event_context : cached_nodes)
         {
@@ -149,38 +149,4 @@ namespace Kernel
 
     float SimpleInterventionDistributionEventCoordinator::GetMinimumAge() const { return 0.0f; }
     float SimpleInterventionDistributionEventCoordinator::GetMaximumAge() const { return 116.0f; }
-
-#if USE_JSON_SERIALIZATION
-
-    // IJsonSerializable Interfaces
-    void SimpleInterventionDistributionEventCoordinator::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-
-        root->Insert("intervention_config");
-        intervention_config.JSerialize(root, helper);
-
-        root->Insert("coverage", coverage);
-        root->Insert("distribution_complete", distribution_complete);
-
-        root->Insert("node_suids");
-        root->BeginArray();
-        for (auto& sid : node_suids)
-        {
-            sid.JSerialize(root, helper);
-        }
-        root->EndArray();
-
-        root->EndObject();
-    }
-
-    void SimpleInterventionDistributionEventCoordinator::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif  
 }
-
-#if USE_BOOST_SERIALIZATION
-
-BOOST_CLASS_EXPORT(Kernel::SimpleInterventionDistributionEventCoordinator);
-#endif

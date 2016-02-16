@@ -49,7 +49,7 @@ namespace Kernel
         // Apply diagnostic test with given specificity/sensitivity
         bool  infected = parent->GetEventContext()->IsInfected();
 
-        IIndividualHumanTB2* tb_ind = NULL;
+        IIndividualHumanTB2* tb_ind = nullptr;
         if(parent->QueryInterface( GET_IID( IIndividualHumanTB2 ), (void**)&tb_ind ) != s_OK)
         {
             LOG_WARN("ResistanceDiagnostics works with TB sims ONLY");
@@ -79,21 +79,14 @@ namespace Kernel
         return treatment_fraction_neg;
     }
 
-}
+/* clorton
+    REGISTER_SERIALIZABLE(MDRDiagnostic);
 
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::MDRDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, MDRDiagnostic& obj, const unsigned int v)
+    void MDRDiagnostic::serialize(IArchive& ar, MDRDiagnostic* obj)
     {
-
-        boost::serialization::void_cast_register<MDRDiagnostic, IDistributableIntervention>();
-        ar & obj.treatment_fraction_neg;
-
-        ar & boost::serialization::base_object<Kernel::DiagnosticTreatNeg>(obj);
+        DiagnosticTreatNeg::serialize(ar, obj);
+        MDRDiagnostic& diagnostic = *obj;
+        ar.labelElement("treatment_fraction_neg") & diagnostic.treatment_fraction_neg;
     }
+*/
 }
-#endif

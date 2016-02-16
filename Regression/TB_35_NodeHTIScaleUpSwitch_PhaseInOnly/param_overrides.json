@@ -1,5 +1,5 @@
 {
-    "Default_Config_Path":"defaults\\tb_default_config.json",
+    "Default_Config_Path":"defaults/tb_default_config.json",
     "parameters":{
         "Listed_Events": [ "TestPositiveOnSmear" ],
         "DEMOGRAPHICS":{

@@ -12,7 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 //#include "stdafx.h"
 typedef int int32_t;
 #include <boost/foreach.hpp>
-#include <boost/serialization/export.hpp>
 #include "Sugar.h"
 #include "InterventionFactory.h"
 #include "Environment.h"
@@ -20,9 +19,6 @@ typedef int int32_t;
 #include "Configuration.h"
 #include "ConfigurationImpl.h"
 #include "FactorySupport.h"
-
-//BOOST_CLASS_EXPORT(Kernel::MyEventCoordinator);
-
 
 // Let's have some fun and customize this. Log out which nodes get the intervention, and which inviduals, track
 // them in a map, make bednet's conditional on some node info we get, and some individual info (not just coverage/

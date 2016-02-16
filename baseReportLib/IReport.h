@@ -17,8 +17,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 namespace Kernel
 {
     struct INodeContext;
-    struct INodeEventContext ;
-    class IndividualHuman ;
+    struct INodeEventContext;
+    struct IIndividualHuman;
 
     class IDMAPI IReport : public JsonConfigurable
     {
@@ -40,7 +40,7 @@ namespace Kernel
                                               float dt, 
                                               std::vector<INodeEventContext*>& rNodeEventContextList ) = 0;
         virtual void BeginTimestep() = 0;
-        virtual void LogIndividualData( IndividualHuman* individual ) = 0;
+        virtual void LogIndividualData( IIndividualHuman* individual ) = 0;
         virtual void LogNodeData( INodeContext* pNC ) = 0;
         virtual void EndTimestep( float currentTime, float dt ) = 0;
 

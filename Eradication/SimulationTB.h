@@ -21,7 +21,7 @@ namespace Kernel
     public:
         static   SimulationTB *CreateSimulation();
         static   SimulationTB *CreateSimulation(const ::Configuration *config);
-        virtual void Initialize( const ::Configuration *config );
+        virtual void Initialize( const ::Configuration *config ) override;
         virtual ~SimulationTB(void);
 
     protected:
@@ -32,20 +32,5 @@ namespace Kernel
 
         // Allows correct type of Node to be added by classes derived from Simulation
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory);
-
-        virtual void resolveMigration();
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationTB &sim, const unsigned int  file_version );
-#endif
-        TypedPrivateMigrationQueueStorage<IndividualHumanTB> typed_migration_queue_storage;
     };
 }
-
-#ifndef WIN32
-DECLARE_VIRTUAL_BASE_OF(Kernel::SimulationAirborne, Kernel::SimulationTB)
-#endif

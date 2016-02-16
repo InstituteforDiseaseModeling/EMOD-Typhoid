@@ -11,9 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "IdmApi.h"
 #include "Common.h" // for constants
-#include "Debug.h" // for release_assert
 #include "Types.h" // for NaturalNumber
-#include "Exceptions.h" // for Exceptions(!)
 
 // fwd declare outside namespace
 class BaseChannelReport;

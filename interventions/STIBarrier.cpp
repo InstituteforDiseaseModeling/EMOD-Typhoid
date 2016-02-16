@@ -17,6 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "STIInterventionsContainer.h"  // for ISTIBarrierConsumer methods
 #include "IRelationship.h"
+#include "Sigmoid.h"
 
 static const char* _module = "STIBarrier";
 
@@ -68,11 +69,7 @@ namespace Kernel
     void STIBarrier::Update( float dt )
     {
         LOG_DEBUG_F( "%s\n", __FUNCTION__ );
-        SigmoidConfig probs;
-        probs.early = early;
-        probs.late = late;
-        probs.midyear = midyear;
-        probs.rate = rate;
+        Sigmoid probs( early, late, midyear, rate );
         ibc->UpdateSTIBarrierProbabilitiesByType( rel_type, probs );
         expired = true;
     }
@@ -119,19 +116,19 @@ namespace Kernel
         return status;
 
     }*/
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::STIBarrier)
+    REGISTER_SERIALIZABLE(STIBarrier);
 
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, STIBarrier& bn, const unsigned int v)
+    void STIBarrier::serialize(IArchive& ar, STIBarrier* obj)
     {
-        //LOG_DEBUG("(De)serializing SimpleHousingSTIBarrier\n");
+        BaseIntervention::serialize( ar, obj );
+        STIBarrier& barrier = *obj;
+        ar.labelElement("early"   ) & barrier.early;
+        ar.labelElement("late"    ) & barrier.late;
+        ar.labelElement("midyear" ) & barrier.midyear;
+        ar.labelElement("rate"    ) & barrier.rate;
+        ar.labelElement("rel_type") & (uint32_t&)barrier.rel_type;
 
-        boost::serialization::void_cast_register<STIBarrier, IDistributableIntervention>();
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(bn);
+        // ibc is set in SetContextTo()
     }
 }
-#endif

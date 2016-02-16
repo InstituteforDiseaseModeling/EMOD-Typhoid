@@ -21,23 +21,16 @@ public:
 
     static IReport* ReportVector::CreateReport() { return new ReportVector(); }
 
-    virtual void LogNodeData( Kernel::INodeContext * pNC );
+    virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
 
 protected:
-    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
-    virtual void postProcessAccumulatedData();
+    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) override;
+    virtual void postProcessAccumulatedData() override;
 
-    virtual void AddSEIRWUnits( std::map<std::string, std::string> &units_map ) {}
-    virtual void UpdateSEIRW( const Kernel::IndividualHuman * individual, float monte_carlo_weight ) {}
-    virtual void AccumulateSEIRW() {}
-    virtual void NormalizeSEIRWChannels() {}
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, ReportVector& report, const unsigned int v);
-#endif
+    virtual void AddSEIRWUnits( std::map<std::string, std::string> &units_map ) override {}
+    virtual void UpdateSEIRW( const Kernel::IIndividualHuman* individual, float monte_carlo_weight ) override {}
+    virtual void AccumulateSEIRW() override {}
+    virtual void NormalizeSEIRWChannels() override {}
 };
 
 }

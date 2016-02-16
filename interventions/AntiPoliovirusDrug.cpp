@@ -28,13 +28,13 @@ namespace Kernel
     AntipoliovirusDrug::~AntipoliovirusDrug()
     { }
 
-    AntipoliovirusDrug::AntipoliovirusDrug() 
+    AntipoliovirusDrug::AntipoliovirusDrug()
         : GenericDrug(),
         adherence_rate(1.0f),
         titer_efficacy(1.0f),
         infection_duration_efficacy(1.0f),
         response_probability(1.0f),
-        ipda(NULL)
+        ipda(nullptr)
     {
         initSimTypes( 1, "POLIO_SIM" );
     }
@@ -48,7 +48,7 @@ namespace Kernel
         initConfigTypeMap( "Titer_Efficacy", &titer_efficacy, DRUG_Titer_Efficacy_DESC_TEXT, 0.0f, 1.0f, 1.0f);
         initConfigTypeMap( "Infection_Duration_Efficacy", &infection_duration_efficacy, DRUG_Infection_Duration_Efficacy_DESC_TEXT, 0.0f, 1.0f, 1.0f);
         initConfigTypeMap( "Responder_Rate", &response_probability, DRUG_Repsonder_Rate_DESC_TEXT, 0.0f, 1.0f, 1.0f);
-    
+
         return GenericDrug::Configure( inputJson );
     }
 
@@ -61,7 +61,7 @@ namespace Kernel
         if (s_OK != context->QueryInterface(GET_IID(IPolioDrugEffectsApply), (void**)&ipda) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IPolioDrugEffectsApply", "IIndividualHumanInterventionsContext" );
-        } 
+        }
 
         // just add in another Drug to list, can later check the person's records and apply accordingly (TODO)
         return GenericDrug::Distribute( context, pCCO );
@@ -90,7 +90,7 @@ namespace Kernel
         if (s_OK != context->GetInterventionsContext()->QueryInterface(GET_IID(IPolioDrugEffectsApply), (void**)&ipda) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "IPolioDrugEffectsApply", "IIndividualHumanInterventionsContext" );
-        } 
+        }
 
         return GenericDrug::SetContextTo( context );
     }
@@ -122,16 +122,11 @@ namespace Kernel
 }
 
 // TODO: move to single serialization block
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::AntipoliovirusDrug)
+#if 0
 namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(AntipoliovirusDrug, IDrug)
-
     template <typename Archive>
     void serialize(Archive &ar, AntipoliovirusDrug& drug, const unsigned int v)
     {
-        //boost::serialization::void_cast_register<AntipoliovirusDrug, IDrug>();
-        
         ar & drug.adherence_rate;
         ar & drug.titer_efficacy;
         ar & drug.infection_duration_efficacy;

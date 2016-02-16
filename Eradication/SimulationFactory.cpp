@@ -23,6 +23,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #ifndef DISABLE_MALARIA
 #include "SimulationMalaria.h"
 #endif
+#ifndef DISABLE_VECTOR
+#include "SimulationVector.h"
+#endif
 #ifdef ENABLE_POLIO
 #include "SimulationPolio.h"
 #endif
@@ -38,6 +41,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationSTI.h"
 #include "SimulationHIV.h"
 #endif
+#endif
+
+#ifdef ENABLE_TOYPHOID
+#include "SimulationPy.h"
 #endif
 
 #include "DllLoader.h"
@@ -89,6 +96,10 @@ namespace Kernel
             else if (sSimType == "HIV_SIM")
                 sim_type = SimType::HIV_SIM;
 #endif // HIV
+#ifdef ENABLE_TOYPHOID
+            else if (sSimType == "PY_SIM")
+                sim_type = SimType::PY_SIM;
+#endif
             else
             {
                 std::ostringstream msg;
@@ -163,7 +174,11 @@ namespace Kernel
                     newsim = SimulationHIV::CreateSimulation(EnvPtr->Config);
                 break;
 #endif // HIV
-
+#ifdef ENABLE_TOYPHOID 
+                case SimType::PY_SIM:
+                    newsim = SimulationPy::CreateSimulation(EnvPtr->Config);
+                break;
+#endif
                 default: 
                 // Is it even possible to get here anymore?  Won't the SimulationConfig error out earlier parsing the parameter-string?
                 //("SimulationFactory::CreateSimulation(): Error, Simulation_Type %d is not implemented.\n", sim_type);

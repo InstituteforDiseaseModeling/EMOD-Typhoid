@@ -28,7 +28,7 @@ public:
     virtual bool Configure( const Configuration * inputJson );
     virtual void EndTimestep( float currentTime, float dt );
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual);
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual);
     virtual void LogNodeData( Kernel::INodeContext * pNC );
 
 protected:
@@ -46,13 +46,6 @@ protected:
 
     //specify the serotype which is used to report infected individuals who are susceptible to paralysis
     PolioVirusTypes::Enum DiseaseSusceptibleReportPoliovirusType;
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, ReportPolio& report, const unsigned int v);
-#endif
 };
 
 }

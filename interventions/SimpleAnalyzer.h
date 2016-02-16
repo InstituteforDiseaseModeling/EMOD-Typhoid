@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "Configuration.h"
 #include "Configure.h"
-#include "SimpleTypemapRegistration.h"
 
 namespace Kernel
 {
@@ -48,11 +47,6 @@ namespace Kernel
         virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
         virtual std::string GetTriggerCondition() const;
 
-#if USE_JSON_SERIALIZATION || USE_JSON_MPI
-        void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif
-
     protected:
         float  m_timer;
         float  m_reporting_interval;
@@ -60,24 +54,11 @@ namespace Kernel
         IndividualEventTriggerType::Enum  m_trigger_condition;
 
         INodeEventContext * m_parent;
-
-    private: 
-#if USE_BOOST_SERIALIZATION
-        // serialization
-        friend class ::boost::serialization::access; 
-        template<class Archive> 
-        friend void serialize(Archive &ar, SimpleAnalyzer& ba, const unsigned int v); 
-#endif
     };
 }
 
-// Serialize SimpleAnalyzer outside of class declaration
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimpleAnalyzer)
-
+#if 0
 namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(SimpleAnalyzer, INodeDistributableIntervention);
-    REGISTER_SERIALIZATION_VOID_CAST(SimpleAnalyzer, IIndividualEventObserver);
     template<class Archive>
     void serialize(Archive &ar, SimpleAnalyzer& obj, const unsigned int v)
     {

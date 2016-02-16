@@ -62,7 +62,7 @@ namespace Kernel
         if(Environment::getInstance()->Log->CheckLogLevel(Logger::DEBUG, "EEL"))
         {
             tProperties* pProp = GetEventContext()->GetProperties();
-            Environment::getInstance()->Log->LogF(Logger::DEBUG, "EEL","t=%d,hum_id=%d,new_hum_state=%d,Props=%s \n", (int)parent->GetTime().time, GetSuid().data, 0,  (*pProp)[ "QualityOfCare" ].c_str() );
+            Environment::getInstance()->Log->LogF(Logger::DEBUG, "EEL","t=%d,hum_id=%d,new_hum_state=%d,Props=%s \n", int(parent->GetTime().time), GetSuid().data, 0,  (*pProp)[ "QualityOfCare" ].c_str() );
         }
     }
 
@@ -109,13 +109,13 @@ namespace Kernel
     bool IndividualHumanTB::SetNewInfectionState(InfectionStateChange::_enum inf_state_change)
     {
         //trigger node level interventions = THIS IS DONE IN NODETB
-        ( (NodeTB * ) parent )->OnNewInfectionState(inf_state_change, this);
+        ((NodeTB*)parent)->OnNewInfectionState(inf_state_change, this);
         //trigger individual level interventions = THIS IS DONE HERE.
         //GHH duplicated code for TBActivation, TBActivationSmearPos, TBActivationSmearNeg, and TBActivationExtrapulm
         //this is intentional for future use of different triggers by smear status although it is not done yet
         if(Environment::getInstance()->Log->CheckLogLevel(Logger::DEBUG, "EEL"))
         {
-            Environment::getInstance()->Log->LogF(Logger::DEBUG, "EEL","t=%d,hum_id=%d,new_inf_state=%lu,inf_id=%d \n", (int)parent->GetTime().time, GetSuid().data, inf_state_change, -1 );
+            Environment::getInstance()->Log->LogF(Logger::DEBUG, "EEL","t=%d,hum_id=%d,new_inf_state=%lu,inf_id=%d \n", int(parent->GetTime().time), GetSuid().data, inf_state_change, -1 );
         }        
         if ( IndividualHuman::SetNewInfectionState(inf_state_change) )
         {
@@ -303,10 +303,9 @@ namespace Kernel
     bool IndividualHumanTB::IsTreatmentNaive() const
     {
          // Query for intervention container, in future cache TB Intervention container when we create it 
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = GetInterventionsContext();
+        ITBInterventionsContainer * itbivc = nullptr;
 
-        context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "ITBInterventionsContainer", "IIndividualHumanInterventionsContext" );
@@ -318,10 +317,9 @@ namespace Kernel
     bool IndividualHumanTB::HasFailedTreatment() const
     {
         // Query for intervention container
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = GetInterventionsContext();
+        ITBInterventionsContainer * itbivc = nullptr;
 
-        context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "ITBInterventionsContainer", "IIndividualHumanInterventionsContext" );
@@ -333,10 +331,9 @@ namespace Kernel
     bool IndividualHumanTB::HasEverRelapsedAfterTreatment() const
     {
         // Query for intervention container
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = GetInterventionsContext();
+        ITBInterventionsContainer * itbivc = nullptr;
 
-        context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "ITBInterventionsContainer", "IIndividualHumanInterventionsContext" );
@@ -360,10 +357,9 @@ namespace Kernel
     bool IndividualHumanTB::IsOnTreatment() const 
     { 
         // Query for intervention container
-        IIndividualHumanInterventionsContext *context = NULL;
-        ITBInterventionsContainer * itbivc = NULL;
+        IIndividualHumanInterventionsContext *context = GetInterventionsContext();
+        ITBInterventionsContainer * itbivc = nullptr;
 
-        context = GetInterventionsContext();
         if (s_OK != context->QueryInterface(GET_IID(ITBInterventionsContainer), (void**)&itbivc) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "ITBInterventionsContainer", "IIndividualHumanInterventionsContext" );
@@ -393,7 +389,7 @@ namespace Kernel
 
     int IndividualHumanTB::GetTime() const
     {
-        return (int)parent->GetTime().time;
+        return int(parent->GetTime().time);
     }
 
     IndividualHumanTB::IndividualHumanTB(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
@@ -401,36 +397,24 @@ namespace Kernel
     {
     }
 
-    Infection* IndividualHumanTB::createInfection( suids::suid _suid )
+    IInfection* IndividualHumanTB::createInfection( suids::suid _suid )
     {
         InfectionTB* new_inf = InfectionTB::CreateInfection(this, _suid);
-        return (Infection*) new_inf;
+        return static_cast<IInfection*>(new_inf);
     }
     
     void IndividualHumanTB::setupInterventionsContainer()
     {
         interventions = _new_ TBInterventionsContainer();
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanTB)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanTB& human, const unsigned int  file_version )
+    REGISTER_SERIALIZABLE(IndividualHumanTB);
+
+    void IndividualHumanTB::serialize(IArchive& ar, IndividualHumanTB* obj)
     {
-                LOG_DEBUG("(De)serializing IndividualTB\n");
-        ar.template register_type<InfectionTB>();
-        ar.template register_type<SusceptibilityTB>();
-        ar.template register_type<TBInterventionsContainer>();
-            
-        // Serialize base class
-        ar & boost::serialization::base_object<IndividualHumanAirborne>(human);
+        IndividualHumanAirborne::serialize(ar, obj);
+        // IndividualHumanTB doesn't have any additional fields.
     }
-    template void serialize(boost::mpi::packed_iarchive&, Kernel::IndividualHumanTB&, unsigned int);
-    template void serialize(boost::mpi::packed_oarchive&, Kernel::IndividualHumanTB&, unsigned int);
 }
-#endif
 
 #endif // ENABLE_TB

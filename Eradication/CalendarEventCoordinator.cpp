@@ -97,7 +97,7 @@ namespace Kernel
             // Only visit individuals if this is NOT an NTI. Check...
             // Check to see if intervention is an INodeDistributable...
             INodeDistributableIntervention *ndi = InterventionFactory::getInstance()->CreateNDIIntervention(qi_as_config);
-            INodeDistributableIntervention *ndi2 = NULL;
+            INodeDistributableIntervention *ndi2 = nullptr;
 
             LOG_DEBUG_F("[UpdateNodes] limitPerNode = %d\n", limitPerNode);
             for (auto nec : cached_nodes)
@@ -118,7 +118,7 @@ namespace Kernel
                             duration = (float)(prev(iter,2)->first - prev(iter, 1)->first);   
                         }
                         
-                        INodeDistributableInterventionParameterSetterInterface* pNDIPSI = NULL;
+                        INodeDistributableInterventionParameterSetterInterface* pNDIPSI = nullptr;
                         if (s_OK == ndi2->QueryInterface(GET_IID(INodeDistributableInterventionParameterSetterInterface), (void**)&pNDIPSI) )
                         {
                             pNDIPSI->SetDemographicCoverage(times_and_coverages.begin()->second);

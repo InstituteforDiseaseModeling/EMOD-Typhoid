@@ -13,9 +13,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <typeinfo>
 
 #include "Contexts.h"                      // for IIndividualHumanContext, IIndividualHumanInterventionsContext
-#include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "VectorInterventionsContainer.h"  // for IBednetConsumer methods
+#include "Log.h"
+#include "IndividualEventContext.h"
+#include "NodeEventContext.h"
 
 static const char* _module = "SimpleBednet";
 
@@ -74,7 +76,20 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IBednetConsumer", "IIndividualHumanInterventionsContext" );
         }
         context->PurgeExisting( typeid(*this).name() );
-        return BaseIntervention::Distribute( context, pCCO );
+        bool ret = BaseIntervention::Distribute( context, pCCO );
+        if( ret && !on_distributed_event.IsUninitialized() && (on_distributed_event != NO_TRIGGER_STR) )
+        {
+            INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+            if (s_OK != context->GetParent()->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
+                                               "parent->GetEventContext()->GetNodeEventContext()", 
+                                               "INodeTriggeredInterventionConsumer", 
+                                               "INodeEventContext" );
+            }
+            broadcaster->TriggerNodeEventObserversByString( context->GetParent()->GetEventContext(), on_distributed_event );
+        }
+        return ret ;
     }
 
     void SimpleBednet::Update( float dt )
@@ -99,7 +114,6 @@ namespace Kernel
         }
     }
 
-
 /*
     Kernel::QueryResult SimpleBednet::QueryInterface( iid_t iid, void **ppinstance )
     {
@@ -110,10 +124,10 @@ namespace Kernel
 
         ISupports* foundInterface;
 
-        if ( iid == GET_IID(IBednet)) 
+        if ( iid == GET_IID(IBednet))
             foundInterface = static_cast<IBednet*>(this);
-        // -->> add support for other I*Consumer interfaces here <<--      
-        else if ( iid == GET_IID(ISupports)) 
+        // -->> add support for other I*Consumer interfaces here <<--
+        else if ( iid == GET_IID(ISupports))
             foundInterface = static_cast<ISupports*>(static_cast<IBednet*>(this));
         else
             foundInterface = 0;
@@ -131,22 +145,14 @@ namespace Kernel
         return status;
 
     }*/
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleBednet)
+    REGISTER_SERIALIZABLE(SimpleBednet);
 
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SimpleBednet& bn, const unsigned int v)
+    void SimpleBednet::serialize(IArchive& ar, SimpleBednet* obj)
     {
-        //LOG_DEBUG("(De)serializing SimpleHousingBednet\n");
-
-        boost::serialization::void_cast_register<SimpleBednet, IDistributableIntervention>();
-        ar & bn.bednet_type;
-        ar & bn.blocking_effect;
-        ar & bn.killing_effect;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(bn);
+        SimpleBednet& bednet = *obj;
+        ar.labelElement("blocking_effect") & bednet.blocking_effect;
+        ar.labelElement("killing_effect") & bednet.killing_effect;
+        ar.labelElement("bednet_type") & (uint32_t&)bednet.bednet_type;
     }
 }
-#endif

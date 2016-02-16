@@ -30,6 +30,9 @@
                "Air_Migration_Filename": ""
           },
           "Enable_Migration_Heterogeneity": 0, 
+          "Enable_Family_Migration": 0, 
+          "Family_Migration_Filename": "", 
+          "x_Family_Migration": 1,
           "LOCAL": {
                "Enable_Local_Migration": 1, 
                "Local_Migration_Filename": "Garki_30arcsec_local_migration.bin"

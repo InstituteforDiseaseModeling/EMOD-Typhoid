@@ -37,7 +37,7 @@ void CaptureCallstack(char* buf)
     fprintf(stderr, "func=%p\n", func);
     fflush(stderr);
 
-    if(func == NULL)
+    if(func == nullptr)
         return; 
 
     int nf =  (func)(1, 62, bt, &dwHashCode);
@@ -144,10 +144,10 @@ void WalkCallstack( char* buf )
             thread,
             &stack,
             &context,
-            NULL,
+            nullptr,
             SymFunctionTableAccess64,
             SymGetModuleBase64,
-            NULL
+            nullptr
         );
 
         symbol.SizeOfStruct  = sizeof( IMAGEHLP_SYMBOL64 );

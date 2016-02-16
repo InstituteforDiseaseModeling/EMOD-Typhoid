@@ -26,7 +26,7 @@ public:
 protected:
     virtual void LogNodeData( INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( IndividualHuman * individual );
+    virtual void LogIndividualData( IIndividualHuman* individual );
     virtual void BeginTimestep();
     virtual void EndTimestep( float currentTime, float dt );
     virtual void Finalize();
@@ -39,7 +39,7 @@ protected:
     virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
     virtual void postProcessAccumulatedData();
     
-    virtual int calcBinIndex(const IndividualHuman * individual);
+    virtual int calcBinIndex(const IIndividualHuman* individual);
 
     // for INodeEventObserver
     virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );

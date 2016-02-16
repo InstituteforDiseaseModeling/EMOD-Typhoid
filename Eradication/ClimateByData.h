@@ -52,15 +52,5 @@ namespace Kernel
         virtual bool IsPlausible();
 
         void ReadDataFromFiles(int datapoints, std::ifstream& airtemperature_file, std::ifstream& landtemperature_file, std::ifstream& rainfall_file, std::ifstream& humidity_file);
-
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-#if USE_BOOST_SERIALIZATION
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive &ar, ClimateByData &climate, const unsigned int v);
-#endif
-        ///////////////////////////////////////////////////////////////////////////
     };
 }

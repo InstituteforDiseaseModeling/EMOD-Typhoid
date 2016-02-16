@@ -51,15 +51,3 @@ namespace Kernel
         return habitat;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::VectorCohortWithHabitat)
-namespace Kernel {
-    template< typename Archive >
-    void serialize( Archive& ar, VectorCohortWithHabitat &obj, unsigned int file_version )
-    {
-        //ar & obj.habitat; // these guys don't migrate
-        ar & boost::serialization::base_object<Kernel::VectorCohort>(obj);
-    }
-}
-#endif

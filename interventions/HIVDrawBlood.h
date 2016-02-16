@@ -30,13 +30,9 @@ namespace Kernel
         virtual bool positiveTestResult();
         virtual void positiveTestDistribute();
 
-    protected:
-
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVDrawBlood &obj, const unsigned int v);
-#endif
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+        DECLARE_SERIALIZABLE(HIVDrawBlood);
+#pragma warning( pop )
     };
 }

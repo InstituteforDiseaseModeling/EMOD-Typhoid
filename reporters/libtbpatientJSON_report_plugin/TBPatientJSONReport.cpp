@@ -22,6 +22,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "DllDefs.h"
 #include "ProgVersion.h"
 
+#include "FactorySupport.h"
+
 using namespace json;
 using namespace Kernel;
 
@@ -144,7 +146,7 @@ void TBPatientJSONReport::LogNodeData( Kernel::INodeContext * pNC )
     //pNode->GetTime();
 }
 
-void TBPatientJSONReport::LogIndividualData( Kernel::IndividualHuman * individual )
+void TBPatientJSONReport::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 

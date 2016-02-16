@@ -166,16 +166,14 @@ namespace Kernel
     } 
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::MosquitoRelease)
+#if 0
 namespace Kernel {
-        template<class Archive>
-        void serialize_inner(Archive &ar, const unsigned int v)
-        {
-            boost::serialization::void_cast_register<MosquitoRelease, INodeDistributableIntervention>();
-            ar & releasedSpecies;
-            ar & vector_genetics;
-            ar & releasedNumber;
-        }
+    template<class Archive>
+    void serialize_inner(Archive &ar, const unsigned int v)
+    {
+        ar & releasedSpecies;
+        ar & vector_genetics;
+        ar & releasedNumber;
+    }
 }
 #endif

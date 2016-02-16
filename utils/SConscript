@@ -18,16 +18,25 @@ if os.sys.platform != 'win32':
 
 
 utilsSrcFiles = [
+    "BinaryArchiveReader.cpp",
+    "BinaryArchiveWriter.cpp",
     "Configuration.cpp",
     "Configure.cpp",
     "Coredump.cpp",
+    "DurationDistribution.cpp",
     "Environment.cpp",
     "Exceptions.cpp",
     "FileSystem.cpp",
+    "IArchive.cpp",
     "IdmDateTime.cpp",
     "InterpolatedValueMap.cpp",
+    "ISerializable.cpp",
     "ISupports.cpp",
+    "JsonFullReader.cpp",
+    "JsonFullWriter.cpp",
     "JsonObject.cpp",
+    "JsonRawReader.cpp",
+    "JsonRawWriter.cpp",
     "Log.cpp",
     "MathFunctions.cpp",
     "../rapidjson/modp/modp_numtoa.cpp",
@@ -36,9 +45,11 @@ utilsSrcFiles = [
     "RANDOM.cpp",
     "RapidJsonImpl.cpp",
     "Serializer.cpp",
+    "Sigmoid.cpp",
     "StatusReporter.cpp",
     "stdafx.cpp",
     "suids.cpp",
+    "Types.cpp",
     "ValidationLog.cpp"
 ]
 

@@ -15,12 +15,11 @@ namespace Kernel {
 
     IPairFormationAgent* PfaFactory::CreatePfa( const Configuration* pConfig,
                                                 const IPairFormationParameters* params,
-                                                float updatePeriod,
                                                 float selectionThreshold,
                                                 RANDOMBASE* prng, 
                                                 RelationshipCreator rc )
     {
-        IPairFormationAgent* pfa = BehaviorPfa::CreatePfa( pConfig, params, updatePeriod,  selectionThreshold, prng, rc );
+        IPairFormationAgent* pfa = BehaviorPfa::CreatePfa( pConfig, params, selectionThreshold, prng, rc );
         return pfa;
     }
 }

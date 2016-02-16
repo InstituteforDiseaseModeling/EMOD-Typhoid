@@ -198,18 +198,20 @@ env['BUILD_VARIANT'] = bvar
 env['EXTRACPPPATH'] = []
 if os.sys.platform == 'win32':
     env['OS_FAMILY'] = 'win'
-    env.Append( EXTRACPPPATH=["C:/boost/boost_1_51_0",
+    env.Append( EXTRACPPPATH=[
+                          "#/Eradication",
+                          "#/interventions",
+                          "#/campaign",
+                          "#/baseReportLib",
+                          "#/utils",
+                          "#/libgeneric_static",
+                          "#/C:/boost/boost_1_51_0",
                           "#/C:/Python27/Include",
                           "#/Dependencies/ComputeClusterPack/Include",
                           "#/cajun/include",
-                          "#/Eradication",
-                          "#/campaign",
-                          "#/interventions",
-                          "#/utils",
-                          "#/baseReportLib",
-                          "#/libgeneric_static",
                           "#/rapidjson/include",
                           "#/rapidjson/modp",
+                          "#/snappy",
                           "#/unittest/UnitTest++/src"])
 else:
     SVN_BRANCH = os.popen("svn info|grep URL|awk '{ print $2 }'|awk -F/ '{ printf( \"/%s\", $NF) }'" ).read()
@@ -218,22 +220,25 @@ else:
     env['OS_FAMILY'] = 'posix'
     env['CC'] = "mpicxx"
     env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
+    #env['CXX'] = "/usr/lib64/mpi/gcc/openmpi/bin/mpicxx"
     env.Append( CCFLAGS=["-fpermissive"] )
     env.Append( CCFLAGS=["--std=c++0x"] )
     env.Append( CCFLAGS=["-w"] )
     env.Append( CCFLAGS=["-ffloat-store"] )
     env.Append( CCFLAGS=["-Wno-unknown-pragmas"] )
-    #env.Append( CCFLAGS=["-save-temps"] )
-    env.Append( EXTRACPPPATH=["/usr/include/python2.7/",
-                          "#/cajun/include",
+    env.Append( CCFLAGS=["-save-temps"] )
+    env.Append( EXTRACPPPATH=[
                           "#/Eradication",
-                          "#/campaign",
                           "#/interventions",
-                          "#/utils",
+                          "#/campaign",
                           "#/baseReportLib",
+                          "#/utils",
                           "#/libgeneric_static",
+                          "/usr/include/python2.7/",
+                          "#/cajun/include",
                           "#/rapidjson/include",
                           "#/rapidjson/modp",
+                          "#/snappy",
                           "#/unittest/UnitTest++/src"])
 
 #if has_option( "cxx" ):
@@ -281,29 +286,20 @@ def findVersion( root , choices ):
 #env.Append( CPPDEFINES=["ENABLE_TB" ] )
 #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
 
-#if has_option('Dlls'):
-#    env.Append( CPPDEFINES=["USE_JSON_MPI" ] )
-
-env.Append( EXTRALIBPATH=["#Dependencies/ComputeClusterPack/Lib/amd64"] )
-env.Append( EXTRALIBPATH=["C:/boost/boost_1_51_0/lib/x64"] )
-
-boostLibs = ["system", "filesystem" , "program_options", "serialization" ]
-
 if os.sys.platform.startswith("linux"):
     linux = True
     static = True
     platform = "linux"
 
     env.Append( LIBS=['m'] )
-    env.Append( CPPDEFINES={'USE_BOOST_MPI' : '0'})
 
     if os.uname()[4] == "x86_64":
         linux64 = True
         nixLibPrefix = "lib64"
         env.Append( EXTRALIBPATH=["/usr/lib64" , "/lib64" ] )
 
-    env.Append( LIBS=["pthread", "mpichcxx", "boost_program_options", "boost_mpi-mt", "boost_serialization", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
-    env.Append( EXTRALIBPATH="-L/usr/local/lib -L/usr/local/lib -L/usr/lib/mpich2/lib/ -L /usr/lib/mpich2/lib/" )
+    env.Append( LIBS=["pthread", "python2.7", "dl" ] ) 
+    env.Append( EXTRALIBPATH=[ "/usr/local/lib", "/usr/lib64/mpich/lib" ] )
 
     if static:
         #env.Append( LINKFLAGS=" -static " )
@@ -323,6 +319,7 @@ elif "win32" == os.sys.platform:
     env.Append( CPPDEFINES=[ "WIN32" ] )
     env.Append( CPPDEFINES=[ "_UNICODE" ] )
     env.Append( CPPDEFINES=[ "UNICODE" ] )
+    env.Append( CPPDEFINES=[ "BOOST_ALL_NO_LIB" ] )
 
     # this is for MSVC <= 10.0
     #winSDKHome = findVersion( [ "C:/Program Files/Microsoft SDKs/Windows/", "C:/Program Files (x86)/Microsoft SDKs/Windows/" ] , [ "v7.0A", "v7.0"] )
@@ -334,6 +331,7 @@ elif "win32" == os.sys.platform:
     env.Append( EXTRACPPPATH=[ winSDKHome + "/Include/um" ] )
     env.Append( EXTRALIBPATH=[ winSDKHome + "Lib/win8/um/x64" ] )
     env.Append( EXTRALIBPATH=[ "C:/Python27/libs" ] )
+    env.Append( EXTRALIBPATH=[ "#/Dependencies/ComputeClusterPack/Lib/amd64" ] )
 
     print( "Windows SDK Root '" + winSDKHome + "'" )
 
@@ -396,11 +394,6 @@ elif "win32" == os.sys.platform:
         # NOTE: /DEBUG and Dbghelp.lib go together with changes in Exception.cpp which adds
         #       the ability to print a stack trace.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["libboost_mpi-vc110-mt-1_51.lib",
-                          "libboost_program_options-vc110-mt-1_51.lib",
-                          "libboost_filesystem-vc110-mt-1_51.lib",
-                          "libboost_system-vc110-mt-1_51.lib",
-                          "libboost_serialization-vc110-mt-1_51.lib"] )
         env.Append( LIBS=["python27.lib"] )
         # For MSVC <= 10.0
         #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
@@ -418,11 +411,6 @@ elif "win32" == os.sys.platform:
         # If you build without --d, no debug PDB will be generated, and 
         # linking will be faster. However, you won't be able to debug your code with the debugger.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["libboost_mpi-vc110-mt-gd-1_51.lib",
-                          "libboost_program_options-vc110-mt-gd-1_51.lib",
-                          "libboost_filesystem-vc110-mt-gd-1_51.lib",
-                          "libboost_system-vc110-mt-gd-1_51.lib",
-                          "libboost_serialization-vc110-mt-gd-1_51.lib"] )
         env.Append( LINKFLAGS=["/MACHINE:X64"] )
 
 
@@ -471,7 +459,7 @@ def doConfigure(myenv):
 def setEnvAttrs(myenv):
 
     diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'TB', "STI", "HIV" ]
-    #diseases = ['Generic', 'Vector', 'Malaria', 'Waterborne', 'Polio', 'Airborne', 'TB', 'STI', 'HIV']
+    diseases = ['Generic', 'Vector', 'Malaria', 'Waterborne', 'Polio', 'Airborne', 'TB', 'STI', 'HIV', 'Py' ]
     reportdlls = ['Spatial', 'Binned']
     campaigndlls = ['Bednet', 'IRSHousing']
 

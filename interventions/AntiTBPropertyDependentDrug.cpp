@@ -89,7 +89,7 @@ namespace Kernel
 
     void AntiTBPropDepDrug::ConfigureDrugTreatment( IIndividualHumanInterventionsContext * ivc )  
     {
-        IIndividualHumanTB2* tb_patient = NULL;
+        IIndividualHumanTB2* tb_patient = nullptr;
         if ( ivc->GetParent()->QueryInterface( GET_IID(IIndividualHumanTB2), (void**) &tb_patient ) != s_OK )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndvidualHumanTB2", "IndividualHuman" );
@@ -124,7 +124,7 @@ namespace Kernel
                 if (enable_state_specific_tx == true)
                 {    
                     LOG_DEBUG("Inside enable_state_specific_tx \n");
-                    release_assert(tb_patient != NULL);
+                    release_assert(tb_patient != nullptr);
                     if (tb_patient->IsMDR())
                     {
                         all_cond_drug_type = all_cond_drug_type + "MDR";
@@ -141,7 +141,7 @@ namespace Kernel
                 }
 
                 LOG_DEBUG_F("Read in the tbdt map, the drug type is %s \n", all_cond_drug_type.c_str());
-                if (tbdtMap[all_cond_drug_type] == NULL)
+                if (tbdtMap[all_cond_drug_type] == nullptr)
                 {
                     throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "You used a drug which is not in the TB_Drug_Types_For_This_Sim." );
                 }
@@ -163,20 +163,16 @@ namespace Kernel
             }
         }
     }
-}
 
+    REGISTER_SERIALIZABLE(AntiTBPropDepDrug);
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::AntiTBPropDepDrug)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, AntiTBPropDepDrug& drug, const unsigned int v)
+    void AntiTBPropDepDrug::serialize(IArchive& ar, AntiTBPropDepDrug* obj)
     {
-        boost::serialization::void_cast_register<AntiTBPropDepDrug, IDrug>();
-        ar & drug.enable_state_specific_tx;
-        ar & boost::serialization::base_object<AntiTBDrug>(drug);
+        AntiTBDrug::serialize(ar, obj);
+        AntiTBPropDepDrug& drug = *obj;
+        ar.labelElement("drug_type_by_property") & drug.drug_type_by_property.prop2drugMap;
+        ar.labelElement("enable_state_specific_tx") & drug.enable_state_specific_tx;
     }
 }
-#endif
 
 #endif

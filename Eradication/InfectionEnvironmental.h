@@ -20,20 +20,14 @@ namespace Kernel
         static InfectionEnvironmental *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
         virtual ~InfectionEnvironmental(void);
 
-        virtual void Update(float dt, Susceptibility* immunity = NULL);
-        virtual void SetParameters(StrainIdentity* _infstrain=NULL, int incubation_period_override = -1 );
+        virtual void Update(float dt, ISusceptibilityContext* immunity = nullptr) override;
+        virtual void SetParameters(StrainIdentity* _infstrain=nullptr, int incubation_period_override = -1 ) override;
 
     protected:
         InfectionEnvironmental(IIndividualHumanContext *context);
-        void Initialize(suids::suid _suid);
+        /* clorton virtual */ void Initialize(suids::suid _suid) /* clorton override */;
         InfectionEnvironmental();
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive & ar, InfectionEnvironmental& inf, const unsigned int file_version );
-#endif    
+        DECLARE_SERIALIZABLE(InfectionEnvironmental);
     };
 }

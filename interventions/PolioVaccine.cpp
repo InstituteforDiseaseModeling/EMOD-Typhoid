@@ -22,7 +22,6 @@ static const char * _module = "PolioVaccine";
 
 namespace Kernel
 {
-
     ///////////////////////////////////////////////////////////////////////////////////////
     IMPLEMENT_FACTORY_REGISTERED(PolioVaccine)
 
@@ -131,18 +130,23 @@ namespace Kernel
         *ppinstance = foundInterface;
         return status;
     }
+
+    REGISTER_SERIALIZABLE(PolioVaccine);
+
+    void PolioVaccine::serialize(IArchive& ar, PolioVaccine* obj)
+    {
+        PolioVaccine& vaccine = *obj;
+        ar.labelElement("vaccine_type") & (uint32_t&)vaccine.vaccine_type;
+        ar.labelElement("time_since_vaccination") & vaccine.time_since_vaccination;
+    }
 }
 
 // TODO: Consolidate with main serialization block
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::PolioVaccine)
-
+#if 0
 namespace Kernel {
-    REGISTER_SERIALIZATION_VOID_CAST(PolioVaccine, IDistributableIntervention)
     template<class Archive>
     void serialize(Archive &ar, PolioVaccine& vacc, const unsigned int v)
     {
-        boost::serialization::void_cast_register<PolioVaccine, IDistributableIntervention>();
         ar & vacc.vaccine_type;
         ar & vacc.time_since_vaccination;
         ar & boost::serialization::base_object<BaseIntervention>(vacc);

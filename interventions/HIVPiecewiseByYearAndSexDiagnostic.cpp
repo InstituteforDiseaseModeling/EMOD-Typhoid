@@ -17,7 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 #include "SimulationEnums.h"
 
 static const char * _module = "HIVPiecewiseByYearAndSexDiagnostic";
@@ -97,25 +97,18 @@ namespace Kernel
         return testResult;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVPiecewiseByYearAndSexDiagnostic);
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVPiecewiseByYearAndSexDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVPiecewiseByYearAndSexDiagnostic& obj, const unsigned int v)
+    void HIVPiecewiseByYearAndSexDiagnostic::serialize(IArchive& ar, HIVPiecewiseByYearAndSexDiagnostic* obj)
     {
-        static const char * _module = "HIVPiecewiseByYearAndSexDiagnostic";
-        LOG_DEBUG("(De)serializing HIVPiecewiseByYearAndSexDiagnostic\n");
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVPiecewiseByYearAndSexDiagnostic& diag = *obj;
 
-        boost::serialization::void_cast_register<HIVPiecewiseByYearAndSexDiagnostic, IDistributableIntervention>();
-        ar & obj.interpolation_order;
-        ar & obj.female_multiplier;
-        ar & obj.default_value;
-        //ar & obj.year2ValueMap;     // todo: serialize this!
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        ar.labelElement("interpolation_order"  ) & diag.interpolation_order;
+        ar.labelElement("female_multiplier"    ) & diag.female_multiplier;
+        ar.labelElement("default_value"        ) & diag.default_value;
+        ar.labelElement("year2ValueMap"        ) & diag.year2ValueMap;
+        ar.labelElement("period_between_trials") & diag.period_between_trials;
+        ar.labelElement("value_multiplier"     ) & diag.value_multiplier;
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVPiecewiseByYearAndSexDiagnostic&, unsigned int);
 }
-#endif

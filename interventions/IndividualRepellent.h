@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "InterventionFactory.h"
 #include "Configuration.h"
 #include "InterventionEnums.h"
@@ -23,9 +22,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IIndividualRepellentConsumer; 
+    struct IIndividualRepellentConsumer;
 
-    class SimpleIndividualRepellent : public BaseIntervention 
+    class SimpleIndividualRepellent : public BaseIntervention
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleIndividualRepellent, IDistributableIntervention)
@@ -56,11 +55,6 @@ namespace Kernel
         IWaningEffect* blocking_effect;
         IIndividualRepellentConsumer *ihmc; // aka individual or individual vector interventions container
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleIndividualRepellent& obj, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(SimpleIndividualRepellent);
     };
 }

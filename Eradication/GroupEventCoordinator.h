@@ -29,23 +29,11 @@ namespace Kernel
         GroupInterventionDistributionEventCoordinator();
         // IEventCoordinator
 
-        virtual bool qualifiesDemographically( const IIndividualHumanEventContext * pIndividual ) const;
+        virtual bool qualifiesDemographically( const IIndividualHumanEventContext * pIndividual ) override;
 
 
     protected:
 
         TargetGroupType::Enum target_disease_state;
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        friend void serialize(Archive &ar, GroupInterventionDistributionEventCoordinator &ec, const unsigned int v);
-#endif
-
     };
 }

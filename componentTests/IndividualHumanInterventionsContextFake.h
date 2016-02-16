@@ -61,8 +61,12 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
+    virtual bool ContainsExisting( const std::string &iv_name )
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
 
-    virtual void CheckSTINetworkParams(const char *prop = NULL, const char* new_value = NULL) {}
+    virtual void CheckSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) {}
 
     // ---------------------
     // --- ISupport Methods

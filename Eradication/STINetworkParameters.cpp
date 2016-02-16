@@ -17,11 +17,24 @@ static const char * _module = "STINetworkParameters";
 
 namespace Kernel
 {
+    // ------------------------------------------------------------------------
+    // --- STINetworkParameters
+    // ------------------------------------------------------------------------
 
-    STINetworkParameters::STINetworkParameters( const std::string& key ) :
-        key_colon_val(key)
+    STINetworkParameters::STINetworkParameters()
+    : key_colon_val("UNINITIALIZED")
+    , extra_relational_flag_type(ExtraRelationalFlagType::Correlated)
     {
-        LOG_DEBUG( "ctor\n" );
+        memset( prob_extra_relational, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
+        memset( max_simultaneous_rels, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
+    }
+
+    STINetworkParameters::STINetworkParameters( const std::string& key )
+    : key_colon_val(key)
+    , extra_relational_flag_type(ExtraRelationalFlagType::Correlated)
+    {
+        memset( prob_extra_relational, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
+        memset( max_simultaneous_rels, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
     }
 
     STINetworkParameters::~STINetworkParameters()
@@ -82,8 +95,36 @@ namespace Kernel
         throw NotYetImplementedException(  __FILE__, __LINE__, __FUNCTION__ );
     }
 
+    void STINetworkParameters::serialize( Kernel::IArchive& ar, STINetworkParameters& parameters )
+    {
+        ar.startObject();
 
+        ar.labelElement("key_colon_val") & parameters.key_colon_val;
+        ar.labelElement("extra_relational_flag_type") & (uint32_t&)parameters.extra_relational_flag_type;
 
+        size_t count = RelationshipType::COUNT;
+
+        ar.labelElement("prob_extra_relational");
+        ar.startArray(count);
+        for( int i = 0 ; i < RelationshipType::COUNT ; i++ )
+        {
+            ar.serialize( parameters.prob_extra_relational[i], Gender::COUNT );
+        }
+        ar.endArray();
+
+        ar.labelElement("max_simultaneous_rels");
+        ar.startArray(count);
+        for( int i = 0 ; i < RelationshipType::COUNT ; i++ )
+        {
+            ar.serialize( parameters.max_simultaneous_rels[i], Gender::COUNT );
+        }
+        ar.endArray();
+        ar.endObject();
+    }
+
+    // ------------------------------------------------------------------------
+    // --- STINetworkParametersMap
+    // ------------------------------------------------------------------------
 
     STINetworkParametersMap::STINetworkParametersMap()
         : has_ip_params(false)

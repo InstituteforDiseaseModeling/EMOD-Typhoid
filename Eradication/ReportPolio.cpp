@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <numeric> // for std::accumulate
 #include "ReportPolio.h" // for base class
 #include "NodePolio.h" // for base class
-#include "Debug.h" // for base class
+#include "IndividualPolio.h"
 
 static const char * _module = "ReportPolio";
 
@@ -197,11 +197,11 @@ ReportPolio::populateSummaryDataUnitsMap(
 
 void
 ReportPolio::LogIndividualData(
-    IndividualHuman * individual
+    IIndividualHuman* individual
 )
 {
     ReportEnvironmental::LogIndividualData( individual );
-    IIndividualHumanPolio* polio_individual = NULL;
+    IIndividualHumanPolio* polio_individual = nullptr;
     if( individual->QueryInterface( GET_IID( IIndividualHumanPolio ), (void**)&polio_individual ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualPolio", "IndividualHuman" );
@@ -232,7 +232,7 @@ ReportPolio::LogIndividualData(
         infectionStrainIdCounts[ ((InfectionPolio*)infection)->GetGeneticID() ] += mc_weight;
         if( tmpNewInfFlag == NewInfectionState::NewInfection )
         {
-            float immunity = ((InfectionPolio*)infection)->GetMusocalImmunity(); // (sic!)
+            float immunity = ((InfectionPolio*)infection)->GetMucosalImmunity();
             if( immunity )
             {
                 immunityAtInfection += log( immunity ) * mc_weight;
@@ -288,7 +288,7 @@ ReportPolio::LogNodeData(
 )
 {
     ReportEnvironmental::LogNodeData( pNC );
-    const INodePolio * pPolioNode = NULL; // TBD: Use limited read-only interface, not full NodePolio
+    const INodePolio * pPolioNode = nullptr; // TBD: Use limited read-only interface, not full NodePolio
     if( pNC->QueryInterface( GET_IID( INodePolio), (void**) &pPolioNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePolio", "INodeContext" );
@@ -298,16 +298,6 @@ ReportPolio::LogNodeData(
 
     total_infections = 0;
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(ReportPolio)
-template<class Archive>
-void serialize(Archive &ar, ReportPolio& report, const unsigned int v)
-{
-    boost::serialization::void_cast_register<ReportPolio,IReport>();
-    ar &boost::serialization::base_object<Report>(report);
-}
-#endif
 
 }
 

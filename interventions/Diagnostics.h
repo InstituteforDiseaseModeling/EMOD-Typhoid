@@ -21,8 +21,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "Interventions.h"
-#include "SimpleTypemapRegistration.h"
 #include "Types.h"
+#include "EventTrigger.h"
 
 namespace Kernel
 {
@@ -31,7 +31,7 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, SimpleDiagnostic, IDistributableIntervention)
 
-    public: 
+    public:
         SimpleDiagnostic();
         SimpleDiagnostic( const SimpleDiagnostic& master );
         virtual ~SimpleDiagnostic() {  }
@@ -52,9 +52,12 @@ namespace Kernel
 
     protected:
 
-        void broadcastEvent(const std::string& event);
+        void broadcastEvent( const EventTrigger& event );
         virtual EventOrConfig::Enum getEventOrConfig( const Configuration* );
+        void CheckPostiveEventConfig();
 
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
         IIndividualHumanContext *parent;
         int   diagnostic_type;
         ProbabilityNumber base_specificity;
@@ -62,17 +65,10 @@ namespace Kernel
         ProbabilityNumber treatment_fraction;
         float days_to_diagnosis; // can go negative if dt is > 1
 
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
         IndividualInterventionConfig positive_diagnosis_config;
-        ConstrainedString positive_diagnosis_event;
-#pragma warning( pop )
+        EventTrigger positive_diagnosis_event;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, SimpleDiagnostic &obj, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(SimpleDiagnostic);
+#pragma warning( pop )
     };
 }

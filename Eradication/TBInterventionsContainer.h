@@ -12,9 +12,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifdef ENABLE_TB
 #include "Interventions.h"
-#include "InterventionEnums.h"
 #include "InterventionsContainer.h"
-#include "SimpleTypemapRegistration.h"
+#include "TBDrugTypeParameters.h"
 
 namespace Kernel
 {
@@ -29,13 +28,7 @@ namespace Kernel
         float relapse_rate;
         float mortality_rate;
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-    // Serialization
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, TBDrugEffects_t& drugeffects, const unsigned int v);
-#endif // BOOST
-
+        static void serialize(IArchive&, TBDrugEffects_t&);
     };
 
     typedef std::map <TBDrugType::Enum, TBDrugEffects_t> TBDrugEffectsMap_t;
@@ -43,7 +36,6 @@ namespace Kernel
     struct ITBDrugEffects : public ISupports
     {
         virtual TBDrugEffectsMap_t GetDrugEffectsMap() = 0;
-        //virtual TBDrugTypeParameters::tTBDTPMap& GetTBdtParams() = 0;
         virtual ~ITBDrugEffects() { }
     };
 
@@ -116,12 +108,7 @@ namespace Kernel
         bool m_failed_tx_TBIVC;
         bool m_ever_relapsed_TBIVC;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, TBInterventionsContainer& container, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(TBInterventionsContainer);
     };
 }
 #endif

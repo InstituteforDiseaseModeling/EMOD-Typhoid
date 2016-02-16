@@ -58,6 +58,9 @@
         "MIGRATION": {
             "Roundtrip_Waypoints": 1, 
             "Enable_Migration_Heterogeneity": 1, 
+            "Enable_Family_Migration": 0, 
+            "Family_Migration_Filename": "", 
+            "x_Family_Migration": 1,
             "REGIONAL": {
                 "Regional_Migration_Roundtrip_Duration": 2, 
                 "Regional_Migration_Roundtrip_Probability": 1

@@ -19,7 +19,7 @@ public:
     static IReport* CreateReport();
     virtual ~BinnedReportTB();
 
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void EndTimestep( float currentTime, float dt );
 
     virtual void postProcessAccumulatedData();

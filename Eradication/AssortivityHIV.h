@@ -17,8 +17,9 @@ namespace Kernel
     // AssortivityHIV adds the groups of STI CoInfection Status and HIV Infection Status
     class IDMAPI AssortivityHIV : public Assortivity
     {
+        DECLARE_QUERY_INTERFACE();
     public:
-        AssortivityHIV( RelationshipType::Enum relType, RANDOMBASE *prng );
+        AssortivityHIV( RelationshipType::Enum relType=RelationshipType::TRANSITORY, RANDOMBASE *prng=nullptr );
         virtual ~AssortivityHIV();
 
         // -------------------------
@@ -26,7 +27,7 @@ namespace Kernel
         // -------------------------
         // Update assortivity parameters/controls.  For example, one might want the
         // assortivity to change based on the year.
-        virtual void Update( const IdmDateTime& rCurrentTime, float dt );
+        virtual void Update( const IdmDateTime& rCurrentTime, float dt ) override;
 
     protected:
         virtual IIndividualHumanSTI* SelectPartnerForExtendedGroups( AssortivityGroup::Enum group,
@@ -34,14 +35,19 @@ namespace Kernel
                                                                      const list<IIndividualHumanSTI*>& potentialPartnerList );
 
         // This routine is called inside Configure() but before the data is completely read.
-        virtual void AddConfigurationParameters( AssortivityGroup::Enum group, const Configuration *config );
+        virtual void AddConfigurationParameters( AssortivityGroup::Enum group, const Configuration *config ) override;
 
-        virtual void CheckDerivedValues() ;
+        virtual void CheckDerivedValues() override;
         virtual void CheckAxesForReceivedResults();
 
-        virtual AssortivityGroup::Enum GetGroupToUse() const ;
+        virtual AssortivityGroup::Enum GetGroupToUse() const override;
     private:
         float m_StartYear ;  // if current year is < start year, default to NO_GROUP
         bool  m_StartUsing ; // value is based on start year versus current year
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+        DECLARE_SERIALIZABLE(AssortivityHIV);
+#pragma warning( pop )
     };
 }

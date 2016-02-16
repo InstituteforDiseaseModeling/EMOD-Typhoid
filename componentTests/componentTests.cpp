@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "UnitTest++.h"
 #include "IdmInitialize.h"
+#include <mpi.h>
 
 using namespace std;
 
@@ -22,6 +23,26 @@ int main(int argc, char* argv[])
     // --- are created/run once for the unit tests.
     // ----------------------------------------------------------------------------------
     IdmInitialize();
+    MPI_Init(nullptr, nullptr);
 
-    return UnitTest::RunAllTests();
+    if( argc == 2 )
+    {
+        // argv[1] is the name of a suite that you would like to run like AssortivityTest.
+        // It runs all of the tests in that suite.
+        return UnitTest::RunSuite( argv[1] );
+    }
+    else
+    {
+        // Run all of the test suites
+        return UnitTest::RunAllTests();
+    }
+}
+
+void PrintDebug( const std::string& rMessage )
+{
+#ifdef WIN32
+    std::wostringstream msg ;
+    msg << rMessage.c_str() ;
+    OutputDebugStringW( msg.str().c_str() );
+#endif
 }

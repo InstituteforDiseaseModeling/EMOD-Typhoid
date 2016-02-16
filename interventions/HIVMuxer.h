@@ -39,11 +39,6 @@ namespace Kernel
         int max_entries;
         std::string muxer_name;
 
-    private:
-        // Serialization
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVMuxer &obj, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(HIVMuxer);
     };
 }

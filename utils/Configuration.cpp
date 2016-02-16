@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configuration.h"
 #include "ConfigurationImpl.h"
 #include "Sugar.h"
-#include "SimpleTypemapRegistration.h"
 #include "CajunIncludes.h"
 #include "Exceptions.h"
 #include "Configure.h"
@@ -99,7 +98,7 @@ Configuration* Configuration::LoadFromPython(
     return conf;
 #else
     throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "Need to enable EMBEDDED_PYTHON_DEMO in compiler." );
-    return NULL;
+    return nullptr;
 #endif
 }
 
@@ -131,7 +130,7 @@ Configuration* Configuration::Load( string configFileName )
 
 Configuration* Configuration::Load( std::istream& rInputStream, const std::string& rDataLocation )
 {
-    Configuration *conf = NULL;
+    Configuration *conf = nullptr;
     std::ostringstream final_msg;
     try 
     {
@@ -212,28 +211,7 @@ Configuration* Configuration::CopyFromElement( const json::Element &elem )
     return _new_ Configuration(elem_copy);
 }
 
-#if USE_JSON_SERIALIZATION
-
-// IJsonSerializable Interfaces
-void Configuration::JSerialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper ) const
-{
-    root->BeginObject();
-    ostringstream oss(ostringstream::out);
-    Writer::Write(*pElement, oss);
-    // Trying 2-step for linux
-    std::string stringToSerialize = oss.str();
-    root->Insert("SerializedConfigurationString", stringToSerialize.c_str());
-    root->EndObject();
-}
-
-void Configuration::JDeserialize( Kernel::IJsonObjectAdapter* root, Kernel::JSerializer* helper )
-{
-}
-#endif
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-
-BOOST_CLASS_EXPORT(Configuration)
+#if 0
 template<class Archive>
 void Configuration::serialize( Archive &ar, const unsigned int v )
 {
@@ -256,7 +234,8 @@ void Configuration::serialize( Archive &ar, const unsigned int v )
 #warning "code commented out to get linux build to work"
 #endif
 
-    } else
+    }
+    else
     {
         ostringstream oss(ostringstream::out);
         Writer::Write(*pElement, oss);
@@ -264,24 +243,7 @@ void Configuration::serialize( Archive &ar, const unsigned int v )
         std::string stringToSerialize = oss.str();
         ar & stringToSerialize;
     }
-
-
 }
-
-
-template void Configuration::serialize(boost::archive::binary_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::archive::binary_iarchive &ar, unsigned int);
-
-// Commenting these out (everywhere) saves 1.2M in release build. :) 
-//template void Configuration::serialize(boost::archive::text_oarchive &ar, unsigned int);
-//template void Configuration::serialize(boost::archive::text_iarchive &ar, unsigned int);
-
-template void Configuration::serialize(boost::mpi::detail::content_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::detail::mpi_datatype_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_iarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_oarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_skeleton_iarchive &ar, unsigned int);
-template void Configuration::serialize(boost::mpi::packed_skeleton_oarchive &ar, unsigned int);
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -291,7 +253,7 @@ vector<int> GET_CONFIG_VECTOR_INT(const QuickInterpreter* parameter_source, cons
 {
     vector<int> values;
 
-    if(parameter_source == NULL)
+    if(parameter_source == nullptr)
     {
         if( Kernel::JsonConfigurable::_dryrun )
         {
@@ -338,7 +300,7 @@ vector<float> GET_CONFIG_VECTOR_FLOAT(const QuickInterpreter* parameter_source, 
 {
     vector<float> values;
 
-    if(parameter_source == NULL)
+    if(parameter_source == nullptr)
     {
         if( Kernel::JsonConfigurable::_dryrun )
         {
@@ -385,7 +347,7 @@ vector<vector<float>> GET_CONFIG_VECTOR2D_FLOAT(const QuickInterpreter* paramete
 {
     vector<vector<float>> matrix;
 
-    if(parameter_source == NULL)
+    if(parameter_source == nullptr)
     {
         if( Kernel::JsonConfigurable::_dryrun )
         {
@@ -439,11 +401,69 @@ vector<vector<float>> GET_CONFIG_VECTOR2D_FLOAT(const QuickInterpreter* paramete
     return matrix;
 }
 
+vector<vector<int>> GET_CONFIG_VECTOR2D_INT(const QuickInterpreter* parameter_source, const char *name)
+{
+    vector<vector<int>> matrix;
+
+    if(parameter_source == nullptr)
+    {
+        if( Kernel::JsonConfigurable::_dryrun )
+        {
+            return matrix;
+        }
+        else
+        {
+            throw std::runtime_error("Null pointer!  Invalid config passed for parsing");
+        }
+    }
+    try
+    {
+        unsigned int num_elements_x = (*parameter_source)[name].As<json::Array>().Size();
+
+        json::QuickInterpreter json_array_of_arrays( (*parameter_source)[name].As<json::Array>() );
+        for( unsigned int idx = 0; idx < num_elements_x; idx++ )
+        {
+            json::QuickInterpreter json_array( json_array_of_arrays[idx].As<json::Array>() );
+
+            unsigned int num_elements_y = json_array_of_arrays[idx].As<json::Array>().Size() ;
+            std::vector<int> values;
+
+            for( unsigned int idy = 0; idy < num_elements_y; idy++ )
+            {
+                int value = (int)json_array[idy].As<json::Number>();
+                values.push_back(value);
+            }
+            matrix.push_back( values );
+        }
+    }
+    catch (json::Exception& e)
+    {
+        string full_description(e.what());
+        if (strcmp(e.what(), "Bad json_cast") == 0)
+        {
+            full_description += ": ";
+            full_description += name;
+            full_description += " (expected JSON array of numeric)";
+        }
+
+        if( Kernel::JsonConfigurable::_dryrun )
+        {
+            return matrix;
+        }
+        else
+        {
+            throw json::Exception(full_description);
+        }
+    }
+
+    return matrix;
+}
+
 vector<string> GET_CONFIG_VECTOR_STRING(const QuickInterpreter* parameter_source, const char *name)
 {
     vector<string> values;
 
-    if(parameter_source == NULL)
+    if(parameter_source == nullptr)
     {
         //if( getenv( "DRYRUN" ) )
         if( Kernel::JsonConfigurable::_dryrun )
@@ -492,7 +512,7 @@ set<string> GET_CONFIG_STRING_SET(const QuickInterpreter* parameter_source, cons
 {
     set<string> values;
 
-    if(parameter_source == NULL)
+    if(parameter_source == nullptr)
     {
         //if( getenv( "DRYRUN" ) )
         if( Kernel::JsonConfigurable::_dryrun )
@@ -542,7 +562,7 @@ string GET_CONFIG_STRING(const QuickInterpreter* parameter_source, const char *n
 {
     string value = "";
 
-    if(parameter_source == NULL)
+    if(parameter_source == nullptr)
     {
         //if( getenv( "DRYRUN" ) )
         if( Kernel::JsonConfigurable::_dryrun )
@@ -591,7 +611,7 @@ double GET_CONFIG_DOUBLE(
 {
     double value = 0.0;
 
-    if(parameter_source == NULL)
+    if(parameter_source == nullptr)
     {
         //if( getenv( "DRYRUN" ) )
         if( Kernel::JsonConfigurable::_dryrun )
@@ -676,212 +696,4 @@ namespace Kernel
             throw json::Exception(full_description); // TODO: this properly makes more sense as a configuration exception or a json parse exception...left to future tidying
         }
     }
-
-#if TEST_OLD_STUFF
-
-   /////////////////////////////////////////////////////////////////////////
-   // Test Classes
- 
-    ENUM_DEFINE(Style, 
-        ENUM_VALUE_SPEC(Fez,0) 
-        ENUM_VALUE_SPEC(Pirate,1)
-        ENUM_VALUE_SPEC(Wizard,665))
-
-    class TinfoilHat : public IConfigurable// dummy intervention
-    {
-        DECLARE_SERIALIZABLE(TinfoilHat)
-    public:
-        DECLARE_CONFIGURED(TinfoilHat)
-        DECLARE_QUERY_INTERFACE()
-        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
-        
-            
-        // configured attributes
-        BEGIN_PERSIST()
-            Persist<float> thickness;
-            Persist<bool> has_carrying_case;
-            Persist<Style::Enum> style;
-        END_PERSIST()
-
-
-
-    private:
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        void serialize_inner(Archive &ar, const unsigned int v)
-        {
-            typemap.serialize(this, ar, v);
-        }
-
-
-    };
-
-    IMPLEMENT_SERIALIZABLE(TinfoilHat)
-    IMPL_QUERY_INTERFACE1(TinfoilHat, IConfigurable)
-
-    BEGIN_IMPLEMENT_CONFIGURED(TinfoilHat)
-#ifdef WIN32
-//        CONFIGURE(thickness, "thickness", 0, 1, "Foil thickness in mm")
-//        CONFIGURE(has_carrying_case, "has_carrying_case", 0, 1, "Convenient travel pouch?")
-        CONFIGURE(thickness, MetadataDescriptor::Real("thickness", "Foil thickness in mm", 0, 1))
-        CONFIGURE(has_carrying_case, MetadataDescriptor::Bool("has_carrying_case", "Convenient travel pouch?"))
-       // CONFIGURE(style, "has_carrying_case", 0, 1, "Convenient travel pouch?")
-       CONFIGURE(style, MetadataDescriptor::Enum("style", "Hat style", MDD_ENUM_ARGS(Style)))
-#endif
-    END_IMPLEMENT_CONFIGURED(TinfoilHat)
-
-
-    class ConfiguredTest : public IConfigurable
-    {
-        DECLARE_SERIALIZABLE(ConfiguredTest)
-    public:
-        DECLARE_CONFIGURED(ConfiguredTest)
-        DECLARE_QUERY_INTERFACE()
-        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
-
-        ConfiguredTest() : hat_config(NULL) { }
-        virtual ~ConfiguredTest() { delete hat_config; }
-        
-
-        
-        BEGIN_PERSIST()
-            Persist<int> foo;
-            Persist<float> bar;
-        END_PERSIST()
-        Configuration *hat_config;
-
-        TinfoilHat configured_hat;
-
-        std::vector<TinfoilHat> hats;
-
-        // how to implement configure for the sub objects? in general we wont know how many or when they are to be created, so how about we just keep a pointer around
-        // to the config sub structure that contains the info we want
-
-
-
-    private:
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        void serialize_inner(Archive &ar, const unsigned int v)
-        {
-            typemap.serialize(this, ar, v);
-            ar & hat_config;
-            ar & configured_hat;
-            ar & hats;
-        }
-
-    };
-
-
-
-
-    IMPLEMENT_SERIALIZABLE(ConfiguredTest)
-
-    IMPL_QUERY_INTERFACE1(ConfiguredTest, IConfigurable)
-
-    BEGIN_IMPLEMENT_CONFIGURED(ConfiguredTest)
-#ifdef WIN32
-/*        CONFIGURE(foo, "foo", 0, 10, "This is Foo.")
-        CONFIGURE(bar, "bar", -100, .001f, "Standard bar.")
-        CONFIGURE(hat_config, "hat_config", 0, 0, "An arbitrary configuration, intended to be for a hat")
-        CONFIGURE_OBJECT(configured_hat, "configured_hat", "Configuration of embedded hat" )
-        */
-        CONFIGURE(foo, MetadataDescriptor::Real("foo", "This is member foo", 0, 10))
-        CONFIGURE(bar, MetadataDescriptor::Real("bar", "Standard bar", -100, .001f))
-        CONFIGURE(hat_config, MetadataDescriptor::Configuration("hat_config", "An arbitrary configuration, intended to be for a hat"))
-        CONFIGURE(configured_hat, MetadataDescriptor::Configurable("configured_hat", "Configuration of a subordinate hat", &configured_hat))
-#endif
-    END_IMPLEMENT_CONFIGURED(ConfiguredTest)
-/*   }
-   template void ConfiguredTest::common_configured_dispatch<ModeConfigure>(const Configuration *config, string *schema);
-   template void ConfiguredTest::common_configured_dispatch<ModeGetSchema>(const Configuration *config, string *schema);
-   */
-
-    class ConfiguredDerived : public ConfiguredTest
-    {
-        DECLARE_SERIALIZABLE(ConfiguredTest)
-    public:
-        DECLARE_CONFIGURED(ConfiguredDerived)
-        std::string baz;
-
-
-    private:
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class ::boost::serialization::access;
-
-        template<class Archive>
-        void serialize(Archive &ar, const unsigned int v)
-        {
-            ar & baz;
-            ar & boost::serialization::base_object<Kernel::ConfiguredTest>(*this);
-        }
-    };
-
-    BEGIN_IMPLEMENT_CONFIGURED_DERIVED(ConfiguredDerived, ConfiguredTest)
-#ifdef WIN32
-        CONFIGURE(baz, MetadataDescriptor::String("baz", "The standard baz string"))
-#endif
-    END_IMPLEMENT_CONFIGURED(ConfiguredDerived)
-
-
-
-    class ConfiguredTestFactory
-    {
-
-    public:
-
-        static ISupports* CreateInstance(const Configuration *config) // general-looking interface but only knows how to create ConfiguredTest instances at the moment
-        {
-            // get classname, then see if we know how to instantiate one of those
-
-            string classname = GET_CONFIG_STRING(config, "class");
-            ISupports* obj = NULL;
-            if (classname == "ConfiguredTest")
-            {                            
-                obj = _new_ ConfiguredTest;
-                obj->AddRef();
-            } // else...more
-            if (classname == "ConfiguredDerived")
-            {                            
-                obj = _new_ ConfiguredDerived;
-                obj->AddRef();
-            } // else...more
-
-            if (NULL == obj)
-            {
-                throw FactoryCreateFromJsonException( __FILE__, __LINE__, __FUNCTION__, classname.c_str() );
-            } else
-            {
-                IConfigurable *conf_obj = NULL;
-                if (s_OK == obj->QueryInterface(GET_IID(IConfigurable), (void**)&conf_obj))
-                {
-                    if (!conf_obj->Configure(config))
-                    {
-                        throw FactoryCreateFromJsonException( __FILE__, __LINE__, __FUNCTION__, "Failed in call to Configure." );
-                        conf_obj->Release();
-                        obj->Release();
-                        return NULL;
-                    }
-                    // need to release when done?
-                    conf_obj->Release();
-                }
-
-            }
-            return obj;
-
-        }
-
-    };
-#endif
-
-
-
 }
-

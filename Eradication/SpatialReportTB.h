@@ -28,7 +28,7 @@ public:
     static IReport* CreateReport();
     virtual ~SpatialReportTB() { }
  
-    virtual void LogIndividualData( Kernel::IndividualHuman * individual );
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
     virtual void LogNodeData( Kernel::INodeContext * pNC );
 
 protected:
@@ -53,13 +53,5 @@ protected:
     float MDR_TB_persons;
     float active_MDR_TB_persons;
     float TB_immune_persons;
-
-
-private:
-#if USE_BOOST_SERIALIZATION
-    friend class ::boost::serialization::access;
-    template<class Archive>
-    friend void serialize(Archive &ar, SpatialReportTB& report, const unsigned int v);
-#endif
 };
 }

@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "Node.h"
 #include "PropertyReportTB.h"
 
@@ -42,7 +42,7 @@ PropertyReportTB::PropertyReportTB()
 
 void
 PropertyReportTB::LogIndividualData(
-    Kernel::IndividualHuman * individual
+    Kernel::IIndividualHuman* individual
 )
 {
     PropertyReport::LogIndividualData( individual );

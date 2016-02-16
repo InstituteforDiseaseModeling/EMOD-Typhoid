@@ -28,7 +28,7 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(HumanHostSeekingTrap)
 
     IMPLEMENT_FACTORY_REGISTERED(HumanHostSeekingTrap)
-    
+
     HumanHostSeekingTrap::HumanHostSeekingTrap()
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
@@ -97,22 +97,17 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IVectorInterventionEffectsSetter", "IIndividualHumanContext" );
         }
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::HumanHostSeekingTrap)
+    REGISTER_SERIALIZABLE(HumanHostSeekingTrap);
 
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HumanHostSeekingTrap& obj, const unsigned int v)
+    void HumanHostSeekingTrap::serialize(IArchive& ar, HumanHostSeekingTrap* obj)
     {
-        boost::serialization::void_cast_register<HumanHostSeekingTrap, IDistributableIntervention>();
-        ar & obj.current_attractrate;
-        ar & obj.current_killingrate;
-        ar & obj.attract_effect;
-        ar & obj.killing_effect;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        HumanHostSeekingTrap& trap = *obj;
+        ar.labelElement("current_attractrate") & trap.current_attractrate;
+        ar.labelElement("current_killingrate") & trap.current_killingrate;
+        ar.labelElement("attract_effect") & trap.attract_effect;
+        ar.labelElement("killing_effect") & trap.killing_effect;
     }
 }
-#endif
+

@@ -9,9 +9,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "NodeSet.h"
-#include "CajunIncludes.h"
-#include "ConfigurationImpl.h"
-#include "InterventionEnums.h"
 #include "NodeEventContext.h"
 
 static const char* _module = "NodeSetNodeList";
@@ -19,12 +16,6 @@ static const char* _module = "NodeSetNodeList";
 namespace Kernel
 {
     using namespace std;
-    // NodeSet
-    //INodeSetFactory * NodeSetFactory::_instance = NULL;
-
-    // NodeSetNodeList
-    IMPLEMENT_FACTORY_REGISTERED(NodeSetNodeList)
-
     IMPL_QUERY_INTERFACE2(NodeSetNodeList, INodeSet, IConfigurable)
 
     void
@@ -42,7 +33,7 @@ namespace Kernel
             json::QuickInterpreter nodeListJson( nodelist_qi.As<json::Array>() );
             for( int idx=0; idx<nodelist_qi.As<json::Array>().Size(); idx++ )
             {
-                auto nodeId = (tNodeId) nodeListJson[idx].As<json::Number>();
+                auto nodeId = tNodeId(nodeListJson[idx].As<json::Number>());
                 nodelist.push_back( nodeId );
             }
         }
@@ -62,7 +53,6 @@ namespace Kernel
         schema[ ts ][0]["Description"] = json::String( "Id of Node" );
         return schema;
     }
-
 
     json::QuickBuilder
     NodeSetNodeList::GetSchema()
@@ -88,44 +78,18 @@ namespace Kernel
         INodeEventContext *nec
     )
     {
-
         LOG_DEBUG_F("node id = %d\n", nec->GetId().data);
 
         // We have external ids, but Node never exposes this id because it will get abused, so go through encapsulating method.
         return nec->IsInExternalIdSet( nodelist_config.nodelist );
     }
-
-#if USE_JSON_SERIALIZATION
-
-    // IJsonSerializable Interfaces
-    void NodeSetNodeList::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-        root->Insert("nodelist");
-        //helper->JSerialize(nodelist_config, root);
-        root->EndObject();
-    }
-
-    void NodeSetNodeList::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(Kernel:INodeSet);
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::NodeSetNodeList)
-
+#if 0
 namespace Kernel {
     template<class Archive>
-    void serialize(
-        Archive &ar,
-        NodeSetNodeList& nodeset,
-        const unsigned int v
-    )
+    void serialize( Archive &ar, NodeSetNodeList& nodeset, const unsigned int v )
     {
-        boost::serialization::void_cast_register<NodeSetNodeList, INodeSet>();
         ar & nodeset.nodelist_config;
     }
 }

@@ -16,6 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "VectorInterventionsContainer.h"  // for IHousingModificationConsumer methods
+#include "Log.h"
 
 static const char* _module = "SimpleHousingModification";
 
@@ -27,6 +28,48 @@ namespace Kernel
     IMPLEMENT_FACTORY_REGISTERED(SpatialRepellentHousingModification)
     IMPLEMENT_FACTORY_REGISTERED(ArtificialDietHousingModification)
     IMPLEMENT_FACTORY_REGISTERED(InsectKillingFenceHousingModification)
+
+    REGISTER_SERIALIZABLE(SimpleHousingModification);
+    REGISTER_SERIALIZABLE(IRSHousingModification);
+    REGISTER_SERIALIZABLE(ScreeningHousingModification);
+    REGISTER_SERIALIZABLE(SpatialRepellentHousingModification);
+    REGISTER_SERIALIZABLE(ArtificialDietHousingModification);
+    REGISTER_SERIALIZABLE(InsectKillingFenceHousingModification);
+
+    void SimpleHousingModification::serialize(IArchive& ar, SimpleHousingModification* obj)
+    {
+        SimpleHousingModification& mod = *obj;
+        ar.labelElement("durability_time_profile") & (uint32_t&)mod.durability_time_profile;
+        ar.labelElement("current_blockingrate") & mod.current_blockingrate;
+        ar.labelElement("current_killingrate") & mod.current_killingrate;
+        ar.labelElement("primary_decay_time_constant") & mod.primary_decay_time_constant;
+        ar.labelElement("secondary_decay_time_constant") & mod.secondary_decay_time_constant;
+    }
+
+    void IRSHousingModification::serialize(IArchive& ar, IRSHousingModification* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void ScreeningHousingModification::serialize(IArchive& ar, ScreeningHousingModification* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void SpatialRepellentHousingModification::serialize(IArchive& ar, SpatialRepellentHousingModification* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void ArtificialDietHousingModification::serialize(IArchive& ar, ArtificialDietHousingModification* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
+
+    void InsectKillingFenceHousingModification::serialize(IArchive& ar, InsectKillingFenceHousingModification* obj)
+    {
+        SimpleHousingModification::serialize(ar, obj);
+    }
 
     bool
     SimpleHousingModification::Configure(
@@ -120,11 +163,11 @@ namespace Kernel
 
         ISupports* foundInterface;
 
-        if ( iid == GET_IID(IHousingModification)) 
+        if ( iid == GET_IID(IHousingModification))
             foundInterface = static_cast<IHousingModification*>(this);
-        // -->> add support for other I*Consumer interfaces here <<--      
-      
-        else if ( iid == GET_IID(ISupports)) 
+        // -->> add support for other I*Consumer interfaces here <<--
+
+        else if ( iid == GET_IID(ISupports))
             foundInterface = static_cast<ISupports*>(static_cast<IHousingModification*>(this));
         else
             foundInterface = 0;
@@ -142,63 +185,4 @@ namespace Kernel
         return status;
     }*/
 }
-
-// This shows how to do serialization from outside the class.
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleHousingModification)
-BOOST_CLASS_EXPORT(Kernel::IRSHousingModification)
-BOOST_CLASS_EXPORT(Kernel::ScreeningHousingModification)
-BOOST_CLASS_EXPORT(Kernel::SpatialRepellentHousingModification)
-BOOST_CLASS_EXPORT(Kernel::ArtificialDietHousingModification)
-BOOST_CLASS_EXPORT(Kernel::InsectKillingFenceHousingModification)
-
-namespace Kernel {
-
-    template<class Archive>
-    void serialize(Archive &ar, SimpleHousingModification& hm, const unsigned int v)
-    {
-        static const char * _module = "SimpleHousingModification";
-        LOG_DEBUG("(De)serializing SimpleHousingModification\n");
-
-        ar & hm.killing_effect;
-        ar & hm.blocking_effect;
-        ar & boost::serialization::base_object<BaseIntervention>(hm);
-    }
-
-    template<class Archive>
-    void serialize(Archive &ar, IRSHousingModification& hm, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<IRSHousingModification, IDistributableIntervention>();
-        ar & boost::serialization::base_object<SimpleHousingModification>(hm);
-    }
-
-    template<class Archive>
-    void serialize(Archive &ar, ScreeningHousingModification& hm, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<ScreeningHousingModification, IDistributableIntervention>();
-        ar & boost::serialization::base_object<SimpleHousingModification>(hm);
-    }
-
-    template<class Archive>
-    void serialize(Archive &ar, SpatialRepellentHousingModification& hm, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<SpatialRepellentHousingModification, IDistributableIntervention>();
-        ar & boost::serialization::base_object<SimpleHousingModification>(hm);
-    }
-
-    template<class Archive>
-    void serialize(Archive &ar, ArtificialDietHousingModification& hm, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<ArtificialDietHousingModification, IDistributableIntervention>();
-        ar & boost::serialization::base_object<SimpleHousingModification>(hm);
-    }
-
-    template<class Archive>
-    void serialize(Archive &ar, InsectKillingFenceHousingModification& hm, const unsigned int v)
-    {
-        boost::serialization::void_cast_register<InsectKillingFenceHousingModification, IDistributableIntervention>();
-        ar & boost::serialization::base_object<SimpleHousingModification>(hm);
-    }
-}
-#endif
 

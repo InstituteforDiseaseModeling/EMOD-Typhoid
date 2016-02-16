@@ -53,7 +53,7 @@ namespace Kernel
 
     SimulationSTI *SimulationSTI::CreateSimulation(const ::Configuration *config)
     {
-        SimulationSTI *newsimulation = NULL;
+        SimulationSTI *newsimulation = nullptr;
 
         newsimulation = _new_ SimulationSTI();
         if (newsimulation)
@@ -64,7 +64,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -74,6 +74,7 @@ namespace Kernel
     void
     SimulationSTI::Initialize()
     {
+        Simulation::Initialize();
     }
 
     void
@@ -149,30 +150,8 @@ namespace Kernel
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
 
-    void SimulationSTI::resolveMigration()
-    {
-        resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-    }
-
     suids::suid SimulationSTI::GetNextRelationshipSuid()
     {
         return relationshipSuidGenerator();
     }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationSTI)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationSTI &sim, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<NodeSTI>();
-        ar.template register_type<NodeSTIFlags>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Simulation>(sim);
-    }
-}
-#endif
-

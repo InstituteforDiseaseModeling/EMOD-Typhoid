@@ -9,9 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 #include "NodeEnvironmental.h"
-#include "IndividualPolio.h"
-#include "PolioDefs.h"
-#include <iostream>
+#include "PolioContexts.h"
 #include <list>
 
 class ReportPolio;
@@ -20,13 +18,6 @@ namespace Kernel
 {
     class SimulationConfig;
     class SpatialReportPolio;
-
-    class INodePolio : public ISupports
-    {
-    public:
-        virtual float GetMeanAgeInfection() const = 0;
-        virtual float GetNewDiseaseSusceptibleInfections() const = 0;
-    };
 
     class NodePolio : public NodeEnvironmental, public INodePolio
     {
@@ -40,17 +31,17 @@ namespace Kernel
     public:
         static NodePolio *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
         virtual ~NodePolio(void);
-        bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
-        virtual void resetNodeStateCounters(void);
-        virtual void updateNodeStateCounters(IndividualHuman *ih);
-        virtual void finalizeNodeStateCounters(void);
+        virtual void resetNodeStateCounters(void) override;
+        virtual void updateNodeStateCounters(IIndividualHuman *ih);
+        virtual void finalizeNodeStateCounters(void) override;
 
-        float GetNewDiseaseSusceptibleInfections(void) const {return newDiseaseSusceptibleInfections;}
+        float GetNewDiseaseSusceptibleInfections(void) const override {return newDiseaseSusceptibleInfections;}
         float GetNewDiseaseSusceptibleInfectionsUnder5(void) const {return newDiseaseSusceptibleInfectionsUnder5;}
         float GetNewDiseaseSusceptibleInfectionsOver5(void) const {return newDiseaseSusceptibleInfectionsOver5;}
 
-        virtual float GetMeanAgeInfection() const;
+        virtual float GetMeanAgeInfection() const override;
 
     protected:
         static const int infection_averaging_window = 30;   // = 30 time steps
@@ -74,30 +65,25 @@ namespace Kernel
 
         NodePolio();
         NodePolio(ISimulationContext *_parent_sim, suids::suid node_suid);
-        void Initialize();
+        /* clorton virtual */ void Initialize() /* clorton override */;
 
         const SimulationConfig* params();
 
         // Factory methods
-        virtual Kernel::IndividualHuman *createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
+        virtual Kernel::IIndividualHuman* createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
 
-        virtual void LoadImmunityDemographicsDistribution();
-        virtual float drawInitialImmunity(float ind_init_age);
+        virtual void LoadImmunityDemographicsDistribution() override;
+        virtual float drawInitialImmunity(float ind_init_age) override;
 
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodePolio &node, const unsigned int  file_version );
-#endif
+        DECLARE_SERIALIZABLE(NodePolio);
     };
 
     class NodePolioTest : public NodePolio
     {
-        public:
-            static NodePolioTest *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
-        protected:
-            NodePolioTest(ISimulationContext *_parent_sim, suids::suid node_suid);
-        private:
+    public:
+        static NodePolioTest *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
+
+    protected:
+        NodePolioTest(ISimulationContext *_parent_sim, suids::suid node_suid);
     };
 }

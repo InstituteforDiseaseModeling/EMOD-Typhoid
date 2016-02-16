@@ -11,12 +11,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimpleImmunoglobulin.h"
 
 #include "Common.h"             // for INFINITE_TIME
-#include "InterventionEnums.h"  // for InterventionDurabilityProfile, ImmunoglobulinType, etc.
 
 static const char * _module = "SimpleImmunoglobulin";
 
 namespace Kernel
 {
+    ENUM_DEFINE(ImmunoglobulinType,
+        ENUM_VALUE_SPEC(StrainSpecific      , 1)
+        ENUM_VALUE_SPEC(BroadlyNeutralizing , 2))
+
     IMPLEMENT_FACTORY_REGISTERED(SimpleImmunoglobulin)
 
     SimpleImmunoglobulin::SimpleImmunoglobulin()
@@ -33,6 +36,7 @@ namespace Kernel
     {
         vaccine_take = 1.0; // immunoglobulin always takes in the model
 
+
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("immunoglobulin_type", SI_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(ImmunoglobulinType))); // required? 
     
         initConfigTypeMap("Reduced_Acquire", &current_reducedacquire, SI_Reduced_Acquire_DESC_TEXT, 0, 1, 1);
@@ -40,16 +44,15 @@ namespace Kernel
 
         return JsonConfigurable::Configure( inputJson );
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleImmunoglobulin)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, SimpleImmunoglobulin &vacc, const unsigned int v)
+    REGISTER_SERIALIZABLE(SimpleImmunoglobulin);
+
+    void SimpleImmunoglobulin::serialize(IArchive& ar, SimpleImmunoglobulin* obj)
     {
-        ar & boost::serialization::base_object<SimpleVaccine>(vacc);
+        SimpleVaccine::serialize( ar, obj );
+        SimpleImmunoglobulin& simple = *obj;
+
+        //ar.labelElement("xxx") & simple.xxx;
     }
 }
 
-#endif

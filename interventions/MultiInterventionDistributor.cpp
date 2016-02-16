@@ -37,7 +37,7 @@ namespace Kernel
     }
 
     MultiInterventionDistributor::MultiInterventionDistributor()
-    : parent(NULL)
+    : parent(nullptr)
     {
     }
 
@@ -58,9 +58,9 @@ namespace Kernel
     bool MultiInterventionDistributor::Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pICCO )
     {
         // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-        IGlobalContext *pGC = NULL;
-        const IInterventionFactory* ifobj = NULL;
-		release_assert(context->GetParent());
+        IGlobalContext *pGC = nullptr;
+        const IInterventionFactory* ifobj = nullptr;
+        release_assert(context->GetParent());
         if (s_OK == context->GetParent()->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
         {
             ifobj = pGC->GetInterventionFactory();
@@ -113,14 +113,11 @@ namespace Kernel
     }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::MultiInterventionDistributor)
-
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, MultiInterventionDistributor& obj, const unsigned int v)
     {
-        boost::serialization::void_cast_register<MultiInterventionDistributor, IDistributableIntervention>();
         ar & obj.intervention_list;
         ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
     }

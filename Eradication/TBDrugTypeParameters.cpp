@@ -11,8 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "TBDrugTypeParameters.h"
 
 #include "Exceptions.h"
-#include <algorithm> // for transform
-#include <cctype> // for tolower
+#include "Log.h"
 
 static const char * _module = "TBDTP";
 

@@ -15,9 +15,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Node.h"
 #include "SimulationConfig.h"
 
+static const char * _module = "Assortivity";
+
 namespace Kernel 
 {
-    static const char * _module = "Assortivity";
+    BEGIN_QUERY_INTERFACE_BODY(Assortivity)
+    END_QUERY_INTERFACE_BODY(Assortivity)
 
     std::string Assortivity::ValuesToString( const std::vector<std::string>& rList )
     {
@@ -38,11 +41,17 @@ namespace Kernel
         , m_Axes()
         , m_WeightingMatrix()
     {
-        release_assert( m_pRNG != nullptr );
+        //release_assert( m_pRNG != nullptr );
     }
 
     Assortivity::~Assortivity()
     {
+    }
+
+    void Assortivity::SetParameters( RANDOMBASE* prng )
+    {
+        m_pRNG = prng;
+        release_assert( m_pRNG != nullptr );
     }
 
     bool Assortivity::Configure(const Configuration *config)
@@ -342,6 +351,7 @@ namespace Kernel
         // -------------------------------------------------------------------------
         // --- Select the partner based on their score/probability of being selected
         // -------------------------------------------------------------------------
+        release_assert( m_pRNG != nullptr );
         float ran_score = m_pRNG->e() * total_score ;
         float cum_score = 0.0 ;
         for( auto entry : partner_score_list )
@@ -367,5 +377,19 @@ namespace Kernel
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
         return index ;
+    }
+
+    REGISTER_SERIALIZABLE(Assortivity);
+
+    void Assortivity::serialize(IArchive& ar, Assortivity* obj)
+    {
+        Assortivity& sort = *obj;
+        ar.labelElement("m_RelType"        ) & (uint32_t&)sort.m_RelType;
+        ar.labelElement("m_Group"          ) & (uint32_t&)sort.m_Group;
+        ar.labelElement("m_PropertyName"   ) & sort.m_PropertyName;
+        ar.labelElement("m_Axes"           ) & sort.m_Axes;
+        ar.labelElement("m_WeightingMatrix") & sort.m_WeightingMatrix;
+
+        //RANDOMBASE*                     m_pRNG ;
     }
 }

@@ -9,8 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include "Interventions.h" // for IVectorInterventionsEffects
-#include "BoostLibWrapper.h"
+#include "VectorContexts.h"
 
 namespace Kernel
 {
@@ -75,15 +74,9 @@ namespace Kernel
         float nooutdoorhumanfound;
         float outdoorRestKilling;
 
+        static void serialize(IArchive&, VectorProbabilities*&);
+
     protected:
         VectorProbabilities();
-
-    private:
-
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template< class Archive >
-        friend void serialize(Archive & ar, VectorProbabilities& probs, const unsigned int  file_version );
-#endif
     };
 }

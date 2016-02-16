@@ -16,22 +16,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Drugs.h"
 #include "Interventions.h"
 #include "InterventionsContainer.h"
-#include "SimpleTypemapRegistration.h"
+#include "PolioContexts.h"
 
 namespace Kernel
 {
-    // this container becomes a help implementation member of the relevant IndividualHuman class 
-    // it needs to implement consumer interfaces for all the relevant intervention types
-    struct IPolioDrugEffectsApply : public ISupports
-    {
-        virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ) = 0;
-        virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ) = 0;
-        virtual void ApplyDrugTiterEffect( float rate ) = 0;
-        virtual void ApplyDrugDurationEffect( float rate ) = 0;
-    };
-
-    class IPolioVaccine;
-
     class PolioInterventionsContainer : public InterventionsContainer,
                                         public IPolioVaccineEffects,
                                         public IPolioDrugEffects,
@@ -43,26 +31,26 @@ namespace Kernel
         PolioInterventionsContainer();
         virtual ~PolioInterventionsContainer();
 
-        virtual QueryResult QueryInterface(iid_t iid, void** pinstance);
+        virtual QueryResult QueryInterface(iid_t iid, void** pinstance) override;
 
         // IVaccineConsumer: not any more!
-        virtual bool GiveIntervention( IDistributableIntervention * pIV );
+        virtual bool GiveIntervention( IDistributableIntervention * pIV ) override;
 
         // IPolioVaccineEffects
-        virtual std::list<IPolioVaccine*>& GetNewVaccines();
-        virtual void ClearNewVaccines();
+        virtual std::list<IPolioVaccine*>& GetNewVaccines() override;
+        virtual void ClearNewVaccines() override;
 
         // IPolioDrugEffectsApply
-        virtual void ApplyDrugTiterEffect( float rate );
-        virtual void ApplyDrugDurationEffect( float rate );
-        virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ); // not used for anything
-        virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ); // not used for anything
+        virtual void ApplyDrugTiterEffect( float rate ) override;
+        virtual void ApplyDrugDurationEffect( float rate ) override;
+        virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ) override; // not used for anything
+        virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ) override; // not used for anything
 
         //IPolioDrugEffects(Get)
-        virtual float get_titer_efficacy() const;
-        virtual float get_infection_duration_efficacy() const;
+        virtual float get_titer_efficacy() const override;
+        virtual float get_infection_duration_efficacy() const override;
 
-        virtual void Update(float dt); // example of intervention timestep update
+        virtual void Update(float dt) override; // example of intervention timestep update
 
     protected:
         std::list<IPolioVaccine*> new_vaccines;
@@ -70,12 +58,8 @@ namespace Kernel
         float titer_efficacy;
         float infection_duration_efficacy;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        void serialize(Archive &ar, PolioInterventionsContainer& cont, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(PolioInterventionsContainer);
     };
 }
+
 #endif

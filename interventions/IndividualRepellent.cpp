@@ -96,7 +96,7 @@ namespace Kernel
         }
         else
         {
-            // ERROR: ihmc (interventions container) pointer null. Should be impossible to get here, but that's 
+            // ERROR: ihmc (interventions container) pointer null. Should be impossible to get here, but that's
             // what one always says about null pointers! :)
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "ihmc", "IIndividualRepellentConsumer" );
         }
@@ -117,11 +117,11 @@ namespace Kernel
 
         ISupports* foundInterface;
 
-        if ( iid == GET_IID(IIndividualRepellent)) 
+        if ( iid == GET_IID(IIndividualRepellent))
             foundInterface = static_cast<IIndividualRepellent*>(this);
-        // -->> add support for other I*Consumer interfaces here <<--      
-      
-        else if ( iid == GET_IID(ISupports)) 
+        // -->> add support for other I*Consumer interfaces here <<--
+
+        else if ( iid == GET_IID(ISupports))
             foundInterface = static_cast<ISupports*>(static_cast<IIndividualRepellent*>(this));
         else
             foundInterface = 0;
@@ -138,23 +138,16 @@ namespace Kernel
         *ppinstance = foundInterface;
         return status;
     }*/
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SimpleIndividualRepellent)
+    REGISTER_SERIALIZABLE(SimpleIndividualRepellent);
 
-namespace Kernel {
-
-    template<class Archive>
-    void serialize(Archive &ar, SimpleIndividualRepellent& obj, const unsigned int v)
+    void SimpleIndividualRepellent::serialize(IArchive& ar, SimpleIndividualRepellent* obj)
     {
-        static const char * _module = "SimpleIndividualRepellent";
-        LOG_DEBUG("(De)serializing SimpleIndividualRepellent\n");
-
-        boost::serialization::void_cast_register<SimpleIndividualRepellent, IDistributableIntervention>();
-        ar & obj.blocking_effect;
-        //ar & obj.killing_effect;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        SimpleIndividualRepellent& repellent = *obj;
+        ar.labelElement("current_blockingrate") & repellent.current_blockingrate;
+        ar.labelElement("current_killingrate") & repellent.current_killingrate; 
+        ar.labelElement("blocking_effect") & repellent.blocking_effect;
+        ar.labelElement("killing_effect") & repellent.killing_effect; 
     }
 }
-#endif

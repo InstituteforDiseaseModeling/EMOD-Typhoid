@@ -29,22 +29,17 @@ namespace Kernel
         float  node_contagion_decay_fraction;
 
         NodeEnvironmental();
-        virtual bool Configure( const Configuration* config );
+        virtual bool Configure( const Configuration* config ) override;
 
         // Factory methods
-        virtual IndividualHuman *createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty);
+        virtual IIndividualHuman* createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender, float above_poverty) override;
 
         // Effect of climate on infectivity in Environmental disease
-        virtual float getClimateInfectivityCorrection()  const;
+        virtual float getClimateInfectivityCorrection() const override;
 
+        virtual void SetupIntranodeTransmission() override;
+        virtual void ValidateIntranodeTransmissionConfiguration() override;
 
-        virtual void SetupIntranodeTransmission();
-        virtual void ValidateIntranodeTransmissionConfiguration();
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodeEnvironmental& node, const unsigned int  file_version );
-#endif
+        DECLARE_SERIALIZABLE(NodeEnvironmental);
     };
 }

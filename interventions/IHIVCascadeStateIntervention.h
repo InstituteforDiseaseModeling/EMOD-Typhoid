@@ -24,13 +24,13 @@ namespace Kernel
     // The original purpose of this interface was to provide a way for the InterventionValidator
     // to ensure that the values of an intervention's cascade and abort states are
     // all valid strings.
-    struct IHIVCascadeStateIntervention : public ISupports
+    struct IDMAPI IHIVCascadeStateIntervention : public ISupports
     {
         // Return the the cascade state of the intervention
         virtual const std::string& GetCascadeState() = 0;
 
         // Return the set of cascade states that would cause this intervention
         // to stop/abort.
-        virtual const JsonConfigurable::tDynamicStringSet& GetAbortStates() = 0;
+        virtual const jsonConfigurable::tDynamicStringSet& GetAbortStates() = 0;
     };
 }

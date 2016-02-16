@@ -12,15 +12,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <iostream>
 #include <fstream>
 #include <sstream> // ostringstream
-#include <cstdlib>
 #include <mpi.h>
 
-#include <iostream>
-#include <fstream>
 #include <math.h>
 #include <stdio.h>
-#include <mpi.h>
-#include <iterator>
 
 #include "Environment.h"
 #include "FileSystem.h"
@@ -32,17 +27,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "ProgramOptions.h"
 #include "Controller.h"
-#include "CajunIncludes.h"
 #include "Debug.h"
-#include "Environment.h"
 #include "ControllerFactory.h"
 #include "StatusReporter.h"
 
-#include "RANDOM.h"
 #include "Exceptions.h"
 
 // Version info extraction for both program and dlls
-#include "SimulationFactory.h"
 #include "ProgVersion.h"
 #include "SimulationConfig.h"
 #include "InterventionFactory.h"
@@ -150,19 +141,18 @@ void setStackSize()
 #endif
 
 
-bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communicator *world, int argc, char *argv[]); // returns false if something broke
+bool ControllerInitWrapper(int argc, char *argv[]); // returns false if something broke
 
 int MPIInitWrapper( int argc, char* argv[])
 {
     try 
     {
         bool fSuccessful = false;
-        boost::mpi::environment env(argc, argv);
-        boost::mpi::communicator world;
+        MPI_Init(nullptr, nullptr);
 
         try 
         {
-            fSuccessful = ControllerInitWrapper(&env, &world, argc, argv);
+            fSuccessful = ControllerInitWrapper(argc, argv);
         }
         catch( std::exception& e) 
         {
@@ -173,9 +163,14 @@ int MPIInitWrapper( int argc, char* argv[])
         // caught, tear everything down, decisively.
         if (!fSuccessful)
         {
-            EnvPtr->Log->Flush();
-            MPI_Abort(world, -1);
+            if( EnvPtr != nullptr )
+            {
+                EnvPtr->Log->Flush();
+            }
+            MPI_Abort(MPI_COMM_WORLD, -1);
         }
+
+        MPI_Finalize();
 
         // Shouldn't get here unless ControllerInitWrapper() returned true (success).
         // MPI_Abort() implementations generally exit the process. If not, return a
@@ -308,7 +303,7 @@ postProcessSchemaFiles(
         PyObject * vars = PyTuple_New(1);
         PyObject* py_filename_str = PyString_FromString( schema_path );
         PyTuple_SetItem(vars, 0, py_filename_str);
-        PyObject * returnArgs = PyObject_CallObject( pFunc, vars );
+        /* PyObject * returnArgs = */ PyObject_CallObject( pFunc, vars );
         //std::cout << "Back from python script." << std::endl;
         PyErr_Print();
     }
@@ -413,7 +408,7 @@ void IDMAPI writeInputSchemas(
     fakeECJson["class"] = json::String("StandardInterventionDistributionEventCoordinator");
     auto fakeConfig = Configuration::CopyFromElement( fakeECJson );
     Kernel::StandardInterventionDistributionEventCoordinator * pTempEC = dynamic_cast<Kernel::StandardInterventionDistributionEventCoordinator*>( Kernel::EventCoordinatorFactory::CreateInstance( fakeConfig ) );
-    json::QuickBuilder ec_schema = pTempEC->GetSchema();
+    /* json::QuickBuilder ec_schema = */ pTempEC->GetSchema();
 
     if( !Kernel::InterventionFactory::getInstance() )
     {
@@ -477,7 +472,7 @@ pythonOnExitHook()
 #endif
 }
 
-bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communicator *world, int argc, char *argv[])
+bool ControllerInitWrapper(int argc, char *argv[])
 {
     using namespace std;
 
@@ -536,8 +531,8 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
                     std::list<string>::iterator iter1;
                     std::list<string>::iterator iter2;
                     for(iter1 = dllNames.begin(),iter2 = dllVersions.begin(); 
-                        iter1 != dllNames.end(); 
-                        iter1++, iter2++)
+                        iter1 != dllNames.end();
+                        ++iter1, ++iter2)
                     {
                         oss << *iter1 << " version: " << *iter2 << std::endl;
                     }
@@ -649,8 +644,6 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
         EnvPtr->Log->Flush();
         LOG_INFO("Initializing environment...\n");
         bool env_ok = Environment::Initialize(
-            mpienv,
-            world,
             configFileName,
             po.GetCommandLineValueString( "input-path"  ),
             po.GetCommandLineValueString( "output-path" ),
@@ -690,20 +683,6 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
             EnvPtr->getStatusReporter()->SetHPCId( po.GetCommandLineValueString( "sim_id" ) );
         }
 
-#if 0
-    Kernel::SimulationConfig* SimConfig = Kernel::SimulationConfigFactory::CreateInstance(EnvPtr->Config);
-    if (SimConfig)
-    {
-        Environment::setSimulationConfig(SimConfig);
-        LOG_INFO_F( "setSimulationConfig: %p\n", SimConfig );
-    }
-    else
-    {
-        LOG_ERR("Failed to create SimulationConfig instance\n");
-        return false;
-    }
-#endif
-
 #ifdef _DEBUG
     //#define DEBUG_MEMORY_LEAKS // uncomment this to run an extra warm-up pass and enable dumping objects 
 #endif 
@@ -732,12 +711,10 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
         //LOG_INFO_F( "Name: %s\n", GET_CONFIGURABLE(SimulationConfig)->ConfigName.c_str() );  // can't get ConfigName because we haven't initialized SimulationConfig yet...
         LOG_INFO_F( "%d parameters found.\n", (EnvPtr->Config)->As<json::Object>().Size() );
 
-        IController *controller = NULL;
-
         // override controller selection if unit tests requested on command line
         LOG_INFO("Initializing Controller...\n");
-        controller = ControllerFactory::CreateController(EnvPtr->Config);
-            
+        IController *controller = ControllerFactory::CreateController(EnvPtr->Config);
+
         if (controller)
         {
             status = controller->Execute();
@@ -822,15 +799,15 @@ bool ControllerInitWrapper(boost::mpi::environment *mpienv, boost::mpi::communic
 #endif
     }
 
-    if( EnvPtr != NULL )
+    if( EnvPtr != nullptr )
     {
         EnvPtr->Log->Flush();
         if((Kernel::SimulationConfig*)EnvPtr->SimConfig)
         {
             ((Kernel::SimulationConfig*)EnvPtr->SimConfig)->Release();
         }
+        EnvPtr->Log->Flush();
     }
-    EnvPtr->Log->Flush();
 
     Environment::Finalize();
     return status;

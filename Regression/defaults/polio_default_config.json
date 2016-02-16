@@ -15,6 +15,8 @@
                "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
                "Birth_Rate_Time_Dependence": "NONE",
                "Demographics_Filename": "", 
+               "Default_Geography_Initial_Node_Population":1000,
+               "Default_Geography_Torus_Size":10,
                "Enable_Aging": 1, 
                "Enable_Birth": 1, 
                "Enable_Demographics_Birth": 1, 
@@ -22,6 +24,7 @@
                "Enable_Demographics_Initial": 1, 
                "Enable_Demographics_Other": 1, 
                "Enable_Demographics_Reporting": 1, 
+               "Minimum_Adult_Age_Years" : 15,
                "Enable_Vital_Dynamics": 1, 
                "IMMUNITY": {
                     "Acquisition_Blocking_Immunity_Decay_Rate": 0.01, 
@@ -95,10 +98,7 @@
           "HPC": {
                "Job_Node_Groups": "Chassis08", 
                "Job_Priority": "BELOWNORMAL", 
-               "LB": {
-                    "Load_Balance_Filename": "", 
-                    "Load_Balance_Scheme": "STATIC"
-               }, 
+               "Load_Balance_Filename": "", 
                "Local_Simulation": 0, 
                "Num_Cores": 1,
                "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\"

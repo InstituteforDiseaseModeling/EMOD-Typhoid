@@ -13,12 +13,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 
 #include "IndividualSTI.h"
-#include "Relationship.h"
 #include "RelationshipManagerFactory.h"
 #include "RelationshipGroups.h"
 #include "SimulationConfig.h"
 
 #include "SocietyFactory.h"
+#include "IIdGeneratorSTI.h"
+#include "NodeEventContextHost.h"
 
 static const char * _module = "NodeSTI";
 
@@ -61,7 +62,6 @@ namespace Kernel
         : Node(_parent_sim, node_suid)
         , relMan(nullptr)
         , society(nullptr)
-        , migratedIndividualToRelationshipIdMap()
         , pfa_burnin_duration( 15 * DAYSPERYEAR )
     {
         relMan = RelationshipManagerFactory::CreateManager( this );
@@ -72,7 +72,6 @@ namespace Kernel
         : Node()
         , relMan(nullptr)
         , society(nullptr)
-        , migratedIndividualToRelationshipIdMap()
         , pfa_burnin_duration( 15 * DAYSPERYEAR )
     {
         relMan = RelationshipManagerFactory::CreateManager( this );
@@ -122,11 +121,11 @@ namespace Kernel
         }
         std::istringstream iss( demographics[SOCIETY_KEY].ToString() );
         Configuration* p_config = Configuration::Load( iss, "demographics" );
-        society->SetParameters( p_config );
+        society->SetParameters( dynamic_cast<IIdGeneratorSTI*>(parent), p_config );
         delete p_config ;
     }
 
-    IndividualHuman *NodeSTI::createHuman(suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
+    IIndividualHuman* NodeSTI::createHuman( suids::suid suid, float monte_carlo_weight, float initial_age, int gender,  float above_poverty)
     {
         return IndividualHumanSTI::CreateHuman(this, suid, monte_carlo_weight, initial_age, gender, above_poverty);
     }
@@ -207,118 +206,47 @@ namespace Kernel
 
     void
     NodeSTI::processEmigratingIndividual(
-        IndividualHuman *individual
+        IIndividualHuman* individual
     )
     {
-#ifdef MIGRATION_SUPPORTED
-        // If this person is in relationships, store a map from individual
-        // id to relationships, so that we can repop the relationship when 
-        // they return.
-        release_assert( individual );
+        event_context_host->TriggerNodeEventObservers( individual->GetEventContext(), IndividualEventTriggerType::STIPreEmigrating );
 
-        ((IndividualHumanSTI*)individual)->onEmigrating();
-
-        IIndividualHumanSTI* sti_individual;
+        IIndividualHumanSTI* sti_individual=nullptr;
         if (individual->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualSTI", "IndividualHuman" );
         }
-        auto& relationships = sti_individual->GetRelationships();
-        LOG_DEBUG_F( "%s: %lu with %d relationships.\n", __FUNCTION__, individual->GetSuid().data, relationships.size() );
-        for (auto iterator = relationships.begin(); iterator != relationships.end(); /**/)
-        {
-            auto relationship = *iterator++;
-            LOG_DEBUG_F( "Storing fact that invidual %lu was in relationship %d at node %lu before they migrated. Will restore on return if relationship still exists.\n",
-                         individual->GetSuid().data,
-                         relationship->GetId(),
-                         GetSuid().data
-                       );
-            migratedIndividualToRelationshipIdMap.insert( std::make_pair( individual->GetSuid().data, relationship->GetId() ) );
-            switch (relationship->GetType())
-            {
-            case RelationshipType::TRANSITORY:
-                // Transitory relationships don't last through a migration.
-                // They are expected to end permanently when the person leaves the Node.
-                relationship->terminate( relMan );
-                delete relationship;
-                break;
 
-            default:
-                // More permanent relationships can last/stay open until the person comes back
-                sti_individual->VacateRelationship( relationship );
-                break;
-            }
-        }
-
-        release_assert( relationships.size() == 0 );
+        sti_individual->onEmigrating();
 
         Node::processEmigratingIndividual( individual );
-#endif
     }
 
-    IndividualHuman*
+    IIndividualHuman*
     NodeSTI::processImmigratingIndividual(
-        IndividualHuman* movedind
+        IIndividualHuman* movedind
     )
     {
         auto retVal = Node::processImmigratingIndividual( movedind );
-        auto movedId = movedind->GetSuid().data;
 
-        // if returning, restore broken relationships 
-        auto count = migratedIndividualToRelationshipIdMap.count( movedId );
-        if ( count == 0 ) {
-            LOG_DEBUG_F("No relationships found to restore for %lu at node %lu.\n", movedId, GetSuid().data);
-        }
-
-        // grab one of the relationships from the migratedIndividual multimap
-        auto relationship = migratedIndividualToRelationshipIdMap.find( movedId );
-
-        // iterate while there are relationships for movedId in the map
-        while (relationship != migratedIndividualToRelationshipIdMap.end() )
+        IIndividualHumanSTI* sti_individual = nullptr;
+        if (retVal->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
         {
-            unsigned int relId = relationship->second;
-
-            LOG_DEBUG_F( "Restore %lu to relationship %d at node %lu.\n", movedId, relId, GetSuid().data );
-            if( relMan->GetRelationshipById( relId ) != NULL )
-            {
-                IIndividualHumanSTI* sti_individual = nullptr;
-                if (movedind->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
-                {
-                    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "movedind", "IIndividualSTI", "IndividualHuman" );
-                }
-                sti_individual->RejoinRelationship( relMan->GetRelationshipById( relId ));
-            }
-            else
-            {
-                LOG_DEBUG_F( "Looks like relationship ended while you were away.\n" );
-            }
-
-            // erase this relationship from the migratedIndividualToRelationshipIdMap
-            migratedIndividualToRelationshipIdMap.erase(relationship);
-
-            // grab the next relationship from the migratedIndividual multimap
-            relationship = migratedIndividualToRelationshipIdMap.find( movedId );
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "retVal", "IIndividualSTI", "IndividualHuman" );
         }
+        sti_individual->onImmigrating();
 
-        // when we're done here, an individual should no longer have any relationships stored in the migratedIndividual map
-        release_assert( migratedIndividualToRelationshipIdMap.count( movedId ) == 0);
+        event_context_host->TriggerNodeEventObservers( retVal->GetEventContext(), IndividualEventTriggerType::STIPostImmigrating );
 
         return retVal;
     }
-}
 
-#if USE_BOOST_SERIALIZATION
-#include "IndividualSTI.h"
-BOOST_CLASS_EXPORT(Kernel::NodeSTI)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, NodeSTI& node, const unsigned int file_version)
+    REGISTER_SERIALIZABLE(NodeSTI);
+
+    void NodeSTI::serialize(IArchive& ar, NodeSTI* obj)
     {
-        // Register derived types
-        //ar.template register_type<IndividualHumanSTI>();
-
-        // Serialize base class
-        ar &boost::serialization::base_object<Node>(node);    
+        Node::serialize(ar, obj);
+        // NodeSTI& node = *obj;
+        // clorton TODO
     }
 }
-#endif

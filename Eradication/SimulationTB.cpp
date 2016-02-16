@@ -44,7 +44,7 @@ namespace Kernel
 
     SimulationTB *SimulationTB::CreateSimulation(const ::Configuration *config)
     {
-        SimulationTB *newsimulation = NULL;
+        SimulationTB *newsimulation = nullptr;
         newsimulation = _new_ SimulationTB();
         if (newsimulation)
         {
@@ -54,7 +54,7 @@ namespace Kernel
             if(!ValidateConfiguration(config))
             {
                 delete newsimulation;
-                newsimulation = NULL;
+                newsimulation = nullptr;
             }
         }
 
@@ -84,29 +84,6 @@ namespace Kernel
         NodeTB *node = NodeTB::CreateNode(this, node_suid);
         addNode_internal(node, nodedemographics_factory, climate_factory);
     }
-
-    void SimulationTB::resolveMigration()
-    {
-        resolveMigrationInternal(typed_migration_queue_storage, migratingIndividualQueues);
-    }
 }
-
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimulationTB)
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationTB &sim, const unsigned int  file_version )
-    {
-        // Register derived types
-        ar.template register_type<NodeTB>();
-        ar.template register_type<NodeTBFlags>();
-        ar.template register_type<SusceptibilityTBFlags>();
-        ar.template register_type<InfectionTBFlags>();
-
-        // Serialize base class
-        ar & boost::serialization::base_object<SimulationAirborne>(sim);
-    }
-}
-#endif
 
 #endif // ENABLE_TB

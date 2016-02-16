@@ -29,6 +29,8 @@
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
         "Config_Name": "00_DEFAULT", 
         "Death_Rate_Dependence" : "NONDISEASE_MORTALITY_OFF",
+        "Default_Geography_Initial_Node_Population": 1000,
+        "Default_Geography_Torus_Size": 10,
         "Demographics_Filenames": ["demographics.compiled.json"], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 

@@ -42,7 +42,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
                     return strings[k];
             }
 
-            return NULL;
+            return nullptr;
         }
 
         static int lookup_enum_value(const char* char_value, int total, const int *values, const char** strings)

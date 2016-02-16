@@ -11,7 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorControlNodeTargeted.h"
 
 #include "Exceptions.h"
-#include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeVectorEventContext.h" // for INodeVectorInterventionEffectsApply methods
 #include "SimulationConfig.h"
@@ -50,7 +49,7 @@ namespace Kernel
     SimpleVectorControlNode::SimpleVectorControlNode()
         : killing_effect( nullptr )
         , blocking_effect( nullptr )
-        , habitat_target(VectorHabitatType::ALL_HABITATS)
+        , habitat_target(VectorHabitatType::ALL_HABITATS) 
         , invic(NULL)
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
@@ -389,24 +388,18 @@ namespace Kernel
     }
 }
 
-// This shows how to do serialization from outside the class.
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::SimpleVectorControlNode)
-
+#if 0
 namespace Kernel {
-
-REGISTER_SERIALIZATION_VOID_CAST(SimpleVectorControlNode, INodeDistributableIntervention);
-
-template<class Archive>
-void serialize(Archive &ar, SimpleVectorControlNode& vcn, const unsigned int v)
-{
-    ar & vcn.durability_time_profile;
-    ar & vcn.killing;
-    ar & vcn.reduction;
-    ar & vcn.habitat_target;
-    ar & vcn.primary_decay_time_constant;
-    ar & vcn.secondary_decay_time_constant;
-    // TODO: if we put some functionality into a BaseNodeIntervention, then we may need to serialize that here
-}
+    template<class Archive>
+    void serialize(Archive &ar, SimpleVectorControlNode& vcn, const unsigned int v)
+    {
+        ar & vcn.durability_time_profile;
+        ar & vcn.killing;
+        ar & vcn.reduction;
+        ar & vcn.habitat_target;
+        ar & vcn.primary_decay_time_constant;
+        ar & vcn.secondary_decay_time_constant;
+        // TODO: if we put some functionality into a BaseNodeIntervention, then we may need to serialize that here
+    }
 }
 #endif

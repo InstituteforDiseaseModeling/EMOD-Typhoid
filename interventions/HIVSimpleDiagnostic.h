@@ -20,7 +20,7 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_FACTORY_REGISTERED(InterventionFactory, HIVSimpleDiagnostic, IDistributableIntervention)
 
-    public: 
+    public:
         HIVSimpleDiagnostic();
         HIVSimpleDiagnostic( const HIVSimpleDiagnostic& );
 
@@ -35,7 +35,7 @@ namespace Kernel
 
         // IHIVCascadeStateIntervention
         virtual const std::string& GetCascadeState();
-        virtual const JsonConfigurable::tDynamicStringSet& GetAbortStates();
+        virtual const jsonConfigurable::tDynamicStringSet& GetAbortStates();
 
     protected:
         virtual bool qualifiesToGetIntervention( IIndividualHumanContext* pIndivid );
@@ -46,25 +46,15 @@ namespace Kernel
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        JsonConfigurable::tDynamicStringSet abortStates;
+        jsonConfigurable::tDynamicStringSet abortStates;
         std::string cascadeState;
-#pragma warning( pop )
-
         bool firstUpdate;
         bool result_of_positive_test;
         float original_days_to_diagnosis;
         float absoluteDuration;
-        
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
-        ConstrainedString negative_diagnosis_event;
-#pragma warning( pop )
+        EventTrigger negative_diagnosis_event;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVSimpleDiagnostic &obj, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(HIVSimpleDiagnostic);
+#pragma warning( pop )
     };
 }

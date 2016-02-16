@@ -160,28 +160,6 @@ namespace Kernel
         unsigned int num_times_started_ART ;
         ReceivedTestResultsType::Enum received_HIV_test_results ;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        // Serialization
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, HIVInterventionsContainer& container, const unsigned int v);
-#endif
+        DECLARE_SERIALIZABLE(HIVInterventionsContainer);
     };
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVInterventionsContainer& container, const unsigned int v)
-    {
-        static const char * _module = "HIVInterventionsContainer";
-        LOG_DEBUG("(De)serializing HIVInterventionsContainer\n");
-
-        ar & container.HIV_drug_inactivation_rate;
-        ar & container.HIV_drug_clearance_rate;
-
-        ar & boost::serialization::base_object<InterventionsContainer>(container);
-    }
-}
-#endif

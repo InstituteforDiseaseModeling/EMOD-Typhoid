@@ -18,32 +18,41 @@ namespace Kernel
     class ReportSTI;
     class RelationshipManager : public IRelationshipManager
     {
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
+        DECLARE_QUERY_INTERFACE();
+
         friend class ReportSTI;
     public:
-        RelationshipManager( INodeContext* parent );
-        void Update( list<IIndividualHuman*>& individualHumans, ITransmissionGroups* groups, float dt ); 
-        IRelationship * GetRelationshipById( unsigned int relId );
-        const tNodeRelationshipType& GetNodeRelationships() const;
-        void AddToPrimaryRelationships( const std::string& propertyKey, const std::string& propertyValue );
-        INodeContext* GetNode() const; // is this a good idea? Adding for RelationshipGroups to be node aware
-        void AddRelationship(IRelationship*);
-        void RemoveRelationship( IRelationship* );
-        void ConsummateRelationship( IRelationship* relationship, unsigned int acts );
+        RelationshipManager( INodeContext* parent = nullptr );
+        virtual void Update( list<IIndividualHuman*>& individualHumans, ITransmissionGroups* groups, float dt ) override; 
+        virtual IRelationship * GetRelationshipById( unsigned int relId ) override;
+        virtual const tNodeRelationshipType& GetNodeRelationships() const override;
+        virtual void AddToPrimaryRelationships( const std::string& propertyKey, const std::string& propertyValue ) override;
+        virtual INodeContext* GetNode() const override; // is this a good idea? Adding for RelationshipGroups to be node aware
+        virtual void AddRelationship(IRelationship*) override;
+        virtual void RemoveRelationship( IRelationship* ) override;
+        virtual void ConsummateRelationship( IRelationship* relationship, unsigned int acts ) override;
 
-        virtual void RegisterNewRelationshipObserver(IRelationshipManager::callback_t observer);
-        virtual void RegisterRelationshipTerminationObserver(IRelationshipManager::callback_t observer);
-        virtual void RegisterRelationshipConsummationObserver(IRelationshipManager::callback_t observer);
+        virtual IRelationship* Emigrate( IRelationship* ) override;
+        virtual IRelationship* Immigrate( IRelationship* ) override;
+
+        virtual void RegisterNewRelationshipObserver(IRelationshipManager::callback_t observer) override;
+        virtual void RegisterRelationshipTerminationObserver(IRelationshipManager::callback_t observer) override;
+        virtual void RegisterRelationshipConsummationObserver(IRelationshipManager::callback_t observer) override;
 
     protected:
         tNodeRelationshipType nodeRelationships;
-        std::map< const std::string, PropertyValueList_t > relationshipListsForMP;
+        std::map< std::string, PropertyValueList_t > relationshipListsForMP;
         INodeContext* _node;
         ITransmissionGroups * nodePools;
         std::list<IRelationshipManager::callback_t> new_relationship_observers;
         std::list<IRelationshipManager::callback_t> relationship_termination_observers;
         std::list<IRelationshipManager::callback_t> relationship_consummation_observers;
         std::map< std::string, std::list<unsigned int> > dead_relationships_by_type;
+        std::map<suids::suid,IRelationship*> migrating_relationship_map;
 
         void notifyObservers(std::list<IRelationshipManager::callback_t>&, IRelationship*);
+
+        DECLARE_SERIALIZABLE(RelationshipManager);
     };
 }

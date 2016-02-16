@@ -38,16 +38,18 @@ if dst_path != "":
     sys.exit(0)
 
 # set the common libraries
-env.Append(LIBPATH = ["$BUILD_DIR/cajun", "$BUILD_DIR/campaign", "$BUILD_DIR/utils"])
+env.Append(LIBPATH = ["$BUILD_DIR/baseReportLib", "$BUILD_DIR/cajun", "$BUILD_DIR/campaign", "$BUILD_DIR/snappy", "$BUILD_DIR/utils"])
 
-print( "Link executable against cajun, campaign, and utils lib's." )
-env.Append(LIBS=["cajun", "campaign", "utils"])
+print( "Link executable against cajun, campaign, snappy, and utils lib's." )
+env.Append(LIBS=["baseReportLib", "cajun", "campaign", "snappy", "utils"])
 
 #print "builddir is " + env["BUILD_DIR"]
 
 # First static libs
-SConscript( [ 'cajun/SConscript',
+SConscript( [ 'baseReportLib/SConscript',
+              'cajun/SConscript',
               'campaign/SConscript',
+              'snappy/SConscript',
               'utils/SConscript' ])
 
 # If DLL=true, build libgeneric_static.lib
@@ -194,3 +196,15 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
 
 # Finally executable
 SConscript('Eradication/SConscript')
+if os.sys.platform == 'win32':
+    SConscript('reporters/STI_Reports_SConscript')
+    SConscript('reporters/TB_Reports_SConscript')
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # !!! Beware on scenarios with large nodes and populations
+    # !!! These can create gigabytes of data and cause scenarios
+    # !!! to take twice as long.
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #SConscript('reporters/NodeDemographics_Reports_SConscript')
+    #SConscript('reporters/VectorStats_Reports_SConscript')
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    

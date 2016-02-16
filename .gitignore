@@ -233,9 +233,26 @@ $RECYCLE.BIN/
 # Subversion
 .svn/
 
+# Mercurial
+.hg/
+.hgignore
+
 # Simulation output
 time.txt
 status.txt
 Transitions.json
 
+.hg
+/Regression/reports/
+componentTests/testdata/NodeDemographicsTest/output/DefaultDemographics.json
+componentTests/invalid.json
+componentTests/testdata/NodeDemographicsTest/DefaultDemographics.json
+.sconsign.dblite
+.sconf_temp/conftest_0.cpp
 Regression/Scenarios/InputFiles
+testing
+.config_from_excel.json
+.campaign_from_excel.json
+
+# compiled Python
+*.pyc

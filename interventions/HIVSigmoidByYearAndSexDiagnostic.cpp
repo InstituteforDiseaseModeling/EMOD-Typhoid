@@ -12,7 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "NodeEventContext.h"  // for INodeEventContext
 #include "SimulationEnums.h"
-#include "MathFunctions.h"
+#include "Sigmoid.h"
 
 static const char * _module = "HIVSigmoidByYearAndSexDiagnostic";
 
@@ -73,26 +73,17 @@ namespace Kernel
         return testResult;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVSigmoidByYearAndSexDiagnostic);
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::HIVSigmoidByYearAndSexDiagnostic)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVSigmoidByYearAndSexDiagnostic& obj, const unsigned int v)
+    void HIVSigmoidByYearAndSexDiagnostic::serialize(IArchive& ar, HIVSigmoidByYearAndSexDiagnostic* obj)
     {
-        static const char * _module = "HIVSigmoidByYearAndSexDiagnostic";
-        LOG_DEBUG("(De)serializing HIVSigmoidByYearAndSexDiagnostic\n");
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVSigmoidByYearAndSexDiagnostic& cascade = *obj;
 
-        boost::serialization::void_cast_register<HIVSigmoidByYearAndSexDiagnostic, IDistributableIntervention>();
-        ar & obj.rampMin;
-        ar & obj.rampMax;
-        ar & obj.rampMidYear;
-        ar & obj.rampRate;
-        ar & obj.femaleMultiplier;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        ar.labelElement("rampMin"         ) & cascade.rampMin;
+        ar.labelElement("rampMax"         ) & cascade.rampMax;
+        ar.labelElement("rampMidYear"     ) & cascade.rampMidYear;
+        ar.labelElement("rampRate"        ) & cascade.rampRate;
+        ar.labelElement("femaleMultiplier") & cascade.femaleMultiplier;
     }
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, Kernel::HIVSigmoidByYearAndSexDiagnostic&, unsigned int);
 }
-#endif

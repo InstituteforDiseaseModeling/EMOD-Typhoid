@@ -22,7 +22,7 @@ using namespace std;
 
 namespace Kernel
 {
-	struct IJsonSerializable;
+    struct IJsonSerializable;
 
     // Helper class that bridges between actual clientèle class that implements IJsonSerializable
     // and the JSon string manipulation (creation, mapping, finding, reading and writing operation)

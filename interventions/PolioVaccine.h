@@ -10,15 +10,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "Vaccine.h"
+#include "PolioContexts.h"
 
 namespace Kernel
 {
-    class IPolioVaccine : public ISupports
-    {
-    public:
-        virtual PolioVaccineType::Enum   GetVaccineType()            const = 0;
-    };
-
     class PolioVaccine : public IVaccine, public BaseIntervention, public IPolioVaccine
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, PolioVaccine, IDistributableIntervention)
@@ -27,35 +22,32 @@ namespace Kernel
         static PolioVaccine* CreateVaccine(PolioVaccineType::Enum type, float days_since_vaccine);
         PolioVaccine();
         virtual ~PolioVaccine();
-        bool Configure( const Configuration* config );
-        virtual int AddRef() { return BaseIntervention::AddRef(); }
-        virtual int Release() { return BaseIntervention::Release(); }
+        virtual bool Configure( const Configuration* config ) override;
+        virtual int AddRef() override { return BaseIntervention::AddRef(); }
+        virtual int Release() override { return BaseIntervention::Release(); }
 
         // IDistributableIntervention
-        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );
-        virtual void SetContextTo(IIndividualHumanContext *context) { /* not needed for this intervention */ }
-        virtual void Update(float dt);
+        virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
+        virtual void SetContextTo(IIndividualHumanContext *context) override { /* not needed for this intervention */ }
+        virtual void Update(float dt) override;
 
         // ISupports
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
         // IPolioVaccine
-        virtual PolioVaccineType::Enum   GetVaccineType()            const;
+        virtual PolioVaccineType::Enum GetVaccineType() const override;
 
         // IVaccine
-        virtual void  ApplyVaccineTake() {} // Take is handled in live vaccines
-        virtual float GetVaccineReducedAcquire()  const { return 0; }
-        virtual float GetVaccineReducedTransmit() const { return 0; }
+        virtual void  ApplyVaccineTake() override {} // Take is handled in live vaccines
+        
+        /* clorton virtual */ float GetVaccineReducedAcquire()  const { return 0; }
+        /* clorton virtual */ float GetVaccineReducedTransmit() const { return 0; }
 
     protected:
         PolioVaccineType::Enum vaccine_type;
         float time_since_vaccination;
         IVaccineConsumer *ivc;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        template<class Archive>
-        friend void serialize(Archive &ar, PolioVaccine& vacc, const unsigned int v);
-#endif    
+        DECLARE_SERIALIZABLE(PolioVaccine);
     };
 }

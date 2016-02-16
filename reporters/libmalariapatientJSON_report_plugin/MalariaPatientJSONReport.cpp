@@ -21,6 +21,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "DllDefs.h"
 #include "ProgVersion.h"
 
+#include "FactorySupport.h"
+
 using namespace Kernel ;
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -191,7 +193,7 @@ void MalariaPatientJSONReport::LogNodeData( INodeContext * pNC )
     simtime = pNC->GetTime().time;
 }
 
-void MalariaPatientJSONReport::LogIndividualData( IndividualHuman * individual )
+void MalariaPatientJSONReport::LogIndividualData( IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 

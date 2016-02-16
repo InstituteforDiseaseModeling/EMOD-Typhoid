@@ -22,16 +22,11 @@ namespace Kernel
 
         SusceptibilitySTI();
         SusceptibilitySTI(IIndividualHumanContext *context);
-        void Initialize(float age, float immmod, float riskmod);
+        /* clorton virtual */ void Initialize(float age, float immmod, float riskmod) /* clorton override */;
 
         // additional members of airborne susceptibility
         float demographic_risk;
 
-    private:
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, SusceptibilitySTI& sus, const unsigned int file_version );
-#endif
+        DECLARE_SERIALIZABLE(SusceptibilitySTI);
     };
 }

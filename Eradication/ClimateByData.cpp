@@ -197,15 +197,11 @@ namespace Kernel {
     }
 }
 
-#if USE_BOOST_SERIALIZATION
-BOOST_CLASS_EXPORT(Kernel::ClimateByData)
+#if 0
 namespace Kernel {
     template<class Archive>
     void serialize(Archive &ar, ClimateByData &climate, const unsigned int v)
     {
-        static const char * _module = "ClimateByData";
-        LOG_DEBUG("(De)serializing ClimateByData\n");
-
         ar & climate.num_datapoints;
         ar & climate.num_years
            & climate.airtemperature_data
@@ -217,4 +213,3 @@ namespace Kernel {
     }
 }
 #endif
-

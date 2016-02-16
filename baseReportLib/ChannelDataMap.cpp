@@ -184,13 +184,21 @@ void ChannelDataMap::Reduce()
 
         LOG_DEBUG_F("Reducing %d timesteps of channel %s\n", timesteps_to_reduce, pair.first.c_str());
 
-        boost::mpi::reduce(
-            *(EnvPtr->MPI.World),
-            &((*channel_data)[timesteps_reduced]),
-            (int)timesteps_to_reduce,
-            &((receive_buffer)[0]), // use same buffer for send and receive...hopefully thats ok
-            std::plus<float>(),
-            0);
+        if ( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) )
+        {
+            LOG_DEBUG_F( "timesteps_reduced   = %d\n", timesteps_reduced );
+            LOG_DEBUG_F( "timesteps_to_reduce = %d\n", timesteps_to_reduce );
+            std::ostringstream data;
+            data << '[';
+            for ( int i = 0; i < timesteps_to_reduce; ++i)
+            {
+                data << ' ' << (*channel_data)[timesteps_reduced + i];
+            }
+            data << " ]" << std::endl;
+            LOG_DEBUG( data.str().c_str() );
+        }
+
+        MPI_Reduce((void*)&((*channel_data)[timesteps_reduced]), (void*)&((receive_buffer)[0]), (int)timesteps_to_reduce, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
 
         for (int k = timesteps_reduced; k < total_timesteps_recorded; k++)
         {

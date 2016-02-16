@@ -17,7 +17,6 @@ namespace Kernel
 
     class IDMAPI InterpolatedValueMap : public JsonConfigurable, public JsonConfigurable::tFloatFloatMapConfigType /* really just a map */
     {
-        friend class ::boost::serialization::access;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
         public:
@@ -26,5 +25,7 @@ namespace Kernel
             float getValueLinearInterpolation( float year, float default_value = 0) const;
             virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
             virtual json::QuickBuilder GetSchema();
+
+            static void serialize( IArchive& ar, InterpolatedValueMap& map );
     };
 }

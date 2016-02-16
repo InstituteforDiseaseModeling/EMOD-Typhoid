@@ -1,11 +1,17 @@
-/***************************************************************************************************
+/*****************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2014 by Global Good Fund I, LLC. All rights reserved.
 
-EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
-To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+Except for any rights expressly granted to you in a separate license with the
+Global Good Fund (GGF), GGF reserves all rights, title and interest in the
+software and documentation.  GGF grants recipients of this software and
+documentation no other rights either expressly, impliedly or by estoppel.
 
-***************************************************************************************************/
+THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
+ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
+
+*****************************************************************************/
 
 #include "stdafx.h"
 #include "BinnedReport.h"
@@ -19,9 +25,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "Exceptions.h"
 #include "Sugar.h"
-#include "Individual.h"
+#include "IIndividualHuman.h"
 #include "ProgVersion.h"
-#include "RapidJsonImpl.h"
+// clorton #include "RapidJsonImpl.h"
 
 using namespace std;
 using namespace json;
@@ -31,23 +37,15 @@ static const char * _module = "BinnedReport";
 
 static const std::string _report_name = "BinnedReport.json";
 
-//static const int _num_age_bins = 10;
-//static const float _age_bin_upper_values[] =   { 365.0, 730.0, 1095.0, 1460.0, 1825.0, 3650.0,  7300.0, 10950.0, 14600.0, 999999.0 };
-//static const char* _age_bin_friendly_names[] = {  "<1", "1-2",  "2-3",  "3-4",  "4-5", "5-10", "10-20", "20-30", "30-40", ">40"    };
-
-static const int _num_age_bins = 21;
-static const float _age_bin_upper_values[] =   {  1825.0,  3650.0,  5475.0,  7300.0,  9125.0, 10950.0, 12775.0, 14600.0, 16425.0, 18250.0,
-                                                 20075.0, 21900.0, 23725.0, 25550.0, 27375.0, 29200.0, 31025.0, 32850.0, 34675.0, 36500.0, 999999.0 };
-static const char* _age_bin_friendly_names[] = {    "<5",   "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49",
-                                                 "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", ">100" };
-
 static const char* _axis_labels[] = { "Age" };
-static const int _num_bins_per_axis[] = { _num_age_bins };
+
+namespace Kernel {
 
 const char * BinnedReport::_pop_label = "Population";
 const char * BinnedReport::_infected_label = "Infected";
 const char * BinnedReport::_new_infections_label = "New Infections";
 const char * BinnedReport::_disease_deaths_label = "Disease Deaths";
+
 
 Kernel::IReport*
 BinnedReport::CreateReport()
@@ -70,10 +68,23 @@ BinnedReport::BinnedReport()
     , new_infections_bins(nullptr)
     , disease_deaths_bins(nullptr)
     , p_output_augmentor(nullptr)
+    , _age_bin_upper_values(nullptr)
 {
     LOG_DEBUG( "BinnedReport ctor\n" );
+    
+    float __age_bin_upper_values[] = { 1825.0,  3650.0,  5475.0,  7300.0,  9125.0, 10950.0, 12775.0, 14600.0, 16425.0, 18250.0, 20075.0, 21900.0, 23725.0, 25550.0, 27375.0, 29200.0, 31025.0, 32850.0, 34675.0, 36500.0, 999999.0 };
+    char * __age_bin_friendly_names[] = { "<5",   "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", ">100" };
+    _num_age_bins = sizeof( __age_bin_upper_values )/sizeof(float); 
 
-    num_timesteps = 0;
+    _age_bin_friendly_names.resize( _num_age_bins );
+    _age_bin_upper_values = new float[100];
+    memset( _age_bin_upper_values, 0, sizeof( float ) * 100 );
+    for( int idx = 0; idx < _num_age_bins ; idx++ )
+    {
+        _age_bin_upper_values[idx] = __age_bin_upper_values[idx];
+        _age_bin_friendly_names[idx] = __age_bin_friendly_names[idx];
+    }
+    
 }
 
 BinnedReport::~BinnedReport()
@@ -90,12 +101,16 @@ BinnedReport::~BinnedReport()
 #endif
 void BinnedReport::Initialize( unsigned int nrmSize )
 {
+    for( unsigned int idx=0; idx<sizeof(_num_bins_per_axis)/sizeof(int); idx++ )
+    {
+        _num_bins_per_axis[idx] = _num_age_bins;
+    }
+    
+    num_timesteps = 0;
     _nrmSize = nrmSize;
     release_assert( _nrmSize );
 
     report_name = _report_name;
-
-    static_assert(_countof(_axis_labels) == _countof(_num_bins_per_axis), "Number of axis-labels must match number of axis bin-counts");
 
     // wish we could just use C++11 initializer lists here, but alas... not yet implemented :(
     axis_labels = std::vector<std::string>(_axis_labels, _axis_labels + (sizeof(_axis_labels) / sizeof(char*)));
@@ -107,17 +122,14 @@ void BinnedReport::Initialize( unsigned int nrmSize )
     for (int i : num_bins_per_axis)
         num_total_bins *= i;
 
-    static_assert(_countof(_age_bin_upper_values) == _num_age_bins, "Number of age-bins must match specified size");
-    static_assert(_countof(_age_bin_friendly_names) == _num_age_bins, "Number of age-bins friendly-names must match specified size");
-
     values_per_axis.push_back(std::vector<float>(_age_bin_upper_values, _age_bin_upper_values + (sizeof(_age_bin_upper_values) / sizeof(int))));
-    friendly_names_per_axis.push_back(std::vector<std::string>(_age_bin_friendly_names, _age_bin_friendly_names + (sizeof(_age_bin_friendly_names) / sizeof(char*))));
 
     initChannelBins();
 }
 
 void BinnedReport::initChannelBins()
 {
+    LOG_DEBUG_F( "num_total_bins = %d\n", num_total_bins );
     population_bins     = new float[num_total_bins];
     infected_bins       = new float[num_total_bins];
     new_infections_bins = new float[num_total_bins];
@@ -149,6 +161,41 @@ void BinnedReport::EndTimestep( float currentTime, float dt )
     Accumulate(_disease_deaths_label, disease_deaths_bins);
 
     clearChannelsBins();
+#if 1
+    // This is experimental for sending data via stdout. Don't check in without config option.
+    Kernel::JSerializer js;
+    auto * jsonSerializer = Kernel::CreateJsonObjAdapter();
+    jsonSerializer->CreateNewWriter();
+    jsonSerializer->BeginObject();
+    for (auto& entry : channelDataMap.channel_data_map)
+    {
+        auto vector_of_data = entry.second;
+        // OK, for binned report, this is an array of some length, and we want the last N values, where N is number of age bins.
+        const auto channel_name = entry.first.c_str();
+        auto last = vector_of_data.size() - _num_age_bins;
+        vector<float> segment;
+        for( int idx=last; idx<last+_num_age_bins; idx++ )
+        {
+            segment.push_back( vector_of_data[ idx ] );
+        }
+        // Populate last 5 values from vector_of_data
+        jsonSerializer->Insert(channel_name);
+        jsonSerializer->BeginArray();
+        js.JSerialize( segment, jsonSerializer );
+        //jsonSerializer->Insert( , last );
+        jsonSerializer->EndArray();
+    }
+    jsonSerializer->EndObject();
+
+    //std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
+
+#ifdef WIN32
+    _putenv_s( "JSON_SER_REPORT2", jsonSerializer->ToString() );
+#else
+    setenv( "JSON_SER_REPORT2", jsonSerializer->ToString(), 1 );
+#endif
+    delete jsonSerializer;
+#endif
 }
 
 void BinnedReport::Accumulate(std::string channel_name, float bin_data[])
@@ -193,24 +240,25 @@ void BinnedReport::LogNodeData( Kernel::INodeContext * pNC )
     LOG_DEBUG( "LogNodeData.\n" );
 }
 
-int BinnedReport::calcBinIndex( Kernel::IndividualHuman * individual)
+int BinnedReport::calcBinIndex( Kernel::IIndividualHuman* individual)
 {
-    float age          = (float)individual->GetAge();
+    float age = float(individual->GetAge());
     //bool isFemale      = (individual->GetGender() == FEMALE);
 
     // Calculate bin
-    int agebin   = lower_bound( values_per_axis[0].begin(), values_per_axis[0].end(), age ) - values_per_axis[0].begin();
+    int agebin = lower_bound( values_per_axis[0].begin(), values_per_axis[0].end(), age ) - values_per_axis[0].begin();
     //int bin_index = ( age_bin_upper_edges.size() * isFemale ) + agebin;
     int bin_index = agebin;
 
+    release_assert( bin_index < num_total_bins );
     return bin_index;
 }
 
-void  BinnedReport::LogIndividualData( Kernel::IndividualHuman * individual )
+void  BinnedReport::LogIndividualData( Kernel::IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
 
-    float mc_weight    = (float)individual->GetMonteCarloWeight();
+    float mc_weight = float(individual->GetMonteCarloWeight());
 
     int bin_index = calcBinIndex(individual);
 
@@ -226,10 +274,10 @@ void  BinnedReport::LogIndividualData( Kernel::IndividualHuman * individual )
             new_infections_bins[bin_index] += mc_weight;
     }
 
-    if(individual->GetStateChange() == HumanStateChange::KilledByInfection)
-	{
+    if(individual->GetStateChange() == HumanStateChange::KilledByInfection) 
+    {
         disease_deaths_bins[bin_index] += mc_weight;
-	}
+    }
 }
 
 void BinnedReport::Finalize()
@@ -249,7 +297,7 @@ void BinnedReport::Finalize()
     //   { "Timesteps" },      # of timestamps in data
     //   { "Channels" }        # of channels in data
     // }
-    time_t now = time(0);
+    time_t now = time(nullptr);
 #ifdef WIN32
     tm now2;
     localtime_s(&now2,&now);
@@ -277,7 +325,7 @@ void BinnedReport::Finalize()
     int timesteps = 0;
     if( !channelDataMap.IsEmpty() && num_total_bins > 0 )
     {
-        timesteps = (int)( (double)channelDataMap.GetChannelLength() / (double)num_total_bins);
+        timesteps = int(double(channelDataMap.GetChannelLength()) / double(num_total_bins));
     }
     pIJsonObj->Insert("Timesteps", timesteps);
 
@@ -311,16 +359,18 @@ void BinnedReport::Finalize()
 
     pIJsonObj->Insert("MeaningPerAxis");
     pIJsonObj->BeginArray();
-    for (auto& names : friendly_names_per_axis)
+    //for (auto& names : friendly_names_per_axis)
+    //for (auto& names : _age_bin_friendly_names)
     {
         pIJsonObj->BeginArray();
-        js.JSerialize(names, pIJsonObj);
+        //js.JSerialize(names, pIJsonObj);
+        js.JSerialize(_age_bin_friendly_names, pIJsonObj);
         pIJsonObj->EndArray();
     }
     pIJsonObj->EndArray();
     pIJsonObj->EndObject(); // end of "Subchannel_Metadata"
 
-    pIJsonObj->Insert("Channels", (int)channelDataMap.GetNumChannels()); // this is "Header":"Channels" metadata
+    pIJsonObj->Insert("Channels", int(channelDataMap.GetNumChannels())); // this is "Header":"Channels" metadata
     pIJsonObj->EndObject(); // end of "Header"
 
     LOG_DEBUG("Iterating over channelDataMap\n");
@@ -344,8 +394,8 @@ void BinnedReport::Finalize()
     // Write output to file
     // GetPrettyFormattedOutput() can be used for nicer indentation but bigger filesize
     LOG_DEBUG("Writing JSON output file\n");
-    const char* buffer;
-    js.GetFormattedOutput(pIJsonObj, buffer);
+    char* buffer;
+    js.GetPrettyFormattedOutput(pIJsonObj, buffer);
 
     ofstream binned_report_json;
     binned_report_json.open( FileSystem::Concat( EnvPtr->OutputPath, report_name ).c_str());
@@ -421,3 +471,4 @@ void BinnedReport::formatChannelDataBins(Kernel::IJsonObjectAdapter* pIJsonObj, 
 
 void BinnedReport::populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) { }
 void BinnedReport::postProcessAccumulatedData() { }
+}

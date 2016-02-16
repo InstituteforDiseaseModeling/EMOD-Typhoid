@@ -47,7 +47,7 @@ namespace Kernel
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:CalendarIV" );
-    
+
         schema[ts] = json::Array();
         schema[ts][0] = json::Object();
         schema[ts][0]["Age"] = json::Object();
@@ -73,8 +73,11 @@ namespace Kernel
     IMPLEMENT_FACTORY_REGISTERED(IVCalendar)
 
     IVCalendar::IVCalendar()
-    : parent(NULL)
+    : parent(nullptr)
+    , target_age_array()
+    , actual_intervention_config()
     , dropout(false)
+    , scheduleAges()
     {
         initConfigTypeMap("Dropout", &dropout, CAL_Dropout_DESC_TEXT, false);
     }
@@ -152,7 +155,7 @@ namespace Kernel
 
     // Each time this is called, the HSB intervention is going to decide for itself if
     // health should be sought. For start, just do it based on roll of the dice. If yes,
-    // an intervention needs to be created (from what config?) and distributed to the 
+    // an intervention needs to be created (from what config?) and distributed to the
     // individual who owns us. Hmm...
     void IVCalendar::Update( float dt )
     {
@@ -172,8 +175,8 @@ namespace Kernel
                 LOG_DEBUG_F("interventions array size = %d\n", interventions_array.Size());
 
                 // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
-                IGlobalContext *pGC = NULL;
-                const IInterventionFactory* ifobj = NULL;
+                IGlobalContext *pGC = nullptr;
+                const IInterventionFactory* ifobj = nullptr;
                 if (s_OK == parent->QueryInterface(GET_IID(IGlobalContext), (void**)&pGC))
                 {
                     ifobj = pGC->GetInterventionFactory();
@@ -182,7 +185,7 @@ namespace Kernel
                 {
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to IInterventionFactory object is not valid (could be DLL specific)" );
                 }
-                for( int idx=0; idx<interventions_array.Size(); idx++ )
+                for( int idx=0; idx<interventions_array.Size(); ++idx )
                 {
                     const json::Object& actualIntervention = json_cast<const json::Object&>(interventions_array[idx]);
                     Configuration * tmpConfig = Configuration::CopyFromElement(actualIntervention);
@@ -194,7 +197,7 @@ namespace Kernel
                         // Calendar wanted to distribute intervention but factory returned null pointer.
                         throw FactoryCreateFromJsonException( __FILE__, __LINE__, __FUNCTION__, "Unable to create intervention object from actualIntervention (apparently). Factory should actually throw exception. This exception throw is just paranoid exception handling." );
                     }
-                    float interventionCost = 0.0f; 
+                    float interventionCost = 0.0f;
                     LOG_DEBUG_F("Calendar (intervention) distributed actual intervention at age %f\n", parent->GetEventContext()->GetAge());
 
                     // Now make sure cost gets reported.
@@ -231,20 +234,23 @@ namespace Kernel
         return msg.str();
     }
 
-}
+    REGISTER_SERIALIZABLE(IVCalendar);
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::IVCalendar)
-
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, IVCalendar& cal, const unsigned int v)
+    void IVCalendar::serialize(IArchive& ar, IVCalendar* obj)
     {
-        boost::serialization::void_cast_register<IVCalendar, IDistributableIntervention>();
-        ar & cal.actual_intervention_config;
-        ar & cal.scheduleAges;
-        ar & cal.target_age_array;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(cal);
+        BaseIntervention::serialize( ar, obj );
+        IVCalendar& cal = *obj;
+        ar.labelElement("target_age_array") & cal.target_age_array;
+        ar.labelElement("actual_intervention_config") & cal.actual_intervention_config;
+        ar.labelElement("dropout") & cal.dropout;
+        ar.labelElement("scheduleAges") & cal.scheduleAges;
+    }
+
+    void TargetAgeArrayConfig::serialize(IArchive& ar, TargetAgeArrayConfig& age_array)
+    {
+        ar.startObject();
+            ar.labelElement("age2ProbabilityMap") & age_array.age2ProbabilityMap;
+            ar.labelElement("dropout") & age_array.dropout;
+        ar.endObject();
     }
 }
-#endif

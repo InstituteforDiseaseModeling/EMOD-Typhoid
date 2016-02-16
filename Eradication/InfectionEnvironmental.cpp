@@ -25,7 +25,7 @@ namespace Kernel
     InfectionEnvironmental::~InfectionEnvironmental(void)
     { }
 
-    void InfectionEnvironmental::Update(float dt, Susceptibility* immunity)
+    void InfectionEnvironmental::Update(float dt, ISusceptibilityContext* immunity)
     {
         Infection::Update(dt);
         //for Environmental, same infectiousness is deposited to both environmental and contact routes (if applicable)
@@ -72,26 +72,14 @@ namespace Kernel
 
         return newinfection;
     }
-}
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::InfectionEnvironmental)
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionEnvironmental& inf, const unsigned int file_version )
+    REGISTER_SERIALIZABLE(InfectionEnvironmental);
+
+    void InfectionEnvironmental::serialize(IArchive& ar, InfectionEnvironmental* obj)
     {
-        ar & boost::serialization::base_object<Kernel::Infection>(inf);
+        Infection::serialize(ar, obj);
+        // nothing else, yet
     }
-    template void serialize( boost::archive::binary_iarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_iarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_skeleton_iarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::archive::binary_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::packed_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::content_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
-    template void serialize( boost::mpi::detail::mpi_datatype_oarchive&, InfectionEnvironmental &obj, unsigned int file_version );
 }
-#endif
 
 #endif // ENABLE_POLIO

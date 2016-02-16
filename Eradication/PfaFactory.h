@@ -20,7 +20,6 @@ namespace Kernel {
     public:
         static IPairFormationAgent* CreatePfa( const Configuration* pConfig,
                                                const IPairFormationParameters* params,
-                                               float updatePeriod,
                                                float selectionThreshold,
                                                RANDOMBASE* prng, 
                                                RelationshipCreator rc );

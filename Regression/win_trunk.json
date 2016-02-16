@@ -1,6 +1,7 @@
 {
     "suite":"win_trunk.json",
     "tests": [
+        { "path" : "00_Households" },
         { "path" : "1_Generic_Seattle_MultiNode" },
         { "path" : "5_Vector_Namawala_SugarTrap_EveryFeedFeed" },
         { "path" : "8_Vector_Namawala_SugarTrap_EmergeFeed" },
@@ -72,8 +73,6 @@
         { "path" : "91_Generic_Namawala_Climate_Data" },
         { "path" : "92_Generic_Namawala_Property_Restrictions_NLHTI" },
         { "path" : "93_Generic_Namawala_DelayedIntervention" },
-        { "path" : "106_Generic_AgeDependentSusceptibility" },
-        { "path" : "107_Generic_Intervention_SimpleDiagnostic" },
         { "path" : "94_Generic_InfectivityForcing_Sinusoid" },
         { "path" : "95_Generic_InfectivityForcing_Boxcar" },
         { "path" : "99_Malaria_Intervention_RTSSVaccine" },
@@ -83,6 +82,9 @@
         { "path" : "101_OneMalariaIndividual_MultipleAntigens" },
         { "path" : "102_OneMalariaIndividual_MultipleSwitchingAntigens" },
         { "path" : "103_OneMalariaIndividual_MultipleSwitchingAntigensSuperInfection" },
+        { "path" : "106_Generic_AgeDependentSusceptibility" },
+        { "path" : "107_Generic_Intervention_SimpleDiagnostic" },
+        { "path" : "108_Generic_MigrationByAgeAndGender" },
         { "path" : "Scenarios/Generic/04_SEIR_VitalDynamics" },
         { "path" : "Scenarios/Generic/09_DensityScaling" },
         { "path" : "Scenarios/HINT/03_AgeAndAccess/A_BaselineOutbreak" },
