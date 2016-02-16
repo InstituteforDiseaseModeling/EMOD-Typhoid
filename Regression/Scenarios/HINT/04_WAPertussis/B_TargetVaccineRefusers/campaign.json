@@ -15,7 +15,12 @@
                             "Reduced_Transmit": 0.6,
                             "Vaccine_Take": 0.95,
                             "Vaccine_Type": "Generic",
-                            "class": "SimpleVaccine"
+                            "class": "SimpleVaccine",
+				"Waning_Config": {
+				    "Initial_Effect": 0.9,
+				    "Decay_Time_Constant": 2525,
+				    "class": "WaningEffectExponential"
+				}
                         }
                     ],
                     "Calendar": [
@@ -74,7 +79,12 @@
                     "Reduced_Transmit": 0.9,
                     "Vaccine_Take": 1,
                     "Vaccine_Type": "Generic",
-                    "class": "SimpleVaccine"
+                    "class": "SimpleVaccine",
+		    "Waning_Config": {
+		        "Initial_Effect": 0.9,
+		        "Decay_Time_Constant": 7300,
+		        "class": "WaningEffectExponential"
+		    }
                 },
                 "Property_Restrictions": [
                     "Accessibility:VaccineTake"
@@ -104,7 +114,12 @@
                         "Reduced_Transmit": 0.6,
                         "Vaccine_Take": 0.95,
                         "Vaccine_Type": "Generic",
-                        "class": "SimpleVaccine"
+                        "class": "SimpleVaccine",
+			"Waning_Config": {
+			    "Initial_Effect": 0.9,
+			    "Decay_Time_Constant": 2525,
+			    "class": "WaningEffectExponential"
+			}
                     },
                     "Event_Or_Config": "Config",
                     "Single_Use": 1,
@@ -140,7 +155,12 @@
                                 "Reduced_Transmit": 0.6,
                                 "Vaccine_Take": 0.95,
                                 "Vaccine_Type": "Generic",
-                                "class": "SimpleVaccine"
+                                "class": "SimpleVaccine",
+				"Waning_Config": {
+				    "Initial_Effect": 0.9,
+				    "Decay_Time_Constant": 2525,
+				    "class": "WaningEffectExponential"
+				}
                             }
                         ],
                         "Calendar": [
@@ -246,14 +266,17 @@
                 "Demographic_Coverage": 0.95,
                 "Intervention_Config": {
                     "Cost_To_Consumer": 20.0,
-                    "Durability_Time_Profile": "DECAYDURABILITY",
-                    "Primary_Decay_Time_Constant": 2525,
                     "Reduced_Acquire": 0.9,
                     "Reduced_Mortality": 1,
                     "Reduced_Transmit": 0.6,
                     "Vaccine_Take": 1,
                     "Vaccine_Type": "Generic",
-                    "class": "SimpleVaccine"
+                    "class": "SimpleVaccine",
+		    "Waning_Config": {
+		        "Initial_Effect": 0.9,
+		        "Decay_Time_Constant": 2525,
+		        "class": "WaningEffectExponential"
+		    }
                 },
                 "Property_Restrictions": [
                     "Accessibility:VaccineRefuse"

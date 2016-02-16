@@ -19,9 +19,16 @@ namespace Kernel
 
     public:
         SimpleImmunoglobulin();
+        SimpleImmunoglobulin( const SimpleImmunoglobulin& );
         bool Configure( const Configuration* pConfig );
+        virtual void Update(float dt) override;
 
     protected:
         DECLARE_SERIALIZABLE(SimpleImmunoglobulin);
+	// TBD: Will probably move this down to vaccine but for now want it here until I figure out details
+        WaningConfig   acquire_config;
+        IWaningEffect* acquire_effect;
+        WaningConfig   transmit_config;
+        IWaningEffect* transmit_effect;
     };
 }

@@ -23,7 +23,7 @@
 			"Waning_Config": {
 			    "Box_Duration": 3650, 
 			    "Initial_Effect": 1, 
-			   "class": "WaningEffectBox"
+			    "class": "WaningEffectBox"
 			}
                     },
                     "Treatment_Fraction": 0.7,
@@ -43,12 +43,18 @@
                 "Intervention_Config": {
                     "Actual_IndividualIntervention_Config": {
                         "Cost_To_Consumer": 1.0,
-                        "Durability_Time_Profile": "BOXDURABILITY",
-                        "Primary_Decay_Time_Constant": 1000,
-                        "Reduced_Acquire": 0.0,
-                        "Reduced_Transmit": 1.0,
                         "Vaccine_Type": "StrainSpecific",
-                        "class": "SimpleImmunoglobulin"
+                        "class": "SimpleImmunoglobulin",
+			"Acquire_Config": {
+			    "Initial_Rate": 0.0,
+			    "Box_Duration": 1000,
+			    "class": "WaningEffectBox"
+			},
+			"Transmit_Config": {
+			    "Initial_Rate": 1.0,
+			    "Box_Duration": 1000,
+			    "class": "WaningEffectBox"
+			}
                     },
                     "Demographic_Coverage": 1.0,
                     "Trigger_Condition": "TriggerList",
@@ -95,12 +101,13 @@
                 "Intervention_Config": {
                     "Actual_IndividualIntervention_Config": {
                         "Cost_To_Consumer": 1.0,
-                        "Durability_Time_Profile": "BOXDURABILITY",
-                        "Primary_Decay_Time_Constant": 1000,
-                        "Reduced_Acquire": 1.0,
-                        "Reduced_Transmit": 0.0,
                         "Vaccine_Type": "AcquisitionBlocking",
-                        "class": "SimpleVaccine"
+                        "class": "SimpleVaccine",
+			"Waning_Config": {
+			    "Box_Duration": 1000, 
+			    "Initial_Effect": 1, 
+			    "class": "WaningEffectBox"
+			}
                     },
                     "Demographic_Coverage": 1.0,
                     "Trigger_Condition": "TriggerList",
