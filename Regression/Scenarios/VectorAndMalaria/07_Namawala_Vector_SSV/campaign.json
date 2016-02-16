@@ -5,14 +5,16 @@
                 "Demographic_Coverage": 0.85,
                 "Intervention_Config": {
                     "Cost_To_Consumer": 10,
-                    "Durability_Time_Profile": "DECAYDURABILITY",
                     "Primary_Decay_Time_Constant": 2190,
-                    "Reduced_Acquire": 0,
-                    "Reduced_Transmit": 0.9,
-                    "Secondary_Decay_Time_Constant": 3650,
+                    ".Secondary_Decay_Time_Constant": 3650,
                     "Vaccine_Take": 1,
                     "Vaccine_Type": "TransmissionBlocking",
-                    "class": "SimpleVaccine"
+                    "class": "SimpleVaccine",
+                    "Waning_Config": {
+                        "Decay_Time_Constant": 2190, 
+                        "Initial_Effect": 0.9, 
+                        "class": "WaningEffectExponential"
+                    }
                 },
                 "Target_Demographic": "Everyone",
                 "class": "StandardInterventionDistributionEventCoordinator"

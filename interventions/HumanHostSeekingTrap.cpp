@@ -32,11 +32,17 @@ namespace Kernel
     HumanHostSeekingTrap::HumanHostSeekingTrap()
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
-        initConfigTypeMap( "Attract_Rate", &current_attractrate, HST_Attract_Rate_DESC_TEXT, 0.0, 1.0, 0.5 );
-        initConfigTypeMap( "Killing_Rate", &current_killingrate, HST_Killing_Rate_DESC_TEXT, 0.0, 1.0, 0.5 );
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, HST_Cost_To_Consumer_DESC_TEXT, 0, 999999, 3.75 );
-        initConfigTypeMap( "Primary_Decay_Time_Constant", &primary_decay_time_constant, HST_Primary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650 );
-        initConfigTypeMap( "Secondary_Decay_Time_Constant", &secondary_decay_time_constant, HST_Secondary_Decay_Time_Constant_DESC_TEXT, 0, 1000000, 3650 );
+        
+    }
+
+    HumanHostSeekingTrap::HumanHostSeekingTrap( const HumanHostSeekingTrap& master )
+    : BaseIntervention( master )
+    {
+        killing_config = master.killing_config;
+        killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        attract_config = master.attract_config;
+        attract_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( attract_config._json ) );
     }
 
     bool
@@ -44,8 +50,15 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfig( "Durability_Time_Profile", durability_time_profile, inputJson, MetadataDescriptor::Enum("Durability_Time_Profile", HST_Durability_Time_Profile_DESC_TEXT, MDD_ENUM_ARGS(InterventionDurabilityProfile)) );
-        return JsonConfigurable::Configure( inputJson );
+        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Attract_Config",  &attract_config, "TBD" /*IVM_attract_Config_DESC_TEXT*/ );
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            attract_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( attract_config._json ) );
+        }
+        return configured;
     }
 
     bool
@@ -64,48 +77,10 @@ namespace Kernel
 
     void HumanHostSeekingTrap::Update( float dt )
     {
-        if (durability_time_profile == InterventionDurabilityProfile::BOXDECAYDURABILITY/*(int)(InterventionDurabilityProfile::BOXDECAYDURABILITY)*/)
-        {
-            if(primary_decay_time_constant>0)
-            {
-                primary_decay_time_constant-=dt;
-            }
-            else
-            {
-                if(secondary_decay_time_constant > dt)
-                {
-                    current_killingrate *= (1-dt/secondary_decay_time_constant);
-                    current_attractrate *= (1-dt/secondary_decay_time_constant);
-                }
-                else
-                {
-                    current_killingrate = 0;
-                    current_attractrate = 0;
-                }
-            }
-        }
-        else if (durability_time_profile == (int)(InterventionDurabilityProfile::DECAYDURABILITY))
-        {
-            if(primary_decay_time_constant > dt)
-                current_killingrate *= (1-dt/primary_decay_time_constant);
-            else
-                current_killingrate = 0;
-
-            if(secondary_decay_time_constant > dt)
-                current_attractrate *= (1-dt/secondary_decay_time_constant);
-            else
-                current_attractrate = 0;
-        }
-        else if(durability_time_profile == (int)(InterventionDurabilityProfile::BOXDURABILITY))
-        {
-            primary_decay_time_constant -= dt;
-            if(primary_decay_time_constant < 0)
-                current_killingrate = 0;
-
-            secondary_decay_time_constant -= dt;
-            if(secondary_decay_time_constant < 0)
-                current_attractrate = 0;
-        }
+        killing_effect->Update(dt);
+        attract_effect->Update(dt);
+        current_killingrate = killing_effect->Current();
+        current_attractrate = attract_effect->Current();
 
         // Effects of human host-seeking trap are updated with indoor-home artificial-diet interfaces in VectorInterventionsContainer::Update.
         // Attraction rate diverts indoor feeding attempts from humans to trap; killing rate kills a fraction of diverted feeding attempts.
@@ -131,8 +106,8 @@ namespace Kernel
         HumanHostSeekingTrap& trap = *obj;
         ar.labelElement("current_attractrate") & trap.current_attractrate;
         ar.labelElement("current_killingrate") & trap.current_killingrate;
-        ar.labelElement("primary_decay_time_constant") & trap.primary_decay_time_constant;
-        ar.labelElement("secondary_decay_time_constant") & trap.secondary_decay_time_constant;
-        ar.labelElement("durability_time_profile") & (uint32_t&)trap.durability_time_profile;
+        ar.labelElement("attract_effect") & trap.attract_effect;
+        ar.labelElement("killing_effect") & trap.killing_effect;
     }
 }
+
