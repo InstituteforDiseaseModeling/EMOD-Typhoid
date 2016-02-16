@@ -48,7 +48,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -233,7 +234,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -729,7 +731,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -1391,7 +1394,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -2295,7 +2299,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -2532,7 +2537,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -2727,7 +2733,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -2945,7 +2952,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -5626,7 +5634,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -5754,7 +5763,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
@@ -5842,7 +5852,8 @@
 					"TB_SIM",
 					"TBHIV_SIM",
 					"STI_SIM",
-					"HIV_SIM"
+					"HIV_SIM",
+					"PY_SIM"
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
