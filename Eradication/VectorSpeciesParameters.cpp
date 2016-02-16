@@ -82,6 +82,7 @@ namespace Kernel
         schema[ts][0]["Event"][ "description" ] = json::String( HIV_Age_Diagnostic_Event_Name_DESC_TEXT );
 #endif
         return schema;
+    }
 
     void VectorSpeciesParameters::serialize(IArchive& ar, VectorSpeciesParameters*& parameters)
     {
@@ -91,7 +92,7 @@ namespace Kernel
         }
 
         ar.startObject();
-            ar.labelElement("habitat_params") & parameters->habitat_param;
+            //ar.labelElement("habitat_paramss") & parameters->habitat_params;
             ar.labelElement("aquaticarrhenius1") & parameters->aquaticarrhenius1;
             ar.labelElement("aquaticarrhenius2") & parameters->aquaticarrhenius2;
             ar.labelElement("infectedarrhenius1") & parameters->infectedarrhenius1;

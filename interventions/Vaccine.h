@@ -40,6 +40,7 @@ namespace Kernel
 
     public:
         SimpleVaccine();
+        SimpleVaccine( const SimpleVaccine& );
         virtual ~SimpleVaccine();
         virtual int AddRef() override { return BaseIntervention::AddRef(); }
         virtual int Release() override { return BaseIntervention::Release(); }
