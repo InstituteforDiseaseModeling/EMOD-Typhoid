@@ -18,7 +18,6 @@
                     "Released_Wolbachia": "VECTOR_WOLBACHIA_A", 
                     "class": "MosquitoRelease"
                 }, 
-                "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Event_Name": "MosquitoRelease", 
@@ -30,7 +29,6 @@
         }, 
         {
             "Event_Coordinator_Config": {
-                "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 3.75, 
                     "Killing_Config": {
@@ -40,7 +38,6 @@
                     }, 
                     "class": "SugarTrap"
                 }, 
-                "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {

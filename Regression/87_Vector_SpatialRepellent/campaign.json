@@ -2,7 +2,6 @@
     "Events": [
         {
             "Event_Coordinator_Config": {
-                "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
                     "Blocking_Config": {
                         "Box_Duration": 100, 
@@ -13,7 +12,6 @@
                     "Cost_To_Consumer": 1.0, 
                     "class": "SpatialRepellent"
                 }, 
-                "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {

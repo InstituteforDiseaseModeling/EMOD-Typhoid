@@ -12,7 +12,6 @@
                     }, 
                     "class": "OvipositionTrap"
                 }, 
-                "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {

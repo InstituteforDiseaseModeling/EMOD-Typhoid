@@ -2,7 +2,6 @@
     "Events": [
         {
             "Event_Coordinator_Config": {
-                "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
                     "Blocking_Config": {
                         "Box_Duration": 100, 
@@ -21,7 +20,6 @@
                     "Spray_Kill_Target": "SpaceSpray_FemalesOnly", 
                     "class": "Larvicides"
                 }, 
-                "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {
