@@ -326,10 +326,12 @@ namespace Kernel
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", OT_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
         //initConfigTypeMap("Killing", &killing, OT_Killing_DESC_TEXT, 0, 1, 0);
         initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
+        initConfigComplexType("Reduction_Config",  &blocking_config, VCN_Killing_DESC_TEXT );
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
             killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
         }
         return configured;
     }
