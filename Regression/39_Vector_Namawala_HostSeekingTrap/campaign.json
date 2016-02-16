@@ -2,6 +2,7 @@
     "Events": [
         {
             "Event_Coordinator_Config": {
+	        "Demographic_Coverage": 0.7, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 3.75, 
                     "Attract_Config": {
@@ -16,6 +17,7 @@
                     }, 
                     "class": "HumanHostSeekingTrap"
                 }, 
+                "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {
