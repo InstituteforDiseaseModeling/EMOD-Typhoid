@@ -43,12 +43,14 @@ namespace Kernel
 
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("Vaccine_Type", SV_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(SimpleVaccineType)));
 
-       initConfigComplexType("Waning_Config",  &waning_config, IVM_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Waning_Config",  &waning_config, IVM_Killing_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
             waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
         }
+        release_assert( vaccine_type );
+        LOG_DEBUG_F( "Vaccine configured with type %d and take %f.\n", vaccine_type, vaccine_take );
         return configured;
     }
 
@@ -68,6 +70,9 @@ namespace Kernel
     SimpleVaccine::SimpleVaccine( const SimpleVaccine& master )
     : BaseIntervention( master )
     {
+        vaccine_type = master.vaccine_type;
+        vaccine_take = master.vaccine_take;
+        cost_per_unit = master.cost_per_unit;
         waning_config = master.waning_config;
         waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
     }
@@ -94,41 +99,45 @@ namespace Kernel
         }
         bool success = BaseIntervention::Distribute( context, pCCO );
         ApplyVaccineTake();
+        LOG_DEBUG_F( "Vaccine distributed with type %d and take %f for individual %d\n", vaccine_type, vaccine_take, parent->GetSuid().data );
         return success;
     }
 
     void SimpleVaccine::Update( float dt )
     {
         waning_effect->Update(dt);
-	release_assert(ivc);
+        release_assert(ivc);
 
         switch( vaccine_type )
-	{
-	    case SimpleVaccineType::AcquisitionBlocking:
-		current_reducedacquire = waning_effect->Current();
-		ivc->UpdateVaccineAcquireRate( current_reducedacquire );
-	    break;
+        {
+            case SimpleVaccineType::AcquisitionBlocking:
+                current_reducedacquire = waning_effect->Current();
+                ivc->UpdateVaccineAcquireRate( current_reducedacquire );
+                break;
 
-	    case SimpleVaccineType::TransmissionBlocking:
-		current_reducedtransmit  = waning_effect->Current();
-		ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
-	    break;
+            case SimpleVaccineType::TransmissionBlocking:
+                current_reducedtransmit  = waning_effect->Current();
+                ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
+                break;
 
-	    case SimpleVaccineType::MortalityBlocking:
-		current_reducedmortality  = waning_effect->Current(); 
-		ivc->UpdateVaccineMortalityRate( current_reducedmortality );
-	    break;
-		// TBD: This is wrong for case of vaccine that has all 3 effects.
+            case SimpleVaccineType::MortalityBlocking:
+                current_reducedmortality  = waning_effect->Current(); 
+                ivc->UpdateVaccineMortalityRate( current_reducedmortality );
+                break;
+
+            case SimpleVaccineType::Generic:
+                current_reducedacquire = waning_effect->Current();
+                ivc->UpdateVaccineAcquireRate( current_reducedacquire );
+                current_reducedtransmit  = waning_effect->Current();
+                ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
+                current_reducedmortality  = waning_effect->Current(); 
+                ivc->UpdateVaccineMortalityRate( current_reducedmortality );
+                break;
 
             default:
-		current_reducedacquire = waning_effect->Current();
-		ivc->UpdateVaccineAcquireRate( current_reducedacquire );
-		current_reducedtransmit  = waning_effect->Current();
-		ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
-		current_reducedmortality  = waning_effect->Current(); 
-		ivc->UpdateVaccineMortalityRate( current_reducedmortality );
-	    break;
-	}
+                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "vaccine_type", vaccine_type, SimpleVaccineType::pairs::lookup_key( vaccine_type ) );
+                break;
+        }
     }
 
 /*
@@ -187,6 +196,7 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "IVaccineConsumer", "IIndividualHumanInterventionsContext" );
         }
+        LOG_DEBUG_F( "Vaccine configured with type %d and take %f for individual %d\n", vaccine_type, vaccine_take, parent->GetSuid().data );
     } // needed for VaccineTake
 
     REGISTER_SERIALIZABLE(SimpleVaccine);
