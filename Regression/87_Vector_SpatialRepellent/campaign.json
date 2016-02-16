@@ -3,7 +3,7 @@
         {
             "Event_Coordinator_Config": {
                 "Intervention_Config": {
-                    "Blocking_Config": {
+                    "Repellency_Config": {
                         "Box_Duration": 100, 
                         "Decay_Time_Constant": 150, 
                         "Initial_Effect": 0.4, 
