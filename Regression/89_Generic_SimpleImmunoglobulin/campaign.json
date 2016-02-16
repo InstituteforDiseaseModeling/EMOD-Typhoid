@@ -10,10 +10,16 @@
                     "Reduced_Acquire": 0.4, 
                     "Reduced_Transmit": 0.6, 
                     "Vaccine_Type": "BroadlyNeutralizing", 
-                    "Waning_Config": {
+                    "Acquire_Config": {
+                        "Initial_Effect": 0.4, 
                         "Box_Duration": 50, 
                         "Decay_Time_Constant": 100, 
-                        "Initial_Effect": null, 
+                        "class": "WaningEffectBoxExponential"
+                    }, 
+                    "Transmit_Config": {
+                        "Initial_Effect": 0.6, 
+                        "Box_Duration": 50, 
+                        "Decay_Time_Constant": 100, 
                         "class": "WaningEffectBoxExponential"
                     }, 
                     "class": "SimpleImmunoglobulin"
