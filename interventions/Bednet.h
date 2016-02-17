@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "FactorySupport.h"
 #include "Configure.h"
+#include "WaningEffect.h"
 #include "EventTrigger.h"
 
 namespace Kernel
@@ -41,6 +42,7 @@ namespace Kernel
 
     public:
         SimpleBednet();
+        SimpleBednet( const SimpleBednet& );
         virtual ~SimpleBednet() { }
 
         virtual bool Configure( const Configuration * config ) override;
@@ -53,11 +55,10 @@ namespace Kernel
 
     protected:
 
-        float current_blockingrate;
-        float current_killingrate;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
-        InterventionDurabilityProfile::Enum durability_time_profile;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   blocking_config;
+        IWaningEffect* blocking_effect;
         BednetType::Enum bednet_type;
         EventTrigger on_distributed_event ;
         IBednetConsumer *ibc;

@@ -2,7 +2,7 @@
     "Metadata": {
         "Author": "cwiswell", 
         "DateCreated": "Mon Apr 13 14:39:00 2015", 
-        "IdReference": "SampleContent", 
+        "IdReference": "0", 
         "NodeCount": 1, 
         "Tool": "demographics_to_overlay.py"
     }, 

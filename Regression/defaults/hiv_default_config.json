@@ -299,8 +299,6 @@
 		"Male_To_Female_Relative_Infectivity_Multipliers": [ 5, 1, 0.5 ],
 		"STI_Coinfection_Multiplier": 10,
 
-		"Circumcision_Reduced_Acquire": 0.6,
-
 		"Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity": 0.5, 
 		"Days_Between_Symptomatic_And_Death_Weibull_Scale": 618.341625, 
 

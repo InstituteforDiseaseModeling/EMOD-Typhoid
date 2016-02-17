@@ -15,6 +15,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "Configuration.h"
 #include "InterventionEnums.h"
+#include "Configure.h"
+#include "WaningEffect.h"
 
 namespace Kernel
 {
@@ -27,6 +29,7 @@ namespace Kernel
     public:
         virtual bool Configure( const Configuration * config ) override;
         SimpleHousingModification();
+        SimpleHousingModification( const SimpleHousingModification& );
         virtual ~SimpleHousingModification() { }
 
         // IDistributableIntervention
@@ -36,11 +39,10 @@ namespace Kernel
         virtual void Update(float dt) override;
 
     protected:
-        InterventionDurabilityProfile::Enum durability_time_profile;
-        float current_blockingrate;
-        float current_killingrate;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   blocking_config;
+        IWaningEffect* blocking_effect;
         IHousingModificationConsumer *ihmc; // aka individual or individual vector interventions container
 
         DECLARE_SERIALIZABLE(SimpleHousingModification);

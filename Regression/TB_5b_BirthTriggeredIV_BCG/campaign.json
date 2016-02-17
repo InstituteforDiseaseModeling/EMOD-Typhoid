@@ -23,7 +23,13 @@
                             "Reduced_Mortality": 1,
                             "Vaccine_Take": 1,
                             "Vaccine_Take_Age_Decay_Rate": 0,
-                            "Vaccine_Type": "Generic"
+                            "Vaccine_Type": "Generic",
+			    "Waning_Config": {
+			    	"Initial_Effect": 1,
+			    	"Box_Duration": 3650,
+			    	"Decay_Rate_Factor": 3650,
+			    	"class": "WaningEffectBoxExponential"
+			    }
                         }],
                         "Calendar": [{
                             "Age": 1,

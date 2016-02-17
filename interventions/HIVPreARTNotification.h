@@ -36,5 +36,7 @@ namespace Kernel
 
     protected:
         bool startingPreART;
+
+        DECLARE_SERIALIZABLE(HIVPreARTNotification);
     };
 }

@@ -13,6 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 //#include "NodeTB.h"
 
 #include "IndividualCoinfection.h"
+#include "SusceptibilityHIV.h"
 
 static const char* _module = "ReportTBHIV";
 

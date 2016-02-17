@@ -162,12 +162,21 @@ class IDMAPI RangedFloat
         void serialize( Kernel::IArchive& ar )
         {
             ar.startObject();
-                ar.labelElement("_value") & _value;
+                ar.labelElement("_value"    ) & _value;
                 ar.labelElement("_min_value") & _min_value;
                 ar.labelElement("_max_value") & _max_value;
             ar.endObject();
         }
 
+        // TODO - I dont understand why I need both
+        static void serialize( Kernel::IArchive& ar, RangedFloat& rf )
+        {
+            ar.startObject();
+                ar.labelElement("_value"    ) & rf._value;
+                ar.labelElement("_min_value") & rf._min_value;
+                ar.labelElement("_max_value") & rf._max_value;
+            ar.endObject();
+        }
     private:
     protected:
         float _value;
@@ -289,6 +298,12 @@ class IDMAPI NaturalNumber
         void serialize( Kernel::IArchive& ar )
         {
             ar & _value;
+        }
+
+        static void serialize( Kernel::IArchive& ar, NaturalNumber& nn )
+        {
+            //ar.labelElement("_value") & nn._value;
+            ar & nn._value;
         }
 
     private:

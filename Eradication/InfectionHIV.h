@@ -61,6 +61,7 @@ namespace Kernel
 
         virtual void SetParameters(StrainIdentity* infstrain=nullptr, int incubation_period_override = -1) override;
         virtual void Update(float dt, ISusceptibilityContext* immunity = nullptr) override;
+        virtual void SetContextTo(IIndividualHumanContext* context) override;
 
         virtual NaturalNumber GetViralLoad() const override;
         virtual float GetPrognosis() const override;
@@ -107,18 +108,7 @@ namespace Kernel
         float m_hetero_infectivity_multiplier;
 
         IIndividualHumanHIV * hiv_parent;
+
+        DECLARE_SERIALIZABLE(InfectionHIV);
     };
 }
-
-#if 0
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionHIV& inf, const unsigned int file_version )
-    {
-        //serialize the params here 
-        //ar & inf.m_is_active;
-        ar & boost::serialization::base_object<Kernel::Infection>(inf);
-    }
-}
-#endif

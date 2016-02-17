@@ -47,7 +47,8 @@ namespace Kernel
 
         // ISTICircumcisionConsumer 
         virtual bool IsCircumcised( void ) const override;
-        virtual bool ApplyCircumcision( ICircumcision *) override;
+        virtual float GetCircumcisedReducedAcquire() const override;
+        virtual void ApplyCircumcision( float reduceAcquire ) override;
 
         // IPropertyValueChangerEffects
         virtual void ChangeProperty( const char *property, const char* new_value) override;
@@ -63,6 +64,7 @@ namespace Kernel
 
     protected:
         bool is_circumcised;
+        float circumcision_reduced_require;
 
         std::map< RelationshipType::Enum, Sigmoid > STI_blocking_overrides;
 

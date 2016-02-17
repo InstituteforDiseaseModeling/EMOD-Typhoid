@@ -59,6 +59,7 @@ namespace Kernel
         virtual ~SusceptibilityHIV(void);
         static Susceptibility *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);
 
+        void SetContextTo(IIndividualHumanContext* context) override;
         virtual void Update(float dt = 0.0) override;
         virtual void UpdateInfectionCleared() override;
 
@@ -90,5 +91,7 @@ namespace Kernel
         float sqrtCD4_AtDiseaseDeath;   // sqrt of CD4 count at HIV-cause death
 
         float CD4count_at_ART_start;    // CD4 count at start of ART, if any
+
+        DECLARE_SERIALIZABLE(SusceptibilityHIV);
     };
 }

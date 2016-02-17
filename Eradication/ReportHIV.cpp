@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeHIV.h"
 #include "SusceptibilityHIV.h"
 #include "InfectionHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 #include "NodeEventContext.h"
 #include "SimulationConfig.h" // to iterate over listed_events
 #include "IIndividualHumanHIV.h"

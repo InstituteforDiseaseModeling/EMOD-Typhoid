@@ -269,6 +269,7 @@
     <ClCompile Include="NodeInfo.cpp" />
     <ClCompile Include="NodeInfoVector.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
+    <ClCompile Include="ReferenceTrackingEventCoordinator.cpp" />
     <ClCompile Include="RelationshipParameters.cpp" />
     <ClCompile Include="ReportEventRecorder.cpp" />
     <ClCompile Include="ReportHIVART.cpp" />
@@ -585,6 +586,7 @@
     <ClInclude Include="NodeTBHIV.h" />
     <ClInclude Include="PolioContexts.h" />
     <ClInclude Include="PropertyReportTB.h" />
+    <ClInclude Include="ReferenceTrackingEventCoordinator.h" />
     <ClInclude Include="RelationshipManager.h" />
     <ClInclude Include="RelationshipManagerFactory.h" />
     <ClInclude Include="RelationshipParameters.h" />

@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHumanSTI.h"
 #include "IIndividualHumanHIV.h"
 #include "InfectionHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 
 static const char* _module = "RelationshipReporting";
 
