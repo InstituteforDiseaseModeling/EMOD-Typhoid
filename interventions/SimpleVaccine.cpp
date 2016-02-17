@@ -179,9 +179,7 @@ namespace Kernel
                 if(parent->GetRng()->e()>vaccine_take)
                 {
                     LOG_DEBUG("Vaccine did not take.\n");
-                    current_reducedacquire = 0.0;
-                    current_reducedtransmit = 0.0;
-                    current_reducedmortality = 0.0;
+                    expired = true;
                 }
             }
         }
