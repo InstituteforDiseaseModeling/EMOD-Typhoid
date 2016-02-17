@@ -127,6 +127,7 @@ else:
                             "../interventions/Drugs.cpp",
                             "../interventions/HealthSeekingBehavior.cpp",
                             "../interventions/ImportPressure.cpp",
+                            "../interventions/MultiInterventionDistributor.cpp",
                             "../interventions/NodeLevelHealthTriggeredIV.cpp",
                             "../interventions/PropertyValueChanger.cpp",
                             "../interventions/Outbreak.cpp",

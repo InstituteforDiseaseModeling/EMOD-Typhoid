@@ -90,6 +90,7 @@ namespace Kernel
 
     float SimpleVectorControlNode::GetReduction() const
     {
+    	LOG_DEBUG_F( "Returning reduction value of %f.\n", reduction );
         return reduction;
     }
 
@@ -228,8 +229,7 @@ namespace Kernel
     bool ArtificialDiet::Configure( const Configuration * inputJson )
     {
         initConfig( "Artificial_Diet_Target", attraction_target, inputJson, MetadataDescriptor::Enum("Artificial_Diet_Target", AD_Target_DESC_TEXT, MDD_ENUM_ARGS(ArtificialDietTarget)) );
-        //initConfigTypeMap("Attraction_Config", &reduction, AD_Attraction_DESC_TEXT, 0, 1, 0);
-        initConfigComplexType("Attraction_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Attraction_Config", &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {

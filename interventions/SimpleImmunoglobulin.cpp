@@ -31,8 +31,13 @@ namespace Kernel
 
     SimpleImmunoglobulin::SimpleImmunoglobulin( const SimpleImmunoglobulin& master )
     {
-    	acquire_effect = master.acquire_effect;
-    	transmit_effect = master.transmit_effect;
+        vaccine_type = master.vaccine_type;
+        vaccine_take = master.vaccine_take;
+        cost_per_unit = master.cost_per_unit;
+        acquire_config = master.acquire_config;
+        transmit_config = master.transmit_config;
+        acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
+        transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
     }
 
 #define SI_Acquire_Config_DESC_TEXT  "TBD"
@@ -49,7 +54,7 @@ namespace Kernel
     
         initConfigComplexType("Acquire_Config",  &acquire_config, SI_Acquire_Config_DESC_TEXT );
         initConfigComplexType("Transmit_Config",  &transmit_config, SI_Transmit_Config_DESC_TEXT  );
-        bool configured = JsonConfigurable::Configure( inputJson );
+        bool configured = BaseIntervention::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
             acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
@@ -63,11 +68,11 @@ namespace Kernel
     {
         acquire_effect->Update(dt);
         current_reducedacquire = acquire_effect->Current();
-	ivc->UpdateVaccineAcquireRate( current_reducedacquire );
+        ivc->UpdateVaccineAcquireRate( current_reducedacquire );
 
         transmit_effect->Update(dt);
         current_reducedtransmit = transmit_effect->Current();
-	ivc->UpdateVaccineAcquireRate( current_reducedtransmit );
+        ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
     }
 
     REGISTER_SERIALIZABLE(SimpleImmunoglobulin);
