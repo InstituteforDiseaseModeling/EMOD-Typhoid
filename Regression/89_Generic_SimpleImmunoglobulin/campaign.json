@@ -20,7 +20,7 @@
                     }, 
                     "class": "SimpleImmunoglobulin"
                 }, 
-                "Target_Demographic_DOME": "Everyone", 
+                "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {
