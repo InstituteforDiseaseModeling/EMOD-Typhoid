@@ -90,6 +90,7 @@ namespace Kernel
 
     float SimpleVectorControlNode::GetReduction() const
     {
+    	LOG_DEBUG_F( "Returning reduction value of %f.\n", reduction );
         return reduction;
     }
 
@@ -205,9 +206,14 @@ namespace Kernel
     //--------------------------------------------- SpatialRepellent ---------------------------------------------
 
     bool SpatialRepellent::Configure( const Configuration * inputJson )
-    {
-        initConfigTypeMap("Repellency", &reduction, SR_Repellency_DESC_TEXT, 0, 1, 0);
-        return SimpleVectorControlNode::Configure( inputJson );
+    { 
+        initConfigComplexType("Repellency_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        bool configured = SimpleVectorControlNode::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+        }
+	return configured;
     }
 
     void SpatialRepellent::ApplyEffects()
@@ -223,8 +229,14 @@ namespace Kernel
     bool ArtificialDiet::Configure( const Configuration * inputJson )
     {
         initConfig( "Artificial_Diet_Target", attraction_target, inputJson, MetadataDescriptor::Enum("Artificial_Diet_Target", AD_Target_DESC_TEXT, MDD_ENUM_ARGS(ArtificialDietTarget)) );
-        initConfigTypeMap("Attraction", &reduction, AD_Attraction_DESC_TEXT, 0, 1, 0);
-        return SimpleVectorControlNode::Configure( inputJson );
+        initConfigComplexType("Attraction_Config", &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        bool configured = SimpleVectorControlNode::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+        }
+
+        return configured;
     }
 
     void ArtificialDiet::ApplyEffects()
@@ -325,12 +337,12 @@ namespace Kernel
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", OT_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
         //initConfigTypeMap("Killing", &killing, OT_Killing_DESC_TEXT, 0, 1, 0);
         initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
-        initConfigComplexType("Reduction_Config",  &blocking_config, VCN_Killing_DESC_TEXT );
+        //initConfigComplexType("Reduction_Config",  &blocking_config, VCN_Killing_DESC_TEXT );
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
             killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
-            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+            //blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
         }
         return configured;
     }

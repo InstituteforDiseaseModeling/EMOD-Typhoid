@@ -9,8 +9,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "SimpleImmunoglobulin.h"
-
 #include "Common.h"             // for INFINITE_TIME
+#include "InterventionsContainer.h"
 
 static const char * _module = "SimpleImmunoglobulin";
 
@@ -29,20 +29,50 @@ namespace Kernel
         // cost_per_unit...
     }
 
+    SimpleImmunoglobulin::SimpleImmunoglobulin( const SimpleImmunoglobulin& master )
+    {
+        vaccine_type = master.vaccine_type;
+        vaccine_take = master.vaccine_take;
+        cost_per_unit = master.cost_per_unit;
+        acquire_config = master.acquire_config;
+        transmit_config = master.transmit_config;
+        acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
+        transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
+    }
+
+#define SI_Acquire_Config_DESC_TEXT  "TBD"
+#define SI_Transmit_Config_DESC_TEXT  "TBD"
+
     bool
     SimpleImmunoglobulin::Configure(
         const Configuration * inputJson
     )
     {
-        vaccine_take = 1.0; // immunoglobulin always takes in the model
-
+        vaccine_take = 1.0; // immunoglobulin always takes in the model 
 
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("immunoglobulin_type", SI_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(ImmunoglobulinType))); // required? 
     
-        initConfigTypeMap("Reduced_Acquire", &current_reducedacquire, SI_Reduced_Acquire_DESC_TEXT, 0, 1, 1);
-        initConfigTypeMap("Reduced_Transmit", &current_reducedtransmit, SI_Reduced_Transmit_DESC_TEXT, 0, 1, 1);
+        initConfigComplexType("Acquire_Config",  &acquire_config, SI_Acquire_Config_DESC_TEXT );
+        initConfigComplexType("Transmit_Config",  &transmit_config, SI_Transmit_Config_DESC_TEXT  );
+        bool configured = BaseIntervention::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
+        {
+            acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
+            transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
+        }
 
-        return JsonConfigurable::Configure( inputJson );
+        return configured;
+    }
+
+    void SimpleImmunoglobulin::Update( float dt )
+    {
+        acquire_effect->Update(dt);
+        current_reducedacquire = acquire_effect->Current();
+        ivc->UpdateVaccineAcquireRate( current_reducedacquire );
+
+        transmit_effect->Update(dt);
+        current_reducedtransmit = transmit_effect->Current();
+        ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
     }
 
     REGISTER_SERIALIZABLE(SimpleImmunoglobulin);
@@ -52,7 +82,8 @@ namespace Kernel
         SimpleVaccine::serialize( ar, obj );
         SimpleImmunoglobulin& simple = *obj;
 
-        //ar.labelElement("xxx") & simple.xxx;
+        ar.labelElement("acquire_effect") & simple.acquire_effect;
+        ar.labelElement("transmit_effect") & simple.transmit_effect;
     }
 }
 

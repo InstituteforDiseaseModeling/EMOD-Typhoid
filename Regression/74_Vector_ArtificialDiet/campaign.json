@@ -4,11 +4,14 @@
             "Event_Coordinator_Config": {
                 "Intervention_Config": {
                     "Artificial_Diet_Target": "AD_WithinVillage", 
-                    "Attraction": 0.5, 
+                    "Attraction_Config": 
+                    {
+                        "Initial_Effect": 0.5, 
+                        "Box_Duration": 100,
+                        "Decay_Time_Constant": 150,
+                        "class": "WaningEffectBoxExponential"
+                    },
                     "Cost_To_Consumer": 10.0, 
-                    "Durability_Time_Profile": "BOXDECAYDURABILITY", 
-                    "Primary_Decay_Time_Constant": 100, 
-                    "Secondary_Decay_Time_Constant": 150, 
                     "class": "ArtificialDiet"
                 }, 
                 "class": "StandardInterventionDistributionEventCoordinator"

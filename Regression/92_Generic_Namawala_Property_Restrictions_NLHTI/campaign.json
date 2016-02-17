@@ -26,12 +26,14 @@
                     "Actual_IndividualIntervention_Config": {
                         "Cost_To_Consumer": 1.0, 
                         "Durability_Time_Profile": "BOXDURABILITY", 
-                        "Primary_Decay_Time_Constant": 3650, 
-                        "Reduced_Acquire": 1, 
-                        "Reduced_Transmit": 0, 
                         "Vaccine_Take": 1, 
                         "Vaccine_Type": "AcquisitionBlocking", 
-                        "class": "SimpleVaccine"
+                        "class": "SimpleVaccine",
+			"Waning_Config": {
+			    "Initial_Effect": 1,
+			    "Box_Duration": 3650,
+			    "class": "WaningEffectBox"
+			}
                     }, 
                     "Duration": 1, 
                     "Property_Restrictions_Within_Node": [

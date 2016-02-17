@@ -28,12 +28,12 @@
                 "Demographic_Coverage": 0.9, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 10.0, 
-                    "Reduced_Transmit": 1, 
+                    ".Reduced_Transmit": 1, 
                     "Vaccine_Take": 0.95, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "Waning_Config": {
-                        "Box_Duration": 36500, 
                         "Initial_Effect": 1, 
+                        "Box_Duration": 36500, 
                         "class": "WaningEffectBox"
                     }, 
                     "class": "SimpleVaccine"
