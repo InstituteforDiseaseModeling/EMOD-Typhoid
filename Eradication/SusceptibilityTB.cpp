@@ -16,6 +16,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "RANDOM.h"
 #ifdef ENABLE_TBHIV
 #include "IndividualCoinfection.h"
+#else
+#include "Individual.h"
 #endif
 
 static const char* _module = "SusceptibilityTB";
