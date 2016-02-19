@@ -656,7 +656,7 @@ class HpcMonitor(Monitor):
                             else:
                                 # Every .json file in output (not hidden with . prefix) will be used for validation
                                 for file in os.listdir( os.path.join( self.config_id, "output" ) ):
-                                    if ( file.endswith( ".json" ) or file.endswith( ".csv" ) ) and file[0] != "." and file != "transitions.json":
+                                    if ( file.endswith( ".json" ) or file.endswith( ".csv" ) ) and file[0] != "." and file != "transitions.json" and "linux" not in file:
                                         self.verify( sim_dir, file, "Channels" )
                     break
             time.sleep(5)
