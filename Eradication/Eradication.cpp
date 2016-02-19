@@ -466,7 +466,6 @@ pythonOnExitHook()
         PyObject* py_oppath_str = PyString_FromString( EnvPtr->OutputPath.c_str() );
         PyTuple_SetItem(vars, 0, py_oppath_str );
         PyObject * returnArgs = PyObject_CallObject( pFunc, vars );
-        PyObject_CallObject( pFunc, vars );
         PyErr_Print();
     }
 #endif
