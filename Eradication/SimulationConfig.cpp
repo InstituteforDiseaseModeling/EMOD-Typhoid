@@ -813,6 +813,8 @@ SimulationConfig::SimulationConfig()
 #ifdef ENABLE_TB
     , tb_drug_names_for_this_sim()
     , TBDrugMap()
+#endif
+#ifdef ENABLE_TBHIV
     , cd4_count_at_beginning_of_hiv_infection(0.0f)
     , cd4_count_at_end_of_hiv_infection(0.0f)
 #endif

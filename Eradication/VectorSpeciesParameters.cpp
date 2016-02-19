@@ -49,7 +49,7 @@ namespace Kernel
             }
             catch( OutOfRangeException &except )
             {
-                //throw Kernel::OutOfRangeException( __FILE__, __LINE__, __FUNCTION__, habitat_type_string.c_str(), initValue, _min_value );
+                LOG_WARN_F( "Out of range exception: %s(Rethrowing in more useful form.)\n", except.what() );
                 throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
                                                    habitat_type_string.c_str(), ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>()), 0 );
             }
