@@ -20,9 +20,10 @@ namespace Kernel
     IMPL_QUERY_INTERFACE2(ReferenceTrackingEventCoordinator, IEventCoordinator, IConfigurable)
 
     ReferenceTrackingEventCoordinator::ReferenceTrackingEventCoordinator()
-    : target_coverage( 0.0 ) // no great reason for this value
+    : year2ValueMap()
+    , target_coverage( 0.0 ) // no great reason for this value
+    , end_year(0.0)
     {
-        avoid_duplicates = true;
     }
 
     QuickBuilder
@@ -39,7 +40,7 @@ namespace Kernel
         float update_period = DAYSPERYEAR;
         initConfigComplexType("Time_Value_Map", &year2ValueMap, "Map of times (years) to coverages." );
         initConfigTypeMap("Update_Period", &update_period, "Gap between distribution updates.", 1.0, 10*DAYSPERYEAR, DAYSPERYEAR );
-        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", 0.0, 2200.0, 0.0 ); // min, max, default years
+        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", 1900.0, 2200.0, 2100.0 ); // min, max, default years
 
         auto ret = StandardInterventionDistributionEventCoordinator::Configure( inputJson );
         num_repetitions = -1; // unlimited
@@ -47,6 +48,11 @@ namespace Kernel
         {
             float dt = GET_CONFIGURABLE(SimulationConfig)->Sim_Tstep;
             tsteps_between_reps = update_period/dt; // this won't be precise, depending on math.
+            if( tsteps_between_reps <= 0.0 )
+            {
+                // don't let this be zero or it will only update one time
+                tsteps_between_reps = 1;
+            }
         }
         return ret;
     }
@@ -101,44 +107,21 @@ namespace Kernel
         float totalToIntervene = ( target_coverage * totalQualifyingPop ) - totalWithIntervention;
         NO_LESS_THAN( totalToIntervene, 0 );
 
+        float dc = 0.0f;
         if( totalWithoutIntervention > 0 )
         {
-            demographic_coverage = totalToIntervene / totalWithoutIntervention;
+            dc = totalToIntervene / totalWithoutIntervention;
         }
-        else
-        {
-            demographic_coverage = 0.0f;
-        }
+        demographic_restrictions.SetDemographicCoverage( dc );
+
         LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
-                    demographic_coverage,
-                    (float) target_coverage,
-                    (float) currentCoverageForIntervention,
-                    (float) totalWithoutIntervention,
-                    (float) totalWithIntervention
+                    demographic_restrictions.GetDemographicCoverage(),
+                    float(target_coverage),
+                    float(currentCoverageForIntervention),
+                    float(totalWithoutIntervention),
+                    float(totalWithIntervention)
                 );
     }
 
-#if USE_JSON_SERIALIZATION
-    // IJsonSerializable Interfaces
-    void ReferenceTrackingEventCoordinator::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-        root->EndObject();
-    }
-
-    void ReferenceTrackingEventCoordinator::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
-
-
-#if USE_BOOST_SERIALIZATION
-// TODO: Consolidate with serialization code in header.
-#include <boost/serialization/export.hpp>
-    template<class Archive>
-    void serialize(Archive &ar, ReferenceTrackingEventCoordinator &ec, const unsigned int v)
-    {
-    }
-#endif
 }
 

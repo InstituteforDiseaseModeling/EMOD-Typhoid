@@ -28,15 +28,15 @@
                               "Actual_IndividualIntervention_Configs": [
                                    {
                                         "Cost_To_Consumer": 8, 
-                                        "Durability_Time_Profile": "DECAYDURABILITY", 
-                                        "Primary_Decay_Time_Constant": 3650, 
-                                        "Reduced_Acquire": 0.9, 
-                                        "Reduced_Transmit": 0,
-                                        "Reduced_Mortality": 0, 
                                         "Vaccine_Take": 0.8, 
                                         "Vaccine_Take_Age_Decay_Rate": 0.2, 
-                                        "Vaccine_Type": "Generic", 
-                                        "class": "BCGVaccine"
+                                        "Vaccine_Type": "AcquisitionBlocking", 
+                                        "class": "BCGVaccine",
+					"Waning_Config": {
+					    "Initial_Rate": 0.9,
+					    "Decay_Time_Constant": 3650,
+                                            "class": "WaningEffectExponential"
+					}
                                    }
                               ], 
                               "Calendar": [

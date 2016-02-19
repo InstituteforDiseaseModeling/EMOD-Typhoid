@@ -16,7 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "STIInterventionsContainer.h"
 
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 #include "IIndividualHumanHIV.h"
 
 static const char * _module = "HIVPreARTNotification";
@@ -79,5 +79,15 @@ namespace Kernel
     {
         // Nothing to do for this intervention, which doesn't have ongoing effects
         expired = true;
+    }
+
+    REGISTER_SERIALIZABLE(HIVPreARTNotification);
+
+    void HIVPreARTNotification::serialize(IArchive& ar, HIVPreARTNotification* obj)
+    {
+        BaseIntervention::serialize( ar, obj );
+        HIVPreARTNotification& note = *obj;
+
+        ar.labelElement("startingPreART") & note.startingPreART;
     }
 }

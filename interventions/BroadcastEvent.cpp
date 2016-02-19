@@ -69,15 +69,13 @@ namespace Kernel
         // expire the intervention
         expired = true;
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, BroadcastEvent& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(BroadcastEvent);
+
+    void BroadcastEvent::serialize(IArchive& ar, BroadcastEvent* obj)
     {
-        ar & /*(std::string)*/ obj.broadcast_event;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        BroadcastEvent& be = *obj;
+        ar.labelElement("broadcast_event") & be.broadcast_event;
     }
 }
-#endif

@@ -134,22 +134,11 @@ namespace Kernel
         }
 
         // Create a larval habitat for each type specified in configuration file for this species
-        for( int ihabitat = 0; ihabitat < species()->habitat_type.size(); ihabitat++ )
+        for( auto habitat_param : species()->habitat_params.habitat_map )
         {
-            VectorHabitatType::Enum type = species()->habitat_type[ihabitat];
-            float max_larval_capacity = species()->habitat_param[ihabitat] * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type);
-            VectorHabitat* habitat = nullptr;
-
-#if 0
-            if( params()->enable_vector_species_habitat_competition )
-            {
-                habitat = ivnc->GetVectorHabitatByType(type);
-
-                // While the VectorHabitats are hooked up properly for this option,
-                // the inter-species competition is not, so let's throw an exception:
-                throw NotYetImplementedException(__FILE__, __LINE__, __FUNCTION__, "Shared-habitat inter-species competition not completely hooked up yet.");
-            }
-#endif
+            VectorHabitat* habitat = NULL;
+            VectorHabitatType::Enum type = habitat_param.first;
+            float max_larval_capacity = habitat_param.second * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type);
 
             if(habitat == nullptr)
             {

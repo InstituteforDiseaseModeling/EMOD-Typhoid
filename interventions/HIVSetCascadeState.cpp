@@ -45,4 +45,14 @@ namespace Kernel
     {
         return true;
     }
+
+    REGISTER_SERIALIZABLE(HIVSetCascadeState);
+
+    void HIVSetCascadeState::serialize(IArchive& ar, HIVSetCascadeState* obj)
+    {
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVSetCascadeState& cascade = *obj;
+
+        //ar.labelElement("xxx") & cascade.xxx;
+    }
 }

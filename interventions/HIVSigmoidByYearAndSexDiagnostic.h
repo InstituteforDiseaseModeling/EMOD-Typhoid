@@ -32,5 +32,7 @@ namespace Kernel
         float rampMidYear;
         float rampRate;
         float femaleMultiplier;
+
+        DECLARE_SERIALIZABLE(HIVSigmoidByYearAndSexDiagnostic);
     };
 }

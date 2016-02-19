@@ -43,8 +43,6 @@ namespace Kernel
 
         static float sti_coinfection_mult;
 
-        static float circumcision_reduced_acquire;
-        
         static float min_days_between_adding_relationships;
     public:
         static float condom_transmission_blocking_probability;

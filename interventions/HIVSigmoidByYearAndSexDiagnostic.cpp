@@ -73,19 +73,17 @@ namespace Kernel
         return testResult;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVSigmoidByYearAndSexDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVSigmoidByYearAndSexDiagnostic& obj, const unsigned int v)
+    void HIVSigmoidByYearAndSexDiagnostic::serialize(IArchive& ar, HIVSigmoidByYearAndSexDiagnostic* obj)
     {
-        ar & obj.rampMin;
-        ar & obj.rampMax;
-        ar & obj.rampMidYear;
-        ar & obj.rampRate;
-        ar & obj.femaleMultiplier;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVSigmoidByYearAndSexDiagnostic& cascade = *obj;
+
+        ar.labelElement("rampMin"         ) & cascade.rampMin;
+        ar.labelElement("rampMax"         ) & cascade.rampMax;
+        ar.labelElement("rampMidYear"     ) & cascade.rampMidYear;
+        ar.labelElement("rampRate"        ) & cascade.rampRate;
+        ar.labelElement("femaleMultiplier") & cascade.femaleMultiplier;
     }
 }
-#endif

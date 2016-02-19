@@ -64,8 +64,6 @@
 
             "STI_Coinfection_Multiplier": 10,
 
-            "Circumcision_Reduced_Acquire": 0.6,
-
             "Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity": 0.5,
             "Days_Between_Symptomatic_And_Death_Weibull_Scale": 618.341625,
 
@@ -169,6 +167,7 @@
             "Report_HIV_ByAgeAndGender_Collect_Circumcision_Data" : 0,
             "Report_HIV_ByAgeAndGender_Collect_IP_Data" : 0,
             "Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4": 0,
+            "Report_HIV_ByAgeAndGender_Event_Counter_List" : [],
             "Report_HIV_Infection": 0,
             "Report_HIV_Mortality": 0,
             "Report_HIV_Period": 365,

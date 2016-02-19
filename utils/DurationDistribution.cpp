@@ -244,9 +244,9 @@ namespace Kernel
                 ar.startObject();
                     ar.labelElement("key"  ) & (uint32_t&)key;
                     ar.labelElement("value.m_ParamName_1") & value.m_ParamName_1;
-                    ar.labelElement("value.m_ParamDesc_1") & value.m_ParamDesc_1;
+                    //ar.labelElement("value.m_ParamDesc_1") & value.m_ParamDesc_1;
                     ar.labelElement("value.m_ParamName_2") & value.m_ParamName_2;
-                    ar.labelElement("value.m_ParamDesc_2") & value.m_ParamDesc_2;
+                    //ar.labelElement("value.m_ParamDesc_2") & value.m_ParamDesc_2;
                 ar.endObject();
             }
         }
@@ -259,9 +259,9 @@ namespace Kernel
                 ar.startObject();
                     ar.labelElement("key"  ) & (uint32_t&)key;
                     ar.labelElement("value.m_ParamName_1") & value.m_ParamName_1;
-                    ar.labelElement("value.m_ParamDesc_1") & value.m_ParamDesc_1;
+                    //ar.labelElement("value.m_ParamDesc_1") & value.m_ParamDesc_1;
                     ar.labelElement("value.m_ParamName_2") & value.m_ParamName_2;
-                    ar.labelElement("value.m_ParamDesc_2") & value.m_ParamDesc_2;
+                    //ar.labelElement("value.m_ParamDesc_2") & value.m_ParamDesc_2;
                 ar.endObject();
                 map[key] = value;
             }
@@ -271,11 +271,14 @@ namespace Kernel
 
     void DurationDistribution::serialize( IArchive& ar, DurationDistribution& dd )
     {
+        ar.startObject();
         ar.labelElement("m_Type"    ) & (uint32_t&)dd.m_Type;
         ar.labelElement("m_Param1"  ) & dd.m_Param1;
         ar.labelElement("m_Param2"  ) & dd.m_Param2;
-        ar.labelElement("m_TypeName") & dd.m_TypeName;
-        ar.labelElement("m_TypeDesc") & dd.m_TypeDesc;
-        ar.labelElement("m_SupportedParameterInfoMap"); serialize_map( ar, dd.m_SupportedParameterInfoMap );
+        // I don't think we need to serialize the following.
+        //ar.labelElement("m_TypeName") & dd.m_TypeName;
+        //ar.labelElement("m_TypeDesc") & dd.m_TypeDesc;
+        //ar.labelElement("m_SupportedParameterInfoMap"); serialize_map( ar, dd.m_SupportedParameterInfoMap );
+        ar.endObject();
     }
 }

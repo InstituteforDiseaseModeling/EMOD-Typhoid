@@ -28,15 +28,11 @@
                 ],
                 "Vector_Species_Params": {
                     "arabiensis": {
-                        "Habitat_Type": [
-                            "TEMPORARY_RAINFALL", 
-                            "WATER_VEGETATION"
-                        ], 
-                        "Immature_Duration": 2,
-                        "Required_Habitat_Factor": [
-                            11250000000, 
-                            6000000000
-                        ]
+                        "Larval_Habitat_Types": {
+                            "TEMPORARY_RAINFALL": 11250000000, 
+                            "WATER_VEGETATION": 6000000000
+                        }, 
+                        "Immature_Duration": 2
                     },
                     "funestus": {
                         "Immature_Duration": 2

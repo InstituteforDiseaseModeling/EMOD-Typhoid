@@ -13,12 +13,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "ReportHIVByAgeAndGender.h"
 #include "NodeHIV.h"
-#include "HIVInterventionsContainer.h"
-#include "NodeLevelHealthTriggeredIV.h"
+#include "IHIVInterventionsContainer.h"
 #include "ISimulation.h"
 #include "SimulationHIV.h" // for base_year
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
+#include "EventTrigger.h"
+#include "NodeEventContext.h"
 
 static const char* _module = "ReportHIVByAgeAndGender";
 
@@ -67,6 +68,11 @@ namespace Kernel
                            Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT, 
                            false );
 
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Event_Counter_List",
+                           &event_list,  
+                           Report_HIV_ByAgeAndGender_Event_Counter_List_DESC_TEXT, 
+                           false );
+
         bool ret = JsonConfigurable::Configure( inputJson );
 
         if( ret )
@@ -80,6 +86,18 @@ namespace Kernel
                  throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
                                                          "Report_HIV_ByAgeAndGender_Start_Year", startYear, 
                                                          "Report_HIV_ByAgeAndGender_Stop_Year", stopYear );
+            }
+
+            // -----------------------------------------------------------------------------
+            // --- check that the events defined for the report exist in the known event list
+            // -----------------------------------------------------------------------------
+            EventTrigger tmp;
+            for( auto ev : event_list )
+            {
+                // exception will be thrown if ev not in listed_events
+                tmp = ev;
+
+                eventTriggerList.push_back( ev );
             }
         }
 
@@ -164,6 +182,7 @@ namespace Kernel
         }
         AddConstant() ; // is_circumcised
         AddConstant() ; // gender
+        AddConstant() ; // node_id
 
         BaseTextReportEvents::Initialize( nrmSize );
     }
@@ -207,9 +226,8 @@ namespace Kernel
                    << "Infected CD4 200 To 349 (Not On ART)"    << ", "
                    << "Infected CD4 350 To 499 (Not On ART)"    << ", "
                    << "Infected CD4 500 Plus (Not On ART)"      << ", ";
-        } else {
-            header << "Infected" << ", ";
         }
+        header << "Infected" << ", ";
 
         header << "Newly Infected"   << ", "
                << "On_ART"           << ", "
@@ -220,6 +238,11 @@ namespace Kernel
                << "Tested Ever HIVNeg" << ", "
                << "Tested Positive" << ", "
                << "Tested Negative";
+
+        for( auto ev : event_list )
+        {
+            header << "," << ev ;
+        }
 
         return header.str();
     }
@@ -235,6 +258,7 @@ namespace Kernel
         float year = _parent->GetSimulationTime().Year();
 
         int nodeId = pNC->GetExternalID();
+        int node_suid_id = pNC->GetSuid().data;
 
         std::vector<int> key_value_index_list ;
         for( int i = 0 ; i < ip_key_list.size() ; i++ )
@@ -273,7 +297,7 @@ namespace Kernel
 
                     for( int age_bin = 0; age_bin < MAX_AGE; age_bin++ ) 
                     {
-                        uint32_t map_key = GetDataMapKey( gender, age_bin, circumcision_bin, key_value_index_list );
+                        uint32_t map_key = GetDataMapKey( node_suid_id, gender, age_bin, circumcision_bin, key_value_index_list );
                         ReportData rd ;
                         if( data_map.count( map_key ) > 0 )
                         {
@@ -300,9 +324,8 @@ namespace Kernel
                                               << "," << rd.infected_noART_cd4_200_to_350
                                               << "," << rd.infected_noART_cd4_350_to_500
                                               << "," << rd.infected_noART_cd4_above_500;
-                        } else {
-                            GetOutputStream() << "," << rd.infected;
                         }
+                        GetOutputStream() << "," << rd.infected;
 
 
                         GetOutputStream() << "," << rd.newly_infected
@@ -313,8 +336,14 @@ namespace Kernel
                                           << "," << rd.tested_ever_HIVpos
                                           << "," << rd.tested_ever_HIVneg
                                           << "," << rd.tested_positive
-                                          << "," << rd.tested_negative
-                                          << endl;
+                                          << "," << rd.tested_negative;
+
+                        for( auto ev : event_list )
+                        {
+                            GetOutputStream() << "," << rd.event_counter_map[ ev ];
+                        }
+
+                        GetOutputStream() << endl;
                     }
                 }
                 // ------------------------------------------------
@@ -323,7 +352,15 @@ namespace Kernel
                 done_with_ip = GetNextIP( key_value_index_list );
             }
         }
-        data_map.clear();
+    }
+
+    void ReportHIVByAgeAndGender::EndTimestep( float currentTime, float dt )
+    {
+        BaseTextReportEvents::EndTimestep( currentTime, dt );
+        if( is_collecting_data && doReport )
+        {
+            data_map.clear();
+        }
     }
 
     void ReportHIVByAgeAndGender::LogIndividualData( IIndividualHuman* individual )
@@ -380,11 +417,8 @@ namespace Kernel
                         data_map[ map_key ].infected_noART_cd4_above_500 += mc_weight;
                 }
             }
-            else
-            {
                 data_map[ map_key ].infected += mc_weight;
             }
-        }
 
         if( isOnART )
             data_map[ map_key ].on_ART += mc_weight;
@@ -440,6 +474,10 @@ namespace Kernel
         else if( StateChange == "HIVTestedNegative" )
         {
             data_map[ map_key ].tested_negative += mc_weight;
+        }
+        else if( std::find( event_list.begin(), event_list.end(), StateChange ) != event_list.end() )
+        {
+             data_map[ map_key ].event_counter_map[ StateChange ] += mc_weight;
         }
  
         return true;
@@ -500,12 +538,13 @@ namespace Kernel
             int index = std::find( ip_key_value_list_map[ key ].begin(), ip_key_value_list_map[ key ].end(), value ) - ip_key_value_list_map[ key ].begin() ;
             key_value_list_index.push_back( index );
         }
+        int node_suid_id = context->GetNodeEventContext()->GetId().data;
 
-        uint32_t map_key = GetDataMapKey( gender, age_bin, circumcision_bin, key_value_list_index );
+        uint32_t map_key = GetDataMapKey( node_suid_id, gender, age_bin, circumcision_bin, key_value_list_index );
         return map_key ;
     }
 
-    uint32_t ReportHIVByAgeAndGender::GetDataMapKey( int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList )
+    uint32_t ReportHIVByAgeAndGender::GetDataMapKey( int nodeSuidIndex, int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList )
     {
         // ------------------------------------------------------------------------------
         // --- I used factors of 100 in the map_key_constant so that one could look at
@@ -520,8 +559,9 @@ namespace Kernel
         {
             map_key += map_key_constants[ kvi ] * rKeyValueIndexList[ kvi ] ;
         }
-        map_key += map_key_constants[ rKeyValueIndexList.size()+0 ] * circIndex ;
-        map_key += map_key_constants[ rKeyValueIndexList.size()+1 ] * genderIndex ;
+        map_key += map_key_constants[ rKeyValueIndexList.size()+0 ] * circIndex;
+        map_key += map_key_constants[ rKeyValueIndexList.size()+1 ] * genderIndex;
+        map_key += map_key_constants[ rKeyValueIndexList.size()+2 ] * nodeSuidIndex;
 
         return map_key;
     }

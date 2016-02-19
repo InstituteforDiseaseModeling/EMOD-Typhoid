@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "FactorySupport.h"
 #include "Configure.h"
+#include "WaningEffect.h"
 
 namespace Kernel
 {
@@ -36,6 +37,7 @@ namespace Kernel
     public:
         bool Configure( const Configuration * config );
         HumanHostSeekingTrap();
+        HumanHostSeekingTrap( const HumanHostSeekingTrap& );
         virtual ~HumanHostSeekingTrap() { }
 
         // IDistributableIntervention
@@ -47,9 +49,10 @@ namespace Kernel
     protected:
         float current_attractrate;
         float current_killingrate;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
-        InterventionDurabilityProfile::Enum durability_time_profile;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   attract_config;
+        IWaningEffect* attract_effect;
         IVectorInterventionEffectsSetter *ivies;
 
         DECLARE_SERIALIZABLE(HumanHostSeekingTrap);

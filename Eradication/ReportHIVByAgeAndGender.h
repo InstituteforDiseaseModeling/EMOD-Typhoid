@@ -43,6 +43,7 @@ namespace Kernel {
         virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
         virtual void LogIndividualData( IIndividualHuman* individual );
         virtual void LogNodeData( INodeContext* pNC );
+        virtual void EndTimestep(float currentTime, float dt);
 
     protected:
 
@@ -70,6 +71,7 @@ namespace Kernel {
                 , tested_ever_HIVpos(0.0)
                 , tested_ever_HIVneg(0.0)
                 , tested_past_year_or_onART(0.0)
+                , event_counter_map()
             {
             }
 
@@ -92,14 +94,15 @@ namespace Kernel {
             float tested_ever_HIVpos;        // Tested ever [amongst HIV+]
             float tested_ever_HIVneg;        // Tested ever [amongst HIV-]
             float tested_past_year_or_onART; // Tested past year (or on ART)
+
+            std::map<std::string,float> event_counter_map; // count the ocurrences of events
         };
 
         bool GetNextIP( std::vector<int>& rKeyValueIndexList );
         uint32_t GetDataMapKey( IIndividualHumanEventContext* context );
-        uint32_t GetDataMapKey( int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList );
+        uint32_t GetDataMapKey( int nodeSuidIndex, int genderIndex, int ageIndex, int circIndex, const std::vector<int>& rKeyValueIndexList );
         void AddConstant();
 
-        //ReportData data_matrix[Gender::Enum::COUNT][MAX_AGE][Yes_No::COUNT];
         std::map<uint32_t,ReportData> data_map ;
 
         const ISimulation * _parent;
@@ -109,6 +112,7 @@ namespace Kernel {
         bool is_collecting_circumcision_data;
         bool is_collecting_ip_data;
         bool stratify_infected_by_CD4;
+        std::vector<std::string> event_list;
         std::vector<std::string> ip_key_list ;
         std::map<std::string,std::vector<std::string>> ip_key_value_list_map ;
         std::vector<uint32_t> map_key_constants ;
