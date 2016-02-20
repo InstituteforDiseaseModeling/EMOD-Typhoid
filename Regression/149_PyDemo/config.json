@@ -103,7 +103,7 @@
         "Serialization_Test_Cycles": 0, 
         "Simulation_Duration": 365, 
         "Simulation_Timestep": 1, 
-        "Simulation_Type": "PYDEMO_SIM", 
+        "Simulation_Type": "PY_SIM", 
         "Start_Time": 0, 
         "Transmission_Blocking_Immunity_Decay_Rate": 0.1, 
         "Transmission_Blocking_Immunity_Duration_Before_Decay": 60, 
@@ -123,9 +123,12 @@
         "x_Regional_Migration": 1, 
         "x_Sea_Migration": 1, 
         "x_Temporary_Larval_Habitat": 1,
-        ".logLevel_IndividualPyDemo": "DEBUG",
+        ".logLevel_IndividualPy": "DEBUG",
         "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_OFF",
         "Report_Event_Recorder": 0,
-        "Susceptibility_Scale_Type": "CONSTANT_SUSCEPTIBILITY"
+        "Susceptibility_Scale_Type": "CONSTANT_SUSCEPTIBILITY",
+        "Default_Geography_Initial_Node_Population": 0,
+        "Default_Geography_Torus_Size": 3,
+        "Minimum_Adult_Age_Years": 20
     }
 }

@@ -30,7 +30,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualCoinfection.h"
 #else
 #include "TBContexts.h"
-#include "IIndividualHuman.h"
+#include "Individual.h"
 #endif
 
 static const char * _module = "InfectionTB";

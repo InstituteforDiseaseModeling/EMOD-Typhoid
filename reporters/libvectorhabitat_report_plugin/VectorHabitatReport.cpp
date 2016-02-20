@@ -98,6 +98,8 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 // --- VectorHabitatReport Methods
 // ----------------------------------------
 
+namespace Kernel {
+
 VectorHabitatReport::VectorHabitatReport()
 {
 }
@@ -261,4 +263,6 @@ void VectorHabitatReport::LogNodeData( INodeContext * pNC )
     {
         initChannelBins();
     }
+}
+
 }

@@ -11,6 +11,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "BinnedReport.h"
 
+namespace Kernel {
+
 class VectorHabitatReport : public BinnedReport
 {
 public:
@@ -40,4 +42,6 @@ protected:
     ChannelDataMap::channel_data_t artificial_larval_mortality;
     ChannelDataMap::channel_data_t local_larval_growth_mod;
 };
+
+}
 

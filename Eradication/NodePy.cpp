@@ -171,7 +171,7 @@ namespace Kernel
     {
         // This is a chance to do a single call into TOYPHOID at start of timestep
 #ifdef ENABLE_TOYPHOID
-        static auto pFunc = IdmPyInit( "dtk_toyphoid_individual", "start_timestep" );
+        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "start_timestep" );
         if( pFunc )
         {
             PyObject_CallObject( pFunc, nullptr );

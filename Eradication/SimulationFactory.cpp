@@ -37,8 +37,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #ifdef ENABLE_TBHIV
 #include "SimulationTBHIV.h"
 #endif
-#ifndef DISABLE_HIV
+#ifndef DISABLE_STI
 #include "SimulationSTI.h"
+#endif
+#ifndef DISABLE_HIV
 #include "SimulationHIV.h"
 #endif
 #endif
@@ -90,9 +92,11 @@ namespace Kernel
                 sim_type = SimType::TBHIV_SIM;
 #endif // TBHIV
 #endif // TB
-#ifndef DISABLE_HIV
+#ifndef DISABLE_STI
             else if (sSimType == "STI_SIM")
                 sim_type = SimType::STI_SIM;
+#endif
+#ifndef DISABLE_HIV
             else if (sSimType == "HIV_SIM")
                 sim_type = SimType::HIV_SIM;
 #endif // HIV
@@ -165,11 +169,12 @@ namespace Kernel
                 break;
 #endif // TBHIV
 #endif // TB
-#ifndef DISABLE_HIV 
+#ifndef DISABLE_STI
                 case SimType::STI_SIM:
                     newsim = SimulationSTI::CreateSimulation(EnvPtr->Config);
                 break;
-
+#endif
+#ifndef DISABLE_HIV 
                 case SimType::HIV_SIM:
                     newsim = SimulationHIV::CreateSimulation(EnvPtr->Config);
                 break;
