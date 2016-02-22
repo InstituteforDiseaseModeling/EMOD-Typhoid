@@ -16,6 +16,38 @@
         {
             "Test" :
             {
+                "__class__":"WaningEffectConstant",
+                "currentEffect" : 0.1
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectExponential",
+                "currentEffect"     : 0.1,
+                "decayTimeConstant" : 0.2
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectBox",
+                "currentEffect" : 0.1,
+                "boxDuration"   : 0.2
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectBoxExponential",
+                "currentEffect"     : 0.1,
+                "boxDuration"       : 0.2,
+                "decayTimeConstant" : 0.3
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"IndividualHumanHIV",
                 "suid_data"                 : 1234,
                 "m_age"                     : 7300,
@@ -661,9 +693,24 @@
                 "current_reducedacquire"        : 4.4,
                 "current_reducedtransmit"       : 5.5,
                 "current_reducedmortality"      : 6.6,
-                "durability_time_profile"       : 2,
-                "primary_decay_time_constant"   : 7.7,
-                "secondary_decay_time_constant" : 8.8
+                "waning_effect" :
+                {
+                    "__class__":"WaningEffectBoxExponential",
+                    "currentEffect"     : 0.1,
+                    "boxDuration"       : 0.2,
+                    "decayTimeConstant" : 0.3
+                },
+                "acquire_effect"  :
+                {
+                    "__class__":"WaningEffectConstant",
+                    "currentEffect" : 0.1
+                },
+                "transmit_effect" :
+                {
+                    "__class__":"WaningEffectExponential",
+                    "currentEffect"     : 0.1,
+                    "decayTimeConstant" : 0.2
+                }
             }
         },
         {
@@ -678,9 +725,13 @@
                 "current_reducedacquire"        : 4.4,
                 "current_reducedtransmit"       : 5.5,
                 "current_reducedmortality"      : 6.6,
-                "durability_time_profile"       : 2,
-                "primary_decay_time_constant"   : 7.7,
-                "secondary_decay_time_constant" : 8.8
+                "waning_effect" :
+                {
+                    "__class__":"WaningEffectBoxExponential",
+                    "currentEffect"     : 0.1,
+                    "boxDuration"       : 0.2,
+                    "decayTimeConstant" : 0.3
+                }
             }
         },
         {
@@ -2513,9 +2564,13 @@
                         "current_reducedacquire"        : 0.2,
                         "current_reducedtransmit"       : 0.3,
                         "current_reducedmortality"      : 0.4,
-                        "durability_time_profile"       : 2,
-                        "primary_decay_time_constant"   : 0.5,
-                        "secondary_decay_time_constant" : 0.6,
+                        "waning_effect" :
+                        {
+                            "__class__":"WaningEffectBoxExponential",
+                            "currentEffect"     : 0.1,
+                            "boxDuration"       : 0.2,
+                            "decayTimeConstant" : 0.3
+                        },
                         "vaccine_take_age_decay_rate"   : 0.7
                     },
                     {
