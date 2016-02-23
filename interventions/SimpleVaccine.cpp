@@ -43,56 +43,13 @@ namespace Kernel
 
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("Vaccine_Type", SV_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(SimpleVaccineType)));
 
-        switch( vaccine_type )
-        {
-            case SimpleVaccineType::AcquisitionBlocking:
-                initConfigComplexType("Acquire_Config",  &acquire_config, "TBD" );
-                break;
-
-            case SimpleVaccineType::TransmissionBlocking:
-                initConfigComplexType("Transmit_Config",  &transmit_config, "TBD" );
-                break;
-
-            case SimpleVaccineType::MortalityBlocking:
-                initConfigComplexType("Mortality_Config", &mortality_config, "TBD" );
-                break;
-
-            case SimpleVaccineType::Generic:
-                initConfigComplexType("Acquire_Config",  &acquire_config, "TBD" );
-                initConfigComplexType("Transmit_Config",  &transmit_config, "TBD" );
-                initConfigComplexType("Mortality_Config", &mortality_config, "TBD" );
-                break;
-
-            default:
-                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "vaccine_type", vaccine_type, SimpleVaccineType::pairs::lookup_key( vaccine_type ) );
-                break;
-        }
-
+        initConfigComplexType("Waning_Config",  &waning_config, IVM_Killing_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            switch( vaccine_type )
-            {
-                case SimpleVaccineType::AcquisitionBlocking:
-                    acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-                break;
-
-                case SimpleVaccineType::TransmissionBlocking:
-                    transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-                break;
-
-                case SimpleVaccineType::MortalityBlocking:
-                    mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
-                break;
-
-                case SimpleVaccineType::Generic:
-                    acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-                    transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-                    mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
-                break;
-            }
+            waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
         }
-        release_assert( vaccine_type );
+        //release_assert( vaccine_type );
         LOG_DEBUG_F( "Vaccine configured with type %d and take %f.\n", vaccine_type, vaccine_take );
         return configured;
     }
@@ -105,9 +62,7 @@ namespace Kernel
     , current_reducedacquire(0.0)
     , current_reducedtransmit(0.0)
     , current_reducedmortality(0.0) 
-    , acquire_effect( nullptr )
-    , transmit_effect( nullptr )
-    , mortality_effect( nullptr )
+    , waning_effect( nullptr )
     {
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, SV_Cost_To_Consumer_DESC_TEXT, 0, 999999, 10.0);
     }
@@ -118,32 +73,8 @@ namespace Kernel
         vaccine_type = master.vaccine_type;
         vaccine_take = master.vaccine_take;
         cost_per_unit = master.cost_per_unit;
-        acquire_config = master.acquire_config;
-        transmit_config = master.transmit_config;
-        mortality_config = master.mortality_config;
-
-        // dupe code
-        switch( vaccine_type )
-        {
-            case SimpleVaccineType::AcquisitionBlocking:
-                acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-                break;
-
-            case SimpleVaccineType::TransmissionBlocking:
-                transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-                break;
-
-            case SimpleVaccineType::MortalityBlocking:
-                mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
-                break;
-
-            case SimpleVaccineType::Generic:
-                acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-                transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-                mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
-                break;
-        }
-
+        waning_config = master.waning_config;
+        waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
     }
 
     SimpleVaccine::~SimpleVaccine() { }
@@ -174,39 +105,32 @@ namespace Kernel
 
     void SimpleVaccine::Update( float dt )
     {
+        waning_effect->Update(dt);
         release_assert(ivc);
 
         switch( vaccine_type )
         {
             case SimpleVaccineType::AcquisitionBlocking:
-                acquire_effect->Update(dt);
-                current_reducedacquire = acquire_effect->Current();
+                current_reducedacquire = waning_effect->Current();
                 ivc->UpdateVaccineAcquireRate( current_reducedacquire );
                 break;
 
             case SimpleVaccineType::TransmissionBlocking:
-                transmit_effect->Update(dt);
-                current_reducedtransmit  = transmit_effect->Current();
+                current_reducedtransmit  = waning_effect->Current();
                 ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
                 break;
 
             case SimpleVaccineType::MortalityBlocking:
-                mortality_effect->Update(dt);
-                current_reducedmortality  = mortality_effect->Current(); 
+                current_reducedmortality  = waning_effect->Current(); 
                 ivc->UpdateVaccineMortalityRate( current_reducedmortality );
                 break;
 
             case SimpleVaccineType::Generic:
-                acquire_effect->Update(dt);
-                current_reducedacquire = acquire_effect->Current();
+                current_reducedacquire = waning_effect->Current();
                 ivc->UpdateVaccineAcquireRate( current_reducedacquire );
-
-                transmit_effect->Update(dt);
-                current_reducedtransmit  = transmit_effect->Current();
+                current_reducedtransmit  = waning_effect->Current();
                 ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
-
-                mortality_effect->Update(dt);
-                current_reducedmortality  = mortality_effect->Current(); 
+                current_reducedmortality  = waning_effect->Current(); 
                 ivc->UpdateVaccineMortalityRate( current_reducedmortality );
                 break;
 
@@ -284,8 +208,6 @@ namespace Kernel
         ar.labelElement("current_reducedacquire")        & vaccine.current_reducedacquire;
         ar.labelElement("current_reducedtransmit")       & vaccine.current_reducedtransmit;
         ar.labelElement("current_reducedmortality")      & vaccine.current_reducedmortality;
-        ar.labelElement("acquire_effect")                 & vaccine.acquire_effect;
-        ar.labelElement("transmit_effect")                 & vaccine.transmit_effect;
-        ar.labelElement("mortality_effect")                 & vaccine.mortality_effect;
+        ar.labelElement("waning_effect")                 & vaccine.waning_effect;
     }
 }

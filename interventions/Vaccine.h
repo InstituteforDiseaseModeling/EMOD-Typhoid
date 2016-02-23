@@ -66,12 +66,8 @@ namespace Kernel
         float current_reducedacquire;
         float current_reducedtransmit;
         float current_reducedmortality;
-        WaningConfig   acquire_config;
-        IWaningEffect* acquire_effect;
-        WaningConfig   transmit_config;
-        IWaningEffect* transmit_effect;
-        WaningConfig   mortality_config;
-        IWaningEffect* mortality_effect;
+        WaningConfig   waning_config;
+        IWaningEffect* waning_effect;
         IVaccineConsumer * ivc; // interventions container
 
         DECLARE_SERIALIZABLE(SimpleVaccine);
