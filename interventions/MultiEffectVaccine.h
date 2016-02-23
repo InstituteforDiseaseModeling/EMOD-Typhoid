@@ -26,7 +26,6 @@ namespace Kernel
         virtual bool Configure( const Configuration* pConfig ) override;
 
         // IDistributableIntervention
-        //virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO ) override;
         virtual void Update(float dt) override;
 
         // ISupports

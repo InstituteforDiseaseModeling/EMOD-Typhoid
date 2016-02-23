@@ -43,50 +43,24 @@ namespace Kernel
             transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
             mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
         }
-        //release_assert( vaccine_type );
         LOG_DEBUG_F( "Vaccine configured with type %d and take %f.\n", vaccine_type, vaccine_take );
         return configured;
     }
 
     MultiEffectVaccine::MultiEffectVaccine() 
-    : SimpleVaccine()
-    , acquire_effect( nullptr )
+    : acquire_effect( nullptr )
     , transmit_effect( nullptr )
     , mortality_effect( nullptr )
     {
     }
 
     MultiEffectVaccine::MultiEffectVaccine( const MultiEffectVaccine& master )
-    //: BaseIntervention( master )
     {
         vaccine_take = master.vaccine_take;
         cost_per_unit = master.cost_per_unit;
         acquire_config = master.acquire_config;
         transmit_config = master.transmit_config;
         mortality_config = master.mortality_config;
-
-        // dupe code
-        /*switch( vaccine_type )
-        {
-            case SimpleVaccineType::AcquisitionBlocking:
-                acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-                break;
-
-            case SimpleVaccineType::TransmissionBlocking:
-                transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-                break;
-
-            case SimpleVaccineType::MortalityBlocking:
-                mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
-                break;
-
-            case SimpleVaccineType::Generic:*/
-                acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-                transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-                mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
-                //break;
-        //}
-
     }
 
     MultiEffectVaccine::~MultiEffectVaccine() { }
@@ -95,44 +69,17 @@ namespace Kernel
     {
         release_assert(ivc);
 
-        /*switch( vaccine_type )
-        {
-            case SimpleVaccineType::AcquisitionBlocking:
-                acquire_effect->Update(dt);
-                current_reducedacquire = acquire_effect->Current();
-                ivc->UpdateVaccineAcquireRate( current_reducedacquire );
-                break;
+        acquire_effect->Update(dt);
+        current_reducedacquire = acquire_effect->Current();
+        ivc->UpdateVaccineAcquireRate( current_reducedacquire );
 
-            case SimpleVaccineType::TransmissionBlocking:
-                transmit_effect->Update(dt);
-                current_reducedtransmit  = transmit_effect->Current();
-                ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
-                break;
+        transmit_effect->Update(dt);
+        current_reducedtransmit  = transmit_effect->Current();
+        ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
 
-            case SimpleVaccineType::MortalityBlocking:
-                mortality_effect->Update(dt);
-                current_reducedmortality  = mortality_effect->Current(); 
-                ivc->UpdateVaccineMortalityRate( current_reducedmortality );
-                break;
-
-            case SimpleVaccineType::Generic:*/
-                acquire_effect->Update(dt);
-                current_reducedacquire = acquire_effect->Current();
-                ivc->UpdateVaccineAcquireRate( current_reducedacquire );
-
-                transmit_effect->Update(dt);
-                current_reducedtransmit  = transmit_effect->Current();
-                ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
-
-                mortality_effect->Update(dt);
-                current_reducedmortality  = mortality_effect->Current(); 
-                ivc->UpdateVaccineMortalityRate( current_reducedmortality );
-                /*break;
-
-            default:
-                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "vaccine_type", vaccine_type, SimpleVaccineType::pairs::lookup_key( vaccine_type ) );
-                break;*/
-        //}
+        mortality_effect->Update(dt);
+        current_reducedmortality  = mortality_effect->Current(); 
+        ivc->UpdateVaccineMortalityRate( current_reducedmortality );
     }
 
 
