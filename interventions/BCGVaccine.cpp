@@ -34,7 +34,9 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        return SimpleVaccine::Configure( inputJson );
+        bool ret = SimpleVaccine::Configure( inputJson );
+        vaccine_type = SimpleVaccineType::AcquisitionBlocking;
+        return ret;
     }
 
     BCGVaccine::BCGVaccine()
@@ -61,6 +63,8 @@ namespace Kernel
         {
             current_reducedacquire = 0.0;
             current_reducedtransmit = 0.0;
+            expired = true;
+            LOG_DEBUG("Vaccine did not take.\n");
         }
     }
 
