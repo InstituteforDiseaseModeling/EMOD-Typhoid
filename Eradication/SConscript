@@ -140,6 +140,7 @@ else:
                             "../interventions/OutbreakIndividual.cpp",
                             "../interventions/SimpleImmunoglobulin.cpp",
                             "../interventions/SimpleVaccine.cpp",
+                            "../interventions/MultiEffectVaccine.cpp",
                             "../interventions/WaningEffectBox.cpp",
                             "../interventions/WaningEffectBoxExponential.cpp",
                             "../interventions/WaningEffectConstant.cpp",
