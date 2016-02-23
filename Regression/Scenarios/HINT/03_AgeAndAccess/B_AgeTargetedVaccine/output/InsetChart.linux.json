@@ -1,7 +1,7 @@
 {
     "Header": {
-        "DateTime": "Wed Nov 25 16:38:11 2015",
-        "DTK_Version": "5538 ' Oct 29 2015",
+        "DateTime": "Tue Feb 23 11:52:19 2016",
+        "DTK_Version": "5633 ' Feb 16 2016",
         "Report_Type": "InsetChart",
         "Report_Version": "3.2",
         "Start_Time": 0,
@@ -4824,7 +4824,7 @@
             "Units": "Recovered (Immune) Fraction",
             "Data": [
                 0,
-                0.09700000286102,
+                0.1040000021458,
                 0.09700000286102,
                 0.09700000286102,
                 0.09700000286102,
@@ -5564,7 +5564,7 @@
             "Units": "Susceptible Fraction",
             "Data": [
                 1,
-                0.902999997139,
+                0.8960000276566,
                 0.9010000228882,
                 0.8999999761581,
                 0.8989999890327,
