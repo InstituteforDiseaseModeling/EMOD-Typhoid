@@ -77,7 +77,7 @@
                 "Demographic_Coverage": 1,
                 "Intervention_Config": { 
                         "Cost_To_Consumer": 20,
-                        "Vaccine_Take": 0.95,
+                        "Vaccine_Take": 1,
                         "Vaccine_Type": "Generic",
                         "class": "MultiEffectVaccine",
                         "Acquire_Config": {
