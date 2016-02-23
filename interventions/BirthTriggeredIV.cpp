@@ -149,7 +149,7 @@ namespace Kernel
     void BirthTriggeredIV::Update( float dt )
     {
         duration += dt;
-        LOG_INFO_F("[BirthTriggeredIV], Updating: duration = %f, max_duration = %f.\n", duration, max_duration);
+        LOG_DEBUG_F("[BirthTriggeredIV], Updating: duration = %f, max_duration = %f.\n", duration, max_duration);
         if( max_duration >= 0 && duration > max_duration )
         {
             // QI to register ourself as a birth observer
