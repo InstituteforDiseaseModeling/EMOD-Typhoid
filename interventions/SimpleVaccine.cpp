@@ -49,7 +49,7 @@ namespace Kernel
         {
             waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
         }
-        release_assert( vaccine_type );
+        //release_assert( vaccine_type );
         LOG_DEBUG_F( "Vaccine configured with type %d and take %f.\n", vaccine_type, vaccine_take );
         return configured;
     }

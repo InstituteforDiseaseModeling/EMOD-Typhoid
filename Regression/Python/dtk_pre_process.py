@@ -134,6 +134,25 @@ def application( config_file_name ):
                                 campaign_event["Event_Coordinator_Config"][ param_name ] = param_value
                         elif param_name in [ "Start_Day" ]:
                             campaign_event[ param_name ] = param_value
+                        elif param_name in [ "Initial_Effect", "Box_Duration", "Decay_Time_Constant" ] and param_value != "":
+                            #pdb.set_trace()
+                            print( "Waning_Config param needs special processing..." )
+                            # Have to infer waning effect class time. A bit dependent on order of params.
+                            #vacctype2waning = { "AcquisitionBlocking": "Acquisition_Config", "TransmissionBlocking": "Transmit_Config", "MortalityBlocking": "Mortality_Config" }
+                            vacctype2waning = { "AcquisitionBlocking": "Waning_Config", "TransmissionBlocking": "Waning_Config", "MortalityBlocking": "Waning_Config" }
+                            vaccine_type = getXlsParamValueFromColumnByKey( sheet, event, "Vaccine_Type"  )
+                            waning_config_pn = vacctype2waning[ vaccine_type ] 
+                            if waning_config_pn  not in campaign_event["Event_Coordinator_Config"]["Intervention_Config"]:
+                                campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ waning_config_pn ] = {}
+                                # take care of waning class here (Box, Decay, or BoxDecay). Tricky
+                            campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ waning_config_pn ][ param_name ] = param_value
+                            if param_name == "Box_Duration":
+                                campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ waning_config_pn ][ "class" ] = "WaningEffectBox"
+                            elif param_name == "Decay_Time_Constant":
+                                if "Box_Duration" in campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ waning_config_pn ]:
+                                    campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ waning_config_pn ][ "class" ] = "WaningEffectBoxExponential"
+                                else:
+                                    campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ waning_config_pn ][ "class" ] = "WaningEffectExponential" 
                         else:
                             campaign_event["Event_Coordinator_Config"]["Intervention_Config"][ param_name ] = param_value
                     campaign_json["Events"].append( campaign_event )
@@ -176,3 +195,11 @@ def application( config_file_name ):
     else:
         print( "Non-json files not supported (yet)." )
         return config_file_name
+
+def getXlsParamValueFromColumnByKey( sheet, column, key ):
+    for row_id in range(0,sheet.nrows):
+        row = sheet.row(row_id)
+        param_name = row[0].value
+        param_value = row[ column ].value
+        if param_name == key:
+            return param_value
