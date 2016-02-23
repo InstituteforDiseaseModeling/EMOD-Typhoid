@@ -749,7 +749,7 @@ namespace Kernel
                 bool defaultValue = (bool)schema["default"].As<json::Boolean>();*/
                 bool defaultValue = ((int)schema["default"].As<json::Number>() == 1);
                 *(entry.second) = defaultValue;
-                LOG_INFO_F( "Using the default value ( \"%s\" : %d ) for unspecified parameter.\n", key.c_str(), defaultValue );
+                LOG_DEBUG_F( "Using the default value ( \"%s\" : %d ) for unspecified parameter.\n", key.c_str(), defaultValue );
                 if( _track_missing )
                 {
                     missing_parameters_set.insert(key);
