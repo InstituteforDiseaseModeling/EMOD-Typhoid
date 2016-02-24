@@ -987,6 +987,9 @@
     <ClCompile Include="NodeInfoSTI.cpp">
       <Filter>Source Files\STI</Filter>
     </ClCompile>
+    <ClCompile Include="..\interventions\MultiEffectVaccine.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2150,6 +2153,9 @@
     </ClInclude>
     <ClInclude Include="ISTISimulationContext.h">
       <Filter>Source Files\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\MultiEffectVaccine.h">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
