@@ -113,7 +113,7 @@ namespace Kernel {
             { 
                 suids::suid rel_id = pIdGen->GetNextRelationshipSuid();
                 IRelationship* p_rel = RelationshipFactory::CreateRelationship( rel_id, relationship_manager, p_rel_params, male, female );
-                relationship_manager->AddRelationship( p_rel );
+                relationship_manager->AddRelationship( p_rel, true );
             }; 
 
             rel_params[  irel ] = p_rel_params ;

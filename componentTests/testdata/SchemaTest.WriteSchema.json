@@ -11075,6 +11075,47 @@
 					"iv_type" : "NodeTargeted",
 					"class" : "MosquitoRelease"
 				},
+				"MultiEffectVaccine" : {
+					"Sim_Types" : [
+						"*"
+					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Cost_To_Consumer" : {
+						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 999999,
+						"default" : 10
+					},
+					"Vaccine_Take" : {
+						"description" : "This specifies the rate at which delivered vaccines will successfully stimulate an immune response and achieve the desired efficacy. If vaccine_take is set to 0.9, then with a 90 percent chance, the vaccine will start with the specified efficacy, and with a 10 percent chance it will have no efficacy at all.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Acquire_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
+					},
+					"Transmit_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
+					},
+					"Mortality_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "MultiEffectVaccine"
+				},
 				"MultiInterventionDistributor" : {
 					"Sim_Types" : [
 						"*"

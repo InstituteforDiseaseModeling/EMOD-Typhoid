@@ -14,7 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 #include "Exceptions.h"
 #include "INodeSTI.h"
-#include "SimulationSTI.h"
 #include "Properties.h"
 #include "NodeEventContext.h"
 #include "IIndividualHumanSTI.h"

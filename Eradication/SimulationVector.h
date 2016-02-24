@@ -51,8 +51,8 @@ namespace Kernel
 
         // IVectorSimulationContext methods
         virtual void  PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind ) override;
-        virtual float GetNodePopulation( const suids::suid& nodeSuid ) const override;
-        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const override;
+        virtual float GetNodePopulation( const suids::suid& nodeSuid ) override;
+        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) override;
 
         // Allows correct type of community to be added by derived class Simulations
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory) override;

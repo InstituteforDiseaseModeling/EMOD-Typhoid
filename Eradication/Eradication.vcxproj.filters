@@ -984,6 +984,9 @@
     <ClCompile Include="ReferenceTrackingEventCoordinator.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
+    <ClCompile Include="NodeInfoSTI.cpp">
+      <Filter>Source Files\STI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2141,6 +2144,12 @@
     </ClInclude>
     <ClInclude Include="ReferenceTrackingEventCoordinator.h">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeInfoSTI.h">
+      <Filter>Source Files\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="ISTISimulationContext.h">
+      <Filter>Source Files\STI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
+#include <unordered_map>
 #include "BaseTextReport.h"
 #include "ISimulation.h"
 #include "RelationshipReporting.h"
@@ -36,5 +37,6 @@ namespace Kernel
 
         ISimulation* simulation;
         std::vector<RelationshipEndInfo> report_data;
+        std::unordered_map<unsigned int,RelationshipEndInfo> paused_data;
     };
 }

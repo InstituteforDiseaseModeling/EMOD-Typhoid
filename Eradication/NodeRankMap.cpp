@@ -298,7 +298,7 @@ namespace Kernel
         rankMap[ pNC->GetSuid() ]->Update( pNC );
     }
 
-    const INodeInfo& NodeRankMap::GetNodeInfo( const suids::suid& node_suid ) const
+    INodeInfo& NodeRankMap::GetNodeInfo( const suids::suid& node_suid )
     {
         if( rankMap.count( node_suid ) == 0 )
         {

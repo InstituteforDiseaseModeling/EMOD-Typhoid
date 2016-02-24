@@ -1380,7 +1380,6 @@ namespace Kernel
             // -------------------------------------------------------------------------
             for( auto event_name : events_from_other_nodes )
             {
-                //printf("%d-broadcasting event from other node: %s\n",GetSuid().data,event_name.c_str());
                 for (auto individual : individualHumans)
                 {
                     event_context_host->TriggerNodeEventObserversByString( individual->GetEventContext(), event_name );
@@ -1465,15 +1464,13 @@ namespace Kernel
                 // ---------------------------------------
                 if( individual->AtHome() )
                 {
-                    home_individual_ids.erase( individual->GetSuid().data ); // if this person doesn't call this home, then nothing happens
+                    home_individual_ids.erase( individual->GetSuid().data );
 
                     delete individual;
                     individual = NULL;
                 }
                 else
                 {
-                    //printf("Rank=%2d: ++++++++Individual %d is dead but needs to go home\n",EnvPtr->MPI.Rank,individual->GetSuid().data); fflush(stdout);
-
                     // individual must go home to officially die
                     individual->GoHome();
                     processEmigratingIndividual(individual);

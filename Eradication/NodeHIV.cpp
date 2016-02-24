@@ -12,7 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeHIV.h"
 
 #include "IndividualHIV.h"
-#include "SimulationSTI.h"
 
 static const char * _module = "NodeHIV";
 

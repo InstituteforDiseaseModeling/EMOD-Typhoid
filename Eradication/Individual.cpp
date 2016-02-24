@@ -435,7 +435,7 @@ namespace Kernel
                     waypoints_trip_type.push_back(migration_type);
                 }
             }
-            else
+            else if( waypoints.size() > 0 )
             {
                 waypoints.pop_back();
                 waypoints_trip_type.pop_back();

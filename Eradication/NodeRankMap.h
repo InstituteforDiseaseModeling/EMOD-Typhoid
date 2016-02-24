@@ -59,7 +59,7 @@ namespace Kernel
         void Add( int rank, INodeContext* pNC );
         void Update( INodeContext* pNC );
 
-        const INodeInfo& GetNodeInfo( const suids::suid& node_suid ) const ;
+        INodeInfo& GetNodeInfo( const suids::suid& node_suid );
 
         std::string ToString();
 
