@@ -61,6 +61,9 @@ namespace Kernel
         acquire_config = master.acquire_config;
         transmit_config = master.transmit_config;
         mortality_config = master.mortality_config;
+        acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
+        transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
+        mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
     }
 
     MultiEffectVaccine::~MultiEffectVaccine() { }
