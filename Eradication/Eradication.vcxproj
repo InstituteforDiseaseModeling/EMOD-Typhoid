@@ -218,6 +218,7 @@
     <ClCompile Include="..\interventions\MaleCircumcision.cpp" />
     <ClCompile Include="..\interventions\MosquitoRelease.cpp" />
     <ClCompile Include="..\interventions\ModifyStiCoInfectionStatus.cpp" />
+    <ClCompile Include="..\interventions\MultiEffectVaccine.cpp" />
     <ClCompile Include="..\interventions\MultiInterventionDistributor.cpp" />
     <ClCompile Include="..\interventions\NodeLevelHealthTriggeredIV.cpp" />
     <ClCompile Include="..\interventions\NodeLevelHealthTriggeredIVScaleUpSwitch.cpp" />
@@ -494,6 +495,7 @@
     <ClInclude Include="..\interventions\MigrateIndividuals.h" />
     <ClInclude Include="..\interventions\ModifyStiCoInfectionStatus.h" />
     <ClInclude Include="..\interventions\MosquitoRelease.h" />
+    <ClInclude Include="..\interventions\MultiEffectVaccine.h" />
     <ClInclude Include="..\interventions\MultiInterventionDistributor.h" />
     <ClInclude Include="..\interventions\NodeLevelHealthTriggeredIV.h" />
     <ClInclude Include="..\interventions\NodeLevelHealthTriggeredIVScaleUpSwitch.h" />
