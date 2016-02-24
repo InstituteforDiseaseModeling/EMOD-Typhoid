@@ -7,43 +7,24 @@
                 "Intervention_Config": {
                     "Actual_IndividualIntervention_Configs": [
                         {
-                            "class": "MultiInterventionDistributor",
-                            "Intervention_List": [
-                                {
-                                    "Cost_To_Consumer": 6.6667,
-                                    "Vaccine_Take": 0.95,
-                                    "Vaccine_Type": "AcquisitionBlocking",
-                                    "class": "SimpleVaccine",
-                                    "Waning_Config": {
-                                        "Initial_Effect": 0.9,
-                                        "Decay_Time_Constant": 2525,
-                                        "class": "WaningEffectExponential"
-                                    }
-                                },
-                                {
-                                    "Cost_To_Consumer": 6.6667,
-                                    "Vaccine_Take": 0.95,
-                                    "Vaccine_Type": "TransmissionBlocking",
-                                    "class": "SimpleVaccine",
-                                    "Waning_Config": {
-                                        "Initial_Effect": 0.6,
-                                        "Decay_Time_Constant": 2525,
-                                        "class": "WaningEffectExponential"
-                                    }
-                                },
-                                {
-                                    "Cost_To_Consumer": 6.6667,
-                                    "Vaccine_Take": 0.95,
-                                    "Vaccine_Type": "MortalityBlocking",
-                                    "class": "SimpleVaccine",
-                                    "Waning_Config": {
-                                        "Initial_Effect": 1.0,
-                                        "Decay_Time_Constant": 2525,
-                                        "class": "WaningEffectExponential"
-                                    }
-                                }
-
-                            ]
+                            "Cost_To_Consumer": 20,
+                            "Vaccine_Take": 0.95,
+                            "class": "MultiEffectVaccine",
+                            "Acquire_Config": {
+                                "Initial_Effect": 0.9,
+                                "Decay_Time_Constant": 2525,
+                                "class": "WaningEffectExponential"
+                            },
+                            "Transmit_Config": {
+                                "Initial_Effect": 0.6,
+                                "Decay_Time_Constant": 2525,
+                                "class": "WaningEffectExponential"
+                            },
+                            "Mortality_Config": {
+                                "Initial_Effect": 1.0,
+                                "Decay_Time_Constant": 2525,
+                                "class": "WaningEffectExponential"
+                            }
                         }
                     ],
                     "Calendar": [
@@ -94,43 +75,24 @@
             "Event_Coordinator_Config": {
                 "Demographic_Coverage": 1,
                 "Intervention_Config": {
-                    "class": "MultiInterventionDistributor",
-                    "Intervention_List": [
-                        {
-                            "Cost_To_Consumer": 6.6667,
-                            "Vaccine_Take": 0.95,
-                            "Vaccine_Type": "AcquisitionBlocking",
-                            "class": "SimpleVaccine",
-                            "Waning_Config": {
-                                "Initial_Effect": 0.9,
-                                "Decay_Time_Constant": 7300,
-                                "class": "WaningEffectExponential"
-                            }
-                        },
-                        {
-                            "Cost_To_Consumer": 6.6667,
-                            "Vaccine_Take": 0.95,
-                            "Vaccine_Type": "TransmissionBlocking",
-                            "class": "SimpleVaccine",
-                            "Waning_Config": {
-                                "Initial_Effect": 0.9,
-                                "Decay_Time_Constant": 7300,
-                                "class": "WaningEffectExponential"
-                            }
-                        },
-                        {
-                            "Cost_To_Consumer": 6.6667,
-                            "Vaccine_Take": 0.95,
-                            "Vaccine_Type": "MortalityBlocking",
-                            "class": "SimpleVaccine",
-                            "Waning_Config": {
-                                "Initial_Effect": 1.0,
-                                "Decay_Time_Constant": 7300,
-                                "class": "WaningEffectExponential"
-                            }
-                        }
-
-                    ]
+                    "Cost_To_Consumer": 20,
+                    "Vaccine_Take": 1,
+                    "class": "MultiEffectVaccine",
+                    "Acquire_Config": {
+                        "Initial_Effect": 0.9,
+                        "Decay_Time_Constant": 7300,
+                        "class": "WaningEffectExponential"
+                    },
+                    "Transmit_Config": {
+                        "Initial_Effect": 0.9,
+                        "Decay_Time_Constant": 7300,
+                        "class": "WaningEffectExponential"
+                    },
+                    "Mortality_Config": {
+                        "Initial_Effect": 1.0,
+                        "Decay_Time_Constant": 7300,
+                        "class": "WaningEffectExponential"
+                    }
                 },
                 "Property_Restrictions": [
                     "Accessibility:VaccineTake"
@@ -152,43 +114,24 @@
                 "Demographic_Coverage": 1,
                 "Intervention_Config": {
                     "Actual_IndividualIntervention_Config": {
-                        "class": "MultiInterventionDistributor",
-                        "Intervention_List": [
-                            {
-                                "Cost_To_Consumer": 6.6667,
-                                "Vaccine_Take": 0.95,
-                                "Vaccine_Type": "AcquisitionBlocking",
-                                "class": "SimpleVaccine",
-                                "Waning_Config": {
-                                    "Initial_Effect": 0.9,
-                                    "Decay_Time_Constant": 2525,
-                                    "class": "WaningEffectExponential"
-                                }
-                            },
-                            {
-                                "Cost_To_Consumer": 6.6667,
-                                "Vaccine_Take": 0.95,
-                                "Vaccine_Type": "TransmissionBlocking",
-                                "class": "SimpleVaccine",
-                                "Waning_Config": {
-                                    "Initial_Effect": 0.6,
-                                    "Decay_Time_Constant": 2525,
-                                    "class": "WaningEffectExponential"
-                                }
-                            },
-                            {
-                                "Cost_To_Consumer": 6.6667,
-                                "Vaccine_Take": 0.95,
-                                "Vaccine_Type": "MortalityBlocking",
-                                "class": "SimpleVaccine",
-                                "Waning_Config": {
-                                    "Initial_Effect": 1.0,
-                                    "Decay_Time_Constant": 2525,
-                                    "class": "WaningEffectExponential"
-                                }
-                            }
-
-                        ] 
+                        "Cost_To_Consumer": 20,
+                        "Vaccine_Take": 0.95,
+                        "class": "MultiEffectVaccine",
+                        "Acquire_Config": {
+                            "Initial_Effect": 0.9,
+                            "Decay_Time_Constant": 2525,
+                            "class": "WaningEffectExponential"
+                        },
+                        "Transmit_Config": {
+                            "Initial_Effect": 0.6,
+                            "Decay_Time_Constant": 2525,
+                            "class": "WaningEffectExponential"
+                        },
+                        "Mortality_Config": {
+                            "Initial_Effect": 1.0,
+                            "Decay_Time_Constant": 2525,
+                            "class": "WaningEffectExponential"
+                        }
                     },
                     "Event_Or_Config": "Config",
                     "Single_Use": 1,
@@ -216,43 +159,24 @@
                     "Actual_IndividualIntervention_Config": {
                         "Actual_IndividualIntervention_Configs": [
                             {
-                                "class": "MultiInterventionDistributor",
-                                "Intervention_List": [
-                                    {
-                                        "Cost_To_Consumer": 6.6667,
-                                        "Vaccine_Take": 0.95,
-                                        "Vaccine_Type": "AcquisitionBlocking",
-                                        "class": "SimpleVaccine",
-                                        "Waning_Config": {
-                                            "Initial_Effect": 0.9,
-                                            "Decay_Time_Constant": 2525,
-                                            "class": "WaningEffectExponential"
-                                        }
-                                    },
-                                    {
-                                        "Cost_To_Consumer": 6.6667,
-                                        "Vaccine_Take": 0.95,
-                                        "Vaccine_Type": "TransmissionBlocking",
-                                        "class": "SimpleVaccine",
-                                        "Waning_Config": {
-                                            "Initial_Effect": 0.6,
-                                            "Decay_Time_Constant": 2525,
-                                            "class": "WaningEffectExponential"
-                                        }
-                                    },
-                                    {
-                                        "Cost_To_Consumer": 6.6667,
-                                        "Vaccine_Take": 0.95,
-                                        "Vaccine_Type": "MortalityBlocking",
-                                        "class": "SimpleVaccine",
-                                        "Waning_Config": {
-                                            "Initial_Effect": 1.0,
-                                            "Decay_Time_Constant": 2525,
-                                            "class": "WaningEffectExponential"
-                                        }
-                                    }
-
-                                ] 
+                                "Cost_To_Consumer": 20,
+                                "Vaccine_Take": 0.95,
+                                "class": "MultiEffectVaccine",
+                                "Acquire_Config": {
+                                    "Initial_Effect": 0.9,
+                                    "Decay_Time_Constant": 2525,
+                                    "class": "WaningEffectExponential"
+                                },
+                                "Transmit_Config": {
+                                    "Initial_Effect": 0.6,
+                                    "Decay_Time_Constant": 2525,
+                                    "class": "WaningEffectExponential"
+                                },
+                                "Mortality_Config": {
+                                    "Initial_Effect": 1.0,
+                                    "Decay_Time_Constant": 2525,
+                                    "class": "WaningEffectExponential"
+                                }
                             }
                         ],
                         "Calendar": [
@@ -357,43 +281,24 @@
             "Event_Coordinator_Config": {
                 "Demographic_Coverage": 0.95,
                 "Intervention_Config": {
-                    "class": "MultiInterventionDistributor",
-                    "Intervention_List": [
-                        {
-                            "Cost_To_Consumer": 6.666667,
-                            "Vaccine_Take": 0.95,
-                            "Vaccine_Type": "AcquisitionBlocking",
-                            "class": "SimpleVaccine",
-                            "Waning_Config": {
-                                "Initial_Effect": 0.9,
-                                "Decay_Time_Constant": 2525,
-                                "class": "WaningEffectExponential"
-                            }
-                        },
-                        {
-                            "Cost_To_Consumer": 6.666667,
-                            "Vaccine_Take": 0.95,
-                            "Vaccine_Type": "TransmissionBlocking",
-                            "class": "SimpleVaccine",
-                            "Waning_Config": {
-                                "Initial_Effect": 0.6,
-                                "Decay_Time_Constant": 2525,
-                                "class": "WaningEffectExponential"
-                            }
-                        },
-                        {
-                            "Cost_To_Consumer": 6.666667,
-                            "Vaccine_Take": 0.95,
-                            "Vaccine_Type": "MortalityBlocking",
-                            "class": "SimpleVaccine",
-                            "Waning_Config": {
-                                "Initial_Effect": 1.0,
-                                "Decay_Time_Constant": 2525,
-                                "class": "WaningEffectExponential"
-                            }
-                        }
-
-                    ]
+                    "Cost_To_Consumer": 20,
+                    "Vaccine_Take": 1,
+                    "class": "MultiEffectVaccine",
+                    "Acquire_Config": {
+                        "Initial_Effect": 0.9,
+                        "Decay_Time_Constant": 2525,
+                        "class": "WaningEffectExponential"
+                    },
+                    "Transmit_Config": {
+                        "Initial_Effect": 0.6,
+                        "Decay_Time_Constant": 2525,
+                        "class": "WaningEffectExponential"
+                    },
+                    "Mortality_Config": {
+                        "Initial_Effect": 1.0,
+                        "Decay_Time_Constant": 2525,
+                        "class": "WaningEffectExponential"
+                    }
                 },
                 "Property_Restrictions": [
                     "Accessibility:VaccineRefuse"
