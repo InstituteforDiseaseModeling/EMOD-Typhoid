@@ -61,6 +61,7 @@ namespace Kernel
         unsigned int female_id;
         float male_age;
         float female_age;
+        unsigned int termination_reason;
     };
 
     struct CoitalActInfo

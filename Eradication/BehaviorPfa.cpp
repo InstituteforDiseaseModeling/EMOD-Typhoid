@@ -363,7 +363,7 @@ namespace Kernel
         auto male_rels = person1->GetRelationships();
         for( auto rel: male_rels )
         {
-            if( rel->FemalePartner()->GetSuid().data == person2->GetSuid().data )
+            if( rel->GetFemalePartnerId().data == person2->GetSuid().data )
             {
                 LOG_WARN_F( "PFA attempted to create duplicate relationship between male individual %d and female individual %d\n", person1->GetSuid().data, person2->GetSuid().data );
                 existing_relationship = true;

@@ -17,12 +17,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SusceptibilitySTI.h"
 #include "SimulationConfig.h"
 #include "StiObjectFactory.h"
+#include "NodeInfoSTI.h"
 
 static const char * _module = "SimulationSTI";
 
 namespace Kernel
 {
     GET_SCHEMA_STATIC_WRAPPER_IMPL(SimulationSTI,SimulationSTI)
+
+    BEGIN_QUERY_INTERFACE_DERIVED(SimulationSTI, Simulation)
+        HANDLE_INTERFACE(IIdGeneratorSTI)
+        HANDLE_INTERFACE(ISTISimulationContext)
+    END_QUERY_INTERFACE_DERIVED(SimulationSTI, Simulation)
 
     SimulationSTI::SimulationSTI()
         : relationshipSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
@@ -154,4 +160,41 @@ namespace Kernel
     {
         return relationshipSuidGenerator();
     }
+
+    void SimulationSTI::AddTerminatedRelationship( const suids::suid& nodeSuid, const suids::suid& relId )
+    {
+        INodeInfo& r_ni = nodeRankMap.GetNodeInfo( nodeSuid );
+        NodeInfoSTI* p_ni_sti = dynamic_cast<NodeInfoSTI*>(&r_ni);
+        p_ni_sti->AddTerminatedRelationship( relId );
+    }
+
+    bool SimulationSTI::WasRelationshipTerminatedLastTimestep( const suids::suid& relId ) const
+    {
+        const NodeRankMap::RankMap_t& rank_map = nodeRankMap.GetRankMap();
+
+        for( auto& entry : rank_map )
+        {
+            NodeInfoSTI* p_nis = dynamic_cast<NodeInfoSTI*>(entry.second);
+            release_assert( p_nis );
+
+            if( p_nis->WasRelationshipTerminatedLastTimestep( relId ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    INodeInfo* SimulationSTI::CreateNodeInfo()
+    {
+        INodeInfo* pin = new NodeInfoSTI();
+        return pin ;
+    }
+
+    INodeInfo* SimulationSTI::CreateNodeInfo( int rank, INodeContext* pNC )
+    {
+        INodeInfo* pin = new NodeInfoSTI( rank, pNC );
+        return pin ;
+    }
+
 }

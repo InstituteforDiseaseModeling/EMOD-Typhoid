@@ -25,8 +25,8 @@ namespace Kernel
     struct IVectorSimulationContext : public ISupports
     {
         virtual void  PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind ) = 0;
-        virtual float GetNodePopulation( const suids::suid& nodeSuid ) const = 0;
-        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const = 0 ;
+        virtual float GetNodePopulation( const suids::suid& nodeSuid ) = 0;
+        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) = 0 ;
     };
 
     struct IVectorNodeContext : public ISupports

@@ -268,6 +268,7 @@
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
     <ClCompile Include="NodeEventCoordinator.cpp" />
     <ClCompile Include="NodeInfo.cpp" />
+    <ClCompile Include="NodeInfoSTI.cpp" />
     <ClCompile Include="NodeInfoVector.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="ReferenceTrackingEventCoordinator.cpp" />
@@ -575,6 +576,7 @@
     <ClInclude Include="IRelationshipParameters.h" />
     <ClInclude Include="IIdGeneratorSTI.h" />
     <ClInclude Include="ISTIInterventionsContainer.h" />
+    <ClInclude Include="ISTISimulationContext.h" />
     <ClInclude Include="ISusceptibilityContext.h" />
     <ClInclude Include="JsonObjectDemog.h" />
     <ClInclude Include="LoadBalanceScheme.h" />
@@ -584,6 +586,7 @@
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />
     <ClInclude Include="NodeInfo.h" />
+    <ClInclude Include="NodeInfoSTI.h" />
     <ClInclude Include="NodeInfoVector.h" />
     <ClInclude Include="NodeTBHIV.h" />
     <ClInclude Include="PolioContexts.h" />

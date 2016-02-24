@@ -35,10 +35,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "TBDrugTypeParameters.h"
 #endif
 
-#ifndef DISABLE_HIV
-#include "IRelationship.h"
-#endif
-
 // This macro, GET_CONFIGURABLE(Category), is the convenient and fast way to access the SimulationConfig parameters
 // within monolithic executable Eradication.exe.
 // To access the same SimulationConfig instance from EModule (Dlls/so), use the IGlobalContext method

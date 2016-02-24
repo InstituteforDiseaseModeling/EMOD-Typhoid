@@ -301,12 +301,12 @@ namespace Kernel
         migratingVectorQueues[nodeRankMap.GetRankFromNodeSuid(vci->GetMigrationDestination())].push_back(vci);
     }
 
-    float SimulationVector::GetNodePopulation( const suids::suid& nodeSuid ) const
+    float SimulationVector::GetNodePopulation( const suids::suid& nodeSuid )
     {
         return nodeRankMap.GetNodeInfo( nodeSuid ).GetPopulation() ;
     }
 
-    float SimulationVector::GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const
+    float SimulationVector::GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID )
     {
         return ((NodeInfoVector&)nodeRankMap.GetNodeInfo( nodeSuid )).GetAvailableLarvalHabitat( rSpeciesID ) ;
     }
