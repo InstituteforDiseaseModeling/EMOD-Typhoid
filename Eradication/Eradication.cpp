@@ -12,7 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <iostream>
 #include <fstream>
 #include <sstream> // ostringstream
-#include <mpi.h>
 
 #include <math.h>
 #include <stdio.h>
