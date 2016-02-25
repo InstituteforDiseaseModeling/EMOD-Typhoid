@@ -310,7 +310,10 @@ else:
                             "FlowControllerFactory.cpp",
                             "FlowControllerImpl.cpp",
                             "../interventions/STIBarrier.cpp",
-                            "../interventions/STIIsPostDebut.cpp"
+                            "../interventions/STIIsPostDebut.cpp",
+                            "../interventions/MaleCircumcision.cpp",
+                            "../interventions/ModifyStiCoInfectionStatus.cpp",
+                            "../interventions/StiCoInfectionDiagnostic.cpp"
     ]
 
     # HIV
@@ -349,9 +352,6 @@ else:
                             "../interventions/HIVSigmoidByYearAndSexDiagnostic.cpp",
                             "../interventions/HIVSimpleDiagnostic.cpp",
                             "../interventions/HIVMuxer.cpp",
-                            "../interventions/MaleCircumcision.cpp",
-                            "../interventions/ModifyStiCoInfectionStatus.cpp",
-                            "../interventions/StiCoInfectionDiagnostic.cpp",
                             "../interventions/PMTCT.cpp"
     ]
 
