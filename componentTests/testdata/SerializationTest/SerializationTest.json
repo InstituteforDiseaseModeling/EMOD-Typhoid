@@ -16,6 +16,38 @@
         {
             "Test" :
             {
+                "__class__":"WaningEffectConstant",
+                "currentEffect" : 0.1
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectExponential",
+                "currentEffect"     : 0.1,
+                "decayTimeConstant" : 0.2
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectBox",
+                "currentEffect" : 0.1,
+                "boxDuration"   : 0.2
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectBoxExponential",
+                "currentEffect"     : 0.1,
+                "boxDuration"       : 0.2,
+                "decayTimeConstant" : 0.3
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"IndividualHumanHIV",
                 "suid_data"                 : 1234,
                 "m_age"                     : 7300,
@@ -279,7 +311,9 @@
                         "__class__":"MarriageRelationship",
                         "_suid"                    : 123,
                         "state"                    : 0,
+                        "previous_state"           : 0,
                         "relationship_type"        : 2,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 123,
                         "absent_female_partner_id" : 456,
                         "rel_timer"                : 1.1,
@@ -312,7 +346,9 @@
                         "__class__":"InformalRelationship",
                         "_suid"                    : 222,
                         "state"                    : 1,
+                        "previous_state"           : 0,
                         "relationship_type"        : 1,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 555,
                         "absent_female_partner_id" : 333,
                         "rel_timer"                : 41.1,
@@ -345,7 +381,9 @@
                         "__class__":"TransitoryRelationship",
                         "_suid"                    : 789,
                         "state"                    : 2,
+                        "previous_state"           : 0,
                         "relationship_type"        : 0,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 321,
                         "absent_female_partner_id" : 654,
                         "rel_timer"                : 21.1,
@@ -378,7 +416,9 @@
                         "__class__":"TransitoryRelationship",
                         "_suid"                    : 888,
                         "state"                    : 0,
+                        "previous_state"           : 0,
                         "relationship_type"        : 0,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 654,
                         "absent_female_partner_id" : 321,
                         "rel_timer"                : 31.1,
@@ -420,9 +460,6 @@
                 "relationshipSlots"                        : 5,
                 "delay_between_adding_relationships_timer" : 30,
                 "potential_exposure_flag"                  : true,
-                "relationships_at_death"                   : 
-                [
-                ],
                 "num_lifetime_relationships"               : 7,
                 "last_6_month_relationships"               : [ 30, 60, 90 ],
                 "slot2RelationshipDebugMap"                : 
@@ -661,9 +698,24 @@
                 "current_reducedacquire"        : 4.4,
                 "current_reducedtransmit"       : 5.5,
                 "current_reducedmortality"      : 6.6,
-                "durability_time_profile"       : 2,
-                "primary_decay_time_constant"   : 7.7,
-                "secondary_decay_time_constant" : 8.8
+                "waning_effect" :
+                {
+                    "__class__":"WaningEffectBoxExponential",
+                    "currentEffect"     : 0.1,
+                    "boxDuration"       : 0.2,
+                    "decayTimeConstant" : 0.3
+                },
+                "acquire_effect"  :
+                {
+                    "__class__":"WaningEffectConstant",
+                    "currentEffect" : 0.1
+                },
+                "transmit_effect" :
+                {
+                    "__class__":"WaningEffectExponential",
+                    "currentEffect"     : 0.1,
+                    "decayTimeConstant" : 0.2
+                }
             }
         },
         {
@@ -678,9 +730,13 @@
                 "current_reducedacquire"        : 4.4,
                 "current_reducedtransmit"       : 5.5,
                 "current_reducedmortality"      : 6.6,
-                "durability_time_profile"       : 2,
-                "primary_decay_time_constant"   : 7.7,
-                "secondary_decay_time_constant" : 8.8
+                "waning_effect" :
+                {
+                    "__class__":"WaningEffectBoxExponential",
+                    "currentEffect"     : 0.1,
+                    "boxDuration"       : 0.2,
+                    "decayTimeConstant" : 0.3
+                }
             }
         },
         {
@@ -1982,7 +2038,9 @@
                         "__class__":"MarriageRelationship",
                         "_suid"                    : 123,
                         "state"                    : 0,
+                        "previous_state"           : 0,
                         "relationship_type"        : 2,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 123,
                         "absent_female_partner_id" : 456,
                         "rel_timer"                : 1.1,
@@ -2015,7 +2073,9 @@
                         "__class__":"InformalRelationship",
                         "_suid"                    : 222,
                         "state"                    : 1,
+                        "previous_state"           : 0,
                         "relationship_type"        : 1,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 555,
                         "absent_female_partner_id" : 333,
                         "rel_timer"                : 41.1,
@@ -2048,7 +2108,9 @@
                         "__class__":"TransitoryRelationship",
                         "_suid"                    : 789,
                         "state"                    : 2,
+                        "previous_state"           : 0,
                         "relationship_type"        : 0,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 321,
                         "absent_female_partner_id" : 654,
                         "rel_timer"                : 21.1,
@@ -2081,7 +2143,9 @@
                         "__class__":"TransitoryRelationship",
                         "_suid"                    : 888,
                         "state"                    : 0,
+                        "previous_state"           : 0,
                         "relationship_type"        : 0,
+                        "termination_reason"      : 0,
                         "absent_male_partner_id"   : 654,
                         "absent_female_partner_id" : 321,
                         "rel_timer"                : 31.1,
@@ -2123,9 +2187,6 @@
                 "relationshipSlots"                        : 5,
                 "delay_between_adding_relationships_timer" : 30,
                 "potential_exposure_flag"                  : true,
-                "relationships_at_death"                   : 
-                [
-                ],
                 "num_lifetime_relationships"               : 7,
                 "last_6_month_relationships"               : [ 30, 60, 90 ],
                 "slot2RelationshipDebugMap"                : 
@@ -2175,7 +2236,9 @@
                 "__class__":"MarriageRelationship",
                 "_suid"                    : 987,
                 "state"                    : 0,
+                "previous_state"           : 0,
                 "relationship_type"        : 2,
+                "termination_reason"      : 0,
                 "absent_male_partner_id"   : 123,
                 "absent_female_partner_id" : 456,
                 "rel_timer"                : 1.1,
@@ -2513,9 +2576,13 @@
                         "current_reducedacquire"        : 0.2,
                         "current_reducedtransmit"       : 0.3,
                         "current_reducedmortality"      : 0.4,
-                        "durability_time_profile"       : 2,
-                        "primary_decay_time_constant"   : 0.5,
-                        "secondary_decay_time_constant" : 0.6,
+                        "waning_effect" :
+                        {
+                            "__class__":"WaningEffectBoxExponential",
+                            "currentEffect"     : 0.1,
+                            "boxDuration"       : 0.2,
+                            "decayTimeConstant" : 0.3
+                        },
                         "vaccine_take_age_decay_rate"   : 0.7
                     },
                     {

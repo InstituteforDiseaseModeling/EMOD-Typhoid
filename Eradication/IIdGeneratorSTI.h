@@ -9,11 +9,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
+#include "ISupports.h"
 #include "suids.hpp"
 
 namespace Kernel
 {
-    struct IIdGeneratorSTI
+    struct IIdGeneratorSTI : virtual ISupports
     {
         virtual suids::suid GetNextRelationshipSuid() = 0;
     };

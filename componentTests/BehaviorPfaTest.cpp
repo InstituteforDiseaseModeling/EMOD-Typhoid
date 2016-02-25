@@ -205,6 +205,11 @@ SUITE(BehaviorPfaTest)
         {
         }
 
+        Relationship* Clone()
+        {
+            return new FakeRelationship( *this );
+        }
+
     protected:
         virtual ProbabilityNumber getProbabilityUsingCondomThisAct() const override { return 1.0f; }
     };

@@ -74,6 +74,9 @@ SUITE(SerializationTest)
 
             for( int i = 0 ; i < json["Objects"].size() ; i++ )
             {
+                string class_name = json["Objects"][i]["Test"]["__class__"].AsString();
+                printf("testing  %s\n",class_name.c_str());
+
                 string expected_json_str = json["Objects"][i].ToString();
 
                 ISerializable* p_read_obj = nullptr;

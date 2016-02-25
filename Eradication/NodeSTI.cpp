@@ -20,6 +20,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SocietyFactory.h"
 #include "IIdGeneratorSTI.h"
 #include "NodeEventContextHost.h"
+#include "ISTISimulationContext.h"
 
 static const char * _module = "NodeSTI";
 
@@ -227,14 +228,21 @@ namespace Kernel
         IIndividualHuman* movedind
     )
     {
-        auto retVal = Node::processImmigratingIndividual( movedind );
+        // -------------------------------------------------------------------------------
+        // --- SetContextTo() is called in Node::processImmigratingIndividual() but
+        // --- we need need to set context before onImmigrating().  onImmigrating() needs
+        // --- the RelationshipManager which is part of the node.
+        // -------------------------------------------------------------------------------
+        movedind->SetContextTo(getContextPointer());
 
         IIndividualHumanSTI* sti_individual = nullptr;
-        if (retVal->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
+        if (movedind->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "retVal", "IIndividualSTI", "IndividualHuman" );
         }
         sti_individual->onImmigrating();
+
+        auto retVal = Node::processImmigratingIndividual( movedind );
 
         event_context_host->TriggerNodeEventObservers( retVal->GetEventContext(), IndividualEventTriggerType::STIPostImmigrating );
 

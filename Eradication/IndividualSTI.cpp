@@ -435,7 +435,7 @@ namespace Kernel
         for (auto iterator = relationships.begin(); iterator != relationships.end(); /**/ )
         {
             auto relationship = *iterator++;
-            relationship->Terminate();
+            relationship->Terminate( RelationshipTerminationReason::SELF_DIED );
             relationships_at_death.insert( relationship );
             LOG_DEBUG_F("Relationship with %d terminated at time %f due to death\n", GetSuid().data, (float) GetParent()->GetTime().time );
         }
@@ -853,11 +853,13 @@ namespace Kernel
         for( auto p_rel : tmp_relationships )
         {
             IRelationship* p_existing_rel = manager->Immigrate( p_rel );
+
             p_existing_rel->Resume( manager, society, this );
 
             // ------------------------------------------------------------------------
-            // --- If the two relationship objects are not the same object, then
-            // --- the objects are from serialization and we need to get it down to one
+            // --- If the two relationship objects are not the same object, then either
+            // --- we are resolving them due to serialization or due to the relationship
+            // --- being paused (we clone the relationship when we pause it).
             // ------------------------------------------------------------------------
             if( p_rel != p_existing_rel )
             {
@@ -1065,7 +1067,8 @@ namespace Kernel
                             auto partner_rel = *partner_iterator++;
                             if( partner_rel != rel )
                             {
-                                partner_rel->Terminate();
+                                partner_rel->Terminate( RelationshipTerminationReason::PARTNER_MIGRATING );
+                                delete partner_rel;
                             }
                         }
                     }
@@ -1074,7 +1077,7 @@ namespace Kernel
                         // -------------------------------------------------------------------
                         // --- Relationship ends permanently when the person leaves the Node.
                         // -------------------------------------------------------------------
-                        rel->Terminate();
+                        rel->Terminate( RelationshipTerminationReason::SELF_MIGRATING );
                         delete rel;
                     }
                     else if( migration_action == RelationshipMigrationAction::PAUSE )
@@ -1217,7 +1220,13 @@ namespace Kernel
         ar.labelElement("relationshipSlots"                       ) & human_sti.relationshipSlots;
         ar.labelElement("delay_between_adding_relationships_timer") & human_sti.delay_between_adding_relationships_timer;
         ar.labelElement("potential_exposure_flag"                 ) & human_sti.potential_exposure_flag;
-        ar.labelElement("relationships_at_death"                  ); serialize_relationships( ar, human_sti.relationships_at_death );
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // !!! Do not serialize relationships_at_death.  If the person is dead, we are just trying to get them
+        // !!! home to clean up who is a resident.  The use of relationships_at_death should have been used already
+        // !!! when the death event was broadcasted.  Hence, no one should need this later.
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //ar.labelElement("relationships_at_death"                  ); serialize_relationships( ar, human_sti.relationships_at_death );
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ar.labelElement("num_lifetime_relationships"              ) & human_sti.num_lifetime_relationships;
         ar.labelElement("last_6_month_relationships"              ) & human_sti.last_6_month_relationships;
         ar.labelElement("slot2RelationshipDebugMap"               ) & human_sti.slot2RelationshipDebugMap;

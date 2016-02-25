@@ -560,25 +560,10 @@
 			},
 			"Vector_Species_Params" : {
 				"vector_species_name_goes_here" : {
-					"Habitat_Type" : {
-						"type" : "vector enum",
-						"enum" : [
-							"TEMPORARY_RAINFALL",
-							"WATER_VEGETATION",
-							"HUMAN_POPULATION",
-							"CONSTANT",
-							"BRACKISH_SWAMP",
-							"ALL_HABITATS"
-						],
-						"description" : "An array of habitat type used for larval breeding. For example, ['CONSTANT', 'TEMPORARY_RAINFALL', 'WATER_VEGETATION']. More than one habitat may be selected. Possible values are: CONSTANT, TEMPORARY_RAINFALL, WATER_VEGETATION, HUMAN_POPULATION and BRACKISH_SWAMP. Vectors may reside in more than one habitat. This allows for inter-species competition in a shared habitat.",
-						"default" : "TEMPORARY_RAINFALL"
-					},
-					"Required_Habitat_Factor" : {
+					"idmType:LarvalHabitats" : null,
+					"Larval_Habitat_Types" : {
 						"description" : "An array of scaling factors used to determine the volume of habitat needed for larvae to breed. Represents the number of larvae in a 1x1-degree area. The factor multiplicatively scales the resulting weather or population dependent functional form.",
-						"type" : "vector float",
-						"min" : 0,
-						"max" : 1e+015,
-						"default" : 1.25e+010
+						"type" : "idmType:LarvalHabitats"
 					},
 					"Aquatic_Arrhenius_1" : {
 						"description" : "The duration of aquatic development is a decreasing function of temperature.  The daily rate of fractional progression from egg-hatching to emergence is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.  This parameter, a1, is a temperature-independent scale factor on the development rate.  Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
@@ -1108,25 +1093,10 @@
 			},
 			"Vector_Species_Params" : {
 				"vector_species_name_goes_here" : {
-					"Habitat_Type" : {
-						"type" : "vector enum",
-						"enum" : [
-							"TEMPORARY_RAINFALL",
-							"WATER_VEGETATION",
-							"HUMAN_POPULATION",
-							"CONSTANT",
-							"BRACKISH_SWAMP",
-							"ALL_HABITATS"
-						],
-						"description" : "An array of habitat type used for larval breeding. For example, ['CONSTANT', 'TEMPORARY_RAINFALL', 'WATER_VEGETATION']. More than one habitat may be selected. Possible values are: CONSTANT, TEMPORARY_RAINFALL, WATER_VEGETATION, HUMAN_POPULATION and BRACKISH_SWAMP. Vectors may reside in more than one habitat. This allows for inter-species competition in a shared habitat.",
-						"default" : "TEMPORARY_RAINFALL"
-					},
-					"Required_Habitat_Factor" : {
+					"idmType:LarvalHabitats" : null,
+					"Larval_Habitat_Types" : {
 						"description" : "An array of scaling factors used to determine the volume of habitat needed for larvae to breed. Represents the number of larvae in a 1x1-degree area. The factor multiplicatively scales the resulting weather or population dependent functional form.",
-						"type" : "vector float",
-						"min" : 0,
-						"max" : 1e+015,
-						"default" : 1.25e+010
+						"type" : "idmType:LarvalHabitats"
 					},
 					"Aquatic_Arrhenius_1" : {
 						"description" : "The duration of aquatic development is a decreasing function of temperature.  The daily rate of fractional progression from egg-hatching to emergence is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.  This parameter, a1, is a temperature-independent scale factor on the development rate.  Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
@@ -7797,36 +7767,12 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
-					"Killing" : {
-						"description" : "Killing of the targeted stage. A parameter that is decayed. The fraction of animal feeds at this node that result in death of the feeding female mosquito.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+					"Killing_Config" : {
+						"description" : "Killing of the targeted stage. A parameter that is decayed.",
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -8299,36 +8245,12 @@
 						"description" : "The targeted deployment of artificial diet. Possible values are: AD_WithinVillage, AD_OutsideVillage",
 						"default" : "AD_WithinVillage"
 					},
-					"Attraction" : {
-						"description" : "Fraction of feeds attracted to the artificial diet. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+					"Attraction_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -8350,34 +8272,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Blocking_Rate" : {
-						"description" : "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Killing_Rate" : {
-						"description" : "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per housing modification (unamortized).",
 						"type" : "float",
@@ -8385,15 +8279,16 @@
 						"max" : 999999,
 						"default" : 8
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "BOXDURABILITY - Efficacy remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" for the killing efficacy and \"secondary_decay_time_constant\" for the blocking efficacy. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "ArtificialDietHousingModification"
@@ -8414,13 +8309,6 @@
 						"max" : 999999,
 						"default" : 10
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile. See durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 365000,
-						"default" : 1
-					},
 					"Vaccine_Take_Age_Decay_Rate" : {
 						"description" : "This variable assumes that the vaccine take declines exponentially with age (in units of years). Vaccine_Take_Age_Decay_Rate specifies the rate of this exponential decline (in units of 1/years).",
 						"type" : "float",
@@ -8435,23 +8323,6 @@
 						"max" : 1,
 						"default" : 1
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. In principle, a generic vaccine_type will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by \"primary_decay_time_constant\", and then decays exponentially with the time constant \"secondary_decay_time_constant\".  ",
-						"default" : "BOXDURABILITY"
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "Only relevant when BOXDECAYDURABILITY is set for decaying the efficacy by the combination of a box function and an exponential decay. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 365000,
-						"default" : 1
-					},
 					"Vaccine_Type" : {
 						"type" : "enum",
 						"enum" : [
@@ -8463,26 +8334,12 @@
 						"description" : "Type of vaccine to distribute in a vaccine intervention. Possible values are: - Generic - The vaccine can have all of \"reduced_transmit\", \"reduced_acquire\", and \"reduced_mortality\" fields and the vaccine will have both effects. - TransmissionBlocking - Specifies the fraction by which the infectivity of the infected and vaccinated Individual is reduced (\"reduced_transmit\"). - AcquisitionBlocking - Specifies the fraction by which the force of infection experienced by the vaccinated Individual is reduced (\"reduced_acquire\"). - MortalityBlocking - Specifies the fraction by which the disease-mortality rate of a vaccinated Individual is reduced (\"reduced_mortality\").  ",
 						"default" : "Generic"
 					},
-					"Reduced_Acquire" : {
-						"description" : "The acquisition reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Reduced_Transmit" : {
-						"description" : "The transmission reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Reduced_Mortality" : {
-						"description" : "The mortality reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
+					"Waning_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "BCGVaccine"
@@ -10210,20 +10067,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Attract_Rate" : {
-						"description" : "The fraction of human-feeding attempts attracted to a trap. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.5
-					},
-					"Killing_Rate" : {
-						"description" : "The fraction of feeds on the human host seeking trap. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.5
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per trap (unamortized).",
 						"type" : "float",
@@ -10231,29 +10074,16 @@
 						"max" : 999999,
 						"default" : 3.75
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "BOXDURABILITY - Efficacy (for human host seeking trap attacting and killing) remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" and \"secondary_decay_time_constant\". For human host seeking trap, killing is governed by primary, and attracting is governed by secondary. Remember that killing is conditional on attracting, so if attracting drops to zero due to tearing of the net, then no killing will occur, even if killing efficacy is nonzero. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for attracting efficacy. BOXDECAYDURABILITY - Both killing and attracting have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"Attract_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "HumanHostSeekingTrap"
@@ -10268,34 +10098,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Blocking_Rate" : {
-						"description" : "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Killing_Rate" : {
-						"description" : "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per housing modification (unamortized).",
 						"type" : "float",
@@ -10303,15 +10105,16 @@
 						"max" : 999999,
 						"default" : 8
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "BOXDURABILITY - Efficacy remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" for the killing efficacy and \"secondary_decay_time_constant\" for the blocking efficacy. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "IRSHousingModification"
@@ -10448,36 +10251,12 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
-					"Killing" : {
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
-					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -10499,34 +10278,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Blocking_Rate" : {
-						"description" : "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Killing_Rate" : {
-						"description" : "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per housing modification (unamortized).",
 						"type" : "float",
@@ -10534,15 +10285,16 @@
 						"max" : 999999,
 						"default" : 8
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "BOXDURABILITY - Efficacy remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" for the killing efficacy and \"secondary_decay_time_constant\" for the blocking efficacy. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "InsectKillingFenceHousingModification"
@@ -10592,43 +10344,16 @@
 						"description" : "The larval habitat type targeted for larvicide. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
 						"default" : "TEMPORARY_RAINFALL"
 					},
-					"Killing" : {
-						"description" : "Larval killing of targeted stage. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Reduction" : {
-						"description" : "Larval habitat reduction in the targeted quantity. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -11350,6 +11075,47 @@
 					"iv_type" : "NodeTargeted",
 					"class" : "MosquitoRelease"
 				},
+				"MultiEffectVaccine" : {
+					"Sim_Types" : [
+						"*"
+					],
+					"Dont_Allow_Duplicates" : {
+						"description" : "TBD",
+						"type" : "bool",
+						"default" : 0
+					},
+					"Cost_To_Consumer" : {
+						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 999999,
+						"default" : 10
+					},
+					"Vaccine_Take" : {
+						"description" : "This specifies the rate at which delivered vaccines will successfully stimulate an immune response and achieve the desired efficacy. If vaccine_take is set to 0.9, then with a 90 percent chance, the vaccine will start with the specified efficacy, and with a 10 percent chance it will have no efficacy at all.",
+						"type" : "float",
+						"min" : 0,
+						"max" : 1,
+						"default" : 1
+					},
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Acquire_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
+					},
+					"Transmit_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
+					},
+					"Mortality_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "MultiEffectVaccine"
+				},
 				"MultiInterventionDistributor" : {
 					"Sim_Types" : [
 						"*"
@@ -11765,36 +11531,12 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
-					"Killing" : {
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
-					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -11824,36 +11566,12 @@
 						"description" : "The oviposition habitat type targeted by oviposition traps. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
 						"default" : "TEMPORARY_RAINFALL"
 					},
-					"Killing" : {
-						"description" : "Killing of the targeted stage. A parameter that is decayed. The fraction of oviposition cycles that end in the female mosquito's death. If there is skip oviposition, this is not the mortality per skip but the effective net mortality per gonotrophic cycle over all skips.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+					"Killing_Config" : {
+						"description" : "Killing of the targeted stage. A parameter that is decayed.",
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -12189,34 +11907,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Blocking_Rate" : {
-						"description" : "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Killing_Rate" : {
-						"description" : "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per housing modification (unamortized).",
 						"type" : "float",
@@ -12224,15 +11914,16 @@
 						"max" : 999999,
 						"default" : 8
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "BOXDURABILITY - Efficacy remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" for the killing efficacy and \"secondary_decay_time_constant\" for the blocking efficacy. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "ScreeningHousingModification"
@@ -12247,56 +11938,12 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Blocking_Rate" : {
-						"description" : "A fraction of feed attempts that have been blocked. The rate of blocking indoor feeds on individuals with an ITN. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.5
-					},
-					"Killing_Rate" : {
-						"description" : "A fraction of feed attempts that kill the vector. The rate at which the mosquito dies conditional on a successfully blocked feed. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.5
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per bednet (unamortized).",
 						"type" : "float",
 						"min" : 0,
 						"max" : 999999,
 						"default" : 3.75
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile. profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"On_Distributed_Event_Trigger" : {
-						"default" : "UNINITIALIZED STRING",
-						"description" : "TBD",
-						"type" : "Constrained String",
-						"value_source" : "<configuration>:Listed_Events.*"
-					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay that specifies the time course of efficacy. Possible values are: BOXDURABILITY - Efficacy (for bednets blocking or killing) remains at its initial level for a fixed duration at which point the efficacy drops to zero.  Two time constants are provided \"primary_decay_time_constant\" and \"secondary_decay_time_constant\".  For bednets, the killing efficacy is governed by the primary decay time constant and the blocking efficacy is governed by the secondary decay time constant.  Remember that killing is conditional on blocking, so if blocking drops to zero due to tearing of the net, then no killing will occur, even if killing efficacy is nonzero. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
 					},
 					"Bednet_Type" : {
 						"type" : "enum",
@@ -12308,6 +11955,17 @@
 						],
 						"description" : "Type of bednet. Possible values are: Barrier, ITN, LLIN, Retreatment. Note: This enum does not affect the code at all. ",
 						"default" : "Barrier"
+					},
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "SimpleBednet"
@@ -12443,34 +12101,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Blocking_Rate" : {
-						"description" : "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Killing_Rate" : {
-						"description" : "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per housing modification (unamortized).",
 						"type" : "float",
@@ -12478,15 +12108,16 @@
 						"max" : 999999,
 						"default" : 8
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "BOXDURABILITY - Efficacy remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" for the killing efficacy and \"secondary_decay_time_constant\" for the blocking efficacy. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "SimpleHousingModification"
@@ -12507,30 +12138,6 @@
 						"max" : 999999,
 						"default" : 10
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile. See durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 365000,
-						"default" : 1
-					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. In principle, a generic vaccine_type will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by \"primary_decay_time_constant\", and then decays exponentially with the time constant \"secondary_decay_time_constant\".   ",
-						"default" : "BOXDURABILITY"
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "Only relevant when BOXDECAYDURABILITY is set for decaying the efficacy by the combination of a box function and an exponential decay. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 365000,
-						"default" : 1
-					},
 					"Vaccine_Type" : {
 						"type" : "enum",
 						"enum" : [
@@ -12540,19 +12147,16 @@
 						"description" : "The type of immunoglobulin. Possible values are: StrainSpecific",
 						"default" : "StrainSpecific"
 					},
-					"Reduced_Acquire" : {
-						"description" : "The acquisition reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Reduced_Transmit" : {
-						"description" : "The transmission reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
+					"Acquire_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
+					},
+					"Transmit_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "SimpleImmunoglobulin"
@@ -12567,27 +12171,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Blocking_Rate" : {
-						"description" : "The current blocking rate. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per repellent (unamortized).",
 						"type" : "float",
@@ -12595,15 +12178,12 @@
 						"max" : 999999,
 						"default" : 8
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay that specifies the time course of efficacy. Possible values are: BOXDURABILITY - Efficacy (for repellents blocking or killing) blocking is the key efficacy for repellents and killing should be set to zero. Two time constants are provided \"primary_decay_time_constant\" and \"secondary_decay_time_constant\". For repellents, the killing efficacy is governed by the primary decay time constant and the decay of blocking is governed by the secondary decay time constant. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "SimpleIndividualRepellent"
@@ -12624,35 +12204,11 @@
 						"max" : 999999,
 						"default" : 10
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile. See durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 365000,
-						"default" : 1
-					},
 					"Vaccine_Take" : {
 						"description" : "This specifies the rate at which delivered vaccines will successfully stimulate an immune response and achieve the desired efficacy. If vaccine_take is set to 0.9, then with a 90 percent chance, the vaccine will start with the specified efficacy, and with a 10 percent chance it will have no efficacy at all.",
 						"type" : "float",
 						"min" : 0,
 						"max" : 1,
-						"default" : 1
-					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. In principle, a generic vaccine_type will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by \"primary_decay_time_constant\", and then decays exponentially with the time constant \"secondary_decay_time_constant\".  ",
-						"default" : "BOXDURABILITY"
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "Only relevant when BOXDECAYDURABILITY is set for decaying the efficacy by the combination of a box function and an exponential decay. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 365000,
 						"default" : 1
 					},
 					"Vaccine_Type" : {
@@ -12666,26 +12222,12 @@
 						"description" : "Type of vaccine to distribute in a vaccine intervention. Possible values are: - Generic - The vaccine can have all of \"reduced_transmit\", \"reduced_acquire\", and \"reduced_mortality\" fields and the vaccine will have both effects. - TransmissionBlocking - Specifies the fraction by which the infectivity of the infected and vaccinated Individual is reduced (\"reduced_transmit\"). - AcquisitionBlocking - Specifies the fraction by which the force of infection experienced by the vaccinated Individual is reduced (\"reduced_acquire\"). - MortalityBlocking - Specifies the fraction by which the disease-mortality rate of a vaccinated Individual is reduced (\"reduced_mortality\").  ",
 						"default" : "Generic"
 					},
-					"Reduced_Acquire" : {
-						"description" : "The acquisition reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Reduced_Transmit" : {
-						"description" : "The transmission reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Reduced_Mortality" : {
-						"description" : "The mortality reduction ratio.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
+					"Waning_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "SimpleVaccine"
@@ -12780,13 +12322,6 @@
 						"description" : "The larval habitat type targeted for habitat reduction. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
 						"default" : "TEMPORARY_RAINFALL"
 					},
-					"Reduction" : {
-						"description" : "Reduction in the targeted quantity which is larval habitat type specified by target. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
-					},
 					"Spray_Kill_Target" : {
 						"type" : "enum",
 						"enum" : [
@@ -12797,36 +12332,16 @@
 						"description" : "The gender kill target of space spraying. Possible values are: SpaceSpray_FemalesOnly SpaceSpray_MalesOnly SpaceSpray_FemalesAndMales",
 						"default" : "SpaceSpray_FemalesOnly"
 					},
-					"Killing" : {
-						"description" : "A parameter that is decayed. This intervention imposes an additional daily mortality on targeted vectors..",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+					"Reduction_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -12843,36 +12358,12 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
-					"Repellency" : {
-						"description" : "Fraction of feeds repelled by spatial repellent. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+					"Repellency_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",
@@ -12894,34 +12385,6 @@
 						"type" : "bool",
 						"default" : 0
 					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 3650
-					},
-					"Blocking_Rate" : {
-						"description" : "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
-					"Killing_Rate" : {
-						"description" : "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 1
-					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per housing modification (unamortized).",
 						"type" : "float",
@@ -12929,15 +12392,16 @@
 						"max" : 999999,
 						"default" : 8
 					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "BOXDURABILITY - Efficacy remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" for the killing efficacy and \"secondary_decay_time_constant\" for the blocking efficacy. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. ",
-						"default" : "BOXDURABILITY"
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"Blocking_Config" : {
+						"description" : "TBD",
+						"type" : "idmType:WaningEffect"
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "SpatialRepellentHousingModification"
@@ -13020,36 +12484,12 @@
 						"VECTOR_SIM",
 						"MALARIA_SIM"
 					],
-					"Killing" : {
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.Waning"
+					},
+					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0
-					},
-					"Durability_Time_Profile" : {
-						"type" : "enum",
-						"enum" : [
-							"BOXDURABILITY",
-							"DECAYDURABILITY",
-							"BOXDECAYDURABILITY"
-						],
-						"description" : "Profile of durability time decay. Possible values are: BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. In principle, an animal feed kill will have both reduced acquisition and transmission, but it is not decayed separately. DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy of killing. BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by primary_decay_time_constant, and then decays exponentially with the time constant secondary_decay_time_constant.",
-						"default" : "BOXDURABILITY"
-					},
-					"Primary_Decay_Time_Constant" : {
-						"description" : "The primary decay time constant of the decay profile (for killing, if that is primary, else reduction). See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
-					},
-					"Secondary_Decay_Time_Constant" : {
-						"description" : "The secondary decay time constant of the decay profile. See the durability_time_profile.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1e+006,
-						"default" : 0
+						"type" : "idmType:WaningEffect"
 					},
 					"Cost_To_Consumer" : {
 						"description" : "Unit cost per vector control (unamortized).",

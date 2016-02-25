@@ -43,14 +43,24 @@ namespace Kernel
         ENUM_VALUE_SPEC( MIGRATE   , 1)
         ENUM_VALUE_SPEC( TERMINATE , 2))
 
+    ENUM_DEFINE(RelationshipTerminationReason,
+        ENUM_VALUE_SPEC( NOT_TERMINATING    , 0)
+        ENUM_VALUE_SPEC( BROKEUP            , 1)
+        ENUM_VALUE_SPEC( SELF_DIED          , 2)
+        ENUM_VALUE_SPEC( SELF_MIGRATING     , 3)
+        ENUM_VALUE_SPEC( PARTNER_TERMINATED , 4)
+        ENUM_VALUE_SPEC( PARTNER_MIGRATING  , 5))
+
     struct IDMAPI IRelationship : ISerializable
     {
         virtual RelationshipState::Enum GetState() const = 0;
+        virtual RelationshipState::Enum GetPreviousState() const = 0;
+        virtual RelationshipMigrationAction::Enum GetMigrationAction( RANDOMBASE* prng ) const =0;
+        virtual RelationshipTerminationReason::Enum GetTerminationReason() const = 0;
         virtual void Pause( IIndividualHumanSTI* departee ) = 0;
-        virtual void Terminate() = 0;
+        virtual void Terminate( RelationshipTerminationReason::Enum terminationReason ) = 0;
         virtual void Migrate() = 0;
         virtual void Resume( IRelationshipManager* pRelMan, ISociety* pSociety, IIndividualHumanSTI* returnee ) = 0;
-        virtual RelationshipMigrationAction::Enum GetMigrationAction( RANDOMBASE* prng ) const =0;
 
         virtual bool Update( float dt ) = 0;
         virtual void Consummate( float dt ) = 0;

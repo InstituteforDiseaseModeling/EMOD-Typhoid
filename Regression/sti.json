@@ -61,6 +61,8 @@
         { "path": "STI/59_STI_Transitory_Only_Relationship_Terminate" },
         { "path": "STI/60_STI_All_Rel_Types_All_Rel_States" },
         { "path": "STI/61_STI_Marital_Only_Relationship_Migration_Multicore" },
+        { "path": "STI/62_STI_ERAD_2931_PauseAndRelationshipTermination" },
+        { "path": "STI/63_STI_All_Rel_Types_All_Rel_States_Multicore" },
         { "path": "STI/101_MaleCircumcision" }
     ],
     "ENABLE_PYTHON": [
