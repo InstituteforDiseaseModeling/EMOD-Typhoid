@@ -133,6 +133,8 @@ else:
                             "../interventions/Drugs.cpp",
                             "../interventions/HealthSeekingBehavior.cpp",
                             "../interventions/ImportPressure.cpp",
+                            "../interventions/MigrateIndividuals.cpp",
+                            "../interventions/MigrateFamily.cpp",
                             "../interventions/MultiInterventionDistributor.cpp",
                             "../interventions/NodeLevelHealthTriggeredIV.cpp",
                             "../interventions/PropertyValueChanger.cpp",
