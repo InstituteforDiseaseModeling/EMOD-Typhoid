@@ -103,6 +103,7 @@
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="IArchive.cpp" />
     <ClCompile Include="IdmDateTime.cpp" />
+    <ClCompile Include="IdmMpi.cpp" />
     <ClCompile Include="InterpolatedValueMap.cpp" />
     <ClCompile Include="ISerializable.cpp" />
     <ClCompile Include="ISupports.cpp">
@@ -171,6 +172,7 @@
     <ClInclude Include="IdmDateTime.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="IdmApi.h" />
+    <ClInclude Include="IdmMpi.h" />
     <ClInclude Include="IdmString.h" />
     <ClInclude Include="InterpolatedValueMap.h" />
     <ClInclude Include="ISerializable.h" />

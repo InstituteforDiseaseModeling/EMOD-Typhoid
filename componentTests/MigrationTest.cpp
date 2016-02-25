@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualHumanContextFake.h"
 #include "RandomFake.h"
 #include "JsonObjectDemog.h"
+#include "IdmMpi.h"
 
 using namespace Kernel; 
 
@@ -34,6 +35,7 @@ SUITE(MigrationTest)
 
     struct MigrationFixture
     {
+        IdmMpi::MessageInterface* m_pMpi;
         SimulationConfig* m_pSimulationConfig ;
         RandomFake m_RandomFake ;
 
@@ -45,6 +47,8 @@ SUITE(MigrationTest)
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
 
+            m_pMpi = IdmMpi::MessageInterface::CreateNull();
+
             int argc      = 1;
             char* exeName = "componentTests.exe";
             char** argv   = &exeName;
@@ -54,7 +58,7 @@ SUITE(MigrationTest)
             string statePath("testdata/MigrationTest");
             string dllPath("testdata/MigrationTest");
 
-            Environment::Initialize( configFilename, inputPath, outputPath, dllPath, false );
+            Environment::Initialize( m_pMpi, configFilename, inputPath, outputPath, dllPath, false );
 
             const_cast<Environment*>(Environment::getInstance())->RNG = &m_RandomFake;
             m_pSimulationConfig->sim_type = SimType::VECTOR_SIM ;
@@ -65,6 +69,7 @@ SUITE(MigrationTest)
 
         ~MigrationFixture()
         {
+            delete m_pMpi;
             Environment::Finalize();
         }
     };

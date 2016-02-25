@@ -22,6 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BinaryArchiveWriter.h"
 #include "BinaryArchiveReader.h"
 #include "Debug.h"
+#include "IdmMpi.h"
 
 static const char * _module = "NodeRankMap";
 namespace Kernel 
@@ -101,17 +102,13 @@ namespace Kernel
                         const char* buffer = writer.GetBuffer();
                         uint32_t size = writer.GetBufferSize();
                         LOG_VALID_F( "Broadcasting serialized map (%d bytes)\n", size );
-                        MPI_Bcast( (void*)&size, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
-                        MPI_Bcast( (void*)const_cast<char*>(buffer), size, MPI_BYTE, rank, MPI_COMM_WORLD );
+                        EnvPtr->MPI.p_idm_mpi->PostChars( const_cast<char*>(buffer), size, rank );
                     }
                     else
                     {
-                        uint32_t size;
-                        MPI_Bcast( (void*)&size, 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
-                        char* buffer = new char[size];
-                        LOG_VALID_F( "Receiving map (%d bytes) from rank %d\n", size, rank );
-                        MPI_Bcast( (void*)buffer, size, MPI_BYTE, rank, MPI_COMM_WORLD );
-                        auto json_reader = new JsonRawReader( buffer );
+                        std::vector<char> received;
+                        EnvPtr->MPI.p_idm_mpi->GetChars( received, rank );
+                        auto json_reader = new JsonRawReader( received.data() );
                         IArchive& reader = *static_cast<IArchive*>(json_reader);
                         size_t count;
                         reader.startArray( count );
@@ -130,7 +127,7 @@ namespace Kernel
                             }
                         reader.endArray();
                         delete json_reader;
-                        delete [] buffer;
+                        //delete [] buffer;
                     }
                 }
 

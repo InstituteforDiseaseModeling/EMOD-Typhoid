@@ -42,6 +42,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "CampaignEvent.h"
 #include "StandardEventCoordinator.h"
 #include "DllLoader.h"
+#include "IdmMpi.h"
+
 #ifdef ENABLE_PYTHON
 #include "Python.h"
 #endif
@@ -141,18 +143,18 @@ void setStackSize()
 #endif
 
 
-bool ControllerInitWrapper(int argc, char *argv[]); // returns false if something broke
+bool ControllerInitWrapper(int argc, char *argv[], IdmMpi::MessageInterface* pMpi ); // returns false if something broke
 
 int MPIInitWrapper( int argc, char* argv[])
 {
     try 
     {
         bool fSuccessful = false;
-        MPI_Init(nullptr, nullptr);
+        IdmMpi::MessageInterface* p_mpi = IdmMpi::MessageInterface::Create( argc, argv );
 
         try 
         {
-            fSuccessful = ControllerInitWrapper(argc, argv);
+            fSuccessful = ControllerInitWrapper( argc, argv, p_mpi );
         }
         catch( std::exception& e) 
         {
@@ -167,10 +169,12 @@ int MPIInitWrapper( int argc, char* argv[])
             {
                 EnvPtr->Log->Flush();
             }
-            MPI_Abort(MPI_COMM_WORLD, -1);
+            p_mpi->Abort(-1);
         }
 
-        MPI_Finalize();
+        p_mpi->Finalize();
+        delete p_mpi;
+        p_mpi = nullptr;
 
         // Shouldn't get here unless ControllerInitWrapper() returned true (success).
         // MPI_Abort() implementations generally exit the process. If not, return a
@@ -471,7 +475,7 @@ pythonOnExitHook()
 #endif
 }
 
-bool ControllerInitWrapper(int argc, char *argv[])
+bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pMpi )
 {
     using namespace std;
 
@@ -643,6 +647,7 @@ bool ControllerInitWrapper(int argc, char *argv[])
         EnvPtr->Log->Flush();
         LOG_INFO("Initializing environment...\n");
         bool env_ok = Environment::Initialize(
+            pMpi,
             configFileName,
             po.GetCommandLineValueString( "input-path"  ),
             po.GetCommandLineValueString( "output-path" ),
