@@ -83,6 +83,10 @@ def application( config_file_name ):
 			    	list_of_numbers.append( float(elem) )
 	                    param_list= list_of_numbers
                         param_value = param_list
+                    elif isinstance( param_value,basestring) and param_value.startswith( "{" ):
+                        param_dict = json.loads( param_value )
+			# could be list of strings or list of floats...
+                        param_value = param_dict
                     print( param_name, param_value )
                     config_json[param_key]["Vector_Species_Params"][ snpbp_key ][param_name] = param_value
             elif sheet.name.endswith( " Drug Params" ):
