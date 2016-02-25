@@ -314,10 +314,7 @@ else:
                             "../interventions/ModifyStiCoInfectionStatus.cpp",
                             "../interventions/StiCoInfectionDiagnostic.cpp",
                             "../interventions/STIBarrier.cpp",
-                            "../interventions/STIIsPostDebut.cpp",
-                            "../interventions/MaleCircumcision.cpp",
-                            "../interventions/ModifyStiCoInfectionStatus.cpp",
-                            "../interventions/StiCoInfectionDiagnostic.cpp"
+                            "../interventions/STIIsPostDebut.cpp"
     ]
 
     # HIV
