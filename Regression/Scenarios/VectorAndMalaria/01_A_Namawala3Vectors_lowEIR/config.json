@@ -150,7 +150,7 @@
                 "Infected_Egg_Batch_Factor": 0.8, 
                 "Infectious_Human_Feed_Mortality_Factor": 1.5, 
                 "Larval_Habitat_Types": {
-                    "TEMPORARY_RAINFALL": 11250000000
+                    "TEMPORARY_RAINFALL": -1
                 }, 
                 "Transmission_Rate": 0.5
             }, 
