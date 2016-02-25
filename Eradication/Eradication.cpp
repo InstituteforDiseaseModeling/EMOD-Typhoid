@@ -190,14 +190,17 @@ int MPIInitWrapper( int argc, char* argv[])
 #ifdef ENABLE_PYTHON
 
 #define DEFAULT_PYTHON_HOME "c:/python27/"
+#define PYTHON_DLL_W          L"python27.dll"
+#define PYTHON_DLL_S           "python27.dll"
+
 static std::string python_script_path = std::string("");
 
 #pragma warning( push )
 #pragma warning( disable: 4996 )
 char* PythonHomePath()
 {
-    char* python_path = getenv("PYTHON_PATH");
-    if (!python_path)
+    char* python_path = getenv("PYTHONHOME");
+    if( python_path == nullptr )
     {
         python_path = DEFAULT_PYTHON_HOME;
     }
@@ -216,6 +219,15 @@ IdmPyInit(
 {
     //std::cout << __FUNCTION__ << ": " << python_script_name << ": " << python_function_name << std::endl;
 #ifdef WIN32
+    HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
+    if( p_dll == nullptr )
+    {
+        LOG_WARN(  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        LOG_WARN_F("!!!!!! Cannot find %s so embedded python is disabled!!!!!!\n",PYTHON_DLL_S);
+        LOG_WARN(  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        return nullptr;
+    }
+
     Py_SetPythonHome(PythonHomePath()); // add capability to override from command line???
 #endif
 
