@@ -36,6 +36,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IMigrationInfo.h"
 #include "Individual.h"
 #include "Serialization.h"
+#include "IdmMpi.h"
 
 static const char* _module = "Node";
 
@@ -1049,7 +1050,7 @@ namespace Kernel
                 }
 
                 // Everybody stops here for a sync-up after rank 0 writes transitions.json
-                MPI_Barrier( MPI_COMM_WORLD );
+                EnvPtr->MPI.p_idm_mpi->Barrier();
 
                 doOnce = true;
             }
@@ -1464,7 +1465,7 @@ namespace Kernel
                 // ---------------------------------------
                 if( individual->AtHome() )
                 {
-                    home_individual_ids.erase( individual->GetSuid().data );
+                    home_individual_ids.erase( individual->GetSuid().data ); // if this person doesn't call this home, then nothing happens
 
                     delete individual;
                     individual = NULL;

@@ -12,7 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <iostream>
 #include <fstream>
 #include <sstream> // ostringstream
-#include <mpi.h>
 
 #include <math.h>
 #include <stdio.h>
@@ -42,6 +41,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "CampaignEvent.h"
 #include "StandardEventCoordinator.h"
 #include "DllLoader.h"
+#include "IdmMpi.h"
+
 #ifdef ENABLE_PYTHON
 #include "Python.h"
 #endif
@@ -141,18 +142,18 @@ void setStackSize()
 #endif
 
 
-bool ControllerInitWrapper(int argc, char *argv[]); // returns false if something broke
+bool ControllerInitWrapper(int argc, char *argv[], IdmMpi::MessageInterface* pMpi ); // returns false if something broke
 
 int MPIInitWrapper( int argc, char* argv[])
 {
     try 
     {
         bool fSuccessful = false;
-        MPI_Init(nullptr, nullptr);
+        IdmMpi::MessageInterface* p_mpi = IdmMpi::MessageInterface::Create( argc, argv );
 
         try 
         {
-            fSuccessful = ControllerInitWrapper(argc, argv);
+            fSuccessful = ControllerInitWrapper( argc, argv, p_mpi );
         }
         catch( std::exception& e) 
         {
@@ -167,10 +168,12 @@ int MPIInitWrapper( int argc, char* argv[])
             {
                 EnvPtr->Log->Flush();
             }
-            MPI_Abort(MPI_COMM_WORLD, -1);
+            p_mpi->Abort(-1);
         }
 
-        MPI_Finalize();
+        p_mpi->Finalize();
+        delete p_mpi;
+        p_mpi = nullptr;
 
         // Shouldn't get here unless ControllerInitWrapper() returned true (success).
         // MPI_Abort() implementations generally exit the process. If not, return a
@@ -187,14 +190,17 @@ int MPIInitWrapper( int argc, char* argv[])
 #ifdef ENABLE_PYTHON
 
 #define DEFAULT_PYTHON_HOME "c:/python27/"
+#define PYTHON_DLL_W          L"python27.dll"
+#define PYTHON_DLL_S           "python27.dll"
+
 static std::string python_script_path = std::string("");
 
 #pragma warning( push )
 #pragma warning( disable: 4996 )
 char* PythonHomePath()
 {
-    char* python_path = getenv("PYTHON_PATH");
-    if (!python_path)
+    char* python_path = getenv("PYTHONHOME");
+    if( python_path == nullptr )
     {
         python_path = DEFAULT_PYTHON_HOME;
     }
@@ -213,6 +219,15 @@ IdmPyInit(
 {
     //std::cout << __FUNCTION__ << ": " << python_script_name << ": " << python_function_name << std::endl;
 #ifdef WIN32
+    HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
+    if( p_dll == nullptr )
+    {
+        LOG_WARN(  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        LOG_WARN_F("!!!!!! Cannot find %s so embedded python is disabled!!!!!!\n",PYTHON_DLL_S);
+        LOG_WARN(  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        return nullptr;
+    }
+
     Py_SetPythonHome(PythonHomePath()); // add capability to override from command line???
 #endif
 
@@ -471,7 +486,7 @@ pythonOnExitHook()
 #endif
 }
 
-bool ControllerInitWrapper(int argc, char *argv[])
+bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pMpi )
 {
     using namespace std;
 
@@ -643,6 +658,7 @@ bool ControllerInitWrapper(int argc, char *argv[])
         EnvPtr->Log->Flush();
         LOG_INFO("Initializing environment...\n");
         bool env_ok = Environment::Initialize(
+            pMpi,
             configFileName,
             po.GetCommandLineValueString( "input-path"  ),
             po.GetCommandLineValueString( "output-path" ),

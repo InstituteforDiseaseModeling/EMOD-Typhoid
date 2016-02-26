@@ -13,6 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"
 #include "NodeEventContextHost.h"
 #include "SimulationConfig.h"
+#include "IdmMpi.h"
 
 using namespace Kernel; 
 using namespace std; 
@@ -100,7 +101,7 @@ SUITE(BaseEventReportTest)
 {
     struct ReportFixture
     {
-
+        IdmMpi::MessageInterface* m_pMpi;
         SimulationConfig* m_pSimulationConfig ;
 
         ReportFixture()
@@ -108,6 +109,8 @@ SUITE(BaseEventReportTest)
             JsonConfigurable::ClearMissingParameters();
             m_pSimulationConfig = new SimulationConfig();
             m_pSimulationConfig->sim_type = SimType::HIV_SIM ;
+
+            m_pMpi = IdmMpi::MessageInterface::CreateNull();
 
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
@@ -119,7 +122,7 @@ SUITE(BaseEventReportTest)
             string outputPath("testdata/BaseEventReportTest");
             string statePath("testdata/BaseEventReportTest");
             string dllPath("");
-            Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
+            Environment::Initialize( m_pMpi, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
 
             Environment::setSimulationConfig( m_pSimulationConfig );
             m_pSimulationConfig->listed_events.insert("Births"          );
@@ -128,6 +131,7 @@ SUITE(BaseEventReportTest)
 
         ~ReportFixture()
         {
+            delete m_pMpi;
             delete m_pSimulationConfig;
             Environment::setSimulationConfig( nullptr );
         }

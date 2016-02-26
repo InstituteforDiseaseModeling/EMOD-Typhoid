@@ -29,6 +29,7 @@ utilsSrcFiles = [
     "FileSystem.cpp",
     "IArchive.cpp",
     "IdmDateTime.cpp",
+    "IdmMpi.cpp",
     "InterpolatedValueMap.cpp",
     "ISerializable.cpp",
     "ISupports.cpp",

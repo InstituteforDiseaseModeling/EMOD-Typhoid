@@ -27,6 +27,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHuman.h"
 #include "SimulationConfig.h"
 #include "ProgVersion.h"
+#include "IdmMpi.h"
 
 using namespace std;
 
@@ -397,24 +398,7 @@ void SpatialReport::shuffleNodeData()
     }
 
     // reduce nodeids and sort
-    {
-        int32_t count = (int32_t)nodeids.size();
-        LOG_VALID_F( "Contributing %d nodeids\n", count );
-
-        std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
-        MPI_Allgather((void*)&count, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, MPI_COMM_WORLD);
-
-        int32_t total = 0;
-        std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
-        for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
-        {
-            displs[i] = total;
-            total += lengths[i];
-        }
-        all_nodeids.resize(total);
-
-        MPI_Allgatherv((void*)nodeids.data(), count, MPI_INTEGER4, (void*)all_nodeids.data(), lengths.data(), displs.data(), MPI_INTEGER4, MPI_COMM_WORLD);
-    }
+    EnvPtr->MPI.p_idm_mpi->Reduce( nodeids, all_nodeids );
 
     std::sort(all_nodeids.begin(), all_nodeids.end());
 
