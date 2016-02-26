@@ -412,7 +412,7 @@ void IDMAPI writeInputSchemas(
     Kernel::JsonConfigurable::_dryrun = true;
     std::ostringstream oss;
 
-    const char * simTypeListC[] = { "GENERIC_SIM"
+    const char * simTypeListC[] = { "GENERIC_SIM" 
 #ifndef DISABLE_VECTOR
         , "VECTOR_SIM"
 #endif
