@@ -377,7 +377,13 @@ void IDMAPI writeInputSchemas(
     Kernel::JsonConfigurable::_dryrun = true;
     std::ostringstream oss;
 
-    const char * simTypeListC[] = { "GENERIC_SIM", "VECTOR_SIM", "MALARIA_SIM"
+    const char * simTypeListC[] = { "GENERIC_SIM"
+#ifndef DISABLE_VECTOR
+        , "VECTOR_SIM"
+#endif
+#ifndef DISABLE_MALARIA
+        , "MALARIA_SIM"
+#endif
 #ifdef ENABLE_POLIO
         , "POLIO_SIM"
 #endif
@@ -387,8 +393,10 @@ void IDMAPI writeInputSchemas(
 #ifdef ENABLE_TBHIV
         , "TBHIV_SIM"
 #endif
-#ifndef DISABLE_HIV
+#ifndef DISABLE_STI
         , "STI_SIM"
+#endif
+#ifndef DISABLE_HIV
         , "HIV_SIM"
 #endif
     };
