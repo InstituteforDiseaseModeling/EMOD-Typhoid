@@ -2,5 +2,5 @@
 
 import icjjson2csv
 
-def application():
-    icjjson2csv.doit()
+def application( output_path ):
+    icjjson2csv.doit( output_path )

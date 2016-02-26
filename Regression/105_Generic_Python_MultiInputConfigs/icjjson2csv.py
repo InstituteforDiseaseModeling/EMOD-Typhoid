@@ -1,10 +1,11 @@
 #!/usr/bin/python
 import json
+import os
 
-def doit():
-    icj = json.loads( open( "output/InsetChart.json" ).read() )
+def doit( output_path ):
+    icj = json.loads( open( os.path.join( output_path, "InsetChart.json" ) ).read() )
 
-    csv = open( "output/InsetChart.csv", "w" )
+    csv = open( os.path.join( output_path, "InsetChart.csv" ), "w" )
 
 # Channel_1_Name, Channel_2_Name, etc.
 # channel_1_datum[0], channel_2_datum[0], etc
