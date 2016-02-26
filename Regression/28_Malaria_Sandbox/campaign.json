@@ -61,7 +61,6 @@
                     "Cost_To_Consumer": 10, 
                     "Intervention_Name": "Vaccines", 
                     "Reduced_Transmit": 1.0, 
-                    "Vaccine_Take": 1, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "Waning_Config": {
                         "Box_Duration": 3650, 
@@ -83,8 +82,6 @@
             "Event_Coordinator_Config": {
                 "Intervention_Config": {
                     "Cost_To_Consumer": 10, 
-                    "Reduced_Acquire": 1, 
-                    "Vaccine_Take": 1, 
                     "Vaccine_Type": "TransmissionBlocking", 
                     "Waning_Config": {
                         "Box_Duration": 3650, 

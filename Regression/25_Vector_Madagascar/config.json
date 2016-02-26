@@ -91,7 +91,7 @@
         "Listed_Events": [], 
         "Load_Balance_Filename": "Madagascar_2_5arcmin_load_balancing_comm.bin", 
         "Local_Migration_Filename": "Madagascar_2_5arcmin_local_migration.bin", 
-        "Local_Simulation": 0, 
+        "Local_Simulation": 1, 
         "Maternal_Transmission_Probability": 0, 
         "Max_Individual_Infections": 5, 
         "Max_Node_Population_Samples": 30, 
