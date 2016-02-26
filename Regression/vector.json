@@ -1,17 +1,5 @@
 {
     "tests": [
-        { "path" : "25_Vector_Madagascar" },
-        { "path" : "26_Vector_Garki" },
-        { "path" : "27_Vector_Sandbox" },
-        { "path" : "36_Vector_Release_Wolbachia_Females_Individual" },
-        { "path" : "37_Vector_Release_Sterile_Male_Cohort" },
-        { "path" : "39_Vector_Namawala_HostSeekingTrap" },
-        { "path" : "43_Vector_Garki_MultiCore_VectorMigration" },
-        { "path" : "44_Custom_Reporter_Demo" },
-        { "path" : "45_Vector_An_farauti_IRS" },
-        { "path" : "46_Vector_An_arabiensis_MultipleHabitats" }
-    ],
-    ".tests": [
         { "path" : "5_Vector_Namawala_SugarTrap_EveryFeedFeed" },
         { "path" : "6_Vector_Namawala_SugarTrap_EveryDayFeed" },
         { "path" : "8_Vector_Namawala_SugarTrap_EmergeFeed" },
