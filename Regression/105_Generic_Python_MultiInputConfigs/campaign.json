@@ -24,7 +24,12 @@
             "Event_Coordinator_Config": {
                 "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
-                    "class": "SimpleVaccine"
+                    "class": "SimpleVaccine",
+		    "Waning_Config": {
+		        "Initial_Rate": 0.8,
+			"Box_Duration": 1000,
+			"class": "WaningEffectBox"
+		    }
                 },
                 "Target_Demographic": "Everyone",
                 "class": "StandardInterventionDistributionEventCoordinator"

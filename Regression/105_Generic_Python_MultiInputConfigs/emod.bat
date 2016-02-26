@@ -1,1 +1,1 @@
-S:\build\win32\Release\Eradication\Eradication.exe -C config.xlsm -O testing_excel
+Y:\build\x64\Release\Eradication\Eradication.exe -C config.xlsm -O testing_excel
