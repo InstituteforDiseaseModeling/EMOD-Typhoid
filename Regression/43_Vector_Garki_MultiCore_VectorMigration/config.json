@@ -93,7 +93,7 @@
         "Listed_Events": [], 
         "Load_Balance_Filename": "Garki_30arcsec_load_balancing_8procs.bin", 
         "Local_Migration_Filename": "Garki_30arcsec_local_migration.bin", 
-        "Local_Simulation": 1, 
+        "Local_Simulation": 0, 
         "Maternal_Transmission_Probability": 0, 
         "Max_Individual_Infections": 5, 
         "Max_Node_Population_Samples": 40, 

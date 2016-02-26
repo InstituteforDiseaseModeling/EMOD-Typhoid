@@ -83,7 +83,7 @@
         "Larval_Rainfall_Mortality_Threshold": 30.0, 
         "Listed_Events": [], 
         "Load_Balance_Filename": "", 
-        "Local_Simulation": 1, 
+        "Local_Simulation": 0, 
         "Maternal_Transmission_Probability": 0, 
         "Max_Individual_Infections": 5, 
         "Max_Node_Population_Samples": 40, 
