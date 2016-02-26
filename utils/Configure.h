@@ -24,6 +24,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #include "iv_params.rc"
 
+#include <stdarg.h>
 #include <stdexcept>
 #include <sstream>
 #include <fstream>
