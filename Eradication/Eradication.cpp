@@ -189,9 +189,14 @@ int MPIInitWrapper( int argc, char* argv[])
 
 #ifdef ENABLE_PYTHON
 
-#define DEFAULT_PYTHON_HOME "c:/python27/"
+#define DEFAULT_PYTHON_HOME "c:/Python27"
 #define PYTHON_DLL_W          L"python27.dll"
 #define PYTHON_DLL_S           "python27.dll"
+
+#define PYTHON_PRE_PROCESS         "dtk_pre_process"
+#define PYTHON_POST_PROCESS        "dtk_post_process"
+#define PYTHON_POST_PROCESS_SCHEMA "dtk_post_process_schema"
+
 
 static std::string python_script_path = std::string("");
 
@@ -211,6 +216,31 @@ char* PythonHomePath()
 }
 #pragma warning( pop )
 
+void PythonScriptCheckExists( const char* script_filename )
+{
+    std::string path_to_script = FileSystem::Concat( std::string(python_script_path), std::string(script_filename)+".py" );
+    bool exists = FileSystem::FileExists( path_to_script );
+    if( exists )
+    {
+        std::stringstream msg;
+        msg << "Cannot run python script " << path_to_script << " because " << PYTHON_DLL_S << " cannot be found.";
+        throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+    }
+}
+
+void checkPythonSupport()
+{
+#ifdef WIN32
+    HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
+    if( p_dll == nullptr )
+    {
+        PythonScriptCheckExists( PYTHON_PRE_PROCESS         );
+        PythonScriptCheckExists( PYTHON_POST_PROCESS        );
+        PythonScriptCheckExists( PYTHON_POST_PROCESS_SCHEMA );
+    }
+#endif
+}
+
 PyObject * 
 IdmPyInit( 
     const char * python_script_name,
@@ -222,13 +252,18 @@ IdmPyInit(
     HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
     if( p_dll == nullptr )
     {
-        LOG_WARN(  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-        LOG_WARN_F("!!!!!! Cannot find %s so embedded python is disabled!!!!!!\n",PYTHON_DLL_S);
-        LOG_WARN(  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        PythonScriptCheckExists( python_script_name );
         return nullptr;
     }
 
-    Py_SetPythonHome(PythonHomePath()); // add capability to override from command line???
+    std::string python_home = PythonHomePath();
+    if( !FileSystem::DirectoryExists( python_home ) )
+    {
+        std::stringstream msg;
+        msg << PYTHON_DLL_S << " was found but PYTHONHOME=" << python_home << " was not found.  Default is " << DEFAULT_PYTHON_HOME;
+        throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+    }
+    Py_SetPythonHome( const_cast<char*>(python_home.c_str()) ); // add capability to override from command line???
 #endif
 
     //std::cout << "Calling Py_Initialize." << std::endl;
@@ -310,7 +345,7 @@ postProcessSchemaFiles(
 )
 {
     //std::cout << __FUNCTION__ << ": " << schema_path << std::endl;
-    PyObject * pFunc = IdmPyInit( "dtk_post_process_schema", "application" );
+    PyObject * pFunc = IdmPyInit( PYTHON_POST_PROCESS_SCHEMA, "application" );
     //std::cout << __FUNCTION__ << ": " << pFunc << std::endl;
     if( pFunc )
     {
@@ -481,7 +516,7 @@ pythonOnExitHook()
     //PyObject * pName, *pModule, *pDict, *pFunc, *pValue;
 
 #ifdef ENABLE_PYTHON
-    auto pFunc = IdmPyInit( "dtk_post_process", "application" );
+    auto pFunc = IdmPyInit( PYTHON_POST_PROCESS, "application" );
     if( pFunc )
     {
         PyObject * vars = PyTuple_New(1);
@@ -650,7 +685,9 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
         // Prefer to put it in this function rather than inside Environment::Intialize, but note that in --get-schema mode we'll unnecessarily call preproc.
         // NOTE: This enables functionality to allow config.json to be specified in (semi-)arbitrary formats as long as python preproc's into standard config.json
 #ifdef ENABLE_PYTHON
-        auto pFunc = IdmPyInit( "dtk_pre_process", "application" );
+        checkPythonSupport();
+
+        auto pFunc = IdmPyInit( PYTHON_PRE_PROCESS, "application" );
         if( pFunc )
         {
             PyObject * vars = PyTuple_New(1);
