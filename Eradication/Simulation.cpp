@@ -40,6 +40,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
 #include "MpiDataExchanger.h"
+#include "IdmMpi.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -800,17 +801,13 @@ namespace Kernel
                     const char* buffer = writer_archive.GetBuffer();
                     uint32_t byte_count = writer_archive.GetBufferSize();
                     LOG_VALID_F( "Broadcasting serialized bimap (%d bytes)\n", byte_count );
-                    MPI_Bcast( static_cast<void*>(&byte_count), 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
-                    MPI_Bcast( static_cast<void*>(const_cast<char*>(buffer)), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
+                    EnvPtr->MPI.p_idm_mpi->PostChars( const_cast<char*>(buffer), byte_count, rank );
                 }
                 else
                 {
-                    uint32_t byte_count;
-                    MPI_Bcast( static_cast<void*>(&byte_count), 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
-                    char* buffer = new char[byte_count];
-                    LOG_VALID_F( "Receiving bimap (%d bytes) from rank %d\n", byte_count, rank );
-                    MPI_Bcast( static_cast<void*>(buffer), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
-                    auto json_reader = new JsonRawReader( buffer );
+                    std::vector<char> received;
+                    EnvPtr->MPI.p_idm_mpi->GetChars( received, rank );
+                    auto json_reader = new JsonRawReader( received.data() );
                     IArchive& reader_archive = *static_cast<IArchive*>(json_reader);
                     size_t entry_count;
                     reader_archive.startArray( entry_count );
@@ -827,7 +824,7 @@ namespace Kernel
                         }
                     reader_archive.endArray();
                     delete json_reader;
-                    delete [] buffer;
+                    //delete [] buffer;
                 }
             }
 
@@ -931,7 +928,7 @@ namespace Kernel
             LOG_DEBUG_F( "Deleting any existing %s file.\n", transitions_file_path.c_str() );
             FileSystem::RemoveFile( transitions_file_path );
         }
-        MPI_Barrier( MPI_COMM_WORLD );
+        EnvPtr->MPI.p_idm_mpi->Barrier();
 
         // Add nodes according to demographics-and climate file specifications
         for (auto node_id : nodeIDs)

@@ -212,31 +212,7 @@ void ReportPolioIndividualInfections::Reduce_Internal()
     
     LOG_DEBUG_F( "REDUCE:send_buffer (length %d): %s\n", tx_str.length(), tx_str.c_str() );
 
-    // clorton TODO - consolidate versions of this reduce code in one place.
-    int32_t length = (int32_t)tx_str.size();
-
-    if (EnvPtr->MPI.Rank > 0)
-    {
-        MPI_Gather((void*)&length, 1, MPI_INTEGER4, nullptr, EnvPtr->MPI.NumTasks, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-        MPI_Gatherv((void*)tx_str.c_str(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD);
-    }
-    else
-    {
-        std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
-        MPI_Gather((void*)&length, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-        int32_t total = 0;
-        std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
-        for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
-        {
-            displs[i] = total;
-            total += lengths[i];
-        }
-        std::vector<char> buffer(total + 1);
-        MPI_Gatherv((void*)tx_str.c_str(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
-        buffer[total] = '\0';
-
-        rx_str = buffer.data();
-    }
+    EnvPtr->MPI.p_idm_mpi->Reduce( tx_str, rx_str );
 
     if( rx_str.length() > 0 && Infections.good())   // Should be true only for EnvPtr->MPI.Rank == 0
     {

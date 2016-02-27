@@ -10,7 +10,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "UnitTest++.h"
 #include "IdmInitialize.h"
-#include <mpi.h>
 
 using namespace std;
 
@@ -23,7 +22,6 @@ int main(int argc, char* argv[])
     // --- are created/run once for the unit tests.
     // ----------------------------------------------------------------------------------
     IdmInitialize();
-    MPI_Init(nullptr, nullptr);
 
     if( argc == 2 )
     {

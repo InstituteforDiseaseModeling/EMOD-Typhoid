@@ -17,7 +17,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #if USE_BOOST_GENERAL
 #include <boost/scoped_ptr.hpp>
-#include <boost/mpi.hpp>
 #include <boost/bimap.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>

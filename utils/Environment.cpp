@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configure.h"
 #include "Log.h"
 #include "ValidationLog.h"
+#include "IdmMpi.h"
 
 #include <iso646.h>
 
@@ -41,18 +42,24 @@ Environment::Environment()
 , DllPath()
 , RNG( nullptr )
 {
-    MPI.NumTasks = 1;
-    MPI.Rank = 0;
+    MPI.NumTasks  = 1;
+    MPI.Rank      = 0;
+    MPI.p_idm_mpi = nullptr;
+
     Report.Validation = nullptr;
 }
 
 bool Environment::Initialize(
+    IdmMpi::MessageInterface* pMpi,
     string configFileName, 
     string inputPath, string outputPath, /* 2.5 string statePath, */ string dllPath,
     bool get_schema)
 {
-    MPI_Comm_size(MPI_COMM_WORLD, reinterpret_cast<int*>(&localEnv->MPI.NumTasks));
-    MPI_Comm_rank(MPI_COMM_WORLD, reinterpret_cast<int*>(&localEnv->MPI.Rank));
+    release_assert( pMpi );
+
+    localEnv->MPI.p_idm_mpi = pMpi;
+    localEnv->MPI.NumTasks  = pMpi->GetNumTasks();
+    localEnv->MPI.Rank      = pMpi->GetRank();
 
     inputPath = FileSystem::RemoveTrailingChars( inputPath );
     if( !FileSystem::DirectoryExists(inputPath) )
@@ -75,7 +82,7 @@ bool Environment::Initialize(
             // -------------------------------------------------------
             // --- Wait for Rank=0 process to create output directory
             // -------------------------------------------------------
-            MPI_Barrier( MPI_COMM_WORLD );
+            localEnv->MPI.p_idm_mpi->Barrier();
         }
         else
         {
@@ -90,7 +97,7 @@ bool Environment::Initialize(
             // ----------------------------------------------------------------------
             // --- Synchronize with other process after creating output directory
             // ----------------------------------------------------------------------
-            MPI_Barrier( MPI_COMM_WORLD );
+            localEnv->MPI.p_idm_mpi->Barrier();
 
             if( !FileSystem::DirectoryExists(outputPath) )
             {

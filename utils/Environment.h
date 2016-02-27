@@ -27,6 +27,11 @@ class ValidationLog;
 class RANDOMBASE;
 class StatusReporter;
 
+namespace IdmMpi
+{
+    class MessageInterface;
+}
+
 
 class IDMAPI Environment
 {
@@ -35,6 +40,7 @@ public:
     {
         int NumTasks;
         int Rank;
+        IdmMpi::MessageInterface* p_idm_mpi;
     } MPI;
 
     SimpleLogger *Log;
@@ -58,6 +64,7 @@ public:
 
     // Sets up the environment for this process. Returns false if something went wrong
     static bool Initialize(
+        IdmMpi::MessageInterface* pMpi,
         std::string configFileName,
         std::string inputPath,
         std::string outputPath,

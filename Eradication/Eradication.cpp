@@ -12,7 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <iostream>
 #include <fstream>
 #include <sstream> // ostringstream
-#include <mpi.h>
 
 #include <math.h>
 #include <stdio.h>
@@ -42,6 +41,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "CampaignEvent.h"
 #include "StandardEventCoordinator.h"
 #include "DllLoader.h"
+#include "IdmMpi.h"
+
 #ifdef ENABLE_PYTHON
 #include "Python.h"
 #endif
@@ -141,18 +142,18 @@ void setStackSize()
 #endif
 
 
-bool ControllerInitWrapper(int argc, char *argv[]); // returns false if something broke
+bool ControllerInitWrapper(int argc, char *argv[], IdmMpi::MessageInterface* pMpi ); // returns false if something broke
 
 int MPIInitWrapper( int argc, char* argv[])
 {
     try 
     {
         bool fSuccessful = false;
-        MPI_Init(nullptr, nullptr);
+        IdmMpi::MessageInterface* p_mpi = IdmMpi::MessageInterface::Create( argc, argv );
 
         try 
         {
-            fSuccessful = ControllerInitWrapper(argc, argv);
+            fSuccessful = ControllerInitWrapper( argc, argv, p_mpi );
         }
         catch( std::exception& e) 
         {
@@ -167,10 +168,12 @@ int MPIInitWrapper( int argc, char* argv[])
             {
                 EnvPtr->Log->Flush();
             }
-            MPI_Abort(MPI_COMM_WORLD, -1);
+            p_mpi->Abort(-1);
         }
 
-        MPI_Finalize();
+        p_mpi->Finalize();
+        delete p_mpi;
+        p_mpi = nullptr;
 
         // Shouldn't get here unless ControllerInitWrapper() returned true (success).
         // MPI_Abort() implementations generally exit the process. If not, return a
@@ -186,15 +189,23 @@ int MPIInitWrapper( int argc, char* argv[])
 
 #ifdef ENABLE_PYTHON
 
-#define DEFAULT_PYTHON_HOME "c:/python27/"
+#define DEFAULT_PYTHON_HOME "c:/Python27"
+#define PYTHON_DLL_W          L"python27.dll"
+#define PYTHON_DLL_S           "python27.dll"
+
+#define PYTHON_PRE_PROCESS         "dtk_pre_process"
+#define PYTHON_POST_PROCESS        "dtk_post_process"
+#define PYTHON_POST_PROCESS_SCHEMA "dtk_post_process_schema"
+
+
 static std::string python_script_path = std::string("");
 
 #pragma warning( push )
 #pragma warning( disable: 4996 )
 char* PythonHomePath()
 {
-    char* python_path = getenv("PYTHON_PATH");
-    if (!python_path)
+    char* python_path = getenv("PYTHONHOME");
+    if( python_path == nullptr )
     {
         python_path = DEFAULT_PYTHON_HOME;
     }
@@ -205,6 +216,31 @@ char* PythonHomePath()
 }
 #pragma warning( pop )
 
+void PythonScriptCheckExists( const char* script_filename )
+{
+    std::string path_to_script = FileSystem::Concat( std::string(python_script_path), std::string(script_filename)+".py" );
+    bool exists = FileSystem::FileExists( path_to_script );
+    if( exists )
+    {
+        std::stringstream msg;
+        msg << "Cannot run python script " << path_to_script << " because " << PYTHON_DLL_S << " cannot be found.";
+        throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+    }
+}
+
+void checkPythonSupport()
+{
+#ifdef WIN32
+    HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
+    if( p_dll == nullptr )
+    {
+        PythonScriptCheckExists( PYTHON_PRE_PROCESS         );
+        PythonScriptCheckExists( PYTHON_POST_PROCESS        );
+        PythonScriptCheckExists( PYTHON_POST_PROCESS_SCHEMA );
+    }
+#endif
+}
+
 PyObject * 
 IdmPyInit( 
     const char * python_script_name,
@@ -213,7 +249,21 @@ IdmPyInit(
 {
     //std::cout << __FUNCTION__ << ": " << python_script_name << ": " << python_function_name << std::endl;
 #ifdef WIN32
-    Py_SetPythonHome(PythonHomePath()); // add capability to override from command line???
+    HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
+    if( p_dll == nullptr )
+    {
+        PythonScriptCheckExists( python_script_name );
+        return nullptr;
+    }
+
+    std::string python_home = PythonHomePath();
+    if( !FileSystem::DirectoryExists( python_home ) )
+    {
+        std::stringstream msg;
+        msg << PYTHON_DLL_S << " was found but PYTHONHOME=" << python_home << " was not found.  Default is " << DEFAULT_PYTHON_HOME;
+        throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+    }
+    Py_SetPythonHome( const_cast<char*>(python_home.c_str()) ); // add capability to override from command line???
 #endif
 
     //std::cout << "Calling Py_Initialize." << std::endl;
@@ -295,7 +345,7 @@ postProcessSchemaFiles(
 )
 {
     //std::cout << __FUNCTION__ << ": " << schema_path << std::endl;
-    PyObject * pFunc = IdmPyInit( "dtk_post_process_schema", "application" );
+    PyObject * pFunc = IdmPyInit( PYTHON_POST_PROCESS_SCHEMA, "application" );
     //std::cout << __FUNCTION__ << ": " << pFunc << std::endl;
     if( pFunc )
     {
@@ -362,7 +412,7 @@ void IDMAPI writeInputSchemas(
     Kernel::JsonConfigurable::_dryrun = true;
     std::ostringstream oss;
 
-    const char * simTypeListC[] = { "GENERIC_SIM" 
+    const char * simTypeListC[] = { "GENERIC_SIM"
 #ifndef DISABLE_VECTOR
         , "VECTOR_SIM"
 #endif
@@ -466,7 +516,7 @@ pythonOnExitHook()
     //PyObject * pName, *pModule, *pDict, *pFunc, *pValue;
 
 #ifdef ENABLE_PYTHON
-    auto pFunc = IdmPyInit( "dtk_post_process", "application" );
+    auto pFunc = IdmPyInit( PYTHON_POST_PROCESS, "application" );
     if( pFunc )
     {
         PyObject * vars = PyTuple_New(1);
@@ -479,7 +529,7 @@ pythonOnExitHook()
 #endif
 }
 
-bool ControllerInitWrapper(int argc, char *argv[])
+bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pMpi )
 {
     using namespace std;
 
@@ -635,7 +685,9 @@ bool ControllerInitWrapper(int argc, char *argv[])
         // Prefer to put it in this function rather than inside Environment::Intialize, but note that in --get-schema mode we'll unnecessarily call preproc.
         // NOTE: This enables functionality to allow config.json to be specified in (semi-)arbitrary formats as long as python preproc's into standard config.json
 #ifdef ENABLE_PYTHON
-        auto pFunc = IdmPyInit( "dtk_pre_process", "application" );
+        checkPythonSupport();
+
+        auto pFunc = IdmPyInit( PYTHON_PRE_PROCESS, "application" );
         if( pFunc )
         {
             PyObject * vars = PyTuple_New(1);
@@ -651,6 +703,7 @@ bool ControllerInitWrapper(int argc, char *argv[])
         EnvPtr->Log->Flush();
         LOG_INFO("Initializing environment...\n");
         bool env_ok = Environment::Initialize(
+            pMpi,
             configFileName,
             po.GetCommandLineValueString( "input-path"  ),
             po.GetCommandLineValueString( "output-path" ),

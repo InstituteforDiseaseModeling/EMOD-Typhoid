@@ -75,6 +75,10 @@ class RuntimeParameters:
         return self.args.debug
     
     @property
+    def quick_start(self):
+        return self.args.quick_start
+    
+    @property
     def use_dlls(self):
         if self.args.dll_path is not None:
             return True
@@ -1073,6 +1077,8 @@ def copyEModulesOver( params ):
             emodule_dir = os.path.join( params.src_root, "x64" )
         if params.debug == True:
             emodule_dir = os.path.join( emodule_dir, "Debug" )
+        elif params.quick_start == True:
+            emodule_dir = os.path.join( emodule_dir, "QuickStart" )
         else:
             emodule_dir = os.path.join( emodule_dir, "Release" )
 
@@ -1319,6 +1325,7 @@ def setup():
     parser.add_argument("--perf", action="store_true", default=False, help="Run for performance measurement purposes")
     parser.add_argument("--hidegraphs", action="store_true", default=False, help="Suppress pop-up graphs in case of validation failure")
     parser.add_argument("--debug", action="store_true", default=False, help="Use debug path for emodules")
+    parser.add_argument("--quick-start", action="store_true", default=False, help="Use QuickStart path for emodules")
     parser.add_argument("--label", help="Custom suffix for HPC job name")
     parser.add_argument("--config", default="regression_test.cfg", help="Regression test configuration [regression_test.cfg]")
     parser.add_argument("--disable-schema-test", action="store_false", default=True, help="Test schema (true by default, use to suppress schema testing)")
