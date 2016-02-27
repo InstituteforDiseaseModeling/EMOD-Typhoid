@@ -20,6 +20,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ProgVersion.h"
 #include "Configuration.h"
 #include "BoostLibWrapper.h"
+#include "IdmMpi.h"
 
 
 using namespace std;
@@ -198,7 +199,7 @@ void ChannelDataMap::Reduce()
             LOG_DEBUG( data.str().c_str() );
         }
 
-        MPI_Reduce((void*)&((*channel_data)[timesteps_reduced]), (void*)&((receive_buffer)[0]), (int)timesteps_to_reduce, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
+        EnvPtr->MPI.p_idm_mpi->Reduce( &((*channel_data)[timesteps_reduced]), &((receive_buffer)[0]), (int)timesteps_to_reduce );
 
         for (int k = timesteps_reduced; k < total_timesteps_recorded; k++)
         {
