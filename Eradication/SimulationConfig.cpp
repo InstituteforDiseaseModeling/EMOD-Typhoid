@@ -21,7 +21,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Common.h"
 #include "Debug.h"
 #include "Malaria.h"
-#include "SusceptibilityMalaria.h"
 #include "Vector.h"
 #include "Configure.h"
 
@@ -36,8 +35,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "PolioDefs.h"
 #endif
 #include <set>
-
-#include "MathFunctions.h"
 
 static const char* _module = "SimulationConfig";
 
@@ -496,7 +493,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         return true;
     }
 
-    for( int i = 0 ; i < IndividualEventTriggerType::pairs::count()-2 ; i++ )
+    for( int i = 0 ; i < IndividualEventTriggerType::pairs::count()-2 ; ++i )
     {
         auto trigger = IndividualEventTriggerType::pairs::lookup_key( i );
         if( trigger != nullptr )
@@ -544,7 +541,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         {
             json::Object mdp = (*EnvPtr->Config)["Malaria_Drug_Params"].As<Object>();
             json::Object::const_iterator itMdp;
-            for (itMdp = mdp.Begin(); itMdp != mdp.End(); itMdp++)
+            for (itMdp = mdp.Begin(); itMdp != mdp.End(); ++itMdp)
             {
                 std::string drug_name( itMdp->name );
                 auto * mdtp = MalariaDrugTypeParameters::CreateMalariaDrugTypeParameters( drug_name );
@@ -568,7 +565,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     // a little malaria range checking
     if( sim_type == SimType::MALARIA_SIM )
     {
-        larvalconstant0 = (float)(LARVAL_CONSTANT_FACTOR * lloffset * lloffset * ONE_POINT_TWO * (float)x_templarvalhabitat);
+        larvalconstant0 = float(LARVAL_CONSTANT_FACTOR * lloffset * lloffset * ONE_POINT_TWO * float(x_templarvalhabitat));
     }
 
 #ifdef ENABLE_POLIO
@@ -583,13 +580,13 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif
 
         // reversion rates for Sabin attenuating sites
-        for(int i=0; i<3; i++)
+        for(int i=0; i<3; ++i)
         {
             int nDataRead = 0;
             int ptrPosition;
             const char * readStr = tmpSiteRatesStrings[i].c_str();
             float data;
-            size_t maximum_index = 1 + (int)( log((float)number_substrains) / log(2.0f) );
+            size_t maximum_index = 1 + int(log(float(number_substrains)) / log(2.0f));
             vector<float> tmp_sabin_rates;
             tmp_sabin_rates.resize(maximum_index);
 
@@ -598,7 +595,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
                 if (nDataRead < maximum_index)
                     tmp_sabin_rates[nDataRead] = data;
                 readStr += ptrPosition;
-                nDataRead++;
+                ++nDataRead;
             }
 
             if (nDataRead > maximum_index)
@@ -619,7 +616,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
 
         // vaccine infectivity by genotype
-        for(int i=0; i<3; i++)
+        for(int i=0; i<3; ++i)
         {
             int nDataRead = 0;
             int ptrPosition;
@@ -631,7 +628,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
                 if (nDataRead < maximum_index)
                     substrainRelativeInfectivity[i][nDataRead] = data;
                 readStr += ptrPosition;
-                nDataRead++;
+                ++nDataRead;
             }
 
             if (nDataRead != number_substrains)
@@ -685,6 +682,7 @@ QuickBuilder SimulationConfig::GetSchema()
 SimulationConfig::SimulationConfig()
     : age_initialization_distribution_type(DistributionType::DISTRIBUTION_OFF)
     , vital_death_dependence(VitalDeathDependence::NONDISEASE_MORTALITY_OFF)
+    , immunity_initialization_distribution_type( DistributionType::DISTRIBUTION_OFF )
     , egg_hatch_delay_dist(EggHatchDelayDist::NO_DELAY)
     , egg_saturation(EggSaturation::NO_SATURATION)
     , evolution_polio_clock_type(EvolutionPolioClockType::POLIO_EVOCLOCK_NONE)
@@ -709,7 +707,6 @@ SimulationConfig::SimulationConfig()
     , HEGhomingRate(0.0f)
     , HEGfecundityLimiting(0.0f)
     , human_feeding_mortality(DEFAULT_HUMAN_FEEDING_MORTALITY)
-    , immunity_initialization_distribution_type( DistributionType::DISTRIBUTION_OFF )
     , parasiteSmearSensitivity(-42.0f)
     , newDiagnosticSensitivity(-42.0f)
     , falciparumMSPVars(0)
@@ -726,8 +723,6 @@ SimulationConfig::SimulationConfig()
     , default_torus_size( 10 )
     , default_node_population( 1000 )
     , lloffset(0)
-    , coinfection_incidence(false)
-    , enable_coinfection_mortality(false)
     , vital_dynamics(false)
     , vital_disease_mortality(false)
     , interventions(false)
@@ -744,6 +739,21 @@ SimulationConfig::SimulationConfig()
     , landtemperature_variance(-42.0f)
     , rainfall_variance(false)
     , humidity_variance(-42.0f)
+    , number_basestrains(1)
+    , number_substrains(0)
+    , heterogeneous_intranode_transmission_enabled(false)
+    , Sim_Duration(-42.0f)
+    , Sim_Tstep(-42.0f)
+    , starttime(0.0f)
+    , node_grid_size(0.0f)
+    , Run_Number(-42)
+    , branch_duration(-1)
+    , branch_end_state(-1)
+    , branch_start_state(-1)
+    , burnin_period(-1)
+    , serialization_test_cycles(0)
+    , maternalAbHalfLife(-42.0f)
+    , x_templarvalhabitat(1.0f)
 #ifdef ENABLE_POLIO
     , TauNAb(-42.0f)
 //    , PVinf0( { -42.0f, -42.0f, -42.0f, -42.0f, -42.0f, -42.0f } )
@@ -770,10 +780,6 @@ SimulationConfig::SimulationConfig()
 //    , vaccine_Dantigen_IPV( { -42.0f, -42.0f, -42.0f } )
     , Incubation_Disease_Mu(-42.0f)
     , Incubation_Disease_Sigma(-42.0f)
-#endif
-    , number_basestrains(1)
-    , number_substrains(0)
-#ifdef ENABLE_POLIO
 //    , reversionSteps_cVDPV( { -42.0f, -42.0f, -42.0f } )
     , excrement_load(-42.0f)
     , MaxRandStdDev(-42.0f)
@@ -794,42 +800,30 @@ SimulationConfig::SimulationConfig()
     , shedOralMaxLnDuration(-42.0f)
     , shedOralMaxLnDuration_Stddev(-42.0f)
     , shedOralDurationBlockLog2NAb(-42.0f)
-#endif
-
-    , heterogeneous_intranode_transmission_enabled(false)
-    , Sim_Duration(-42.0f)
-    , Sim_Tstep(-42.0f)
-    , starttime(0.0f)
-    , node_grid_size(0.0f)
-    , Run_Number(-42)
-    , branch_duration(-1)
-    , branch_end_state(-1)
-    , branch_start_state(-1)
-    , burnin_period(-1)
-    , serialization_test_cycles(0)
-    , maternalAbHalfLife(-42.0f)
-    , x_templarvalhabitat(1.0f)
-#ifdef ENABLE_POLIO
     , vaccine_genome_OPV1(1)
     , vaccine_genome_OPV2(1)
     , vaccine_genome_OPV3(1)
 #endif
-#ifdef ENABLE_TB
-    , tb_drug_names_for_this_sim()
-    , TBDrugMap()
-#endif
 #ifdef ENABLE_TBHIV
-    , cd4_count_at_beginning_of_hiv_infection(0.0f)
-    , cd4_count_at_end_of_hiv_infection(0.0f)
+    , num_cd4_time_steps(0)
+    , cd4_time_step(0.0)
+    , coinfection_incidence(false)
+    , enable_coinfection_mortality(false)
 #endif
+#ifndef DISABLE_STI
+    , enable_coital_dilution(true)
+    , coital_dilution_2_partners(1)
+    , coital_dilution_3_partners(1)
+    , coital_dilution_4_plus_partners(1)
+#ifndef DISABLE_HIV
+    , days_between_symptomatic_and_death_lambda(183.0f)
+    , days_between_symptomatic_and_death_inv_kappa(1.0f)
+    , prob_maternal_transmission(1.0f)
+    , maternal_transmission_ART_multiplier(1.0f)
+#endif // DISABLE_HIV
+#endif // DISABLE_STI
 #if !defined(_DLLS_)
 //    , vaccine_strains( { 0, 0, 0 } )
-#endif
-#ifdef ENABLE_POLIO
-    , substrainRelativeInfectivity()
-    , Sabin1_Site_Rates()
-    , Sabin2_Site_Rates()
-    , Sabin3_Site_Rates()
 #endif
     , vector_species_names()
     , ConfigName("UNSPECIFIED")
@@ -847,22 +841,19 @@ SimulationConfig::SimulationConfig()
 #ifdef ENABLE_PYTHON
     , python_script_path("UNSPECIFIED")
 #endif
+#ifdef ENABLE_POLIO
+    , substrainRelativeInfectivity()
+    , Sabin1_Site_Rates()
+    , Sabin2_Site_Rates()
+    , Sabin3_Site_Rates()
+#endif
+#ifdef ENABLE_TB
+    , tb_drug_names_for_this_sim()
+    , TBDrugMap()
+#endif
     , vspMap()
     , MalariaDrugMap()
     , m_jsonConfig(nullptr)
-#ifndef DISABLE_STI
-    , enable_coital_dilution(true)
-    , coital_dilution_2_partners(1)
-    , coital_dilution_3_partners(1)
-    , coital_dilution_4_plus_partners(1)
-
-#ifndef DISABLE_HIV
-    , prob_maternal_transmission(1.0f)
-    , days_between_symptomatic_and_death_lambda(183.0f)
-    , days_between_symptomatic_and_death_inv_kappa(1.0f)
-    , maternal_transmission_ART_multiplier(1.0f)
-#endif // DISABLE_HIV
-#endif // DISABLE_STI
 {
 #ifdef ENABLE_POLIO
     ZERO_ARRAY(PVinf0);

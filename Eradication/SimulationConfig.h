@@ -91,10 +91,6 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
-        jsonConfigurable::tDynamicStringSet listed_events;
-#pragma warning( pop )
         // Enum type name                                    Enum variable name                                name in config.json
         //
         DistributionType::Enum                               age_initialization_distribution_type;             // Age_Initialization_Distribution_Type
@@ -163,9 +159,6 @@ namespace Kernel
 
         float lloffset; // half the size of a grid edge in degrees, set by SetFlags()
 
-        bool coinfection_incidence;
-        bool enable_coinfection_mortality;
-
         // parameters for individual
         bool vital_dynamics;
         bool vital_disease_mortality;
@@ -192,6 +185,28 @@ namespace Kernel
         float          landtemperature_variance;
         bool           rainfall_variance;
         float          humidity_variance;
+
+        int number_basestrains; // poliovirus types WPV1-3 VRPV1-3
+        int number_substrains; // genetic variants
+
+        // flag for heterogeneity in mixing (true) or uniform mixing (false)
+        bool heterogeneous_intranode_transmission_enabled;
+
+        float Sim_Duration;
+        float Sim_Tstep;
+        float starttime;
+        float node_grid_size;
+        int Run_Number;
+
+        int branch_duration;
+        int branch_end_state;
+        int branch_start_state;
+
+        int burnin_period;
+        int serialization_test_cycles;
+
+        float maternalAbHalfLife;
+        double x_templarvalhabitat;
 
 #ifdef ENABLE_POLIO
         // SusceptibilityPolio
@@ -222,11 +237,7 @@ namespace Kernel
         float vaccine_Dantigen_IPV[N_POLIO_SEROTYPES]; // (D-antigen units) antigen content of each serotype
         float Incubation_Disease_Mu; // paralysis incubation period, lognormal parameter mu
         float Incubation_Disease_Sigma; // paralysis incubation period, lognormal parameter sigma
-#endif
 
-        int number_basestrains; // poliovirus types WPV1-3 VRPV1-3
-        int number_substrains; // genetic variants
-#ifdef ENABLE_POLIO
         int reversionSteps_cVDPV[N_POLIO_SEROTYPES]; // (bits) number of mutation steps to revert from Sabin to cVDPV, must be <= number_substrains
         float excrement_load; // (grams/day) feces
         float MaxRandStdDev; // (dimensionless) limit to effect of a random normal
@@ -247,37 +258,17 @@ namespace Kernel
         float shedOralMaxLnDuration; // (Ln time)
         float shedOralMaxLnDuration_Stddev; // (Ln time)
         float shedOralDurationBlockLog2NAb; // (log2 NAb)
-#endif
 
-        // flag for heterogeneity in mixing (true) or uniform mixing (false)
-        bool heterogeneous_intranode_transmission_enabled;
-
-        float Sim_Duration;
-        float Sim_Tstep;
-        float starttime;
-        float node_grid_size;
-        int Run_Number;
-
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
-
-        int branch_duration;
-        int branch_end_state;
-        int branch_start_state;
-
-        int burnin_period;
-        int serialization_test_cycles;
-
-        float maternalAbHalfLife;
-        double x_templarvalhabitat;
-#ifdef ENABLE_POLIO
         int vaccine_genome_OPV1;
         int vaccine_genome_OPV2;
         int vaccine_genome_OPV3;
 #endif
-#ifdef ENABLE_TB
-        jsonConfigurable::tDynamicStringSet tb_drug_names_for_this_sim;
-        std::map< std::string, TBDrugTypeParameters * > TBDrugMap;
+
+#ifdef ENABLE_TBHIV
+        int num_cd4_time_steps;
+        float cd4_time_step;
+        bool coinfection_incidence;
+        bool enable_coinfection_mortality;
 #endif
 #ifndef DISABLE_STI
         // STI: these will all move to IndividualHumanSTIConfig soon.
@@ -287,16 +278,11 @@ namespace Kernel
         float coital_dilution_3_partners;
         float coital_dilution_4_plus_partners;
 
-
 #ifndef DISABLE_HIV
-        bool  Enable_cd4_dep_prog;
-        int num_cd4_time_steps;
-        float cd4_time_step;
-        float cd4_count_at_beginning_of_hiv_infection;
-        float cd4_count_at_end_of_hiv_infection;
-
         float days_between_symptomatic_and_death_lambda;
         float days_between_symptomatic_and_death_inv_kappa;
+        float prob_maternal_transmission;
+        float maternal_transmission_ART_multiplier;
 #endif // DISABLE_HIV
 #endif // DISABLE_STI
 
@@ -306,18 +292,13 @@ namespace Kernel
         // for the SimulationConfig object crossing the DLL/EModule boundary
         // without affecting the memory layout and therefore its member values
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+
 #if !defined(_DLLS_)
         StrainIdentity vaccine_strains[3]; // (StrainIdentity) strainIDs for vaccine virus out of the vial, types 1-3 Sabin strains
 #endif
-        std::vector<std::vector<float> >   substrainRelativeInfectivity;
-
-#ifdef ENABLE_POLIO
-        std::vector<float> Sabin1_Site_Rates;
-        std::vector<float> Sabin2_Site_Rates;
-        std::vector<float> Sabin3_Site_Rates;
-
-#endif
-
+        jsonConfigurable::tDynamicStringSet listed_events;
         jsonConfigurable::tDynamicStringSet vector_species_names;
 
         std::string ConfigName;
@@ -336,10 +317,21 @@ namespace Kernel
 #ifdef ENABLE_PYTHON
         std::string python_script_path;
 #endif
+#ifdef ENABLE_POLIO
+        std::vector<std::vector<float> >   substrainRelativeInfectivity;
+        std::vector<float> Sabin1_Site_Rates;
+        std::vector<float> Sabin2_Site_Rates;
+        std::vector<float> Sabin3_Site_Rates;
+#endif
+#ifdef ENABLE_TB
+        jsonConfigurable::tDynamicStringSet tb_drug_names_for_this_sim;
+        std::map< std::string, TBDrugTypeParameters * > TBDrugMap;
+#endif
+
+        std::map< std::string, VectorSpeciesParameters * > vspMap;
+        std::map< std::string, MalariaDrugTypeParameters * > MalariaDrugMap;
 #pragma warning( pop )
 
-        float prob_maternal_transmission;
-        float maternal_transmission_ART_multiplier;
 
         ///////////////////////////////////////////
         SimulationConfig();
@@ -348,12 +340,7 @@ namespace Kernel
         const Configuration* GetJsonConfigObj() const { return m_jsonConfig; }
 
 
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
-        std::map< std::string, VectorSpeciesParameters * > vspMap;
-        std::map< std::string, MalariaDrugTypeParameters * > MalariaDrugMap;
     protected:
-#pragma warning( pop )
 
     private: // for serialization to work
 

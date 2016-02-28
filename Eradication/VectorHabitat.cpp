@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Climate.h"
 #include "Contexts.h"
 #include "Exceptions.h"
-#include "Interventions.h"
 #include "Log.h"
 #include "SimulationConfig.h" // TODO: long-term, it seems that lloffset should belong to Node and the larval decay rates and rainfall mortality thresholds to this class.
 #include "Vector.h"
@@ -56,7 +55,7 @@ namespace Kernel
     {
     }
 
-    VectorHabitat* VectorHabitat::CreateHabitat( VectorHabitatType::Enum type, float max_capacity )
+    IVectorHabitat* VectorHabitat::CreateHabitat( VectorHabitatType::Enum type, float max_capacity )
     {
         return new VectorHabitat(type, max_capacity);
     }
@@ -385,20 +384,21 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    void VectorHabitat::serialize(IArchive& ar, VectorHabitat* habitat)
+    REGISTER_SERIALIZABLE(VectorHabitat);
+
+    void VectorHabitat::serialize(IArchive& ar, VectorHabitat* obj)
     {
-        ar.startObject();
-            ar.labelElement("m_habitat_type") & (uint32_t&)habitat->m_habitat_type;
-            ar.labelElement("m_max_larval_capacity") & habitat->m_max_larval_capacity;
-            ar.labelElement("m_current_larval_capacity") & habitat->m_current_larval_capacity;
-            ar.labelElement("m_total_larva_count") & habitat->m_total_larva_count;
-            ar.labelElement("m_new_egg_count") & habitat->m_new_egg_count;
-            ar.labelElement("m_oviposition_trap_killing") & habitat->m_oviposition_trap_killing;
-            ar.labelElement("m_artificial_larval_mortality") & habitat->m_artificial_larval_mortality;
-            ar.labelElement("m_larvicide_habitat_scaling") & habitat->m_larvicide_habitat_scaling;
-            ar.labelElement("m_rainfall_mortality") & habitat->m_rainfall_mortality;
-            ar.labelElement("m_egg_crowding_correction") & habitat->m_egg_crowding_correction;
-        ar.endObject();
+        VectorHabitat& habitat = *obj;
+        ar.labelElement("m_habitat_type") & (uint32_t&)habitat.m_habitat_type;
+        ar.labelElement("m_max_larval_capacity") & habitat.m_max_larval_capacity;
+        ar.labelElement("m_current_larval_capacity") & habitat.m_current_larval_capacity;
+        ar.labelElement("m_total_larva_count") & habitat.m_total_larva_count;
+        ar.labelElement("m_new_egg_count") & habitat.m_new_egg_count;
+        ar.labelElement("m_oviposition_trap_killing") & habitat.m_oviposition_trap_killing;
+        ar.labelElement("m_artificial_larval_mortality") & habitat.m_artificial_larval_mortality;
+        ar.labelElement("m_larvicide_habitat_scaling") & habitat.m_larvicide_habitat_scaling;
+        ar.labelElement("m_rainfall_mortality") & habitat.m_rainfall_mortality;
+        ar.labelElement("m_egg_crowding_correction") & habitat.m_egg_crowding_correction;
     }
 
     void serialize(IArchive& ar, map<VectorHabitatType::Enum, float>& mapping)
@@ -427,31 +427,6 @@ namespace Kernel
                     ar.labelElement("value") & value;
                 ar.endObject();
                 mapping[type] = value;
-            }
-        }
-        ar.endArray();
-    }
-
-    void VectorHabitat::serialize(IArchive& ar, list<VectorHabitat*>& habitats)
-    {
-        size_t count = ar.IsWriter() ? habitats.size() : -1;
-
-        ar.startArray(count);
-        if (ar.IsWriter())
-        {
-            for (auto habitat : habitats)
-            {
-                serialize(ar, habitat);
-            }
-        }
-        else
-        {
-            habitats.clear();
-            for (size_t i = 0; i < count; ++i)
-            {
-                auto habitat = new VectorHabitat();
-                serialize(ar, habitat);
-                habitats.push_back(habitat);
             }
         }
         ar.endArray();

@@ -21,7 +21,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "PropertyReport.h"
 #include "Exceptions.h"
 #include "Instrumentation.h"
-#include "InterventionEnums.h"
 #include "IMigrationInfo.h"
 #include "Node.h"
 #include "NodeDemographics.h"
@@ -35,13 +34,16 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "DllLoader.h"
 
-#include "BinaryArchiveWriter.h"
-#include "BinaryArchiveReader.h"
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
 #include "MpiDataExchanger.h"
 #include "IdmMpi.h"
 #include "Properties.h"
+
+#ifdef _DEBUG
+#include <BinaryArchiveReader.h>
+#include <BinaryArchiveWriter.h>
+#endif
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -793,9 +795,10 @@ namespace Kernel
             {
 #if defined(WIN32)
                 writer_archive.startObject();
-                    writer_archive.labelElement( "id" ) & uint32_t(entry.left);
-                    uint32_t suid = entry.right.data;
-                    writer_archive.labelElement( "suid") & suid;
+                    writer_archive.labelElement( "id" ) & (uint32_t&)entry.left;
+                    // entry.right is const which doesn't play well with IArchive operator '&'
+                    suids::suid suid(entry.right);
+                    writer_archive.labelElement( "suid" ) & suid;
                 writer_archive.endObject();
 #endif
             }
@@ -1084,7 +1087,7 @@ namespace Kernel
 
         WithSelfFunc to_self_func = [this](int myRank) 
         { 
-#ifndef CLORTON
+#ifndef _DEBUG
             // Don't bother to serialize locally
             // for (auto individual : migratingIndividualQueues[destination_rank]) // Note the direction of iteration below!
             for (auto iterator = migratingIndividualQueues[myRank].rbegin(); iterator != migratingIndividualQueues[myRank].rend(); ++iterator)

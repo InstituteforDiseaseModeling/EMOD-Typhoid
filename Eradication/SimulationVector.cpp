@@ -23,6 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BinaryArchiveWriter.h"
 #include "BinaryArchiveReader.h"
 #include "MpiDataExchanger.h"
+#include "VectorCohortIndividual.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -284,7 +285,7 @@ namespace Kernel
         return num_nodes ;
     }
 
-    void SimulationVector::PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind )
+    void SimulationVector::PostMigratingVector( const suids::suid& nodeSuid, IVectorCohort* ind )
     {
         for( auto report : vector_migration_reports )
         {
@@ -306,7 +307,7 @@ namespace Kernel
 
     float SimulationVector::GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID )
     {
-        return ((NodeInfoVector&)nodeRankMap.GetNodeInfo( nodeSuid )).GetAvailableLarvalHabitat( rSpeciesID ) ;
+        return ((NodeInfoVector&)nodeRankMap.GetNodeInfo( nodeSuid )).GetAvailableLarvalHabitat( rSpeciesID );
     }
 
     void SimulationVector::setupMigrationQueues()
@@ -322,21 +323,3 @@ namespace Kernel
 
 }
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, SimulationVector& sim, const unsigned int  file_version )
-    {
-        ar & sim.vaccinedefaultcost;
-        ar & sim.housingmoddefaultcost;
-        ar & sim.awarenessdefaultcost;
-        ar & sim.netdefaultcost;
-
-        // Serialize fields
-        ar & sim.migratingVectorQueues;
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::Simulation>(sim);
-    }
-}
-#endif

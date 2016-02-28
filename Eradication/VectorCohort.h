@@ -18,6 +18,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class StrainIdentity;
+    
     struct IVectorCohort : ISerializable
     {
         /* Only for type-ID right now */
@@ -29,15 +31,15 @@ namespace Kernel
         virtual VectorMatingStructure& GetVectorGenetics() = 0;
         virtual void SetVectorGenetics( const VectorMatingStructure& new_value ) = 0;
         virtual float GetMortality( uint32_t addition ) const = 0;
+        virtual const StrainIdentity* GetStrainIdentity() const = 0;
     };
 
     struct INodeContext;
-    class StrainIdentity;
 
     struct VectorCohort;
-    typedef std::list<VectorCohort *> VectorCohortList_t;
+    typedef std::list<IVectorCohort *> VectorCohortList_t;
 
-    struct VectorCohort : IMigrate, IVectorCohort
+    struct VectorCohort : IVectorCohort, IMigrate
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -46,7 +48,7 @@ namespace Kernel
         static VectorCohort *CreateCohort( float progress = 0.0, uint32_t population = DEFAULT_VECTOR_COHORT_SIZE, VectorMatingStructure = VectorMatingStructure() );
         virtual ~VectorCohort();
 
-        virtual const StrainIdentity* GetStrainIdentity() const;
+        virtual const StrainIdentity* GetStrainIdentity() const override;
 
         // IMigrate interfaces
         virtual void ImmigrateTo(INodeContext* destination_node) override;
@@ -70,7 +72,7 @@ namespace Kernel
     protected:
         VectorCohort();
         VectorCohort(float progress, uint32_t population, VectorMatingStructure _vector_genetics);
-        void Initialize();
+        virtual void Initialize();
 
         VectorMatingStructure vector_genetics;
         double progress;

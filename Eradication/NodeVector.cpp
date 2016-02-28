@@ -51,27 +51,30 @@ namespace Kernel
     TransmissionGroupMembership_t NodeVector::vector_to_human_outdoor;
 
     NodeVector::NodeVector() 
-        : Node()
-        , m_larval_habitats()
+        : m_larval_habitats()
         , m_vectorpopulations()
-        , m_vector_lifecycle_probabilities()
+        , m_vector_lifecycle_probabilities( nullptr )
         , larval_habitat_multiplier()
-        , vector_mortality(true)
-        , mosquito_weight(0)
-        , vector_migration_info(nullptr)
+        , vector_mortality( true )
+        , mosquito_weight( 0 )
+        , vector_migration_info( nullptr )
     {
+        delete event_context_host;
+        NodeVector::setupEventContextHost();    // This is marked as a virtual function, but isn't virtualized here because we're still in the ctor.
     }
 
     NodeVector::NodeVector(ISimulationContext *context, suids::suid _suid) 
         : Node(context, _suid)
         , m_larval_habitats()
         , m_vectorpopulations()
-        , m_vector_lifecycle_probabilities()
+        , m_vector_lifecycle_probabilities( nullptr )
         , larval_habitat_multiplier()
-        , vector_mortality(true)
-        , mosquito_weight(0)
-        , vector_migration_info(nullptr)
+        , vector_mortality( true )
+        , mosquito_weight( 0 )
+        , vector_migration_info( nullptr )
     {
+        delete event_context_host;
+        NodeVector::setupEventContextHost();    // This is marked as a virtual function, but isn't virtualized here because we're still in the ctor.
     }
 
     bool
@@ -170,9 +173,14 @@ namespace Kernel
         }
         m_vectorpopulations.clear();
 
-        for (auto habitat : m_larval_habitats)
+        for (auto& entry : m_larval_habitats)
         {
-            delete habitat;
+            LOG_DEBUG_F("%s: Cleaning up habitats for species '%s'.\n", __FUNCTION__, entry.first.c_str() );
+            for (auto& habitat : entry.second)
+            {
+                delete habitat;
+                habitat = nullptr;
+            }
         }
         m_larval_habitats.clear();
 
@@ -332,10 +340,15 @@ namespace Kernel
 
         // changes in larval capacities.
         // drying of larval habitat, function of temperature and humidity
-        for (auto habitat : m_larval_habitats)
+        for ( auto& entry : m_larval_habitats )
         {
-            release_assert(habitat);
-            habitat->Update( dt, getContextPointer() );
+            LOG_DEBUG_F( "%s: Updating habitats for mosquito species %s.\n", __FUNCTION__, entry.first.c_str() );
+
+            for ( auto habitat : entry.second )
+            {
+                release_assert( habitat );
+                habitat->Update( dt, getContextPointer() );
+            }
         }
 
         transmissionGroups->EndUpdate(1.0f);
@@ -558,7 +571,7 @@ namespace Kernel
             vp->Vector_Migration( vector_migration_info, &migrating_vectors );
             while (migrating_vectors.size() > 0)
             {
-                VectorCohort* p_vc = migrating_vectors.front();
+                IVectorCohort* p_vc = migrating_vectors.front();
                 migrating_vectors.pop_front();
 
                 ivsc->PostMigratingVector( this->GetSuid(), p_vc );
@@ -601,7 +614,7 @@ namespace Kernel
 
         // bookkeeping
         VectorCohortList_t migratingvectors;             // to hold vectors
-        VectorCohort *tempentry;                         // to hold vector popped off migrating list
+        IVectorCohort *tempentry;                        // to hold vector popped off migrating list
         std::vector<suids::suid>::iterator itNodeId;     // iterator for "sprinkling" vectors evenly across locally adjacent nodes
 
         if (vectormigrationrate > 0)
@@ -619,7 +632,8 @@ namespace Kernel
                     migratingvectors.pop_front();
 
                     // give vectors to attached communities like a sprinkler / round-robin
-                    tempentry->SetMigrating( *itNodeId, MigrationType::LOCAL_MIGRATION, 0.0, 0.0, false );
+                    auto emigre = dynamic_cast<IMigrate*>(tempentry);
+                    emigre->SetMigrating( *itNodeId, MigrationType::LOCAL_MIGRATION, 0.0, 0.0, false );
                     ivsc->PostMigratingVector( this->GetSuid(), tempentry);
 
                     // circular iteration among available nodes
@@ -666,24 +680,31 @@ namespace Kernel
         return m_vector_lifecycle_probabilities;
     }
 
-    VectorHabitat* NodeVector::GetVectorHabitatByType(VectorHabitatType::Enum type)
+    IVectorHabitat* NodeVector::GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type )
     {
-        VectorHabitatList_t::iterator it = std::find_if( m_larval_habitats.begin(), m_larval_habitats.end(), [type](VectorHabitat* habitat){ return habitat->GetVectorHabitatType() == type; } );
-        if ( it != m_larval_habitats.end() )
+        IVectorHabitat* habitat;
+
+        VectorHabitatList_t& habitats = m_larval_habitats[ species ];
+        VectorHabitatList_t::iterator it = std::find_if( habitats.begin(), habitats.end(), [type](IVectorHabitat* entry){ return entry->GetVectorHabitatType() == type; } );
+        if ( it != habitats.end() )
         { 
-            LOG_DEBUG_F("Found larval habitat with type = %s\n", VectorHabitatType::pairs::lookup_key(type));
-            return *it;
+            LOG_DEBUG_F( "%s: Found larval habitat with type = %s\n", __FUNCTION__, VectorHabitatType::pairs::lookup_key( type ) );
+            habitat = *it;
         }
         else
         {
-            LOG_DEBUG_F("There is no larval habitat yet with type = %s\n", VectorHabitatType::pairs::lookup_key(type));
-            return nullptr;
+            LOG_DEBUG_F( "%s: Creating new larval habitat with type %s for species %s.\n", __FUNCTION__, VectorHabitatType::pairs::lookup_key( type ), species.c_str() );
+            habitat = VectorHabitat::CreateHabitat( type, 0.0f );
+            habitats.push_front( habitat );
         }
+
+        return habitat;
     }
 
-    void NodeVector::AddVectorHabitat(VectorHabitat* habitat)
+    VectorHabitatList_t* NodeVector::GetVectorHabitatsBySpecies( std::string& species )
     {
-        m_larval_habitats.push_front(habitat);
+        // This will create an empty habitat list if necessary, which is okay.
+        return &(m_larval_habitats[ species ]);
     }
 
     float NodeVector::GetLarvalHabitatMultiplier(VectorHabitatType::Enum type) const
@@ -724,11 +745,6 @@ namespace Kernel
         m_vectorpopulations.push_front(vp);
     }
 
-    const std::list<VectorHabitat *>& NodeVector::GetHabitats() const
-    {
-        return m_larval_habitats ;
-    }
-
     VectorPopulationList_t& NodeVector::GetVectorPopulations()
     {
         return m_vectorpopulations;
@@ -749,18 +765,3 @@ namespace Kernel
     }
 } // end namespace Kernel
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive & ar, NodeVector& node, const unsigned int  file_version )
-    {
-        // Serialize fields
-        ar & node.m_vectorpopulations;
-        ar & node.m_larval_habitats;
-        ar & node.larval_habitat_multiplier
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::Node>(node);
-    }
-}
-#endif

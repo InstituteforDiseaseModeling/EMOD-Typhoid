@@ -39,51 +39,38 @@ namespace Kernel
         HANDLE_ISUPPORTS_VIA(IVectorPopulation)
     END_QUERY_INTERFACE_BODY(VectorPopulation)
 
-    VectorPopulation::VectorPopulation() :
-        animalfeed_eggbatchmod(1.0f),
-        ADfeed_eggbatchmod(1.0f),
-        neweggs(0),
-        adult(0),
-        infected(0),
-        infectious(0),
-        males(0),
-        dryheatmortality(0.0f),
-        localadultmortality(0.0f),
-        infectiouscorrection(0.0f),
-        indoorinfectiousbites(0.0f),
-        outdoorinfectiousbites(0.0f),
-        indoorbites(0.0f),
-        outdoorbites(0.0f),
-        infectivity(0.0),
-        infectivity_indoor(0.0f),
-        infectivity_outdoor(0.0f),
-        species_ID("gambiae"),
-        m_context(nullptr),
-        m_species_params(nullptr),
-        m_probabilities(nullptr),
-        m_VectorMortality(true)
+    VectorPopulation::VectorPopulation()
+        : animalfeed_eggbatchmod(1.0f)
+        , ADfeed_eggbatchmod(1.0f)
+        , m_larval_habitats( nullptr )
+        , neweggs(0)
+        , adult(0)
+        , infected(0)
+        , infectious(0)
+        , males(0)
+        , dryheatmortality(0.0f)
+        , localadultmortality(0.0f)
+        , infectiouscorrection(0.0f)
+        , indoorinfectiousbites(0.0f)
+        , outdoorinfectiousbites(0.0f)
+        , indoorbites(0.0f)
+        , outdoorbites(0.0f)
+        , infectivity(0.0)
+        , infectivity_indoor(0.0f)
+        , infectivity_outdoor(0.0f)
+        , species_ID("gambiae")
+        , m_context(nullptr)
+        , m_species_params(nullptr)
+        , m_probabilities(nullptr)
+        , m_VectorMortality(true)
     {
     }
 
     void VectorPopulation::Initialize(INodeContext *context, std::string species_name, unsigned int adults, unsigned int _infectious)
     {
-        SetContextTo(context);
-
         species_ID = species_name;
-        LOG_DEBUG_F( "Creating VectorSpeciesParameters for %s and suid=%d\n", species_name.c_str(), context->GetSuid().data);
-        m_species_params = GET_CONFIGURABLE(SimulationConfig)->vspMap.at( species_name );
 
-        // Query for vector node context
-        IVectorNodeContext* ivnc = nullptr;
-        if (s_OK !=  context->QueryInterface(GET_IID(IVectorNodeContext), (void**)&ivnc))
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IVectorNodeContext", "INodeContext" );
-        }
-
-        // Set pointer to shared vector lifecycle probabilities container.
-        // The species-independent probabilities, e.g. dependent on individual-human vector-control interventions, are updated once by the node
-        // The species-specific probabilities are overwritten when FinalizeTransitionProbabilites is called in Update_Lifecycle_Probabilities
-        m_probabilities  = ivnc->GetVectorLifecycleProbabilities();
+        SetContextTo(context);
 
         // Correct diepostfeeding and successfulfeed for infectious, which have infectioushfmortmod
         // adjusted for increased feeding mortality due to longer probing
@@ -136,25 +123,11 @@ namespace Kernel
         // Create a larval habitat for each type specified in configuration file for this species
         for( auto habitat_param : species()->habitat_params.habitat_map )
         {
-            VectorHabitat* habitat = NULL;
             VectorHabitatType::Enum type = habitat_param.first;
+            IVectorHabitat* habitat = ivnc->GetVectorHabitatBySpeciesAndType( species_ID, type );
             float max_larval_capacity = habitat_param.second * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type);
 
-            if(habitat == nullptr)
-            {
-                // If this larval habitat type doesn't exist yet,
-                // or if the different species will not be competing for larval habitat,
-                // create a new habitat pointer and push it back to the node
-                habitat = VectorHabitat::CreateHabitat(type, max_larval_capacity);
-                ivnc->AddVectorHabitat(habitat);
-            }
-            else
-            {
-                habitat->IncrementMaxLarvalCapacity(max_larval_capacity);
-            }
-
-            // Keep a local pointer, too
-            m_larval_habitats.push_back(habitat);
+            habitat->IncrementMaxLarvalCapacity(max_larval_capacity);
 
             // TODO: probably it would be preferable to store the "Required_Habitat_Parameter" values
             //       as a map-by-Habitat_Type already in VectorSpeciesParameters.
@@ -198,9 +171,6 @@ namespace Kernel
         {
             delete queue;
         }
-
-        // memory allocated to VectorHabitat pointers in m_larval_habitats
-        // is cleared in the NodeVector destructor.  TODO: shared_ptr?
     }
 
     void VectorPopulation::UpdateVectorPopulation( float dt )
@@ -296,7 +266,7 @@ namespace Kernel
         // Use the verbose "foreach" construct here because empty or completely-progressed queues will be removed
         for ( VectorCohortList_t::iterator iInfected = InfectedQueues.begin(); iInfected != InfectedQueues.end(); )
         {
-            VectorCohort *cohort = (*iInfected);
+            IVectorCohort* cohort = (*iInfected);
             release_assert( cohort );
 
             // progress with sporogony
@@ -358,17 +328,19 @@ namespace Kernel
         }
     }
 
-    uint32_t VectorPopulation::ProcessFeedingCycle(float dt, VectorCohort *queue, VectorStateEnum::Enum state)
+    uint32_t VectorPopulation::ProcessFeedingCycle(float dt, IVectorCohort* cohort, VectorStateEnum::Enum state)
     {
         // start of outcome calculation
-        unsigned long int initPop = queue->GetPopulation();
+        unsigned long int initPop = cohort->GetPopulation();
         unsigned long int dead_mosquitoes        = 0;
-        unsigned long int survived_wo_feeding    = 0;
         unsigned long int successful_animal_feed = 0;
         unsigned long int successful_AD_feed     = 0;
         unsigned long int attempt_indoor_feed    = 0;
         unsigned long int human_outdoor_feed     = 0;
         unsigned long int successful_human_feed  = 0;
+#ifdef _DEBUG
+        unsigned long int survived_wo_feeding    = 0;
+#endif
 
         // reset counters
         float cumulative_probability = 0;
@@ -389,7 +361,7 @@ namespace Kernel
         //Wolbachia related impacts on mortality and infection susceptibility
         float x_mortalityWolbachia = 1.0;
         float x_infectionWolbachia = 1.0; 
-        if( queue->GetVectorGenetics().GetWolbachia() != VectorWolbachia::WOLBACHIA_FREE )
+        if( cohort->GetVectorGenetics().GetWolbachia() != VectorWolbachia::WOLBACHIA_FREE )
         {
             x_mortalityWolbachia = params()->WolbachiaMortalityModification;
             x_infectionWolbachia = params()->WolbachiaInfectionModification;
@@ -477,20 +449,22 @@ namespace Kernel
             remainingPop -= temp_number;
         }
 
+#ifdef _DEBUG
         // survived without attempting feed
         if (remainingPop > 0)
         {
             survived_wo_feeding = remainingPop;
         }
+#endif
 
-        // for the infectious queue, need to update infectious bites
+        // for the infectious cohort, need to update infectious bites
         if ( state == VectorStateEnum::STATE_INFECTIOUS )
         {
             indoorinfectiousbites += attempt_indoor_feed;
             outdoorinfectiousbites += human_outdoor_feed;
 
             // deposit indoor and outdoor contagion into vector-to-human group
-            StrainIdentity *strain = const_cast<StrainIdentity *>(queue->GetStrainIdentity());
+            StrainIdentity* strain = const_cast<StrainIdentity*>(cohort->GetStrainIdentity());
 
             m_context->DepositFromIndividual( strain, attempt_indoor_feed  * species()->transmissionmod, &NodeVector::vector_to_human_indoor );
             m_context->DepositFromIndividual( strain, human_outdoor_feed * species()->transmissionmod, &NodeVector::vector_to_human_outdoor );
@@ -553,8 +527,10 @@ namespace Kernel
                 }
             }
 
+#ifdef _DEBUG
             // survived without feeding
             if (remainingPop > 0) { survived_wo_feeding += remainingPop; }
+#endif
         }
 
         // now outdoor feeds
@@ -581,13 +557,13 @@ namespace Kernel
                 {
                     temp_number = uint32_t(remainingPop);
                     successful_human_feed+=temp_number;
-                    remainingPop = 0;
+                    // remainingPop = 0;
                 }
                 else
                 {
                     temp_number = uint32_t(randgen->binomial_approx(remainingPop, temp_probability));
                     successful_human_feed += temp_number;
-                    remainingPop -= temp_number;
+                    // remainingPop -= temp_number;
                 }
 
                 // some successful feeds result in infected adults
@@ -600,11 +576,11 @@ namespace Kernel
         }
 
         // now adjust population and eggs
-        if (dead_mosquitoes > 0) { queue->SetPopulation( queue->GetPopulation() - dead_mosquitoes); }
-        unsigned long int tempeggs = (unsigned long)(species()->eggbatchsize * x_infectedeggbatchmod * (successful_human_feed + successful_AD_feed * ADfeed_eggbatchmod + successful_animal_feed * animalfeed_eggbatchmod));
+        if (dead_mosquitoes > 0) { cohort->SetPopulation( cohort->GetPopulation() - dead_mosquitoes); }
+        unsigned long int tempeggs = unsigned long(species()->eggbatchsize * x_infectedeggbatchmod * (successful_human_feed + successful_AD_feed * ADfeed_eggbatchmod + successful_animal_feed * animalfeed_eggbatchmod));
         neweggs += tempeggs;
-        gender_mating_eggs[queue->GetVectorGenetics().GetIndex()] += tempeggs;
-        LOG_DEBUG_F("adding %d eggs to vector genetics index %d.  current total=%d\n", tempeggs, queue->GetVectorGenetics().GetIndex(), gender_mating_eggs[queue->GetVectorGenetics().GetIndex()]);
+        gender_mating_eggs[cohort->GetVectorGenetics().GetIndex()] += tempeggs;
+        LOG_DEBUG_F("adding %d eggs to vector genetics index %d.  current total=%d\n", tempeggs, cohort->GetVectorGenetics().GetIndex(), gender_mating_eggs[cohort->GetVectorGenetics().GetIndex()]);
 
         // correction to ensure that new infections won't surpass the upper bound of successful human feeds
         // return min(newinfected, successful_human_feed); // EAW: this would be more concise
@@ -649,7 +625,7 @@ namespace Kernel
         // Use the verbose "for" construct here because we may be modifying the list and need to protect the iterator.
         for (VectorCohortList_t::iterator iList = ImmatureQueues.begin(); iList != ImmatureQueues.end(); /* iList++ */)
         {
-            VectorCohort *cohort = (*iList);
+            IVectorCohort* cohort = (*iList);
             release_assert( cohort );
 
             VectorCohortList_t::iterator iCurrent = iList++;
@@ -671,7 +647,7 @@ namespace Kernel
                         }
                         else if(gender_mating_males.size() == 1)// just one type of males, so all females mate with that type
                         {
-                            ApplyMatingGenetics(cohort, VectorMatingStructure(gender_mating_males.begin()->first));
+                            ApplyMatingGenetics( cohort, VectorMatingStructure(gender_mating_males.begin()->first) );
                             queueIncrementTotalPopulation(cohort, VectorStateEnum::STATE_ADULT);
                             MergeProgressedCohortIntoCompatibleQueue(AdultQueues, cohort->GetPopulation(), cohort->GetVectorGenetics());
                         }
@@ -705,38 +681,38 @@ namespace Kernel
         }
     }
 
-    void VectorPopulation::ApplyMatingGenetics(VectorCohort* vq, VectorMatingStructure male_vector_genetics)
+    void VectorPopulation::ApplyMatingGenetics( IVectorCohort* cohort, VectorMatingStructure male_vector_genetics )
     {
         // (1) Determine female fertility
-        if( vq->GetVectorGenetics().GetSterility() == VectorSterility::VECTOR_STERILE )
+        if( cohort->GetVectorGenetics().GetSterility() == VectorSterility::VECTOR_STERILE )
         {
             // Already sterile
         }
         else if( male_vector_genetics.GetSterility() == VectorSterility::VECTOR_STERILE )
         {
             // Female mated with a sterile male
-            vq->GetVectorGenetics().SetSterility(VectorSterility::VECTOR_STERILE);
+            cohort->GetVectorGenetics().SetSterility(VectorSterility::VECTOR_STERILE);
         }
-        else if( !VectorMatingStructure::WolbachiaCompatibleMating(vq->GetVectorGenetics().GetWolbachia(), male_vector_genetics.GetWolbachia()) )
+        else if( !VectorMatingStructure::WolbachiaCompatibleMating(cohort->GetVectorGenetics().GetWolbachia(), male_vector_genetics.GetWolbachia()) )
         {
             // Cytoplasmic incompatibility due to differing Wolbachia infections
-            vq->GetVectorGenetics().SetSterility(VectorSterility::VECTOR_STERILE);
+            cohort->GetVectorGenetics().SetSterility(VectorSterility::VECTOR_STERILE);
         }
 
         // (2) Wolbachia retains female type
         
         // (3) Solve for pesticide resistance of mating
-        vq->GetVectorGenetics().SetPesticideResistance( vq->GetVectorGenetics().GetPesticideResistance().first, male_vector_genetics.GetPesticideResistance().first );
+        cohort->GetVectorGenetics().SetPesticideResistance( cohort->GetVectorGenetics().GetPesticideResistance().first, male_vector_genetics.GetPesticideResistance().first );
 
         // (4) Finally define mated HEGs case
-        vq->GetVectorGenetics().SetHEG( vq->GetVectorGenetics().GetHEG().first, male_vector_genetics.GetHEG().first );
+        cohort->GetVectorGenetics().SetHEG( cohort->GetVectorGenetics().GetHEG().first, male_vector_genetics.GetHEG().first );
     }
 
     // Seek a compatible (same gender-mating type) queue in specified list (e.g. AdultQueues, InfectiousQueues) and increase its population.
     // EAW: If we have to do this a lot, then we might consider a different type of container (e.g. map instead of list).
     void VectorPopulation::MergeProgressedCohortIntoCompatibleQueue(VectorCohortList_t &queues, int32_t population, VectorMatingStructure vector_genetics)
     {
-        VectorCohortList_t::iterator it = std::find_if( queues.begin(), queues.end(), [vector_genetics](VectorCohort* cohort){ return cohort->GetVectorGenetics() == vector_genetics; } );
+        VectorCohortList_t::iterator it = std::find_if( queues.begin(), queues.end(), [vector_genetics](IVectorCohort* cohort){ return cohort->GetVectorGenetics() == vector_genetics; } );
         if ( it != queues.end() ) 
         { 
             (*it)->SetPopulation( (*it)->GetPopulation() + population ); 
@@ -825,7 +801,7 @@ namespace Kernel
 
     float VectorPopulation::GetLarvalMortalityProbability(float dt, IVectorCohortWithHabitat* larva) const
     {
-        VectorHabitat* habitat = larva->GetHabitat();
+        IVectorHabitat* habitat = larva->GetHabitat();
 
         // (1) Local larval mortality from larval competition in habitat
         // float larval_survival_weight = GetRelativeSurvivalWeight(habitat);
@@ -855,7 +831,7 @@ namespace Kernel
     {
         // Get total larval capacity across habitats for calculation of fractional allocation of eggs
         float total_capacity = 0;
-        for (auto habitat : m_larval_habitats)
+        for (auto habitat : (*m_larval_habitats))
         {
             total_capacity += habitat->GetCurrentLarvalCapacity();
         }
@@ -868,7 +844,7 @@ namespace Kernel
         //          At present, we will just round and live with the potential bias away from completely full larval habitat.
 
         // Loop over larval habitats
-        for (auto habitat : m_larval_habitats)
+        for (auto habitat : (*m_larval_habitats))
         {
             float fractional_allocation = habitat->GetCurrentLarvalCapacity() / total_capacity;
             habitat->AddEggs(neweggs * fractional_allocation);
@@ -911,13 +887,13 @@ namespace Kernel
                 {
                     // Now for the more interesting cases involving HEGs or pesticide Resistance
                     // Moved into a separate function for clarity
-                    CreateEggCohortAlleleSorting(habitat, eggs_to_lay, vms);
+                    CreateEggCohortAlleleSorting( habitat, eggs_to_lay, vms );
                 }
             }
         }
     }
 
-    void VectorPopulation::CreateEggCohortOfType(VectorHabitat* habitat, uint32_t eggs_to_lay, VectorMatingStructure vms_egg)
+    void VectorPopulation::CreateEggCohortOfType(IVectorHabitat* habitat, uint32_t eggs_to_lay, VectorMatingStructure vms_egg)
     {
         // Find if there is a compatible existing cohort of eggs
         VectorCohortList_t::iterator itEggs = std::find_if( EggQueues.begin(), EggQueues.end(), [vms_egg, habitat](IVectorCohort* cohort) -> bool 
@@ -940,14 +916,14 @@ namespace Kernel
         }
         else
         {
-            EggQueues.push_back( VectorCohortWithHabitat::CreateCohort(habitat, 0, eggs_to_lay, vms_egg) );
+            EggQueues.push_back( VectorCohortWithHabitat::CreateCohort( habitat, 0, eggs_to_lay, vms_egg ) );
             LOG_DEBUG_F( "Laying %d eggs and pushing into new egg queue (index=%d, habitat=%s).\n", eggs_to_lay, vms_egg.GetIndex(), VectorHabitatType::pairs::lookup_key( habitat->GetVectorHabitatType() ) );
         }
 
         // Males larvae are produced in Update_Egg_Hatching in equal proportion to female hatching eggs
     }
 
-    void VectorPopulation::CreateEggCohortAlleleSorting(VectorHabitat* habitat, uint32_t eggs_to_lay, VectorMatingStructure vms)
+    void VectorPopulation::CreateEggCohortAlleleSorting( IVectorHabitat* habitat, uint32_t eggs_to_lay, VectorMatingStructure vms )
     {
         // This first Allele Sorting function focuses on pesticide resistance alleles and then calls a second function for HEG sorting, if necessary
         AlleleFractions_t fractions = VectorMatingStructure::GetAlleleFractions(vms.GetPesticideResistance());
@@ -977,13 +953,13 @@ namespace Kernel
                 if( fraction_by_type.second > 0 )
                 {
                     // Do the additional sorting by HEG for each pesticide-resistance type
-                    CreateEggCohortHEGSorting(habitat, uint32_t(fraction_by_type.second * eggs_to_lay), vms);
+                    CreateEggCohortHEGSorting( habitat, uint32_t(fraction_by_type.second * eggs_to_lay), vms );
                 }
             }
         }
     }
 
-    void VectorPopulation::CreateEggCohortHEGSorting(VectorHabitat* habitat, uint32_t eggs_to_lay, VectorMatingStructure vms)
+    void VectorPopulation::CreateEggCohortHEGSorting( IVectorHabitat* habitat, uint32_t eggs_to_lay, VectorMatingStructure vms )
     {
         
         AlleleFractions_t fractions;
@@ -1114,7 +1090,7 @@ namespace Kernel
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "eggentry", "IVectorCohortWithHabitat", "IVectorCohort" );
             }
             VectorCohortList_t::iterator iCurrent = iList++;
-            VectorHabitat* habitat = eggentry->GetHabitat();
+            IVectorHabitat* habitat = eggentry->GetHabitat();
 
             // Potential inter-species competitive weighting
             // float egg_survival_weight = GetRelativeSurvivalWeight(habitat);
@@ -1173,31 +1149,31 @@ namespace Kernel
         }
     }
 
-    void VectorPopulation::queueIncrementTotalPopulation(VectorCohort* vq, VectorStateEnum::Enum state)
+    void VectorPopulation::queueIncrementTotalPopulation(IVectorCohort* cohort, VectorStateEnum::Enum state)
     {
-        VectorGeneticIndex_t index = vq->GetVectorGenetics().GetIndex();
-        if(vq->GetVectorGenetics().GetGender() == VectorGender::VECTOR_FEMALE)
+        VectorGeneticIndex_t index = cohort->GetVectorGenetics().GetIndex();
+        if(cohort->GetVectorGenetics().GetGender() == VectorGender::VECTOR_FEMALE)
         {
             if(state==VectorStateEnum::STATE_ADULT)
             {
-                adult += vq->GetPopulation();
-                vector_genetics_adults[index] += vq->GetPopulation();
+                adult += cohort->GetPopulation();
+                vector_genetics_adults[index] += cohort->GetPopulation();
             }
             else if(state==VectorStateEnum::STATE_INFECTED)
             {
-                infected +=vq->GetPopulation();
-                vector_genetics_infected[index] += vq->GetPopulation();
+                infected +=cohort->GetPopulation();
+                vector_genetics_infected[index] += cohort->GetPopulation();
             }
             else if(state==VectorStateEnum::STATE_INFECTIOUS)
             {
-                infectious += vq->GetPopulation();
-                vector_genetics_infectious[index] += vq->GetPopulation();
+                infectious += cohort->GetPopulation();
+                vector_genetics_infectious[index] += cohort->GetPopulation();
             }
         }
         else
         {
-            males +=vq->GetPopulation();
-            gender_mating_males[index] += vq->GetPopulation();
+            males +=cohort->GetPopulation();
+            gender_mating_males[index] += cohort->GetPopulation();
         }
     }
 
@@ -1315,9 +1291,43 @@ namespace Kernel
     double  VectorPopulation::getInfectivity()      const  { return infectivity; }
     std::string VectorPopulation::get_SpeciesID()   const  { return species_ID; }
 
-    const VectorHabitatList_t& VectorPopulation::GetHabitats() const  { return m_larval_habitats; }
+    const VectorHabitatList_t& VectorPopulation::GetHabitats() const  { return (*m_larval_habitats); }
     
-    void VectorPopulation::SetContextTo(INodeContext *context) { m_context = context; }
+    void VectorPopulation::SetContextTo(INodeContext *context)
+    {
+        m_context = context;
+        
+        LOG_DEBUG_F( "Creating VectorSpeciesParameters for %s and suid=%d\n", species_ID.c_str(), context->GetSuid().data);
+        m_species_params = GET_CONFIGURABLE(SimulationConfig)->vspMap.at( species_ID );
+
+        // Query for vector node context
+        IVectorNodeContext* ivnc = nullptr;
+        if (s_OK !=  context->QueryInterface(GET_IID(IVectorNodeContext), (void**)&ivnc))
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IVectorNodeContext", "INodeContext" );
+        }
+
+        // Set pointer to shared vector lifecycle probabilities container.
+        // The species-independent probabilities, e.g. dependent on individual-human vector-control interventions, are updated once by the node
+        // The species-specific probabilities are overwritten when FinalizeTransitionProbabilites is called in Update_Lifecycle_Probabilities
+        m_probabilities  = ivnc->GetVectorLifecycleProbabilities();
+
+        m_larval_habitats = ivnc->GetVectorHabitatsBySpecies( species_ID );
+
+        // For each cohort in EggQueues, look at it's habitat type and (re)wire it to the correct habitat instance.
+        for ( auto cohort : EggQueues )
+        {
+            auto with_habitat = dynamic_cast<IVectorCohortWithHabitat*>(cohort);
+            with_habitat->SetHabitat( ivnc->GetVectorHabitatBySpeciesAndType( species_ID, with_habitat->GetHabitatType() ) );
+        }
+
+        // For each cohort in LarvaQueues, look at it's habitat type and (re)wire it to the correct habitat instance.
+        for ( auto cohort : LarvaQueues )
+        {
+            auto with_habitat = dynamic_cast<IVectorCohortWithHabitat*>(cohort);
+            with_habitat->SetHabitat( ivnc->GetVectorHabitatBySpeciesAndType( species_ID, with_habitat->GetHabitatType() ) );
+        }
+    }
 
     const SimulationConfig* VectorPopulation::params()  const { return GET_CONFIGURABLE(SimulationConfig); }
 
@@ -1338,7 +1348,7 @@ namespace Kernel
         VectorPopulation& population = *obj;
         ar.labelElement("animalfeed_eggbatchmod") & population.animalfeed_eggbatchmod;
         ar.labelElement("ADfeed_eggbatchmod") & population.ADfeed_eggbatchmod;
-        ar.labelElement("m_larval_habitats"); VectorHabitat::serialize(ar, population.m_larval_habitats);
+//        ar.labelElement("m_larval_habitats") & population.m_larval_habitats;  // NodeVector owns this information.
         ar.labelElement("m_larval_capacities"); Kernel::serialize(ar, population.m_larval_capacities);
         ar.labelElement("neweggs") & population.neweggs;
         ar.labelElement("adult") & population.adult;

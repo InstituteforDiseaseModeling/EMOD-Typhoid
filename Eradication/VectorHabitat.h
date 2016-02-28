@@ -13,55 +13,29 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <list>
 #include <vector>
 
-#include "VectorEnums.h"
+#include "IVectorHabitat.h"
 #include "IArchive.h"
 
 namespace Kernel
 {
-    // Current timestep and immediately previous for total larva counts
-    enum TimeStepIndex
-    {
-        CURRENT_TIME_STEP           = 0,
-        PREVIOUS_TIME_STEP          = 1,
-    };
-
     struct INodeContext;
     class  SimulationConfig;
-
-    struct IVectorHabitat
-    {
-        virtual VectorHabitatType::Enum  GetVectorHabitatType()                   const = 0;
-        virtual float                    GetMaximumLarvalCapacity()               const = 0;
-        virtual float                    GetCurrentLarvalCapacity()               const = 0;
-        virtual int32_t                  GetTotalLarvaCount(TimeStepIndex index)  const = 0;
-
-        virtual float                    GetOvipositionTrapKilling()     const = 0;
-        virtual float                    GetArtificialLarvalMortality()  const = 0;
-        virtual float                    GetLarvicideHabitatScaling()    const = 0;
-        virtual float                    GetRainfallMortality()          const = 0;
-        virtual float                    GetEggCrowdingCorrection()      const = 0;
-
-        virtual float GetLocalLarvalGrowthModifier() const = 0;
-        virtual float GetLocalLarvalMortality(float species_aquatic_mortality, float progress) const = 0;
-
-        virtual ~IVectorHabitat() {}
-    };
 
     class VectorHabitat : public IVectorHabitat
     {
     public:
-        static VectorHabitat* CreateHabitat( VectorHabitatType::Enum type, float max_capacity );
+        static IVectorHabitat* CreateHabitat( VectorHabitatType::Enum type, float max_capacity );
         virtual ~VectorHabitat();
-        void Update(float dt, INodeContext* node);
+        virtual void Update(float dt, INodeContext* node) override;
 
         virtual VectorHabitatType::Enum  GetVectorHabitatType()                   const override;
         virtual float                    GetMaximumLarvalCapacity()               const override;
         virtual float                    GetCurrentLarvalCapacity()               const override;
         virtual int32_t                  GetTotalLarvaCount(TimeStepIndex index)  const override;
 
-        void                             AddLarva(int32_t larva, float progress);
-        void                             AddEggs(int32_t eggs);
-        void                             IncrementMaxLarvalCapacity(float);
+        virtual void                     AddLarva(int32_t larva, float progress) override;
+        virtual void                     AddEggs(int32_t eggs) override;
+        virtual void                     IncrementMaxLarvalCapacity(float) override;
 
         virtual float                    GetOvipositionTrapKilling()     const override;
         virtual float                    GetArtificialLarvalMortality()  const override;
@@ -72,12 +46,13 @@ namespace Kernel
         virtual float GetLocalLarvalGrowthModifier() const override;
         virtual float GetLocalLarvalMortality(float species_aquatic_mortality, float progress) const override;
 
-        static void serialize(IArchive&, VectorHabitat*);
-        static void serialize(IArchive&, list<VectorHabitat*>&);
-
     protected:
         explicit VectorHabitat();
         VectorHabitat( VectorHabitatType::Enum type, float max_capacity );
+
+        virtual QueryResult QueryInterface( iid_t, void** ) override { return e_NOINTERFACE; }
+        virtual int32_t AddRef() override { return 1; }
+        virtual int32_t Release() override { return 0; }
 
         void CalculateEggCrowdingCorrection();
         void UpdateCurrentLarvalCapacity(float dt, INodeContext* node);
@@ -86,6 +61,8 @@ namespace Kernel
         void AdvanceTotalLarvaCounts();
 
         const SimulationConfig* params() const;
+
+        DECLARE_SERIALIZABLE(VectorHabitat);
 
         VectorHabitatType::Enum  m_habitat_type;
         float                    m_max_larval_capacity;
@@ -99,8 +76,6 @@ namespace Kernel
         float                    m_rainfall_mortality;
         float                    m_egg_crowding_correction;
     };
-
-    typedef std::list<VectorHabitat *> VectorHabitatList_t;
 
     void serialize(IArchive&, map<VectorHabitatType::Enum, float>&);
 }

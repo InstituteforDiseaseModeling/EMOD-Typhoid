@@ -9,10 +9,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include <string>
 #include <map>
 
-#include "Common.h"
 #include "Node.h"
 #include "VectorHabitat.h"
 #include "VectorPopulation.h"
@@ -24,7 +22,7 @@ namespace Kernel
 {
     struct IMigrationInfoVector;
     class SpatialReportVector;
-    class NodeVector : public Node, public IVectorNodeContext , public INodeVector
+    class NodeVector : public Node, public IVectorNodeContext, public INodeVector
     {
         GET_SCHEMA_STATIC_WRAPPER(NodeVector)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -42,8 +40,8 @@ namespace Kernel
         // INodeContext methods
         // IVectorNodeContext methods
         virtual VectorProbabilities* GetVectorLifecycleProbabilities() override;
-        virtual VectorHabitat*       GetVectorHabitatByType(VectorHabitatType::Enum type) override;
-        virtual void                 AddVectorHabitat(VectorHabitat* habitat) override;
+        virtual IVectorHabitat*      GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type) override;
+        virtual VectorHabitatList_t* GetVectorHabitatsBySpecies( std::string& species ) override;
         virtual float                GetLarvalHabitatMultiplier(VectorHabitatType::Enum type) const override;
 
         virtual IIndividualHuman* processImmigratingIndividual(IIndividualHuman*) override;
@@ -65,7 +63,6 @@ namespace Kernel
         virtual void processImmigratingVector( VectorCohort* immigrant ) override;
         void processEmigratingVectors();
 
-        virtual const std::list<VectorHabitat *>& GetHabitats() const ;
         virtual VectorPopulationList_t& GetVectorPopulations() override;
 
         static TransmissionGroupMembership_t human_to_vector_all;
@@ -81,7 +78,8 @@ namespace Kernel
         static RouteList_t route_outdoor;*/
 
     protected:
-        VectorHabitatList_t     m_larval_habitats;
+
+        std::map<std::string, VectorHabitatList_t> m_larval_habitats;
         VectorPopulationList_t  m_vectorpopulations;
 
         VectorProbabilities* m_vector_lifecycle_probabilities;

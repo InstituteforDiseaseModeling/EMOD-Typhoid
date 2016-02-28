@@ -618,7 +618,6 @@
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
-    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="PropertyReport.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="SimpleTransmissionGroups.cpp" />
@@ -2291,6 +2290,9 @@
     </ClInclude>
     <ClInclude Include="..\interventions\ControlledVaccine.h">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClInclude>
+    <ClInclude Include="IVectorHabitat.h">
+      <Filter>Source Files\Vector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -678,6 +678,7 @@
     <ClInclude Include="ISTISimulationContext.h" />
     <ClInclude Include="ISusceptibilityContext.h" />
     <ClInclude Include="IVectorMigrationReporting.h" />
+    <ClInclude Include="IVectorHabitat.h" />
     <ClInclude Include="LoadBalanceScheme.h" />
     <ClInclude Include="MalariaBarcode.h" />
     <ClInclude Include="MigrationInfoVector.h" />
