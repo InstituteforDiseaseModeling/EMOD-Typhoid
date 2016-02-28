@@ -89,7 +89,6 @@ else:
                             "CoverageByNodeEventCoordinator.cpp",
                             "ReferenceTrackingEventCoordinator.cpp",
                             "DemographicRestrictions.cpp",
-                            "../interventions/IndividualRepellent.cpp",
                             
                             # Reporting
                             "../baseReportLib/ChannelDataMap.cpp",
@@ -184,6 +183,7 @@ else:
                             "../interventions/Bednet.cpp",
                             "../interventions/HousingModification.cpp", 
                             "../interventions/HumanHostSeekingTrap.cpp", 
+                            "../interventions/IndividualRepellent.cpp",
                             "../interventions/Ivermectin.cpp",
                             "../interventions/MosquitoRelease.cpp",
                             "../interventions/VectorControlNodeTargeted.cpp",
