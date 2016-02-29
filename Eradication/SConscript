@@ -435,7 +435,7 @@ else:
 
         if env["Disease"] == "Py":
             eradicationSrcFiles.extend( pyDemoSrcFiles )
-            env.Append( CPPDEFINES=["ENABLE_TOYPHOID" ] )
+            env.Append( CPPDEFINES=["ENABLE_PYTHON_FEVER" ] )
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_STI" ] )
