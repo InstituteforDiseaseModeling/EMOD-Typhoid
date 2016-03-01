@@ -112,7 +112,7 @@ namespace Kernel
         return Infection::InitInfectionImmunology( _immunity );
     }
 
-    void InfectionPy::Update(float dt, Susceptibility* _immunity)
+    void InfectionPy::Update(float dt, ISusceptibilityContext* _immunity)
     {
         return;
         /*

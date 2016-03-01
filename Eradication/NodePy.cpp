@@ -38,7 +38,7 @@ IdmPyInit(
     const char * python_function_name
 );
 
-//#define ENABLE_TOYPHOID 1
+#define ENABLE_PYTHON_FEVER 1
 namespace Kernel
 {
     BEGIN_QUERY_INTERFACE_DERIVED(NodePy, Node)
@@ -169,8 +169,8 @@ namespace Kernel
 
     void NodePy::resetNodeStateCounters(void)
     {
-        // This is a chance to do a single call into TOYPHOID at start of timestep
-#ifdef ENABLE_TOYPHOID
+        // This is a chance to do a single call into PYTHON_FEVER?g at start of timestep
+#ifdef ENABLE_PYTHON_FEVER
         static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "start_timestep" );
         if( pFunc )
         {

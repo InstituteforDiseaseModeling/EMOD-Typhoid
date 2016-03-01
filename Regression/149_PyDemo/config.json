@@ -14,7 +14,7 @@
         "Base_Infectivity": 0.3, 
         "Base_Land_Temperature": 30, 
         "Base_Mortality": 0, 
-        "Base_Population_Scale_Factor": 1.00, 
+        "Base_Population_Scale_Factor": 1.0, 
         "Base_Rainfall": 100, 
         "Base_Relative_Humidity": 0.5, 
         "Birth_Rate_Dependence": "INDIVIDUAL_PREGNANCIES_BY_AGE_AND_YEAR", 

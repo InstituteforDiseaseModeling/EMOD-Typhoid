@@ -256,3 +256,5 @@ testing
 
 # compiled Python
 *.pyc
+*.s
+*.ii

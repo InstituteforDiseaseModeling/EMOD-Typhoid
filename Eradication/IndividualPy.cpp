@@ -32,8 +32,8 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <sys/time.h>
 #endif
 
-//#define ENABLE_TOYPHOID 1
-#ifdef ENABLE_TOYPHOID 
+//#define ENABLE_PYTHON_FEVER 1
+#ifdef ENABLE_PYTHON_FEVER 
 #include "Python.h"
 extern PyObject *
 IdmPyInit(
@@ -64,7 +64,7 @@ namespace Kernel
     IndividualHumanPy::IndividualHumanPy(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
         IndividualHuman(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
     {
-#ifdef ENABLE_TOYPHOID
+#ifdef ENABLE_PYTHON_FEVER
         // Call into python script to notify of new individual
         static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "create" );
         if( pFunc )
@@ -93,7 +93,7 @@ namespace Kernel
 
     IndividualHumanPy::~IndividualHumanPy()
     {
-#ifdef ENABLE_TOYPHOID
+#ifdef ENABLE_PYTHON_FEVER
         // Call into python script to notify of new individual
         static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "destroy" );
         if( pFunc )
@@ -152,7 +152,7 @@ namespace Kernel
 
     void IndividualHumanPy::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
     { 
-#ifdef ENABLE_TOYPHOID
+#ifdef ENABLE_PYTHON_FEVER
         /*if( randgen->e() > GET_CONFIGURABLE(SimulationConfig)->pydemo_exposure_fraction )
         {
             return;
@@ -209,7 +209,7 @@ namespace Kernel
 
     void IndividualHumanPy::UpdateInfectiousness(float dt)
     {
-#ifdef ENABLE_TOYPHOID
+#ifdef ENABLE_PYTHON_FEVER
         for( auto &route: parent->GetTransmissionRoutes() )
         {
             static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "update_and_return_infectiousness" );
@@ -254,7 +254,7 @@ namespace Kernel
 
     void IndividualHumanPy::Update( float currenttime, float dt)
     {
-#ifdef ENABLE_TOYPHOID
+#ifdef ENABLE_PYTHON_FEVER
         static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "update" );
         if( pFunc )
         {
@@ -285,10 +285,11 @@ namespace Kernel
             //Py_DECREF( py_dt_str );
             PyErr_Print();
         }
-        LOG_DEBUG_F( "state_to_report for individual %d = %s; Infected = %d.\n", GetSuid().data, state_to_report.c_str(), IsInfected() );
+        LOG_DEBUG_F( "state_to_report for individual %d = %s; Infected = %d, change = %d.\n", GetSuid().data, state_to_report.c_str(), IsInfected(), state_changed );
 
         if( state_to_report == "S" && state_changed && GetInfections().size() > 0 )
         {
+            LOG_DEBUG_F( "[Update] Somebody cleared their infection.\n" );
             // ClearInfection
             auto inf = GetInfections().front();
             IInfectionPy * inf_pydemo  = NULL;
@@ -311,7 +312,7 @@ namespace Kernel
     {
         LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
         IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
-#ifdef ENABLE_TOYPHOID
+#ifdef ENABLE_PYTHON_FEVER
         static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "acquire_infection" );
         if( pFunc )
         {
