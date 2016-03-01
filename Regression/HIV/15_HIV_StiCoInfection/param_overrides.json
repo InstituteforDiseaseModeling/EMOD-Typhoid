@@ -24,7 +24,7 @@
         "Base_Population_Scale_Factor": 0.002,
         "Demographics_Filenames": [
             "../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed.json",
-            "../input/PFA_Overlay.json",
+            "../input/pfa_overlay.json",
             "PFA_overlay_rates.json"
         ], 
         "Enable_Nondisease_Mortality": 1,
