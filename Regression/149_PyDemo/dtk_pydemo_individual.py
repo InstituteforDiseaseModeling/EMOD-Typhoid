@@ -25,6 +25,8 @@ class PyIndividual:
 
     _incubation_period = 14
     _prob_infection = 0.0001
+    _maleInfectiousnessByAge = { 0 : 1, 5: 0.8, 10: 0.3, 15: 0.5, 20: 0.1, 50: 1, 125: 0.05 }
+    _femaleInfectiousnessByAge = { 0 : 1, 5: 0.8, 10: 0.3, 15: 0.5, 20: 0.1, 50: 1, 125: 0.05 }
     
     def __init__(self, new_id_in, new_mcw_in, new_age_in, new_sex_in ):
         self._id = new_id_in
@@ -57,7 +59,7 @@ class PyIndividual:
             if self.infectious_timer <= 0:
                 state = "S"
                 state_change = True # I->S
-                print( "Someone just cleared their infection: returning {0}, {1}.".format( state, state_change ) )
+                #print( "Someone just cleared their infection: returning {0}, {1}.".format( state, state_change ) )
 
         return state, state_change
 
@@ -68,11 +70,23 @@ class PyIndividual:
             infected = 1
         return infected
 
+    def getInfectiousnessByAgeAndSex( self ):
+        retValue = 0
+        table = None
+        if self._sex == 'MALE':
+            table = self._maleInfectiousnessByAge
+        else:
+            table = self._femaleInfectiousnessByAge
+        ageInYrs = self.ageInYearsAsInt()
+        for ageBoundary in table:
+            if ageInYrs <= ageBoundary:
+                return table[ ageBoundary ];
+
     def GetInfectiousnessByRoute( self, route ):
         # NOTE: route is contact or environmental
         deposit = 0
         if self.infectious_timer > 0:
-            deposit = 1
+            deposit = self.getInfectiousnessByAgeAndSex()
         return deposit
 
 class PythonFeverIndividual(PyIndividual):
