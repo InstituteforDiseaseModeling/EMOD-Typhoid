@@ -444,7 +444,7 @@ else:
     else:
         print( "Monolithic all-disease build." )
         env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
-        env.Append( CPPDEFINES=["ENABLE_TOYPHOID" ] )
+        env.Append( CPPDEFINES=["ENABLE_PYTHON_FEVER" ] )
         env.Append( CPPDEFINES=["ENABLE_TB" ] )
         env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
         eradicationSrcFiles.extend( malariaSrcFiles )
