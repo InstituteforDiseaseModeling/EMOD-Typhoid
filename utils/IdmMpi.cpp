@@ -132,9 +132,8 @@ namespace IdmMpi
                     displs[i] = total;
                     total += lengths[i];
                 }
-                std::vector<char> buffer(total + 1);
+                std::vector<char> buffer(total);
                 MPI_Gatherv((void*)rToSend.data(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
-                buffer[total] = '\0';
             
                 // ------------------------------------------------------------------------------------
                 // --- Make sure to avoid string methods that look for the string to be null terminated.
