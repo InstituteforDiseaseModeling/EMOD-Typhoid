@@ -41,21 +41,21 @@ namespace Kernel
         virtual ~Report_HIV_WHO2015();
 
         // BaseEventReport
-        virtual bool Configure( const Configuration* );
+        virtual bool Configure( const Configuration* ) override;
         //virtual void BeginTimestep() ;
 
         virtual void UpdateEventRegistration( float currentTime, 
                                               float dt, 
-                                              std::vector<INodeEventContext*>& rNodeEventContextList );
+                                              std::vector<INodeEventContext*>& rNodeEventContextList ) override;
 
-        virtual std::string GetHeader() const;
-        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const;
-        virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
-        virtual void LogNodeData( Kernel::INodeContext * pNC );
+        virtual std::string GetHeader() const override;
+        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override;
+        virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
+        virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
         //virtual void Reduce();
         //virtual void Finalize();
         virtual bool notifyOnEvent( IIndividualHumanEventContext *context, 
-                                    const std::string& StateChange );
+                                    const std::string& StateChange ) override;
     private:
 
         const float report_hiv_half_period;

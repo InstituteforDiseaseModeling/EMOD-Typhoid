@@ -23,15 +23,15 @@ namespace Kernel
         virtual ~ReportMalariaFiltered();
 
         // ReportMalaria
-        virtual bool Configure( const Configuration* );
+        virtual bool Configure( const Configuration* ) override;
 
         virtual void UpdateEventRegistration( float currentTime, 
                                               float dt, 
-                                              std::vector<INodeEventContext*>& rNodeEventContextList );
-        virtual void BeginTimestep();
-        virtual void LogIndividualData( IIndividualHuman* individual ) ;
-        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
-        virtual void LogNodeData( INodeContext* pNC );
+                                              std::vector<INodeEventContext*>& rNodeEventContextList ) override;
+        virtual void BeginTimestep() override;
+        virtual void LogIndividualData( IIndividualHuman* individual ) override;
+        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override;
+        virtual void LogNodeData( INodeContext* pNC ) override;
     private:
         bool IsValidNode( uint32_t externalNodeID ) const;
 

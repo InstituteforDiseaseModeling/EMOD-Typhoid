@@ -28,10 +28,10 @@ namespace Kernel
         virtual ~MalariaSummaryReport();
 
         // BaseEventReportIntervalOutput
-        virtual bool Configure( const Configuration* config );
-        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
-        virtual void EndTimestep( float currentTime, float dt );
-        virtual void Finalize();
+        virtual bool Configure( const Configuration* config ) override;
+        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual void Finalize() override;
 
     protected:
         // BaseEventReportIntervalOutput

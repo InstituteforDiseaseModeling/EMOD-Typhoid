@@ -255,7 +255,88 @@ class Monitor(threading.Thread):
                         self.verify( sim_dir, file, "Channels" )
         MyRegressionRunner.sems.release()
 
-    def compareCsvOutputs( self, ref_path, test_path ):
+    def get_json_data_hash( self, data ):
+        #json_data = collections.OrderedDict([])
+        #json_data["Data"] = data
+        with tempfile.TemporaryFile() as handle:
+            json.dump( data, handle )
+            hash = md5_hash( handle )
+        return hash
+
+    def compareJsonOutputs( self, sim_dir, report_name, ref_path, test_path, failures ):
+        fail_validation = False
+        failure_txt = ""
+
+        ref_json = json.loads( open( os.path.join( cache_cwd, ref_path ) ).read() )
+        if "Channels" not in ref_json.keys():
+            ref_md5  = md5_hash_of_file( ref_path )
+            test_md5 = md5_hash_of_file( test_path )
+            if ref_md5 == test_md5:
+                return False, ""
+            else:
+                print( self.config_id + " completed but did not match reference! (" + str(self.duration) + ") - " + report_name )
+                return True, "Non-Channel JSON failed MD5."
+        else:
+            test_json = json.loads( open( os.path.join( sim_dir, test_path ) ).read() )
+
+            if "Channels" not in test_json.keys():
+                return True, "Reference has Channel data and Test file does not."
+
+            ref_md5  = self.get_json_data_hash( ref_json["Channels"] )
+            test_md5 = self.get_json_data_hash( test_json["Channels"] )
+
+            ref_channels = set(ref_json["Channels"])
+            test_channels = set(test_json["Channels"])
+
+            if ref_md5 == test_md5:
+                return False, ""
+
+            missing_channels = ref_channels - test_channels
+            new_channels = test_channels - ref_channels
+
+            if len(missing_channels) > 0:
+                fail_validation = True
+                print("ERROR: Missing channels - " + ', '.join(missing_channels))
+                failure_txt += "Missing channels:\n" + '\n'.join(missing_channels) + "\n"
+                self.report.addFailingTest( self.config_id, failure_txt, os.path.join( sim_dir, ( "output/" + report_name ) ) )
+
+            if len(new_channels) > 0:
+                print("WARNING: The test "+report_name+" has " + str(len(new_channels)) + " channels not found in the reference.  Please update the reference "+report_name+".")
+                global final_warnings
+                final_warnings += self.config_id + " - New channels not found in reference:\n  " + '\n  '.join(new_channels) + "\nPlease update reference from " + os.path.join( sim_dir, os.path.join( "output", "InsetChart.json" ) ) + "!\n"
+                self.report.addFailingTest( self.config_id, failure_txt, os.path.join( sim_dir, ( "output/" + report_name ) ) )
+
+            if "Header" in ref_json.keys() and ref_json["Header"]["Timesteps"] != test_json["Header"]["Timesteps"]:
+                warning_msg = "WARNING: test "+report_name+" has timesteps " + str(test_json["Header"]["Timesteps"])  + " DIFFERRING from ref "+report_name+" timesteps " + str(ref_json["Header"]["Timesteps"]) + "!\n"
+                if params.hide_graphs:
+                    # This is treated as automated running mode (or bamboo nightly build mode)
+                    fail_validation = True
+                    failure_txt += warning_msg
+                else:
+                    # This is treated as manual running mode
+                    final_warnings += warning_msg
+                    print(warning_msg)
+
+            if not fail_validation:
+                #print( "Hasn't failed validation on second level review. Time to look channel by channel, timestep by timestep." )
+                # BinnedReport and its derived classes have "Subchannel_Metadata" in the header
+                if "Header" in ref_json.keys() and "Subchannel_Metadata" in ref_json["Header"].keys():
+                    self.compareBinnedReportType( ref_json, test_json, failures )
+                elif "Header" in ref_json.keys() and "Report_Type" in ref_json["Header"].keys() and ref_json["Header"]["Report_Type"] =="InsetChart":
+                    # Assuming a BaseChannelReport
+                    self.compareChannelReportType( ref_json, test_json, failures )
+                else:
+                    fail_validation = True
+                    failures.append(report_name + " - Files are different but cannot do deep dive.")
+
+            if len(failures) > 0:
+                fail_validation = True
+                failure_txt += "Channel Timestep Reference_Value Test_Value\n" + ''.join(failures)
+                print( self.config_id + " completed but did not match reference! (" + str(self.duration) + ") - " + report_name )
+
+        return fail_validation, failure_txt
+
+    def compareCsvOutputs( self, ref_path, test_path, failures ):
         # print( "Comparing CSV files: ref = " + ref_path + ", test = " + test_path )
         # Do Md5 comp first.
         ref_md5 = md5_hash_of_file( ref_path )
@@ -298,6 +379,16 @@ class Monitor(threading.Thread):
         failure_txt = err_msg
         #self.report.addFailingTest( self.config_id, failure_txt, test_path )
         return fail_validation, failure_txt
+
+    def compareOtherOutputs( self, report_name, ref_path, test_path, failures ):
+        ref_md5 = md5_hash_of_file( ref_path )
+        test_md5 = md5_hash_of_file( test_path )
+        if ref_md5 == test_md5:
+            # print( "CSV files passed MD5 comparison test." )
+            return False, ""
+        else:
+            print( self.config_id + " completed but did not match reference! (" + str(self.duration) + ") - " + report_name )
+            return True, "Failes MD5 check."
 
     # Compare Binned Report Types
     def compareBinnedReportType( self, ref_json, test_json, failures ):
@@ -378,64 +469,13 @@ class Monitor(threading.Thread):
             return False
 
         if test_path.endswith( ".csv" ):
-            fail_validation, failure_txt = self.compareCsvOutputs( ref_path, test_path )
+            fail_validation, failure_txt = self.compareCsvOutputs( ref_path, test_path, failures )
 
-        elif( areTheseJsonFilesTheSame( ref_path, test_path, key ) == False ):
-            #print( "Output doesn't match based on initial simple test." )
-            
-            #print( "Looking at actual channel data for report " + report_name )
-            ref_json = json.loads( open( os.path.join( cache_cwd, ref_path ) ).read() )
-            test_json = json.loads( open( os.path.join( sim_dir, test_path ) ).read() )
+        elif test_path.endswith( ".json" ):
+            fail_validation, failure_txt = self.compareJsonOutputs( sim_dir, report_name, ref_path, test_path, failures )
 
-            if key not in ref_json.keys():
-                print( "Can't do deep dive yet on non-standard detailed data." )
-                # Don't even chalk these up as failure
-                return True
-
-            ref_channels = set(ref_json["Channels"])
-            test_channels = set(test_json["Channels"])
-            missing_channels = ref_channels - test_channels
-            new_channels = test_channels - ref_channels
-
-            if len(missing_channels) > 0:
-                fail_validation = True
-                print("ERROR: Missing channels - " + ', '.join(missing_channels))
-                failure_txt += "Missing channels:\n" + '\n'.join(missing_channels) + "\n"
-                self.report.addFailingTest( self.config_id, failure_txt, os.path.join( sim_dir, ( "output/" + report_name ) ) )
-
-            if len(new_channels) > 0:
-                print("WARNING: The test "+report_name+" has " + str(len(new_channels)) + " channels not found in the reference.  Please update the reference "+report_name+".")
-                global final_warnings
-                final_warnings += self.config_id + " - New channels not found in reference:\n  " + '\n  '.join(new_channels) + "\nPlease update reference from " + os.path.join( sim_dir, os.path.join( "output", "InsetChart.json" ) ) + "!\n"
-                self.report.addFailingTest( self.config_id, failure_txt, os.path.join( sim_dir, ( "output/" + report_name ) ) )
-
-            if "Header" in ref_json.keys() and ref_json["Header"]["Timesteps"] != test_json["Header"]["Timesteps"]:
-                warning_msg = "WARNING: test "+report_name+" has timesteps " + str(test_json["Header"]["Timesteps"])  + " DIFFERRING from ref "+report_name+" timesteps " + str(ref_json["Header"]["Timesteps"]) + "!\n"
-                if params.hide_graphs:
-                    # This is treated as automated running mode (or bamboo nightly build mode)
-                    fail_validation = True
-                    failure_txt += warning_msg
-                else:
-                    # This is treated as manual running mode
-                    final_warnings += warning_msg
-                    print(warning_msg)
-
-            if not fail_validation:
-                #print( "Hasn't failed validation on second level review. Time to look channel by channel, timestep by timestep." )
-                # BinnedReport and its derived classes have "Subchannel_Metadata" in the header
-                if "Header" in ref_json.keys() and "Subchannel_Metadata" in ref_json["Header"].keys():
-                    self.compareBinnedReportType( ref_json, test_json, failures )
-                elif "Header" in ref_json.keys() and "Report_Type" in ref_json["Header"].keys() and ref_json["Header"]["Report_Type"] =="InsetChart":
-                    # Assuming a BaseChannelReport
-                    self.compareChannelReportType( ref_json, test_json, failures )
-                else:
-                    fail_validation = True
-                    print(report_name + " - Files are different but cannot do deep dive.")
-
-            if len(failures) > 0:
-                fail_validation = True
-                failure_txt += "Channel Timestep Reference_Value Test_Value\n" + ''.join(failures)
-                print( self.config_id + " completed but did not match reference! (" + str(self.duration) + ") - " + report_name )
+        elif test_path.endswith( ".kml" ) or test_path.endswith( ".bin" ):
+            fail_validation, failure_txt = self.compareOtherOutputs( report_name, ref_path, test_path, failures )
 
         if fail_validation:
             #print( "Validation failed, add to failing tests report." )
@@ -661,7 +701,7 @@ class HpcMonitor(Monitor):
                             else:
                                 # Every .json file in output (not hidden with . prefix) will be used for validation
                                 for file in os.listdir( os.path.join( self.config_id, "output" ) ):
-                                    if ( file.endswith( ".json" ) or file.endswith( ".csv" ) ) and file[0] != "." and file != "transitions.json" and "linux" not in file:
+                                    if ( file.endswith( ".json" ) or file.endswith( ".csv" ) or file.endswith( ".kml" ) or file.endswith( ".bin" ) ) and file[0] != "." and file != "transitions.json" and "linux" not in file:
                                         self.verify( sim_dir, file, "Channels" )
                     break
             time.sleep(5)
@@ -1043,19 +1083,6 @@ class MyRegressionRunner():
         except Exception as ex:
             print( "schema failed!" )
             return "fail"
-
-def md5_hash_of_file( filename ):
-    #print( "Getting md5 for " + filename )
-    file_handle = open( filename )
-    md5calc = md5()
-    while True:
-        file_bytes = file_handle.read( 10240 ) # value picked from example!
-        if len(file_bytes) == 0:
-            break
-        md5calc.update( file_bytes )
-    file_handle.close()
-    hash = md5calc.hexdigest()
-    return hash
 
 # Copy just build dlls to deployed places based on commandline argument 
 # - The default is to use all of the DLLs found in the location the DLL projects

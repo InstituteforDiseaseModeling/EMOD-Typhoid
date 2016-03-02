@@ -18,6 +18,7 @@
         "Enable_Birth": 1,
 
 		"____________REPORTING___________": "",
+                "Custom_Reports_Filename" : "custom_reports.json",
 		"Enable_Demographics_Reporting": 1,
 		"Report_HIV_Infection": 1,
 		"Report_HIV_Infection_Start_Year": 0,

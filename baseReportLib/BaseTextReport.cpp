@@ -98,7 +98,7 @@ namespace Kernel {
         std::string to_send = output_stream.str();
         std::string received;
 
-        EnvPtr->MPI.p_idm_mpi->Reduce( to_send, received );
+        EnvPtr->MPI.p_idm_mpi->GatherToRoot( to_send, received );
         if (EnvPtr->MPI.Rank == 0)
         {
             reduced_stream << received;

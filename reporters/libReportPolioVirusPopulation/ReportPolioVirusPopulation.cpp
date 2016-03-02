@@ -11,98 +11,87 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include <fstream>
 
-#include "BoostLibWrapper.h"
 #include "ReportPolioVirusPopulation.h"
+#include "DllInterfaceHelper.h"
+#include "FactorySupport.h"
+#include "IdmMpi.h"
+
 #include "Environment.h"
 #include "INodeContext.h"
 #include "IndividualPolio.h"
 #include "InfectionPolio.h"
 #include "Log.h"
-
-#include "ProgVersion.h"
-#include "DllDefs.h"
-
-#pragma warning(disable : 4996)
+#include "PolioContexts.h"
 
 using namespace std;
 using namespace json;
 
-static const char * _module = "ReportPolioVirusPopulation";
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!! CREATING NEW REPORTS
+// !!! If you are creating a new report by copying this one, you will need to modify 
+// !!! the values below indicated by "<<<"
 
+// Module name for logging, CustomReport.json, and DLL GetType()
+static const char * _module = "ReportPolioVirusPopulation";// <<< Name of this file
 static const std::string _report_name = "VirusPopulation.bin";
 
-using namespace Kernel;
 
-// You can put 0 or more valid Sim types into _sim_types but has to end with nullptr
-// Refer to DllLoader.h for current SIMTYPES_MAXNUM
-// but we don't include DllLoader.h to avoid compiling redefinition errors.
-static const char * _sim_types[] = {"POLIO_SIM", nullptr};
+namespace Kernel
+{
+// You can put 0 or more valid Sim types into _sim_types but has to end with nullptr.
+// "*" can be used if it applies to all simulation types.
+static const char * _sim_types[] = { "POLIO_SIM", nullptr };// <<< Types of simulation the report is to be used with
+
+report_instantiator_function_t rif = []()
+{
+    return (Kernel::IReport*)(new ReportPolioVirusPopulation()); // <<< Report to create
+};
+
+DllInterfaceHelper DLL_HELPER( _module, _sim_types, rif );
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// ------------------------------
+// --- DLL Interface Methods
+// ---
+// --- The DTK will use these methods to establish communication with the DLL.
+// ------------------------------
 
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
 #endif
 
-//
-// This is the interface function from the DTK.
-//
-DTK_DLLEXPORT
-char* __cdecl
+DTK_DLLEXPORT char* __cdecl
 GetEModuleVersion(char* sVer, const Environment * pEnv)
 {
-    Environment::setInstance(const_cast<Environment*>(pEnv));
-    ProgDllVersion pv;
-    LOG_INFO_F("GetVersion called with ver=%s\n", pv.getVersion());
-    if (sVer) strcpy(sVer, pv.getVersion());
-    return sVer;
+    return DLL_HELPER.GetEModuleVersion( sVer, pEnv );
 }
-
 
 DTK_DLLEXPORT void __cdecl
 GetSupportedSimTypes(char* simTypes[])
 {
-    int i=0;
-    while (i < SIMTYPES_MAXNUM && _sim_types[i] != NULL)
-    {
-        // allocation will be freed by the caller
-        simTypes[i] = new char[strlen(_sim_types[i]) + 1];
-        strcpy(simTypes[i], _sim_types[i]);
-        i++;
-    }
-    simTypes[i] = NULL;
+    DLL_HELPER.GetSupportedSimTypes( simTypes );
 }
 
-DTK_DLLEXPORT IReport* __cdecl
-CreateReport()
-{
-    std::ostringstream oss;
-    oss << "CreateReport called for " << _module << std::endl;
-    LOG_INFO( oss.str().c_str() );
-    return new ReportPolioVirusPopulation();
-}
-
-DTK_DLLEXPORT
-const char *
-__cdecl
+DTK_DLLEXPORT const char * __cdecl
 GetType()
 {
-    std::ostringstream oss;
-    oss << "GetType called for " << _module << std::endl;
-    LOG_INFO( oss.str().c_str() );
-    return _module;
+    return DLL_HELPER.GetType();
 }
 
 DTK_DLLEXPORT void __cdecl
-InitReportEnvironment(
-    const Environment * pEnv
-)
+GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 {
-    Environment::setInstance(const_cast<Environment*>(pEnv));
+    DLL_HELPER.GetReportInstantiator( pif );
 }
 
 #ifdef __cplusplus
 }
 #endif
 
+// ----------------------------------------
+// --- ReportPolioVirusPopulation Methods
+// ----------------------------------------
 
 void
 ReportPolioVirusPopulation::Initialize( unsigned int nrmSize )
@@ -137,16 +126,14 @@ ReportPolioVirusPopulation::LogNodeData( INodeContext * pNC )
     if( !node_stats )
         node_stats = node_to_stats_map[suid] = new stringstream (stringstream::in | stringstream::out | stringstream::binary);
 
-    float tmp_float = pNode->GetTime();     node_stats->write((char*)(&tmp_float), sizeof(float));
+    float tmp_float = pNC->GetTime().time;  node_stats->write((char*)(&tmp_float), sizeof(float));
     suids::suid_data_t tmp_suid = suid;     node_stats->write((char*)(&tmp_suid),  sizeof(suids::suid_data_t));
-    tmp_float = pNode->GetStatPop();        node_stats->write((char*)(&tmp_float), sizeof(float));
+    tmp_float = pNC->GetStatPop();          node_stats->write((char*)(&tmp_float), sizeof(float));
 
-    const IPoolReportable *pr = pNode->GetPoolReportable();
-
-    tmp_float = pr->GetTotalContagion(TRANSMISSIONROUTE_ALL);
-    node_stats->write((char*)(&tmp_float), sizeof(float));
-
-    pr->ReportPopulations(node_stats);
+    //const IPoolReportable *pr = pNC->GetPoolReportable();
+    //tmp_float = pr->GetTotalContagion(TRANSMISSIONROUTE_ALL);
+    //node_stats->write((char*)(&tmp_float), sizeof(float));
+    //pr->ReportPopulations(node_stats);
 }
 
 void 
@@ -179,7 +166,7 @@ void ReportPolioVirusPopulation::Reduce_Internal()
     
     LOG_DEBUG_F( "REDUCE:send_buffer (length %d): %s\n", tx_str.length(), tx_str.c_str() );
 
-    EnvPtr->MPI.p_idm_mpi->Reduce( tx_str, rx_str );
+    EnvPtr->MPI.p_idm_mpi->GatherToRoot( tx_str, rx_str );
 
     if( rx_str.length() > 0 && VirusPopulation.good())
     {
@@ -190,10 +177,11 @@ void ReportPolioVirusPopulation::Reduce_Internal()
 
 void ReportPolioVirusPopulation::Reduce()
 {
-
+    Reduce_Internal();
 }
 
 std::string ReportPolioVirusPopulation::GetReportName() const
 {
     return _report_name;
+}
 }
