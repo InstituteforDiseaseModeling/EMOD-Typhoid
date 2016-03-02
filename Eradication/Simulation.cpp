@@ -525,7 +525,7 @@ namespace Kernel
                                 !p_cr_config->Exist( "Use_Explicit_Dlls" ) ||
                                 (int(p_cr_config->operator[]( "Use_Explicit_Dlls" ).As<json::Number>()) != 1) ;
 
-        LOG_INFO_F("Found %d Custom Report DLL's to consider loading\n", rReportInstantiatorMap.size() );
+        LOG_INFO_F("Found %d Custom Report DLL's to consider loading, load_all_reports=%d\n", rReportInstantiatorMap.size(), load_all_reports );
         for( auto ri_entry : rReportInstantiatorMap )
         {
             std::string class_name = ri_entry.first ;

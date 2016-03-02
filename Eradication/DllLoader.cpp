@@ -423,7 +423,7 @@ bool DllLoader::GetType( const TCHAR* pFilename,
         if( p_class_name != nullptr )
         {
             rClassName = std::string( p_class_name );
-            LOG_INFO_F( "Found Report DLL = %s", p_class_name );
+            LOG_INFO_F( "Found Report DLL = %s\n", p_class_name );
         }
         else
         {

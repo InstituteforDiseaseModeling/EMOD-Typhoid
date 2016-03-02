@@ -37,9 +37,9 @@ namespace Kernel
         virtual void updateNodeStateCounters(IIndividualHuman *ih);
         virtual void finalizeNodeStateCounters(void) override;
 
-        float GetNewDiseaseSusceptibleInfections(void) const override {return newDiseaseSusceptibleInfections;}
-        float GetNewDiseaseSusceptibleInfectionsUnder5(void) const {return newDiseaseSusceptibleInfectionsUnder5;}
-        float GetNewDiseaseSusceptibleInfectionsOver5(void) const {return newDiseaseSusceptibleInfectionsOver5;}
+        virtual float GetNewDiseaseSusceptibleInfections(void)       const override {return newDiseaseSusceptibleInfections;}
+        virtual float GetNewDiseaseSusceptibleInfectionsUnder5(void) const override {return newDiseaseSusceptibleInfectionsUnder5;}
+        virtual float GetNewDiseaseSusceptibleInfectionsOver5(void)  const override {return newDiseaseSusceptibleInfectionsOver5;}
 
         virtual float GetMeanAgeInfection() const override;
 

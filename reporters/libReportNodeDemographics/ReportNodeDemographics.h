@@ -33,12 +33,12 @@ namespace Kernel
         virtual ~ReportNodeDemographics();
 
         // BaseEventReport
-        virtual bool Configure( const Configuration* );
+        virtual bool Configure( const Configuration* ) override;
 
-        virtual std::string GetHeader() const;
-        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
-        virtual void LogIndividualData( IIndividualHuman* individual ) ;
-        virtual void LogNodeData( INodeContext* pNC );
+        virtual std::string GetHeader() const override;
+        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override;
+        virtual void LogIndividualData( IIndividualHuman* individual ) override;
+        virtual void LogNodeData( INodeContext* pNC ) override;
     private:
         std::vector<float> m_AgeYears;
         std::vector<std::vector<NodeData>> m_Data;

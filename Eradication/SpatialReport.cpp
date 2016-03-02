@@ -397,8 +397,8 @@ void SpatialReport::shuffleNodeData()
         nodeids.push_back(entry.first);
     }
 
-    // reduce nodeids and sort
-    EnvPtr->MPI.p_idm_mpi->Reduce( nodeids, all_nodeids );
+    // synchronize nodeids and sort
+    EnvPtr->MPI.p_idm_mpi->Sync( nodeids, all_nodeids );
 
     std::sort(all_nodeids.begin(), all_nodeids.end());
 

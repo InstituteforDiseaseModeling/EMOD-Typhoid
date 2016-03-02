@@ -2,7 +2,8 @@
     "tests": [
         { "path" : "14_Polio_Bihar_Larger" },
         { "path" : "17_Polio_Bihar_Simplest" },
-        { "path" : "42_Polio_Default_Geography" }
+        { "path" : "42_Polio_Default_Geography" },
+        { "path": "118_Polio_CustomReports" }
     ],
     "NotWorking" : [
         { "path" : "2_Polio_Bihar_2x2_MixingPool" },

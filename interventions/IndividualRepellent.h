@@ -49,8 +49,8 @@ namespace Kernel
     protected:
         float current_killingrate;
         float current_blockingrate;
-        WaningConfig   killing_config;
-        IWaningEffect* killing_effect;
+//        WaningConfig   killing_config;
+//        IWaningEffect* killing_effect;
         WaningConfig   blocking_config;
         IWaningEffect* blocking_effect;
         IIndividualRepellentConsumer *ihmc; // aka individual or individual vector interventions container

@@ -101,7 +101,7 @@ ReportPluginAgeAtInfection::ReportPluginAgeAtInfection()
 {
     LOG_INFO( "ReportPluginAgeAtInfection ctor\n" );
     report_name = _report_name;
-    sampling_ratio = 0.01f;
+    sampling_ratio = 0.75f;
 }
 
 /////////////////////////
@@ -128,16 +128,14 @@ ReportPluginAgeAtInfection::LogIndividualData(
 {
     LOG_DEBUG( "LogIndividualData\n" );
 
-
     if (individual->GetNewInfectionState() == NewInfectionState::NewAndDetected || individual->GetNewInfectionState() == NewInfectionState::NewInfection)
     {
         LOG_DEBUG_F("Individual's New infection state is %d\n", (int)individual->GetNewInfectionState());
-        if(randgen->e() < sampling_ratio) 
+        if( DLL_HELPER.GetRandomNumberGenerator()->e() < sampling_ratio) 
         {
             ages.push_back(individual->GetAge());
         }
     }
-
 }
 
 
@@ -172,6 +170,7 @@ ReportPluginAgeAtInfection::Finalize()
     dtk_ver << pv.getRevisionNumber() << " " << pv.getBranch() << " " << pv.getBuildDate();
     qb["Header"]["DTK_Version"] = String(dtk_ver.str());
     qb["Header"]["Report_Version"] = String("3");
+    qb["Header"]["Timesteps"] = String("3");
     qb["Channels"]["Ages"]["Units"] = String("Days");
     int timestep_ind = 0;
     for (auto& timestep_entry : time_age_map)
@@ -195,6 +194,7 @@ ReportPluginAgeAtInfection::Finalize()
         timestep_ind++;
 
     }
+    qb["Header"]["Timesteps"] = Number(timestep_ind);
 
     // write to an internal buffer first... if we write directly to the network share, performance is slow
     // (presumably because it's doing a bunch of really small writes of all the JSON elements instead of one

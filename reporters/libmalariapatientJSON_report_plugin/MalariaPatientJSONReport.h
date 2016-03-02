@@ -54,19 +54,19 @@ public:
     MalariaPatientJSONReport();
     virtual ~MalariaPatientJSONReport();
 
-    virtual void Initialize( unsigned int nrmSize ); // public because Simulation::Populate will call this function, passing in NodeRankMap size
+    virtual void Initialize( unsigned int nrmSize ) override; // public because Simulation::Populate will call this function, passing in NodeRankMap size
 
-    virtual void BeginTimestep();
-    virtual void LogNodeData( Kernel::INodeContext * pNC );
-    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
-    virtual void EndTimestep( float currentTime, float dt );
+    virtual void BeginTimestep() override;
+    virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
+    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override;
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
+    virtual void EndTimestep( float currentTime, float dt ) override;
 
     // TODO: are we ever going to want to use this on multi-core?  Lot's of data output!
-    void Reduce();
+    virtual void Reduce() override;
 
-    virtual std::string GetReportName() const;
-    virtual void Finalize();
+    virtual std::string GetReportName() const override;
+    virtual void Finalize() override;
 
 protected:
     std::string report_name;

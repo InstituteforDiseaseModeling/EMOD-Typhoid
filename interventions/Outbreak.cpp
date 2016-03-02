@@ -102,6 +102,11 @@ namespace Kernel
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to IInterventionFactory object is not valid (could be DLL specific)" );
         }
 
+        if (( antigen < 0 ) || ( antigen >= simConfigObj->number_basestrains ))
+        {
+            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "antigen", antigen, "number_basestrains", simConfigObj->number_basestrains );
+        }
+
         if ( genome < 0 )
         {
             int ss = simConfigObj->number_substrains;
