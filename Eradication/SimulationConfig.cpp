@@ -93,6 +93,9 @@ BEGIN_QUERY_INTERFACE_BODY(SimulationConfig)
      HANDLE_INTERFACE(IConfigurable)
 END_QUERY_INTERFACE_BODY(SimulationConfig)
 
+SimulationConfig::~SimulationConfig()
+{
+}
 
 bool SimulationConfig::Configure(const Configuration * inputJson)
 {
@@ -887,10 +890,6 @@ SimulationConfig::SimulationConfig()
     ZERO_ARRAY(vaccine_strains);
 #endif
 #endif
-}
-
-SimulationConfig::~SimulationConfig()
-{
 }
 
 }

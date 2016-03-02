@@ -17,6 +17,9 @@
         "Mortality_Blocking_Immunity_Decay_Rate": 0.001, 
         "Mortality_Blocking_Immunity_Duration_Before_Decay": 60, 
         "Mortality_Time_Course": "DAILY_MORTALITY", 
+        "Default_Geography_Initial_Node_Population": 1000,
+        "Default_Geography_Torus_Size": 5,
+        "Minimum_Adult_Age_Years": 20, 
         "x_Birth": 1, 
         "x_Other_Mortality": 1 
     }
