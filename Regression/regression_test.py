@@ -231,7 +231,8 @@ class Monitor(threading.Thread):
         starttime = datetime.datetime.now()
 
         with open(os.path.join(sim_dir, "stdout.txt"), "w") as stdout, open(os.path.join(sim_dir, "stderr.txt"), "w") as stderr:
-            cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", params.input_path]
+            actual_input_dir = os.path.join( params.input_path, self.config_json["parameters"]["Geography"] )
+            cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir]
             print( "Calling '" + str(cmd) + "' from " + sim_dir + "\n" )
             proc = subprocess.Popen( cmd, stdout=stdout, stderr=stderr, cwd=sim_dir )
             proc.wait()
@@ -898,9 +899,6 @@ class MyRegressionRunner():
         remote_input_dir = os.path.join( self.params.shared_input, reply_json["parameters"]["Geography"] )
         # print( "remote_input_dir = " + remote_input_dir )
         actual_input_dir = os.path.join( self.params.user_input, reply_json["parameters"]["Geography"] )
-        
-        if is_local:
-            actual_input_dir = params.input_path
 
         if os.path.exists( actual_input_dir ) == False:
             print( "Creating " + actual_input_dir )
