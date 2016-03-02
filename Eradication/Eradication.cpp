@@ -277,7 +277,6 @@ IdmPyInit(
     // how about we use the config.json python script path by default and if that is missing
 
     //std::cout << "Appending our path to existing python path." << std::endl;
-    PyObject * path = nullptr;
     if( python_script_path != "." )
     {
         std::cout << "Using (configured) dtk python path: " << python_script_path << std::endl;
@@ -287,7 +286,7 @@ IdmPyInit(
         // because say we're running locally (or --get-schema doesn't read config.json!) we can look locally... 
         std::cout << "Using (default) dtk python path: " << "." << std::endl;
     }
-    path = PyString_FromString( python_script_path.c_str() );
+    PyObject* path = PyString_FromString( python_script_path.c_str() );
     //LOG_DEBUG_F( "Using Python Script Path: %s.\n", GET_CONFIGURABLE(SimulationConfig)->python_script_path );
     release_assert( path );
     
@@ -519,11 +518,11 @@ pythonOnExitHook()
     auto pFunc = IdmPyInit( PYTHON_POST_PROCESS, "application" );
     if( pFunc )
     {
-        PyObject * vars = PyTuple_New(1);
+        PyObject* vars = PyTuple_New(1);
         release_assert( EnvPtr );
         PyObject* py_oppath_str = PyString_FromString( EnvPtr->OutputPath.c_str() );
         PyTuple_SetItem(vars, 0, py_oppath_str );
-        PyObject * returnArgs = PyObject_CallObject( pFunc, vars );
+        PyObject* returnArgs = PyObject_CallObject( pFunc, vars );
         PyErr_Print();
     }
 #endif
