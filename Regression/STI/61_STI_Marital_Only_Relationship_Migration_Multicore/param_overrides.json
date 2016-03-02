@@ -64,6 +64,7 @@
 
         "____________RARELY_CHANGED___________": "",
         "Config_Name": "61_STI_Marital_Only_Relationship_Migration_Multicore",
+        "Custom_Reports_Filename" : "custom_reports.json",
         "Geography": "MigrationTest"
     }
 }

@@ -20,19 +20,19 @@ namespace Kernel
         virtual ~ReportRelationshipMigrationTracking();
 
         // BaseEventReport
-        virtual bool Configure( const Configuration* );
+        virtual bool Configure( const Configuration* ) override;
 
         virtual void UpdateEventRegistration( float currentTime, 
                                               float dt, 
-                                              std::vector<INodeEventContext*>& rNodeEventContextList );
+                                              std::vector<INodeEventContext*>& rNodeEventContextList ) override;
 
-        virtual std::string GetHeader() const;
+        virtual std::string GetHeader() const override;
         virtual bool notifyOnEvent( IIndividualHumanEventContext *context, 
-                                    const std::string& StateChange );
-        virtual void LogIndividualData( IIndividualHuman* individual ) ;
-        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
-        virtual void EndTimestep( float currentTime, float dt );
-        virtual void Reduce();
+                                    const std::string& StateChange ) override;
+        virtual void LogIndividualData( IIndividualHuman* individual ) override;
+        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override;
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual void Reduce() override;
     private:
         struct MigrationData
         {

@@ -23,12 +23,12 @@ namespace Kernel
         virtual ~ReportEventCounter();
 
         // BaseEventReport
-        virtual bool Configure( const Configuration* );
-        virtual void BeginTimestep() ;
-        virtual void Reduce();
-        virtual void Finalize();
+        virtual bool Configure( const Configuration* ) override;
+        virtual void BeginTimestep() override;
+        virtual void Reduce() override;
+        virtual void Finalize() override;
         virtual bool notifyOnEvent( IIndividualHumanEventContext *context, 
-                                    const std::string& StateChange );
+                                    const std::string& StateChange ) override;
     private:
         ChannelDataMap channelDataMap ;
         std::map<std::string, std::string> unitsMap;

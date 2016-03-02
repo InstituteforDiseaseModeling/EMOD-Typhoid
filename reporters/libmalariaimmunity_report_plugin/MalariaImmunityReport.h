@@ -26,13 +26,13 @@ namespace Kernel
         virtual ~MalariaImmunityReport();
 
         //BaseEventReportIntervalOutput
-        virtual bool Configure( const Configuration * inputJson );
-        virtual void EndTimestep( float currentTime, float dt );
-        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
+        virtual bool Configure( const Configuration * inputJson ) override;
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
 
     protected:
         // BaseEventReportIntervalOutput
-        virtual void WriteOutput( float currentTime );
+        virtual void WriteOutput( float currentTime ) override;
 
     private:
         void AccumulateOutput();

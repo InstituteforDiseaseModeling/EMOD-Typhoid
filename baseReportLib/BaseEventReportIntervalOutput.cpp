@@ -59,7 +59,11 @@ namespace Kernel
                 m_report_count++;
 
                 LOG_DEBUG("Timer has reached reporting interval.  Writing report...\n");
-                WriteOutput( currentTime );
+                Reduce();
+                if( EnvPtr->MPI.Rank == 0 )
+                {
+                    WriteOutput( currentTime );
+                }
 
                 LOG_DEBUG_F("Resetting %s reporting interval timer...\n", GetReportName().c_str());
                 m_interval_timer = 0 ;

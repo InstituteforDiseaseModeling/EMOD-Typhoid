@@ -16,18 +16,19 @@ class ReportPluginAgeAtInfectionHistogram : public BaseChannelReport
 public:
     ReportPluginAgeAtInfectionHistogram();
     virtual ~ReportPluginAgeAtInfectionHistogram() { }
-    virtual void BeginTimestep();
-    virtual void EndTimestep( float currentTime, float dt );
-    virtual void LogNodeData( Kernel::INodeContext * pNC );
-    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
-    virtual void Reduce();
-    virtual void Finalize();
+
+    virtual void BeginTimestep() override;
+    virtual void EndTimestep( float currentTime, float dt ) override;
+    virtual void LogNodeData( Kernel::INodeContext * pNC ) override;
+    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override { return true ; } ;
+    virtual void LogIndividualData( Kernel::IIndividualHuman* individual ) override;
+    virtual void Reduce() override;
+    virtual void Finalize() override;
 
 protected:
-    virtual bool Configure( const Configuration* config);
-    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
-    virtual void postProcessAccumulatedData();
+    virtual bool Configure( const Configuration* config) override;
+    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) override;
+    virtual void postProcessAccumulatedData() override;
     int  GetAgeBin(double age);
 
     float time_since_last_report;

@@ -48,6 +48,7 @@
             "ENUMS":{
                 "Simulation_Type":"TB_SIM"
             },
+            "Custom_Reports_Filename" : "custom_reports.json",
             "Geography":"TB_single_node",
             "Node_Grid_Size":0.009,
             "Run_Number":10400,

@@ -1,0 +1,65 @@
+{
+    "Custom_Reports" : 
+    {
+        "Use_Explicit_Dlls" : 1,
+        "ReportPolioIndividualInfections" :
+        {
+            "Enabled" : 1,
+            "Reports" : [ {} ]
+        },
+        "ReportPolioVirusPopulation" :
+        {
+            "Enabled" : 1,
+            "Reports" : [ {} ]
+        },
+        "PolioSurveyJSONAnalyzer" :
+        {
+            "Enabled" : 1,
+            "Reports" :
+            [
+                {
+                    "Start_Day": 2,
+                    "Duration_Days" : 10000,
+                    "Nodeset_Config": {
+                         "class": "NodeSetAll"
+                    }, 
+                    "Event_Trigger_List" :
+                    [
+                        "EveryUpdate"
+                    ],
+                    "Max_Number_Reports": 1,
+                    "Report_Description": "Initial",
+                    "Reporting_Interval": 2
+                },
+                {
+                    "Start_Day": 3,
+                    "Duration_Days" : 10000,
+                    "Nodeset_Config": {
+                         "class": "NodeSetAll"
+                    }, 
+                    "Event_Trigger_List" :
+                    [
+                        "EveryUpdate"
+                    ],
+                    "Max_Number_Reports": 1,
+                    "Report_Description": "Day3",
+                    "Reporting_Interval": 2
+                },
+                {
+                    "Start_Day": 88,
+                    "Duration_Days" : 10000,
+                    "Nodeset_Config": {
+                         "class": "NodeSetAll"
+                    }, 
+                    "Event_Trigger_List" :
+                    [
+                        "EveryUpdate"
+                    ],
+                    "Max_Number_Reports": 1,
+                    "Report_Description": "Day168",
+                    "Reporting_Interval": 2
+                }
+            ]
+        }
+    }
+}

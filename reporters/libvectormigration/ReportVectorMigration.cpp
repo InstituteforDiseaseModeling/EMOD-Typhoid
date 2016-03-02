@@ -114,6 +114,11 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 
     void ReportVectorMigration::LogVectorMigration( ISimulationContext* pSim, float currentTime, const suids::suid& nodeSuid, IVectorCohort* pvc )
     {
+        if( (currentTime <= 365.0) || (372.0 < currentTime) )
+        {
+            return;
+        }
+
         IVectorCohortIndividual * pivci = NULL;
         if (s_OK != pvc->QueryInterface(GET_IID(IVectorCohortIndividual), (void**)&pivci) )
         {

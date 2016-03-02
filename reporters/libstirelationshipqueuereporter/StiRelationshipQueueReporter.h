@@ -25,12 +25,12 @@ namespace Kernel
         // IReport
         virtual void UpdateEventRegistration( float currentTime, 
                                               float dt, 
-                                              std::vector<INodeEventContext*>& rNodeEventContextList );
-        virtual void LogNodeData( INodeContext* pNC );
+                                              std::vector<INodeEventContext*>& rNodeEventContextList ) override;
+        virtual void LogNodeData( INodeContext* pNC ) override;
 
     protected:
         // BaseTextReport
-        virtual std::string GetHeader() const ;
+        virtual std::string GetHeader() const override;
 
     private:
         std::string CreateLengthsString( const map<int, vector<int>>& rQueueLengthMap );
