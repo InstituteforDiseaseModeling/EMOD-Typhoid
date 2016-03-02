@@ -92,7 +92,7 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\utils\;..\campaign\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\python27\include;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -142,7 +142,7 @@
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\Python27\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -193,7 +193,7 @@
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\Python27\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_MPI;BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DISABLE_MPI;BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -313,6 +313,7 @@
     <ClCompile Include="BehaviorPfa.cpp" />
     <ClCompile Include="BinnedReportMalaria.cpp" />
     <ClCompile Include="BinnedReportPolio.cpp" />
+    <ClCompile Include="BinnedReportPy.cpp" />
     <ClCompile Include="BinnedReportTB.cpp" />
     <ClCompile Include="CalendarEventCoordinator.cpp" />
     <ClCompile Include="CoverageByNodeEventCoordinator.cpp" />
@@ -378,6 +379,7 @@
     <ClCompile Include="IndividualHIV.cpp" />
     <ClCompile Include="IndividualMalaria.cpp" />
     <ClCompile Include="IndividualPolio.cpp" />
+    <ClCompile Include="IndividualPy.cpp" />
     <ClCompile Include="IndividualSTI.cpp" />
     <ClCompile Include="IndividualTB.cpp" />
     <ClCompile Include="IndividualVector.cpp" />
@@ -388,6 +390,7 @@
     <ClCompile Include="InfectionHIV.cpp" />
     <ClCompile Include="InfectionMalaria.cpp" />
     <ClCompile Include="InfectionPolio.cpp" />
+    <ClCompile Include="InfectionPy.cpp" />
     <ClCompile Include="InfectionSTI.cpp" />
     <ClCompile Include="InfectionTB.cpp" />
     <ClCompile Include="InfectionVector.cpp" />
@@ -407,6 +410,7 @@
     <ClCompile Include="NodeMalaria.cpp" />
     <ClCompile Include="NodeMalariaEventContext.cpp" />
     <ClCompile Include="NodePolio.cpp" />
+    <ClCompile Include="NodePy.cpp" />
     <ClCompile Include="NodeRankMap.cpp" />
     <ClCompile Include="NodeSTI.cpp" />
     <ClCompile Include="NodeTB.cpp" />
@@ -420,6 +424,7 @@
     <ClCompile Include="PairFormationStatsImpl.cpp" />
     <ClCompile Include="PfaFactory.cpp" />
     <ClCompile Include="PolioInterventionsContainer.cpp" />
+    <ClCompile Include="PyInterventionsContainer.cpp" />
     <ClCompile Include="RateTableFactory.cpp" />
     <ClCompile Include="RateTableImpl.cpp" />
     <ClCompile Include="Relationship.cpp" />
@@ -433,6 +438,7 @@
     <ClCompile Include="ReportHIVMortalityEvents.cpp" />
     <ClCompile Include="ReportMalaria.cpp" />
     <ClCompile Include="ReportPolio.cpp" />
+    <ClCompile Include="ReportPy.cpp" />
     <ClCompile Include="ReportSTI.cpp" />
     <ClCompile Include="ReportTB.cpp" />
     <ClCompile Include="ReportTBHIV.cpp" />
@@ -447,6 +453,7 @@
     <ClCompile Include="SimulationHIV.cpp" />
     <ClCompile Include="SimulationMalaria.cpp" />
     <ClCompile Include="SimulationPolio.cpp" />
+    <ClCompile Include="SimulationPy.cpp" />
     <ClCompile Include="SimulationSTI.cpp" />
     <ClCompile Include="SimulationTB.cpp" />
     <ClCompile Include="SimulationTBHIV.cpp" />
@@ -457,6 +464,7 @@
     <ClCompile Include="SpatialReport.cpp" />
     <ClCompile Include="SpatialReportMalaria.cpp" />
     <ClCompile Include="SpatialReportPolio.cpp" />
+    <ClCompile Include="SpatialReportPy.cpp" />
     <ClCompile Include="SpatialReportTB.cpp" />
     <ClCompile Include="SpatialReportVector.cpp" />
     <ClCompile Include="StandardEventCoordinator.cpp" />
@@ -469,6 +477,7 @@
     <ClCompile Include="SusceptibilityHIV.cpp" />
     <ClCompile Include="SusceptibilityMalaria.cpp" />
     <ClCompile Include="SusceptibilityPolio.cpp" />
+    <ClCompile Include="SusceptibilityPy.cpp" />
     <ClCompile Include="SusceptibilitySTI.cpp" />
     <ClCompile Include="SusceptibilityTB.cpp" />
     <ClCompile Include="SusceptibilityVector.cpp" />
@@ -678,6 +687,7 @@
     <ClInclude Include="BehaviorPfa.h" />
     <ClInclude Include="BinnedReportMalaria.h" />
     <ClInclude Include="BinnedReportPolio.h" />
+    <ClInclude Include="BinnedReportPy.h" />
     <ClInclude Include="CampaignEvent.h" />
     <ClInclude Include="CampaignEventByYear.h" />
     <ClInclude Include="Climate.h" />
@@ -721,6 +731,7 @@
     <ClInclude Include="IndividualHIV.h" />
     <ClInclude Include="IndividualMalaria.h" />
     <ClInclude Include="IndividualPolio.h" />
+    <ClInclude Include="IndividualPy.h" />
     <ClInclude Include="IndividualSTI.h" />
     <ClInclude Include="IndividualTB.h" />
     <ClInclude Include="IndividualVector.h" />
@@ -729,6 +740,7 @@
     <ClInclude Include="InfectionAirborne.h" />
     <ClInclude Include="InfectionMalaria.h" />
     <ClInclude Include="InfectionPolio.h" />
+    <ClInclude Include="InfectionPy.h" />
     <ClInclude Include="InfectionSTI.h" />
     <ClInclude Include="InfectionTB.h" />
     <ClInclude Include="InfectionVector.h" />
@@ -757,6 +769,7 @@
     <ClInclude Include="NodeMalaria.h" />
     <ClInclude Include="NodeMalariaEventContext.h" />
     <ClInclude Include="NodePolio.h" />
+    <ClInclude Include="NodePy.h" />
     <ClInclude Include="NodeRankMap.h" />
     <ClInclude Include="NodeSTI.h" />
     <ClInclude Include="NodeTB.h" />
@@ -769,6 +782,7 @@
     <ClInclude Include="PairFormationStatsImpl.h" />
     <ClInclude Include="PfaFactory.h" />
     <ClInclude Include="PolioInterventionsContainer.h" />
+    <ClInclude Include="PyInterventionsContainer.h" />
     <ClInclude Include="Properties.h" />
     <ClInclude Include="RateTableFactory.h" />
     <ClInclude Include="RateTableImpl.h" />
@@ -780,6 +794,7 @@
     <ClInclude Include="ReportHIVMortalityEvents.h" />
     <ClInclude Include="ReportMalaria.h" />
     <ClInclude Include="ReportPolio.h" />
+    <ClInclude Include="ReportPy.h" />
     <ClInclude Include="ReportSTI.h" />
     <ClInclude Include="ReportTB.h" />
     <ClInclude Include="ReportVector.h" />
@@ -794,6 +809,7 @@
     <ClInclude Include="SimulationHIV.h" />
     <ClInclude Include="SimulationMalaria.h" />
     <ClInclude Include="SimulationPolio.h" />
+    <ClInclude Include="SimulationPy.h" />
     <ClInclude Include="SimulationSTI.h" />
     <ClInclude Include="SimulationTB.h" />
     <ClInclude Include="SimulationVector.h" />
@@ -803,6 +819,7 @@
     <ClInclude Include="SpatialReport.h" />
     <ClInclude Include="SpatialReportMalaria.h" />
     <ClInclude Include="SpatialReportPolio.h" />
+    <ClInclude Include="SpatialReportPy.h" />
     <ClInclude Include="SpatialReportTB.h" />
     <ClInclude Include="SpatialReportVector.h" />
     <ClInclude Include="StandardEventCoordinator.h" />
@@ -821,6 +838,7 @@
     <ClInclude Include="SusceptibilityHIV.h" />
     <ClInclude Include="SusceptibilityMalaria.h" />
     <ClInclude Include="SusceptibilityPolio.h" />
+    <ClInclude Include="SusceptibilityPy.h" />
     <ClInclude Include="SusceptibilitySTI.h" />
     <ClInclude Include="SusceptibilityTB.h" />
     <ClInclude Include="SusceptibilityVector.h" />
