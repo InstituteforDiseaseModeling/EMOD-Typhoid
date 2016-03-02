@@ -1,5 +1,5 @@
 {
-    "Default_Config_Path":"defaults\\tb_scenario_default_config.json",
+    "Default_Config_Path":"defaults/tb_scenario_default_config.json",
     "parameters":{
         "Config_Name":"03_HealthSystems_A_MultipleSystems -- multicore -- Madagascar_Nosibe",
         "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;../TB_03_HealthSystems_demographics_overlay.json",
