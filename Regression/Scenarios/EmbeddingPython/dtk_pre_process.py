@@ -1,11 +1,8 @@
 #!/usr/bin/python
+
 import json
-#import yaml
-import pdb
-import xlrd
 
 def application( config_file_name ):
-    #pdb.set_trace()
     if config_file_name.endswith( ".json" ):
         tlc = json.loads( open( config_file_name ).read() )
         params = {}
@@ -29,6 +26,7 @@ def application( config_file_name ):
             return stitched_output_config_file_name 
 
     elif config_file_name.endswith( ".yaml" ):
+        import yaml
         config_yaml_f = open( config_file_name )
         config = yaml.safe_load( config_yaml_f )
         config_json_str = json.dumps( config )
@@ -39,6 +37,7 @@ def application( config_file_name ):
         return output_config_file_name 
 
     elif config_file_name.endswith( ".xlsx" ) or config_file_name.endswith( ".xlsm" ):
+        import xlrd
         wb = xlrd.open_workbook( config_file_name ) 
         # just support single worksheet for now
         config_json = json.loads( "{}" )

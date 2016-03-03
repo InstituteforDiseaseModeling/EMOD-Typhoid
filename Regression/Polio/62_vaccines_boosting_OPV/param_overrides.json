@@ -1,5 +1,5 @@
 {
-    "Default_Config_Path": "..\\defaults\\polio_default_config.json", 
+    "Default_Config_Path": "../defaults/polio_default_config.json", 
     "parameters": {
         "POLIO": {
             "Disease_Susceptible_Report_Poliovirus_Type": "VRPV1", 
