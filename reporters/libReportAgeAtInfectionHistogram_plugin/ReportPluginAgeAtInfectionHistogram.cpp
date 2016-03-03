@@ -251,6 +251,7 @@ ReportPluginAgeAtInfectionHistogram::Finalize()
         }
         curr_interval++;
     }
+    qb["Header"]["Timesteps"] = Number(curr_bin);
 
     // write to an internal buffer first... if we write directly to the network share, performance is slow
     // (presumably because it's doing a bunch of really small writes of all the JSON elements instead of one

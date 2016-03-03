@@ -20,10 +20,10 @@ namespace Kernel
         ReportVectorMigration();
         virtual ~ReportVectorMigration();
 
-        virtual std::string GetHeader() const;
+        virtual std::string GetHeader() const override;
         virtual void LogVectorMigration( ISimulationContext* pSim, 
                                          float currentTime, 
                                          const suids::suid& nodeSuid, 
-                                         IVectorCohort* pivc );
+                                         IVectorCohort* pivc ) override;
     };
 }

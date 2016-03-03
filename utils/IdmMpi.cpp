@@ -112,14 +112,14 @@ namespace IdmMpi
             MPI_Reduce((void*)pSendBuff, (void*)pReceiveBuff, size, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
         }
 
-        virtual void Reduce( const std::string& rToSend, std::string& rReceived )
+        virtual void GatherToRoot( const std::string& rToSend, std::string& rReceived )
         {
             int32_t length = int32_t(rToSend.size());
 
             if( m_Rank > 0 )
             {
                 MPI_Gather( (void*)&length, 1, MPI_INTEGER4, nullptr, m_NumTasks, MPI_INTEGER4, 0, MPI_COMM_WORLD );
-                MPI_Gatherv( (void*)rToSend.c_str(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD );
+                MPI_Gatherv( (void*)rToSend.data(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD );
             }
             else
             {
@@ -132,15 +132,18 @@ namespace IdmMpi
                     displs[i] = total;
                     total += lengths[i];
                 }
-                std::vector<char> buffer(total + 1);
-                MPI_Gatherv((void*)rToSend.c_str(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
-                buffer[total] = '\0';
+                std::vector<char> buffer(total);
+                MPI_Gatherv((void*)rToSend.data(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
             
-                rReceived.assign( buffer.data() );
+                // ------------------------------------------------------------------------------------
+                // --- Make sure to avoid string methods that look for the string to be null terminated.
+                // --- If the string has binary data in it, then you won't get all of it.
+                // ------------------------------------------------------------------------------------
+                rReceived.assign( buffer.begin(), buffer.end() );
             }
         }
 
-        virtual void Reduce( const std::vector<int>& rSendInts, std::vector<int>& rReceiveInts )
+        virtual void Sync( const std::vector<int>& rSendInts, std::vector<int>& rReceiveInts )
         {
             int32_t count = (int32_t)rSendInts.size();
 
@@ -224,7 +227,7 @@ namespace IdmMpi
             memcpy( pReceiveBuff, pSendBuff, size*sizeof(float) );
         }
 
-        virtual void Reduce( const std::string& rToSend, std::string& rReceived ) override
+        virtual void GatherToRoot( const std::string& rToSend, std::string& rReceived )
         {
             rReceived = rToSend;
         }
@@ -235,7 +238,7 @@ namespace IdmMpi
         virtual void ReceiveChars( char* pBuf, int count, int fromRank ) override {}
         virtual void SendIntegers( const uint32_t* pBuf, int count, int toRank, Request* pRequest ) override {}
         virtual void SendChars( const char* pBuf, int count, int toRank, Request* pRequest ) override {}
-        virtual void Reduce( const std::vector<int>& rSendInts, std::vector<int>& rReceiveInts ) override {}
+        virtual void Sync( const std::vector<int>& rSendInts, std::vector<int>& rReceiveInts ) override {}
         virtual void BroadcastInteger( int* buffer, int size, int rank ) override {}
         virtual void BroadcastChar( char* buffer, int size, int rank ) override {}
         virtual void PostChars( char* pBuf, int size, int myRank ) override {}

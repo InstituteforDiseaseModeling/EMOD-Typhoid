@@ -1,6 +1,7 @@
 {
     "Custom_Reports" : 
     {
+        "Use_Explicit_Dlls" : 1,
         "ReportEventCounter" :
         {
             "Enabled" : 1,
@@ -92,6 +93,11 @@
                     "Reporting_Interval": 73
                 }
             ]
+        },
+        "MalariaPatientJSONReport" :
+        {
+            "Enabled" : 1,
+            "Reports" : [ {} ]
         }
     }
 }

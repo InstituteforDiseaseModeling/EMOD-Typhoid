@@ -22,6 +22,7 @@ namespace Kernel
         ~MalariaPatient();
 
         int id;
+        int node_id;
         float initial_age;
         float local_birthday;
         std::vector< std::pair<int,int> > strain_ids;
@@ -37,6 +38,7 @@ namespace Kernel
 
         // IJsonSerializable
         virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper );
+        virtual void JDeserialize( IJsonObjectAdapter* root );
 
     protected:
         void SerializeChannel( std::string channel_name, std::vector<float> &channel_data,
@@ -51,14 +53,20 @@ namespace Kernel
         virtual ~MalariaSurveyJSONAnalyzer();
 
         // BaseEventReportIntervalOutput
-        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
+        virtual bool Configure( const Configuration* ) override;
+        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual void Reduce() override;
 
     protected:
         // BaseEventReportIntervalOutput
-        virtual void WriteOutput( float currentTime );
-        virtual void ClearOutputData();
+        virtual void WriteOutput( float currentTime ) override;
+        virtual void ClearOutputData() override;
+
+        void SerializePatients( IJsonObjectAdapter* pIJsonObj, JSerializer& js );
 
         typedef std::map<int, MalariaPatient*> patient_map_t;
         patient_map_t m_patient_map;
+        bool m_PrettyFormat;
     };
 }

@@ -18,8 +18,25 @@ namespace Kernel
 
     void ISerializable::serialize(IArchive& ar, ISerializable*& obj)
     {
+        static std::string nullptr_string( "nullptr" );
+
+        if ( ar.IsWriter() && ( obj == nullptr ) )
+        {
+            ar.startClass( nullptr_string );
+            ar.endClass();
+            return;
+        }
+
         std::string class_name = ar.IsWriter() ? obj->GetClassName() : "__UNK__";
         ar.startClass(class_name);
+
+        if ( ar.IsReader() && (class_name == nullptr_string) )
+        {
+            ar.endClass();
+            obj = nullptr;
+            return;
+        }
+
         auto serialize_function = SerializationRegistrar::_get_serializer(class_name);
         if (!ar.IsWriter())
         {
@@ -33,6 +50,6 @@ namespace Kernel
             obj = constructor_function();
         }
         serialize_function(ar, obj);
-        ar.endObject();
+        ar.endClass();
     }
 }

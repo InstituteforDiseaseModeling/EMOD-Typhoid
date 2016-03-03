@@ -1,5 +1,5 @@
 {
-     "Default_Config_Path": "defaults\\polio_default_config.json", 
+     "Default_Config_Path": "defaults/polio_default_config.json", 
      "parameters": {
           "DEMOGRAPHICS": {
                "Demographics_Filename": "Bihar_2x2_sandbox_demographics.compiled.json;Bihar_2x2_sandbox_pool_overlay1.compiled.json", 

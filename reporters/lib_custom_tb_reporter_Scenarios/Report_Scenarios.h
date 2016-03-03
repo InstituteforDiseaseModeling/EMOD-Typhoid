@@ -24,25 +24,25 @@ public:
     virtual ~Report_Scenarios();
 
 protected:
-    virtual void LogNodeData( INodeContext * pNC );
-    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( IIndividualHuman* individual );
-    virtual void BeginTimestep();
-    virtual void EndTimestep( float currentTime, float dt );
-    virtual void Finalize();
+    virtual void LogNodeData( INodeContext * pNC ) override;
+    virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override { return true ; } ;
+    virtual void LogIndividualData( IIndividualHuman* individual ) override;
+    virtual void BeginTimestep() override;
+    virtual void EndTimestep( float currentTime, float dt ) override;
+    virtual void Finalize() override;
 
     // for IIndividualEventObserver
-    virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+    virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
     virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const {}; //GHH weird I had to add these?
     virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper ) {}; //GHH weird I had to add these?
 
-    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map );
-    virtual void postProcessAccumulatedData();
+    virtual void populateSummaryDataUnitsMap( std::map<std::string, std::string> &units_map ) override;
+    virtual void postProcessAccumulatedData() override;
     
     virtual int calcBinIndex(const IIndividualHuman* individual);
 
     // for INodeEventObserver
-    virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
+    virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
 
     int last_years_births;
     int this_years_births;

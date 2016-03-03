@@ -148,6 +148,6 @@ namespace Kernel
         ar.labelElement("current_blockingrate") & repellent.current_blockingrate;
         ar.labelElement("current_killingrate") & repellent.current_killingrate; 
         ar.labelElement("blocking_effect") & repellent.blocking_effect;
-        ar.labelElement("killing_effect") & repellent.killing_effect; 
+//        ar.labelElement("killing_effect") & repellent.killing_effect; 
     }
 }

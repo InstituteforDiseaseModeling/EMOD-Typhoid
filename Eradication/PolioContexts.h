@@ -27,7 +27,9 @@ namespace Kernel
     struct INodePolio : ISupports
     {
         virtual float GetMeanAgeInfection() const = 0;
-        virtual float GetNewDiseaseSusceptibleInfections() const = 0;
+        virtual float GetNewDiseaseSusceptibleInfections()           const = 0;
+        virtual float GetNewDiseaseSusceptibleInfectionsUnder5(void) const = 0;
+        virtual float GetNewDiseaseSusceptibleInfectionsOver5(void)  const = 0;
     };
 
     class ISusceptibilityPolioReportable : public ISupports

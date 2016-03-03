@@ -1,5 +1,5 @@
 {
-     "Default_Config_Path": "defaults\\polio_default_config.json", 
+     "Default_Config_Path": "defaults/polio_default_config.json", 
      "parameters": {
           "DEMOGRAPHICS": {
                "Demographics_Filename": "Bihar_single_node_demographics.compiled.json;Bihar_single_node_demographics_immunity.compiled.json", 
