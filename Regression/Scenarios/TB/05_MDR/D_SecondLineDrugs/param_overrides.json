@@ -3,6 +3,7 @@
     "parameters":{
         "Base_Infectivity":0.05,
         "Config_Name":"05_MDR_D_SecondLineDrugs",
+        "Custom_Reports_Filename" : "custom_reports.json",
         "Demographics_Filename":"TB_05_MDR_demographics.json",
         "Simulation_Duration":300,
         "Simulation_Timestep": 5, 

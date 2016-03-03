@@ -41,6 +41,7 @@
         "Condom_Usage_Probability_in_Transitory_Relationships_Midyear": 2000, 
         "Condom_Usage_Probability_in_Transitory_Relationships_Rate": 1.5, 
         "Config_Name": "15_HIV_StiCoInfection", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity": 0.5, 
         "Days_Between_Symptomatic_And_Death_Weibull_Scale": 618.341625, 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
@@ -48,7 +49,7 @@
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filenames": [
             "../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed.json", 
-            "../input/PFA_Overlay.json", 
+            "../input/pfa_overlay.json", 
             "PFA_overlay_rates.json"
         ], 
         "Enable_Aging": 1, 

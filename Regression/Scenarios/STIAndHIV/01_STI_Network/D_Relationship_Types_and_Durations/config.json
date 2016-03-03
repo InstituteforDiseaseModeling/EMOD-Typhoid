@@ -19,6 +19,7 @@
         "Coital_Dilution_Factor_4_Plus_Partners": 1, 
         "Condom_Transmission_Blocking_Probability": 0.9, 
         "Config_Name": "01D_Relationship_Types_and_Durations", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 

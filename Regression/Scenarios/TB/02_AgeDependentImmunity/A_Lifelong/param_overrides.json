@@ -3,6 +3,7 @@
     "parameters":{
         "Age_Initialization_Distribution_Type":"DISTRIBUTION_COMPLEX",
         "Config_Name":"02_AgeDependentImmunity_A_Lifelong",
+        "Custom_Reports_Filename" : "custom_reports.json",
         "Demographics_Filename":"TB_02_AgeDependentImmunity_demographics.json",
         "Simulation_Duration":7000,
         "Simulation_Timestep":5,

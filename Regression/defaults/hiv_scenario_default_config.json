@@ -382,6 +382,7 @@
         },
 
 		"____________REPORTING___________": {
+            "Custom_Reports_Filename" : "NoCustomReports",
             "Enable_Default_Reporting" : 1,
             "Report_HIV_Event_Channels_List" : [],
             "Enable_Demographics_Reporting": 0,

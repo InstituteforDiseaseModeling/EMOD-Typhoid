@@ -396,6 +396,7 @@
      }, 
      "OBSOLETE": {}, 
      "OUTPUT": {
+          "Custom_Reports_Filename" : "NoCustomReports",
           "Report_Event_Recorder" : 0,
           "Enable_Default_Reporting" : 1,
           "Enable_Spatial_Output": 0,
