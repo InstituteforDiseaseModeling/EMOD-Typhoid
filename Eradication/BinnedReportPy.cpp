@@ -36,10 +36,6 @@ using namespace Kernel;
 // Module name for logging
 static const char * _module = "BinnedReportPy"; 
 
-static const std::string _num_chronic_carriers_label     = "Number of Chronic Carriers";
-static const std::string _num_subclinic_infections_label = "Number of New Sub-Clinical Infections";
-static const std::string _num_acute_infections_label     = "Number of New Acute Infections";
-
 namespace Kernel {
 
 Kernel::IReport*
@@ -51,9 +47,6 @@ BinnedReportPy::CreateReport()
 // Derived constructor calls base constructor to initialized reduced timesteps etc. 
 BinnedReportPy::BinnedReportPy() 
     : BinnedReport()
-    , carrier_bins( nullptr )
-    , subclinical_bins( nullptr )
-    , acute_bins( nullptr )
 {
     LOG_DEBUG( "BinnedReportPy ctor\n" );
     _num_age_bins = 100;
@@ -69,17 +62,10 @@ BinnedReportPy::BinnedReportPy()
 
 BinnedReportPy::~BinnedReportPy()
 {
-    delete[] carrier_bins;
-    delete[] subclinical_bins;
-    delete[] acute_bins;
 }
 
 void BinnedReportPy::initChannelBins()
 {
-    carrier_bins = new float[num_total_bins];
-    subclinical_bins = new float[num_total_bins];
-    acute_bins = new float[num_total_bins];
-
     BinnedReport::initChannelBins();
 
     clearChannelsBins();
@@ -87,28 +73,16 @@ void BinnedReportPy::initChannelBins()
 
 void BinnedReportPy::clearChannelsBins()
 {
-    memset(carrier_bins, 0, num_total_bins * sizeof(float));
-    memset(subclinical_bins, 0, num_total_bins * sizeof(float));
-    memset(acute_bins, 0, num_total_bins * sizeof(float));
 }
 
 void BinnedReportPy::EndTimestep( float currentTime, float dt )
 {
-	if (currentTime<6570){
-		num_timesteps--;
-		return;
-	}
-
-    Accumulate( _num_chronic_carriers_label,     carrier_bins );
-    Accumulate( _num_subclinic_infections_label, subclinical_bins );
-    Accumulate( _num_acute_infections_label,     acute_bins );
-
     BinnedReport::EndTimestep( currentTime, dt );
 
     clearChannelsBins();
 }
 
-void  BinnedReportPy::LogIndividualData( IIndividualHuman * individual )
+void BinnedReportPy::LogIndividualData( IIndividualHuman * individual )
 {
     LOG_DEBUG( "BinnedReportPy::LogIndividualData\n" );
 
@@ -121,23 +95,6 @@ void  BinnedReportPy::LogIndividualData( IIndividualHuman * individual )
 
     auto mc_weight = individual->GetMonteCarloWeight();
     int bin_index = calcBinIndex(individual);
-
-    if( typhoid_individual->IsChronicCarrier() )
-    {
-        carrier_bins[ bin_index ] += mc_weight;
-    }
-
-    if( individual->IsInfected() )
-    {
-        if( typhoid_individual->IsSubClinical() )
-        {
-            subclinical_bins[ bin_index ] += mc_weight;
-        }
-        else if( typhoid_individual->IsAcute() )
-        {
-            acute_bins[ bin_index ] += mc_weight;
-        }
-    }
 
     BinnedReport::LogIndividualData(individual);
 }

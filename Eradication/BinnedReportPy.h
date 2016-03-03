@@ -35,9 +35,6 @@ namespace Kernel {
             virtual void initChannelBins();
             void clearChannelsBins();
 
-            float *carrier_bins;
-            float *subclinical_bins;
-            float *acute_bins;
             // channels specific to this particular report-type
     };
 }
