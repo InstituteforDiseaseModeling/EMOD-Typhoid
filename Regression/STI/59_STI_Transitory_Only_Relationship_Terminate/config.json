@@ -23,6 +23,7 @@
         "Coital_Dilution_Factor_4_Plus_Partners": 0.45, 
         "Condom_Transmission_Blocking_Probability": 0.9, 
         "Config_Name": "59_STI_Transitory_Only_Relationship_Terminate", 
+        "Custom_Reports_Filename": "custom_reports.json", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 

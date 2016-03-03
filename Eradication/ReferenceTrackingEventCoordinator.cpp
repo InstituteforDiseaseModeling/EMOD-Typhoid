@@ -97,30 +97,37 @@ namespace Kernel
         {
             event_context->VisitIndividuals( fn ); // does not return value, updates total existing coverage by capture
         }
-        release_assert( totalQualifyingPop > 0 );
-        Fraction currentCoverageForIntervention = totalWithIntervention/totalQualifyingPop;
-        NonNegativeFloat totalWithoutIntervention = totalQualifyingPop - totalWithIntervention;
-        float default_value = 0.0f;
-        float year = parent->GetSimulationTime().Year();
-        target_coverage  = year2ValueMap.getValueLinearInterpolation(year, default_value);
-
-        float totalToIntervene = ( target_coverage * totalQualifyingPop ) - totalWithIntervention;
-        NO_LESS_THAN( totalToIntervene, 0 );
 
         float dc = 0.0f;
-        if( totalWithoutIntervention > 0 )
+        if( totalQualifyingPop > 0 )
         {
-            dc = totalToIntervene / totalWithoutIntervention;
+            Fraction currentCoverageForIntervention = totalWithIntervention/totalQualifyingPop;
+            NonNegativeFloat totalWithoutIntervention = totalQualifyingPop - totalWithIntervention;
+            float default_value = 0.0f;
+            float year = parent->GetSimulationTime().Year();
+            target_coverage  = year2ValueMap.getValueLinearInterpolation(year, default_value);
+
+            float totalToIntervene = ( target_coverage * totalQualifyingPop ) - totalWithIntervention;
+            NO_LESS_THAN( totalToIntervene, 0 );
+
+            if( totalWithoutIntervention > 0 )
+            {
+                dc = totalToIntervene / totalWithoutIntervention;
+            }
+            LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
+                            dc,
+                            (float) target_coverage,
+                            (float) currentCoverageForIntervention,
+                            (float) totalWithoutIntervention,
+                            (float) totalWithIntervention
+                        );
+        }
+        else
+        {
+            LOG_INFO( "Setting demographic_coverage to 0 since 0 qualifying population.\n");
         }
         demographic_restrictions.SetDemographicCoverage( dc );
 
-        LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
-                    demographic_restrictions.GetDemographicCoverage(),
-                    float(target_coverage),
-                    float(currentCoverageForIntervention),
-                    float(totalWithoutIntervention),
-                    float(totalWithIntervention)
-                );
     }
 
 }
