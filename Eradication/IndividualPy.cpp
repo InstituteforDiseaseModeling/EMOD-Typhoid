@@ -82,10 +82,6 @@ namespace Kernel
             PyTuple_SetItem(vars, 3, py_newsex_str );
             PyObject_CallObject( pFunc, vars );
 
-            //Py_DECREF( vars );
-            //Py_DECREF( py_newid_str );
-            //Py_DECREF( py_newmcweight_str );
-            //Py_DECREF( py_newage_str );
             PyErr_Print();
         }
 #endif
@@ -102,8 +98,6 @@ namespace Kernel
             PyObject* py_id = PyLong_FromLong( GetSuid().data );
             PyTuple_SetItem(vars, 0, py_id );
             PyObject_CallObject( pFunc, vars );
-            //Py_DECREF( vars );
-            //Py_DECREF( py_id_str  );
             PyErr_Print();
         }
 #endif
@@ -153,10 +147,6 @@ namespace Kernel
     void IndividualHumanPy::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
     { 
 #ifdef ENABLE_PYTHON_FEVER
-        /*if( randgen->e() > GET_CONFIGURABLE(SimulationConfig)->pydemo_exposure_fraction )
-        {
-            return;
-        }*/
         if( cp->GetTotalContagion() == 0 )
         {
             return;
@@ -174,10 +164,8 @@ namespace Kernel
             // silly. can't seem to figure out how to do floats so doing this way for now!
             PyObject* py_contagion_pop = PyLong_FromLong( cp->GetTotalContagion() );
 
-            //PyObject* py_contagion_pop = Py_BuildValue( "%f", 
             PyObject* py_dt = PyLong_FromLong( dt );
 
-            //PyObject* py_tx_route = PyString_FromFormat( "%s", TransmissionRoute::pairs::lookup_key( transmission_route ) );
             PyObject* py_tx_route = PyLong_FromLong( transmission_route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ? 0 : 1 );
             PyTuple_SetItem(vars, 0, py_existing_id );
             PyTuple_SetItem(vars, 1, py_contagion_pop  );
@@ -191,12 +179,9 @@ namespace Kernel
                 StrainIdentity strainId;
                 AcquireNewInfection(&strainId);
             }
-            //Py_DECREF( vars );
-            //Py_DECREF( py_existing_id_str );
-            //Py_DECREF( py_contagion_pop );
-            //Py_DECREF( py_dt );
-            //Py_DECREF( py_tx_route );
+#if !defined(_WIN32) || !defined(_DEBUG)
             Py_DECREF( retVal );
+#endif
         }
         return;
 #endif
@@ -232,10 +217,9 @@ namespace Kernel
                     LOG_DEBUG_F("Depositing %f to route %s: (antigen=%d, substain=%d)\n", val, route.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());
                     parent->DepositFromIndividual( &tmp_strainID, (float) val, &transmissionGroupMembershipByRoute.at( route ) );
                 }
-                //Py_DECREF( vars );
-                //Py_DECREF( py_existing_id_str );
-                //Py_DECREF( py_route_str );
+#if !defined(_WIN32) || !defined(_DEBUG)
                 Py_DECREF( retVal );
+#endif
             }
         }
         return;
@@ -267,22 +251,17 @@ namespace Kernel
             auto pyVal = PyObject_CallObject( pFunc, vars );
             if( pyVal != nullptr )
             {
-                //state_to_report = PyString_AsString(pyVal); 
-                // parse tuple: char, bool
-                //PyObject *ob1,*ob2;
                 char * state = "UNSET";
                 PyArg_ParseTuple(pyVal,"si",&state, &state_changed ); //o-> pyobject |i-> int|s-> char*
                 state_to_report = state;
-                 //= PyString_AsString(ob1); 
-                //state_changed = (bool) PyInt_AsLong(ob2); 
             }
             else
             {
                 state_to_report = "D";
             }
-            //Py_DECREF( vars );
-            //Py_DECREF( py_existing_id_str );
-            //Py_DECREF( py_dt_str );
+#if !defined(_WIN32) || !defined(_DEBUG)
+			Py_DECREF(pyVal);
+#endif
             PyErr_Print();
         }
         LOG_DEBUG_F( "state_to_report for individual %d = %s; Infected = %d, change = %d.\n", GetSuid().data, state_to_report.c_str(), IsInfected(), state_changed );
@@ -321,7 +300,6 @@ namespace Kernel
             PyObject* py_existing_id = PyLong_FromLong( GetSuid().data );
             PyTuple_SetItem(vars, 0, py_existing_id );
             PyObject_CallObject( pFunc, vars );
-            //Py_DECREF( vars );
         }
 #endif
     }
