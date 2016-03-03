@@ -16,7 +16,7 @@
         "Enable_Demographics_Reporting": 0, 
         "Demographics_Filenames": [
             "../input/SA_UN_demographics.json",
-            "../input/pfa_overlay.json",
+            "../input/PFA_overlay.json",
             "PFA_overlay_rates.json"
         ], 
         "Report_HIV_Event_Channels_List": [

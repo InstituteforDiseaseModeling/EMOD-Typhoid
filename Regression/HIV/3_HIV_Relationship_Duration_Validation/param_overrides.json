@@ -16,7 +16,7 @@
 		"Base_Population_Scale_Factor": 1e-3,
 		"Demographics_Filenames": [
 			"../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed.json",
-			"../input/pfa_overlay.json",
+			"../input/PFA_overlay.json",
 			"PFA_overlay_rates.json"
 		], 
 
