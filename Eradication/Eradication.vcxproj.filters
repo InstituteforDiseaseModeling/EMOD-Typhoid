@@ -990,6 +990,9 @@
     <ClCompile Include="..\interventions\MultiEffectVaccine.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
+    <ClCompile Include="PythonSupport.cpp">
+      <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2156,6 +2159,9 @@
     </ClInclude>
     <ClInclude Include="..\interventions\MultiEffectVaccine.h">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClInclude>
+    <ClInclude Include="PythonSupport.h">
+      <Filter>Source Files\Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -46,6 +46,7 @@ public:
     SimpleLogger *Log;
     Configuration *Config;
     void* SimConfig;
+    void* pPythonSupport;
     StatusReporter * Status_Reporter;
     
 #pragma warning( push )
@@ -65,6 +66,7 @@ public:
     // Sets up the environment for this process. Returns false if something went wrong
     static bool Initialize(
         IdmMpi::MessageInterface* pMpi,
+        void* p_python_support,
         std::string configFileName,
         std::string inputPath,
         std::string outputPath,
