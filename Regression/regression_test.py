@@ -27,7 +27,7 @@ import pdb
 
 # global variable >:p -- actually, it's a module variable :) 
 params = None
-MAX_ACTIVE_JOBS=3
+MAX_ACTIVE_JOBS=20
 
 class RuntimeParameters:
     def __init__(self, args):
