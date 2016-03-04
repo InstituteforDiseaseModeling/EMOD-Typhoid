@@ -163,8 +163,7 @@
             "Transmission_Blocking_Immunity_Decay_Rate": 0.1,
             "Transmission_Blocking_Immunity_Duration_Before_Decay": 60,
             "x_Population_Immunity": 1,
-            "Listed_Events": [],
-            "Python_Script_Path": ""
+            "Listed_Events": []
         }
 	}
 }
