@@ -38,6 +38,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHuman.h"
 #include "suids.hpp"
 #include "IdmMpi.h"
+#include "NoCrtWarnings.h"
 
 //#define TARBALL 1
 #define KML 1
@@ -233,7 +234,7 @@ KML_Demo_Reporter::Reduce()
                 cnt = 0;
                 std::istringstream i_timeseries( string_token );
                 getline(i_timeseries, token, ':');
-                sscanf(token.c_str(), "%u",&nodeId);
+                sscanf_s(token.c_str(), "%u",&nodeId);
 
                 if (nodeChannelMapVec[ channelName ].find( nodeId ) != nodeChannelMapVec[ channelName ].end()) //data already exists
                 {
@@ -243,7 +244,7 @@ KML_Demo_Reporter::Reduce()
                 {
                     while (getline(i_timeseries, token, ','))   // Missing last value?
                     {
-                        sscanf(token.c_str(), "%f",&value);
+                        sscanf_s(token.c_str(), "%f",&value);
                         nodeChannelMapVec[ channelName ][ nodeId ].push_back (value);
                     }
                 }
@@ -367,8 +368,10 @@ void KML_Demo_Reporter::WriteKmlData()
         }
 
         // Copy the file
-        FILE * fp_master = fopen( master_filename, "r" );
-        FILE * fp_clone = fopen( ( std::string( output_dir ) + kml_file ).c_str(), "w" );
+        FILE * fp_master=nullptr;
+        FILE * fp_clone=nullptr;
+        fopen_s( &fp_master, master_filename, "r" );
+        fopen_s( &fp_clone, ( std::string( output_dir ) + kml_file ).c_str(), "w" );
 
         unsigned char buf[ 1024 ];
         size_t read_size;
@@ -430,7 +433,7 @@ void KML_Demo_Reporter::WriteKmlData()
                 channelXmlFile << "              <PolyStyle targetId='ps" << node_id << "'>" << std::endl;
                 // convert color to hex RGB somehow
                 char colorString[6];
-                sprintf( &colorString[0], "%02x%02x%02x", normValue, normValue, normValue);
+                sprintf_s( &colorString[0], 6, "%02x%02x%02x", normValue, normValue, normValue);
                 channelXmlFile << "                <color>7d" << colorString << "</color>" << std::endl;
                 channelXmlFile << "              </PolyStyle>" << std::endl;
             }
