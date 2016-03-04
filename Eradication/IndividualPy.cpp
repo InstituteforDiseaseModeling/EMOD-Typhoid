@@ -156,7 +156,8 @@ namespace Kernel
             vars = Py_BuildValue( "llls", GetSuid().data, int(cp->GetTotalContagion()), int(dt), PyLong_FromLong( transmission_route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ? 0 : 1 ) );
             PyObject * retVal = PyObject_CallObject( pFunc, vars );
             PyErr_Print();
-            auto val = (bool) PyInt_AsLong(retVal);
+            bool val = false;
+            PyArg_Parse( retVal, "b", &val );
             if( val )
             {
                 StrainIdentity strainId;
@@ -238,7 +239,7 @@ namespace Kernel
                 state_to_report = "D";
             }
 #if !defined(_WIN32) || !defined(_DEBUG)
-			Py_DECREF(pyVal);
+            Py_DECREF(pyVal);
 #endif
             PyErr_Print();
         }
