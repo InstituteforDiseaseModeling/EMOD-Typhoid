@@ -342,6 +342,7 @@
     <ClCompile Include="NodeInfoSTI.cpp" />
     <ClCompile Include="NodeInfoVector.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
+    <ClCompile Include="PythonSupport.cpp" />
     <ClCompile Include="ReferenceTrackingEventCoordinator.cpp" />
     <ClCompile Include="RelationshipParameters.cpp" />
     <ClCompile Include="ReportEventRecorder.cpp" />
@@ -671,6 +672,7 @@
     <ClInclude Include="NodeTBHIV.h" />
     <ClInclude Include="PolioContexts.h" />
     <ClInclude Include="PropertyReportTB.h" />
+    <ClInclude Include="PythonSupport.h" />
     <ClInclude Include="ReferenceTrackingEventCoordinator.h" />
     <ClInclude Include="RelationshipManager.h" />
     <ClInclude Include="RelationshipManagerFactory.h" />

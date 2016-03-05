@@ -27,18 +27,10 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "PyInterventionsContainer.h"
 #include "IdmString.h"
 #include "SimulationConfig.h"
+#include "PythonSupport.h"
 
 #ifndef WIN32
 #include <sys/time.h>
-#endif
-
-#ifdef ENABLE_PYTHON_FEVER 
-#include "Python.h"
-extern PyObject *
-IdmPyInit(
-    const char * python_script_name,
-    const char * python_function_name
-);
 #endif
 
 #pragma warning(disable: 4244)
@@ -65,16 +57,19 @@ namespace Kernel
     {
 #ifdef ENABLE_PYTHON_FEVER
         // Call into python script to notify of new individual
-        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "create" );
-        if( pFunc )
+        if( PythonSupportPtr != nullptr )
         {
-            // pass individual id
-            static PyObject * vars = PyTuple_New(4); 
-            vars = Py_BuildValue( "lffs", _suid.data, monte_carlo_weight, initial_age, PyString_FromFormat( "%s", ( ( gender==0 ) ? "MALE" : "FEMALE" ) ) );
-            // now ready to call function
-            PyObject_CallObject( pFunc, vars );
-            // vars ref count is always 1 here
-            PyErr_Print();
+            static auto pFunc = PythonSupportPtr->IdmPyInit( PythonSupport::SCRIPT_PYTHON_FEVER.c_str(), "create" );
+            if( pFunc )
+            {
+                // pass individual id
+                static PyObject * vars = PyTuple_New(4); 
+                vars = Py_BuildValue( "lffs", _suid.data, monte_carlo_weight, initial_age, PyString_FromFormat( "%s", ( ( gender==0 ) ? "MALE" : "FEMALE" ) ) );
+                // now ready to call function
+                PyObject_CallObject( pFunc, vars );
+                // vars ref count is always 1 here
+                PyErr_Print();
+            }
         }
 #endif
     }
@@ -83,15 +78,18 @@ namespace Kernel
     {
 #ifdef ENABLE_PYTHON_FEVER
         // Call into python script to notify of new individual
-        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "destroy" );
-        if( pFunc )
+        if( PythonSupportPtr != nullptr )
         {
-            static PyObject * vars = PyTuple_New(1);
-            //vars = Py_BuildValue( "l", GetSuid().data ); // this gives errors. :(
-            PyObject* py_id = PyLong_FromLong( GetSuid().data );
-            PyTuple_SetItem(vars, 0, py_id );
-            PyObject_CallObject( pFunc, vars );
-            PyErr_Print();
+            static auto pFunc = PythonSupportPtr->IdmPyInit( PythonSupport::SCRIPT_PYTHON_FEVER.c_str(), "destroy" );
+            if( pFunc )
+            {
+                static PyObject * vars = PyTuple_New(1);
+                //vars = Py_BuildValue( "l", GetSuid().data ); // this gives errors. :(
+                PyObject* py_id = PyLong_FromLong( GetSuid().data );
+                PyTuple_SetItem(vars, 0, py_id );
+                PyObject_CallObject( pFunc, vars );
+                PyErr_Print();
+            }
         }
 #endif
     }
@@ -147,7 +145,7 @@ namespace Kernel
 
         LOG_DEBUG_F( "Calling py:expose with contagion pop %f\n", cp->GetTotalContagion() );
 
-        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "expose" );
+        static auto pFunc = PythonSupportPtr->IdmPyInit( PythonSupport::SCRIPT_PYTHON_FEVER.c_str(), "expose" );
         if( pFunc )
         {
             // pass individual id AND dt
@@ -181,7 +179,7 @@ namespace Kernel
 #ifdef ENABLE_PYTHON_FEVER
         for( auto &route: parent->GetTransmissionRoutes() )
         {
-            static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "update_and_return_infectiousness" );
+            static auto pFunc = PythonSupportPtr->IdmPyInit( PythonSupport::SCRIPT_PYTHON_FEVER.c_str(), "update_and_return_infectiousness" );
             if( pFunc )
             {
                 // pass individual id ONLY
@@ -221,7 +219,7 @@ namespace Kernel
     void IndividualHumanPy::Update( float currenttime, float dt)
     {
 #ifdef ENABLE_PYTHON_FEVER
-        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "update" );
+        static auto pFunc = PythonSupportPtr->IdmPyInit( PythonSupport::SCRIPT_PYTHON_FEVER.c_str(), "update" );
         if( pFunc )
         {
             // pass individual id AND dt
@@ -271,7 +269,7 @@ namespace Kernel
         LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
         IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
 #ifdef ENABLE_PYTHON_FEVER
-        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "acquire_infection" );
+        static auto pFunc = PythonSupportPtr->IdmPyInit( PythonSupport::SCRIPT_PYTHON_FEVER.c_str(), "acquire_infection" );
         if( pFunc )
         {
             // pass individual id ONLY
@@ -299,36 +297,5 @@ namespace Kernel
         return retVal;
     }
 }
-
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-#include "InfectionPy.h"
-#include "SusceptibilityPy.h"
-#include "PyInterventionsContainer.h"
-
-#include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT(Kernel::IndividualHumanPy)
-
-namespace Kernel
-{
-/*
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanPy& human, const unsigned int  file_version )
-    {
-        LOG_DEBUG("(De)serializing IndividualHumanPy\n");
-
-        ar.template register_type<Kernel::InfectionPy>();
-        ar.template register_type<Kernel::SusceptibilityPy>();
-        ar.template register_type<Kernel::PyInterventionsContainer>();
-            
-        // Serialize fields - N/A
-        
-
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
-    }
-*/
-}
-
-#endif
 
 #endif // ENABLE_PYTHON
