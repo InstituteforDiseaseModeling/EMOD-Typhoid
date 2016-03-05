@@ -595,7 +595,10 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
             if (status)
             {
                 release_assert( EnvPtr );
-                PythonSupportPtr->RunPostProcessScript( EnvPtr->OutputPath );
+		if ( EnvPtr->MPI.Rank == 0 )
+		{
+                    PythonSupportPtr->RunPostProcessScript( EnvPtr->OutputPath );
+		}
                 LOG_INFO( "Controller executed successfully.\n" );
             }
             else
