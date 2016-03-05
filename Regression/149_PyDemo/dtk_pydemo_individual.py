@@ -2,7 +2,6 @@
 
 import pdb
 import math
-import numpy.random
 import csv
 import os
 import sys
@@ -19,7 +18,7 @@ tracking_report = {} # the report itself: a map of ids to lists of states, 1 per
 Our IndividualPythonFever class goes here. It should match up to the C++ functions that it mirrors
 """
 
-numpy.random.seed(20)
+random.seed(20)
 
 class PyIndividual:
 

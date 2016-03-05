@@ -19,6 +19,9 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "InfectionPy.h"
 #include "IndividualEnvironmental.h"
 #include "SusceptibilityPy.h"
+#ifdef ENABLE_PYTHON
+#include "Python.h"
+#endif
 
 namespace Kernel
 {
@@ -26,10 +29,7 @@ namespace Kernel
     class IIndividualHumanPy : public ISupports
     {
     public:
-        virtual bool IsChronicCarrier( bool incidence_only = true ) const = 0;
-        virtual bool IsSubClinical( bool incidence_only = true ) const = 0;
-        virtual bool IsAcute( bool incidence_only = true ) const = 0;
-        virtual bool IsPrePatent( bool incidence_only = true ) const = 0;
+        
     };
 
     class IndividualHumanPy : public IndividualHuman, public IIndividualHumanPy
@@ -45,11 +45,6 @@ namespace Kernel
 
         virtual void CreateSusceptibility(float imm_mod = 1.0, float risk_mod = 1.0);
         virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = NULL);
-
-        virtual bool IsChronicCarrier( bool incidence_only = true ) const;
-        virtual bool IsSubClinical( bool incidence_only = true ) const;
-        virtual bool IsAcute( bool incidence_only = true ) const;
-        virtual bool IsPrePatent( bool incidence_only = true ) const;
 
     protected:
 
@@ -71,22 +66,13 @@ namespace Kernel
         // pydemo infection state
         std::string state_to_report; // pydemo status of individual
         std::string last_state_reported; // previous pydemo status of individual
-        int chronic_timer;
-        int subclinical_timer;
-        int acute_timer;
-        int prepatent_timer;
-        int clinical_immunity_timer;  // timers of days left in state, or UNINIT_TIMER if not used //JG- I'm going to leave clinical immunity in for now. 
-        int _subclinical_duration;
-        int _prepatent_duration;
-        int _acute_duration; // duration of state in days
-        bool hasClinicalImmunity; // is immune to clinical infection
-        bool isChronic;       // is or will be a chronic carrier (using "Ames" definition)
         int _infection_count;     // number of times infected;
         TransmissionRoute::Enum _routeOfInfection; // how did this person get infected?
         bool isDead;  // is this individual dead?
         bool state_changed;
 
     private:
+        PyObject * expose_vars;
         SusceptibilityPy * pydemo_susceptibility;
         std::map< TransmissionRoute::Enum, float > contagion_population_by_route;
 

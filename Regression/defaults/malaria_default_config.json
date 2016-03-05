@@ -69,8 +69,7 @@
                "LOAD_BALANCING": {
                     "Load_Balance_Filename": ""
                }, 
-               "Num_Cores": 1,
-               "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\"
+               "Num_Cores": 1
           }, 
           "Local_Simulation": 0
      }, 

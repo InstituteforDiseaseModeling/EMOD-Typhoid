@@ -29,6 +29,7 @@
                 "Simulation_Type": "PY_SIM"
             }, 
             "Geography": ""
-        }
+        },
+        "Python_Script_Path": "SHARED"
     }
 }

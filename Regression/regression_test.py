@@ -53,6 +53,7 @@ class RuntimeParameters:
         self.config.read(args.config)
         self.config.set('ENVIRONMENT', 'username', os.environ[username_key])
         self._use_user_input_root = False
+        self.PSP = None
     
     @property
     def suite(self):
@@ -154,6 +155,10 @@ class RuntimeParameters:
         return self.config.get('ENVIRONMENT', 'home_input')
         
     @property
+    def py_input(self):
+        return self.config.get('ENVIRONMENT', 'py_input')
+        
+    @property
     def use_user_input_root(self):
         return self._use_user_input_root
         
@@ -232,7 +237,11 @@ class Monitor(threading.Thread):
 
         with open(os.path.join(sim_dir, "stdout.txt"), "w") as stdout, open(os.path.join(sim_dir, "stderr.txt"), "w") as stderr:
             actual_input_dir = os.path.join( params.input_path, self.config_json["parameters"]["Geography"] )
-            cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir]
+            cmd = None
+            if params.py_input is not None:
+                cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir, "--python-script-path", params.py_input ]
+            else:
+                cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir ]
             print( "Calling '" + str(cmd) + "' from " + sim_dir + "\n" )
             proc = subprocess.Popen( cmd, stdout=stdout, stderr=stderr, cwd=sim_dir )
             proc.wait()
@@ -954,6 +963,8 @@ class MyRegressionRunner():
             if( os.path.exists( filename ) ) :
                 #print( "Copying " + filename )
                 shutil.copy( filename, sim_dir )
+            else:
+                print( "ERROR: Failed to find file to copy: " + filename )
         return
 
     def commissionFromConfigJson( self, sim_id, reply_json, config_id, report, compare_results_to_baseline=True ):
@@ -1026,6 +1037,22 @@ class MyRegressionRunner():
             f.write( str( reports_json ) )
             f.close()
 
+        if "Python_Script_Path" in reply_json["parameters"]:
+            psp_param = reply_json["parameters"]["Python_Script_Path"]
+            if psp_param == "LOCAL":
+                self.params.py_input = "."
+                for py_file in glob.glob( os.path.join( config_id, "dtk_*.py" ) ):
+                    regression_runner.copy_sim_file( config_id, sim_dir, os.path.basename( py_file ) )
+            elif psp_param == "SHARED":
+                self.params.py_input = params.py_input
+            elif psp_param != "NO":
+                print( psp_param + " is not a valid value for Python_Script_Path. Valid values are NO, LOCAL, SHARED. Exiting." )
+                sys.exit()
+                self.params.py_input = None
+            else:
+                self.params.py_input = None
+            del( reply_json["parameters"]["Python_Script_Path"] )
+
         self.copy_input_files_to_user_input(sim_id, config_id, reply_json, is_local)
 
         #print "Writing out config and campaign.json."
@@ -1053,7 +1080,8 @@ class MyRegressionRunner():
         #shutil.copy( "../Eradication/x64/Release/Eradication.pdb", sim_dir )
         # ------------------------------------------------------------------
 
-        regression_runner.copy_sim_file( config_id, sim_dir, "dtk_post_process.py" )
+        if os.path.exists( os.path.join( config_id, "dtk_post_process.py" ) ):
+            regression_runner.copy_sim_file( config_id, sim_dir, "dtk_post_process.py" )
 
         monitorThread = None # need scoped here
 

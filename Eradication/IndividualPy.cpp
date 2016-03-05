@@ -32,7 +32,6 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include <sys/time.h>
 #endif
 
-//#define ENABLE_PYTHON_FEVER 1
 #ifdef ENABLE_PYTHON_FEVER 
 #include "Python.h"
 extern PyObject *
@@ -70,18 +69,11 @@ namespace Kernel
         if( pFunc )
         {
             // pass individual id
-            static PyObject * vars = PyTuple_New(4);
-            PyObject* py_newid = PyLong_FromLong( _suid.data );
-            PyObject* py_newmcweight = PyFloat_FromDouble( monte_carlo_weight );
-            PyObject* py_newage = PyFloat_FromDouble( initial_age );
-            PyObject* py_newsex_str = PyString_FromFormat( "%s", ( ( gender==0 ) ? "MALE" : "FEMALE" ) );
-
-            PyTuple_SetItem(vars, 0, py_newid );
-            PyTuple_SetItem(vars, 1, py_newmcweight );
-            PyTuple_SetItem(vars, 2, py_newage );
-            PyTuple_SetItem(vars, 3, py_newsex_str );
+            static PyObject * vars = PyTuple_New(4); 
+            vars = Py_BuildValue( "lffs", _suid.data, monte_carlo_weight, initial_age, PyString_FromFormat( "%s", ( ( gender==0 ) ? "MALE" : "FEMALE" ) ) );
+            // now ready to call function
             PyObject_CallObject( pFunc, vars );
-
+            // vars ref count is always 1 here
             PyErr_Print();
         }
 #endif
@@ -95,6 +87,7 @@ namespace Kernel
         if( pFunc )
         {
             static PyObject * vars = PyTuple_New(1);
+            //vars = Py_BuildValue( "l", GetSuid().data ); // this gives errors. :(
             PyObject* py_id = PyLong_FromLong( GetSuid().data );
             PyTuple_SetItem(vars, 0, py_id );
             PyObject_CallObject( pFunc, vars );
@@ -159,21 +152,12 @@ namespace Kernel
         {
             // pass individual id AND dt
             static PyObject * vars = PyTuple_New(4);
-            PyObject* py_existing_id = PyLong_FromLong( GetSuid().data );
 
-            // silly. can't seem to figure out how to do floats so doing this way for now!
-            PyObject* py_contagion_pop = PyLong_FromLong( cp->GetTotalContagion() );
-
-            PyObject* py_dt = PyLong_FromLong( dt );
-
-            PyObject* py_tx_route = PyLong_FromLong( transmission_route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ? 0 : 1 );
-            PyTuple_SetItem(vars, 0, py_existing_id );
-            PyTuple_SetItem(vars, 1, py_contagion_pop  );
-            PyTuple_SetItem(vars, 2, py_dt  );
-            PyTuple_SetItem(vars, 3, py_tx_route );
+            vars = Py_BuildValue( "llls", GetSuid().data, int(cp->GetTotalContagion()), int(dt), PyLong_FromLong( transmission_route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ? 0 : 1 ) );
             PyObject * retVal = PyObject_CallObject( pFunc, vars );
             PyErr_Print();
-            auto val = (bool) PyInt_AsLong(retVal);
+            bool val = false;
+            PyArg_Parse( retVal, "b", &val );
             if( val )
             {
                 StrainIdentity strainId;
@@ -202,10 +186,8 @@ namespace Kernel
             {
                 // pass individual id ONLY
                 static PyObject * vars = PyTuple_New(2);
-                PyObject* py_existing_id = PyLong_FromLong( GetSuid().data );
-                PyTuple_SetItem( vars, 0, py_existing_id );
-                PyObject* py_route_str = PyString_FromFormat( "%s", route.c_str() );
-                PyTuple_SetItem( vars, 1, py_route_str );
+
+                vars = Py_BuildValue( "ls", GetSuid().data, PyString_FromFormat( "%s", route.c_str() ) );
                 PyObject * retVal = PyObject_CallObject( pFunc, vars );
                 PyErr_Print();
                 auto val = PyFloat_AsDouble(retVal);
@@ -244,10 +226,7 @@ namespace Kernel
         {
             // pass individual id AND dt
             static PyObject * vars = PyTuple_New(2);
-            PyObject* py_existing_id = PyLong_FromLong( GetSuid().data );
-            PyObject* py_dt = PyLong_FromLong( (int) dt );
-            PyTuple_SetItem(vars, 0, py_existing_id );
-            PyTuple_SetItem(vars, 1, py_dt );
+            vars = Py_BuildValue( "ll", GetSuid().data, int(dt) );
             auto pyVal = PyObject_CallObject( pFunc, vars );
             if( pyVal != nullptr )
             {
@@ -260,7 +239,7 @@ namespace Kernel
                 state_to_report = "D";
             }
 #if !defined(_WIN32) || !defined(_DEBUG)
-			Py_DECREF(pyVal);
+            Py_DECREF(pyVal);
 #endif
             PyErr_Print();
         }
@@ -297,9 +276,13 @@ namespace Kernel
         {
             // pass individual id ONLY
             static PyObject * vars = PyTuple_New(1);
+
             PyObject* py_existing_id = PyLong_FromLong( GetSuid().data );
             PyTuple_SetItem(vars, 0, py_existing_id );
+
+            //vars = Py_BuildValue( "l", GetSuid().data ); // BuildValue with 1 param seems to give errors
             PyObject_CallObject( pFunc, vars );
+            PyErr_Print();
         }
 #endif
     }
@@ -314,70 +297,6 @@ namespace Kernel
             retVal = HumanStateChange::KilledByInfection;
         }
         return retVal;
-    }
-
-    bool IndividualHumanPy::IsChronicCarrier( bool incidence_only ) const
-    {
-        if( state_to_report == "C" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
-          )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    bool IndividualHumanPy::IsSubClinical( bool incidence_only ) const
-    {
-        if( state_to_report == "SUB" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
-          )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    bool IndividualHumanPy::IsAcute( bool incidence_only ) const
-    {
-        if( state_to_report == "A" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
-          )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    bool IndividualHumanPy::IsPrePatent( bool incidence_only ) const
-    {
-        if( state_to_report == "P" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
-          )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 }
 

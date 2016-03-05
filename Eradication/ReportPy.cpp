@@ -91,22 +91,6 @@ ReportPy::LogIndividualData(
     }
 
     auto mc_weight = individual->GetMonteCarloWeight();
-    if( typhoid_individual->IsChronicCarrier( false ) )
-    {
-        Accumulate( _num_chronic_carriers_label, mc_weight );
-    }
-
-    if( individual->IsInfected() )
-    {
-        if( typhoid_individual->IsSubClinical() )
-        {
-            Accumulate( _num_subclinic_infections_label, mc_weight );
-        }
-        else if( typhoid_individual->IsAcute() )
-        {
-            Accumulate( _num_acute_infections_label, mc_weight );
-        }
-    }
 }
 
 void
@@ -120,11 +104,6 @@ ReportPy::LogNodeData(
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodePy", "INodeContext" );
     }
-
-    //auto contactContagionPop = pNC->GetTotalContagion();
-    //Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
-    //Accumulate( "Environmental Contagion Population", contactContagionPop["environmental"] );
-    //Accumulate( _aoi_label, pPyNode->GetMeanAgeInfection() * total_infections ); // weight the age of infection by the number of infections in the node. global normalization happens in SimulationPy
 }
 
 #if USE_BOOST_SERIALIZATION
