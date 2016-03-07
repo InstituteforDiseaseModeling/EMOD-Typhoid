@@ -37,7 +37,7 @@
 
         "____________DEMOGRAPHICS___________": "",
         "Base_Population_Scale_Factor": 2e-4,
-        "Demographics_Filename": "../../HIV/input/SA_UN_demographics_extrapolated_WithProperties_Smoothed_4_Nodes.json;../../HIV/input/PFA_overlay.json;PFA_overlay_rates.json",
+        "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics_extrapolated_WithProperties_Smoothed_4_Nodes.json", "../../HIV/input/PFA_overlay.json", "PFA_overlay_rates.json" ],
         "Enable_Birth": 1,
 
         "____________MIGRATION___________": "",

@@ -3,7 +3,7 @@
     "parameters": {
         "DEMOGRAPHICS": {
             "Enable_Birth": 0, 
-            "Demographics_Filename": "Atlantis_nine_node_demographics.compiled.json;Atlantis_nine_node_overlay_demographics.compiled.json", 
+            "Demographics_Filenames": [ "Atlantis_nine_node_demographics.compiled.json", "Atlantis_nine_node_overlay_demographics.compiled.json" ], 
             "Enable_Vital_Dynamics": 0, 
             "SAMPLING": {
                 "Individual_Sampling_Type": "TRACK_ALL", 
