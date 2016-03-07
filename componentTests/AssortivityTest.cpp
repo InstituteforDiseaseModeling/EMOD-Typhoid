@@ -663,7 +663,7 @@ SUITE(AssortivityTest)
     TEST_FIXTURE(AssortivityFixture, TestBadStartYear)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/AssortivityTest/TestBadStartYear.json",
-            "Configuration variable Start_Year with value 9999 out of range: greater than 2100.\nWas reading values for TRANSITORY." );
+            "Configuration variable Start_Year with value 9999 out of range: greater than 2200.\nWas reading values for TRANSITORY." );
     }
 
     TEST_FIXTURE(AssortivityFixture, TestMissingStartYear)

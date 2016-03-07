@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #define HOURSPERDAY         (24)
 #define MONTHSPERYEAR       (12)
 #define MIN_YEAR            (1900)
-#define MAX_YEAR            (2100)
+#define MAX_YEAR            (2200)
 
 
 
