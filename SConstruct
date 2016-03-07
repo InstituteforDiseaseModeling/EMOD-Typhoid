@@ -134,11 +134,11 @@ add_option( "Debug" , "debug build" , 0 , True )
 
 # module/linking options
 add_option( "Dlls" , "build all dlls" , 0 , True )
-add_option( "Interventions" , "build all intervention dlls" , 0 , True )
+#add_option( "Interventions" , "build all intervention dlls" , 0 , True )
 add_option( "DllDisease" , "build disease target dll" , 1 , True) #, Disease="Generic" )
 add_option( "Disease" , "build only files for disease target " , 1 , True) #, Disease="Generic" )
-add_option( "Report" , "build report target dll" , 1 , True) #, Report="Spatial" )
-add_option( "Campaign" , "build all campaign target dll" , 1 , True) #, Campaign=Bednet
+#add_option( "Report" , "build report target dll" , 1 , True) #, Report="Spatial" )
+#add_option( "Campaign" , "build all campaign target dll" , 1 , True) #, Campaign=Bednet
  
 # installation options
 add_option( "Install" , "install target dll into given directory" , 1 , True) #, Install="install dir" )
@@ -466,16 +466,16 @@ def setEnvAttrs(myenv):
 
     myenv['AllDlls'] = False
     dlldisease = has_option('DllDisease')
-    dllreport = has_option('Report')
-    dllcampaign = has_option('Campaign')
+    #dllreport = has_option('Report')
+    #dllcampaign = has_option('Campaign')
     monodisease = has_option('Disease')
 
     if has_option('Dlls'):
         myenv['AllDlls'] = True
 
     myenv['AllInterventions'] = False
-    if has_option('Interventions'):
-        myenv['AllInterventions'] = True
+    #if has_option('Interventions'):
+    #    myenv['AllInterventions'] = True
 
 #    if has_option('Dlls') or dlldisease or dllreport or dllcampaign:
 #        myenv.Append( CPPDEFINES=["_DLLS_" ] )
@@ -498,23 +498,23 @@ def setEnvAttrs(myenv):
     else:
         myenv['Disease'] = ""
 
-    if dllreport:
-        myenv['Report'] = get_option( 'Report' )
-        print "Report=" + myenv['Report']
-        if myenv['Report'] not in reportdlls:
-            print "Unknown report type: " + myenv['Report']
-            exit(1)
-    else:
-        myenv['Report'] = ""
+    #if dllreport:
+    #    myenv['Report'] = get_option( 'Report' )
+    #    print "Report=" + myenv['Report']
+    #    if myenv['Report'] not in reportdlls:
+    #        print "Unknown report type: " + myenv['Report']
+    #        exit(1)
+    #else:
+    #    myenv['Report'] = ""
 
-    if dllcampaign:
-        myenv['Campaign'] = get_option( 'Campaign' )
-        print "Campaign=" + myenv['Campaign']
-        if myenv['Campaign'] not in campaigndlls:
-            print "Unknown campaign type: " + myenv['Campaign']
-            exit(1)
-    else:
-        myenv['Campaign'] = ""
+    #if dllcampaign:
+    #    myenv['Campaign'] = get_option( 'Campaign' )
+    #    print "Campaign=" + myenv['Campaign']
+    #    if myenv['Campaign'] not in campaigndlls:
+    #        print "Unknown campaign type: " + myenv['Campaign']
+    #        exit(1)
+    #else:
+    #    myenv['Campaign'] = ""
     
     if has_option('Install'):
         myenv['Install'] = get_option( 'Install' )

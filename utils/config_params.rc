@@ -527,3 +527,5 @@ NO_DENSITY_DEPENDENCE."
 #define Family_Migration_Filename_DESC_TEXT "TBD"
 #define x_Family_Migration_DESC_TEXT        "TBD"
 #define Family_Migration_Roundtrip_Duration_DESC_TEXT "TBD"
+
+#define Local_Balance_Scheme_DESC_TEXT "TBD"
