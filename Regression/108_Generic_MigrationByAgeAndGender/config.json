@@ -89,7 +89,6 @@
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Regional_Migration_Filename": "3X3_Age_Regional.bin", 
         "Regional_Migration_Roundtrip_Duration": 10000, 
         "Regional_Migration_Roundtrip_Probability": 0, 

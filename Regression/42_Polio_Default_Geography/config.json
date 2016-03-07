@@ -145,7 +145,6 @@
         "Prime_Log2_NAb_Stddev_OPV1": 2.3, 
         "Prime_Log2_NAb_Stddev_OPV2": 2.5, 
         "Prime_Log2_NAb_Stddev_OPV3": 2.5, 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Random_Type": "USE_PSEUDO_DES", 
         "Regional_Migration_Filename": "", 
         "Report_Event_Recorder": 0, 

@@ -295,7 +295,6 @@
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
         "Pyrogenic_Threshold": 15000, 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "RBC_Destruction_Multiplier": 3.291048711, 
         "Rainfall_Filename": "", 
         "Rainfall_In_mm_To_Fill_Swamp": 1000.0, 
