@@ -209,6 +209,7 @@ else:
                             "../interventions/AntiMalarialDrug.cpp",
                             "../interventions/InputEIR.cpp",
                             "../interventions/MalariaChallenge.cpp",
+                            "../interventions/MalariaDiagnostic.cpp",
                             "../interventions/RTSSVaccine.cpp",
                         ]
 
