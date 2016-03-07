@@ -49,10 +49,10 @@
           }, 
           "PRIMARY": {
                "Config_Name": "38_5x5_Migrate_Residents_Only", 
-               "Custom_Reports_Filename" : "custom_reports.json",
                "Geography": "Household_5x5", 
                "Listed_Events": [], 
                "Node_Grid_Size": 0.005, 
+               "Custom_Reports_Filename" : "custom_reports.json",
                "Report_Event_Recorder": 0, 
                "Run_Number": 33, 
                "Simulation_Timestep": 1, 
