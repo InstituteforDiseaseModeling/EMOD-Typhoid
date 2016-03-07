@@ -443,6 +443,7 @@ def doConfigure(myenv):
     if 'CheckCXX' in dir( conf ):
         if  not conf.CheckCXX():
             print( "c++ compiler not installed!" )
+            print( "This sometimes happens even though the compiler is fine and can be resolved by performing a 'scons -c' followed by manually removing the .sconf_temp folder and .sconfsidg.dblite." )
             Exit(1)
             
     """
