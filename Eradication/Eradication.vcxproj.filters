@@ -178,6 +178,15 @@
     <Filter Include="Source Files\Campaign\EventCoordinator\STI">
       <UniqueIdentifier>{961c1cb3-7a74-4bf2-9b05-8c66a210a44d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Py">
+      <UniqueIdentifier>{520fc0ac-b503-466a-a617-6eafc1ec24cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Reporting\Py">
+      <UniqueIdentifier>{be74a929-4abb-405b-ae7c-435f9dc10bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Campaign\InterventionContainers\Py">
+      <UniqueIdentifier>{7146defc-43a0-4968-9aa1-29480c975dfe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VectorPopulation.cpp">
@@ -963,9 +972,6 @@
     <ClCompile Include="..\interventions\ModifyStiCoInfectionStatus.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
     </ClCompile>
-    <ClCompile Include="CampaignEventByYear.cpp">
-      <Filter>Source Files\Campaign\EventCoordinator</Filter>
-    </ClCompile>
     <ClCompile Include="MpiDataExchanger.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
@@ -981,9 +987,6 @@
     <ClCompile Include="..\interventions\MigrateFamily.cpp">
       <Filter>Source Files\Campaign\NodeTargeted</Filter>
     </ClCompile>
-    <ClCompile Include="ReferenceTrackingEventCoordinator.cpp">
-      <Filter>Source Files\Campaign\EventCoordinator</Filter>
-    </ClCompile>
     <ClCompile Include="NodeInfoSTI.cpp">
       <Filter>Source Files\STI</Filter>
     </ClCompile>
@@ -992,6 +995,39 @@
     </ClCompile>
     <ClCompile Include="PythonSupport.cpp">
       <Filter>Source Files\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="CampaignEventByYear.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceTrackingEventCoordinator.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="SusceptibilityPy.cpp">
+      <Filter>Source Files\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulationPy.cpp">
+      <Filter>Source Files\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="NodePy.cpp">
+      <Filter>Source Files\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="InfectionPy.cpp">
+      <Filter>Source Files\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="IndividualPy.cpp">
+      <Filter>Source Files\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialReportPy.cpp">
+      <Filter>Source Files\Reporting\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="ReportPy.cpp">
+      <Filter>Source Files\Reporting\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="BinnedReportPy.cpp">
+      <Filter>Source Files\Reporting\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="PyInterventionsContainer.cpp">
+      <Filter>Source Files\Campaign\InterventionContainers\Py</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2121,9 +2157,6 @@
     <ClInclude Include="IMigrationInfo.h">
       <Filter>Source Files\Kernel</Filter>
     </ClInclude>
-    <ClInclude Include="CampaignEventByYear.h">
-      <Filter>Source Files\Campaign\EventCoordinator</Filter>
-    </ClInclude>
     <ClInclude Include="PolioContexts.h">
       <Filter>Source Files\Environmental\Polio</Filter>
     </ClInclude>
@@ -2148,9 +2181,6 @@
     <ClInclude Include="..\interventions\MigrateFamily.h">
       <Filter>Source Files\Campaign\NodeTargeted</Filter>
     </ClInclude>
-    <ClInclude Include="ReferenceTrackingEventCoordinator.h">
-      <Filter>Source Files\Campaign\EventCoordinator</Filter>
-    </ClInclude>
     <ClInclude Include="NodeInfoSTI.h">
       <Filter>Source Files\STI</Filter>
     </ClInclude>
@@ -2162,6 +2192,39 @@
     </ClInclude>
     <ClInclude Include="PythonSupport.h">
       <Filter>Source Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="CampaignEventByYear.h">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferenceTrackingEventCoordinator.h">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="SusceptibilityPy.h">
+      <Filter>Source Files\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulationPy.h">
+      <Filter>Source Files\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="NodePy.h">
+      <Filter>Source Files\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="InfectionPy.h">
+      <Filter>Source Files\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="IndividualPy.h">
+      <Filter>Source Files\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialReportPy.h">
+      <Filter>Source Files\Reporting\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportPy.h">
+      <Filter>Source Files\Reporting\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="BinnedReportPy.h">
+      <Filter>Source Files\Reporting\Py</Filter>
+    </ClInclude>
+    <ClInclude Include="PyInterventionsContainer.h">
+      <Filter>Source Files\Campaign\InterventionContainers\Py</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

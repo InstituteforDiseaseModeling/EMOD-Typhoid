@@ -37,10 +37,17 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
+        if( !JsonConfigurable::_dryrun &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::STI_SIM) &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::HIV_SIM) )
+        {
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "ReferenceTrackingEventCoordinator can only be used in STI and HIV simulations." );
+        }
+
         float update_period = DAYSPERYEAR;
         initConfigComplexType("Time_Value_Map", &year2ValueMap, "Map of times (years) to coverages." );
         initConfigTypeMap("Update_Period", &update_period, "Gap between distribution updates.", 1.0, 10*DAYSPERYEAR, DAYSPERYEAR );
-        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", 1900.0, 2200.0, 2100.0 ); // min, max, default years
+        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", MIN_YEAR, MAX_YEAR, MAX_YEAR );
 
         auto ret = StandardInterventionDistributionEventCoordinator::Configure( inputJson );
         num_repetitions = -1; // unlimited

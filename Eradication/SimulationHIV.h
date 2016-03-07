@@ -44,8 +44,6 @@ namespace Kernel
         // IChannelDataMapOutputAugmentor
         virtual void AddDataToHeader( IJsonObjectAdapter* pIJsonObj );
 
-        static float base_year;
-
     protected:
         virtual void Initialize() override;
         virtual void Initialize(const ::Configuration *config) override;

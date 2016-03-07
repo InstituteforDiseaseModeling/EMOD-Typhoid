@@ -2,6 +2,7 @@
 	"parameters": 
 	{ 
 		"____________SIMULATION___________": {
+            "Base_Year": 1960.5,
             "Run_Number": 1,
             "Campaign_Filename": "campaign.json",
             "Enable_Aging": 1,

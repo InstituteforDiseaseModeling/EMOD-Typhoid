@@ -16,7 +16,7 @@
                     "Assortivity" :
                     {
                         "Group" : "HIV_TESTED_POSITIVE_STATUS",
-                        "Start_Year" : 0.0, 
+                        "Start_Year" : 1900.0, 
                         "Axes" : [ "TRUE", "FALSE" ],
                         "Weighting_Matrix_RowMale_ColumnFemale" :
                         [
@@ -34,7 +34,7 @@
                     "Assortivity" :
                     {
                         "Group" : "HIV_TESTED_POSITIVE_STATUS",
-                        "Start_Year" : 0.0, 
+                        "Start_Year" : 1900.0, 
                         "Axes" : [ "TRUE", "FALSE" ],
                         "Weighting_Matrix_RowMale_ColumnFemale" :
                         [
@@ -52,7 +52,7 @@
                     "Assortivity" :
                     {
                         "Group" : "HIV_TESTED_POSITIVE_STATUS",
-                        "Start_Year" : 0.0, 
+                        "Start_Year" : 1900.0, 
                         "Axes" : [ "TRUE", "FALSE" ],
                         "Weighting_Matrix_RowMale_ColumnFemale" :
                         [

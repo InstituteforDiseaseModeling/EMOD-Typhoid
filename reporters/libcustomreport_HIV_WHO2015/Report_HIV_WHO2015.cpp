@@ -131,8 +131,8 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 
     bool Report_HIV_WHO2015::Configure( const Configuration * inputJson )
     {
-        initConfigTypeMap( "Start_Year", &startYear, "Year to start collecting data for Report_HIV_WHO2015.csv", 0.0f, FLT_MAX, 0.0f    );
-        initConfigTypeMap( "Stop_Year",  &stopYear,  "Year to stop collecting data for Report_HIV_WHO2015.csv",  0.0f, FLT_MAX, FLT_MAX );
+        initConfigTypeMap( "Start_Year", &startYear, "Year to start collecting data for Report_HIV_WHO2015.csv", MIN_YEAR, MAX_YEAR, MIN_YEAR );
+        initConfigTypeMap( "Stop_Year",  &stopYear,  "Year to stop collecting data for Report_HIV_WHO2015.csv",  MIN_YEAR, MAX_YEAR, MAX_YEAR );
 
         bool ret = BaseTextReportEvents::Configure( inputJson );
 

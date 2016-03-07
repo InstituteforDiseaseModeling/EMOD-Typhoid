@@ -37,7 +37,7 @@
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filenames": [
             "../input/SA_UN_demographics.json", 
-            "../input/pfa_overlay.json", 
+            "../input/PFA_overlay.json", 
             "PFA_overlay_rates.json"
         ], 
         "Enable_Aging": 1, 
@@ -381,8 +381,8 @@
             "Births"
         ], 
         "Report_HIV_Infection": 1, 
-        "Report_HIV_Infection_Start_Year": 0, 
-        "Report_HIV_Infection_Stop_Year": 9999, 
+        "Report_HIV_Infection_Start_Year": 1900, 
+        "Report_HIV_Infection_Stop_Year": 2100, 
         "Report_HIV_Mortality": 0, 
         "Report_HIV_Period": 365, 
         "Report_Relationship_End": 0, 
