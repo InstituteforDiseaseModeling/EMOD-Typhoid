@@ -8,7 +8,7 @@
             "Demographics_Filenames": [
                 "uniform_demographics.json", 
                 "pfa_simple.json",
-                "pfa_overlay_rates_03.json"
+                "PFA_overlay_rates_03.json"
             ], 
             "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE"
         }, 

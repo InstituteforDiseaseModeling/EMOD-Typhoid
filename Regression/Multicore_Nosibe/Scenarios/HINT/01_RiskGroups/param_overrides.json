@@ -3,7 +3,7 @@
     "parameters": {
         "DEMOGRAPHICS": {
             "Birth_Rate_Dependence": "POPULATION_DEP_RATE",
-            "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;Madagascar_Nosibe_2.5arcmin_demographics_overlay.json",
+            "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "Madagascar_Nosibe_2.5arcmin_demographics_overlay.json" ],
             "IMMUNITY": {
                 "Acquisition_Blocking_Immunity_Decay_Rate": 0.01,
                 "Acquisition_Blocking_Immunity_Duration_Before_Decay": 90,

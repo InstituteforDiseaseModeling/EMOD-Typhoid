@@ -7,7 +7,7 @@
         "Simulation_Timestep": 1,
         "alpha_____________DEMOGRAPHICS___________": "",
         "Base_Population_Scale_Factor": 0.001,
-        "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json;PFA_overlay_coinfection.json",
+        "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics.json", "../../HIV/input/PFA_overlay.json", "PFA_overlay_coinfection.json" ],
         "Enable_Nondisease_Mortality": 1,
 
         "alpha_____________INTRAHOST___________": "",

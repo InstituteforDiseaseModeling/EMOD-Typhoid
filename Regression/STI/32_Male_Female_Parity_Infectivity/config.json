@@ -22,7 +22,12 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json;../../HIV/input/No_Condom_Usage_overlay.json", 
+        "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json", 
+        "Demographics_Filenames": [
+            "../../HIV/input/SA_UN_demographics.compiled.json", 
+            "../../HIV/input/PFA_overlay.json", 
+            "../../HIV/input/No_Condom_Usage_overlay.json"
+        ], 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
         "Enable_Coital_Dilution": 1, 
@@ -82,7 +87,6 @@
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
         "Probability_Person_Is_Behavioral_Super_Spreader": 0, 
-        "Python_Script_Path": "", 
         "Report_Coital_Acts": 0, 
         "Report_Event_Recorder": 0, 
         "Report_Event_Recorder_Events": [], 
