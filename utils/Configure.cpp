@@ -468,7 +468,7 @@ namespace Kernel
         vectorStringConstraintsTypeMap[ paramName ] = &constraint_variable;
         json::Object newVectorStringSchema;
         newVectorStringSchema["description"] = json::String(description);
-        newVectorStringSchema["type"] = json::String("vector string");
+        newVectorStringSchema["type"] = json::String("Vector String");
         if( constraint_schema )
         {
             newVectorStringSchema["value_source"] = json::String( constraint_schema );
