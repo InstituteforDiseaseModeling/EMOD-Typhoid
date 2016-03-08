@@ -3485,7 +3485,7 @@
 			},
 			"Report_Event_Recorder_Events" : {
 				"description" : "The list of events to include or exclude in the ReportEventRecorder.csv output file. This is available for both STI_SIM and HIV_SIM, but HIV_SIM simulations will have additional columns.",
-				"type" : "vector string",
+				"type" : "Vector String",
 				"value_source" : "<configuration>:Listed_Events.*"
 			},
 			"Report_Event_Recorder_Individual_Properties" : {
@@ -3719,14 +3719,14 @@
 			},
 			"Male_To_Female_Relative_Infectivity_Ages" : {
 				"description" : "Vector of ages governing the susceptibility of females relative to males, by age.",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 0
 			},
 			"Male_To_Female_Relative_Infectivity_Multipliers" : {
 				"description" : "Vector of multiplicative factors governing the susceptibility of females relative to males, by age.  Multipliers are linearly interpolated between ages.  The left (right)-most value is used before (after) the first (last) age.",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 0,
 				"max" : 25,
 				"default" : 1
@@ -4842,7 +4842,7 @@
 			},
 			"Demographics_Filenames" : {
 				"description" : "Array of demographics files containing information on the identity and demographics of the region to simulate.",
-				"type" : "vector string"
+				"type" : "Vector String"
 			}
 		},
 		"NodeSTI" : {
@@ -5611,7 +5611,7 @@
 			},
 			"Report_Event_Recorder_Events" : {
 				"description" : "The list of events to include or exclude in the ReportEventRecorder.csv output file. This is available for both STI_SIM and HIV_SIM, but HIV_SIM simulations will have additional columns.",
-				"type" : "vector string",
+				"type" : "Vector String",
 				"value_source" : "<configuration>:Listed_Events.*"
 			},
 			"Report_Event_Recorder_Individual_Properties" : {
@@ -5627,7 +5627,7 @@
 		"ReportHIV" : {
 			"Report_HIV_Event_Channels_List" : {
 				"description" : "This is the list of events included in the InsetChart report. If events are specified with this parameter, the InsetChart will include a channel for each event listed. If no events are listed, a 'Number of Events' channel will display the total number of all events that occurred during the simulation.",
-				"type" : "vector string",
+				"type" : "Vector String",
 				"value_source" : "<configuration>:Listed_Events.*"
 			}
 		},
@@ -5663,7 +5663,7 @@
 			},
 			"Report_HIV_ByAgeAndGender_Event_Counter_List" : {
 				"description" : "TBD",
-				"type" : "vector string"
+				"type" : "Vector String"
 			}
 		},
 		"ReportHIVInfection" : {
@@ -6461,14 +6461,14 @@
 			},
 			"TB_CD4_Activation_Vector" : {
 				"description" : "Increased risk per time step of TB activation by CD4",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 1
 			},
 			"CD4_Strata_Activation" : {
 				"description" : "CD4 strata",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 1,
 				"max" : 2000,
 				"default" : 1
@@ -6558,14 +6558,14 @@
 				"CalendarEventCoordinator" : {
 					"Distribution_Times" : {
 						"description" : "Vector of ints for simulation times at which distribution of events occurs in a CalendarEventCoordinator",
-						"type" : "vector int",
+						"type" : "Vector Int",
 						"min" : 1,
 						"max" : 2.14748e+009,
 						"default" : 0
 					},
 					"Distribution_Coverages" : {
 						"description" : "Vector of floats for fraction of individuals that will receive this intervention in a CalendarEventCoordinator",
-						"type" : "vector float",
+						"type" : "Vector Float",
 						"min" : 0,
 						"max" : 1,
 						"default" : 0
@@ -10389,14 +10389,14 @@
 					},
 					"Durations" : {
 						"description" : "Durations to apply import pressure over.",
-						"type" : "vector int",
+						"type" : "Vector Int",
 						"min" : 0,
 						"max" : 2.14748e+009,
 						"default" : 1
 					},
 					"Daily_Import_Pressures" : {
 						"description" : "daily importation pressures to apply",
-						"type" : "vector float",
+						"type" : "Vector Float",
 						"min" : 0,
 						"max" : 3.40282e+038,
 						"default" : 0
@@ -11471,7 +11471,7 @@
 					},
 					"Trigger_Condition_List" : {
 						"description" : "Included if Trigger_Condition is set to 'TriggerList'. A list (JSON array) of triggers (strings) drawn from config.json 'Listed_Events' or from built-in events.",
-						"type" : "vector string"
+						"type" : "Vector String"
 					},
 					"Trigger_Condition_String" : {
 						"default" : "UNINITIALIZED STRING",
@@ -11645,7 +11645,7 @@
 					},
 					"Trigger_Condition_List" : {
 						"description" : "Included if Trigger_Condition is set to 'TriggerList'. A list (JSON array) of triggers (strings) drawn from config.json 'Listed_Events' or from built-in events.",
-						"type" : "vector string"
+						"type" : "Vector String"
 					},
 					"Trigger_Condition_String" : {
 						"default" : "UNINITIALIZED STRING",
