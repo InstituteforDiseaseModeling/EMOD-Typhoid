@@ -60,10 +60,12 @@ namespace Kernel
             auto ns_config = Configuration::CopyFromElement( ce->nodeset_config._json );
             ce->nodeset = NodeSetFactory::CreateInstance( ns_config );
             delete ns_config;
+            ns_config = nullptr;
 
             auto ec_config = Configuration::CopyFromElement((ce->event_coordinator_config._json));
             ce->event_coordinator = EventCoordinatorFactory::CreateInstance( ec_config );
             delete ec_config;
+            ec_config = nullptr;
 
             if (!ce->nodeset)
             {
@@ -128,6 +130,8 @@ namespace Kernel
                     << std::endl;
                 LOG_INFO( msg.str().c_str() );
             }
+            delete fakeConfig;
+            fakeConfig = nullptr;
         }
         LOG_DEBUG( "Returning from GetSchema.\n" );
         json::QuickBuilder retSchema = json::QuickBuilder(ceSchema);

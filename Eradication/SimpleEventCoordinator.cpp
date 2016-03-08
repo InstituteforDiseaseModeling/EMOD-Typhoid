@@ -116,6 +116,9 @@ namespace Kernel
         distribution_complete = true; // we're done, signal disposal ok
         // this signals each process individually that its ok to clean up, in general if the completion times might be different on different nodes 
         // we'd want to coordinate the cleanup signal in Update()
+
+        delete qi_as_config;
+        qi_as_config = nullptr;
     }
 
     void SimpleInterventionDistributionEventCoordinator::regenerateCachedNodeContextPointers()

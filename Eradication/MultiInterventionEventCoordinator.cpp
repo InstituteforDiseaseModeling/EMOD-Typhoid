@@ -53,6 +53,7 @@ namespace Kernel
                 ndi->Release();
             }
             delete qi_as_config;
+            qi_as_config = nullptr;
         }
 
         return has_node_level_intervention;
@@ -141,6 +142,8 @@ namespace Kernel
                     LOG_DEBUG_F( "Attempting to instantiate intervention of class %s\n", std::string((*tmpConfig)["class"].As<json::String>()).c_str() );
                     IDistributableIntervention *di = InterventionFactory::getInstance()->CreateIntervention(tmpConfig);
                     assert(di);
+                    delete tmpConfig;
+                    tmpConfig = nullptr;
                     if (di)
                     {
                         if (!di->Distribute( ihec->GetInterventionsContext(), pICCO ) )

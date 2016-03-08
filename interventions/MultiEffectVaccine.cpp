@@ -39,9 +39,20 @@ namespace Kernel
         bool configured = BaseIntervention::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-            transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-            mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
+            auto tmp_acquire   = Configuration::CopyFromElement( acquire_config._json   );
+            auto tmp_transmit  = Configuration::CopyFromElement( transmit_config._json  );
+            auto tmp_mortality = Configuration::CopyFromElement( mortality_config._json );
+
+            acquire_effect   = WaningEffectFactory::CreateInstance( tmp_acquire   );
+            transmit_effect  = WaningEffectFactory::CreateInstance( tmp_transmit  );
+            mortality_effect = WaningEffectFactory::CreateInstance( tmp_mortality );
+
+            delete tmp_acquire;
+            delete tmp_transmit;
+            delete tmp_mortality;
+            tmp_acquire   = nullptr;
+            tmp_transmit  = nullptr;
+            tmp_mortality = nullptr;
         }
         LOG_DEBUG_F( "Vaccine configured with type %d and take %f.\n", vaccine_type, vaccine_take );
         return configured;
@@ -61,9 +72,21 @@ namespace Kernel
         acquire_config = master.acquire_config;
         transmit_config = master.transmit_config;
         mortality_config = master.mortality_config;
-        acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-        transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
-        mortality_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( mortality_config._json ) );
+
+        auto tmp_acquire   = Configuration::CopyFromElement( acquire_config._json   );
+        auto tmp_transmit  = Configuration::CopyFromElement( transmit_config._json  );
+        auto tmp_mortality = Configuration::CopyFromElement( mortality_config._json );
+
+        acquire_effect   = WaningEffectFactory::CreateInstance( tmp_acquire   );
+        transmit_effect  = WaningEffectFactory::CreateInstance( tmp_transmit  );
+        mortality_effect = WaningEffectFactory::CreateInstance( tmp_mortality );
+
+        delete tmp_acquire;
+        delete tmp_transmit;
+        delete tmp_mortality;
+        tmp_acquire   = nullptr;
+        tmp_transmit  = nullptr;
+        tmp_mortality = nullptr;
     }
 
     MultiEffectVaccine::~MultiEffectVaccine() { }

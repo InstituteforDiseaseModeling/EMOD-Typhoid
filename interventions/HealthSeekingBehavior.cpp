@@ -122,13 +122,17 @@ namespace Kernel
                 auto config = Configuration::CopyFromElement( (actual_intervention_config._json) );
                 IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config );
                 delete config;
+                config = nullptr;
 /*
                 // In theory this is a good addition, but I can't get it to trigger when I add other upstream
                 // error checking and handling. And if we add it here, we should add it to the other places we do CreateIntervention's.
                 IDistributableIntervention *di = nullptr;
                 try
                 {
-                    di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement( (actual_intervention_config._json) ));
+                    auto tmp_config = Configuration::CopyFromElement( (actual_intervention_config._json) );
+                    di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( tmp_config );
+                    delete tmp_config;
+                    tmp_config = nullptr;
                 }
                 catch( json::Exception &except )
                 {

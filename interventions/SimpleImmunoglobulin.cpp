@@ -36,8 +36,17 @@ namespace Kernel
         cost_per_unit = master.cost_per_unit;
         acquire_config = master.acquire_config;
         transmit_config = master.transmit_config;
-        acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-        transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
+
+        auto tmp_acquire   = Configuration::CopyFromElement( acquire_config._json   );
+        auto tmp_transmit  = Configuration::CopyFromElement( transmit_config._json  );
+
+        acquire_effect   = WaningEffectFactory::CreateInstance( tmp_acquire   );
+        transmit_effect  = WaningEffectFactory::CreateInstance( tmp_transmit  );
+
+        delete tmp_acquire;
+        delete tmp_transmit;
+        tmp_acquire   = nullptr;
+        tmp_transmit  = nullptr;
     }
 
 #define SI_Acquire_Config_DESC_TEXT  "TBD"
@@ -57,8 +66,16 @@ namespace Kernel
         bool configured = BaseIntervention::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            acquire_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( acquire_config._json ) );
-            transmit_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( transmit_config._json ) );
+            auto tmp_acquire   = Configuration::CopyFromElement( acquire_config._json   );
+            auto tmp_transmit  = Configuration::CopyFromElement( transmit_config._json  );
+
+            acquire_effect   = WaningEffectFactory::CreateInstance( tmp_acquire   );
+            transmit_effect  = WaningEffectFactory::CreateInstance( tmp_transmit  );
+
+            delete tmp_acquire;
+            delete tmp_transmit;
+            tmp_acquire   = nullptr;
+            tmp_transmit  = nullptr;
         }
 
         return configured;
