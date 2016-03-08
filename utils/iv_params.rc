@@ -360,6 +360,7 @@ EXPONENTIAL_DURATION"
 #define WEE_Decay_Time_Constant_DESC_TEXT "Exponential decay length in days"
 
 #define MSCIS_New_STI_Co_Status_DESC_TEXT "Determines whether to apply STI co-infection, or cure/remove STI co-infection.When called with 1, it sets the co-infection status to true. When called with 0, it sets the co-infection status to false."
+#define STI_Barrier_Cost_DESC_TEXT "TBD"
 #define STI_Barrier_Early_DESC_TEXT "The left asymptote for the sigmoid trend over time."
 #define STI_Barrier_Late_DESC_TEXT "The right asymptote for the sigmoid trend over time."
 #define STI_Barrier_MidYear_DESC_TEXT "The time of the infection point in the sigmoid trend over time."

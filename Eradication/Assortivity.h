@@ -47,7 +47,7 @@ namespace Kernel
         virtual bool Configure(const Configuration *config) override;
 
         // Update assortivity parameters/controls.
-        virtual void Update( const IdmDateTime& rCurrentTime, float dt ) override {};
+        virtual void Update( const IdmDateTime& rCurrentTime, float dt ) override;
 
         // Using the attributes of pPartnerA and the attributes of the potential partners, 
         // select a partner from the potentialPartnerList.
@@ -101,6 +101,8 @@ namespace Kernel
         std::string                     m_PropertyName ;
         std::vector<std::string>        m_Axes ;
         std::vector<std::vector<float>> m_WeightingMatrix ;
+        float                           m_StartYear;  // if current year is < start year, default to NO_GROUP
+        bool                            m_StartUsing; // value is based on start year versus current year
 
         DECLARE_SERIALIZABLE(Assortivity);
 #pragma warning( pop )

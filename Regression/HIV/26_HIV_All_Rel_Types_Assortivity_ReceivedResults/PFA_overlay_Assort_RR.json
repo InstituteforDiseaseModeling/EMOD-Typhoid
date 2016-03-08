@@ -17,7 +17,7 @@
                     {
                         ".Group" : "NO_GROUP",
                         "Group" : "HIV_RECEIVED_RESULTS_STATUS",
-                        "Start_Year" : 0.0, 
+                        "Start_Year" : 1900.0, 
                         "Axes" : [ "UNKNOWN", "POSITIVE", "NEGATIVE" ],
                         "Weighting_Matrix_RowMale_ColumnFemale" :
                         [
@@ -37,7 +37,7 @@
                     {
                         ".Group" : "NO_GROUP",
                         "Group" : "HIV_RECEIVED_RESULTS_STATUS",
-                        "Start_Year" : 0.0, 
+                        "Start_Year" : 1900.0, 
                         "Axes" : [ "UNKNOWN", "POSITIVE", "NEGATIVE" ],
                         "Weighting_Matrix_RowMale_ColumnFemale" :
                         [
@@ -57,7 +57,7 @@
                     {
                         ".Group" : "NO_GROUP",
                         "Group" : "HIV_RECEIVED_RESULTS_STATUS",
-                        "Start_Year" : 0.0, 
+                        "Start_Year" : 1900.0, 
                         "Axes" : [ "UNKNOWN", "POSITIVE", "NEGATIVE" ],
                         "Weighting_Matrix_RowMale_ColumnFemale" :
                         [

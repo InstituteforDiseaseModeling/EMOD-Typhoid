@@ -5635,16 +5635,16 @@
 			"Report_HIV_ByAgeAndGender_Start_Year" : {
 				"description" : "The beginning calendar year that will be collected by the ReportHIVByAgeAndGender.csv report.",
 				"type" : "float",
-				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 0
+				"min" : 1900,
+				"max" : 2200,
+				"default" : 1900
 			},
 			"Report_HIV_ByAgeAndGender_Stop_Year" : {
 				"description" : "The ending calendar year that will be collected by the HIVByAgeAndGender.csv report.",
 				"type" : "float",
-				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 3.40282e+038
+				"min" : 1900,
+				"max" : 2200,
+				"default" : 2200
 			},
 			"Report_HIV_ByAgeAndGender_Collect_Circumcision_Data" : {
 				"description" : "TBD",
@@ -5670,16 +5670,16 @@
 			"Report_HIV_Infection_Start_Year" : {
 				"description" : "The beginning calendar year specified for the HIVInfection.csv report.",
 				"type" : "float",
-				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 0
+				"min" : 1900,
+				"max" : 2200,
+				"default" : 1900
 			},
 			"Report_HIV_Infection_Stop_Year" : {
 				"description" : "The ending calendar year specified for the HIVInfection.csv report.",
 				"type" : "float",
-				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 3.40282e+038
+				"min" : 1900,
+				"max" : 2200,
+				"default" : 2200
 			}
 		},
 		"ReportPolio" : {
@@ -5889,8 +5889,8 @@
 			"Base_Year" : {
 				"description" : "Absolute time in years when the simulation begins, e.g. 1990.  This can be combined with CampaignEventByYear to trigger campaign events.",
 				"type" : "float",
-				"min" : 1800,
-				"max" : 2100,
+				"min" : 1900,
+				"max" : 2200,
 				"default" : 2015
 			},
 			"Simulation_Type" : {
@@ -5981,6 +5981,13 @@
 				"description" : "Enables or disables the RelationshipConsummatedReport.csv report.",
 				"type" : "bool",
 				"default" : 0
+			},
+			"Base_Year" : {
+				"description" : "Absolute time in years when the simulation begins, e.g. 1990.  This can be combined with CampaignEventByYear to trigger campaign events.",
+				"type" : "float",
+				"min" : 1900,
+				"max" : 2200,
+				"default" : 2015
 			},
 			"Simulation_Type" : {
 				"type" : "enum",
@@ -6526,9 +6533,9 @@
 					"Start_Year" : {
 						"description" : "Absolute year of the simulation to activate the event's event coordinator.  Internally converted to Start_Day using Base_Year and Simulation_Timestep.",
 						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 1
+						"min" : 1900,
+						"max" : 2200,
+						"default" : 1900
 					},
 					"idmType:NodeSet" : {
 						"base" : "interventions.idmType.NodeSet"
@@ -7331,7 +7338,7 @@
 						"type" : "float",
 						"min" : 1900,
 						"max" : 2200,
-						"default" : 2100
+						"default" : 2200
 					},
 					"idmType:Intervention" : {
 						"base" : "interventions.idmAbstractType.Intervention"
@@ -10061,7 +10068,7 @@
 						"description" : "The time of the infection point in the sigmoid trend over time.",
 						"type" : "float",
 						"min" : 1900,
-						"max" : 2100,
+						"max" : 2200,
 						"default" : 2000
 					},
 					"Ramp_Rate" : {
@@ -11942,6 +11949,13 @@
 						"type" : "bool",
 						"default" : 0
 					},
+					"Cost_To_Consumer" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 999999,
+						"default" : 10
+					},
 					"Early" : {
 						"description" : "The left asymptote for the sigmoid trend over time.",
 						"type" : "float",
@@ -11960,7 +11974,7 @@
 						"description" : "The time of the infection point in the sigmoid trend over time.",
 						"type" : "float",
 						"min" : 1900,
-						"max" : 2100,
+						"max" : 2200,
 						"default" : 2000
 					},
 					"Rate" : {

@@ -10,6 +10,7 @@
         "Base_Infectivity": 3.5, 
         "Base_Mortality": 0, 
         "Base_Population_Scale_Factor": 0.2, 
+        "Base_Year": 1960.5, 
         "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
         "Birth_Rate_Time_Dependence": "NONE", 
         "Campaign_Filename": "campaign.json", 
@@ -26,7 +27,7 @@
         "Demographics_Filenames": [
             "uniform_demographics.json", 
             "pfa_simple.json", 
-            "pfa_overlay_rates.json"
+            "PFA_overlay_rates.json"
         ], 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
@@ -94,7 +95,6 @@
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
         "Probability_Person_Is_Behavioral_Super_Spreader": 0, 
-        "Python_Script_Path": "", 
         "Report_Coital_Acts": 0, 
         "Report_Event_Recorder": 0, 
         "Report_Relationship_End": 1, 

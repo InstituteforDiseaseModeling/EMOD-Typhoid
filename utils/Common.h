@@ -14,6 +14,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #define DAYSPERWEEK         (7)
 #define HOURSPERDAY         (24)
 #define MONTHSPERYEAR       (12)
+#define MIN_YEAR            (1900)
+#define MAX_YEAR            (2200)
+
+
 
 #define ARCMINUTES_PER_DEGREE   (60)
 #define KM_PER_ARCMINUTE        (1.86)

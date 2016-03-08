@@ -37,7 +37,7 @@
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filenames": [
             "../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed.json", 
-            "../input/pfa_overlay.json", 
+            "../input/PFA_overlay.json", 
             "PFA_overlay_rates.json"
         ], 
         "Enable_Aging": 1, 

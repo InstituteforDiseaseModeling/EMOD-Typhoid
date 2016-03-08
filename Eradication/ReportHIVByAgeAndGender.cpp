@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeHIV.h"
 #include "IHIVInterventionsContainer.h"
 #include "ISimulation.h"
-#include "SimulationHIV.h" // for base_year
+#include "SimulationSTI.h" // for base_year
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
 #include "EventTrigger.h"
@@ -52,8 +52,8 @@ namespace Kernel
 
     bool ReportHIVByAgeAndGender::Configure( const Configuration* inputJson )
     {
-        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Start_Year", &startYear, Report_HIV_ByAgeAndGender_Start_Year_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Stop_Year",  &stopYear,  Report_HIV_ByAgeAndGender_Stop_Year_DESC_TEXT,  0.0f, FLT_MAX, FLT_MAX );
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Start_Year", &startYear, Report_HIV_ByAgeAndGender_Start_Year_DESC_TEXT, MIN_YEAR, MAX_YEAR, MIN_YEAR );
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Stop_Year",  &stopYear,  Report_HIV_ByAgeAndGender_Stop_Year_DESC_TEXT,  MIN_YEAR, MAX_YEAR, MAX_YEAR );
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Collect_Circumcision_Data",  
                            &is_collecting_circumcision_data,  
                            Report_HIV_ByAgeAndGender_Collect_Circumcision_Data_DESC_TEXT,
@@ -77,9 +77,9 @@ namespace Kernel
 
         if( ret )
         {
-            if( startYear < SimulationHIV::base_year )
+            if( startYear < SimulationSTI::base_year )
             {
-                startYear = SimulationHIV::base_year ;
+                startYear = SimulationSTI::base_year ;
             }
             if( startYear >= stopYear )
             {
@@ -128,7 +128,7 @@ namespace Kernel
             // --- data would be collected at 180.  However, for the next update
             // --- next_report_time would be 350 and the update would occur at 360.
             // ------------------------------------------------------------------------
-            next_report_time = DAYSPERYEAR*(startYear - SimulationHIV::base_year) + report_hiv_half_period - dt / 2.0f ;
+            next_report_time = DAYSPERYEAR*(startYear - SimulationSTI::base_year) + report_hiv_half_period - dt / 2.0f ;
 
         }
         else if( is_collecting_data && (_parent->GetSimulationTime().Year() >= stopYear) )
