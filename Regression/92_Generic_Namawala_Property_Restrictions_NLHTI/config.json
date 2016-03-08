@@ -21,7 +21,11 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Namawala_single_node_demographics.compiled.json;Namawala_regression_property_overlay.json", 
+        "Demographics_Filename": "", 
+        "Demographics_Filenames": [
+            "Namawala_single_node_demographics.compiled.json", 
+            "Namawala_regression_property_overlay.json"
+        ], 
         "Disable_IP_Whitelist": 1, 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
