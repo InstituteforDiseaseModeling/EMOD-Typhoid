@@ -40,9 +40,18 @@ namespace Kernel
     : BaseIntervention( master )
     {
         killing_config = master.killing_config;
-        killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
         attract_config = master.attract_config;
-        attract_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( attract_config._json ) );
+
+        auto tmp_killing = Configuration::CopyFromElement( killing_config._json );
+        auto tmp_attract = Configuration::CopyFromElement( attract_config._json );
+
+        killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
+        attract_effect = WaningEffectFactory::CreateInstance( tmp_attract );
+
+        delete tmp_killing;
+        delete tmp_attract;
+        tmp_killing = nullptr;
+        tmp_attract = nullptr;
     }
 
     bool
@@ -55,8 +64,16 @@ namespace Kernel
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
-            attract_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( attract_config._json ) );
+            auto tmp_killing = Configuration::CopyFromElement( killing_config._json );
+            auto tmp_attract = Configuration::CopyFromElement( attract_config._json );
+
+            killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
+            attract_effect = WaningEffectFactory::CreateInstance( tmp_attract );
+
+            delete tmp_killing;
+            delete tmp_attract;
+            tmp_killing = nullptr;
+            tmp_attract = nullptr;
         }
         return configured;
     }

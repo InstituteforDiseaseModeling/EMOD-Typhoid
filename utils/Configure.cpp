@@ -1188,6 +1188,7 @@ namespace Kernel
             pJc->Configure( p_config );
 
             delete p_config ;
+            p_config = nullptr;
         }
 
         return true;

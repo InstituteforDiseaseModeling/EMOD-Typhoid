@@ -132,7 +132,10 @@ namespace Kernel
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to IInterventionFactory object is not valid (could be DLL specific)" );
         }
 
-        IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement( actual_intervention_config._json ) ); 
+        auto tmp_config = Configuration::CopyFromElement( actual_intervention_config._json );
+        IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( tmp_config ); 
+        delete tmp_config;
+        tmp_config = nullptr;
         if( di )
         {
             di->Distribute( pIndiv->GetInterventionsContext(), iCCO );

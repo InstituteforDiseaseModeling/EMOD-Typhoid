@@ -47,7 +47,10 @@ namespace Kernel
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
+            auto tmp_waning = Configuration::CopyFromElement( waning_config._json );
+            waning_effect = WaningEffectFactory::CreateInstance( tmp_waning );
+            delete tmp_waning;
+            tmp_waning = nullptr;
         }
         //release_assert( vaccine_type );
         LOG_DEBUG_F( "Vaccine configured with type %d and take %f.\n", vaccine_type, vaccine_take );
@@ -74,7 +77,11 @@ namespace Kernel
         vaccine_take = master.vaccine_take;
         cost_per_unit = master.cost_per_unit;
         waning_config = master.waning_config;
-        waning_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( waning_config._json ) );
+
+        auto tmp_waning = Configuration::CopyFromElement( waning_config._json );
+        waning_effect = WaningEffectFactory::CreateInstance( tmp_waning );
+        delete tmp_waning;
+        tmp_waning = nullptr;
     }
 
     SimpleVaccine::~SimpleVaccine() { }

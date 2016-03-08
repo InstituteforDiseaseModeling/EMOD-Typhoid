@@ -277,6 +277,9 @@ void IDMAPI writeInputSchemas(
 
         json::QuickBuilder config_schema = pConfig->GetSchema();
         configSchemaAll[sim_type] = config_schema;
+
+        delete fakeConfig;
+        fakeConfig = nullptr;
     }
 
     for (auto& entry : Kernel::JsonConfigurable::get_registration_map())
@@ -293,6 +296,8 @@ void IDMAPI writeInputSchemas(
     fakeECJson["class"] = json::String("StandardInterventionDistributionEventCoordinator");
     auto fakeConfig = Configuration::CopyFromElement( fakeECJson );
     Kernel::StandardInterventionDistributionEventCoordinator * pTempEC = dynamic_cast<Kernel::StandardInterventionDistributionEventCoordinator*>( Kernel::EventCoordinatorFactory::CreateInstance( fakeConfig ) );
+    delete fakeConfig;
+    fakeConfig = nullptr;
     /* json::QuickBuilder ec_schema = */ pTempEC->GetSchema();
 
     if( !Kernel::InterventionFactory::getInstance() )

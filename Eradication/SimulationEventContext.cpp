@@ -197,6 +197,8 @@ namespace Kernel
                         LOG_WARN_F("Discarding old event for t=%0.1f.\n", ce->GetStartDay());
                         delete event_config;
                         delete ce;
+                        event_config = nullptr;
+                        ce = nullptr;
                         continue;
                     }
                     ce->SetEventIndex(k);

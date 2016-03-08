@@ -546,6 +546,7 @@ namespace Kernel
                             p_cr->Configure( p_cfg );
                             reports.push_back( p_cr );
                             delete p_cfg ;
+                            p_cfg = nullptr;
                         }
                     }
                 }
@@ -560,6 +561,7 @@ namespace Kernel
                     p_cr->Configure( p_cfg );
                     reports.push_back( p_cr );
                     delete p_cfg ;
+                    p_cfg = nullptr;
                 }
             }
             catch( json::Exception& e )
@@ -569,6 +571,8 @@ namespace Kernel
                 throw InitializationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
             }
         }
+        delete p_cr_config;
+        p_cr_config = nullptr;
     }
 
     void Simulation::Reports_UpdateEventRegistration( float _currentTime, float dt )

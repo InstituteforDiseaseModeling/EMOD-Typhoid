@@ -164,6 +164,7 @@ namespace Kernel
                 LOG_DEBUG_F("DelayedIntervention distributed intervention #%d\n", idx);
                 IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig);
                 delete tmpConfig;
+                tmpConfig = nullptr;
                 expired = true;
 
                 // Now make sure cost gets reported back to node

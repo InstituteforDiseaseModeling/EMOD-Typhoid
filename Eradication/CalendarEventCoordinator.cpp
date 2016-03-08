@@ -148,6 +148,8 @@ namespace Kernel
                     }
                 }
             }
+            delete qi_as_config;
+            qi_as_config = nullptr;
 
             times_and_coverages.erase(times_and_coverages.begin());
             LOG_DEBUG_F("%d Distributions remaining from CalendarEventCoordinator\n", times_and_coverages.size());
