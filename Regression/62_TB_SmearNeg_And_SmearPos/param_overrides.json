@@ -36,7 +36,6 @@
                 "TB_Smear_Negative_Infectivity_Multiplier":0.0001
             }
         },
-        "Demographics_Filename_35":"Bihar_single_node_demographics.compiled.json;Bihar_single_node_demographics_complex_mortality.compiled.json",
         "Enable_Timestep_Channel_In_Report":0,
         "MIGRATION":{
             "Roundtrip_Waypoints":1

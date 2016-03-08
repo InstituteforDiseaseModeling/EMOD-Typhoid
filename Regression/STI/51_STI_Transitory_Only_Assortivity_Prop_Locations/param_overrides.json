@@ -3,7 +3,7 @@
     "parameters": {
         "DEMOGRAPHICS": {
             "Enable_Vital_Dynamics": 0,
-            "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json;PFA_overlay_Assort_Prop_Location.json", 
+            "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics.json", "../../HIV/input/PFA_overlay.json", "PFA_overlay_Assort_Prop_Location.json" ], 
             "MORTALITY": {
                 "Base_Mortality": 0.01, 
                 "Immunity_Mortality_Factor": 0.5

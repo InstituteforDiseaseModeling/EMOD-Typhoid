@@ -558,7 +558,7 @@ class HpcMonitor(Monitor):
             else:
                print( "Didn't find key 'parameters/Num_Cores' in '{0}'. Using 1.".format( self.config_id ) )
                
-            return num_cores
+            return int(num_cores)
     
         input_dir = params.input_root + self.config_json["parameters"]["Geography"] + "\\"
         sim_dir = self.sim_root + "\\" + self.sim_timestamp   # can't use os.path.join() here because on linux it'll give us the wrong dir-separator...

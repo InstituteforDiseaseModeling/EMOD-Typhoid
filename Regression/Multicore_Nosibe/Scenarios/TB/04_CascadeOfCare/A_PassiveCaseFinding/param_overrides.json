@@ -3,7 +3,7 @@
     "parameters":{
         "Config_Name":"04_CascadeOfCare_A_PassiveCaseFinding -- multicore -- Madagascar_Nosibe",
         "Custom_Reports_Filename" : "custom_reports.json",
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;../TB_04_CascadeOfCare_demographics_overlay.json",
+        "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "../TB_04_CascadeOfCare_demographics_overlay.json" ],
         "Geography": "Test",
         "Simulation_Duration":1000,
         "Simulation_Timestep":5,

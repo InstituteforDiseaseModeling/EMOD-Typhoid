@@ -6,7 +6,7 @@
         "Base_Infectivity":0.022,
         "Config_Name":"06_PopulationBurnIn_A_SteadyState -- multicore -- Madagascar_Nosibe",
         "Custom_Reports_Filename" : "custom_reports.json",
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;../TB_06_PopulationBurnIn_demographics_overlay.json",
+        "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "../TB_06_PopulationBurnIn_demographics_overlay.json" ],
         "Geography": "Test",
         "Simulation_Duration":36500,
         "Simulation_Timestep":5,

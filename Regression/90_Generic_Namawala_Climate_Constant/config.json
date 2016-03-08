@@ -83,7 +83,6 @@
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Relative_Humidity_Variance": 0.05, 
         "Report_Event_Recorder": 0, 
         "Run_Number": 1, 

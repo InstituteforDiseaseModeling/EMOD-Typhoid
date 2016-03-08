@@ -23,7 +23,13 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json;../../HIV/input/PFA_overlay_informal_only.json;condom_overlay.json", 
+        "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json", 
+        "Demographics_Filenames": [
+            "../../HIV/input/SA_UN_demographics.compiled.json", 
+            "../../HIV/input/PFA_overlay.json", 
+            "../../HIV/input/PFA_overlay_informal_only.json", 
+            "condom_overlay.json"
+        ], 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
         "Enable_Coital_Dilution": 1, 

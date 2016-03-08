@@ -21,7 +21,7 @@
         "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
         "Base_Population_Scale_Factor": 1,
-        "Demographics_Filename": "generic_scenarios_complexAgeDistribution_demographics.json;../../HIV/input/PFA_overlay.json;property_demographics.json", 
+        "Demographics_Filenames": [ "generic_scenarios_complexAgeDistribution_demographics.json", "../../HIV/input/PFA_overlay.json", "property_demographics.json" ], 
 
         "____________MIGRATION___________": "",
         "____________REPORTING___________": "",

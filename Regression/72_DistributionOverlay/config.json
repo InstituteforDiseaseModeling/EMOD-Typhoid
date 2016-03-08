@@ -26,7 +26,11 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "generic_scenarios_demographics.json;demog/generic_scenarios_demographics_overlay.json", 
+        "Demographics_Filename": "", 
+        "Demographics_Filenames": [
+            "generic_scenarios_demographics.json", 
+            "demog/generic_scenarios_demographics_overlay.json"
+        ], 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
@@ -78,7 +82,6 @@
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Report_Event_Recorder": 0, 
         "Run_Number": 1, 
         "Sample_Rate_0_18mo": 1, 

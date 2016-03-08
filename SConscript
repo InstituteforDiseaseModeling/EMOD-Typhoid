@@ -56,7 +56,8 @@ SConscript( [ 'baseReportLib/SConscript',
 # to be used by other dlls
 
 # not sure yet exactly right set of conditions for this
-if env['AllDlls'] or env['AllInterventions'] or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or env[ 'Report' ] != "" or env[ 'Campaign' ] != "":
+#if env['AllDlls'] or ( 'AllInterventions' in env and env['AllInterventions'] ) or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or ( 'Report' in env and env[ 'Report' ] != "" ) or ( 'Campaign' in env and env[ 'Campaign' ] != "" ):
+if env['AllDlls'] or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ):
     print "Build libgeneric_static.lib for dll...."
     SConscript( 'libgeneric_static/SConscript' )
 
@@ -107,7 +108,7 @@ elif env[ 'DiseaseDll' ] != "":
         print "Unspecified or unknown disease type: " + dtype
 
 # intervention dlls
-if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env[ 'Report' ]:
+if env['AllDlls'] or env[ 'DiseaseDll' ] != "":
     print( "Building dlls." )
 
     # this vector and malaria static is needed for MalariaDrugTypeParameters 

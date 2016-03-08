@@ -30,6 +30,6 @@
             }, 
             "Geography": ""
         },
-        "Python_Script_Path": "SHARED"
+        "Python_Script_Path": "LOCAL"
     }
 }
