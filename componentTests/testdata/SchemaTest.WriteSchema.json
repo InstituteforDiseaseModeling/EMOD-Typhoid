@@ -3719,14 +3719,14 @@
 			},
 			"Male_To_Female_Relative_Infectivity_Ages" : {
 				"description" : "Vector of ages governing the susceptibility of females relative to males, by age.",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 0
 			},
 			"Male_To_Female_Relative_Infectivity_Multipliers" : {
 				"description" : "Vector of multiplicative factors governing the susceptibility of females relative to males, by age.  Multipliers are linearly interpolated between ages.  The left (right)-most value is used before (after) the first (last) age.",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 0,
 				"max" : 25,
 				"default" : 1
@@ -6454,14 +6454,14 @@
 			},
 			"TB_CD4_Activation_Vector" : {
 				"description" : "Increased risk per time step of TB activation by CD4",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 0,
 				"max" : 3.40282e+038,
 				"default" : 1
 			},
 			"CD4_Strata_Activation" : {
 				"description" : "CD4 strata",
-				"type" : "vector float",
+				"type" : "Vector Float",
 				"min" : 1,
 				"max" : 2000,
 				"default" : 1
@@ -6551,14 +6551,14 @@
 				"CalendarEventCoordinator" : {
 					"Distribution_Times" : {
 						"description" : "Vector of ints for simulation times at which distribution of events occurs in a CalendarEventCoordinator",
-						"type" : "vector int",
+						"type" : "Vector Int",
 						"min" : 1,
 						"max" : 2.14748e+009,
 						"default" : 0
 					},
 					"Distribution_Coverages" : {
 						"description" : "Vector of floats for fraction of individuals that will receive this intervention in a CalendarEventCoordinator",
-						"type" : "vector float",
+						"type" : "Vector Float",
 						"min" : 0,
 						"max" : 1,
 						"default" : 0
@@ -10382,14 +10382,14 @@
 					},
 					"Durations" : {
 						"description" : "Durations to apply import pressure over.",
-						"type" : "vector int",
+						"type" : "Vector Int",
 						"min" : 0,
 						"max" : 2.14748e+009,
 						"default" : 1
 					},
 					"Daily_Import_Pressures" : {
 						"description" : "daily importation pressures to apply",
-						"type" : "vector float",
+						"type" : "Vector Float",
 						"min" : 0,
 						"max" : 3.40282e+038,
 						"default" : 0
