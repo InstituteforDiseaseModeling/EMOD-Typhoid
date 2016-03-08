@@ -78,6 +78,9 @@ for sheet in wb.sheets():
                         print( "Replaced default value for " + param_name + " with config.json value of " + str( sheet.row(row_id)[1].value ) )
                     else:
                         sheet._cell_values[row_id][1] = str(cj[ param_name ])
+            elif param_name == "Sim Path":
+                sheet._cell_values[row_id][1] = sys.argv[2].replace( "Scenarios\\", "" )
+                print( "Using Sim Path: " + sheet._cell_values[row_id][1] )
 
 xlsBook = wb
 workbook = Workbook()
@@ -132,11 +135,12 @@ strings_file.close()
 
 # STEP 7) Zip up the xlsm unpacked directory into a new xlsm. This is our final product.
 
-output_filename = "config_new.xlsm"
+output_filename = "config.xlsm"
 outputfile = os.path.join( os.getcwd(), os.path.join( sys.argv[2], output_filename ) )
 print( "Creating " + outputfile )
 os.chdir( outpath )
 shutil.make_archive( outputfile, 'zip', "." )
+os.remove( outputfile )
 os.rename( outputfile + ".zip", outputfile )
 os.chdir( ".." )
 shutil.rmtree( outpath )
