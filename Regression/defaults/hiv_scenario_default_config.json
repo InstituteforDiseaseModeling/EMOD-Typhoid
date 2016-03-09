@@ -405,6 +405,8 @@
             "Report_Transmission": 0,
             "Report_Coital_Acts": 0,
             "Report_HIV_Infection": 0,
+            "Report_HIV_Infection_Start_Year": 0,
+            "Report_HIV_Infection_Stop_Year": 0,
             "Report_HIV_Mortality": 0
         },
 
