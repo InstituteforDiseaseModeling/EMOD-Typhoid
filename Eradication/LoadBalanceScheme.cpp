@@ -47,7 +47,7 @@ namespace Kernel
             release_assert( numTasks > 0 );
 
             std::vector< std::vector<int> > matrix ;
-            initConfigTypeMap( "Load_Balance_Scheme_Nodes_On_Core_Matrix", &matrix, Local_Balance_Scheme_DESC_TEXT, 0, INT_MAX, 0 );
+            initConfigTypeMap( "Load_Balance_Scheme_Nodes_On_Core_Matrix", &matrix, Load_Balance_Scheme_DESC_TEXT, 0, INT_MAX, 0 );
 
             Configuration* p_config = Configuration::Load( rFilename );
             release_assert( p_config );

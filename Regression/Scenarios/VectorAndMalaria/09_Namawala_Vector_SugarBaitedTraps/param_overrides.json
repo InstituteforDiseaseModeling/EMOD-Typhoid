@@ -14,7 +14,7 @@
             "Demographics_Filename": "Namawala_single_node_demographics.json"
         },
         "PRIMARY": {
-            "Config_Name": "PrimaryScenarios_9_Namawala_Vector_SugarBaitedTraps",
+            "Config_Name": "VectorAndMalaria_9_Namawala_Vector_SugarBaitedTraps",
             "Geography": "Namawala",
             "Run_Number": 1,
             "Simulation_Duration": 2190,

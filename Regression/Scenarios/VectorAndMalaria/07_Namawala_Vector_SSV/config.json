@@ -26,7 +26,7 @@
         "Campaign_Filename": "campaign.json", 
         "Climate_Model": "CLIMATE_BY_DATA", 
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
-        "Config_Name": "PrimaryScenarios_7_Namawala_Vector_SSV", 
+        "Config_Name": "VectorAndMalaria_7_Namawala_Vector_SSV", 
         "Custom_Reports_Filename": "NoCustomReports", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 

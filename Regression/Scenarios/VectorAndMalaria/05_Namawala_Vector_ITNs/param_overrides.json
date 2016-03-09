@@ -14,7 +14,7 @@
             "Demographics_Filename": "Namawala_single_node_demographics.json"
         },
         "PRIMARY": {
-            "Config_Name": "PrimaryScenarios_5_Namawala_Vector_ITNs",
+            "Config_Name": "VectorAndMalaria_5_Namawala_Vector_ITNs",
             "Geography": "Namawala",
             "Run_Number": 1,
             "Simulation_Duration": 3650,
