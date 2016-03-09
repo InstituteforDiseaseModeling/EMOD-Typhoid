@@ -25,7 +25,7 @@
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json", 
         "Demographics_Filenames": [
-            "../../HIV/input/SA_UN_demographics.compiled.json", 
+            "../../HIV/input/SA_UN_demographics.json", 
             "../../HIV/input/PFA_overlay.json", 
             "../../HIV/input/PFA_overlay_marital_10_only.json"
         ], 
