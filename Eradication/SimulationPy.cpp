@@ -15,6 +15,8 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "stdafx.h"
 
+#pragma warning(disable : 4996)
+
 #ifdef ENABLE_PYTHON
 
 #include "SimulationPy.h"
@@ -27,8 +29,6 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "BinnedReportPy.h"
 #include "SpatialReportPy.h"
 #include "ProgVersion.h"
-
-#pragma warning(disable : 4996)
 
 static const char * _module = "SimulationPy";
 

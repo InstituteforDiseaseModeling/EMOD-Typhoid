@@ -375,6 +375,7 @@ elif "win32" == os.sys.platform:
     env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
 
     env.Append( CCFLAGS=["/DIDM_EXPORT"] )
+    env.Append( LIBS=["python27.lib"] )
 
     if Rel:
         # /MD: Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
@@ -394,7 +395,6 @@ elif "win32" == os.sys.platform:
         # NOTE: /DEBUG and Dbghelp.lib go together with changes in Exception.cpp which adds
         #       the ability to print a stack trace.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["python27.lib"] )
         # For MSVC <= 10.0
         #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
         
