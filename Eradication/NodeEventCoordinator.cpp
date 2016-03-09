@@ -47,7 +47,10 @@ namespace Kernel
         INodeDistributableIntervention *ndi = nullptr;
         for(auto *nec : cached_nodes)
         {
-            ndi = InterventionFactory::getInstance()->CreateNDIIntervention(Configuration::CopyFromElement(intervention_config._json));
+            auto tmp_config = Configuration::CopyFromElement( intervention_config._json );
+            ndi = InterventionFactory::getInstance()->CreateNDIIntervention( tmp_config );
+            delete tmp_config;
+            tmp_config = nullptr;
             if(ndi)
             {
                 if (!ndi->Distribute( nec, this ) )

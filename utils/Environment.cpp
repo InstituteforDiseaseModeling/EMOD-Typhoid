@@ -35,6 +35,7 @@ Environment::Environment()
 , Log( nullptr )
 , Config(nullptr)
 , SimConfig(nullptr)
+, pPythonSupport(nullptr)
 , Status_Reporter(nullptr)
 , InputPath()
 , OutputPath()
@@ -51,6 +52,7 @@ Environment::Environment()
 
 bool Environment::Initialize(
     IdmMpi::MessageInterface* pMpi,
+    void* p_python_support,
     string configFileName, 
     string inputPath, string outputPath, /* 2.5 string statePath, */ string dllPath,
     bool get_schema)
@@ -60,6 +62,8 @@ bool Environment::Initialize(
     localEnv->MPI.p_idm_mpi = pMpi;
     localEnv->MPI.NumTasks  = pMpi->GetNumTasks();
     localEnv->MPI.Rank      = pMpi->GetRank();
+
+    localEnv->pPythonSupport = p_python_support;
 
     inputPath = FileSystem::RemoveTrailingChars( inputPath );
     if( !FileSystem::DirectoryExists(inputPath) )

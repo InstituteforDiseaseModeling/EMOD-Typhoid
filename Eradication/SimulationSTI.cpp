@@ -21,6 +21,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char * _module = "SimulationSTI";
 
+static const float DEFAULT_BASE_YEAR = 2015.0f ;
+
 namespace Kernel
 {
     GET_SCHEMA_STATIC_WRAPPER_IMPL(SimulationSTI,SimulationSTI)
@@ -29,6 +31,8 @@ namespace Kernel
         HANDLE_INTERFACE(IIdGeneratorSTI)
         HANDLE_INTERFACE(ISTISimulationContext)
     END_QUERY_INTERFACE_DERIVED(SimulationSTI, Simulation)
+
+    float SimulationSTI::base_year = 0.0f;
 
     SimulationSTI::SimulationSTI()
         : relationshipSuidGenerator(EnvPtr->MPI.Rank, EnvPtr->MPI.NumTasks)
@@ -99,7 +103,13 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
+        initConfigTypeMap( "Base_Year",  &base_year, Base_Year_DESC_TEXT, MIN_YEAR, MAX_YEAR, DEFAULT_BASE_YEAR );
+
         bool ret = Simulation::Configure( inputJson );
+
+        LOG_INFO_F("Setting Base_Year to %f\n", base_year );
+        currentTime.setBaseYear( base_year );
+
         return ret;
     }
 

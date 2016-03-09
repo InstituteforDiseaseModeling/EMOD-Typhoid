@@ -25,6 +25,8 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
 
     public:
+        static float base_year;
+
         virtual ~SimulationSTI(void);
         static SimulationSTI *CreateSimulation();
         static SimulationSTI *CreateSimulation(const ::Configuration *config);

@@ -122,7 +122,7 @@ SUITE(BaseEventReportTest)
             string outputPath("testdata/BaseEventReportTest");
             string statePath("testdata/BaseEventReportTest");
             string dllPath("");
-            Environment::Initialize( m_pMpi, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
+            Environment::Initialize( m_pMpi, nullptr, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
 
             Environment::setSimulationConfig( m_pSimulationConfig );
             m_pSimulationConfig->listed_events.insert("Births"          );

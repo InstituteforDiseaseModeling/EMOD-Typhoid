@@ -54,7 +54,7 @@ SUITE(SchemaTest)
             string outputPath(".");
             string statePath(".");
             string dllPath(".");
-            Environment::Initialize( m_pMpi, configFilename, inputPath, outputPath, /*statePath, */dllPath, true);
+            Environment::Initialize( m_pMpi, nullptr, configFilename, inputPath, outputPath, /*statePath, */dllPath, true);
         }
 
         ~SchemaFixture()

@@ -24,8 +24,6 @@ namespace Kernel
 
     AssortivityHIV::AssortivityHIV( RelationshipType::Enum relType, RANDOMBASE* prng )
         : Assortivity( relType, prng )
-        , m_StartYear( 0.0 )
-        , m_StartUsing(false)
     {
     }
 
@@ -35,13 +33,6 @@ namespace Kernel
 
     void AssortivityHIV::AddConfigurationParameters( AssortivityGroup::Enum group, const Configuration *config )
     {
-        if( JsonConfigurable::_dryrun || (group == AssortivityGroup::STI_COINFECTION_STATUS     ) 
-                                      || (group == AssortivityGroup::HIV_INFECTION_STATUS       )
-                                      || (group == AssortivityGroup::HIV_TESTED_POSITIVE_STATUS )
-                                      || (group == AssortivityGroup::HIV_RECEIVED_RESULTS_STATUS) )
-        {
-            initConfigTypeMap( "Start_Year", &m_StartYear, "TBD - The year to start using the assortivity preference.", 0.0f, 3000.0f, 0.0f );
-        }
     }
 
     void AssortivityHIV::CheckDerivedValues()
@@ -104,22 +95,6 @@ namespace Kernel
                << ValuesToString( result_names ) << ".  Order is up to the user." ;
             throw GeneralConfigurationException(__FILE__, __LINE__, __FUNCTION__,  ss.str().c_str() );
         }
-    }
-
-    void AssortivityHIV::Update( const IdmDateTime& rCurrentTime, float dt )
-    {
-        float current_year = rCurrentTime.Year() ;
-        m_StartUsing = m_StartYear < current_year ;
-    }
-
-    AssortivityGroup::Enum AssortivityHIV::GetGroupToUse() const
-    {
-        AssortivityGroup::Enum group = GetGroup() ;
-        if( !m_StartUsing )
-        {
-            group = AssortivityGroup::NO_GROUP ;
-        }
-        return group ;
     }
 
     std::string GetStringValueHIV( const Assortivity* pAssortivity, const IIndividualHumanSTI* pIndividual )
@@ -197,7 +172,5 @@ namespace Kernel
     {
         Assortivity::serialize( ar, obj );
         AssortivityHIV& hiv = *obj;
-        ar.labelElement("m_StartYear"  ) & hiv.m_StartYear;
-        ar.labelElement("m_StartUsing" ) & hiv.m_StartUsing;
     }
 }

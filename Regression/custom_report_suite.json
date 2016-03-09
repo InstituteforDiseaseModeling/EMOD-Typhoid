@@ -1,8 +1,5 @@
 {
     "tests": [
-        { "path": "118_Polio_CustomReports"                                   , "reports" : "PolioSurveyJSONAnalyzer Infections.bin VirusPopulation.bin" }
-    ],
-    ".tests": [
         { "path": "44_Custom_Reporter_Demo"                                   , "reports" : "ReportEventCounter.json CustomReport.json" },
         { "path": "68_Malaria_Barcode_Genetics"                               , "reports" : "ReportEventCounter.json MalariaSurveyJSONAnalyzer MalariaImmunityReport MalariaSummaryReport MalariaPatientReport.json" },
         { "path": "108_Generic_MigrationByAgeAndGender"                       , "reports" : "ReportNodeDemographics.csv  ReportHumanMigrationTracking KML_Demo_Reporter AgeAtInfectionReport.json AgeAtInfectionHistogramReport.json" },

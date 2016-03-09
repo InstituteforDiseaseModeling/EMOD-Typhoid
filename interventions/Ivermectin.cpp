@@ -27,7 +27,10 @@ namespace Kernel
     : BaseIntervention( master )
     {
         killing_config = master.killing_config;
-        killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+        killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
+        delete tmp_killing;
+        tmp_killing = nullptr;
     }
 
     bool Ivermectin::Configure( const Configuration * inputJson )
@@ -36,7 +39,10 @@ namespace Kernel
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+            killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
+            delete tmp_killing;
+            tmp_killing = nullptr;
         }
         return configured;
     }

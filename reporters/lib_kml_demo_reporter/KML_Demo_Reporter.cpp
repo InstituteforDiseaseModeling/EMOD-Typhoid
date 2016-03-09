@@ -38,6 +38,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHuman.h"
 #include "suids.hpp"
 #include "IdmMpi.h"
+#include "NoCrtWarnings.h"
+#include "FileSystem.h"
 
 //#define TARBALL 1
 #define KML 1
@@ -233,7 +235,7 @@ KML_Demo_Reporter::Reduce()
                 cnt = 0;
                 std::istringstream i_timeseries( string_token );
                 getline(i_timeseries, token, ':');
-                sscanf(token.c_str(), "%u",&nodeId);
+                sscanf_s(token.c_str(), "%u",&nodeId);
 
                 if (nodeChannelMapVec[ channelName ].find( nodeId ) != nodeChannelMapVec[ channelName ].end()) //data already exists
                 {
@@ -243,7 +245,7 @@ KML_Demo_Reporter::Reduce()
                 {
                     while (getline(i_timeseries, token, ','))   // Missing last value?
                     {
-                        sscanf(token.c_str(), "%f",&value);
+                        sscanf_s(token.c_str(), "%f",&value);
                         nodeChannelMapVec[ channelName ][ nodeId ].push_back (value);
                     }
                 }
@@ -340,8 +342,10 @@ void KML_Demo_Reporter::Finalize()
 // like Google Earth or NASA WorldWinds.
 void KML_Demo_Reporter::WriteKmlData()
 {
-    std::cout << __FUNCTION__ << std::endl;
+    LOG_INFO( __FUNCTION__ );
+
     std::string output_dir = "output/";
+
     // Iterate over nodeChannelMapVec, channel by channel
     for( tChannel2Node2DataMapVec::iterator it = nodeChannelMapVec.begin();
          it != nodeChannelMapVec.end();
@@ -358,17 +362,17 @@ void KML_Demo_Reporter::WriteKmlData()
         // Note that even though this example has a KML suffix, it's not a valid KML file because
         // it is missing proper closing tags (to save us from having to find the right insertion point).
         // This way we can just append and provide the necessary closure tags ourself.
-        std::ofstream masterXmlFile;
         const char * master_filename = MASTER_FILE;
-        masterXmlFile.open( master_filename, std::fstream::in );
-        if( masterXmlFile.fail() )
+        if( !FileSystem::FileExists( master_filename ) )
         {
             throw Kernel::FileNotFoundException( __FILE__, __LINE__, __FUNCTION__, master_filename );
         }
 
         // Copy the file
-        FILE * fp_master = fopen( master_filename, "r" );
-        FILE * fp_clone = fopen( ( std::string( output_dir ) + kml_file ).c_str(), "w" );
+        FILE * fp_master=nullptr;
+        FILE * fp_clone=nullptr;
+        fopen_s( &fp_master, master_filename, "r" );
+        fopen_s( &fp_clone, ( std::string( output_dir ) + kml_file ).c_str(), "w" );
 
         unsigned char buf[ 1024 ];
         size_t read_size;
@@ -429,8 +433,8 @@ void KML_Demo_Reporter::WriteKmlData()
                 // Use the node id as the taretId.
                 channelXmlFile << "              <PolyStyle targetId='ps" << node_id << "'>" << std::endl;
                 // convert color to hex RGB somehow
-                char colorString[6];
-                sprintf( &colorString[0], "%02x%02x%02x", normValue, normValue, normValue);
+                char colorString[7];
+                sprintf_s( &colorString[0], 7, "%02x%02x%02x", normValue, normValue, normValue);
                 channelXmlFile << "                <color>7d" << colorString << "</color>" << std::endl;
                 channelXmlFile << "              </PolyStyle>" << std::endl;
             }

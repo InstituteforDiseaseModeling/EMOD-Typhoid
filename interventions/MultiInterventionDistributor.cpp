@@ -85,6 +85,9 @@ namespace Kernel
                 LOG_DEBUG_F( "Attempting to instantiate intervention of class %s\n", std::string((*tmpConfig)["class"].As<json::String>()).c_str() );
                 IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig);
                 assert(di);
+                delete tmpConfig;
+                tmpConfig = nullptr;
+
                 if (di)
                 {
                     if (!di->Distribute( context, pICCO ) )

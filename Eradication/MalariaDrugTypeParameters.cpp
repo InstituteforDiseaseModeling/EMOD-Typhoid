@@ -110,6 +110,8 @@ namespace Kernel
             {
                 Configuration* drug_config = Configuration::CopyFromElement( (*EnvPtr->Config)["Malaria_Drug_Params"][drugType] );
                 params->Configure( drug_config );
+                delete drug_config;
+                drug_config = nullptr;
 
                 // Check validity of dosing regimen
                 float sim_tstep = (*EnvPtr->Config)["Simulation_Timestep"].As<Number>();

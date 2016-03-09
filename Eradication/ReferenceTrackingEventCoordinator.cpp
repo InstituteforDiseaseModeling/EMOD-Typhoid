@@ -37,10 +37,17 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
+        if( !JsonConfigurable::_dryrun &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::STI_SIM) &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::HIV_SIM) )
+        {
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "ReferenceTrackingEventCoordinator can only be used in STI and HIV simulations." );
+        }
+
         float update_period = DAYSPERYEAR;
         initConfigComplexType("Time_Value_Map", &year2ValueMap, "Map of times (years) to coverages." );
         initConfigTypeMap("Update_Period", &update_period, "Gap between distribution updates.", 1.0, 10*DAYSPERYEAR, DAYSPERYEAR );
-        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", 1900.0, 2200.0, 2100.0 ); // min, max, default years
+        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", MIN_YEAR, MAX_YEAR, MAX_YEAR );
 
         auto ret = StandardInterventionDistributionEventCoordinator::Configure( inputJson );
         num_repetitions = -1; // unlimited
@@ -97,30 +104,37 @@ namespace Kernel
         {
             event_context->VisitIndividuals( fn ); // does not return value, updates total existing coverage by capture
         }
-        release_assert( totalQualifyingPop > 0 );
-        Fraction currentCoverageForIntervention = totalWithIntervention/totalQualifyingPop;
-        NonNegativeFloat totalWithoutIntervention = totalQualifyingPop - totalWithIntervention;
-        float default_value = 0.0f;
-        float year = parent->GetSimulationTime().Year();
-        target_coverage  = year2ValueMap.getValueLinearInterpolation(year, default_value);
-
-        float totalToIntervene = ( target_coverage * totalQualifyingPop ) - totalWithIntervention;
-        NO_LESS_THAN( totalToIntervene, 0 );
 
         float dc = 0.0f;
-        if( totalWithoutIntervention > 0 )
+        if( totalQualifyingPop > 0 )
         {
-            dc = totalToIntervene / totalWithoutIntervention;
+            Fraction currentCoverageForIntervention = totalWithIntervention/totalQualifyingPop;
+            NonNegativeFloat totalWithoutIntervention = totalQualifyingPop - totalWithIntervention;
+            float default_value = 0.0f;
+            float year = parent->GetSimulationTime().Year();
+            target_coverage  = year2ValueMap.getValueLinearInterpolation(year, default_value);
+
+            float totalToIntervene = ( target_coverage * totalQualifyingPop ) - totalWithIntervention;
+            NO_LESS_THAN( totalToIntervene, 0 );
+
+            if( totalWithoutIntervention > 0 )
+            {
+                dc = totalToIntervene / totalWithoutIntervention;
+            }
+            LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
+                            dc,
+                            (float) target_coverage,
+                            (float) currentCoverageForIntervention,
+                            (float) totalWithoutIntervention,
+                            (float) totalWithIntervention
+                        );
+        }
+        else
+        {
+            LOG_INFO( "Setting demographic_coverage to 0 since 0 qualifying population.\n");
         }
         demographic_restrictions.SetDemographicCoverage( dc );
 
-        LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
-                    demographic_restrictions.GetDemographicCoverage(),
-                    float(target_coverage),
-                    float(currentCoverageForIntervention),
-                    float(totalWithoutIntervention),
-                    float(totalWithIntervention)
-                );
     }
 
 }

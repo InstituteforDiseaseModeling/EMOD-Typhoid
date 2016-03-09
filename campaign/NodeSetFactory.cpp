@@ -69,8 +69,9 @@ namespace Kernel
                     << std::endl;
                 LOG_INFO( msg.str().c_str() );
             }
-
             LOG_DEBUG( "Done with that class....\n" );
+            delete fakeConfig;
+            fakeConfig = nullptr;
         }
         campaignSchema[ "schema" ] = nodeSetsJsonArray;
         LOG_DEBUG( "Returning from GetSchema.\n" );

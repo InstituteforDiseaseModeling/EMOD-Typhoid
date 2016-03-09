@@ -101,7 +101,7 @@ SUITE(NodeDemographicsTest)
             string outputPath("testdata/NodeDemographicsTest/output");
             string statePath("testdata/NodeDemographicsTest");
             string dllPath("testdata/NodeDemographicsTest");
-            Environment::Initialize( m_pMpi, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
+            Environment::Initialize( m_pMpi, nullptr, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
 
             pSimConfig = SimulationConfigFactory::CreateInstance(Environment::getInstance()->Config);
             if (pSimConfig)
@@ -249,7 +249,7 @@ SUITE(NodeDemographicsTest)
         char** argv   = &exeName;
         string configFilename("testdata/NodeDemographicsTest/config_legacy.json");
         string p("testdata/NodeDemographicsTest");
-        Environment::Initialize(pMpi,configFilename, p, p, /*p, */p, false);
+        Environment::Initialize(pMpi,nullptr,configFilename, p, p, /*p, */p, false);
         SimulationConfig* pSimConfig = SimulationConfigFactory::CreateInstance(Environment::getInstance()->Config);
         CHECK(pSimConfig);
         Environment::setSimulationConfig(pSimConfig);

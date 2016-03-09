@@ -171,6 +171,7 @@
             "Campaign_Filename":"campaign.json"
         },
         "REPORTING": {
+            "Custom_Reports_Filename" : "NoCustomReports",
             "Report_Event_Recorder" : 0,
             "Enable_Default_Reporting" : 1,
             "Enable_Demographics_Reporting":0,

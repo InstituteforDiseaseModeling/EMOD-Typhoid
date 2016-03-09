@@ -3,6 +3,7 @@
     "parameters":{
         "Base_Infectivity":0.05,
         "Config_Name":"05_MDR_A_Acquired",
+        "Custom_Reports_Filename" : "custom_reports.json",
         "Demographics_Filename":"TB_05_MDR_demographics.json",
         "Simulation_Timestep": 5, 
         "Simulation_Duration":300,

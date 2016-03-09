@@ -58,10 +58,19 @@ namespace Kernel
     SimpleVectorControlNode::SimpleVectorControlNode( const SimpleVectorControlNode& master )
     : BaseNodeIntervention( master )
     {
-        killing_config = master.killing_config;
-        killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        killing_config  = master.killing_config;
         blocking_config = master.blocking_config;
-        blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+
+        auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+        auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+
+        killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+        blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+
+        delete tmp_killing;
+        delete tmp_blocking;
+        tmp_killing  = nullptr;
+        tmp_blocking = nullptr;
     }
 
     SimpleVectorControlNode::~SimpleVectorControlNode()
@@ -133,8 +142,16 @@ namespace Kernel
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
-            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+
+            killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+            blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+
+            delete tmp_killing;
+            delete tmp_blocking;
+            tmp_killing  = nullptr;
+            tmp_blocking = nullptr;
         }
         return SimpleVectorControlNode::Configure( inputJson );
     }
@@ -164,8 +181,16 @@ namespace Kernel
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
-            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+
+            killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+            blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+
+            delete tmp_killing;
+            delete tmp_blocking;
+            tmp_killing  = nullptr;
+            tmp_blocking = nullptr;
         }
         return SimpleVectorControlNode::Configure( inputJson );
     }
@@ -211,7 +236,12 @@ namespace Kernel
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+
+            blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+
+            delete tmp_blocking;
+            tmp_blocking = nullptr;
         }
 	return configured;
     }
@@ -233,7 +263,12 @@ namespace Kernel
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+
+            blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+
+            delete tmp_blocking;
+            tmp_blocking = nullptr;
         }
 
         return configured;
@@ -273,7 +308,12 @@ namespace Kernel
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+
+            killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+
+            delete tmp_killing;
+            tmp_killing  = nullptr;
         }
         return SimpleVectorControlNode::Configure( inputJson );
     }
@@ -308,7 +348,12 @@ namespace Kernel
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+
+            killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+
+            delete tmp_killing;
+            tmp_killing  = nullptr;
         }
         return configured;
     }
@@ -341,8 +386,15 @@ namespace Kernel
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
-            //blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+            killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+            delete tmp_killing;
+            tmp_killing  = nullptr;
+
+            //auto tmp_blocking  = Configuration::CopyFromElement( blocking_config._json  );
+            //blocking_effect  = WaningEffectFactory::CreateInstance( tmp_blocking  );
+            //delete tmp_blocking;
+            //tmp_blocking  = nullptr;
         }
         return configured;
     }
@@ -364,7 +416,12 @@ namespace Kernel
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+
+            killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+
+            delete tmp_killing;
+            tmp_killing  = nullptr;
         }
         return configured;
     }
@@ -386,7 +443,12 @@ namespace Kernel
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+            auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+
+            killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
+
+            delete tmp_killing;
+            tmp_killing  = nullptr;
         }
         return configured;
     }
