@@ -18,15 +18,10 @@
         "Campaign_Filename": "campaign.json", 
         "Climate_Model": "CLIMATE_OFF", 
         "Config_Name": "HINT_AgeAndAccess_BaselineOutbreak", 
-        "Custom_Reports_Filename": "NoCustomReports", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "", 
-        "Demographics_Filenames": [
-            "hint_ageandaccess_demographics.json", 
-            "hint_ageandaccess_overlay.json"
-        ], 
+        "Demographics_Filename": "hint_ageandaccess_demographics.json;hint_ageandaccess_overlay.json", 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
         "Enable_Default_Reporting": 1, 

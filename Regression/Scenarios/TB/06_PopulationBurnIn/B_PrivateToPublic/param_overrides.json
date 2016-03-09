@@ -5,7 +5,6 @@
         "Base_Individual_Sample_Rate":0.05,
         "Base_Infectivity":0.022,
         "Config_Name":"06_PopulationBurnIn_B_PrivateToPublic",
-        "Custom_Reports_Filename" : "custom_reports.json",
         "Demographics_Filename":"TB_06_PopulationBurnIn_demographics.json",
         "Simulation_Duration":36500,
         "Simulation_Timestep":5,
