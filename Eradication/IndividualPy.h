@@ -18,14 +18,12 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "Contexts.h"
 #include "InfectionPy.h"
 #include "IndividualEnvironmental.h"
-#include "SusceptibilityPy.h"
-#ifdef ENABLE_PYTHON
-#include "Python.h"
-#endif
+#include "PythonSupport.h"
 
 namespace Kernel
 {
     class SusceptibilityPy;
+
     class IIndividualHumanPy : public ISupports
     {
     public:
@@ -61,7 +59,7 @@ namespace Kernel
         virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
         virtual HumanStateChange GetStateChange() const;
 
-		std::string processPrePatent( float dt );
+        std::string processPrePatent( float dt );
 
         // pydemo infection state
         std::string state_to_report; // pydemo status of individual
@@ -72,21 +70,12 @@ namespace Kernel
         bool state_changed;
 
     private:
+#ifdef ENABLE_PYTHON
         PyObject * expose_vars;
+#endif
         SusceptibilityPy * pydemo_susceptibility;
         std::map< TransmissionRoute::Enum, float > contagion_population_by_route;
 
         virtual bool Configure( const Configuration* config );
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-        ///////////////////////////////////////////////////////////////////////////
-        // Serialization
-        friend class boost::serialization::access;
-	/*
-        template<class Archive>
-        friend void serialize(Archive & ar, IndividualHumanPy& flags, const unsigned int  file_version );
-	*/
-
-        ////////////////////////////////////////////////////////////////////////////
-#endif
     };
 }

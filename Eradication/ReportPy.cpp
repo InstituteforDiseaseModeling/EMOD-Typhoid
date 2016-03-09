@@ -15,6 +15,8 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 #include "stdafx.h"
 
+#pragma warning(disable:4996)
+
 #ifdef ENABLE_PYTHON
 
 #include <numeric> // for std::accumulate
