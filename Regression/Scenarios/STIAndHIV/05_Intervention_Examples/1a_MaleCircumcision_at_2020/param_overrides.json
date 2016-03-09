@@ -1,6 +1,7 @@
 {
-    "Default_Config_Path": "defaults\\hiv_scenario5_default_config.json", 
-    "parameters": {
+    "Default_Config_Path": "defaults/hiv_scenario5_default_config.json",
+    "parameters":
+    {
         "RARELY_CHANGED": {
             "Config_Name": "05_1A_MaleCircumcision_at_2020"
         }
