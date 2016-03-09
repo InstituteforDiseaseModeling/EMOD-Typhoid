@@ -1,42 +1,42 @@
 {
-    "Default_Config_Path": "defaults/hiv_scenario_default_config.json", 
+    "Default_Config_Path": "defaults\\hiv_scenario_default_config.json", 
     "parameters": {
         "____________DEMOGRAPHICS___________": {
             "Birth_Rate_Dependence": "FIXED_BIRTH_RATE", 
-            "Enable_Birth": 0, 
+            "Enable_Birth": 0.0, 
             "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
             "Base_Population_Scale_Factor": 0.01, 
-            "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE",
             "Demographics_Filenames": [
                 "newborn_cohort_demographics.json", 
-                "pfa_overlay.json",
+                "pfa_overlay.json", 
                 "pfa_overlay_rates_02.json"
-            ]
+            ], 
+            "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE"
         }, 
         "____________TRANSMISSION___________": {
             "Maternal_Transmission_ART_Multiplier": 0.03
         }, 
         "____________INTRAHOST___________": {
-            "Base_Infectivity": 0, 
+            "Base_Infectivity": 0.0, 
             "CD4_At_Death_LogLogistic_Heterogeneity": 0.70215, 
             "Male_To_Female_Relative_Infectivity_Multipliers": [
-                5, 
-                5, 
+                5.0, 
+                5.0, 
                 1.5
             ], 
             "CD4_At_Death_LogLogistic_Scale": 2.9593, 
             "CD4_Post_Infection_Weibull_Heterogeneity": 0.2756, 
             "CD4_Post_Infection_Weibull_Scale": 560.43, 
             "Male_To_Female_Relative_Infectivity_Ages": [
-                0, 
-                15, 
-                25
+                0.0, 
+                15.0, 
+                25.0
             ]
         }, 
         "____________SIMULATION___________": {
-            "Simulation_Timestep": 30, 
+            "Simulation_Timestep": 30.0, 
             "Valid_Cascade_States": [
-                "", 
+                "u", 
                 "ARTStaging", 
                 "ARTStagingDiagnosticTest", 
                 "LinkingToART", 
@@ -51,8 +51,8 @@
                 "TestingOnSymptomatic", 
                 "LostForever"
             ], 
-            "Simulation_Duration": 37000, 
-            "Base_Year": 2000
+            "Simulation_Duration": 37000.0, 
+            "Base_Year": 2000.0
         }, 
         "____________REPORTING___________": {
             "Report_Event_Recorder_Events": [
@@ -62,13 +62,13 @@
                 "HCTTestingLoop3", 
                 "ARTStaging1"
             ], 
-            "Report_HIV_ByAgeAndGender": 1, 
-            "Enable_Demographics_Reporting": 1, 
-            "Report_HIV_Mortality": 1, 
-            "Report_HIV_Infection": 1, 
-            "Report_HIV_ART": 1,
-            "Report_HIV_Infection_Start_Year": 2000, 
-            "Report_HIV_Infection_Stop_Year": 2100
+            "Report_HIV_Infection_Stop_Year": 2100.0, 
+            "Report_HIV_ByAgeAndGender": 1.0, 
+            "Enable_Demographics_Reporting": 1.0, 
+            "Report_HIV_Infection": 1.0, 
+            "Report_HIV_Infection_Start_Year": 2000.0, 
+            "Report_HIV_ART": 1.0, 
+            "Report_HIV_Mortality": 1.0
         }, 
         "____________RARELY_CHANGED___________": {
             "Config_Name": "02H_CD4_During_Treatment_Interruption"

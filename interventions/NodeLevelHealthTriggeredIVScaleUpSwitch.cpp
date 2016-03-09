@@ -132,6 +132,8 @@ namespace Kernel
                 LOG_DEBUG_F("NodeHTIScaleUpSwitch will distribute notcoveredintervention #%d\n", idx);
 
                 IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig); 
+                delete tmpConfig;
+                tmpConfig = nullptr;
 
                 if( di )
                 {

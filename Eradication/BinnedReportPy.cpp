@@ -53,7 +53,7 @@ BinnedReportPy::BinnedReportPy()
 
     _age_bin_friendly_names.resize( _num_age_bins );
     memset( _age_bin_upper_values, 0, sizeof( float ) * 100 );
-    for( unsigned int idx = 0; idx < _num_age_bins ; idx++ )
+    for( int idx = 0; idx < _num_age_bins ; idx++ )
     {
         _age_bin_upper_values[idx] = 365.0f*(idx+1);
         _age_bin_friendly_names[idx] = std::to_string( idx );

@@ -47,7 +47,10 @@ namespace Kernel
         TBDrugTypeParameters* params = _new_ TBDrugTypeParameters(tb_drug_name);
         if( !JsonConfigurable::_dryrun )
         {
-            params->Configure( Configuration::CopyFromElement( (*EnvPtr->Config)["TB_Drug_Params"][tb_drug_name.c_str()] ) );
+            auto tmp_config = Configuration::CopyFromElement( (*EnvPtr->Config)["TB_Drug_Params"][tb_drug_name.c_str()] );
+            params->Configure( tmp_config );
+            delete tmp_config;
+            tmp_config = nullptr;
         }
         LOG_DEBUG( "END CreateTBDrugTypeParameters\n" );
         return params;

@@ -198,14 +198,48 @@ if env['AllDlls'] or env[ 'DiseaseDll' ] != "":
 # Finally executable
 SConscript('Eradication/SConscript')
 if os.sys.platform == 'win32':
-    SConscript('reporters/STI_Reports_SConscript')
-    SConscript('reporters/TB_Reports_SConscript')
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # !!! Beware on scenarios with large nodes and populations
-    # !!! These can create gigabytes of data and cause scenarios
-    # !!! to take twice as long.
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    #SConscript('reporters/NodeDemographics_Reports_SConscript')
-    #SConscript('reporters/VectorStats_Reports_SConscript')
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
+
+    dict = env.Dictionary()
+    dict['LIBS'].remove( "delayimp.lib" )
+    dict['LINKFLAGS'].remove( "/DELAYLOAD:\"python27.dll\"" )
+
+    SConscript('reporters/SConscript_Generic_AgeAtInfection')
+    SConscript('reporters/SConscript_Generic_AgeAtInfectionHistogram')
+    SConscript('reporters/SConscript_Generic_Basic')
+    SConscript('reporters/SConscript_Generic_EventCounter')
+    SConscript('reporters/SConscript_Generic_HumanMigrationTracking')
+    SConscript('reporters/SConscript_Generic_KmlDemo')
+    SConscript('reporters/SConscript_Generic_NodeDemographics')
+
+    disease = "ALL"
+    if 'Disease' in env and len(env['Disease']) > 0:
+        disease = env["Disease"]
+
+    if( (disease == "ALL") or (disease == "HIV") ):
+        SConscript('reporters/SConscript_HIV_WHO2015')
+
+    if( (disease == "ALL") or (disease == "Malaria") ):
+        SConscript('reporters/SConscript_Malaria_Filtered')
+        SConscript('reporters/SConscript_Malaria_Immunity')
+        SConscript('reporters/SConscript_Malaria_Patient')
+        SConscript('reporters/SConscript_Malaria_Summary')
+        SConscript('reporters/SConscript_Malaria_Survey')
+
+    if( (disease == "ALL") or (disease == "Polio") ):
+        SConscript('reporters/SConscript_Polio_IndividualInfections')
+        SConscript('reporters/SConscript_Polio_Survey')
+        SConscript('reporters/SConscript_Polio_VirusPopulation')
+
+    if( (disease == "ALL") or (disease == "TB") ):
+        SConscript('reporters/SConscript_TB_Patient')
+        SConscript('reporters/SConscript_TB_ReportScenarios')
+
+    if( (disease == "ALL") or (disease == "STI") or (disease == "HIV") ):
+        SConscript('reporters/SConscript_STI_RelationshipMigrationTracking')
+        SConscript('reporters/SConscript_STI_RelationshipQueue')
+
+    if( (disease == "ALL") or (disease == "Vector") or (disease == "Malaria") ):
+        SConscript('reporters/SConscript_Vector_VectorHabitat')
+        SConscript('reporters/SConscript_Vector_VectorMigration')
+        SConscript('reporters/SConscript_Vector_VectorStats')
+

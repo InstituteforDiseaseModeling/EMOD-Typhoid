@@ -45,6 +45,7 @@
         "Clinical_Fever_Threshold_High": 1, 
         "Clinical_Fever_Threshold_Low": 0.5, 
         "Config_Name": "111_Namawala_Immune_Initialization", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Cytokine_Gametocyte_Inactivation": 0.05, 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 

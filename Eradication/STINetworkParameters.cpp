@@ -162,10 +162,12 @@ namespace Kernel
                 STINetworkParameters * net_params_by_prop = STINetworkParameters::CreateSTINetworkParameters( data->name, p_params_config );
                 param_map[ data->name ] = net_params_by_prop;
 
-                delete p_params_config ;
+                delete p_params_config;
+                p_params_config = nullptr;
             }
         }
         delete config;
+        config = nullptr;
 
         if( param_map.size() == 0 )
         {

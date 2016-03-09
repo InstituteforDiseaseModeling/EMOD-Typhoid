@@ -382,6 +382,7 @@
         },
 
 		"____________REPORTING___________": {
+            "Custom_Reports_Filename" : "NoCustomReports",
             "Enable_Default_Reporting" : 1,
             "Report_HIV_Event_Channels_List" : [],
             "Enable_Demographics_Reporting": 0,
@@ -394,7 +395,7 @@
             "Report_HIV_ART": 0,
             "Report_HIV_ByAgeAndGender": 0,
             "Report_HIV_ByAgeAndGender_Start_Year": 1980,
-            "Report_HIV_ByAgeAndGender_Stop_Year": 10000,
+            "Report_HIV_ByAgeAndGender_Stop_Year": 2200,
             "Report_HIV_ByAgeAndGender_Collect_Circumcision_Data" : 0,
             "Report_HIV_ByAgeAndGender_Collect_IP_Data" : 0,
             "Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4": 0,

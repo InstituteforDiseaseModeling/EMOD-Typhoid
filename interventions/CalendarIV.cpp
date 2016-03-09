@@ -192,6 +192,7 @@ namespace Kernel
                     assert( tmpConfig );
                     IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig);
                     delete tmpConfig;
+                    tmpConfig = nullptr;
                     if( !di )
                     {
                         // Calendar wanted to distribute intervention but factory returned null pointer.

@@ -208,8 +208,13 @@ namespace Kernel
         }
         else if( negative_diagnosis_config._json.Type() != ElementType::NULL_ELEMENT )
         {
+            auto tmp_config = Configuration::CopyFromElement(negative_diagnosis_config._json);
+
             // Distribute the test-negative intervention
-            IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement(negative_diagnosis_config._json));
+            IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( tmp_config );
+
+            delete tmp_config;
+            tmp_config = nullptr;
 
             ICampaignCostObserver* pICCO;
             // Now make sure cost of the test-positive intervention is reported back to node
@@ -264,8 +269,14 @@ namespace Kernel
             }
         }
         else if( defaulters_config._json.Type() != ElementType::NULL_ELEMENT )
-        {            // Distribute the defaulters intervention, right away (do not use the days_to_diagnosis
-            IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement(defaulters_config._json));
+        {
+            auto tmp_config = Configuration::CopyFromElement(defaulters_config._json);
+
+            // Distribute the defaulters intervention, right away (do not use the days_to_diagnosis
+            IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( tmp_config );
+
+            delete tmp_config;
+            tmp_config = nullptr;
 
             ICampaignCostObserver* pICCO;
             // Now make sure cost of the test-positive intervention is reported back to node

@@ -58,7 +58,7 @@ SUITE(MigrationTest)
             string statePath("testdata/MigrationTest");
             string dllPath("testdata/MigrationTest");
 
-            Environment::Initialize( m_pMpi, configFilename, inputPath, outputPath, dllPath, false );
+            Environment::Initialize( m_pMpi, nullptr, configFilename, inputPath, outputPath, dllPath, false );
 
             const_cast<Environment*>(Environment::getInstance())->RNG = &m_RandomFake;
             m_pSimulationConfig->sim_type = SimType::VECTOR_SIM ;

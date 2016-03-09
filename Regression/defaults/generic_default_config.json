@@ -108,6 +108,7 @@
             "Migration_Model": "NO_MIGRATION"
         },
         "OUTPUT": {
+            "Custom_Reports_Filename" : "NoCustomReports",
             "Report_Event_Recorder" : 0,
             "Enable_Default_Reporting" : 1,
             "Enable_Property_Output": 0,

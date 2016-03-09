@@ -88,6 +88,7 @@ namespace Kernel
         }
 
         delete config;
+        config = nullptr;
     }
 
     json::QuickBuilder

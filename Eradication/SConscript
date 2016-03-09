@@ -72,6 +72,7 @@ else:
                             "NodeRankMap.cpp",
                             "MpiDataExchanger.cpp",
                             "NodeInfo.cpp",
+                            "PythonSupport.cpp",
                             "Properties.cpp",
                             "SimulationConfig.cpp",
                             "SimulationFactory.cpp",
@@ -87,7 +88,6 @@ else:
                             "SimulationEventContext.cpp",
                             "StandardEventCoordinator.cpp",
                             "CoverageByNodeEventCoordinator.cpp",
-                            "ReferenceTrackingEventCoordinator.cpp",
                             "DemographicRestrictions.cpp",
                             
                             # Reporting
@@ -208,6 +208,7 @@ else:
                             "../interventions/AntiMalarialDrug.cpp",
                             "../interventions/InputEIR.cpp",
                             "../interventions/MalariaChallenge.cpp",
+                            "../interventions/MalariaDiagnostic.cpp",
                             "../interventions/RTSSVaccine.cpp",
                         ]
 
@@ -284,6 +285,7 @@ else:
                             "Assortivity.cpp",
                             "AssortivityHIV.cpp",
                             "AssortivityFactory.cpp",
+                            "CampaignEventByYear.cpp",
                             "IndividualSTI.cpp",
                             "InfectionSTI.cpp",
                             "NodeInfoSTI.cpp",
@@ -301,6 +303,7 @@ else:
                             "PfaFactory.cpp",
                             "RateTableFactory.cpp",
                             "RateTableImpl.cpp",
+                            "ReferenceTrackingEventCoordinator.cpp",
                             "Relationship.cpp",
                             "RelationshipGroups.cpp",
                             "RelationshipManager.cpp",
@@ -326,7 +329,6 @@ else:
 
     # HIV
     hivSrcFiles = stiSrcFiles + [
-                            "CampaignEventByYear.cpp",
                             "IndividualHIV.cpp",
                             "InfectionHIV.cpp",
                             "FerrandAgeDependentDistribution.cpp",

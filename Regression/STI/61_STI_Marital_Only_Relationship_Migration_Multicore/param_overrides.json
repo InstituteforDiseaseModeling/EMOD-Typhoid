@@ -58,13 +58,13 @@
         "x_Family_Migration" : 1,
 
         "____________REPORTING___________": "",
+        "Custom_Reports_Filename" : "custom_reports.json",
 
 
         "____________REPLICATION_AND_DRUGS___________": "",
 
         "____________RARELY_CHANGED___________": "",
         "Config_Name": "61_STI_Marital_Only_Relationship_Migration_Multicore",
-        "Custom_Reports_Filename" : "custom_reports.json",
         "Geography": "MigrationTest"
     }
 }

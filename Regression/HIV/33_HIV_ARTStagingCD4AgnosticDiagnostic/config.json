@@ -33,6 +33,7 @@
         "Coital_Dilution_Factor_4_Plus_Partners": 0.45, 
         "Condom_Transmission_Blocking_Probability": 0.9, 
         "Config_Name": "33_HIV_ARTStagingCD4AgnosticDiagnostic", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity": 0.5, 
         "Days_Between_Symptomatic_And_Death_Weibull_Scale": 618.341625, 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
@@ -154,8 +155,8 @@
             "Births"
         ], 
         "Report_HIV_Infection": 1, 
-        "Report_HIV_Infection_Start_Year": 0, 
-        "Report_HIV_Infection_Stop_Year": 9999, 
+        "Report_HIV_Infection_Start_Year": 1900, 
+        "Report_HIV_Infection_Stop_Year": 2100, 
         "Report_HIV_Mortality": 0, 
         "Report_HIV_Period": 365, 
         "Report_Relationship_End": 0, 
