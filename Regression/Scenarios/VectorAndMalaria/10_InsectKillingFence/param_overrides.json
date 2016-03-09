@@ -14,7 +14,7 @@
             "Demographics_Filename": "Namawala_single_node_demographics.json"
         },
         "PRIMARY": {
-            "Config_Name": "PrimaryScenarios_10_InsectKillingFence",
+            "Config_Name": "VectorAndMalaria_10_InsectKillingFence",
             "Geography": "Namawala",
             "Run_Number": 1,
             "Simulation_Duration": 730,

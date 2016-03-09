@@ -50,7 +50,7 @@
              }
         }, 
         "PRIMARY": {
-            "Config_Name": "PrimaryScenarios_2_Namawala_Full_Malaria_Model",
+            "Config_Name": "VectorAndMalaria_2_Namawala_Full_Malaria_Model",
             "Geography": "Namawala",
             "Run_Number": 1,
             "Simulation_Duration": 3650,

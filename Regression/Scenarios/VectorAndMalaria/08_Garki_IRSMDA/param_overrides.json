@@ -52,7 +52,7 @@
              }
         }, 
         "PRIMARY": {
-            "Config_Name": "PrimaryScenarios_8_Garki_IRSMDA",
+            "Config_Name": "VectorAndMalaria_8_Garki_IRSMDA",
             "Geography": "Garki_Single",
             "Run_Number": 1,
             "Simulation_Duration": 3650,
