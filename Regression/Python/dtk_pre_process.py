@@ -178,7 +178,7 @@ def application( config_file_name ):
                         #pdb.set_trace()
                         param_list_new = []
                         for param in param_list:
-			    param = param.strip( " " ).strip( "'" ).strip( "u'" )
+			    param = param.strip( " " ).strip( "'" ).replace( "u'", "" )
                             if param.isalpha() == False:
 			    	print( param )
 			    	#pdb.set_trace()
