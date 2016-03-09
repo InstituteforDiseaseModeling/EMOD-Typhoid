@@ -122,6 +122,11 @@ namespace Kernel {
             rates[       irel ] = RateTableFactory::CreateRateTable( form_params[ irel ] );
             stats[       irel ] = PairFormationStatsFactory::CreateStatistician( form_params[ irel ] );
             controller[  irel ] = FlowControllerFactory::CreateController( pfa[ irel ], stats[ irel ], rates[ irel ], form_params[ irel ] );
+
+            delete config_form;
+            delete config_rel;
+            config_form = nullptr;
+            config_rel  = nullptr;
         }
     }
 

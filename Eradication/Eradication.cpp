@@ -29,6 +29,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h"
 #include "ControllerFactory.h"
 #include "StatusReporter.h"
+#include "PythonSupport.h"
 
 #include "Exceptions.h"
 
@@ -42,10 +43,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "StandardEventCoordinator.h"
 #include "DllLoader.h"
 #include "IdmMpi.h"
-
-#ifdef ENABLE_PYTHON
-#include "Python.h"
-#endif
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !!! By creating an instance of this object, we ensure that the linker does not optimize it away.
@@ -187,178 +184,9 @@ int MPIInitWrapper( int argc, char* argv[])
     }
 }
 
-#ifdef ENABLE_PYTHON
-
-#define DEFAULT_PYTHON_HOME "c:/Python27"
-#define PYTHON_DLL_W          L"python27.dll"
-#define PYTHON_DLL_S           "python27.dll"
-
-#define PYTHON_PRE_PROCESS         "dtk_pre_process"
-#define PYTHON_POST_PROCESS        "dtk_post_process"
-#define PYTHON_POST_PROCESS_SCHEMA "dtk_post_process_schema"
-
-
-static std::string python_script_path = std::string("");
-
-#pragma warning( push )
-#pragma warning( disable: 4996 )
-char* PythonHomePath()
-{
-    char* python_path = getenv("PYTHONHOME");
-    if( python_path == nullptr )
-    {
-        python_path = DEFAULT_PYTHON_HOME;
-    }
-
-    std::cout << "Python home path: " << python_path << std::endl;
-
-    return python_path;
-}
-#pragma warning( pop )
-
-void PythonScriptCheckExists( const char* script_filename )
-{
-    std::string path_to_script = FileSystem::Concat( std::string(python_script_path), std::string(script_filename)+".py" );
-    bool exists = FileSystem::FileExists( path_to_script );
-    if( exists )
-    {
-        std::stringstream msg;
-        msg << "Cannot run python script " << path_to_script << " because " << PYTHON_DLL_S << " cannot be found.";
-        throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
-    }
-}
-
-void checkPythonSupport()
-{
-#ifdef WIN32
-    HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
-    if( p_dll == nullptr )
-    {
-        PythonScriptCheckExists( PYTHON_PRE_PROCESS         );
-        PythonScriptCheckExists( PYTHON_POST_PROCESS        );
-        PythonScriptCheckExists( PYTHON_POST_PROCESS_SCHEMA );
-    }
-#endif
-}
-
-PyObject * 
-IdmPyInit( 
-    const char * python_script_name,
-    const char * python_function_name
-)
-{
-    //std::cout << __FUNCTION__ << ": " << python_script_name << ": " << python_function_name << std::endl;
-#ifdef WIN32
-    HMODULE p_dll = LoadLibrary( PYTHON_DLL_W );
-    if( p_dll == nullptr )
-    {
-        PythonScriptCheckExists( python_script_name );
-        return nullptr;
-    }
-
-    std::string python_home = PythonHomePath();
-    if( !FileSystem::DirectoryExists( python_home ) )
-    {
-        std::stringstream msg;
-        msg << PYTHON_DLL_S << " was found but PYTHONHOME=" << python_home << " was not found.  Default is " << DEFAULT_PYTHON_HOME;
-        throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
-    }
-    Py_SetPythonHome( const_cast<char*>(python_home.c_str()) ); // add capability to override from command line???
-#endif
-
-    //std::cout << "Calling Py_Initialize." << std::endl;
-    Py_Initialize();
-
-    //std::cout << "Calling PySys_GetObject('path')." << std::endl;
-    PyObject * sys_path = PySys_GetObject("path");
-
-    release_assert( sys_path );
-    // Get this from Environment::scripts???
-    // how about we use the config.json python script path by default and if that is missing
-
-    //std::cout << "Appending our path to existing python path." << std::endl;
-    if( python_script_path != "." )
-    {
-        std::cout << "Using (configured) dtk python path: " << python_script_path << std::endl;
-    }
-    else
-    {
-        // because say we're running locally (or --get-schema doesn't read config.json!) we can look locally... 
-        std::cout << "Using (default) dtk python path: " << "." << std::endl;
-    }
-    PyObject* path = PyString_FromString( python_script_path.c_str() );
-    //LOG_DEBUG_F( "Using Python Script Path: %s.\n", GET_CONFIGURABLE(SimulationConfig)->python_script_path );
-    release_assert( path );
-    
-    //std::cout << "Calling PyList_Append." << std::endl;
-    if (PyList_Append(sys_path, path) < 0)
-    {
-        PyErr_Print();
-        throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, "Failed to append Scripts path to python path." );
-    }
-    // to here.
-
-    PyObject * pName, *pModule, *pDict, *pFunc; // , *pValue;
-
-    //std::cout << "Calling PyUnicode_FromString." << std::endl;
-    pName = PyUnicode_FromString( python_script_name );
-    if( !pName )
-    {
-        PyErr_Print();
-        // Don't throw exception, return without doing anything.
-        LOG_WARN( "Embedded python code failed (PyUnicode_FromString). Returning without doing anything.\n" );
-        return nullptr;
-    }
-    //std::cout << "Calling PyImport_Import." << std::endl;
-    pModule = PyImport_Import( pName );
-    if( !pModule )
-    {
-        PyErr_Print(); // This error message on console seems to alarm folks. We'll let python errors log as warnings.
-        LOG_WARN( "Embedded python code failed (PyImport_Import). Returning without doing anything.\n" );
-        return nullptr;
-    }
-    //std::cout << "Calling PyModule_GetDict." << std::endl;
-    pDict = PyModule_GetDict( pModule ); // I don't really know what this does...
-    if( !pDict )
-    {
-        PyErr_Print();
-        throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, "Calling to PyModule_GetDict failed." );
-    }
-    //std::cout << "Calling PyDict_GetItemString." << std::endl;
-    pFunc = PyDict_GetItemString( pDict, python_function_name ); // function name
-    if( !pFunc )
-    {
-        PyErr_Print();
-        throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, "Failed to find function 'application' in python script." );
-    }
-    //std::cout << "Returning from IdmPyInit." << std::endl;
-    return pFunc;
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // access to input schema embedding
-
-void
-postProcessSchemaFiles(
-    const char* schema_path
-)
-{
-    //std::cout << __FUNCTION__ << ": " << schema_path << std::endl;
-    PyObject * pFunc = IdmPyInit( PYTHON_POST_PROCESS_SCHEMA, "application" );
-    //std::cout << __FUNCTION__ << ": " << pFunc << std::endl;
-    if( pFunc )
-    {
-        // Pass filename into python script
-        PyObject * vars = PyTuple_New(1);
-        PyObject* py_filename_str = PyString_FromString( schema_path );
-        PyTuple_SetItem(vars, 0, py_filename_str);
-        /* PyObject * returnArgs = */ PyObject_CallObject( pFunc, vars );
-        //std::cout << "Back from python script." << std::endl;
-        PyErr_Print();
-    }
-    return;
-}
-#endif
 
 void IDMAPI writeInputSchemas(
     const char* dll_path,
@@ -449,6 +277,9 @@ void IDMAPI writeInputSchemas(
 
         json::QuickBuilder config_schema = pConfig->GetSchema();
         configSchemaAll[sim_type] = config_schema;
+
+        delete fakeConfig;
+        fakeConfig = nullptr;
     }
 
     for (auto& entry : Kernel::JsonConfigurable::get_registration_map())
@@ -465,6 +296,8 @@ void IDMAPI writeInputSchemas(
     fakeECJson["class"] = json::String("StandardInterventionDistributionEventCoordinator");
     auto fakeConfig = Configuration::CopyFromElement( fakeECJson );
     Kernel::StandardInterventionDistributionEventCoordinator * pTempEC = dynamic_cast<Kernel::StandardInterventionDistributionEventCoordinator*>( Kernel::EventCoordinatorFactory::CreateInstance( fakeConfig ) );
+    delete fakeConfig;
+    fakeConfig = nullptr;
     /* json::QuickBuilder ec_schema = */ pTempEC->GetSchema();
 
     if( !Kernel::InterventionFactory::getInstance() )
@@ -500,32 +333,11 @@ void IDMAPI writeInputSchemas(
     json::Writer::Write( total_schema, schema_ostream );
     schema_ostream_file.close();
 
-#ifdef ENABLE_PYTHON
-    if( szOutputPath != "stdout" )
+    // PythonSupportPtr can be null during componentTests
+    if( (szOutputPath != "stdout") && (PythonSupportPtr != nullptr) )
     {
-        std::cout << "Successfully created schema in file " << output_path << ". Attempting to post-process." << std::endl;
-        postProcessSchemaFiles( output_path );
+        PythonSupportPtr->RunPostProcessSchemaScript( output_path );
     }
-#endif
-}
-
-void
-pythonOnExitHook()
-{
-    //PyObject * pName, *pModule, *pDict, *pFunc, *pValue;
-
-#ifdef ENABLE_PYTHON
-    auto pFunc = IdmPyInit( PYTHON_POST_PROCESS, "application" );
-    if( pFunc )
-    {
-        PyObject* vars = PyTuple_New(1);
-        release_assert( EnvPtr );
-        PyObject* py_oppath_str = PyString_FromString( EnvPtr->OutputPath.c_str() );
-        PyTuple_SetItem(vars, 0, py_oppath_str );
-        PyObject* returnArgs = PyObject_CallObject( pFunc, vars );
-        PyErr_Print();
-    }
-#endif
 }
 
 bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pMpi )
@@ -552,7 +364,7 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
         po.AddOptionWithValue( "sim_id",       "none",       "Unique id of this simulation, formerly sim_guid. Needed for self-identification to UDP host" );
         po.AddOption(          "progress",     "Send updates on the progress of the simulation to the HPC job scheduler." );
 #ifdef ENABLE_PYTHON
-        po.AddOptionWithValue( "python-script-path", ".",    "Path to python scripts." );
+        po.AddOptionWithValue( "python-script-path", "P", "", "Path to python scripts." );
 #endif
 
         std::string errmsg = po.ParseCommandLine( argc, argv );
@@ -636,13 +448,15 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
     }
     EnvPtr->Log->Flush();
 
+    bool is_getting_schema = po.CommandLineHas( "get-schema" );
+
     // --------------------------------------------------------------------------------------------------
     // --- DMB 9-9-2014 ERAD-1621 Users complained that a file not found exception on default-config.json
     // --- really didn't tell them that they forgot to specify the configuration file on the command line.
     // --- One should be able to get the schema without specifying a config file.
     // --------------------------------------------------------------------------------------------------
     if( (po.GetCommandLineValueString( "config" ) == po.GetCommandLineValueDefaultString( "config" )) &&
-       !po.CommandLineHas( "get-schema" ) )
+       !is_getting_schema )
     {
         if( !FileSystem::FileExists( po.GetCommandLineValueDefaultString( "config" ) ) )
         {
@@ -668,47 +482,48 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
             StatusReporter::updateScheduler = true;
         }
 
+        auto configFileName = po.GetCommandLineValueString( "config" );
+
+        auto schema_path = po.GetCommandLineValueString("schema-path");
+
+        std::string python_script_path = "";
 #ifdef ENABLE_PYTHON
-        if( po.CommandLineHas( "python-script-path" ) )
+        python_script_path = po.GetCommandLineValueString( "python-script-path" );
+        if( python_script_path == "" )
         {
-            python_script_path = po.GetCommandLineValueString( "python-script-path" ).c_str();
-            std::cout << "python_script_path = " << python_script_path << std::endl;
+            std::cout << "--python-script-path (-P) not on command line - not using embedded python" << std::endl;
         }
         else
         {
-            std::cout << "python_script_path not set." << std::endl;
+            if( is_getting_schema && (schema_path == "stdout") )
+            {
+                throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, 
+                    "--schema-path=stdout and --python-script-path is defined:  the post processing script can only work on a file.  Please define --schema-path as a filename." );
+            }
+            std::cout << "python_script_path = " << python_script_path << std::endl;
         }
 #endif
-        auto configFileName = po.GetCommandLineValueString( "config" );
+        
+        Kernel::PythonSupport* p_python_support = new Kernel::PythonSupport();
+        p_python_support->CheckPythonSupport( is_getting_schema, python_script_path );
+
         // Where to put config preprocessing? After command-line processing (e.g., what if we are invoked with --get-schema?) but before loading config.json
         // Prefer to put it in this function rather than inside Environment::Intialize, but note that in --get-schema mode we'll unnecessarily call preproc.
         // NOTE: This enables functionality to allow config.json to be specified in (semi-)arbitrary formats as long as python preproc's into standard config.json
-#ifdef ENABLE_PYTHON
-        checkPythonSupport();
-
-        auto pFunc = IdmPyInit( PYTHON_PRE_PROCESS, "application" );
-        if( pFunc )
-        {
-            PyObject * vars = PyTuple_New(1);
-            PyObject* py_filename_str = PyString_FromString( configFileName.c_str() );
-            PyTuple_SetItem(vars, 0, py_filename_str);
-            auto retValue = PyObject_CallObject( pFunc, vars );
-            PyErr_Print();
-            configFileName = PyString_AsString( retValue );
-        }
-#endif
+        configFileName = p_python_support->RunPreProcessScript( configFileName );
 
         // set up the environment
         EnvPtr->Log->Flush();
         LOG_INFO("Initializing environment...\n");
         bool env_ok = Environment::Initialize(
             pMpi,
+            p_python_support,
             configFileName,
             po.GetCommandLineValueString( "input-path"  ),
             po.GetCommandLineValueString( "output-path" ),
 // 2.5            po.GetCommandLineValueString( "state-path"  ),
             po.GetCommandLineValueString( "dll-path"    ),
-            po.CommandLineHas( "get-schema" )
+            is_getting_schema
             );
 
         if (!env_ok)
@@ -717,11 +532,16 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
             return false;
         }
 
-        if( po.CommandLineHas( "get-schema" ) )
+        if( is_getting_schema )
         {
             writeInputSchemas( po.GetCommandLineValueString( "dll-path" ).c_str(), po.GetCommandLineValueString( "schema-path" ).c_str() );
             return true;
         }
+
+        // check if we can support python scripts based on simulation type
+        std::string sim_type_str = GET_CONFIG_STRING( EnvPtr->Config, "Simulation_Type" );
+        PythonSupportPtr->CheckSimScripts( sim_type_str );
+
 
         // UDP-enabled StatusReporter needs host and sim unique id.
         if( po.GetCommandLineValueString( "monitor_host" ) != "none" )
@@ -779,7 +599,11 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
             status = controller->Execute();
             if (status)
             {
-                pythonOnExitHook();
+                release_assert( EnvPtr );
+		if ( EnvPtr->MPI.Rank == 0 )
+		{
+                    PythonSupportPtr->RunPostProcessScript( EnvPtr->OutputPath );
+		}
                 LOG_INFO( "Controller executed successfully.\n" );
             }
             else

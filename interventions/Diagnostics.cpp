@@ -267,6 +267,7 @@ namespace Kernel
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "ICampaignCostObserver", "INodeEventContext" );
             }
             delete config;
+            config = nullptr;
         }
         // this is the right thing to do but we need to deal with HIVRandomChoice and HIVSetCascadeState
         //else

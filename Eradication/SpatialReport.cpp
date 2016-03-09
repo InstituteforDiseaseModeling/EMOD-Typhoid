@@ -352,7 +352,9 @@ SpatialReport::postProcessAccumulatedData()
 {
     LOG_DEBUG( "postProcessAccumulatedData\n" );
 
-    normalizeChannel(prevalence_info.name, population_info.name);
+    if( prevalence_info.enabled )
+        normalizeChannel(prevalence_info.name, population_info.name);
+
     normalizeChannel(rainfall_info.name, (1 / 1000.0f)); // multiply by 1000 (divide by 1/1000) to get result in mm
 
     // Turn these off for now... can add them back later if they're really needed

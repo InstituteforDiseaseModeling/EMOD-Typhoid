@@ -150,7 +150,10 @@ namespace Kernel
         params->Initialize(vector_species_name);
         if( !JsonConfigurable::_dryrun )
         {
-            params->Configure( Configuration::CopyFromElement( (*EnvPtr->Config)["Vector_Species_Params"][vector_species_name.c_str()] ) );
+            auto tmp_config = Configuration::CopyFromElement( (*EnvPtr->Config)["Vector_Species_Params"][vector_species_name.c_str()] );
+            params->Configure( tmp_config );
+            delete tmp_config;
+            tmp_config = nullptr;
         }
         LOG_DEBUG( "END CreateVectorSpeciesParameters\n" );
         return params;

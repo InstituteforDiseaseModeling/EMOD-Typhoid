@@ -332,6 +332,7 @@ namespace Kernel
             _di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config );
             release_assert( _di );
             delete config;
+            config = nullptr;
         }
         // Huge performance win by cloning instead of configuring.
         release_assert( _di );

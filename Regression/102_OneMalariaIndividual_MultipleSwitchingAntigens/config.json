@@ -45,6 +45,7 @@
         "Clinical_Fever_Threshold_High": 1, 
         "Clinical_Fever_Threshold_Low": 0.5, 
         "Config_Name": "102_OneMalariaIndividual_MultipleSwitchingAntigens", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Cytokine_Gametocyte_Inactivation": 0.05, 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
         "Default_Geography_Initial_Node_Population": 1000, 

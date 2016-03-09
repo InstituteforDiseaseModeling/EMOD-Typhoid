@@ -491,8 +491,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif
 
 
-//LOG_DEBUG_F( "base_year initialized to %d\n", base_year );
-
     if( JsonConfigurable::_dryrun == true )
     {
         return true;

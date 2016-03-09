@@ -37,8 +37,8 @@ namespace Kernel
 
     bool ReportHIVInfection::Configure( const Configuration* inputJson )
     {
-        initConfigTypeMap( "Report_HIV_Infection_Start_Year", &startYear, Report_HIV_Infection_Start_Year_DESC_TEXT, 0.0f, FLT_MAX, 0.0f    );
-        initConfigTypeMap( "Report_HIV_Infection_Stop_Year",  &stopYear,  Report_HIV_Infection_Stop_Year_DESC_TEXT,  0.0f, FLT_MAX, FLT_MAX );
+        initConfigTypeMap( "Report_HIV_Infection_Start_Year", &startYear, Report_HIV_Infection_Start_Year_DESC_TEXT, MIN_YEAR, MAX_YEAR, MIN_YEAR );
+        initConfigTypeMap( "Report_HIV_Infection_Stop_Year",  &stopYear,  Report_HIV_Infection_Stop_Year_DESC_TEXT,  MIN_YEAR, MAX_YEAR, MAX_YEAR );
 
         bool ret = JsonConfigurable::Configure( inputJson );
 

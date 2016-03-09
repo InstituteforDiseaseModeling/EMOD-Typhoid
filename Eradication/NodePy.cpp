@@ -26,17 +26,11 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "IndividualPy.h"
 #include "TransmissionGroupsFactory.h"
 #include "SimulationConfig.h"
-#include "Python.h"
+#include "PythonSupport.h"
 
 using namespace Kernel;
 
 static const char* _module = "NodePy";
-
-extern PyObject *
-IdmPyInit(
-    const char * python_script_name,
-    const char * python_function_name
-);
 
 #define ENABLE_PYTHON_FEVER 1
 namespace Kernel
@@ -171,7 +165,7 @@ namespace Kernel
     {
         // This is a chance to do a single call into PYTHON_FEVER?g at start of timestep
 #ifdef ENABLE_PYTHON_FEVER
-        static auto pFunc = IdmPyInit( "dtk_pydemo_individual", "start_timestep" );
+        static auto pFunc = PythonSupportPtr->IdmPyInit( PythonSupport::SCRIPT_PYTHON_FEVER.c_str(), "start_timestep" );
         if( pFunc )
         {
             PyObject_CallObject( pFunc, nullptr );

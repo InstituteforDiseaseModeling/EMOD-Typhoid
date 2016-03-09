@@ -31,8 +31,15 @@ namespace Kernel
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            //killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
-            blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+            //auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+            //killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
+            //delete tmp_killing;
+            //tmp_killing = nullptr;
+
+            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+            blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+            delete tmp_blocking;
+            tmp_blocking = nullptr;
         }
         return configured;
     }
@@ -51,9 +58,16 @@ namespace Kernel
     : BaseIntervention( master )
     {
         //killing_config = master.killing_config;
-        //killing_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( killing_config._json ) );
+        //auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
+        //killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
+        //delete tmp_killing;
+        //tmp_killing = nullptr;
+
         blocking_config = master.blocking_config;
-        blocking_effect = WaningEffectFactory::CreateInstance( Configuration::CopyFromElement( blocking_config._json ) );
+        auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+        blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+        delete tmp_blocking;
+        tmp_blocking = nullptr;
     }
 
     bool

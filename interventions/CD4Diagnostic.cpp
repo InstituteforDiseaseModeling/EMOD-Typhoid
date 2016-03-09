@@ -37,6 +37,7 @@ namespace Kernel
             auto obj = Configuration::CopyFromElement((threshJson)[idx]);
             JsonConfigurable::Configure( obj );
             delete obj;
+            obj = nullptr;
             thresh_events.push_back( signal );
 
             NaturalNumber low = float(threshJson[idx]["Low"].As<json::Number>());

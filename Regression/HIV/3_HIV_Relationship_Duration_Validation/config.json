@@ -29,6 +29,7 @@
         "Coital_Dilution_Factor_4_Plus_Partners": 0.45, 
         "Condom_Transmission_Blocking_Probability": 0.9, 
         "Config_Name": "3_HIV_Relationship_Duration_Validation", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity": 0.5, 
         "Days_Between_Symptomatic_And_Death_Weibull_Scale": 618.341625, 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
@@ -36,7 +37,7 @@
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filenames": [
             "../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed.json", 
-            "../input/PFA_Overlay.json", 
+            "../input/PFA_overlay.json", 
             "PFA_overlay_rates.json"
         ], 
         "Enable_Aging": 1, 

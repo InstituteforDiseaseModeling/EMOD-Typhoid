@@ -123,6 +123,7 @@ namespace Kernel
             ndi->Release();
         }
         delete qi_as_config;
+        qi_as_config = nullptr;
         return has_node_level_intervention;
     }
 
@@ -252,6 +253,7 @@ namespace Kernel
             }
         }
         delete qi_as_config;
+        qi_as_config = nullptr;
         if(ndi)
         {
             ndi->Release();
