@@ -591,6 +591,9 @@ class HpcMonitor(Monitor):
         #eradication.exe commandline
         eradication_bin = self.config_json['bin_path']
         eradication_options = { '--config':'config.json', '--input-path':input_dir, '--progress':' ' }
+
+        if params.py_input is not None:
+            eradication_options[ "--python-script-path" ] = params.py_input
         #if params.dll_root is not None and params.use_dlls is True:
         #    eradication_options['--dll-path'] = params.dll_root
         eradication_params = []
@@ -1052,6 +1055,8 @@ class MyRegressionRunner():
             else:
                 self.params.py_input = None
             del( reply_json["parameters"]["Python_Script_Path"] )
+        else:
+    	    self.params.py_input = None
 
         self.copy_input_files_to_user_input(sim_id, config_id, reply_json, is_local)
 
