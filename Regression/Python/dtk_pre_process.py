@@ -47,7 +47,8 @@ def application( config_file_name ):
         for sheet in wb.sheets():
             if sheet.name.startswith( "STI_Network_Params" ):
                 #pdb.set_trace()
-                config_json[param_key]["STI_Network_Params_By_Property"] = {}
+		if "STI_Network_Params_By_Property" not in config_json[param_key]:
+                    config_json[param_key]["STI_Network_Params_By_Property"] = {}
                 name_parsed = sheet.name.split( "-" )
                 ipn = name_parsed[1]
                 snpbp_key = name_parsed[2]
