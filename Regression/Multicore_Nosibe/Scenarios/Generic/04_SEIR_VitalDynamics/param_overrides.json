@@ -63,7 +63,7 @@
             "Run_Number": 1, 
             "Simulation_Duration": 365, 
             "Config_Name": "04_SEIR_VitalDynamics -- multicore -- Madagascar_Nosibe", 
-            "Geography": "Test"
+            "Geography": "Madagascar_Nosibe"
         }, 
         "FUDGE_FACTORS": {
             "x_Other_Mortality": 10, 

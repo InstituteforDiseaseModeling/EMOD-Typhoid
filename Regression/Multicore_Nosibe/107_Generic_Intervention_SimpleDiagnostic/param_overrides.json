@@ -35,7 +35,7 @@
         },  
         "PRIMARY": {
             "Config_Name": "107_Generic_Intervention_SimpleDiagnostic -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 180,
             "Enable_Interventions": 1

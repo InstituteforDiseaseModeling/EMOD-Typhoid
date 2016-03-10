@@ -58,7 +58,7 @@
             "Run_Number": 1, 
             "Simulation_Duration": 120, 
             "Config_Name": "Generic_02_SIR_Vaccinations_B_Vaccinations -- multicore -- Madagascar_Nosibe", 
-            "Geography": "Test"
+            "Geography": "Madagascar_Nosibe"
         }, 
         "OUTPUT": {
             "Enable_Property_Output": 1

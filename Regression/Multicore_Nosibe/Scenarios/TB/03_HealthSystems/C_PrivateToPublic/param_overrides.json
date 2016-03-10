@@ -4,7 +4,7 @@
         "Config_Name":"03_HealthSystems_C_PrivateToPublic -- multicore -- Madagascar_Nosibe",
         "Custom_Reports_Filename" : "custom_reports.json",
         "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "../TB_03_HealthSystems_demographics_overlay.json" ],
-        "Geography": "Test",
+        "Geography": "Madagascar_Nosibe",
         "Simulation_Duration":1000,
         "Simulation_Timestep":5,
         "TB_Active_Cure_Rate":1e-09,

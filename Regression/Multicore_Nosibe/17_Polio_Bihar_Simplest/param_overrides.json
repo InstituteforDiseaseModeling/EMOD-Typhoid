@@ -37,7 +37,7 @@
         },         
         "PRIMARY": {
                "Config_Name": "17_Polio_Bihar_Simplest -- multicore -- Madagascar_Nosibe", 
-               "Geography": "Test",
+               "Geography": "Madagascar_Nosibe",
                "Run_Number": 23
           }
      }

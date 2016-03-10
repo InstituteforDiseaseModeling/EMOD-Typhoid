@@ -40,7 +40,7 @@
           },         
           "PRIMARY": {
                "Config_Name": "42_Polio_Default_Geography -- multicore -- Madagascar_Nosibe", 
-               "Geography": "Test"
+               "Geography": "Madagascar_Nosibe"
           },
           "Paralytic_Immunity_Titer": 8
      }

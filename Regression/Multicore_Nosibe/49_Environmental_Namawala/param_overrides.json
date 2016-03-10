@@ -73,7 +73,7 @@
           "PRIMARY": {
                "Config_Name": "49_Environmental_Namawala -- multicore -- Madagascar_Nosibe",
                "ENUMS" : { "Simulation_Type" : "ENVIRONMENTAL_SIM" },
-               "Geography": "Test", 
+               "Geography": "Madagascar_Nosibe", 
                "Node_Grid_Size": 0.009, 
                "Run_Number": 49, 
                "Simulation_Duration": 365

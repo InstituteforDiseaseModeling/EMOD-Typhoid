@@ -72,7 +72,7 @@
           "PRIMARY": {
                "Config_Name": "50_Airborne_Namawala -- multicore -- Madagascar_Nosibe",
                "ENUMS" : { "Simulation_Type" : "AIRBORNE_SIM" },
-               "Geography": "Test", 
+               "Geography": "Madagascar_Nosibe", 
                "Node_Grid_Size": 0.009, 
                "Run_Number": 50, 
                "Simulation_Duration": 365

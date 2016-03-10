@@ -58,7 +58,7 @@
             "Run_Number": 1, 
             "Simulation_Duration": 730, 
             "Config_Name": "06_SEIRS -- multicore -- Madagascar_Nosibe", 
-            "Geography": "Test"
+            "Geography": "Madagascar_Nosibe"
         }
     }
 }
