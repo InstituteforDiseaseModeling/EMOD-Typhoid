@@ -74,7 +74,7 @@
         "Simulation_Duration": 730, 
         "Simulation_Type": "VECTOR_SIM", 
         "Config_Name": "104_Vector_DrivingYHEGs -- multicore -- Madagascar_Nosibe", 
-        "Geography": "Test",
+        "Geography": "Madagascar_Nosibe",
         "Enable_Demographics_Reporting": 0
     }, 
     "MOSQUITO": {

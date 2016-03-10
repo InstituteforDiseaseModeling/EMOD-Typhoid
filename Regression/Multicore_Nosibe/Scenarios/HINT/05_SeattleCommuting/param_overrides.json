@@ -63,7 +63,7 @@
         },
         "PRIMARY": {
             "Config_Name": "HINT_SeattleCommuting -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Node_Grid_Size": 0.009,
             "Run_Number": 42
         }

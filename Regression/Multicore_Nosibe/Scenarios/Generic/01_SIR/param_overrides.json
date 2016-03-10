@@ -61,7 +61,7 @@
         
         "PRIMARY": {
             "Config_Name": "01_SIR -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 90,
             "Simulation_Timestep": 1

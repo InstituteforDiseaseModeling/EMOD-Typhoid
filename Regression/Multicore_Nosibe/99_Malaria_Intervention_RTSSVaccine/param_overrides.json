@@ -50,7 +50,7 @@
         "PRIMARY": {
             "Config_Name": "99_Malaria_Intervention_RTSSVaccine -- multicore -- Madagascar_Nosibe",
             "Enable_Demographics_Reporting": 0,
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 180
         }

@@ -39,7 +39,7 @@
         },                      
         "PRIMARY": {
             "Config_Name": "79_Vector_Ivermectin -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 360,
             "x_Temporary_Larval_Habitat": 0.1

@@ -5,7 +5,7 @@
         "Config_Name":"02_AgeDependentImmunity_A_Lifelong -- multicore -- Madagascar_Nosibe",
         "Custom_Reports_Filename" : "custom_reports.json",
         "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "../TB_02_AgeDependentImmunity_demographics_overlay.json" ],
-        "Geography": "Test",
+        "Geography": "Madagascar_Nosibe",
         "Simulation_Duration":7000,
         "Simulation_Timestep":5,
         "TB_Fast_Progressor_Fraction_Child":0,

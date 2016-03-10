@@ -67,7 +67,7 @@
         "Enable_Vector_Mortality": 1, 
         "Enable_Vital_Dynamics": 1, 
         "Family_Migration_Filename": "", 
-        "Geography": "Test", 
+        "Geography": "Madagascar_Nosibe", 
         "HEG_Fecundity_Limiting": 0.0, 
         "HEG_Homing_Rate": 0.0, 
         "HEG_Model": "OFF", 

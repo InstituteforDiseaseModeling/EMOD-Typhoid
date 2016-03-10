@@ -50,7 +50,7 @@
           },             
           "PRIMARY": {
                "Config_Name": "39_Vector_Namawala_HostSeekingTrap -- multicore -- Madagascar_Nosibe", 
-               "Geography": "Test", 
+               "Geography": "Madagascar_Nosibe", 
                "Run_Number": 39, 
                "Simulation_Duration": 730
           }

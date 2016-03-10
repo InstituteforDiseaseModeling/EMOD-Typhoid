@@ -7,7 +7,7 @@
         "Config_Name":"06_PopulationBurnIn_A_SteadyState -- multicore -- Madagascar_Nosibe",
         "Custom_Reports_Filename" : "custom_reports.json",
         "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "../TB_06_PopulationBurnIn_demographics_overlay.json" ],
-        "Geography": "Test",
+        "Geography": "Madagascar_Nosibe",
         "Simulation_Duration":36500,
         "Simulation_Timestep":5,
         "TB_Active_Cure_Rate":0.000245,

@@ -72,7 +72,7 @@
         },
         "PRIMARY": {
             "Config_Name": "HINT_AgeAndAccess_AgeTargetedVaccine -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 13
         },
         "Rainfall_In_mm_To_Fill_Swamp": 1000.0,
