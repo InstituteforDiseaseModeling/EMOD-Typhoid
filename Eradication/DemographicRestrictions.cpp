@@ -37,20 +37,39 @@ namespace Kernel
         // Good Character AND High Income OR Bad Character AND Low Income.
         // So we AND together the elements of each json object and OR together these 
         // calculated truth values of the elements of the json array.
-        json::QuickInterpreter s2sarray = (*inputJson)[key].As<json::Array>();
-        for( int idx=0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
-        {
-            std::map< std::string, std::string > kvp;
-            auto json_map = s2sarray[idx].As<json::Object>();
-            for( auto data = json_map.Begin();
-                      data != json_map.End();
-                      ++data )
+        try {
+            json::QuickInterpreter s2sarray = (*inputJson)[key].As<json::Array>();
+            for( int idx=0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
             {
-                std::string key = data->name;
-                std::string value = (std::string)s2sarray[idx][key].As< json::String >();
-                kvp.insert( std::make_pair( key, value ) );
+                std::map< std::string, std::string > kvp;
+                try {
+                    auto json_map = s2sarray[idx].As<json::Object>();
+                    for( auto data = json_map.Begin();
+                            data != json_map.End();
+                            ++data )
+                    {
+                        std::string key = data->name;
+                        std::string value = "";
+                        try { 
+                            value = (std::string)s2sarray[idx][key].As< json::String >();
+                        }
+                        catch( json::Exception &e )
+                        {
+                            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), s2sarray[idx], "Expected STRING" );
+                        }
+                        kvp.insert( std::make_pair( key, value ) );
+                    }
+                }
+                catch( json::Exception &e )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, std::to_string( idx ).c_str(), s2sarray, "Expected OBJECT" );
+                }
+                _restrictions.push_back( kvp );
             }
-            _restrictions.push_back( kvp );
+        }
+        catch( json::Exception &e )
+        {
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
         }
     }
 

@@ -42,24 +42,27 @@ namespace Kernel
                     }
                     catch( json::Exception &exception )
                     {
-                        std::stringstream ss;
+                        /*std::stringstream ss;
                         ss << "JSON Exception while trying to parse " << key << " param element as number. Please check campaign.json format. Raw thrown exception follows: " << exception.what() << std::endl;
-                        throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                        throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );*/
+                        throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, std::to_string( idx ).c_str(), nodeListJson, "Expected NUMBER" );
                     }
-
+#if 0
                     catch( ... )
                     {
                         std::stringstream ss;
                         ss << "Exception while trying to parse " << key << " param. Please check campaign.json format." << std::endl;
                         throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
                     }
+#endif
                 }
             }
             catch( json::Exception &exception )
             {
-                std::stringstream ss;
+                /*std::stringstream ss;
                 ss << "JSON Exception while trying to parse " << key << " param as array (of numbers). Please check campaign.json format. Raw thrown exception follows: " << exception.what() << std::endl;
-                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );*/
+                throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), nodelist_qi, "Expected ARRAY" );
             }
         }
     }
