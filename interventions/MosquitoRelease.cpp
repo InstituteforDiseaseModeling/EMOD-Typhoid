@@ -25,8 +25,24 @@ namespace Kernel
         const std::string& key
     )
     {
-        initConfig( "Pesticide_Resistance", pesticideResistance, &(*inputJson)[key], MetadataDescriptor::Enum("Pesticide_Resistance", MR_Released_Pesticide_Resistance_DESC_TEXT , MDD_ENUM_ARGS(VectorAllele)));
-        initConfig( "HEG", HEG, &(*inputJson)[key], MetadataDescriptor::Enum("HEG", MR_Released_HEGs_DESC_TEXT, MDD_ENUM_ARGS(VectorAllele)));
+        try
+        {
+            initConfig( "Pesticide_Resistance", pesticideResistance, &(*inputJson)[key], MetadataDescriptor::Enum("Pesticide_Resistance", MR_Released_Pesticide_Resistance_DESC_TEXT , MDD_ENUM_ARGS(VectorAllele)));
+        }
+        catch( Kernel::DetailedException &e )
+        {
+            //throw JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Pesticide_Resistance", (*inputJson)[key], e.GetMsg() );
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.GetMsg() );
+        }
+        try
+        {
+            initConfig( "HEG", HEG, &(*inputJson)[key], MetadataDescriptor::Enum("HEG", MR_Released_HEGs_DESC_TEXT, MDD_ENUM_ARGS(VectorAllele)));
+        }
+        catch( Kernel::DetailedException &e )
+        { 
+            //throw JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "HEG", (*inputJson)[key], e.GetMsg() );
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.GetMsg() );
+        }
         LOG_INFO_F( "pesticideResistance = %s, HEG = %s\n", VectorAllele::pairs::lookup_key(pesticideResistance), VectorAllele::pairs::lookup_key(HEG) );
     }
 
