@@ -1,0 +1,85 @@
+--- VectorSpeciesParameters.cpp
++++ VectorSpeciesParameters.cpp
+@@ -18,6 +18,72 @@
+ 
+ namespace Kernel
+ {
++    void
++    LarvalHabitatParams::ConfigureFromJsonAndKey(
++        const Configuration* inputJson,
++        const std::string& key
++    )
++    {
++        LOG_DEBUG_F( "Configuring larval habitats from config.json\n" );
++        // we have a map of enum keys to floats
++        const auto& tvcs_jo = json_cast<const json::Object&>( (*inputJson)[key] );
++        for( auto data = tvcs_jo.Begin();
++                  data != tvcs_jo.End();
++                  ++data )
++        {
++            auto tvcs = inputJson->As< json::Object >()[ key ];
++
++            auto habitat_type_string = data->name;
++            VectorHabitatType::Enum habitat_type = VectorHabitatType::pairs::lookup_value( habitat_type_string.c_str() );
++            if( habitat_type == -1 )
++            {
++                std::stringstream msg;
++                msg << habitat_type_string 
++                    << " is not a valid VectorHabitatType.";
++                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
++            }
++            try
++            {
++                NonNegativeFloat habitat_param = (NonNegativeFloat) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
++                habitat_map.insert( std::make_pair( habitat_type, habitat_param ) );
++            }
++            catch( OutOfRangeException &except )
++            {
++                //throw Kernel::OutOfRangeException( __FILE__, __LINE__, __FUNCTION__, habitat_type_string.c_str(), initValue, _min_value );
++                throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
++                                                   habitat_type_string.c_str(), ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>()), 0 );
++            }
++        }
++        LOG_DEBUG_F( "Found %d larval habitats\n", habitat_map.size() );
++    }
++
++    json::QuickBuilder
++    LarvalHabitatParams::GetSchema()
++    {
++        json::QuickBuilder schema( jsonSchemaBase );
++        auto tn = JsonConfigurable::_typename_label();
++        auto ts = JsonConfigurable::_typeschema_label();
++        schema[ tn ] = json::String( "idmType:LarvalHabitats" );
++#if 0
++        schema[ts] = json::Array();
++        schema[ts][0] = json::Object();
++        schema[ts][0]["Low"] = json::Object();
++        schema[ts][0]["Low"][ "type" ] = json::String( "float" );
++        schema[ts][0]["Low"][ "min" ] = json::Number( 0 );
++        schema[ts][0]["Low"][ "max" ] = json::Number( 1000.0 );
++        schema[ts][0]["Low"][ "description" ] = json::String( HIV_Age_Diagnostic_Low_DESC_TEXT );
++        schema[ts][0]["High"] = json::Object();
++        schema[ts][0]["High"][ "type" ] = json::String( "float" );
++        schema[ts][0]["High"][ "min" ] = json::Number( 0 );
++        schema[ts][0]["High"][ "max" ] = json::Number( 1000.0 );
++        schema[ts][0]["High"][ "description" ] = json::String( HIV_Age_Diagnostic_High_DESC_TEXT );
++        schema[ts][0]["Event"] = json::Object();
++        schema[ts][0]["Event"][ "type" ] = json::String( "String" );
++        schema[ts][0]["Event"][ "description" ] = json::String( HIV_Age_Diagnostic_Event_Name_DESC_TEXT );
++#endif
++        return schema;
++    }
++
+     void VectorSpeciesParameters::serialize(IArchive& ar, VectorSpeciesParameters*& parameters)
+     {
+         if (!ar.IsWriter())
+@@ -26,8 +92,7 @@
+         }
+ 
+         ar.startObject();
+-            ar.labelElement("habitat_param") & parameters->habitat_param;
+-            ar.labelElement("habitat_type") & (std::vector<uint32_t>&)parameters->habitat_type;
++            //ar.labelElement("larvalhabitattypes") & (std::map< VectorHabitatType::Enum, float >&)parameters->habitat_params;
+             ar.labelElement("aquaticarrhenius1") & parameters->aquaticarrhenius1;
+             ar.labelElement("aquaticarrhenius2") & parameters->aquaticarrhenius2;
+             ar.labelElement("infectedarrhenius1") & parameters->infectedarrhenius1;

@@ -26,24 +26,43 @@ namespace Kernel
         const std::string& key
     )
     {
-        json::QuickInterpreter json_array( (*inputJson)[key].As<json::Array>() );
-        for( unsigned int idx = 0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
+        try {
+            json::QuickInterpreter json_array( (*inputJson)[key].As<json::Array>() );
+            for( unsigned int idx = 0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
+            {
+                json::QuickInterpreter node_coverage_pair( json_array[idx] );
+                if (node_coverage_pair.As<json::Array>().Size() != 2)
+                {
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Coverage_By_Node parameter needs to be an array of [nodeID,coverage] pairs." );
+                }
+                uint32_t nodeid, coverage;
+                try {
+                    nodeid = (uint32_t) node_coverage_pair[0].As<json::Number>();
+                }
+                catch( json::Exception &e )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "0", node_coverage_pair, "Expected NUMBER" );
+                }
+                try {
+                    coverage = (float) node_coverage_pair[1].As<json::Number>();
+                }
+                catch( json::Exception &e )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "1", node_coverage_pair, "Expected NUMBER" );
+                }
+
+                LOG_DEBUG_F("Parsing Coverage_By_Node property: nodeid=%d, coverage=%0.2f.\n", nodeid, coverage);
+
+                auto ret = node_coverage_map.insert(std::pair<uint32_t,float>(nodeid,coverage));
+                if (ret.second == false)
+                {
+                    LOG_WARN_F("Duplicate coverage specified for node with ID=%d. Using first coverage value specified.\n", nodeid);
+                }
+            }
+        }
+        catch( json::Exception &e )
         {
-            json::QuickInterpreter node_coverage_pair( json_array[idx] );
-            if (node_coverage_pair.As<json::Array>().Size() != 2)
-            {
-                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Coverage_By_Node parameter needs to be an array of [nodeID,coverage] pairs." );
-            }
-            uint32_t nodeid = (uint32_t) node_coverage_pair[0].As<json::Number>();
-            float coverage = (float) node_coverage_pair[1].As<json::Number>();
-
-            LOG_DEBUG_F("Parsing Coverage_By_Node property: nodeid=%d, coverage=%0.2f.\n", nodeid, coverage);
-
-            auto ret = node_coverage_map.insert(std::pair<uint32_t,float>(nodeid,coverage));
-            if (ret.second == false)
-            {
-                LOG_WARN_F("Duplicate coverage specified for node with ID=%d. Using first coverage value specified.\n", nodeid);
-            }
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
         }
     }
 

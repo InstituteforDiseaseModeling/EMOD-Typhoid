@@ -27,17 +27,30 @@ namespace Kernel
     {
         // Now's as good a time as any to parse in the calendar schedule.
         json::QuickInterpreter iec_qi( (*inputJson)[key] );
-        json::QuickInterpreter scheduleJson( iec_qi.As<json::Array>() );
-        release_assert( iec_qi.As<json::Array>().Size() );
-        if( iec_qi.As<json::Array>().Size() != MONTHSPERYEAR )
-        {
-            std::ostringstream msg;
-            msg << "InputEIR configuration key " << key << " must be array of size " << MONTHSPERYEAR;
-            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        try {
+            const auto iec_qi_array = iec_qi.As<json::Array>();
+            json::QuickInterpreter scheduleJson( iec_qi_array );
+            release_assert( iec_qi_array.Size() );
+            if( iec_qi_array.Size() != MONTHSPERYEAR )
+            {
+                std::ostringstream msg;
+                msg << "InputEIR configuration key " << key << " must be array of size " << MONTHSPERYEAR;
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            }
+            for( unsigned int idx=0; idx<iec_qi_array.Size(); idx++ )
+            {
+                try {
+                    (*this)[idx] = float(scheduleJson[idx].As<json::Number>());
+                }
+                catch( json::Exception &e )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), scheduleJson[idx], "Expected NUMBER" );
+                }
+            }
         }
-        for( unsigned int idx=0; idx<iec_qi.As<json::Array>().Size(); idx++ )
+        catch( json::Exception &e )
         {
-            (*this)[idx] = float(scheduleJson[idx].As<json::Number>());
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), iec_qi, "Expected ARRAY" );
         }
     }
 
