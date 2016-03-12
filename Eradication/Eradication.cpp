@@ -248,6 +248,9 @@ void IDMAPI writeInputSchemas(
 #ifndef DISABLE_MALARIA
         , "MALARIA_SIM"
 #endif
+#ifndef DISABLE_AIRBORNE
+        , "AIRBORNE_SIM"
+#endif
 #ifdef ENABLE_POLIO
         , "POLIO_SIM"
 #endif
