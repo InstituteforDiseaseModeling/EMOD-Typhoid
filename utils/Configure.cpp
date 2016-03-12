@@ -213,7 +213,7 @@ namespace Kernel
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:WaningEffect" );
         schema[ ts ]= json::Object();
-        schema[ ts ][ "base" ] = json::String( "interventions.idmType.Waning" );
+        schema[ ts ][ "base" ] = json::String( "interventions.idmType.WaningEffect" );
         //json::Writer::Write( schema, std::cout );
         return schema;
     }
