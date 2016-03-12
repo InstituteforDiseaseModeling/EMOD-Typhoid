@@ -11238,7 +11238,7 @@
 								"FULL",
 								"NotMated"
 							],
-							"description" : "Pesticide-resistance characteristics of released mosquitoes. Possible values are: WILD HALF FULL NotMated",
+							"description" : "HEG characteristics of released mosquitoes. Possible values are: WILD HALF FULL NotMated",
 							"default" : "WILD"
 						}
 					},
