@@ -45,14 +45,14 @@ namespace Kernel
                 try {
                     low = float(threshJson[idx]["Low"].As<json::Number>());
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Low", threshJson[idx], "Expected NUMBER" );
                 }
                 try {
                     high = float(threshJson[idx]["High"].As<json::Number>());
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "High", threshJson[idx], "Expected NUMBER" );
                 }
@@ -67,7 +67,7 @@ namespace Kernel
                 LOG_DEBUG_F( "Found CD4 threshold set from config: low/high/event = %d/%d/%s\n", (int) low, (int) high, signal.c_str() );
             }
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), a_qi, "Expected ARRAY" );
         }

@@ -39,7 +39,7 @@ namespace Kernel
                 try {
                     age = float(scheduleJson[idx]["Age"].As<json::Number>());
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Age", scheduleJson[idx], "Expected NUMBER" );
                 }
@@ -47,7 +47,7 @@ namespace Kernel
                 try {
                     probability = float(scheduleJson[idx]["Probability"].As<json::Number>());
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Probability", scheduleJson[idx], "Expected NUMBER" );
                 }
@@ -55,7 +55,7 @@ namespace Kernel
                 age2ProbabilityMap.insert( std::make_pair( age, probability ) );
             }
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), taa_qi, "Expected ARRAY" );
         }
@@ -235,7 +235,7 @@ namespace Kernel
                     }
                 }
             }
-            catch(json::Exception &e)
+            catch( json::Exception )
             {
                 throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "N/A", actual_intervention_config._json, "Expected STRING" );
             }

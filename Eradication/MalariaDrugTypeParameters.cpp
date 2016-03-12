@@ -38,14 +38,14 @@ namespace Kernel
                 try {
                     upper_age_in_years = dosing["Upper_Age_In_Years"].As<Number>();
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Upper_Age_In_Years", dosing, "Expected NUMBER" );
                 }
                 try {
                     fractional_dose = dosing["Fraction_Of_Adult_Dose"].As<Number>();
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Fraction_Of_Adult_Dose", dosing, "Expected NUMBER" );
                 }
@@ -54,7 +54,7 @@ namespace Kernel
                 LOG_DEBUG_F(oss.str().c_str()); 
             }
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
         }
@@ -144,7 +144,7 @@ namespace Kernel
                 }
 
             }
-            catch(json::Exception &e)
+            catch( const json::Exception &e )
             {
                 // Exception getting parameter block for drug of type "drugType" from config.json
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); 

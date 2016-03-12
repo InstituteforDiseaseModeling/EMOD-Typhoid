@@ -53,21 +53,21 @@ namespace Kernel
                         try { 
                             value = (std::string)s2sarray[idx][key].As< json::String >();
                         }
-                        catch( json::Exception &e )
+                        catch( const json::Exception & )
                         {
                             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), s2sarray[idx], "Expected STRING" );
                         }
                         kvp.insert( std::make_pair( key, value ) );
                     }
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, std::to_string( idx ).c_str(), s2sarray, "Expected OBJECT" );
                 }
                 _restrictions.push_back( kvp );
             }
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
         }

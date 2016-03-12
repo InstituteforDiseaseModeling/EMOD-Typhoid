@@ -48,19 +48,19 @@ namespace Kernel
                             std::string value = (std::string)s2sarray[idx][drug_key].As< json::String >();
                             prop2drugMap.insert( std::make_pair( drug_key, value ) );
                         }
-                        catch( json::Exception &e )
+                        catch( const json::Exception & )
                         {
                             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, drug_key.c_str(), s2sarray[idx], "Expected STRING" );
                         }
                     }
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), s2sarray[idx], "Expected OBJECT" );
                 }
             }
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
         }

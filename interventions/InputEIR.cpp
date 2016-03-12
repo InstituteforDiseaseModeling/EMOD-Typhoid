@@ -42,13 +42,13 @@ namespace Kernel
                 try {
                     (*this)[idx] = float(scheduleJson[idx].As<json::Number>());
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), scheduleJson[idx], "Expected NUMBER" );
                 }
             }
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), iec_qi, "Expected ARRAY" );
         }

@@ -40,14 +40,14 @@ namespace Kernel
                 try {
                     nodeid = (uint32_t) node_coverage_pair[0].As<json::Number>();
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "0", node_coverage_pair, "Expected NUMBER" );
                 }
                 try {
                     coverage = (float) node_coverage_pair[1].As<json::Number>();
                 }
-                catch( json::Exception &e )
+                catch( const json::Exception & )
                 {
                     throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "1", node_coverage_pair, "Expected NUMBER" );
                 }
@@ -61,7 +61,7 @@ namespace Kernel
                 }
             }
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
         }
@@ -105,7 +105,7 @@ namespace Kernel
             {
             }
         }
-        catch(json::Exception &e)
+        catch( const json::Exception &e )
         {
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); // ( "Coverage_By_Node json problem: Coverage_By_Node is valid json but needs to be an array of (nodeID,coverage) pairs." );
         }

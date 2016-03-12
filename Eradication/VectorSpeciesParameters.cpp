@@ -49,7 +49,7 @@ namespace Kernel
                     try {
                         habitat_param = (NonNegativeFloat) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
                     }
-                    catch( json::Exception &e )
+                    catch( const json::Exception & )
                     {
                         throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, data->name.c_str(), json::QuickInterpreter( tvcs ), "Expected NUMBER" );
                     }
@@ -64,7 +64,7 @@ namespace Kernel
             }
             LOG_DEBUG_F( "Found %d larval habitats\n", habitat_map.size() );
         }
-        catch( json::Exception &e )
+        catch( const json::Exception & )
         {
             throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected OBJECT" );
         }
