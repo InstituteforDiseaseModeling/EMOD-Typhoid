@@ -86,4 +86,7 @@ parameters:
     x_Birth: 1
     x_Other_Mortality: 1
     x_Population_Immunity: 1
-
+    Default_Geography_Initial_Node_Population: 1000
+    Default_Geography_Torus_Size: 10
+    Minimum_Adult_Age_Years: 15
+    Report_Event_Recorder: 0
