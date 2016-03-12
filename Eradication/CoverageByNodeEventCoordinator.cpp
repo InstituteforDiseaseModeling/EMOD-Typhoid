@@ -35,7 +35,8 @@ namespace Kernel
                 {
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Coverage_By_Node parameter needs to be an array of [nodeID,coverage] pairs." );
                 }
-                uint32_t nodeid, coverage;
+                uint32_t nodeid = 0;
+                float coverage = 0.0f;
                 try {
                     nodeid = (uint32_t) node_coverage_pair[0].As<json::Number>();
                 }
