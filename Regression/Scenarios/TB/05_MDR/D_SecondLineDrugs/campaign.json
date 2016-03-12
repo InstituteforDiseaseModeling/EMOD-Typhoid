@@ -11,7 +11,6 @@
                     "Outbreak_Source": "PrevalenceIncrease", 
                     "class": "OutbreakIndividual"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -52,7 +51,6 @@
                     "Treatment_Fraction": 1, 
                     "class": "ActiveDiagnostic"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Target_Demographic": "Everyone", 
                 "class": "StandardInterventionDistributionEventCoordinator"
@@ -85,7 +83,6 @@
                     "Trigger_Condition": "TBFailedDrugRegimen", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -122,7 +119,6 @@
                     "Trigger_Condition": "TBMDRTestNegative", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -159,7 +155,6 @@
                     "Trigger_Condition": "TBMDRTestPositive", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 

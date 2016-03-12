@@ -31,7 +31,6 @@
                     "class": "Outbreak", 
                     "my_name": "Outbreak"
                 }, 
-                "Number_Distributions": 2, 
                 "Number_Repetitions": 1000, 
                 "Timesteps_Between_Repetitions": 60, 
                 "Travel_Linked ": 0, 

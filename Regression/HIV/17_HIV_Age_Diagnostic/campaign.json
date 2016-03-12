@@ -45,10 +45,10 @@
                 "Intervention_Config":
                 {
                     "class": "AgeDiagnostic",
-                    "Age_Thresholds": [
+                    "Age_Thresholds": [ [
                         {
                             "Low": 0,
-                            "High": 15,
+                            "High": [ "15" ],
                             "Event": "AgeMeasured0"
                         },
                         {
@@ -67,6 +67,7 @@
                             "High": 100,
                             "Event": "AgeMeasured3"
                         }
+                    ] 
                     ]
                 }
             }

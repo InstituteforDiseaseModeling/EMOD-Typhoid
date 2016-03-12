@@ -9,7 +9,7 @@
                     }, 
                     "Released_Gender": "VECTOR_FEMALE", 
                     "Released_Genetics": {
-                        "HEG": "WILD", 
+                        "HEG": [ "WILD" ], 
                         "Pesticide_Resistance": "WILD"
                     }, 
                     "Released_Number": 10000, 

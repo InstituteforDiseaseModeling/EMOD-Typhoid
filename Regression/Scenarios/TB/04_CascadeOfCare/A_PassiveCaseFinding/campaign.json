@@ -11,7 +11,6 @@
                     "Outbreak_Source": "PrevalenceIncrease", 
                     "class": "OutbreakIndividual"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -40,7 +39,6 @@
                     "Trigger_Condition": "TBActivation", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -77,7 +75,6 @@
                     "Trigger_Condition": "ProviderOrdersTBTest", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -109,7 +106,6 @@
                     "Trigger_Condition": "TBTestDefault", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -145,7 +141,6 @@
                     "Trigger_Condition": "TBTestPositive", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -186,7 +181,6 @@
                     "Trigger_Condition": "TBTestNegative", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -218,7 +212,6 @@
                     "Trigger_Condition": "TBFailedDrugRegimen", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 

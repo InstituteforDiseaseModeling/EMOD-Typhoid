@@ -11,7 +11,6 @@
                          "Outbreak_Source": "ImportCases", 
                          "class": "Outbreak"
                     }, 
-                    "Number_Distributions": 1000, 
                     "Number_Repetitions": 1, 
                     "Target_Demographic": "Everyone", 
                     "class": "StandardInterventionDistributionEventCoordinator"

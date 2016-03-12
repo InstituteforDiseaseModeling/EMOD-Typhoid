@@ -9,7 +9,7 @@
                     "Vaccine_Take": 1, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "Waning_Config": {
-                        "Box_Duration": 3650, 
+                        ".Box_Duration": 3650, 
                         "Initial_Effect": 1, 
                         "class": "WaningEffectBox"
                     }, 
@@ -19,11 +19,7 @@
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {
-                "class": "NodeSetNodeList",
-                "Node_List": [ 
-                    1,
-                    "one" 
-                ]
+                "class": "NodeSetAll"
             }, 
             "Start_Day": 60, 
             "class": "CampaignEvent"
