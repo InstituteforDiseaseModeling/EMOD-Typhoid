@@ -19,11 +19,7 @@
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
             "Nodeset_Config": {
-                "class": "NodeSetNodeList",
-                "Node_List": [ 
-                    1,
-                    "one" 
-                ]
+                "class": "NodeSetAll"
             }, 
             "Start_Day": 60, 
             "class": "CampaignEvent"
