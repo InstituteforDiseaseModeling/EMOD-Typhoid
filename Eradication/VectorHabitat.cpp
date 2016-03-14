@@ -80,9 +80,9 @@ namespace Kernel
             // Will hatch equal number of male larva, but these don't take up larval habitat in the calculations, to keep compatible with older results
 
             case EggSaturation::SATURATION_AT_OVIPOSITION:
-                if (larvalhabitat > total_larva_count && m_new_egg_count > 0)
+                if (larvalhabitat > total_larva_count)
                 {
-                    if (m_new_egg_count > larvalhabitat - total_larva_count)
+                    if (m_new_egg_count > (larvalhabitat - total_larva_count))
                     { 
                         m_egg_crowding_correction = float(larvalhabitat - total_larva_count) / float(m_new_egg_count);
                     }
