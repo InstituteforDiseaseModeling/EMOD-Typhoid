@@ -11,6 +11,10 @@
 Data_Files/
 DtkInput/
 
+# Regression
+*.py[ocd]
+report*.xml
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

@@ -185,13 +185,15 @@ namespace Kernel
         }
         else if(params()->vector_larval_rainfall_mortality == VectorRainfallMortality::SIGMOID_HABITAT_SHIFTING)
         {
-            if( rainfall * MM_PER_METER < params()->larval_rainfall_mortality_threshold * dt * ( (m_max_larval_capacity - m_current_larval_capacity) / m_max_larval_capacity ) )
+            float full_habitat = m_max_larval_capacity * params()->lloffset * params()->lloffset;
+            float fraction_empty = (full_habitat - m_current_larval_capacity) / full_habitat;
+            if( rainfall * MM_PER_METER < params()->larval_rainfall_mortality_threshold * dt * fraction_empty )
             {
                 m_rainfall_mortality = 0;
             }
             else
             {
-                m_rainfall_mortality = ( rainfall * MM_PER_METER - params()->larval_rainfall_mortality_threshold * dt * ( (m_max_larval_capacity - m_current_larval_capacity) / m_max_larval_capacity ) ) / (params()->larval_rainfall_mortality_threshold * dt);
+                m_rainfall_mortality = (rainfall * MM_PER_METER - params()->larval_rainfall_mortality_threshold * dt * fraction_empty) / (params()->larval_rainfall_mortality_threshold * dt);
             }
         }
         else
