@@ -68,7 +68,7 @@ for sheet in wb.sheets():
         if sheet.name.startswith( "STI_Network_Params" ):
             #pdb.set_trace()
             # need special handling
-            sti_param_group = sheet.name.split( "-" )[1] 
+            sti_param_group = sheet.name.split( "-" )[2] 
             if sti_param_group not in cj["STI_Network_Params_By_Property"]:
                 print( "Yikes! config.json doesn't have section to override the STI_Network_Params property. Nothing will be changed here." )
             else:
