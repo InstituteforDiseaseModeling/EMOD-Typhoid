@@ -70,32 +70,49 @@ namespace Kernel
         float larvalhabitat = GetCurrentLarvalCapacity();
         float total_larva_count = m_total_larva_count[CURRENT_TIME_STEP]; 
 
-        if (larvalhabitat > total_larva_count && m_new_egg_count > 0  && params()->egg_saturation) 
+        switch ( params()->egg_saturation )
         {
+            case EggSaturation::NO_SATURATION:
+                m_egg_crowding_correction = 1.0;
+                break;
+
             // Eggs divided up by habitat, neweggs holds number of female eggs.  Correcting for overcrowding, applies to all eggs evenly
             // Will hatch equal number of male larva, but these don't take up larval habitat in the calculations, to keep compatible with older results
-            if (m_new_egg_count > larvalhabitat - total_larva_count)
-            { 
-                m_egg_crowding_correction = float(larvalhabitat - total_larva_count) / float(m_new_egg_count);
-            }
-            else
-            {
-                m_egg_crowding_correction = 1.0;
-            }
-        }
-        else if (params()->egg_saturation == EggSaturation::NO_SATURATION)
-        {
-            m_egg_crowding_correction = 1.0;
-        }
-        else if (params()->egg_saturation == EggSaturation::SIGMOIDAL_SATURATION)
-        {
-            if(larvalhabitat > 0){m_egg_crowding_correction = exp(-total_larva_count/larvalhabitat);}
-            else{ m_egg_crowding_correction = 0.0;}
-        }
-        else
-        {
-            // Habitat is full.  No new eggs.
-            m_egg_crowding_correction = 0;
+
+            case EggSaturation::SATURATION_AT_OVIPOSITION:
+                if (larvalhabitat > total_larva_count && m_new_egg_count > 0)
+                {
+                    if (m_new_egg_count > larvalhabitat - total_larva_count)
+                    { 
+                        m_egg_crowding_correction = float(larvalhabitat - total_larva_count) / float(m_new_egg_count);
+                    }
+                    else
+                    {
+                        m_egg_crowding_correction = 1.0;
+                    }
+                }
+                else
+                {
+                    // Habitat is full.  No new eggs.
+                    m_egg_crowding_correction = 0;
+                }
+                break;
+
+            case EggSaturation::SIGMOIDAL_SATURATION:
+                if (larvalhabitat > 0)
+                {
+                    m_egg_crowding_correction = exp(-total_larva_count/larvalhabitat);
+                }
+                else
+                {
+                    m_egg_crowding_correction = 0.0;
+                }
+                break;
+
+            default:
+                throw BadEnumInSwitchStatementException(__FILE__, __LINE__, __FUNCTION__,
+                                                        "params()->egg_saturation", params()->egg_saturation,
+                                                        EggSaturation::pairs::lookup_key(params()->egg_saturation));
         }
 
         // After egg-crowding calculation has been calculated, reset new egg counter
