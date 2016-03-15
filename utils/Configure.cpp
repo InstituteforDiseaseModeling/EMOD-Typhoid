@@ -213,7 +213,7 @@ namespace Kernel
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:WaningEffect" );
         schema[ ts ]= json::Object();
-        schema[ ts ][ "base" ] = json::String( "interventions.idmType.WaningEffect" );
+        schema[ ts ][ "base" ] = json::String( "interventions.idmType.Waning" );
         //json::Writer::Write( schema, std::cout );
         return schema;
     }
@@ -468,7 +468,7 @@ namespace Kernel
         vectorStringConstraintsTypeMap[ paramName ] = &constraint_variable;
         json::Object newVectorStringSchema;
         newVectorStringSchema["description"] = json::String(description);
-        newVectorStringSchema["type"] = json::String("Vector String");
+        newVectorStringSchema["type"] = json::String("vector string");
         if( constraint_schema )
         {
             newVectorStringSchema["value_source"] = json::String( constraint_schema );
@@ -488,7 +488,7 @@ namespace Kernel
         vectorFloatConfigTypeMap[ paramName ] = pVariable;
         json::Object newVectorFloatSchema;
         newVectorFloatSchema["description"] = json::String(description);
-        newVectorFloatSchema["type"] = json::String("Vector Float");
+        newVectorFloatSchema["type"] = json::String("vector float");
         newVectorFloatSchema["min"] = json::Number(min);
         newVectorFloatSchema["max"] = json::Number(max);
         newVectorFloatSchema["default"] = json::Number(defaultvalue);
@@ -507,7 +507,7 @@ namespace Kernel
         vectorIntConfigTypeMap[ paramName ] = pVariable;
         json::Object newVectorIntSchema;
         newVectorIntSchema["description"] = json::String(description);
-        newVectorIntSchema["type"] = json::String("Vector Int");
+        newVectorIntSchema["type"] = json::String("vector int");
         newVectorIntSchema["min"] = json::Number(min);
         newVectorIntSchema["max"] = json::Number(max);
         newVectorIntSchema["default"] = json::Number(defaultvalue);
@@ -526,7 +526,7 @@ namespace Kernel
         vector2dFloatConfigTypeMap[ paramName ] = pVariable;
         json::Object newVector2dFloatSchema;
         newVector2dFloatSchema["description"] = json::String(description);
-        newVector2dFloatSchema["type"] = json::String("Vector2d Float");
+        newVector2dFloatSchema["type"] = json::String("vector2d float");
         newVector2dFloatSchema["min"] = json::Number(min);
         newVector2dFloatSchema["max"] = json::Number(max);
         newVector2dFloatSchema["default"] = json::Number(defaultvalue);
@@ -545,7 +545,7 @@ namespace Kernel
         vector2dIntConfigTypeMap[ paramName ] = pVariable;
         json::Object newVector2dIntSchema;
         newVector2dIntSchema["description"] = json::String(description);
-        newVector2dIntSchema["type"] = json::String("Vector2d Int");
+        newVector2dIntSchema["type"] = json::String("vector2d int");
         newVector2dIntSchema["min"] = json::Number(min);
         newVector2dIntSchema["max"] = json::Number(max);
         newVector2dIntSchema["default"] = json::Number(defaultvalue);
