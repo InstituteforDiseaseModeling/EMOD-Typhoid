@@ -30,13 +30,34 @@ namespace Kernel
     {
         // Now's as good a time as any to parse in the calendar schedule.
         json::QuickInterpreter taa_qi( (*inputJson)[key] );
-        json::QuickInterpreter scheduleJson( taa_qi.As<json::Array>() );
-        assert( taa_qi.As<json::Array>().Size() );
-        for( unsigned int idx=0; idx<taa_qi.As<json::Array>().Size(); idx++ )
+        try {
+            json::QuickInterpreter scheduleJson( taa_qi.As<json::Array>() );
+            assert( taa_qi.As<json::Array>().Size() );
+            for( unsigned int idx=0; idx<taa_qi.As<json::Array>().Size(); idx++ )
+            {
+                float age, probability;
+                try {
+                    age = float(scheduleJson[idx]["Age"].As<json::Number>());
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Age", scheduleJson[idx], "Expected NUMBER" );
+                }
+
+                try {
+                    probability = float(scheduleJson[idx]["Probability"].As<json::Number>());
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Probability", scheduleJson[idx], "Expected NUMBER" );
+                }
+
+                age2ProbabilityMap.insert( std::make_pair( age, probability ) );
+            }
+        }
+        catch( const json::Exception & )
         {
-            float age = float(scheduleJson[idx]["Age"].As<json::Number>());
-            float probability = float(scheduleJson[idx]["Probability"].As<json::Number>());
-            age2ProbabilityMap.insert( std::make_pair( age, probability ) );
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), taa_qi, "Expected ARRAY" );
         }
     }
 
@@ -214,10 +235,9 @@ namespace Kernel
                     }
                 }
             }
-            catch(json::Exception &e)
+            catch( json::Exception )
             {
-                // ERROR: ::cerr << "exception casting actual_intervention_config to array! " << e.what() << std::endl;
-                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); // ( "Calendar intervention json problem: actual_intervention_config is valid json but needs to be an array." );
+                throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "N/A", actual_intervention_config._json, "Expected STRING" );
             }
         }
         // TODO: Calendar may be done, should be disposed of somehow. How about parent->Release()??? :)

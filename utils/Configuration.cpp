@@ -150,7 +150,7 @@ Configuration* Configuration::Load( std::istream& rInputStream, const std::strin
         final_msg << "Caught the following json::ScanException while attempting to read data from: " << rDataLocation << ". " << err_msg;
         throw Kernel::GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, final_msg.str().c_str() );
     }
-    catch (json::Exception &e)
+    catch( const json::Exception &e )
     {
         std::string raw_msg = std::string( e.what() );
         if( raw_msg.find( "Object name not found" ) != std::string::npos )
@@ -273,23 +273,15 @@ vector<int> GET_CONFIG_VECTOR_INT(const QuickInterpreter* parameter_source, cons
             values.push_back(value);
         }
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected JSON array of numeric)";
-        }
-
         if( Kernel::JsonConfigurable::_dryrun )
         {
             return values;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected INT VECTOR/ARRAY" );
         }
     }
 
@@ -320,23 +312,15 @@ vector<float> GET_CONFIG_VECTOR_FLOAT(const QuickInterpreter* parameter_source, 
             values.push_back(value);
         }
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected JSON array of numeric)";
-        }
-
         if( Kernel::JsonConfigurable::_dryrun )
         {
             return values;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected FLOAT VECTOR/ARRAY" );
         }
     }
 
@@ -378,23 +362,15 @@ vector<vector<float>> GET_CONFIG_VECTOR2D_FLOAT(const QuickInterpreter* paramete
             matrix.push_back( values );
         }
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected JSON array of numeric)";
-        }
-
         if( Kernel::JsonConfigurable::_dryrun )
         {
             return matrix;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected FLOAT 2D VECTOR/ARRAY" );
         }
     }
 
@@ -436,23 +412,15 @@ vector<vector<int>> GET_CONFIG_VECTOR2D_INT(const QuickInterpreter* parameter_so
             matrix.push_back( values );
         }
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected JSON array of numeric)";
-        }
-
         if( Kernel::JsonConfigurable::_dryrun )
         {
             return matrix;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected STRING VECTOR/ARRAY" );
         }
     }
 
@@ -484,24 +452,15 @@ vector<string> GET_CONFIG_VECTOR_STRING(const QuickInterpreter* parameter_source
             values.push_back(value);
         }
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected json array of strings)";
-        }
-
-        //if( getenv( "DRYRUN" ) )
         if( Kernel::JsonConfigurable::_dryrun )
         {
             return values;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected STRING VECTOR/ARRAY" );
         }
     }
 
@@ -533,24 +492,15 @@ set<string> GET_CONFIG_STRING_SET(const QuickInterpreter* parameter_source, cons
             values.insert(value);
         }
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected json array of strings)";
-        }
-
-        //if( getenv( "DRYRUN" ) )
         if( Kernel::JsonConfigurable::_dryrun )
         {
             return values;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected STRING SET" );
         }
     }
 
@@ -578,24 +528,15 @@ string GET_CONFIG_STRING(const QuickInterpreter* parameter_source, const char *n
     try {
         value = (string)((*parameter_source)[name].As<json::String>());
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected string)";
-        }
-
         if( Kernel::JsonConfigurable::_dryrun )
-        //if( getenv( "DRYRUN" ) )
         {
             return value;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected STRING" );
         }
     }
 
@@ -626,23 +567,15 @@ double GET_CONFIG_DOUBLE(
     try {
         value = (*parameter_source)[name].As<json::Number>();
     }
-    catch (json::Exception& e)
+    catch( json::Exception )
     {
-        string full_description(e.what());
-        if (strcmp(e.what(), "Bad json_cast") == 0)
-        {
-            full_description += ": ";
-            full_description += name;
-            full_description += " (expected numeric)";
-        }
-
         if( Kernel::JsonConfigurable::_dryrun )
         {
             return 0.0f;
         }
         else
         {
-            throw json::Exception(full_description);
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, name, (*parameter_source), "Expected FLOAT" );
         }
     }
 
@@ -693,7 +626,7 @@ namespace Kernel
             }
             full_description += "\n";
 
-            throw json::Exception(full_description); // TODO: this properly makes more sense as a configuration exception or a json parse exception...left to future tidying
+            throw Kernel::GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, full_description.c_str() );
         }
     }
 }

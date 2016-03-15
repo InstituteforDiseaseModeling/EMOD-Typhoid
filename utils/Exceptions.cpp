@@ -521,4 +521,40 @@ namespace Kernel {
                  << std::endl;
         _msg = _tmp_msg.str();
     }
+
+    JsonTypeConfigurationException::JsonTypeConfigurationException(
+        const char* filename,
+        int line_num,
+        const char* function_name,
+        const char * param_name,
+        const json::QuickInterpreter& json_blob, 
+        const char * caught_msg )
+    : DetailedException( filename, line_num, function_name )
+    {
+#if 0
+                 << what()
+                 << "Parameter '"
+                 << param_name
+                 << "' not found in input file '"
+                 << config_file_name
+                 << "'."
+                 << std::endl;
+#endif
+        std::stringstream blob_msg;
+        json::Writer::Write( json_blob, blob_msg );
+
+        std::ostringstream _tmp_msg;
+        _tmp_msg << "JsonTypeConfigurationException: "
+                 << what()
+                 << "While trying to parse json data for param >>> "
+                 << param_name
+                 << " <<< in otherwise valid json segment... "
+                 << std::endl
+                 << blob_msg.str()
+                 << std::endl
+                 << "Caught exception msg below: "
+                 << std::endl
+                 << caught_msg;
+        _msg = _tmp_msg.str();
+    }
 }

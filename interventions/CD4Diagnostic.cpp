@@ -28,29 +28,48 @@ namespace Kernel
         LOG_DEBUG_F( "Configuring CD4 thresholds from campaign.json\n" );
         // Now's as good a time as any to parse in the calendar schedule.
         json::QuickInterpreter a_qi( (*inputJson)[key] );
-        json::QuickInterpreter threshJson( a_qi.As<json::Array>() );
-        assert( a_qi.As<json::Array>().Size() );
-        for( unsigned int idx=0; idx<a_qi.As<json::Array>().Size(); idx++ )
-        {
-            EventTrigger signal;
-            initConfigTypeMap( "Event", &signal, HIV_CD4_Diagnostic_Event_Name_DESC_TEXT );
-            auto obj = Configuration::CopyFromElement((threshJson)[idx]);
-            JsonConfigurable::Configure( obj );
-            delete obj;
-            obj = nullptr;
-            thresh_events.push_back( signal );
-
-            NaturalNumber low = float(threshJson[idx]["Low"].As<json::Number>());
-            NaturalNumber high = float(threshJson[idx]["High"].As<json::Number>());
-            if( high <= low )
+        try {
+            json::QuickInterpreter threshJson( a_qi.As<json::Array>() );
+            assert( a_qi.As<json::Array>().Size() );
+            for( unsigned int idx=0; idx<a_qi.As<json::Array>().Size(); idx++ )
             {
-                throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "low", std::to_string( low ).c_str(),
-                                                                                          "high", std::to_string( high ).c_str(),
-                                                                                          "High value must be higher than Low value." );
-            }
+                EventTrigger signal;
+                initConfigTypeMap( "Event", &signal, HIV_CD4_Diagnostic_Event_Name_DESC_TEXT );
+                auto obj = Configuration::CopyFromElement((threshJson)[idx]);
+                JsonConfigurable::Configure( obj );
+                delete obj;
+                obj = nullptr;
+                thresh_events.push_back( signal );
 
-            thresholds.push_back( std::make_pair( low, high ) );
-            LOG_DEBUG_F( "Found CD4 threshold set from config: low/high/event = %d/%d/%s\n", (int) low, (int) high, signal.c_str() );
+                NaturalNumber low, high;
+                try {
+                    low = float(threshJson[idx]["Low"].As<json::Number>());
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Low", threshJson[idx], "Expected NUMBER" );
+                }
+                try {
+                    high = float(threshJson[idx]["High"].As<json::Number>());
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "High", threshJson[idx], "Expected NUMBER" );
+                }
+                if( high <= low )
+                {
+                    throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "low", std::to_string( low ).c_str(),
+                            "high", std::to_string( high ).c_str(),
+                            "High value must be higher than Low value." );
+                }
+
+                thresholds.push_back( std::make_pair( low, high ) );
+                LOG_DEBUG_F( "Found CD4 threshold set from config: low/high/event = %d/%d/%s\n", (int) low, (int) high, signal.c_str() );
+            }
+        }
+        catch( const json::Exception & )
+        {
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), a_qi, "Expected ARRAY" );
         }
         LOG_DEBUG_F( "Found %d CD4 thresholds\n", thresholds.size() );
     }

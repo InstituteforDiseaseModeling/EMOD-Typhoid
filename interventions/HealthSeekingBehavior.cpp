@@ -134,7 +134,7 @@ namespace Kernel
                     delete tmp_config;
                     tmp_config = nullptr;
                 }
-                catch( json::Exception &except )
+                catch( json::Exception xcept )
                 {
                     std::ostringstream msg;
                     msg << "Nested json for actual_intervention_config was empty or corrupted: ";
