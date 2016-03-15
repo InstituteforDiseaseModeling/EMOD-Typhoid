@@ -25,7 +25,7 @@
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filename": "../../HIV/input/SA_UN_demographics.compiled.json;../../HIV/input/PFA_overlay.json", 
         "Demographics_Filenames": [
-            "../../HIV/input/SA_UN_demographics.compiled.json", 
+            "../../HIV/input/SA_UN_demographics.json", 
             "../../HIV/input/PFA_overlay.json", 
             "../../HIV/input/PFA_overlay_transitory_only.json", 
             "Coital_overlay.json"
@@ -60,7 +60,7 @@
         "Immunity_Mortality_Factor": 0.5, 
         "Immunity_Transmission_Factor": 0, 
         "Incubation_Period_Distribution": "FIXED_DURATION", 
-        "Individual_Sampling_Type": "FIXED_SAMPLING", 
+        "Individual_Sampling_Type": "TRACK_ALL", 
         "Infection_Updates_Per_Timestep": 1, 
         "Infectious_Period_Distribution": "GAUSSIAN_DURATION", 
         "Infectious_Period_Mean": 120, 

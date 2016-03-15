@@ -71,7 +71,7 @@
         },
         "PRIMARY": {
             "Config_Name": "HINT_AgeAndAccess_BaselineOutbreak -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 2
         },
         "Rainfall_In_mm_To_Fill_Swamp": 1000.0,

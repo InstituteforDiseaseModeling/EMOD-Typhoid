@@ -94,7 +94,7 @@
         "Run_Number": 1, 
         "Simulation_Duration": 3650, 
         "Config_Name": "66_Malaria_InputEIR_Intervention -- multicore -- Madagascar_Nosibe", 
-        "Geography": "Test"
+        "Geography": "Madagascar_Nosibe"
     }, 
     "MOSQUITO": {
         "Vector_Species_Names": []

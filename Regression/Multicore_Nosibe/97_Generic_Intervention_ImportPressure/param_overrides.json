@@ -57,7 +57,7 @@
             "Run_Number": 1, 
             "Simulation_Duration": 1000, 
             "Config_Name": "97_Generic_Intervention_ImportPressure -- multicore -- Madagascar_Nosibe", 
-            "Geography": "Test"
+            "Geography": "Madagascar_Nosibe"
         }
     }
 }

@@ -50,7 +50,7 @@
         "Enable_Superinfection": 0, 
         "Enable_Vital_Dynamics": 1, 
         "Family_Migration_Filename": "", 
-        "Geography": "Test", 
+        "Geography": "Madagascar_Nosibe", 
         "Immunity_Acquisition_Factor": 0, 
         "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_OFF", 
         "Immunity_Mortality_Factor": 0, 

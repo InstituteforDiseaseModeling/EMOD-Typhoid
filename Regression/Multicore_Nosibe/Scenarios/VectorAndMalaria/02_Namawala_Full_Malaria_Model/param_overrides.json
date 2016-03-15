@@ -92,7 +92,7 @@
         }, 
         "PRIMARY": {
             "Config_Name": "PrimaryScenarios_2_Namawala_Full_Malaria_Model -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 3650,
             "Simulation_Type": "MALARIA_SIM",

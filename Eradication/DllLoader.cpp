@@ -102,7 +102,7 @@ DllLoader::ReadEmodulesJson(
         }
         LOG_INFO( "Stored all dll_paths.\n" );
     }
-    catch( json::Exception &e )
+    catch( const json::Exception &e )
     {
         throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, e.what() );
     }

@@ -77,7 +77,7 @@
         "PRIMARY": {
             "Config_Name": "08_SIS -- multicore -- Madagascar_Nosibe",
             "Simulation_Type": "GENERIC_SIM",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 0,
             "Simulation_Duration": 3650,
             "Simulation_Timestep": 1,

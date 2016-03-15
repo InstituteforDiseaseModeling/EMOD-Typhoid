@@ -107,7 +107,6 @@
                     "Treatment_Fraction": 1.0,
                     "class": "SimpleDiagnostic"
                 },
-                "Number_Distributions": -1,
                 "Target_Demographic": "Everyone",
                 "class": "StandardInterventionDistributionEventCoordinator"
             },

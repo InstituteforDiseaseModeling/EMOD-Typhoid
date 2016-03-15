@@ -9,7 +9,6 @@
                     "Outbreak_Source": "PrevalenceIncrease",
                     "class": "OutbreakIndividual"
                 },
-                "Number_Distributions": -1,
                 "Property_Restrictions": [
                     "Risk:Low"
                 ],

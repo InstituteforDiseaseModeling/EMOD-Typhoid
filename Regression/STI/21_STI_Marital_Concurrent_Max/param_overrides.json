@@ -5,6 +5,7 @@
         "DEMOGRAPHICS": {
             "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics.json", "../../HIV/input/PFA_overlay.json", "../../HIV/input/PFA_overlay_marital_10_only.json" ],
             "Enable_Vital_Dynamics": 0,
+            "Individual_Sampling_Type": "FIXED_SAMPLING",
             "MORTALITY": {
                 "Base_Mortality": 0.01, 
                 "Immunity_Mortality_Factor": 0.5

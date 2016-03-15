@@ -59,7 +59,7 @@
         },         
         "PRIMARY": {
             "Config_Name": "PrimaryScenarios_1B_Namawala3Vectors_highEIR -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 3650,
             "Simulation_Type": "VECTOR_SIM",

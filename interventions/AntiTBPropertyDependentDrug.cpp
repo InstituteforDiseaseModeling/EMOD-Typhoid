@@ -33,19 +33,38 @@ namespace Kernel
     )
     {
         // read array of json objects into string-to-string map.
-        json::QuickInterpreter s2sarray = (*inputJson)[key].As<json::Array>();
-        for( int idx=0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
-        {
-            auto json_map = s2sarray[idx].As<json::Object>();
-            for( auto data = json_map.Begin();
-                      data != json_map.End();
-                      ++data )
+        try {
+            json::QuickInterpreter s2sarray = (*inputJson)[key].As<json::Array>();
+            for( int idx=0; idx < (*inputJson)[key].As<json::Array>().Size(); idx++ )
             {
-                std::string key = data->name;
-                std::string value = (std::string)s2sarray[idx][key].As< json::String >(); // (json::QuickInterpreter( tvcs ))[ data->name ].As<json::String>();
-                prop2drugMap.insert( std::make_pair( key, value ) );
+                try {
+                    auto json_map = s2sarray[idx].As<json::Object>();
+                    for( auto data = json_map.Begin();
+                            data != json_map.End();
+                            ++data )
+                    {
+                        std::string drug_key = data->name;
+                        try {
+                            std::string value = (std::string)s2sarray[idx][drug_key].As< json::String >();
+                            prop2drugMap.insert( std::make_pair( drug_key, value ) );
+                        }
+                        catch( const json::Exception & )
+                        {
+                            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, drug_key.c_str(), s2sarray[idx], "Expected STRING" );
+                        }
+                    }
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), s2sarray[idx], "Expected OBJECT" );
+                }
             }
         }
+        catch( const json::Exception & )
+        {
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
+        }
+        
     }
 
     json::QuickBuilder

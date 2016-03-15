@@ -9,6 +9,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 
+#pragma warning(disable:4996)
+
 #include <iostream>
 #include <fstream>
 #include <sstream> // ostringstream
@@ -245,6 +247,9 @@ void IDMAPI writeInputSchemas(
 #endif
 #ifndef DISABLE_MALARIA
         , "MALARIA_SIM"
+#endif
+#ifndef DISABLE_AIRBORNE
+        , "AIRBORNE_SIM"
 #endif
 #ifdef ENABLE_POLIO
         , "POLIO_SIM"

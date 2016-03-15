@@ -11,7 +11,6 @@
                     }, 
                     "class": "SugarTrap"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 

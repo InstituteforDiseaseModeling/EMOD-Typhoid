@@ -380,6 +380,7 @@ else:
     if 'Disease' in env and len(env['Disease']) > 0:
         if env["Disease"] == "Generic":
             #env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_STI" ] )
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
@@ -387,16 +388,19 @@ else:
 
         if env["Disease"] == "Vector":
             eradicationSrcFiles.extend( vectorSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_STI" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
 
         if env["Disease"] ==  "Malaria":
             eradicationSrcFiles.extend( malariaSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_STI" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
 
         if env["Disease"] == "STI":
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
             env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
@@ -404,6 +408,7 @@ else:
             eradicationSrcFiles.extend( stiSrcFiles )
 
         if env["Disease"] == "HIV":
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
             env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
@@ -411,12 +416,21 @@ else:
 
         if env["Disease"] == "Polio":
             eradicationSrcFiles.extend( polioSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
             env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
             env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
             env.Append( CPPDEFINES=["DISABLE_STI" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+        if env["Disease"] == "Environmental":
+            eradicationSrcFiles.extend( environmentalSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+            env.Append( CPPDEFINES=["DISABLE_STI" ] )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
 
         if env["Disease"] == "TB":
             eradicationSrcFiles.extend( tbSrcFiles )
@@ -439,6 +453,7 @@ else:
             eradicationSrcFiles.extend( pyDemoSrcFiles )
             env.Append( CPPDEFINES=["ENABLE_PYTHON_FEVER" ] )
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_STI" ] )
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )

@@ -22,6 +22,7 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
         "Base_Population_Scale_Factor": 1,
         "Demographics_Filenames": [ "generic_scenarios_complexAgeDistribution_demographics.json", "../../HIV/input/PFA_overlay.json", "property_demographics.json" ], 
+        "Individual_Sampling_Type": "FIXED_SAMPLING",
 
         "____________MIGRATION___________": "",
         "____________REPORTING___________": "",

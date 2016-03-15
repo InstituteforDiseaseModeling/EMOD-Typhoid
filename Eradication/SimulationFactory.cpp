@@ -9,6 +9,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 
+#pragma warning(disable:4996)
+
 #ifdef WIN32
 #include "windows.h"
 #endif
@@ -28,6 +30,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #ifdef ENABLE_POLIO
 #include "SimulationPolio.h"
+#endif
+
+#ifndef DISABLE_AIRBORNE
+#include "SimulationAirborne.h"
 #endif
 
 #ifdef ENABLE_TB
@@ -82,9 +88,11 @@ namespace Kernel
             else if (sSimType == "POLIO_SIM")
                 sim_type = SimType::POLIO_SIM;
 #endif
-#ifdef ENABLE_TB
+#ifndef DISABLE_AIRBORNE
             else if (sSimType == "AIRBORNE_SIM")
                 sim_type = SimType::AIRBORNE_SIM;
+#endif
+#ifdef ENABLE_TB
             else if (sSimType == "TB_SIM")
                 sim_type = SimType::TB_SIM;
 #ifdef ENABLE_TBHIV
@@ -155,11 +163,14 @@ namespace Kernel
                     newsim = SimulationMalaria::CreateSimulation(EnvPtr->Config);
                 break;
 #endif
-#ifdef ENABLE_TB
+
+#ifndef DISABLE_AIRBORNE
                 case SimType::AIRBORNE_SIM:
                     newsim = SimulationAirborne::CreateSimulation(EnvPtr->Config);
                 break;
+#endif
 
+#ifdef ENABLE_TB
                 case SimType::TB_SIM:
                     newsim = SimulationTB::CreateSimulation(EnvPtr->Config);
                 break;

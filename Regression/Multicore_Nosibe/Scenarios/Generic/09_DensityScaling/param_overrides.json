@@ -68,7 +68,7 @@
             "Simulation_Duration": 360, 
             "Node_Grid_Size": 0.1, 
             "Config_Name": "09_DensityScaling -- multicore -- Madagascar_Nosibe", 
-            "Geography": "Test"
+            "Geography": "Madagascar_Nosibe"
         }
     }
 }

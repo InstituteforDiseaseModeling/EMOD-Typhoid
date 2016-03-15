@@ -227,7 +227,10 @@ namespace Kernel
                 PyTuple_SetItem(vars, 0, py_filename_str);
                 auto retValue = PyObject_CallObject( pFunc, vars );
                 PyErr_Print();
-                return_filename = PyString_AsString( retValue );
+                if( retValue != nullptr )
+                {
+                    return_filename = PyString_AsString( retValue );
+                }
             }
         }
 #endif

@@ -9,13 +9,37 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
+#pragma warning(disable : 4996)
+
 #include <string>
 
+#include "Environment.h"
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifdef ENABLE_PYTHON
-#include "Python.h"
+
+// This disgusting set of macros is so that we can build in Debug without a linker error on python27_d.lib.
+// Python.h includes pyconfig.h which forces the use of python27_d.lib if _DEBUG is defined.  The following
+// macros are to force python to use python27.lib.
+#ifdef WIN32
+#ifdef _DEBUG
+#undef _DEBUG
+#endif
 #endif
 
-#include "Environment.h"
+#include "Python.h"
+
+// This assumes that NDEBUG is defined for Release and
+// _DEBUG is only defined for Debug.
+#ifdef WIN32
+#ifndef NDEBUG
+#define _DEBUG
+#endif
+#endif
+
+#endif //ENABLE_PYTHON
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 #define PythonSupportPtr static_cast<Kernel::PythonSupport*>(EnvPtr->pPythonSupport)
 
