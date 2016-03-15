@@ -10,7 +10,6 @@
                          "Outbreak_Source": "PrevalenceIncrease", 
                          "class": "OutbreakIndividual"
                     }, 
-                    "Number_Distributions": 1000, 
                     "Target_Demographic": "Everyone", 
                     "class": "StandardInterventionDistributionEventCoordinator"
                }, 
@@ -31,7 +30,6 @@
                          "Vaccine_Type": "mOPV_1", 
                          "class": "PolioVaccine"
                     }, 
-                    "Number_Distributions": 1000000, 
                     "Target_Age_Max": 5, 
                     "Target_Age_Min": 0, 
                     "Target_Demographic": "ExplicitAgeRanges", 
