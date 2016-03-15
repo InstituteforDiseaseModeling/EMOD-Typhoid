@@ -424,8 +424,9 @@ else:
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
 
-        if env["Disease"] == "Airborne":
-            eradicationSrcFiles.extend( airborneSrcFiles )
+        if env["Disease"] == "Environmental":
+            eradicationSrcFiles.extend( environmentalSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
             env.Append( CPPDEFINES=["DISABLE_STI" ] )
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
