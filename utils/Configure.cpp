@@ -852,7 +852,6 @@ namespace Kernel
             }
             else
             {
-                LOG_DEBUG_F( "useDefaults = %d\n", _useDefaults );
                 if ( _useDefaults )
                 {
                     // using the default value
@@ -880,6 +879,9 @@ namespace Kernel
             if( inputJson->Exist(key) )
             {
                 val = GET_CONFIG_DOUBLE( inputJson, key.c_str() );
+                *(entry.second) = val;
+                // throw exception if specified value is outside of range
+                EnforceParameterRange<double>( key, val, schema);
             }
             else
             {
@@ -888,18 +890,13 @@ namespace Kernel
                     // using the default value
                     val = schema["default"].As<json::Number>();
                     LOG_INFO_F( "Using the default value ( \"%s\" : %f ) for unspecified parameter.\n", key.c_str(), val );
+                    *(entry.second) = val;
                 }
                 else 
                 {
                     handleMissingParam( key );
                 }
             }
-
-            // throw exception if specified value is outside of range
-            EnforceParameterRange<double>( key, val, schema);
-
-            *(entry.second) = val;
-
             LOG_DEBUG_F("the key %s = double %f\n", key.c_str(), *(entry.second));
         }
 
@@ -916,6 +913,9 @@ namespace Kernel
             {
                 // get specified configuration parameter
                 val = GET_CONFIG_DOUBLE( inputJson, key.c_str() );
+                *(entry.second) = val;
+                // throw exception if specified value is outside of range even though this datatype enforces ranges inherently.
+                EnforceParameterRange<float>( key, val, schema);
             }
             else
             {
@@ -924,17 +924,13 @@ namespace Kernel
                     // using the default value
                     val = (float)schema["default"].As<json::Number>();
                     LOG_INFO_F( "Using the default value ( \"%s\" : %f ) for unspecified parameter.\n", key.c_str(), val );
+                    *(entry.second) = val;
                 }
                 else 
                 {
                     handleMissingParam( key );
                 }
             }
-
-            // throw exception if specified value is outside of range even though this datatype enforces ranges inherently.
-            EnforceParameterRange<float>( key, val, schema);
-
-            *(entry.second) = val;
 
             LOG_DEBUG_F("the key %s = float %f\n", key.c_str(), (float) *(entry.second));
         }
@@ -952,6 +948,8 @@ namespace Kernel
             {
                 // get specified configuration parameter
                 val = (int) GET_CONFIG_INTEGER( inputJson, key.c_str() );
+                *(entry.second) = val;
+                EnforceParameterRange<int>( key, val, schema);
             }
             else
             {
@@ -960,17 +958,13 @@ namespace Kernel
                     // using the default value
                     val = (int)schema["default"].As<json::Number>();
                     LOG_INFO_F( "Using the default value ( \"%s\" : %f ) for unspecified parameter.\n", key.c_str(), val );
+                    *(entry.second) = val;
                 }
                 else 
                 {
                     handleMissingParam( key );
                 }
             }
-
-            // throw exception if specified value is outside of range
-            EnforceParameterRange<int>( key, val, schema);
-
-            *(entry.second) = val;
 
             LOG_DEBUG_F("the key %s = int %f\n", key.c_str(), (int) *(entry.second));
         }
@@ -981,19 +975,23 @@ namespace Kernel
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
             std::string val = schema["default"].As<json::String>();
-            if ( !inputJson->Exist(key) && _useDefaults )
+            if( inputJson->Exist(key) )
             {
-                LOG_INFO_F( "Using the default value ( \"%s\" : \"%s\" ) for unspecified parameter.\n", key.c_str(), val.c_str() );
-                if( _track_missing )
+                *(entry.second) = (std::string) GET_CONFIG_STRING( inputJson, (entry.first).c_str() );
+            }
+            else
+            {
+                if( _useDefaults )
                 {
-                    missing_parameters_set.insert(key);
+                    val = (std::string)schema["default"].As<json::String>();
+                    LOG_INFO_F( "Using the default value ( \"%s\" : \"%s\" ) for unspecified parameter.\n", key.c_str(), val.c_str() );
+                    *(entry.second) = val;
+                }
+                else
+                {
+                    handleMissingParam( key );
                 }
             }
-            else // FALSE-FALSE ends up here
-            {
-                val = (std::string) GET_CONFIG_STRING( inputJson, (entry.first).c_str() );
-            }
-            *(entry.second) = val;
         }
 
         for (auto& entry : conStringConfigTypeMap)
@@ -1002,19 +1000,23 @@ namespace Kernel
             entry.second->parameter_name = key ;
             json::QuickInterpreter schema = jsonSchemaBase[key];
             std::string val = schema["default"].As<json::String>();
-            if ( !inputJson->Exist(key) && _useDefaults )
+            if( inputJson->Exist(key) )
             {
-                LOG_INFO_F( "Using the default value ( \"%s\" : %f ) for unspecified parameter.\n", key.c_str(), val.c_str() );
-                if( _track_missing )
-                {
-                    missing_parameters_set.insert(key);
-                }
+                *(entry.second) = (std::string) GET_CONFIG_STRING( inputJson, (entry.first).c_str() );
             }
             else
             {
-                val = (std::string) GET_CONFIG_STRING( inputJson, (entry.first).c_str() );
+                if( _useDefaults )
+                {
+                    val = (std::string)schema["default"].As<json::String>();
+                    LOG_INFO_F( "Using the default value ( \"%s\" : \"%s\" ) for unspecified parameter.\n", key.c_str(), val.c_str() );
+                    *(entry.second) = val;
+                }
+                else
+                {
+                    handleMissingParam( key );
+                }
             }
-            *(entry.second) = val;
         }
 
         // ---------------------------------- SET of STRINGs ------------------------------------
@@ -1022,24 +1024,22 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
-            if ( !inputJson->Exist(key) )
-            {
-                if( _useDefaults )
-                {
-                    // using the default value
-                    auto val = schema["default"].As<json::Array>();
-                    LOG_INFO_F( "Using the default value ( \"%s\" : <empty string set> ) for unspecified string set parameter.\n", key.c_str() );
-                }
-
-                if( _track_missing )
-                {
-                    missing_parameters_set.insert(key);
-                }
-            }
-            else
+            if ( inputJson->Exist(key) )
             {
                 *(entry.second) = GET_CONFIG_STRING_SET( inputJson, (entry.first).c_str() );
-                // TODO: validate against value_source
+            }
+            else
+            { 
+                if( _useDefaults )
+                {
+                    //auto val = schema["default"].As<json::Array>();
+                    //LOG_INFO_F( "Using the default value ( \"%s\" : <empty string set> ) for unspecified string set parameter.\n", key.c_str() );
+                    //*(entry.second) = val;
+                }
+                else
+                {
+                    handleMissingParam( key );
+                }
             }
         }
 
@@ -1048,7 +1048,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
-            if ( !inputJson->Exist(key) )
+            if ( inputJson->Exist(key) )
+            {
+                *(entry.second) = GET_CONFIG_VECTOR_STRING( inputJson, (entry.first).c_str() );
+            }
+            else
             {
                 if( _useDefaults )
                 {
@@ -1061,10 +1065,7 @@ namespace Kernel
                     missing_parameters_set.insert(key);
                 }
             }
-            else
-            {
-                *(entry.second) = GET_CONFIG_VECTOR_STRING( inputJson, (entry.first).c_str() );
-            }
+
             auto allowed_values = vectorStringConstraintsTypeMap[ key ];
             for( auto &candidate : *(entry.second) )
             {
@@ -1088,16 +1089,16 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
-            if ( !inputJson->Exist(key) && _track_missing )
-            {
-                missing_parameters_set.insert(key);
-            }
-            else
+            if( inputJson->Exist(key) )
             {
                 std::vector<float> configValues = GET_CONFIG_VECTOR_FLOAT( inputJson, (entry.first).c_str() );
                 *(entry.second) = configValues;
 
                 EnforceVectorParameterRanges<float>(key, configValues, schema);
+            }
+            else
+            {
+                handleMissingParam( key );
             }
         }
 
@@ -1106,16 +1107,16 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
-            if ( !inputJson->Exist(key) && _track_missing )
-            {
-                missing_parameters_set.insert(key);
-            }
-            else
+            if( inputJson->Exist(key) )
             {
                 std::vector<int> configValues = GET_CONFIG_VECTOR_INT( inputJson, (entry.first).c_str() );
                 *(entry.second) = configValues;
 
                 EnforceVectorParameterRanges<int>(key, configValues, schema);
+            }
+            else
+            {
+                handleMissingParam( key );
             }
         }
 
@@ -1124,11 +1125,7 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
-            if ( !inputJson->Exist(key) && _track_missing )
-            {
-                missing_parameters_set.insert(key);
-            }
-            else
+            if( inputJson->Exist(key) )
             {
                 std::vector<std::vector<float>> configValues = GET_CONFIG_VECTOR2D_FLOAT( inputJson, (entry.first).c_str() );
                 *(entry.second) = configValues;
@@ -1138,6 +1135,10 @@ namespace Kernel
                     EnforceVectorParameterRanges<float>(key, values, schema);
                 }
             }
+            else
+            {
+                handleMissingParam( key );
+            }
         }
 
         //----------------------------------- VECTOR VECTOR of INTs ------------------------------
@@ -1145,11 +1146,7 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
-            if ( !inputJson->Exist(key) && _track_missing )
-            {
-                missing_parameters_set.insert(key);
-            }
-            else
+            if( inputJson->Exist(key) )
             {
                 std::vector<std::vector<int>> configValues = GET_CONFIG_VECTOR2D_INT( inputJson, (entry.first).c_str() );
                 *(entry.second) = configValues;
@@ -1158,6 +1155,10 @@ namespace Kernel
                 {
                     EnforceVectorParameterRanges<int>(key, values, schema);
                 }
+            }
+            else
+            {
+                handleMissingParam( key );
             }
         }
 /////////////////// END FIX BOUNDARY
