@@ -17,7 +17,6 @@
                          "Secondary_Decay_Time_Constant": 3650, 
                          "class": "SimpleBednet"
                     }, 
-                    "Number_Distributions": -1, 
                     "Number_Repetitions": 1, 
                     "Target_Age_Max": 100, 
                     "Target_Age_Min": 0, 
@@ -46,7 +45,6 @@
                          "Secondary_Decay_Time_Constant": 3650, 
                          "class": "IRSHousingModification"
                     }, 
-                    "Number_Distributions": -1, 
                     "Number_Repetitions": 1, 
                     "Target_Age_Max": 100, 
                     "Target_Age_Min": 0, 
@@ -76,7 +74,6 @@
                          "Vaccine_Type": "AcquisitionBlocking", 
                          "class": "SimpleVaccine"
                     }, 
-                    "Number_Distributions": -1, 
                     "Number_Repetitions": 1, 
                     "Target_Age_Max": 100, 
                     "Target_Age_Min": 0, 
@@ -106,7 +103,6 @@
                          "Vaccine_Type": "TransmissionBlocking", 
                          "class": "SimpleVaccine"
                     }, 
-                    "Number_Distributions": -1, 
                     "Number_Repetitions": 1, 
                     "Target_Age_Max": 100, 
                     "Target_Age_Min": 0, 

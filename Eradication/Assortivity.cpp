@@ -97,7 +97,7 @@ namespace Kernel
             ss << e.GetMsg() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( m_RelType ) << "." ;
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
-        catch( json::Exception& e )
+        catch( const json::Exception &e )
         {
             std::stringstream ss ;
             ss << e.what() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( m_RelType ) << "." ;

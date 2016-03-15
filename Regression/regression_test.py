@@ -238,8 +238,9 @@ class Monitor(threading.Thread):
         with open(os.path.join(sim_dir, "stdout.txt"), "w") as stdout, open(os.path.join(sim_dir, "stderr.txt"), "w") as stderr:
             actual_input_dir = os.path.join( params.input_path, self.config_json["parameters"]["Geography"] )
             cmd = None
-            if params.py_input is not None:
-                cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir, "--python-script-path", params.py_input ]
+            # python-script-path is optional parameter.
+            if "PSP" in self.config_json:
+                cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir, "--python-script-path", self.config_json["PSP"]]
             else:
                 cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir ]
             print( "Calling '" + str(cmd) + "' from " + sim_dir + "\n" )
@@ -592,8 +593,9 @@ class HpcMonitor(Monitor):
         eradication_bin = self.config_json['bin_path']
         eradication_options = { '--config':'config.json', '--input-path':input_dir, '--progress':' ' }
 
-        if params.py_input is not None:
-            eradication_options[ "--python-script-path" ] = params.py_input
+        # python-script-path is optional parameter.
+        if "PSP" in self.config_json:
+            eradication_options[ "--python-script-path" ] = self.config_json["PSP"]
         #if params.dll_root is not None and params.use_dlls is True:
         #    eradication_options['--dll-path'] = params.dll_root
         eradication_params = []
@@ -1040,23 +1042,21 @@ class MyRegressionRunner():
             f.write( str( reports_json ) )
             f.close()
 
+        # Use a local variable here because we don't want the PSP in the config.json that gets written out to disk
+        # but we need it passed through to the monitor thread execution in the reply_json/config_json.
+        py_input = None
         if "Python_Script_Path" in reply_json["parameters"]:
             psp_param = reply_json["parameters"]["Python_Script_Path"]
             if psp_param == "LOCAL":
-                self.params.py_input = "."
+                py_input = "."
                 for py_file in glob.glob( os.path.join( config_id, "dtk_*.py" ) ):
                     regression_runner.copy_sim_file( config_id, sim_dir, os.path.basename( py_file ) )
             elif psp_param == "SHARED":
-                self.params.py_input = params.py_input
+                py_input = params.py_input
             elif psp_param != "NO":
                 print( psp_param + " is not a valid value for Python_Script_Path. Valid values are NO, LOCAL, SHARED. Exiting." )
-                sys.exit()
-                self.params.py_input = None
-            else:
-                self.params.py_input = None
+                sys.exit() 
             del( reply_json["parameters"]["Python_Script_Path"] )
-        else:
-    	    self.params.py_input = None
 
         self.copy_input_files_to_user_input(sim_id, config_id, reply_json, is_local)
 
@@ -1065,6 +1065,10 @@ class MyRegressionRunner():
         f = open( sim_dir + "/config.json", 'w' )
         f.write( json.dumps( reply_json, sort_keys=True, indent=4 ) )
         f.close()
+
+        # now that config.json is written out, add Py Script Path back (if non-empty)
+        if py_input is not None:
+            reply_json["PSP"] = py_input
 
         # save campaign.json
         f = open( sim_dir + "/campaign.json", 'w' )

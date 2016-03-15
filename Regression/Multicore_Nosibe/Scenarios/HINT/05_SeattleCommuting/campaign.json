@@ -14,7 +14,6 @@
                     "class": "OutbreakIndividual",
                     "outbreak_source": "ImportCases"
                 },
-                "Number_Distributions": 1,
                 "Number_Repetitions": 1,
                 "Property_Restrictions": [
                     "Geographic:007"

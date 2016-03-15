@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "NodeSet.h"
 #include "NodeEventContext.h"
+#include "Exceptions.h"
 
 static const char* _module = "NodeSetNodeList";
 
@@ -30,11 +31,24 @@ namespace Kernel
             // haven't parsed raw list yet.
             // Go through list and parse out.
             json::QuickInterpreter nodelist_qi( (*inputJson)[key] );
-            json::QuickInterpreter nodeListJson( nodelist_qi.As<json::Array>() );
-            for( int idx=0; idx<nodelist_qi.As<json::Array>().Size(); idx++ )
+            try {
+                json::QuickInterpreter nodeListJson( nodelist_qi.As<json::Array>() );
+
+                for( int idx=0; idx<nodelist_qi.As<json::Array>().Size(); idx++ )
+                {
+                    try {
+                        auto nodeId = tNodeId(nodeListJson[idx].As<json::Number>());
+                        nodelist.push_back( nodeId );
+                    }
+                    catch( json::Exception)
+                    {
+                        throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, std::to_string( idx ).c_str(), nodeListJson, "Expected NUMBER" );
+                    }
+                }
+            }
+            catch( json::Exception )
             {
-                auto nodeId = tNodeId(nodeListJson[idx].As<json::Number>());
-                nodelist.push_back( nodeId );
+                throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), nodelist_qi, "Expected ARRAY" );
             }
         }
     }

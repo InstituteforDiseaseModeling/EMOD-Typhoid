@@ -142,7 +142,7 @@ namespace Kernel
                         grandTotal += totalIndivGivenIntervention;
                         LOG_INFO_F( "UpdateNodes() gave out %d interventions at node %d\n", totalIndivGivenIntervention, nec->GetId().data );
                     }                   
-                    catch(json::Exception &e)
+                    catch( const json::Exception &e )
                     {
                         throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() );
                     }

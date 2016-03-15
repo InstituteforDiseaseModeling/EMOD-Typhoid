@@ -8,7 +8,6 @@
                     "Genome": 0, 
                     "class": "Outbreak"
                 }, 
-                "Number_Distributions": 10, 
                 "Target_Demographic": "Everyone", 
                 "Travel_Linked": 0, 
                 "class": "StandardInterventionDistributionEventCoordinator"

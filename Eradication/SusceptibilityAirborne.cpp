@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 
-#ifdef ENABLE_TB
+#ifndef DISABLE_AIRBORNE
 
 #include "SusceptibilityAirborne.h"
 

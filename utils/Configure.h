@@ -642,21 +642,31 @@ namespace Kernel
             const char* condition_key = nullptr, const char* condition_value = nullptr
         )
         {
-            json::QuickBuilder custom_schema = pVariable->GetSchema();
+            if( JsonConfigurable::_dryrun )
+            {
+                json::QuickBuilder custom_schema = pVariable->GetSchema();
 
-            // going to get something back like : {
-            //  "type_name" : "idmType:VectorAlleleEnumPair",
-            //  "type_schema" : {
-            //      "first" : ...,
-            //      "second" : ...
-            //      }
-            //  }
-            std::string custom_type_label = (std::string) custom_schema[ _typename_label() ].As<json::String>();
-            json::String custom_type_label_as_json_string = json::String( custom_type_label );
-            jsonSchemaBase[ custom_type_label ] = custom_schema[ _typeschema_label() ];
-            json::Object newComplexTypeSchemaEntry;
-            newComplexTypeSchemaEntry["description"] = json::String( description );
-            newComplexTypeSchemaEntry["type"] = json::String( custom_type_label_as_json_string );
+                // going to get something back like : {
+                //  "type_name" : "idmType:VectorAlleleEnumPair",
+                //  "type_schema" : {
+                //      "first" : ...,
+                //      "second" : ...
+                //      }
+                //  }
+                std::string custom_type_label = (std::string) custom_schema[ _typename_label() ].As<json::String>();
+                json::String custom_type_label_as_json_string = json::String( custom_type_label );
+                jsonSchemaBase[ custom_type_label ] = custom_schema[ _typeschema_label() ];
+                json::Object newComplexTypeSchemaEntry;
+                newComplexTypeSchemaEntry["description"] = json::String( description );
+                newComplexTypeSchemaEntry["type"] = json::String( custom_type_label_as_json_string );
+                if( condition_key && condition_value )
+                {
+                    json::Object condition;
+                    condition[ condition_key ] = json::String( condition_value );
+                    newComplexTypeSchemaEntry["depends-on"] = condition;
+                }
+                jsonSchemaBase[ paramName ] = newComplexTypeSchemaEntry;
+            }
 
             //std::cout << "type = " << typeid( *pVariable ).name() << std::endl;
             //std::cout << "Storing param name to variable mapping in templated static map." << std::endl;
@@ -670,13 +680,6 @@ namespace Kernel
             release_assert( wrapper );
             wrapper->_labelToVariableMap[ std::string( paramName ) ] = pVariable;
 
-            if( condition_key && condition_value )
-            {
-                json::Object condition;
-                condition[ condition_key ] = json::String( condition_value );
-                newComplexTypeSchemaEntry["depends-on"] = condition;
-            }
-            jsonSchemaBase[ paramName ] = newComplexTypeSchemaEntry;
         }
 
         virtual bool Configure( const Configuration* inputJson );
