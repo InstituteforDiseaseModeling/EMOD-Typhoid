@@ -51,7 +51,7 @@ namespace Kernel
         INodeEventContext* parent;
         AgeDependentBitingRisk::Enum age_dependence;
         InputEIRConfig monthly_EIR; // 12 values of EIR by month
-        int today;
+        float today;
         float daily_EIR;
         tAgeBitingFunction risk_function;
     };
