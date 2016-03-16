@@ -222,7 +222,7 @@
         { "path": "STI/62_STI_ERAD_2931_PauseAndRelationshipTermination" },
         { "path": "STI/63_STI_All_Rel_Types_All_Rel_States_Multicore" },
         { "path": "STI/101_MaleCircumcision" },
-        { "path": "STI/102_STIBarrier" }
+        { "path": "STI/102_STIBarrier" },
         { "path" : "HIV/1_HIV_ARTBasic" },
         { "path" : "HIV/2_HIV_Property_Dependent_ART" },
         { "path" : "HIV/3_HIV_Relationship_Duration_Validation" },
@@ -260,7 +260,7 @@
         { "path" : "HIV/42_HIV_MaleCircumcision"},
         { "path" : "HIV/43_HIV_ProportionalAdjustmentEventCoordinator"},
         { "path" : "HIV/44_HIV_CascadeOfCare_MultiNode_SingleCore" },
-        { "path" : "HIV/45_HIV_CascadeOfCare_MultiNode_MultiCore" }
+        { "path" : "HIV/45_HIV_CascadeOfCare_MultiNode_MultiCore" },
         { "path": "Scenarios/STIAndHIV/01_STI_Network/A_Welcome_to_STI_SIM" },
         { "path": "Scenarios/STIAndHIV/01_STI_Network/B_Sexual_Debut" },
         { "path": "Scenarios/STIAndHIV/01_STI_Network/C_Choice_Of_Partner_Age" },
@@ -337,7 +337,7 @@
         { "path" : "00_Households/test_suite/36_5x5_MigrateIndividuals_Duration_At" },
         { "path" : "00_Households/test_suite/37_5x5_x_Local_Migration_Equal_To_Zero" },
         { "path" : "00_Households/test_suite/38_5x5_Migrate_Residents_Only" },
-        { "path" : "00_Households/test_suite/39_5x5_MigrateFamily" }
+        { "path" : "00_Households/test_suite/39_5x5_MigrateFamily" },
         { "path" : "29_TB_Seattle_HTI_HSB_Drugs" },
         { "path" : "31_TB_Seattle_BirthTriggered_BCG_Calendar" },
         { "path" : "32_TB_Seattle_Diagnostic_Drugs" },
