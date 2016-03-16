@@ -686,6 +686,7 @@ namespace Kernel
 
         static const char * _typename_label() { return "type_name"; }
         static const char * _typeschema_label()  { return "type_schema"; }
+        void handleMissingParam( const std::string& key );
     };
 
     // No, we don't need everything from JsonConfigurable. No, this is not the final solution.
