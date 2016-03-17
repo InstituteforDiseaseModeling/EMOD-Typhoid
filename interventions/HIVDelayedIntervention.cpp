@@ -122,7 +122,7 @@ namespace Kernel
                 auto year = parent->GetEventContext()->GetNodeEventContext()->GetTime().Year();
                 remaining_delay_days = year2DelayMap.getValuePiecewiseConstant( year );
                 //LOG_DEBUG_F( "Selecting (for now) %f as delay days because map year %d is not > current year %d\n", remaining_delay_days, map_year, (int) current_year );
-                LOG_DEBUG_F( "Selecting (for now) %f as delay days.\n", remaining_delay_days );
+                LOG_DEBUG_F( "Selecting (for now) %f as delay days.\n", (float) remaining_delay_days );
             }
             break;
 
@@ -131,7 +131,7 @@ namespace Kernel
                 auto year = parent->GetEventContext()->GetNodeEventContext()->GetTime().Year();
                 remaining_delay_days = year2DelayMap.getValueLinearInterpolation( year );
                 //LOG_DEBUG_F( "Selecting (for now) %f as delay days because map year %d is not > current year %d\n", remaining_delay_days, map_year, (int) current_year );
-                LOG_DEBUG_F( "Selecting (for now) %f as delay days.\n", remaining_delay_days );
+                LOG_DEBUG_F( "Selecting (for now) %f as delay days.\n", (float) remaining_delay_days );
             }
             break;
 
@@ -139,7 +139,7 @@ namespace Kernel
                 DelayedIntervention::CalculateDelay();
             break;
         }
-        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
+        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", (float) remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
     }
 
     // todo: lift to HIVIntervention or helper function (repeated in HIVSimpleDiagnostic)
@@ -255,7 +255,7 @@ namespace Kernel
         //DelayedIntervention::Update(dt);
         if( remaining_delay_days > 0 )
         {
-            remaining_delay_days -= dt;
+            remaining_delay_days.Decrement( dt );
             return;
         }
 

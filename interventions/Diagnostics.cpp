@@ -105,7 +105,7 @@ namespace Kernel
         initConfigTypeMap("Base_Specificity",   &base_specificity, SD_Base_Specificity_DESC_TEXT,     1.0f );
         initConfigTypeMap("Base_Sensitivity",   &base_sensitivity, SD_Base_Sensitivity_DESC_TEXT,     1.0f );
         initConfigTypeMap("Treatment_Fraction", &treatment_fraction, SD_Treatment_Fraction_DESC_TEXT, 1.0f );
-        initConfigTypeMap("Days_To_Diagnosis",  &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT,   0 );
+        initConfigTypeMap("Days_To_Diagnosis",  &days_to_diagnosis._timer_value, SD_Days_To_Diagnosis_DESC_TEXT,   0 );
         initConfigTypeMap("Cost_To_Consumer",   &cost_per_unit, SD_Cost_To_Consumer_DESC_TEXT,        0);
     }
 
@@ -136,7 +136,7 @@ namespace Kernel
 
             if( SMART_DRAW(treatment_fraction) )
             {
-                if ( days_to_diagnosis <= 0 )
+                if ( days_to_diagnosis.Expired() )
                 {
                     positiveTestDistribute(); // since there is no waiting time, distribute intervention right now
                 }
@@ -167,13 +167,14 @@ namespace Kernel
         }
 
         // Count down the time until a positive test result comes back
-        days_to_diagnosis -= dt;
+        if( !days_to_diagnosis.Expired() )
+        {
+            days_to_diagnosis.Decrement( dt );
+            return;
+        }
 
         // Give the intervention if the test has come back
-        if( days_to_diagnosis <= 0 )
-        {
-            positiveTestDistribute();
-        }
+        positiveTestDistribute();
     }
 
     bool

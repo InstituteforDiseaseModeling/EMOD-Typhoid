@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Interventions.h"
 #include "InterventionFactory.h"
 #include "DurationDistribution.h"
+#include "Timers.h"
 
 namespace Kernel
 {
@@ -42,7 +43,7 @@ namespace Kernel
         virtual void CalculateDelay();
 
         IIndividualHumanContext *parent;
-        float remaining_delay_days;
+        CountdownTimer remaining_delay_days;
         float coverage;
 
         DurationDistribution delay_distribution;

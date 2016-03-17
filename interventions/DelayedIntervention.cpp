@@ -87,7 +87,7 @@ namespace Kernel
 
         CalculateDelay();
 
-        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
+        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", (float) remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
         return true;
     }
 
@@ -95,7 +95,7 @@ namespace Kernel
     DelayedIntervention::CalculateDelay()
     {
         remaining_delay_days = delay_distribution.CalculateDuration();
-        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
+        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", (float) remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
     }
 
     DelayedIntervention::DelayedIntervention()
@@ -130,9 +130,9 @@ namespace Kernel
     void DelayedIntervention::Update( float dt )
     {
 
-        if( remaining_delay_days > 0 )
+        if( !remaining_delay_days.Expired() )
         {
-            remaining_delay_days -= dt;
+            remaining_delay_days.Decrement( dt );
             return;
         }
 

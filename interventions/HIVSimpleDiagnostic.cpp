@@ -42,7 +42,7 @@ namespace Kernel
 
         initConfigTypeMap("Abort_States", &abortStates, HIV_Abort_States_DESC_TEXT);
         initConfigTypeMap("Cascade_State", &cascadeState, HIV_Cascade_State_DESC_TEXT);
-        initConfigTypeMap("Days_To_Diagnosis", &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT, 0, FLT_MAX, 0);
+        initConfigTypeMap("Days_To_Diagnosis", &days_to_diagnosis._timer_value, SD_Days_To_Diagnosis_DESC_TEXT, 0, FLT_MAX, 0);
     }
 
     HIVSimpleDiagnostic::HIVSimpleDiagnostic( const HIVSimpleDiagnostic& master )
@@ -250,7 +250,7 @@ namespace Kernel
             // ---    Update() is called the same day as Distribute() so we don't want
             // ---    to decrement the counter until the next day.
             // ------------------------------------------------------------------------------
-            days_to_diagnosis -= dt;
+            days_to_diagnosis.Decrement( dt );
         }
 
         ActOnResultsIfTime();
