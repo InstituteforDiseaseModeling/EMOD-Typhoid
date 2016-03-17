@@ -120,8 +120,8 @@ def get_build_var():
     else:
         bv = "Release"
 
-    if has_option( "Dlls" ):
-        bv = bv + "Dll"
+    #if has_option( "Dlls" ):
+        #bv = bv + "Dll"
 
     return bv
 
@@ -133,9 +133,9 @@ add_option( "Release" , "release build" , 0 , True)
 add_option( "Debug" , "debug build" , 0 , True )
 
 # module/linking options
-add_option( "Dlls" , "build all dlls" , 0 , True )
+#add_option( "Dlls" , "build all dlls" , 0 , True )
 #add_option( "Interventions" , "build all intervention dlls" , 0 , True )
-add_option( "DllDisease" , "build disease target dll" , 1 , True) #, Disease="Generic" )
+#add_option( "DllDisease" , "build disease target dll" , 1 , True) #, Disease="Generic" )
 add_option( "Disease" , "build only files for disease target " , 1 , True) #, Disease="Generic" )
 #add_option( "Report" , "build report target dll" , 1 , True) #, Report="Spatial" )
 #add_option( "Campaign" , "build all campaign target dll" , 1 , True) #, Campaign=Bednet
@@ -459,18 +459,18 @@ def doConfigure(myenv):
 def setEnvAttrs(myenv):
 
     diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'TB', "STI", "HIV" ]
-    diseases = ['Generic', 'Vector', 'Malaria', 'Environmental', 'Polio', 'TB', 'STI', 'HIV', 'Py' ]
+    diseases = ['Generic', 'Vector', 'Malaria', 'Polio', 'TB', 'STI', 'HIV', 'Py' ]
     reportdlls = ['Spatial', 'Binned']
     campaigndlls = ['Bednet', 'IRSHousing']
 
     myenv['AllDlls'] = False
-    dlldisease = has_option('DllDisease')
+    #dlldisease = has_option('DllDisease')
     #dllreport = has_option('Report')
     #dllcampaign = has_option('Campaign')
     monodisease = has_option('Disease')
 
-    if has_option('Dlls'):
-        myenv['AllDlls'] = True
+    #if has_option('Dlls'):
+        #myenv['AllDlls'] = True
 
     myenv['AllInterventions'] = False
     #if has_option('Interventions'):
@@ -479,7 +479,7 @@ def setEnvAttrs(myenv):
 #    if has_option('Dlls') or dlldisease or dllreport or dllcampaign:
 #        myenv.Append( CPPDEFINES=["_DLLS_" ] )
 
-    if dlldisease:
+    if False: # dlldisease:
         myenv['DiseaseDll'] = get_option( 'DllDisease' ) # careful, tricky
         print "DiseaseDll=" + myenv['DiseaseDll']
         if myenv['DiseaseDll'] not in diseasedlls:
