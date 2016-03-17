@@ -136,10 +136,10 @@ namespace Kernel
 
             if( SMART_DRAW(treatment_fraction) )
             {
-                if ( days_to_diagnosis.Expired() )
+                /*if ( days_to_diagnosis.Expired() )
                 {
                     positiveTestDistribute(); // since there is no waiting time, distribute intervention right now
-                }
+                }*/
             }
             else
             {
