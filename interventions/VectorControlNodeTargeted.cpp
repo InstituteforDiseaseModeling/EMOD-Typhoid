@@ -131,14 +131,13 @@ namespace Kernel
     }
 
     //--------------------------------------------- Larvicides ---------------------------------------------
-
+#define LV_Killing_Config_DESC_TEXT  "TBD"
+#define LV_Blocking_Config_DESC_TEXT  "TBD"
     bool Larvicides::Configure( const Configuration * inputJson )
     {
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", LV_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
-        //initConfigTypeMap("Killing", &killing, LV_Killing_DESC_TEXT, 0, 1, 0);
-        //initConfigTypeMap("Reduction", &reduction, LV_Reduction_DESC_TEXT, 0, 1, 0);
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Killing_Config",  &killing_config, LV_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Blocking_Config",  &blocking_config, LV_Blocking_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
@@ -169,15 +168,14 @@ namespace Kernel
     }
 
     //--------------------------------------------- SpaceSpraying ---------------------------------------------
-
+#define SS_Killing_Config_DESC_TEXT "TBD"
+#define SS_Reduction_Config_DESC_TEXT "TBD"
     bool SpaceSpraying::Configure( const Configuration * inputJson )
     {
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", SS_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
         initConfig( "Spray_Kill_Target", kill_target, inputJson, MetadataDescriptor::Enum("Spray_Kill_Target", SS_Kill_Target_DESC_TEXT, MDD_ENUM_ARGS(SpaceSprayTarget)) );
-        //initConfigTypeMap("Killing", &killing, SS_Killing_DESC_TEXT, 0, 1, 0);
-        //initConfigTypeMap("Reduction", &reduction, SS_Reduction_DESC_TEXT, 0, 1, 0);
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Reduction_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Killing_Config",  &killing_config, SS_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Reduction_Config",  &blocking_config, SS_Reduction_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
@@ -229,10 +227,10 @@ namespace Kernel
     }
     
     //--------------------------------------------- SpatialRepellent ---------------------------------------------
-
+#define SR_Repellency_Config_DESC_TEXT "TBD"
     bool SpatialRepellent::Configure( const Configuration * inputJson )
     { 
-        initConfigComplexType("Repellency_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Repellency_Config", &blocking_config, SR_Repellency_Config_DESC_TEXT );
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
@@ -255,11 +253,11 @@ namespace Kernel
     }
 
     //--------------------------------------------- ArtificialDiet ---------------------------------------------
-
+#define AD_Target_DESC_TEXT "TBD"
     bool ArtificialDiet::Configure( const Configuration * inputJson )
     {
         initConfig( "Artificial_Diet_Target", attraction_target, inputJson, MetadataDescriptor::Enum("Artificial_Diet_Target", AD_Target_DESC_TEXT, MDD_ENUM_ARGS(ArtificialDietTarget)) );
-        initConfigComplexType("Attraction_Config", &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Attraction_Config", &blocking_config, AD_Attraction_Config_DESC_TEXT );
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
@@ -380,9 +378,7 @@ namespace Kernel
         }
 
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", OT_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
-        //initConfigTypeMap("Killing", &killing, OT_Killing_DESC_TEXT, 0, 1, 0);
         initConfigComplexType("Killing_Config",  &killing_config, VCN_Killing_DESC_TEXT );
-        //initConfigComplexType("Reduction_Config",  &blocking_config, VCN_Killing_DESC_TEXT );
         bool configured = SimpleVectorControlNode::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
@@ -390,11 +386,6 @@ namespace Kernel
             killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
             delete tmp_killing;
             tmp_killing  = nullptr;
-
-            //auto tmp_blocking  = Configuration::CopyFromElement( blocking_config._json  );
-            //blocking_effect  = WaningEffectFactory::CreateInstance( tmp_blocking  );
-            //delete tmp_blocking;
-            //tmp_blocking  = nullptr;
         }
         return configured;
     }

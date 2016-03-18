@@ -17,6 +17,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char* _module = "SimpleIndividualRepellent";
 
+#define SIR_Blocking_Config_DESC_TEXT "TBD"
+
 namespace Kernel
 {
     IMPLEMENT_FACTORY_REGISTERED(SimpleIndividualRepellent)
@@ -26,16 +28,10 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        //initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Blocking_Config", &blocking_config, SIR_Blocking_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            //auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
-            //killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
-            //delete tmp_killing;
-            //tmp_killing = nullptr;
-
             auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
             blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
             delete tmp_blocking;
@@ -45,9 +41,7 @@ namespace Kernel
     }
 
     SimpleIndividualRepellent::SimpleIndividualRepellent()
-        //: killing_effect( nullptr )
         : blocking_effect( nullptr )
-        //, current_killingrate( 0.0f )
         , current_blockingrate( 0.0f )
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
@@ -57,12 +51,6 @@ namespace Kernel
     SimpleIndividualRepellent::SimpleIndividualRepellent( const SimpleIndividualRepellent& master )
     : BaseIntervention( master )
     {
-        //killing_config = master.killing_config;
-        //auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
-        //killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
-        //delete tmp_killing;
-        //tmp_killing = nullptr;
-
         blocking_config = master.blocking_config;
         auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
         blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
