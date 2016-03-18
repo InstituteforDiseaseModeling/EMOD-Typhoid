@@ -46,7 +46,7 @@ namespace Kernel
     {
         initSimTypes( 2, "STI_SIM", "HIV_SIM" );
         initConfigTypeMap( "Negative_Diagnosis_Event", &negative_diagnosis_event, STI_IPD_Negative_Diagnosis_Event_DESC_TEXT );
-        initConfigTypeMap( "Days_To_Diagnosis", &days_to_diagnosis._timer_value, SD_Days_To_Diagnosis_DESC_TEXT, 0, FLT_MAX, 0 );
+        initConfigTypeMap( "Days_To_Diagnosis", &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT, 0, FLT_MAX, 0 );
     }
 
     STIIsPostDebut::STIIsPostDebut( const STIIsPostDebut& master )

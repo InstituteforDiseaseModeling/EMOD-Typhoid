@@ -103,7 +103,7 @@ namespace Kernel
         }
 
         // You have already been chosen to not default, count down the time until your intervention
-        days_to_diagnosis.Decrement( dt );
+        days_to_diagnosis -= dt;
         LOG_DEBUG_F( "Individual %d will not default and has a diagnosis but has %f more days until the intervention is distributed.\n", parent->GetSuid().data, float(days_to_diagnosis) );
 
         // Give the intervention if the test has come back

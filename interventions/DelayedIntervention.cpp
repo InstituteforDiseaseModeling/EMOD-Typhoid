@@ -87,7 +87,7 @@ namespace Kernel
 
         CalculateDelay();
 
-        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", (float) remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
+        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
         return true;
     }
 
@@ -95,7 +95,7 @@ namespace Kernel
     DelayedIntervention::CalculateDelay()
     {
         remaining_delay_days = delay_distribution.CalculateDuration();
-        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", (float) remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
+        LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", remaining_delay_days, DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
     }
 
     DelayedIntervention::DelayedIntervention()
@@ -120,17 +120,22 @@ namespace Kernel
         , delay_distribution( master.delay_distribution )
         , actual_intervention_config( master.actual_intervention_config )
     {
-        remaining_delay_days.handle = std::bind( &DelayedIntervention::Callback, this, 0 );
     }
-
 
     void DelayedIntervention::SetContextTo(IIndividualHumanContext *context)
     {
         parent = context; // for rng
     }
- 
-    void DelayedIntervention::Callback( float dt )
+
+    void DelayedIntervention::Update( float dt )
     {
+
+        if( remaining_delay_days > 0 )
+        {
+            remaining_delay_days -= dt;
+            return;
+        }
+
         try
         {
             // Important: Use the instance method to obtain the intervention factory obj instead of static method to cross the DLL boundary
@@ -179,11 +184,7 @@ namespace Kernel
             // ERROR: ::cerr << "exception casting actual_intervention_config to array! " << e.what() << std::endl;
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); // ( "DelayedIntervention intervention json problem: actual_intervention_config is valid json but needs to be an array." );
         }
-    }
 
-    void DelayedIntervention::Update( float dt )
-    {
-        remaining_delay_days.Decrement( dt );
     }
 
     DelayedIntervention::~DelayedIntervention()

@@ -227,7 +227,7 @@ namespace Kernel
     }
     
     //--------------------------------------------- SpatialRepellent ---------------------------------------------
-#define SR_Repellency_Config_DESC_TEXT "TBD"
+
     bool SpatialRepellent::Configure( const Configuration * inputJson )
     { 
         initConfigComplexType("Repellency_Config", &blocking_config, SR_Repellency_Config_DESC_TEXT );
@@ -253,7 +253,7 @@ namespace Kernel
     }
 
     //--------------------------------------------- ArtificialDiet ---------------------------------------------
-#define AD_Target_DESC_TEXT "TBD"
+
     bool ArtificialDiet::Configure( const Configuration * inputJson )
     {
         initConfig( "Artificial_Diet_Target", attraction_target, inputJson, MetadataDescriptor::Enum("Artificial_Diet_Target", AD_Target_DESC_TEXT, MDD_ENUM_ARGS(ArtificialDietTarget)) );

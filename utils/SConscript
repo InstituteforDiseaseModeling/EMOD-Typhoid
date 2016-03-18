@@ -50,7 +50,6 @@ utilsSrcFiles = [
     "StatusReporter.cpp",
     "stdafx.cpp",
     "suids.cpp",
-    "Timers.cpp",
     "Types.cpp",
     "ValidationLog.cpp"
 ]
