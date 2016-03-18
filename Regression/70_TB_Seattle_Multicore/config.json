@@ -88,7 +88,6 @@
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Regional_Migration_Filename": "Seattle_30arcsec_regional_migration.bin", 
         "Report_Event_Recorder": 0, 
         "Roundtrip_Waypoints": 1, 

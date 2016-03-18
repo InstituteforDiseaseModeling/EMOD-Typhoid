@@ -1562,7 +1562,7 @@ namespace Kernel
 
             // The per-individual infection rate will be later normalized by weighted population in transmissionGroups
             // The "zoonosis_rate" parameter is per individual, so scale by "statPop" before depositing contagion.
-            // N.B. the "Probability of New Infection" reporting channel does not include this effect or the InfectivityScaling above
+            // N.B. the "Daily (Human) Infection Rate" reporting channel does not include this effect or the InfectivityScaling above
 
             // Assume no heterogeneous transmission
             TransmissionGroupMembership_t defaultGroupMembership;

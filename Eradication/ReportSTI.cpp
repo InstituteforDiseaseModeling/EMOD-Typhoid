@@ -236,7 +236,7 @@ static NaturalNumber num_adults_not_related = 0;
         channelDataMap.RemoveChannel( _cum_reported_infections_label );
         channelDataMap.RemoveChannel( _hum_infectious_res_label      );
         channelDataMap.RemoveChannel( _log_prev_label                );
-        channelDataMap.RemoveChannel( _prob_new_infection_label      );
+        channelDataMap.RemoveChannel( _infection_rate_label          );
         channelDataMap.RemoveChannel( _ymc      );
         channelDataMap.RemoveChannel( _yfc      );
     }
