@@ -126,7 +126,6 @@ namespace Kernel
         ICampaignCostObserver * const pICCO
     )
     {
-        //days_to_diagnosis.pCallback = this;
         days_to_diagnosis.handle = std::bind( &SimpleDiagnostic::Callback, this, 0 );
         parent = context->GetParent();
         LOG_DEBUG_F( "Individual %d is getting tested and positive_diagnosis_event = %s.\n", parent->GetSuid().data, positive_diagnosis_event.c_str() );
