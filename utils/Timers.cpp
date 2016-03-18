@@ -26,10 +26,17 @@ namespace Kernel {
             
     void CountdownTimer::Decrement( float dt )
     {
-        _timer_value -= dt;
+        if( expired() )
+        {
+            handle( dt );
+        }
+        else
+        {
+            _timer_value -= dt;
+        }
     }
 
-    bool CountdownTimer::Expired() const
+    bool CountdownTimer::expired() const
     {
         return( _timer_value <= 0 );
     }

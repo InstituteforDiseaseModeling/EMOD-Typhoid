@@ -50,6 +50,7 @@ namespace Kernel
         virtual void onPatientDefault();
         virtual void positiveTestDistribute();
         virtual bool applySensitivityAndSpecificity( bool infected ) const;
+        virtual void Callback( float dt );
 
     protected:
 

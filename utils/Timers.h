@@ -10,8 +10,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 #include "IArchive.h"
 #include "ISerializable.h"
+#include <functional>
 
 namespace Kernel { 
+    /*class ICountdownTimerCallback
+    {
+        public:
+            virtual void Callback( float dt ) = 0;
+    };*/
+
     class CountdownTimer : public ISerializable
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -20,12 +27,14 @@ namespace Kernel {
             CountdownTimer();
             CountdownTimer( float initValue );
             void Decrement( float dt );
-            bool Expired() const;
             operator float() const { return _timer_value; }
             CountdownTimer& operator=( float newValue );
+            std::function< void(float) > handle;
             static void serialize(IArchive& ar, CountdownTimer & ct);
-        //protected:
-            float _timer_value;
+            //bool Expired() const;
+            float _timer_value; // should be protected, but public so it can be used in initConfigTM
+        protected:
+            bool expired() const;
         private:
         
     };

@@ -126,6 +126,8 @@ namespace Kernel
         ICampaignCostObserver * const pICCO
     )
     {
+        //days_to_diagnosis.pCallback = this;
+        days_to_diagnosis.handle = std::bind( &SimpleDiagnostic::Callback, this, 0 );
         parent = context->GetParent();
         LOG_DEBUG_F( "Individual %d is getting tested and positive_diagnosis_event = %s.\n", parent->GetSuid().data, positive_diagnosis_event.c_str() );
 
@@ -134,14 +136,7 @@ namespace Kernel
         {
             LOG_DEBUG_F( "Individual %d tested positive: treatment fraction = %f.\n", parent->GetSuid().data, (float) treatment_fraction );
 
-            if( SMART_DRAW(treatment_fraction) )
-            {
-                /*if ( days_to_diagnosis.Expired() )
-                {
-                    positiveTestDistribute(); // since there is no waiting time, distribute intervention right now
-                }*/
-            }
-            else
+            if( !SMART_DRAW(treatment_fraction) )
             {
                 onPatientDefault();
                 expired = true;         // this person doesn't get the intervention despite the positive test
@@ -167,14 +162,8 @@ namespace Kernel
         }
 
         // Count down the time until a positive test result comes back
-        if( !days_to_diagnosis.Expired() )
-        {
-            days_to_diagnosis.Decrement( dt );
-            return;
-        }
-
+        days_to_diagnosis.Decrement( dt );
         // Give the intervention if the test has come back
-        positiveTestDistribute();
     }
 
     bool
@@ -227,8 +216,14 @@ namespace Kernel
         }
     }
 
+    void SimpleDiagnostic::Callback( float dt )
+    {
+        positiveTestDistribute();
+    }
+
     void SimpleDiagnostic::positiveTestDistribute()
     {
+        release_assert( parent );
         LOG_DEBUG_F( "Individual %d tested 'positive' in SimpleDiagnostic, receiving actual intervention: event = %s.\n", parent->GetSuid().data, positive_diagnosis_event.c_str() );
 
         // Next alternative is that we were configured to broadcast a raw event string. In which case the value will not
