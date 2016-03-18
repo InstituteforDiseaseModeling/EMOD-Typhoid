@@ -122,7 +122,11 @@ void BinnedReport::Initialize( unsigned int nrmSize )
     for (int i : num_bins_per_axis)
         num_total_bins *= i;
 
-    values_per_axis.push_back(std::vector<float>(_age_bin_upper_values, _age_bin_upper_values + (sizeof(_age_bin_upper_values) / sizeof(int))));
+    values_per_axis.resize( num_axes );
+    for( unsigned int idx=0; idx< num_bins_per_axis[0]; idx++ )
+    {
+        values_per_axis[0].push_back( _age_bin_upper_values[idx] );
+    }
 
     initChannelBins();
 }
