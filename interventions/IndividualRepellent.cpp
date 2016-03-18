@@ -17,8 +17,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char* _module = "SimpleIndividualRepellent";
 
-#define SIR_Blocking_Config_DESC_TEXT "TBD"
-
 namespace Kernel
 {
     IMPLEMENT_FACTORY_REGISTERED(SimpleIndividualRepellent)

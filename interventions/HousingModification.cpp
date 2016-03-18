@@ -20,9 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char* _module = "SimpleHousingModification";
 
-#define HM_Killing_Config_DESC_TEXT "TBD"
-#define HM_Blocking_Config_DESC_TEXT "TBD"
-
 namespace Kernel
 {
     IMPLEMENT_FACTORY_REGISTERED(SimpleHousingModification)

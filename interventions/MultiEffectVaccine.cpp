@@ -13,10 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char* _module = "MultiEffectVaccine";
 
-#define MEV_Acquire_Config_DESC_TEXT "TBD"
-#define MEV_Transmit_Config_DESC_TEXT "TBD"
-#define MEV_Mortality_Config_DESC_TEXT "TBD"
-
 namespace Kernel
 {
     BEGIN_QUERY_INTERFACE_BODY(MultiEffectVaccine)

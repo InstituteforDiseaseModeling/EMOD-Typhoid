@@ -131,8 +131,7 @@ namespace Kernel
     }
 
     //--------------------------------------------- Larvicides ---------------------------------------------
-#define LV_Killing_Config_DESC_TEXT  "TBD"
-#define LV_Blocking_Config_DESC_TEXT  "TBD"
+
     bool Larvicides::Configure( const Configuration * inputJson )
     {
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", LV_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );
@@ -168,8 +167,7 @@ namespace Kernel
     }
 
     //--------------------------------------------- SpaceSpraying ---------------------------------------------
-#define SS_Killing_Config_DESC_TEXT "TBD"
-#define SS_Reduction_Config_DESC_TEXT "TBD"
+
     bool SpaceSpraying::Configure( const Configuration * inputJson )
     {
         initConfig( "Habitat_Target", habitat_target, inputJson, MetadataDescriptor::Enum("Habitat_Target", SS_Habitat_Target_DESC_TEXT, MDD_ENUM_ARGS(VectorHabitatType)) );

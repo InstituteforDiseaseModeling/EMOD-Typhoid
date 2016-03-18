@@ -31,7 +31,7 @@ Generic Transmission Blocking (TBD), \
 Generic Pre-erythrocytic (PED), \
 Tafenoquine (TQ)"
 
-#define AD_Attraction_DESC_TEXT "Fraction of feeds attracted to the artificial diet. A parameter that is decayed."
+#define AD_Attraction_Config_DESC_TEXT "Fraction of feeds attracted to the artificial diet. A parameter that is decayed."
 #define AD_Target_DESC_TEXT "The targeted deployment of artificial diet. Possible values are: \
 AD_WithinVillage, \
 AD_OutsideVillage"
