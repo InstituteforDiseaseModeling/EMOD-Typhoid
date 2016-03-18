@@ -123,10 +123,14 @@ void BinnedReport::Initialize( unsigned int nrmSize )
         num_total_bins *= i;
 
     values_per_axis.resize( num_axes );
-    for( unsigned int idx=0; idx< num_bins_per_axis[0]; idx++ )
+    for( int axis_idx=0; axis_idx < num_axes; axis_idx++ )
     {
-        values_per_axis[0].push_back( _age_bin_upper_values[idx] );
+        for( int idx=0; idx< num_bins_per_axis[axis_idx]; idx++ )
+        {
+            values_per_axis[axis_idx].push_back( _age_bin_upper_values[idx] );
+        }
     }
+
 
     initChannelBins();
 }
