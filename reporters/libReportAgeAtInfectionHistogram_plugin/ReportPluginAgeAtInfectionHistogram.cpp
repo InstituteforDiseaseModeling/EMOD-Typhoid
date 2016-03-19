@@ -104,6 +104,7 @@ ReportPluginAgeAtInfectionHistogram::ReportPluginAgeAtInfectionHistogram()
     LOG_INFO( "ReportPluginAgeAtInfectionHistogram ctor\n" );
     report_name = _report_name;
     time_since_last_report = 0;
+    reporting_interval_in_years = 1;
 }
 
 /////////////////////////
