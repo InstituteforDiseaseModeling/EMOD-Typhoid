@@ -45,6 +45,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "StandardEventCoordinator.h"
 #include "DllLoader.h"
 #include "IdmMpi.h"
+#include "IdmString.h"
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !!! By creating an instance of this object, we ensure that the linker does not optimize it away.
@@ -74,6 +75,44 @@ void Usage(char* cmd)
     exit(1);
 }
 
+    const std::vector<std::string> 
+    getSimTypeList()
+    {
+    const char * simTypeListC[] = { "GENERIC_SIM"
+#ifndef DISABLE_VECTOR
+        , "VECTOR_SIM"
+#endif
+#ifndef DISABLE_MALARIA
+            , "MALARIA_SIM"
+#endif
+#ifndef DISABLE_AIRBORNE
+            , "AIRBORNE_SIM"
+#endif
+#ifdef ENABLE_POLIO
+            , "POLIO_SIM"
+#endif
+#ifdef ENABLE_TB
+            , "TB_SIM"
+#endif
+#ifdef ENABLE_TBHIV
+            , "TBHIV_SIM"
+#endif
+#ifndef DISABLE_STI
+            , "STI_SIM"
+#endif
+#ifndef DISABLE_HIV
+            , "HIV_SIM"
+#endif
+#ifdef PYTHON_FEVER
+            , "PY_SIM"
+#endif
+    };
+
+#define KNOWN_SIM_COUNT (sizeof(simTypeListC)/sizeof(simTypeListC[0]))
+    std::vector<std::string> simTypeList( simTypeListC, simTypeListC + KNOWN_SIM_COUNT );
+    return simTypeList;
+    }
+
 int main(int argc, char* argv[])
 {
     // First thing to do when app launches
@@ -88,7 +127,24 @@ int main(int argc, char* argv[])
 #endif
 
     ProgDllVersion* pv = new ProgDllVersion(); // why new this instead of just put it on the stack?
-    LOG_INFO_F( "Intellectual Ventures(R)/EMOD Disease Transmission Kernel %s %s %s\n", pv->getVersion(), pv->getBranch(), pv->getBuildDate() );
+    auto sims = getSimTypeList();
+    std::stringstream output;
+    output << "Intellectual Ventures(R)/EMOD Disease Transmission Kernel "
+           << pv->getVersion()
+	       << pv->getBranch()
+	       << pv->getBuildDate()
+	       << ". ";
+    
+    std::string sim_types_str = "Supports sim_types: ";
+    for( auto sim_type: sims  )
+    {
+        sim_types_str += IdmString( sim_type ).split('_')[0];
+        sim_types_str += ", ";
+    }
+    sim_types_str.pop_back();
+    sim_types_str.pop_back();
+    output << sim_types_str << "." << std::endl;
+    LOG_INFO_F( output.str().c_str() );
     delete pv;
  
 /* // for debugging all kernel allocations, use inner block around controller lifetime to ignore some environment and mpi stuff
@@ -241,38 +297,9 @@ void IDMAPI writeInputSchemas(
     Kernel::JsonConfigurable::_dryrun = true;
     std::ostringstream oss;
 
-    const char * simTypeListC[] = { "GENERIC_SIM"
-#ifndef DISABLE_VECTOR
-        , "VECTOR_SIM"
-#endif
-#ifndef DISABLE_MALARIA
-        , "MALARIA_SIM"
-#endif
-#ifndef DISABLE_AIRBORNE
-        , "AIRBORNE_SIM"
-#endif
-#ifdef ENABLE_POLIO
-        , "POLIO_SIM"
-#endif
-#ifdef ENABLE_TB
-        , "TB_SIM"
-#endif
-#ifdef ENABLE_TBHIV
-        , "TBHIV_SIM"
-#endif
-#ifndef DISABLE_STI
-        , "STI_SIM"
-#endif
-#ifndef DISABLE_HIV
-        , "HIV_SIM"
-#endif
-    };
-
-#define KNOWN_SIM_COUNT (sizeof(simTypeListC)/sizeof(simTypeListC[0]))
-
-    std::vector<std::string> simTypeList( simTypeListC, simTypeListC + KNOWN_SIM_COUNT );
+    
     json::Object configSchemaAll;
-    for (auto& sim_type : simTypeList)
+    for (auto& sim_type : getSimTypeList())
     {
         json::Object fakeSimTypeConfigJson;
         fakeSimTypeConfigJson["Simulation_Type"] = json::String(sim_type);
@@ -603,14 +630,14 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
         {
             status = controller->Execute();
             if (status)
+        {
+            release_assert( EnvPtr );
+            if ( EnvPtr->MPI.Rank == 0 )
             {
-                release_assert( EnvPtr );
-		if ( EnvPtr->MPI.Rank == 0 )
-		{
-                    PythonSupportPtr->RunPostProcessScript( EnvPtr->OutputPath );
-		}
-                LOG_INFO( "Controller executed successfully.\n" );
+                PythonSupportPtr->RunPostProcessScript( EnvPtr->OutputPath );
             }
+            LOG_INFO( "Controller executed successfully.\n" );
+        }
             else
             {
                 LOG_INFO( "Controller execution failed, exiting.\n" );
