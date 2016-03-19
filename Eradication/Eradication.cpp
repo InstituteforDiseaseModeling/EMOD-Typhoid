@@ -131,15 +131,19 @@ int main(int argc, char* argv[])
     std::stringstream output;
     output << "Intellectual Ventures(R)/EMOD Disease Transmission Kernel "
            << pv->getVersion()
-	   << pv->getBranch()
-	   << pv->getBuildDate()
-	   << ". Supports sim_types: ";
+	       << pv->getBranch()
+	       << pv->getBuildDate()
+	       << ". ";
+    
+    std::string sim_types_str = "Supports sim_types: ";
     for( auto sim_type: sims  )
     {
-        output << IdmString( sim_type ).split('_')[0] << "...";
+        sim_types_str += IdmString( sim_type ).split('_')[0];
+        sim_types_str += ", ";
     }
-    output << "."
-	   << std::endl;
+    sim_types_str.pop_back();
+    sim_types_str.pop_back();
+    output << sim_types_str << "." << std::endl;
     LOG_INFO_F( output.str().c_str() );
     delete pv;
  
