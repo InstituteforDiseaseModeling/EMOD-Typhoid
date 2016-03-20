@@ -37,7 +37,7 @@ namespace Kernel
 
         if( (broadcast_event == NO_TRIGGER_STR) || broadcast_event.IsUninitialized() )
         {
-            LOG_WARN_F("BroadcastEvent was configured with NoTrigger (or uninitialized) as the Broadcast_Event.  This special event will not be broadcast.");
+            LOG_WARN_F("BroadcastEvent was configured with NoTrigger (or uninitialized) as the Broadcast_Event.  This special event will not be broadcast.\n");
         }
         return ret;
     }

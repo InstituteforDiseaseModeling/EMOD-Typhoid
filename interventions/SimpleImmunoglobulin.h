@@ -19,6 +19,7 @@ namespace Kernel
 
     public:
         SimpleImmunoglobulin();
+        virtual ~SimpleImmunoglobulin();
         SimpleImmunoglobulin( const SimpleImmunoglobulin& );
         bool Configure( const Configuration* pConfig );
         virtual void Update(float dt) override;
