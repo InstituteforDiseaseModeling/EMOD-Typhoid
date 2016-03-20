@@ -68,8 +68,8 @@ namespace Kernel
         bool distribution_complete;
         int num_repetitions;
         int tsteps_between_reps;
-        bool include_emigrants;
-        bool include_immigrants;
+        //bool include_emigrants;
+        //bool include_immigrants;
         int tsteps_since_last;
         int intervention_activated;
         InterventionConfig intervention_config;

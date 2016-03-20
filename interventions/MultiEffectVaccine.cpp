@@ -32,9 +32,9 @@ namespace Kernel
     )
     {
         initConfigTypeMap("Vaccine_Take", &vaccine_take, SV_Vaccine_Take_DESC_TEXT, 0.0, 1.0, 1.0 ); 
-        initConfigComplexType("Acquire_Config",  &acquire_config, "TBD" );
-        initConfigComplexType("Transmit_Config",  &transmit_config, "TBD" );
-        initConfigComplexType("Mortality_Config", &mortality_config, "TBD" );
+        initConfigComplexType("Acquire_Config",  &acquire_config, MEV_Acquire_Config_DESC_TEXT );
+        initConfigComplexType("Transmit_Config",  &transmit_config, MEV_Transmit_Config_DESC_TEXT );
+        initConfigComplexType("Mortality_Config", &mortality_config, MEV_Mortality_Config_DESC_TEXT  );
 
         bool configured = BaseIntervention::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )

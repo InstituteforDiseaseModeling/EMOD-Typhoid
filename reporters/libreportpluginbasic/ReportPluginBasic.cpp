@@ -111,7 +111,7 @@ static const char * _new_rep_infs_label = "New Reported Infections";
 static const char * _cum_rep_infs_label = "Cumulative Reported Infections";
 static const char * _disease_deaths_label = "Disease Deaths";
 static const char * _camp_cost_label = "Campaign Cost";
-static const char * _prob_new_inf_label = "Probability of New Infection";
+static const char * _inf_rate_label = "Daily (Human) Infection Rate";
 static const char * _log_prev_label = "Log Prevalence";
 
 
@@ -156,7 +156,7 @@ CustomReport::LogNodeData(
     //Accumulate(_disease_deaths_label, pNC->GetDiseaseDeaths());
     Accumulate(_camp_cost_label,      pNC->GetCampaignCost());
     Accumulate(_hum_inf_res_label,    pNC->GetInfectivity());
-    Accumulate(_prob_new_inf_label,   pNC->GetInfectionRate());
+    Accumulate(_inf_rate_label,       pNC->GetInfectionRate());
 }
 
 void 
@@ -222,7 +222,7 @@ CustomReport::populateSummaryDataUnitsMap(
     //units_map["Cumulative Disease Deaths"]           = "";
     units_map[_camp_cost_label]                      = "USD";
     units_map[_hum_inf_res_label]                    = "Total Infectivity";
-    units_map[_prob_new_inf_label]                   = "Infection Rate";
+    units_map[_inf_rate_label]                       = "Infection Rate";
 }
 
 // not sure whether to leave this in custom demo subclass
@@ -234,6 +234,6 @@ CustomReport::postProcessAccumulatedData()
     //normalizeChannel(channel_name, &value, _air_temp_label,              timestep, (float)nrmSize);
     //normalizeChannel(channel_name, &value, _land_temp_label,             timestep, (float)nrmSize);
     normalizeChannel(_hum_inf_res_label,  (float)_nrmSize);
-    normalizeChannel(_prob_new_inf_label, (float)_nrmSize);
+    normalizeChannel(_inf_rate_label,     (float)_nrmSize);
     normalizeChannel(_rainfall_label,     (float)_nrmSize * (1 / 1000.0f)); // multiply by 1000 to get result in mm/day
 }

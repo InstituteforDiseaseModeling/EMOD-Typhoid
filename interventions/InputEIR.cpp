@@ -138,9 +138,12 @@ namespace Kernel
 
     void InputEIR::Update( float dt )
     {
-        daily_EIR = monthly_EIR.at( (today / IDEALDAYSPERMONTH) % MONTHSPERYEAR ) / IDEALDAYSPERMONTH;
-        today++;
-        LOG_DEBUG_F("Day = %d, annualized EIR = %0.2f\n", today, 365*daily_EIR);
+        float ACTUALDAYSPERMONTH = float(DAYSPERYEAR) / MONTHSPERYEAR;  // 30.416666
+        int month_index = int(today / ACTUALDAYSPERMONTH) % MONTHSPERYEAR;
+        daily_EIR = monthly_EIR.at(month_index) / ACTUALDAYSPERMONTH;
+        today += dt;
+
+        LOG_DEBUG_F("Day = %d, annualized EIR = %0.2f\n", today, DAYSPERYEAR*daily_EIR);
 
         ISporozoiteChallengeConsumer *iscc;
         if (s_OK == parent->QueryInterface(GET_IID(ISporozoiteChallengeConsumer), (void**)&iscc))

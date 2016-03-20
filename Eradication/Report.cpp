@@ -39,7 +39,7 @@ const string Report::_new_reported_infections_label( "New Reported Infections" )
 const string Report::_cum_reported_infections_label( "Cumulative Reported Infections" );
 const string Report::_hum_infectious_res_label( "Human Infectious Reservoir" );
 const string Report::_log_prev_label( "Log Prevalence" );
-const string Report::_prob_new_infection_label( "Probability of New Infection" );
+const string Report::_infection_rate_label( "Daily (Human) Infection Rate" );
 const string Report::_aoi_label( "Age Of Infection" );
 
 /////////////////////////
@@ -151,7 +151,7 @@ Report::LogNodeData(
 
     Accumulate("Campaign Cost",                  pNC->GetCampaignCost());
     Accumulate("Human Infectious Reservoir",     pNC->GetInfectivity());
-    Accumulate("Probability of New Infection",   pNC->GetInfectionRate());  // TODO: does accumulating probabilities in this way make sense for multinode sims?
+    Accumulate(_infection_rate_label,   pNC->GetInfectionRate());
 
     AccumulateSEIRW();
 }
@@ -161,20 +161,20 @@ Report::populateSummaryDataUnitsMap(
     std::map<std::string, std::string> &units_map
 )
 {
-    units_map[_stat_pop_label]         = "Population";
+    units_map[_stat_pop_label]                  = "Population";
     units_map["Births"]                         = "Births";
     units_map["Infected"]                       = _infected_fraction_label;
-    units_map[_log_prev_label]                 = "Log Prevalence";
+    units_map[_log_prev_label]                  = "Log Prevalence";
     units_map["Rainfall"]                       = "mm/day";
     units_map["Temperature"]                    = "degrees C";
-    units_map[_new_infections_label]                 = "";
+    units_map[_new_infections_label]            = "";
     units_map["Cumulative Infections"]          = "";
     units_map["Reported New Infections"]        = "";
     units_map[_cum_reported_infections_label]   = "";
     units_map["Disease Deaths"]                 = "";
     units_map["Campaign Cost"]                  = "USD";
     units_map[_hum_infectious_res_label]        = "Total Infectivity";
-    units_map[_prob_new_infection_label]   = "Infection Rate";
+    units_map[_infection_rate_label]            = "Infection Rate";
 
     AddSEIRWUnits(units_map);
 }
@@ -195,7 +195,7 @@ Report::postProcessAccumulatedData()
         normalizeChannel("Rainfall", float(_nrmSize) * (1 / 1000.0f)); // multiply by 1000 to get result in mm/day
     }
     normalizeChannel( _hum_infectious_res_label, float(_nrmSize) );
-    normalizeChannel( _prob_new_infection_label, float(_nrmSize) );
+    normalizeChannel( _infection_rate_label, float(_nrmSize) );
 
     // add derived channels
     addDerivedLogScaleSummaryChannel("Infected", _log_prev_label);

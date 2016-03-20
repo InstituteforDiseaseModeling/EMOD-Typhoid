@@ -16180,7 +16180,7 @@
                 0.7692307829857
             ]
         },
-        "Probability of New Infection": {
+        "Daily (Human) Infection Rate": {
             "Units": "Infection Rate",
             "Data": [
                 0,

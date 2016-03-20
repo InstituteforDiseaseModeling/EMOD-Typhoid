@@ -31,7 +31,7 @@ Generic Transmission Blocking (TBD), \
 Generic Pre-erythrocytic (PED), \
 Tafenoquine (TQ)"
 
-#define AD_Attraction_DESC_TEXT "Fraction of feeds attracted to the artificial diet. A parameter that is decayed."
+#define AD_Attraction_Config_DESC_TEXT "Fraction of feeds attracted to the artificial diet. A parameter that is decayed."
 #define AD_Target_DESC_TEXT "The targeted deployment of artificial diet. Possible values are: \
 AD_WithinVillage, \
 AD_OutsideVillage"
@@ -49,24 +49,17 @@ AD_OutsideVillage"
 #define DRUG_Secondary_Decay_Time_Constant_DESC_TEXT "The secondary decay time constant of the decay profile."
 #define DRUG_Dose_Interval_DESC_TEXT     "Interval between doses, in days."
 #define DRUG_Bodyweight_Exponent_DEST_TEXT "Effect of body weight on maximum drug concentration in an individual patient."
-#define HST_Attract_Rate_DESC_TEXT "The fraction of human-feeding attempts attracted to a trap. A parameter that is decayed."
+
+//#define HST_Attract_Rate_DESC_TEXT "The fraction of human-feeding attempts attracted to a trap. A parameter that is decayed."
+//#define HST_Killing_Rate_DESC_TEXT "The fraction of feeds on the human host seeking trap. A parameter that is decayed."
 #define HST_Cost_To_Consumer_DESC_TEXT "Unit cost per trap (unamortized)."
-#define HST_Durability_Time_Profile_DESC_TEXT "BOXDURABILITY - Efficacy (for human host seeking trap attacting and killing) remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" and \"secondary_decay_time_constant\". For human host seeking trap, killing is governed by primary, and attracting is governed by secondary. Remember that killing is conditional on attracting, so if attracting drops to zero due to tearing of the net, then no killing will occur, even if killing efficacy is nonzero. \
-DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for attracting efficacy. \
-BOXDECAYDURABILITY - Both killing and attracting have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. \
-"
-#define HST_Killing_Rate_DESC_TEXT "The fraction of feeds on the human host seeking trap. A parameter that is decayed."
-#define HST_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile (for killing). See the durability_time_profile."
-#define HST_Secondary_Decay_Time_Constant_DESC_TEXT "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile."
-#define HM_Blocking_Rate_DESC_TEXT "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed."
-#define HM_Cost_To_Consumer_DESC_TEXT "Unit cost per housing modification (unamortized)."
-#define HM_Durability_Time_Profile_DESC_TEXT "BOXDURABILITY - Efficacy remains at its initial level for a fixed duration at which point the efficacy drops to zero. Two time constants are provided \"primary_decay_time_constant\" for the killing efficacy and \"secondary_decay_time_constant\" for the blocking efficacy. \
-DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. \
-BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. \
-"
-#define HM_Killing_Rate_DESC_TEXT "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed."
-#define HM_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile (for killing). See the durability_time_profile."
-#define HM_Secondary_Decay_Time_Constant_DESC_TEXT "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile."
+#define HST_Killing_Config_DESC_TEXT "TBD"
+#define HST_Attract_Config_DESC_TEXT "TBD"
+//#define HM_Blocking_Rate_DESC_TEXT "The current blocking rate. Blocking with a household modification corresponds to the pre-feed repellency, which means that the mosquito skips the feed and flies out the door. A parameter that is decayed."
+#define HM_Cost_To_Consumer_DESC_TEXT "Unit cost per housing modification (unamortized)." 
+//#define HM_Killing_Rate_DESC_TEXT "The current killing rate. Killing with a housing modification intervention is conditional on NOT repelling the mosquito pre-feed. A parameter that is decayed."
+#define HM_Killing_Config_DESC_TEXT "TBD"
+#define HM_Blocking_Config_DESC_TEXT "TBD"
 
 #define IVM_Cost_To_Consumer_DESC_TEXT "Unit cost per Ivermectin dosing (unamortized)."
 #define IVM_Killing_Config_DESC_TEXT   "Configuration of drug-killing efficacy and waning"
@@ -80,8 +73,10 @@ If false (0), all calendar dates/doses are applied independently of each other. 
 #define CAL_Age_DESC_TEXT "An array of ages (in days). In IVCalendar, there is a list of actual interventions where the distribution is dependent on whether the individual's age matches the next date in the calendar."
 #define CAL_Probability_DESC_TEXT "The probability of an individual receiving the list of actual interventions at the corresponding age."
 
-#define LV_Killing_DESC_TEXT "Larval killing of targeted stage. A parameter that is decayed."
-#define LV_Reduction_DESC_TEXT "Larval habitat reduction in the targeted quantity. A parameter that is decayed."
+#define LV_Killing_Config_DESC_TEXT  "TBD"
+#define LV_Blocking_Config_DESC_TEXT  "TBD"
+//#define LV_Killing_DESC_TEXT "Larval killing of targeted stage. A parameter that is decayed."
+//#define LV_Reduction_DESC_TEXT "Larval habitat reduction in the targeted quantity. A parameter that is decayed."
 #define LV_Habitat_Target_DESC_TEXT "The larval habitat type targeted for larvicide. Possible values are: \
 TEMPORARY_RAINFALL \
 WATER_VEGETATION \
@@ -158,16 +153,10 @@ LLIN, \
 Retreatment. \
 Note: This enum does not affect the code at all. \
 "
-#define SB_Blocking_Rate_DESC_TEXT "A fraction of feed attempts that have been blocked. The rate of blocking indoor feeds on individuals with an ITN. A parameter that is decayed."
+#define SB_Blocking_Config_DESC_TEXT "A fraction of feed attempts that have been blocked. The rate of blocking indoor feeds on individuals with an ITN. A parameter that is decayed."
+#define SB_Killing_Config_DESC_TEXT "A fraction of feed attempts that kill the vector. The rate at which the mosquito dies conditional on a successfully blocked feed. A parameter that is decayed."
 #define SB_Cost_To_Consumer_DESC_TEXT "Unit cost per bednet (unamortized)."
-#define SB_Durability_Time_Profile_DESC_TEXT "Profile of durability time decay that specifies the time course of efficacy. Possible values are: \
-BOXDURABILITY - Efficacy (for bednets blocking or killing) remains at its initial level for a fixed duration at which point the efficacy drops to zero.  Two time constants are provided \"primary_decay_time_constant\" and \"secondary_decay_time_constant\".  For bednets, the killing efficacy is governed by the primary decay time constant and the blocking efficacy is governed by the secondary decay time constant.  Remember that killing is conditional on blocking, so if blocking drops to zero due to tearing of the net, then no killing will occur, even if killing efficacy is nonzero. \
-DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. \
-BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. \
-"
-#define SB_Killing_Rate_DESC_TEXT "A fraction of feed attempts that kill the vector. The rate at which the mosquito dies conditional on a successfully blocked feed. A parameter that is decayed."
-#define SB_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile. profile (for killing). See the durability_time_profile."
-#define SB_Secondary_Decay_Time_Constant_DESC_TEXT "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile."
+
 #define SD_Base_Sensitivity_DESC_TEXT "The sensitivity of the diagnostic. This sets the proportion of the time that individuals with the condition being tested receive a positive diagnostic test. When set to 1, the diagnostic always accurately reflects the condition. When set to zero, then individuals who have the condition always receive a false-negative diagnostic test."
 #define SD_Base_Specificity_DESC_TEXT "The specificity of the diagnostic. This sets the proportion of the time that individuals without the condition being tested receive a negative diagnostic test. When set to 1, the diagnostic always accurately reflects the lack of having the condition. When set to zero, then individuals who do not have the condition always receive a false-positive diagnostic test."
 #define SD_Cost_To_Consumer_DESC_TEXT "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation."
@@ -208,27 +197,20 @@ BOXDECAYDURABILITY - The primary and secondary decay time constants work togethe
 #define SI_Secondary_Decay_Time_Constant_DESC_TEXT "Only relevant when BOXDECAYDURABILITY is set for decaying the efficacy by the combination of a box function and an exponential decay. See the durability_time_profile."
 #define SI_Vaccine_Type_DESC_TEXT "The type of immunoglobulin. Possible values are: \
 StrainSpecific"
-#define SIR_Blocking_Rate_DESC_TEXT "The current blocking rate. A parameter that is decayed."
+//#define SIR_Blocking_Rate_DESC_TEXT "The current blocking rate. A parameter that is decayed."
 #define SIR_Cost_To_Consumer_DESC_TEXT "Unit cost per repellent (unamortized)."
-#define SIR_Durability_Time_Profile_DESC_TEXT "Profile of durability time decay that specifies the time course of efficacy. Possible values are: \
-BOXDURABILITY - Efficacy (for repellents blocking or killing) blocking is the key efficacy for repellents and killing should be set to zero. Two time constants are provided \"primary_decay_time_constant\" and \"secondary_decay_time_constant\". For repellents, the killing efficacy is governed by the primary decay time constant and the decay of blocking is governed by the secondary decay time constant. DECAYDURABILITY - Both efficacies immediately begin to decay exponentially, with primary_decay_time_constant setting the decay time constant for killing efficacy, and secondary_decay_time_constant setting the decay time constant for blocking efficacy. \
-BOXDECAYDURABILITY - Both killing and blocking have the same durability profile, in which the efficacy remains at the initial level for primary_decay_time_constant, at which point it decays exponentially with the time constant secondary_decay_time_constant. \
-"
-#define SIR_Killing_Rate_DESC_TEXT "The current killing rate. A parameter that is decayed."
-#define SIR_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile (for killing). See the durability_time_profile."
-#define SIR_Secondary_Decay_Time_Constant_DESC_TEXT "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile."
+
+//#define SIR_Killing_Rate_DESC_TEXT "The current killing rate. A parameter that is decayed."
+//#define SIR_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile (for killing). See the durability_time_profile."
+//#define SIR_Secondary_Decay_Time_Constant_DESC_TEXT "The secondary decay time constant of the decay profile (for repellency/blocking). See the durability_time_profile."
+#define SIR_Blocking_Config_DESC_TEXT "TBD"
 #define SV_Cost_To_Consumer_DESC_TEXT "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation."
-#define SV_Durability_Time_Profile_DESC_TEXT "Profile of durability time decay. Possible values are: \
-BOXDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. In principle, a generic vaccine_type will have both reduced acquisition and transmission, but it is not decayed separately. \
-DECAYDURABILITY - Only the primary_decay_time_constant matters, since there is a single efficacy. \
-BOXDECAYDURABILITY - The primary and secondary decay time constants work together. Efficacy is constant for the interval described by \"primary_decay_time_constant\", and then decays exponentially with the time constant \"secondary_decay_time_constant\". \
- \
-"
-#define SV_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile. See durability_time_profile."
-#define SV_Reduced_Acquire_DESC_TEXT "The acquisition reduction ratio."
-#define SV_Reduced_Transmit_DESC_TEXT "The transmission reduction ratio."
-#define SV_Reduced_Mortality_DESC_TEXT "The mortality reduction ratio."
-#define SV_Secondary_Decay_Time_Constant_DESC_TEXT "Only relevant when BOXDECAYDURABILITY is set for decaying the efficacy by the combination of a box function and an exponential decay. See the durability_time_profile."
+
+//#define SV_Primary_Decay_Time_Constant_DESC_TEXT "The primary decay time constant of the decay profile. See durability_time_profile."
+//#define SV_Reduced_Acquire_DESC_TEXT "The acquisition reduction ratio."
+//#define SV_Reduced_Transmit_DESC_TEXT "The transmission reduction ratio."
+//#define SV_Reduced_Mortality_DESC_TEXT "The mortality reduction ratio."
+//#define SV_Secondary_Decay_Time_Constant_DESC_TEXT "Only relevant when BOXDECAYDURABILITY is set for decaying the efficacy by the combination of a box function and an exponential decay. See the durability_time_profile."
 #define SV_Vaccine_Take_DESC_TEXT "This specifies the rate at which delivered vaccines will successfully stimulate an immune response and achieve the desired efficacy. If vaccine_take is set to 0.9, then with a 90 percent chance, the vaccine will start with the specified efficacy, and with a 10 percent chance it will have no efficacy at all."
 #define SV_Vaccine_Type_DESC_TEXT "Type of vaccine to distribute in a vaccine intervention. Possible values are: \
 - Generic - The vaccine can have all of \"reduced_transmit\", \"reduced_acquire\", and \"reduced_mortality\" fields and the vaccine will have both effects. \
@@ -237,6 +219,13 @@ BOXDECAYDURABILITY - The primary and secondary decay time constants work togethe
 - MortalityBlocking - Specifies the fraction by which the disease-mortality rate of a vaccinated Individual is reduced (\"reduced_mortality\"). \
  \
 "
+#define MEV_Acquire_Config_DESC_TEXT "TBD"
+#define MEV_Transmit_Config_DESC_TEXT "TBD"
+#define MEV_Mortality_Config_DESC_TEXT "TBD"
+
+
+#define SS_Killing_Config_DESC_TEXT "TBD"
+#define SS_Reduction_Config_DESC_TEXT "TBD"
 #define SS_Kill_Target_DESC_TEXT "The gender kill target of space spraying. Possible values are: \
 SpaceSpray_FemalesOnly \
 SpaceSpray_MalesOnly \
@@ -251,6 +240,8 @@ CONSTANT \
 BRACKISH_SWAMP \
 ALL_HABITATS \
 "
+
+#define SR_Repellency_Config_DESC_TEXT "TBD"
 #define SR_Repellency_DESC_TEXT "Fraction of feeds repelled by spatial repellent. A parameter that is decayed."
 #define ST_Cost_To_Consumer_DESC_TEXT "Unit cost per vector control (unamortized)."
 #define ST_Durability_Time_Profile_DESC_TEXT "Profile of durability time decay. Possible values are: \
@@ -472,4 +463,5 @@ EXPONENTIAL_DURATION"
 #define Male_Circumcision_Reduced_Acquire_DESC_TEXT "Reduction of susceptibility to HIV by VMMC."
 #define Male_Circumcision_Distributed_Event_Trigger_DESC_TEXT "TBD"
 #define Male_Circumcision_Apply_If_Higher_Reduced_Acquire_DESC_TEXT "TBD"
+
 

@@ -18,6 +18,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorInterventionsContainer.h"  // for IVectorInterventionEffectsSetter methods
 
 static const char* _module = "HumanHostSeekingTrap";
+//#define HST_Killing_Config_DESC_TEXT "TBD"
+//#define HST_Attract_Config_DESC_TEXT "TBD"
 
 namespace Kernel
 {
@@ -59,8 +61,8 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Attract_Config",  &attract_config, "TBD" /*IVM_attract_Config_DESC_TEXT*/ );
+        initConfigComplexType("Killing_Config",  &killing_config, HST_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Attract_Config",  &attract_config, HST_Attract_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {

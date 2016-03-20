@@ -77,6 +77,6 @@ protected:
     static const std::string Report::_cum_reported_infections_label;
     static const std::string Report::_hum_infectious_res_label;
     static const std::string Report::_log_prev_label;
-    static const std::string Report::_prob_new_infection_label;
+    static const std::string Report::_infection_rate_label;
     static const std::string Report::_aoi_label;
 };

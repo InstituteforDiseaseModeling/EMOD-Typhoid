@@ -43870,7 +43870,7 @@
                 709
             ]
         },
-        "Probability of New Infection": {
+        "Daily (Human) Infection Rate": {
             "Units": "Infection Rate",
             "Data": [
                 5.426908683148e-005,
