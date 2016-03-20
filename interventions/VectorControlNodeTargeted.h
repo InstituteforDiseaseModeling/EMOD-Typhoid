@@ -18,7 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "VectorEnums.h"
 #include "Configure.h"
-#include "WaningEffect.h"
+#include "IWaningEffect.h"
 
 namespace Kernel
 {

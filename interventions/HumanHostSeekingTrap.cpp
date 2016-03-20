@@ -18,8 +18,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorInterventionsContainer.h"  // for IVectorInterventionEffectsSetter methods
 
 static const char* _module = "HumanHostSeekingTrap";
-//#define HST_Killing_Config_DESC_TEXT "TBD"
-//#define HST_Attract_Config_DESC_TEXT "TBD"
 
 namespace Kernel
 {
@@ -36,6 +34,12 @@ namespace Kernel
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, HST_Cost_To_Consumer_DESC_TEXT, 0, 999999, 3.75 );
         
+    }
+
+    HumanHostSeekingTrap::~HumanHostSeekingTrap()
+    {
+        delete killing_effect;
+        delete attract_effect;
     }
 
     HumanHostSeekingTrap::HumanHostSeekingTrap( const HumanHostSeekingTrap& master )

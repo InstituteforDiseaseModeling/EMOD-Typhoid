@@ -46,6 +46,11 @@ namespace Kernel
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, SIR_Cost_To_Consumer_DESC_TEXT, 0, 999999, 8.0);
     }
 
+    SimpleIndividualRepellent::~SimpleIndividualRepellent()
+    {
+        delete blocking_effect;
+    }
+
     SimpleIndividualRepellent::SimpleIndividualRepellent( const SimpleIndividualRepellent& master )
     : BaseIntervention( master )
     {

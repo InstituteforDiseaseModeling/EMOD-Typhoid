@@ -2226,6 +2226,9 @@
     <ClInclude Include="PyInterventionsContainer.h">
       <Filter>Source Files\Campaign\InterventionContainers\Py</Filter>
     </ClInclude>
+    <ClInclude Include="..\interventions\IWaningEffect.h">
+      <Filter>Source Files\Campaign\WaningEffects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Eradication.rc" />

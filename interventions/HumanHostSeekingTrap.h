@@ -19,7 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "FactorySupport.h"
 #include "Configure.h"
-#include "WaningEffect.h"
+#include "IWaningEffect.h"
 
 namespace Kernel
 {
@@ -38,7 +38,7 @@ namespace Kernel
         bool Configure( const Configuration * config );
         HumanHostSeekingTrap();
         HumanHostSeekingTrap( const HumanHostSeekingTrap& );
-        virtual ~HumanHostSeekingTrap() { }
+        virtual ~HumanHostSeekingTrap();
 
         // IDistributableIntervention
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );

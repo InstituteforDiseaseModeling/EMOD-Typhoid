@@ -29,6 +29,12 @@ namespace Kernel
         // cost_per_unit...
     }
 
+    SimpleImmunoglobulin::~SimpleImmunoglobulin()
+    {
+        delete acquire_effect;
+        delete transmit_effect;
+    }
+
     SimpleImmunoglobulin::SimpleImmunoglobulin( const SimpleImmunoglobulin& master )
     {
         vaccine_type = master.vaccine_type;

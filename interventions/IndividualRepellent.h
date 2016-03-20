@@ -18,7 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configuration.h"
 #include "InterventionEnums.h"
 #include "Configure.h"
-#include "WaningEffect.h"
+#include "IWaningEffect.h"
 
 namespace Kernel
 {
@@ -34,7 +34,7 @@ namespace Kernel
 
         SimpleIndividualRepellent();
         SimpleIndividualRepellent( const SimpleIndividualRepellent& );
-        virtual ~SimpleIndividualRepellent() { }
+        virtual ~SimpleIndividualRepellent();
 
         // IDistributableIntervention
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver  * const pCCO );
