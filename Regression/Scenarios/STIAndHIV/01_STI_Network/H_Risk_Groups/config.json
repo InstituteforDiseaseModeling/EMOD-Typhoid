@@ -51,7 +51,7 @@
         "Enable_Vital_Dynamics": 1, 
         "Extra_Relational_Rate_Ratio_Female": 2, 
         "Extra_Relational_Rate_Ratio_Male": 4, 
-        "Geography": "SamplesInput_HIV", 
+        "Geography": "SamplesInput", 
         "Heterogeneous_Infectiousness_Weibull_Heterogeneity": 0, 
         "Heterogeneous_Infectiousness_Weibull_Scale": 1, 
         "Immunity_Acquisition_Factor": 0, 
