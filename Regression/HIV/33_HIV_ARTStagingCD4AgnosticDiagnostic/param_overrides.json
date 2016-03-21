@@ -31,7 +31,6 @@
 		], 
 
 		"____________REPORTING___________": "",
-		"Enable_Demographics_Reporting": 1,
 		"Report_HIV_Event_Channels_List" : [
 			"NewInfectionEvent",
 			"HIVNeedsHIVTest",
