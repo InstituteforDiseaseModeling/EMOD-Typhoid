@@ -10470,60 +10470,6 @@
 					"iv_type" : "IndividualTargeted",
 					"class" : "IVCalendar"
 				},
-				"ImportPressure" : {
-					"Sim_Types" : [
-						"GENERIC_SIM"
-					],
-					"Antigen" : {
-						"description" : "The antigenic ID of the outbreak infection.",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 10,
-						"default" : 0
-					},
-					"Genome" : {
-						"description" : "The genetic ID of the outbreak infection.",
-						"type" : "integer",
-						"min" : -1,
-						"max" : 1.67772e+007,
-						"default" : 0
-					},
-					"Incubation_Period_Override" : {
-						"description" : "0 = outbreak will bypass incubation, 1 = outbreak infection will start from beginning",
-						"type" : "bool",
-						"default" : 0
-					},
-					"Durations" : {
-						"description" : "Durations to apply import pressure over.",
-						"type" : "Vector Int",
-						"min" : 0,
-						"max" : 2.14748e+009,
-						"default" : 1
-					},
-					"Daily_Import_Pressures" : {
-						"description" : "daily importation pressures to apply",
-						"type" : "Vector Float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 0
-					},
-					"Number_Cases_Per_Node" : {
-						"description" : "Number of new cases of Outbreak to import (per node). This will increase population. There is no control over demographics of these individuals.",
-						"type" : "integer",
-						"min" : 0,
-						"max" : 2.14748e+009,
-						"default" : 1
-					},
-					"Import_Age" : {
-						"description" : "Age (in days) of infected import cases",
-						"type" : "float",
-						"min" : 0,
-						"max" : 43800,
-						"default" : 365
-					},
-					"iv_type" : "NodeTargeted",
-					"class" : "ImportPressure"
-				},
 				"InputEIR" : {
 					"Sim_Types" : [
 						"MALARIA_SIM"
@@ -12435,45 +12381,6 @@
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "SimpleHousingModification"
-				},
-				"SimpleImmunoglobulin" : {
-					"Sim_Types" : [
-						"*"
-					],
-					"Dont_Allow_Duplicates" : {
-						"description" : "TBD",
-						"type" : "bool",
-						"default" : 0
-					},
-					"Cost_To_Consumer" : {
-						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 999999,
-						"default" : 10
-					},
-					"Vaccine_Type" : {
-						"type" : "enum",
-						"enum" : [
-							"StrainSpecific",
-							"BroadlyNeutralizing"
-						],
-						"description" : "The type of immunoglobulin. Possible values are: StrainSpecific",
-						"default" : "StrainSpecific"
-					},
-					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
-					},
-					"Acquire_Config" : {
-						"description" : "TBD",
-						"type" : "idmType:WaningEffect"
-					},
-					"Transmit_Config" : {
-						"description" : "TBD",
-						"type" : "idmType:WaningEffect"
-					},
-					"iv_type" : "IndividualTargeted",
-					"class" : "SimpleImmunoglobulin"
 				},
 				"SimpleIndividualRepellent" : {
 					"Sim_Types" : [
