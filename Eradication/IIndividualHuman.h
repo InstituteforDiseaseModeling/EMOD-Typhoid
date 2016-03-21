@@ -53,6 +53,9 @@ namespace Kernel
         virtual IIndividualHumanInterventionsContext* GetInterventionsContext() const = 0;
 
         virtual tProperties* GetProperties() = 0;
+        virtual const std::string& GetPropertyReportString() const = 0;
+        virtual void SetPropertyReportString( const std::string& str ) = 0;
+
         virtual INodeContext* GetParent() const = 0;
 
         virtual IIndividualHumanEventContext *GetEventContext() = 0;    // access to specific attributes of the individual useful for events
