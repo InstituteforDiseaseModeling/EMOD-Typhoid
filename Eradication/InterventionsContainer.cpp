@@ -261,6 +261,7 @@ namespace Kernel
             (*pProps)[ property ] = new_value;
             parent->UpdateGroupMembership();
             parent->UpdateGroupPopulation(1.0f);
+            parent->SetPropertyReportString("");
         }
         else
         {

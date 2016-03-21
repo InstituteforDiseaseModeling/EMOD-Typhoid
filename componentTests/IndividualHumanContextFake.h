@@ -126,6 +126,9 @@ public:
     virtual IIndividualHumanInterventionsContext* GetInterventionsContextbyInfection(Infection* infection)       override { throw std::exception("The method or operation is not implemented."); }
     virtual const NodeDemographicsDistribution*   GetDemographicsDistribution(std::string)                 const override { throw std::exception("The method or operation is not implemented."); }        
 
+    virtual const std::string& GetPropertyReportString() const     override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetPropertyReportString( const std::string& str ) override { throw std::exception("The method or operation is not implemented."); }
+
     // --------------------------------
     // --- IIndividualHuman Methods
     // --------------------------------
