@@ -1,9 +1,6 @@
 {
     "tests": [
         {
-            "path" : "Multicore_Nosibe/89_Generic_SimpleImmunoglobulin"
-        }, 
-        {
             "path" : "Multicore_Nosibe/97_Generic_Intervention_ImportPressure"
         },    
         {

@@ -8,7 +8,6 @@
         { "path": "59_Generic_Individual_Properties" },
         { "path": "65_Generic_Seattle_CoverageByNode" },
         { "path": "72_DistributionOverlay" },
-        { "path": "89_Generic_SimpleImmunoglobulin" },
         { "path": "90_Generic_Namawala_Climate_Constant" },
         { "path": "91_Generic_Namawala_Climate_Data" },
         { "path": "92_Generic_Namawala_Property_Restrictions_NLHTI" },

@@ -144,7 +144,6 @@ else:
                             "../interventions/PropertyValueChanger.cpp",
                             "../interventions/Outbreak.cpp",
                             "../interventions/OutbreakIndividual.cpp",
-                            "../interventions/SimpleImmunoglobulin.cpp",
                             "../interventions/SimpleVaccine.cpp",
                             "../interventions/MultiEffectVaccine.cpp",
                             "../interventions/WaningEffectBox.cpp",

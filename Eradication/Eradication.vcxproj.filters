@@ -375,9 +375,6 @@
     <ClCompile Include="..\interventions\SimpleVaccine.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
-    <ClCompile Include="..\interventions\SimpleImmunoglobulin.cpp">
-      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
-    </ClCompile>
     <ClCompile Include="Migration.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
@@ -1306,9 +1303,6 @@
     </ClInclude>
     <ClInclude Include="VectorCohortWithHabitat.h">
       <Filter>Source Files\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interventions\SimpleImmunoglobulin.h">
-      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
     <ClInclude Include="..\interventions\OutbreakIndividual.h">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>

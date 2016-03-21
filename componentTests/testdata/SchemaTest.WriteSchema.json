@@ -12436,45 +12436,6 @@
 					"iv_type" : "IndividualTargeted",
 					"class" : "SimpleHousingModification"
 				},
-				"SimpleImmunoglobulin" : {
-					"Sim_Types" : [
-						"*"
-					],
-					"Dont_Allow_Duplicates" : {
-						"description" : "TBD",
-						"type" : "bool",
-						"default" : 0
-					},
-					"Cost_To_Consumer" : {
-						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 999999,
-						"default" : 10
-					},
-					"Vaccine_Type" : {
-						"type" : "enum",
-						"enum" : [
-							"StrainSpecific",
-							"BroadlyNeutralizing"
-						],
-						"description" : "The type of immunoglobulin. Possible values are: StrainSpecific",
-						"default" : "StrainSpecific"
-					},
-					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
-					},
-					"Acquire_Config" : {
-						"description" : "TBD",
-						"type" : "idmType:WaningEffect"
-					},
-					"Transmit_Config" : {
-						"description" : "TBD",
-						"type" : "idmType:WaningEffect"
-					},
-					"iv_type" : "IndividualTargeted",
-					"class" : "SimpleImmunoglobulin"
-				},
 				"SimpleIndividualRepellent" : {
 					"Sim_Types" : [
 						"VECTOR_SIM",
