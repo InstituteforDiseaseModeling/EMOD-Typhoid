@@ -257,7 +257,6 @@
     <ClCompile Include="..\interventions\HIVPreARTNotification.cpp" />
     <ClCompile Include="..\interventions\HIVSetCascadeState.cpp" />
     <ClCompile Include="..\interventions\MigrateIndividuals.cpp" />
-    <ClCompile Include="..\interventions\ImportPressure.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBox.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBoxExponential.cpp" />
     <ClCompile Include="..\interventions\WaningEffectExponential.cpp" />
@@ -568,7 +567,6 @@
     <ClInclude Include="..\interventions\IDrug.h" />
     <ClInclude Include="..\interventions\IHealthSeekingBehavior.h" />
     <ClInclude Include="..\interventions\IHIVCascadeStateIntervention.h" />
-    <ClInclude Include="..\interventions\ImportPressure.h" />
     <ClInclude Include="..\interventions\IndividualRepellent.h" />
     <ClInclude Include="..\interventions\InputEIR.h" />
     <ClInclude Include="..\interventions\Ivermectin.h" />

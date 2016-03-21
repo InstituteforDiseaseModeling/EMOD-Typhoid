@@ -924,9 +924,6 @@
     <ClCompile Include="..\interventions\MaleCircumcision.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI</Filter>
     </ClCompile>
-    <ClCompile Include="..\interventions\ImportPressure.cpp">
-      <Filter>Source Files\Campaign\NodeTargeted</Filter>
-    </ClCompile>
     <ClCompile Include="CalendarEventCoordinator.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
@@ -2072,9 +2069,6 @@
     </ClInclude>
     <ClInclude Include="SimulationTBHIV.h">
       <Filter>Source Files\TBHIV</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interventions\ImportPressure.h">
-      <Filter>Source Files\Campaign\NodeTargeted</Filter>
     </ClInclude>
     <ClInclude Include="CalendarEventCoordinator.h">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>

@@ -136,7 +136,6 @@ else:
                             "../interventions/BroadcastEventToOtherNodes.cpp",
                             "../interventions/Drugs.cpp",
                             "../interventions/HealthSeekingBehavior.cpp",
-                            "../interventions/ImportPressure.cpp",
                             "../interventions/MigrateIndividuals.cpp",
                             "../interventions/MigrateFamily.cpp",
                             "../interventions/MultiInterventionDistributor.cpp",

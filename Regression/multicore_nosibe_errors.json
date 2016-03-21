@@ -1,6 +1,5 @@
 {
     "tests": [
-        { "path": "Multicore_Nosibe/97_Generic_Intervention_ImportPressure",             "note": "Issue #38 -- Occasional exception. Failed validation otherwise." }
     ],
     "good": [
         { "path": "Multicore_Nosibe/14_Polio_Bihar_Larger" },

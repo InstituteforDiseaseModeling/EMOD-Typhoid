@@ -15,7 +15,6 @@
         { "path": "94_Generic_InfectivityForcing_Sinusoid" },
         { "path": "95_Generic_InfectivityForcing_Boxcar" },
         { "path": "96_Generic_CalendarEventCoordinator" },
-        { "path": "97_Generic_Intervention_ImportPressure" },
         { "path": "106_Generic_AgeDependentSusceptibility" },
         { "path": "107_Generic_Intervention_SimpleDiagnostic" },
         { "path": "108_Generic_MigrationByAgeAndGender" },
