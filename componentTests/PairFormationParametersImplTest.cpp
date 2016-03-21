@@ -13,6 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <memory> // unique_ptr
 #include "UnitTest++.h"
 #include "PairFormationParametersImpl.h"
+#include "common.h"
 
 using namespace std; 
 using namespace Kernel; 
@@ -240,8 +241,11 @@ SUITE(PairFormationParametersImplTest)
         catch( DetailedException& re )
         {
             std::string msg = re.GetMsg();
-            //std::cout << msg << std::endl ;
-            CHECK_LN( msg.find( rExpMsg ) != string::npos, lineNumber );
+            if( msg.find( rExpMsg ) == string::npos )
+            {
+                PrintDebug( msg );
+                CHECK_LN( false, lineNumber );
+            }
         }
     }
 
@@ -260,7 +264,7 @@ SUITE(PairFormationParametersImplTest)
     TEST(TestMissingFemaleBinCount)
     {
         TestHelper_Exception( __LINE__, "testdata/PairFormationParametersTest/TestMissingFemaleBinCount.json",
-            "Object name not found: Number_Age_Bins_Female\nWas reading values for TRANSITORY." ) ;
+            "Parameter 'Number_Age_Bins_Female' not found in input file 'N/A'.\n\nWas reading values for TRANSITORY." ) ;
     }
 
     TEST(TestBadMarginalProbabilityValue)

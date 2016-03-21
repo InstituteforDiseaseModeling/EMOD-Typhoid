@@ -54,6 +54,11 @@ namespace Kernel
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, IVM_Cost_To_Consumer_DESC_TEXT, 0, 999999, 8.0);
     }
 
+    Ivermectin::~Ivermectin()
+    {
+        delete killing_effect;
+    }
+
     bool Ivermectin::Distribute( IIndividualHumanInterventionsContext *context,
                                  ICampaignCostObserver * const pCCO )
     {

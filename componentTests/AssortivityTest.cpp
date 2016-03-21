@@ -599,8 +599,11 @@ SUITE(AssortivityTest)
         catch( DetailedException& re )
         {
             std::string msg = re.GetMsg();
-            //std::cout << msg << std::endl ;
-            CHECK_LN( msg.find( rExpMsg ) != string::npos, lineNumber );
+            if( msg.find( rExpMsg ) == string::npos )
+            {
+                PrintDebug( msg );
+                CHECK_LN( false, lineNumber );
+            }
         }
     }
 
@@ -669,13 +672,13 @@ SUITE(AssortivityTest)
     TEST_FIXTURE(AssortivityFixture, TestMissingStartYear)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/AssortivityTest/TestMissingStartYear.json",
-            "Object name not found: Start_Year\nWas reading values for TRANSITORY." );
+            "Parameter 'Start_Year' not found in input file 'N/A'.\n\nWas reading values for TRANSITORY." );
     }
 
     TEST_FIXTURE(AssortivityFixture, TestMissingGroup)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/AssortivityTest/TestMissingGroup.json",
-            "Object name not found: Group\nWas reading values for TRANSITORY." );
+            "While trying to parse json data for param >>> Group <<< in otherwise valid json segment" );
     }
 
     TEST_FIXTURE(AssortivityFixture, TestMatrixRowAllZeros)

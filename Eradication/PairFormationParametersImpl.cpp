@@ -244,24 +244,33 @@ namespace Kernel
         initConfigTypeMap( "Joint_Probabilities",            &joint_probabilities,      Joint_Probabilities_DESC_TEXT,            0.0,  FLT_MAX,    0.0f   ); 
 
         bool ret = false;
+        bool prev_use_defaults = JsonConfigurable::_useDefaults ;
+        bool reset_track_missing = JsonConfigurable::_track_missing;
+        JsonConfigurable::_track_missing = false;
+        JsonConfigurable::_useDefaults = false ;
         
         try
         {
-            bool prev_use_defaults = JsonConfigurable::_useDefaults ;
-            JsonConfigurable::_useDefaults = false ;
 
             ret = JsonConfigurable::Configure( inputJson );
 
             JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = reset_track_missing;
         }
         catch( DetailedException& e )
         {
+            JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = reset_track_missing;
+
             std::stringstream ss ;
             ss << e.GetMsg() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( rel_type ) << "." ;
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
         catch( json::Exception& e )
         {
+            JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = reset_track_missing;
+
             std::stringstream ss ;
             ss << e.what() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( rel_type ) << "." ;
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );

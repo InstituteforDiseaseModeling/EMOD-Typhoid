@@ -89,7 +89,12 @@ namespace Kernel
         tmp_mortality = nullptr;
     }
 
-    MultiEffectVaccine::~MultiEffectVaccine() { }
+    MultiEffectVaccine::~MultiEffectVaccine()
+    {
+        delete acquire_effect;
+        delete transmit_effect;
+        delete mortality_effect;
+    }
 
     void MultiEffectVaccine::Update( float dt )
     {
