@@ -812,6 +812,9 @@ namespace Kernel
                 }
                 // get specified configuration parameter
                 val = (int)GET_CONFIG_INTEGER(inputJson,key.c_str());
+                // throw exception if value is outside of range
+                EnforceParameterRange<int>( key, val, schema );
+                *(entry.second) = val;
             }
             else
             {
@@ -820,6 +823,7 @@ namespace Kernel
                     // using the default value
                     val = (int)schema["default"].As<json::Number>();
                     LOG_INFO_F( "Using the default value ( \"%s\" : %d ) for unspecified parameter.\n", key.c_str(), val );
+                    *(entry.second) = val;
                 }
                 else 
                 {
@@ -827,10 +831,6 @@ namespace Kernel
                 }
             }
 
-            // throw exception if value is outside of range
-            EnforceParameterRange<int>( key, val, schema );
-
-            *(entry.second) = val;
 
             LOG_DEBUG_F("the key %s = int %d\n", key.c_str(), *(entry.second));
         }
