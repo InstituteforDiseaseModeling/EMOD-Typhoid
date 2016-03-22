@@ -717,10 +717,13 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
     if( EnvPtr != nullptr )
     {
         EnvPtr->Log->Flush();
+#if 0
+        // Workaround: let's not do this.
         if((Kernel::SimulationConfig*)EnvPtr->SimConfig)
         {
             ((Kernel::SimulationConfig*)EnvPtr->SimConfig)->Release();
         }
+#endif
         EnvPtr->Log->Flush();
     }
 
