@@ -71,7 +71,7 @@ namespace Kernel
         std::string CreatePythonScriptPath( const std::string& script_filename );
         bool PythonScriptCheckExists( const std::string&script_filename );
         void PythonScriptsNotFound();
-        char* PythonHomePath();
+        std::string PythonHomePath();
 
         std::string m_PythonScriptPath;
         bool m_IsGettingSchema;
