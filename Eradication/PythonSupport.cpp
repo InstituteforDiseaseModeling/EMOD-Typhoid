@@ -145,8 +145,6 @@ namespace Kernel
         Py_SetPythonHome( const_cast<char*>(python_home.c_str()) ); // add capability to override from command line???
 #endif
 
-        //std::cout << __FUNCTION__ << ": " << python_script_name << ": " << python_function_name << std::endl;
-        //std::cout << "Calling Py_Initialize." << std::endl;
         Py_Initialize();
 
         //std::cout << "Calling PySys_GetObject('path')." << std::endl;
@@ -208,7 +206,9 @@ namespace Kernel
         if( !pFunc )
         {
             PyErr_Print();
-            throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, "Failed to find function 'application' in python script." );
+            std::stringstream msg;
+            msg << "Failed to find function '" << python_function_name << "' in python script.";
+            throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str());
         }
         //std::cout << "Returning from IdmPyInit." << std::endl;
         return pFunc;
@@ -229,9 +229,15 @@ namespace Kernel
                 PyTuple_SetItem(vars, 0, py_filename_str);
                 auto retValue = PyObject_CallObject( pFunc, vars );
                 PyErr_Print();
-                if( retValue != nullptr )
+                if( retValue != nullptr && std::string( retValue->ob_type->tp_name ) != "NoneType" )
                 {
                     return_filename = PyString_AsString( retValue );
+                }
+                else
+                {
+                    std::stringstream msg;
+                    msg << "'application' function in python pre-process script failed to return string.";
+                    throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str());
                 }
             }
         }
