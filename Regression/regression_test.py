@@ -1396,16 +1396,8 @@ def setup():
     parser.add_argument("--dll-path", help="Path to the root directory of the DLLs to use (e.g. contains reporter_plugins)")
     parser.add_argument("--skip-emodule-check", action="store_true", default=False, help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
     parser.add_argument("--config-constraints", default=[], action="append", help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
-    parser.add_argument("--scons", help="assume scons build")
+    parser.add_argument("--scons", action="store_true", default=False, help="Indicates scons build so look for custom DLLs in the build/64/Release directory.")
     args = parser.parse_args()
-
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # The following is a hack to force the use of the STI custom report.
-    # This can be removed once we can control 'scons' in bamboo
-    if os.path.isfile( "../build/x64/Release/reporter_plugins/libstirelationshipmigrationtracking.dll" ):
-        args.scons = True
-        args.use_dlls = True
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     global params
     params = RuntimeParameters(args)
