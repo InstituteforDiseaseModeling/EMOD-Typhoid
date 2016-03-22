@@ -108,6 +108,9 @@ namespace Kernel
         
         virtual void UpdateGroupMembership() = 0;
         virtual void UpdateGroupPopulation(float size_changes) = 0;
+
+        virtual const std::string& GetPropertyReportString() const = 0;
+        virtual void SetPropertyReportString( const std::string& str ) = 0;
     };
 
 // helper macro for readability

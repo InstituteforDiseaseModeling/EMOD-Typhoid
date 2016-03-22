@@ -40,17 +40,19 @@ namespace Kernel
 
 #pragma warning( push )
 #pragma warning( disable: 4996 )
-    char* PythonSupport::PythonHomePath()
+    std::string PythonSupport::PythonHomePath()
     {
-        char* python_path = getenv("PYTHONHOME");
-        if( python_path == nullptr )
+        char* c_python_path = getenv("PYTHONHOME");
+        if( c_python_path == nullptr )
         {
-            python_path = DEFAULT_PYTHON_HOME;
+            c_python_path = DEFAULT_PYTHON_HOME;
         }
+        std::string str_python_path = c_python_path;
+        str_python_path = FileSystem::RemoveTrailingChars( str_python_path );
+        
+        std::cout << "Python home path: " << str_python_path << std::endl;
 
-        std::cout << "Python home path: " << python_path << std::endl;
-
-        return python_path;
+        return str_python_path;
     }
 #pragma warning( pop )
 

@@ -57,6 +57,12 @@ namespace Kernel
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, SB_Cost_To_Consumer_DESC_TEXT, 0, 999999, 3.75 );
     }
 
+    SimpleBednet::~SimpleBednet()
+    {
+        delete killing_effect;
+        delete blocking_effect;
+    }
+
     bool
     SimpleBednet::Configure(
         const Configuration * inputJson

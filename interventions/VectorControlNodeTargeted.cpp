@@ -75,6 +75,8 @@ namespace Kernel
 
     SimpleVectorControlNode::~SimpleVectorControlNode()
     {
+        delete killing_effect;
+        delete blocking_effect;
     }
 
     void SimpleVectorControlNode::SetContextTo( INodeEventContext *context )

@@ -180,7 +180,7 @@
         "RARELY_CHANGED": {
             "Config_Name": "Baseline",
             "Scenario": "Baseline",
-            "Geography": "SamplesInput_HIV",
+            "Geography": "SamplesInput",
 
             "Acquisition_Blocking_Immunity_Decay_Rate": 1,
             "Acquisition_Blocking_Immunity_Duration_Before_Decay": 2,

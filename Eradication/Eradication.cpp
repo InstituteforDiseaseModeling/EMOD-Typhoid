@@ -40,7 +40,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "InterventionFactory.h"
 #include "EventCoordinator.h"
-#include "WaningEffect.h"
+#include "IWaningEffect.h"
 #include "CampaignEvent.h"
 #include "StandardEventCoordinator.h"
 #include "DllLoader.h"

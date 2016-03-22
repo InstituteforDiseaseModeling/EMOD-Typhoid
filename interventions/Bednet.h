@@ -18,7 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "FactorySupport.h"
 #include "Configure.h"
-#include "WaningEffect.h"
+#include "IWaningEffect.h"
 #include "EventTrigger.h"
 
 namespace Kernel
@@ -43,7 +43,7 @@ namespace Kernel
     public:
         SimpleBednet();
         SimpleBednet( const SimpleBednet& );
-        virtual ~SimpleBednet() { }
+        virtual ~SimpleBednet();
 
         virtual bool Configure( const Configuration * config ) override;
 
