@@ -442,7 +442,8 @@ def doConfigure(myenv):
 
     if 'CheckCXX' in dir( conf ):
         if  not conf.CheckCXX():
-            print( "c++ compiler not installed!" )
+            print( "c++ compiler test failed!" )
+            print( "This sometimes happens even though the compiler is fine and can be resolved by performing a 'scons -c' followed by manually removing the .sconf_temp folder and .sconsign.dblite. It can also be because mpich_devel is not installed." )
             Exit(1)
             
     """
