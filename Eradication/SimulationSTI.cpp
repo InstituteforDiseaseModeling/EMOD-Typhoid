@@ -96,6 +96,11 @@ namespace Kernel
         IndividualHumanSTIConfig fakeHumanSTIConfig;
         LOG_INFO( "Calling Configure on fakeHumanSTIConfig\n" );
         fakeHumanSTIConfig.Configure( config );
+
+        if( !JsonConfigurable::_dryrun && this->GetSimulationConfigObj()->migration_structure != MigrationStructure::NO_MIGRATION )
+        {
+            throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Migration is not yet supported in STI/HIV." );
+        }
     }
 
     bool
@@ -106,9 +111,11 @@ namespace Kernel
         initConfigTypeMap( "Base_Year",  &base_year, Base_Year_DESC_TEXT, MIN_YEAR, MAX_YEAR, DEFAULT_BASE_YEAR );
 
         bool ret = Simulation::Configure( inputJson );
-
-        LOG_INFO_F("Setting Base_Year to %f\n", base_year );
-        currentTime.setBaseYear( base_year );
+        if( ret )
+        {
+            LOG_INFO_F("Setting Base_Year to %f\n", base_year );
+            currentTime.setBaseYear( base_year );
+        }
 
         return ret;
     }
