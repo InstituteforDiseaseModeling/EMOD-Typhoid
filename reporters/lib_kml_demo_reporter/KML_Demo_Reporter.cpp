@@ -274,7 +274,6 @@ void KML_Demo_Reporter::Finalize()
          ++it )
     {
         const std::string &channelName = it->first;
-        std::string output_dir = "output\\";
         std::string fileName = "ReportByNode_"+channelName + ".csv";
 
         //space to underscore
@@ -288,7 +287,7 @@ void KML_Demo_Reporter::Finalize()
 
         // Write nodeID in column 1, and data in subsequent columns
         std::ofstream channelDataFile;
-        channelDataFile.open( output_dir+fileName);
+        channelDataFile.open( FileSystem::Concat( EnvPtr->OutputPath, fileName ) );
 
         std::stringstream channelStringStream;
         for( tNode2DataMapVec::const_iterator it2 = node2DataMapVec.begin();
@@ -344,8 +343,6 @@ void KML_Demo_Reporter::WriteKmlData()
 {
     LOG_INFO( __FUNCTION__ );
 
-    std::string output_dir = "output/";
-
     // Iterate over nodeChannelMapVec, channel by channel
     for( tChannel2Node2DataMapVec::iterator it = nodeChannelMapVec.begin();
          it != nodeChannelMapVec.end();
@@ -372,7 +369,7 @@ void KML_Demo_Reporter::WriteKmlData()
         FILE * fp_master=nullptr;
         FILE * fp_clone=nullptr;
         fopen_s( &fp_master, master_filename, "r" );
-        fopen_s( &fp_clone, ( std::string( output_dir ) + kml_file ).c_str(), "w" );
+        fopen_s( &fp_clone, FileSystem::Concat( EnvPtr->OutputPath, kml_file ).c_str(), "w" );
 
         unsigned char buf[ 1024 ];
         size_t read_size;
@@ -386,7 +383,7 @@ void KML_Demo_Reporter::WriteKmlData()
 
         // Write the one-time animation xml
         std::ofstream channelXmlFile;
-        channelXmlFile.open( ( std::string( output_dir ) + kml_file ).c_str(), std::fstream::app );
+        channelXmlFile.open(  FileSystem::Concat( EnvPtr->OutputPath, kml_file ).c_str(), std::fstream::app );
         channelXmlFile << "    <gx:Tour>" << std::endl
                        << "      <name>Play me!</name>" << std::endl
                        << "      <gx:Playlist>" << std::endl

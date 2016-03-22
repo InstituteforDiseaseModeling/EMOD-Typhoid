@@ -413,7 +413,7 @@
 
 		"____________RARELY_CHANGED___________": {
             "Config_Name": "Config_Name_NOT_SET",
-            "Geography": "SamplesInput_HIV",
+            "Geography": "SamplesInput",
             "Acquisition_Blocking_Immunity_Decay_Rate": 1,
             "Acquisition_Blocking_Immunity_Duration_Before_Decay": 2,
             "Animal_Reservoir_Type": "NO_ZOONOSIS",

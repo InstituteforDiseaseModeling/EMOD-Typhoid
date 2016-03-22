@@ -689,38 +689,6 @@
         {
             "Test" :
             {
-                "__class__":"SimpleImmunoglobulin",
-                "cost_per_unit"                 : 1,
-                "expired"                       : false,
-                "dont_allow_duplicates"         : false,
-                "vaccine_type"                  : 2,
-                "vaccine_take"                  : 3.3,
-                "current_reducedacquire"        : 4.4,
-                "current_reducedtransmit"       : 5.5,
-                "current_reducedmortality"      : 6.6,
-                "waning_effect" :
-                {
-                    "__class__":"WaningEffectBoxExponential",
-                    "currentEffect"     : 0.1,
-                    "boxDuration"       : 0.2,
-                    "decayTimeConstant" : 0.3
-                },
-                "acquire_effect"  :
-                {
-                    "__class__":"WaningEffectConstant",
-                    "currentEffect" : 0.1
-                },
-                "transmit_effect" :
-                {
-                    "__class__":"WaningEffectExponential",
-                    "currentEffect"     : 0.1,
-                    "decayTimeConstant" : 0.2
-                }
-            }
-        },
-        {
-            "Test" :
-            {
                 "__class__":"SimpleVaccine",
                 "cost_per_unit"                 : 1,
                 "expired"                       : false,

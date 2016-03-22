@@ -259,6 +259,7 @@ namespace Kernel
         , family_migration_is_destination_new_home(false)
         , home_node_id(suids::nil_suid())
         , Properties()
+        , m_PropertyReportString()
         , parent(nullptr)
         , broadcaster(nullptr)
     {
@@ -305,6 +306,7 @@ namespace Kernel
         , family_migration_is_destination_new_home(false)
         , home_node_id(suids::nil_suid())
         , Properties()
+        , m_PropertyReportString()
         , parent(nullptr)
         , broadcaster(nullptr)
     {

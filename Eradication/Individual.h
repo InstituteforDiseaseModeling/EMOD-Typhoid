@@ -133,6 +133,8 @@ namespace Kernel
         virtual void Die( HumanStateChange ) override;
         virtual INodeEventContext   * GetNodeEventContext() override; // for campaign cost reporting in e.g. HealthSeekingBehavior
         virtual tProperties* GetProperties() override;
+        virtual const std::string& GetPropertyReportString() const override { return m_PropertyReportString; }
+        virtual void SetPropertyReportString( const std::string& str ) override { m_PropertyReportString = str; }
         virtual bool AtHome() const override;
 
         virtual bool IsAdult() const override;
@@ -254,6 +256,7 @@ namespace Kernel
         suids::suid home_node_id ;
 
         tProperties Properties;
+        std::string m_PropertyReportString;
 
         INodeContext* parent;   // Access back to node/simulation methods
 
