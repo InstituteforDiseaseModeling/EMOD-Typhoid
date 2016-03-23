@@ -47,7 +47,7 @@
             "Nodeset_Config": {
                 "class": "NodeSetAll"
             }, 
-            "Start_Day": 1, 
+            "Start_Day": 5, 
             "class": "CampaignEvent"
         }
     ], 
