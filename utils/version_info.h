@@ -11,15 +11,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #define XSTRINGIFY(ver)       STRINGIFY(ver)
 
 #ifdef WIN32
-static const char *BUILD_DATE   = "Wed Mar 23 23:50:09 PDT 2016";
-static const char *SCCS_URL     = "https://github.com/InstituteforDiseaseModeling/DtkTrunk/commit/unknown";
+static const char* BUILD_DATE = __DATE__ " " __TIME__;
+static const char *SCCS_URL   = "https://github.com/InstituteforDiseaseModeling/DtkTrunk/commit/unknown";
 #else
 #define BUILD_DATE __DATE__
-static const char *SCCS_URL     = XSTRINGIFY(SVN_BRANCH_FROM_SCONS);
+static const char *SCCS_URL   = XSTRINGIFY(SVN_BRANCH_FROM_SCONS);
 #endif
 
-#define    SCCS_BRANCH		"unknown branch (unknown)"
-#define    SCCS_DATE        "date unknown"
+#define    SCCS_BRANCH      "unknown-branch (unknown)"
+#define    SCCS_DATE        "date time unknown"
 
 #define    MAJOR_VERSION    2
 #define    MINOR_VERSION    5
