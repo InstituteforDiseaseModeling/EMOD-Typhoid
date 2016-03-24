@@ -103,7 +103,7 @@ void Usage(char* cmd)
 #ifndef DISABLE_HIV
             , "HIV_SIM"
 #endif
-#ifdef PYTHON_FEVER
+#ifdef ENABLE_PYTHON_FEVER
             , "PY_SIM"
 #endif
     };
@@ -129,11 +129,8 @@ int main(int argc, char* argv[])
     ProgDllVersion* pv = new ProgDllVersion(); // why new this instead of just put it on the stack?
     auto sims = getSimTypeList();
     std::stringstream output;
-    output << "Intellectual Ventures(R)/EMOD Disease Transmission Kernel "
-           << pv->getVersion()
-	       << pv->getBranch()
-	       << pv->getBuildDate()
-	       << ". ";
+    output << "Intellectual Ventures(R)/EMOD Disease Transmission Kernel " << pv->getVersion() << std::endl
+           << "Built on " << pv->getBuildDate() << " from " << pv->getSccsBranch() << " checked in on " << pv->getSccsDate() << std::endl;
     
     std::string sim_types_str = "Supports sim_types: ";
     for( auto sim_type: sims  )
@@ -260,7 +257,7 @@ void IDMAPI writeInputSchemas(
     json::QuickBuilder versionSchema( vsRoot );
     ProgDllVersion pv;
     versionSchema["DTK_Version"] = json::String( pv.getVersion() );
-    versionSchema["DTK_Branch"] = json::String( pv.getBranch() );
+    versionSchema["DTK_Branch"] = json::String( pv.getSccsBranch() );
     versionSchema["DTK_Build_Date"] = json::String( pv.getBuildDate() );
     total_schema["Version"] = versionSchema.As<json::Object>();
 

@@ -36,12 +36,13 @@
             "Enable_Heterogeneous_Intranode_Transmission": 1
         },
         "OUTPUT": {
-            "Enable_Property_Output": 1
+            "Enable_Property_Output": 1,
+            "Enable_Demographics_Reporting": 0
         },
         "PRIMARY": {
             "Config_Name": "HINT_AgeAndAccess_AccessTargetedVaccine",
             "Geography": "SamplesInput",
-            "Run_Number": 2
+            "Run_Number": 7
         },
         "Rainfall_In_mm_To_Fill_Swamp": 1000.0,
         "Spatial_Output_Channels": [
