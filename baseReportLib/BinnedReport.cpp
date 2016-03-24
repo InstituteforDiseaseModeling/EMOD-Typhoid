@@ -62,7 +62,7 @@ BinnedReport::BinnedReport()
     , num_bins_per_axis()
     , num_total_bins(0)
     , values_per_axis()
-    , friendly_names_per_axis()
+    //, friendly_names_per_axis()
     , population_bins(nullptr)
     , infected_bins(nullptr)
     , new_infections_bins(nullptr)
@@ -71,14 +71,19 @@ BinnedReport::BinnedReport()
     , _age_bin_upper_values(nullptr)
 {
     LOG_DEBUG( "BinnedReport ctor\n" );
-    
+   
+    // These __ variables exists for super-easy initialization/specification by humans and don't persist past the ctor.
+    // We don't want these as static consts outside the class, but ultimately as members so that each sim_type can define their own age boundaries.
     float __age_bin_upper_values[] = { 1825.0,  3650.0,  5475.0,  7300.0,  9125.0, 10950.0, 12775.0, 14600.0, 16425.0, 18250.0, 20075.0, 21900.0, 23725.0, 25550.0, 27375.0, 29200.0, 31025.0, 32850.0, 34675.0, 36500.0, 999999.0 };
     char * __age_bin_friendly_names[] = { "<5",   "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", ">100" };
     _num_age_bins = sizeof( __age_bin_upper_values )/sizeof(float); 
 
+    // Now let's actually initialize the single underscore vector variables we're going to use (the "tedious" way).
+    // NOTE: 100 picked as "hopefully we won't need any bigger than this
     _age_bin_friendly_names.resize( _num_age_bins );
     _age_bin_upper_values = new float[100];
     memset( _age_bin_upper_values, 0, sizeof( float ) * 100 );
+    // it can be fun to use 1-line STL initializers, but sometimes readability is more important.
     for( int idx = 0; idx < _num_age_bins ; idx++ )
     {
         _age_bin_upper_values[idx] = __age_bin_upper_values[idx];
@@ -368,7 +373,6 @@ void BinnedReport::Finalize()
     pIJsonObj->Insert("MeaningPerAxis");
     pIJsonObj->BeginArray();
     //for (auto& names : friendly_names_per_axis)
-    //for (auto& names : _age_bin_friendly_names)
     {
         pIJsonObj->BeginArray();
         //js.JSerialize(names, pIJsonObj);

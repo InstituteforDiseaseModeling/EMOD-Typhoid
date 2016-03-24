@@ -67,7 +67,7 @@ protected:
     std::vector<int> num_bins_per_axis;
     int num_total_bins;
     std::vector<std::vector<float> > values_per_axis;
-    std::vector<std::vector<std::string> > friendly_names_per_axis;
+    //std::vector<std::vector<std::string> > friendly_names_per_axis;
 
     //labels (these are in the header instead of the cpp file so they can be inherited by disease specific binned report
     static const char * _pop_label;
@@ -82,9 +82,7 @@ protected:
     IChannelDataMapOutputAugmentor* p_output_augmentor ;
     int _num_age_bins;
     int _num_bins_per_axis[1];
-    //float _age_bin_upper_values[5];
     float * _age_bin_upper_values;
-    //std::string _age_bin_friendly_names[100];
     std::vector<std::string> _age_bin_friendly_names;
                                   
 };
