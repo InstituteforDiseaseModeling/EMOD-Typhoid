@@ -38,7 +38,8 @@ public:
     uint16_t getRevisionNumber() { return m_nRevision; }
 
     uint32_t getBuildNumber() { return m_nBuild; }
-    const char* getBranch() { return m_sBranch; }
+    const char* getSccsBranch() { return m_sSccsBranch; }
+    const char* getSccsDate() { return m_sSccsDate; }
     const char* getBuildDate(); // { return BUILD_DATE; }
 
     const char* getVersion() { return m_sVersion; }
@@ -60,7 +61,8 @@ private:
     uint16_t m_nRevision;
 
     uint32_t m_nBuild;
-    char m_sBranch[VER_LEN];
+    char m_sSccsBranch[VER_LEN];
+    char m_sSccsDate[VER_LEN];
 
     uint32_t m_nVersion;
     char m_sVersion[VER_LEN];

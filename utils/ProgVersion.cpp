@@ -30,7 +30,8 @@ ProgDllVersion::ProgDllVersion()
     m_nRevision = REVISION_NUMBER; 
 
     m_nBuild = BUILD_NUMBER;
-    strncpy(m_sBranch, std::string( SVN_URL ).substr( std::string( SVN_URL ).find_last_of( "/" )+1 ).c_str(), VER_LEN);
+    strncpy( m_sSccsBranch, SCCS_BRANCH, VER_LEN );
+    strncpy( m_sSccsDate, SCCS_DATE, VER_LEN );
 
     m_nVersion = COMBINE_VER(m_nMajor, m_nMinor, m_nRevision);
 
