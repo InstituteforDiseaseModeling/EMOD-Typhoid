@@ -10,10 +10,10 @@
                     "outbreak_source": "PrevalenceIncrease"
                 }, 
                 "Property_Restrictions": [
-                    "Accessibility:Easy"
+                    "Accessibility:Hard"
                 ], 
-                "Target_Age_Max": 20, 
-                "Target_Age_Min": 10, 
+                "Target_Age_Max": 6.0, 
+                "Target_Age_Min": 0.5, 
                 "Target_Demographic": "ExplicitAgeRanges", 
                 "class": "StandardInterventionDistributionEventCoordinator"
             }, 
@@ -25,7 +25,7 @@
         }, 
         {
             "Event_Coordinator_Config": {
-                "Demographic_Coverage": 0.9, 
+                "Demographic_Coverage": 0.95, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 10.0, 
                     ".Reduced_Transmit": 1, 
@@ -47,7 +47,7 @@
             "Nodeset_Config": {
                 "class": "NodeSetAll"
             }, 
-            "Start_Day": 5, 
+            "Start_Day": 1, 
             "class": "CampaignEvent"
         }
     ], 
