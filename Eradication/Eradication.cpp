@@ -103,7 +103,7 @@ void Usage(char* cmd)
 #ifndef DISABLE_HIV
             , "HIV_SIM"
 #endif
-#ifdef PYTHON_FEVER
+#ifdef ENABLE_PYTHON_FEVER
             , "PY_SIM"
 #endif
     };
