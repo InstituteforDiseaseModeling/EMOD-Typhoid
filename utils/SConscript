@@ -15,7 +15,11 @@ if os.sys.platform != 'win32':
     #svn_url_define = "-DSVN_URL="+env["SVN_URL"]
     env.Append( CCFLAGS=[ svn_url_define ] )
     #env.Append( CCFLAGS=[ "-save-temps" ] )
-
+else:
+    root = Dir('#').abspath
+    version_info = '{0}\\scripts\\gitversion.cmd {0}\\utils'.format(root)
+    print("Executing '{0}'".format(version_info))
+    os.system(version_info)
 
 utilsSrcFiles = [
     "BinaryArchiveReader.cpp",
