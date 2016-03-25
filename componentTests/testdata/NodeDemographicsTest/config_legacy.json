@@ -31,7 +31,7 @@
         "Death_Rate_Dependence" : "NONDISEASE_MORTALITY_OFF",
         "Default_Geography_Initial_Node_Population": 1000,
         "Default_Geography_Torus_Size": 10,
-        "Demographics_Filename": "demographics.compiled.json", 
+        "Demographics_Filenames": ["demographics.compiled.json"], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
         "Enable_Birth": 1, 

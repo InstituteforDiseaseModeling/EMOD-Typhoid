@@ -47,7 +47,7 @@
         "Default_Genome": 0,
         "Delay_To_Antibody": 10,
         "Delay_To_Paralysis": 16.899999999999999,
-        "Demographics_Filename": "..\\input\\Sandbox_naive_demographics.compiled.json",
+        "Demographics_Filenames": ["..\\input\\Sandbox_naive_demographics.compiled.json"],
         "Disease_Susceptible_Report_Poliovirus_Type": "VRPV1",
         "Enable_Aging": 1,
         "Enable_Air_Migration": 0,

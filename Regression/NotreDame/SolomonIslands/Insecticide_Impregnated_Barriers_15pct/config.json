@@ -46,7 +46,7 @@
         "Clinical_Fever_Threshold_Low": 0.5, 
         "Config_Name": "SolomonIslands_Insecticide_Impregnated_Barriers_15pct", 
         "Cytokine_Gametocyte_Inactivation": 0.05, 
-        "Demographics_Filename": "Honiara_Haleta_two_node_demographics.compiled.json", 
+        "Demographics_Filenames": ["Honiara_Haleta_two_node_demographics.compiled.json"], 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "NO_SATURATION", 
         "Enable_Aging": 1, 

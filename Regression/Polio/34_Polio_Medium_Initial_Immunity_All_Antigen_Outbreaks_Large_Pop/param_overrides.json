@@ -3,7 +3,7 @@
     "parameters": {
         "DEMOGRAPHICS": {
             "Enable_Birth": 0, 
-            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.medinitimmunity.compiled.json", 
+            "Demographics_Filenames": ["../polio_input/Bihar_single_node_demographics.medinitimmunity.compiled.json"], 
             "Enable_Vital_Dynamics": 0, 
             "SAMPLING": {
                 "Base_Individual_Sample_Rate": 0.01

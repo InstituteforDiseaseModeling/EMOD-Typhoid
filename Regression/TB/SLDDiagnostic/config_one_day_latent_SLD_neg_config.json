@@ -28,7 +28,7 @@
         "Climate_Model": "CLIMATE_OFF", 
         "Climate_Update_Resolution": "CLIMATE_UPDATE_MONTH", 
         "Config_Name": "TB_52_scenariotutorial_accesstocare", 
-        "Demographics_Filename": "demographics/Single_node_demographics_10000.json;demographics/three_property_overlay_demographics.json", 
+        "Demographics_Filenames": ["demographics/Single_node_demographics_10000.json", "demographics/three_property_overlay_demographics.json"], 
         "Disable_IP_Whitelist": 1, 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 

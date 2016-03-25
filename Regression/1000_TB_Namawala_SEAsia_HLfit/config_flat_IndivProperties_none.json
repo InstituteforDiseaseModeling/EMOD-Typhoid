@@ -29,7 +29,7 @@
         "Climate_Update_Resolution": "CLIMATE_UPDATE_MONTH", 
         "Config_Name": "1000_TB_Namawala_SEAsia_HLfit", 
         "Default_Config_Path": "defaults\\tb_default_config.json", 
-        "Demographics_Filename": "Namawala_single_node_demographics_IndivProperties_none.compiled.json", 
+        "Demographics_Filenames": ["Namawala_single_node_demographics_IndivProperties_none.compiled.json"], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
         "Enable_Birth": 1, 

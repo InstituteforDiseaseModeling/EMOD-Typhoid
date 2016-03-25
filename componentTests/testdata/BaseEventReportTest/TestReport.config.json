@@ -46,7 +46,7 @@
         "Climate_Model": "CLIMATE_OFF", 
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
         "Config_Name": "00_DEFAULT", 
-        "Demographics_Filename": "demographics.compiled.json", 
+        "Demographics_Filenames": ["demographics.compiled.json"], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
         "Enable_Birth": 1, 

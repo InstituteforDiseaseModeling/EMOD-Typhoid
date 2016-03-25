@@ -23,7 +23,9 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Seattle_30arcsec_demographics.compiled.json", 
+        "Demographics_Filenames": [
+            "Seattle_30arcsec_demographics.compiled.json"
+        ], 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
@@ -34,7 +36,7 @@
         "Enable_Demographics_Gender": 1, 
         "Enable_Demographics_Initial": 1, 
         "Enable_Demographics_Other": 0, 
-        "Enable_Demographics_Reporting": 1, 
+        "Enable_Demographics_Reporting": 0, 
         "Enable_Disease_Mortality": 0, 
         "Enable_Family_Migration": 0, 
         "Enable_Heterogeneous_Intranode_Transmission": 0, 

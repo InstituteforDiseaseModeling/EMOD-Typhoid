@@ -36,7 +36,7 @@
                }
           },
           "DEMOGRAPHICS": {
-               "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json"
+               "Demographics_Filenames": ["Madagascar_Nosibe_2.5arcmin_demographics.json"]
           },
           "EXECUTION": {
               "CLUSTER": {

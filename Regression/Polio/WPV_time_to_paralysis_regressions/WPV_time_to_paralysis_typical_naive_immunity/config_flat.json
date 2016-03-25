@@ -42,7 +42,7 @@
         "Config_Name": "WPV_DoseResponseTest", 
         "Default_Antigen": 0, 
         "Default_Genome": 0, 
-        "Demographics_Filename": "..\\input\\WPV_time_to_paralysis_humoral_log2NAb_0_demographics.compiled.json", 
+        "Demographics_Filenames": ["..\\input\\WPV_time_to_paralysis_humoral_log2NAb_0_demographics.compiled.json"], 
         "Disease_Susceptible_Report_Poliovirus_Type": "WPV2",
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 

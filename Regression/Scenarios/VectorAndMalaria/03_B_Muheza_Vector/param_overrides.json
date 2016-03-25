@@ -20,7 +20,7 @@
             }
         },
         "DEMOGRAPHICS": {
-            "Demographics_Filename": "Muheza_single_node_demographics.json"
+            "Demographics_Filenames": ["Muheza_single_node_demographics.json"]
         },
         "PRIMARY": {
             "Config_Name": "VectorAndMalaria_3B_Muheza_Vector",

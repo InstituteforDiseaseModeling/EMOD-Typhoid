@@ -28,7 +28,7 @@
         "Climate_Model": "CLIMATE_OFF", 
         "Climate_Update_Resolution": "CLIMATE_UPDATE_MONTH", 
         "Config_Name": "TB_32_HSBUpdate", 
-        "Demographics_Filename": "Single_node_demographics_100.compiled.json", 
+        "Demographics_Filenames": ["Single_node_demographics_100.compiled.json"], 
         "Disable_IP_Whitelist": 1, 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 

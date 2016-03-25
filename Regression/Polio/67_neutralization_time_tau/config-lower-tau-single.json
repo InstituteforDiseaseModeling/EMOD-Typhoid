@@ -42,7 +42,7 @@
         "Config_Name": "8_Polio_Validation_Vaccination_mOPV1_Small_Population",
         "Default_Antigen": 0,
         "Default_Genome": 0,
-        "Demographics_Filename": "..\\polio_input\\Sandbox_kids_with_single_antibody_level_demographics.compiled.json",
+        "Demographics_Filenames": ["..\\polio_input\\Sandbox_kids_with_single_antibody_level_demographics.compiled.json"],
         "Disease_Susceptible_Report_Poliovirus_Type": "VRPV1",
         "Enable_Aging": 1,
         "Enable_Air_Migration": 0,

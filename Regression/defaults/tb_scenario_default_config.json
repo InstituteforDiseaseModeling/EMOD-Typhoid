@@ -18,7 +18,7 @@
             "Num_Cores":1
         },
         "DEMOGRAPHICS": {
-            "Demographics_Filename":"../../demog/Single_node_demographics_10000.json",
+            "Demographics_Filenames":["../../demog/Single_node_demographics_10000.json"],
             "Default_Geography_Initial_Node_Population":1000,
             "Default_Geography_Torus_Size":10,
             "Enable_Vital_Dynamics":1,

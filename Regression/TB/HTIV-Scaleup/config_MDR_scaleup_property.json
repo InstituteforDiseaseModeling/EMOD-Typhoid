@@ -24,7 +24,7 @@
         "Campaign_Filename": "campaign_mdr_scaleup_property.json", 
         "Climate_Model": "CLIMATE_OFF", 
         "Config_Name": "TB_HTIVUpswitch_sample", 
-        "Demographics_Filename": "Single_node_demographics_1000.json;five_property_overlay_demographics.json", 
+        "Demographics_Filenames": ["Single_node_demographics_1000.json", "five_property_overlay_demographics.json"], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
         "Enable_Birth": 1, 

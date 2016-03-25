@@ -44,7 +44,7 @@
         "Default_Genome": 0, 
         "Delay_To_Antibody": 10, 
         "Delay_To_Paralysis": 16.9, 
-        "Demographics_Filename": "Bihar_single_node_demographics.smallpop.compiled.json", 
+        "Demographics_Filenames": ["Bihar_single_node_demographics.smallpop.compiled.json"], 
         "Disease_Susceptible_Report_Poliovirus_Type": 3, 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 

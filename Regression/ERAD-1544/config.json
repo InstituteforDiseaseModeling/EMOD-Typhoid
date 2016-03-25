@@ -26,7 +26,7 @@
         "Climate_Model": "CLIMATE_BY_DATA", 
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
         "Config_Name": "PrimaryScenarios_4C_Garki_single_node_Vector", 
-        "Demographics_Filename": "Garki_single_demographics.compiled.json", 
+        "Demographics_Filenames": ["Garki_single_demographics.compiled.json"], 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "SATURATION_AT_OVIPOSITION", 
         "Enable_Aging": 1, 

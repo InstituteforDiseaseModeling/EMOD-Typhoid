@@ -45,7 +45,7 @@
         "Default_Genome": 0, 
         "Delay_To_Antibody": 10, 
         "Delay_To_Paralysis": 16.9,
-		"Demographics_Filename": "Atlantis_nine_node_smallpop_prev_demographics.compiled.json;Atlantis_nine_node_overlay_demographics.compiled.json", 
+        "Demographics_Filenames": ["Atlantis_nine_node_smallpop_prev_demographics.compiled.json", "Atlantis_nine_node_overlay_demographics.compiled.json"], 
         "Disease_Susceptible_Report_Poliovirus_Type": 0, 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
