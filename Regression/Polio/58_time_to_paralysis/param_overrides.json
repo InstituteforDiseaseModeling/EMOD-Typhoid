@@ -25,7 +25,6 @@
             }
         }, 
         "DEMOGRAPHICS": {
-            "Enable_Immunity_Initialization_Distribution": 1, 
             "Enable_Birth": 0, 
             "Enable_Demographics_Reporting": 0, 
             "Demographics_Filename": "../polio_input/WPV_time_to_paralysis_humoral_log2NAb_0_demographics.compiled.json", 

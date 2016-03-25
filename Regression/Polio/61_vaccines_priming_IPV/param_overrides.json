@@ -25,7 +25,6 @@
             }
         }, 
         "DEMOGRAPHICS": {
-            "Enable_Immunity_Initialization_Distribution": 1, 
             "Enable_Birth": 0, 
             "Enable_Demographics_Reporting": 0, 
             "Demographics_Filename": "../polio_input/Sandbox_naive_demographics.compiled.json", 
