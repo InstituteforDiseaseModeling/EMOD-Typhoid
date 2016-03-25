@@ -147,7 +147,8 @@ void VectorHabitatReport::initChannelBins()
             }
         }
     }
-    friendly_names_per_axis.push_back(axis_names);
+    // friendly_names_per_axis.push_back(axis_names);
+    _age_bin_friendly_names= std::vector<std::string>( axis_names.begin(), axis_names.end() );
 
     oss << endl;
     LOG_DEBUG(oss.str().c_str());
