@@ -15,10 +15,12 @@ static const char* BUILD_DATE = __DATE__ " " __TIME__;
 static const char *SCCS_URL   = "https://github.com/InstituteforDiseaseModeling/DtkTrunk/commit/unknown";
 #else
 #define BUILD_DATE __DATE__
-static const char *SCCS_URL   = XSTRINGIFY(SVN_BRANCH_FROM_SCONS);
+//static const char *SCCS_URL   = XSTRINGIFY(SVN_BRANCH_FROM_SCONS);
 #endif
 
+#ifndef SCCS_BRANCH
 #define    SCCS_BRANCH      "unknown-branch (unknown)"
+#endif
 #define    SCCS_DATE        "date time unknown"
 
 #define    MAJOR_VERSION    2

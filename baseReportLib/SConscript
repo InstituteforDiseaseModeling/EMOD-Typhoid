@@ -7,15 +7,6 @@ import os
 #SVN_REV = os.popen("svn info | grep 'Last Changed Rev' | awk '{ print $4; }'").read()
 
 Import("env")
-if os.sys.platform != 'win32':
-    svn_url_define = "-DSVN_BRANCH_FROM_SCONS=\""
-    svn_url_define += env["SVN_BRANCH"]
-    svn_url_define += "'\""
-    #svn_url_define = svn_url_define.replace( "/", "&ampps" )
-    #svn_url_define = "-DSVN_URL="+env["SVN_URL"]
-    env.Append( CCFLAGS=[ svn_url_define ] )
-    #env.Append( CCFLAGS=[ "-save-temps" ] )
-
 
 reportSrcFiles = [
     "BaseChannelReport.cpp",

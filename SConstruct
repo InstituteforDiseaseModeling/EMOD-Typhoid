@@ -214,9 +214,6 @@ if os.sys.platform == 'win32':
                           "#/snappy",
                           "#/unittest/UnitTest++/src"])
 else:
-    SVN_BRANCH = os.popen("svn info|grep URL|awk '{ print $2 }'|awk -F/ '{ printf( \"/%s\", $NF) }'" ).read()
-    print( SVN_BRANCH )
-    env['SVN_BRANCH'] = SVN_BRANCH
     env['OS_FAMILY'] = 'posix'
     env['CC'] = "mpicxx"
     env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
