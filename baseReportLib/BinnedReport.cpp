@@ -1,17 +1,11 @@
-/*****************************************************************************
+/***************************************************************************************************
 
-Copyright (c) 2014 by Global Good Fund I, LLC. All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
-Except for any rights expressly granted to you in a separate license with the
-Global Good Fund (GGF), GGF reserves all rights, title and interest in the
-software and documentation.  GGF grants recipients of this software and
-documentation no other rights either expressly, impliedly or by estoppel.
+EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 
-THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
-ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
-
-*****************************************************************************/
+***************************************************************************************************/
 
 #include "stdafx.h"
 #include "BinnedReport.h"
@@ -62,7 +56,7 @@ BinnedReport::BinnedReport()
     , num_bins_per_axis()
     , num_total_bins(0)
     , values_per_axis()
-    //, friendly_names_per_axis()
+//    , friendly_names_per_axis()
     , population_bins(nullptr)
     , infected_bins(nullptr)
     , new_infections_bins(nullptr)
@@ -71,19 +65,21 @@ BinnedReport::BinnedReport()
     , _age_bin_upper_values(nullptr)
 {
     LOG_DEBUG( "BinnedReport ctor\n" );
-   
-    // These __ variables exists for super-easy initialization/specification by humans and don't persist past the ctor.
-    // We don't want these as static consts outside the class, but ultimately as members so that each sim_type can define their own age boundaries.
+
+    // These __ variables exist for super-easy intialization/specification by humans and don't persist past the ctor.
+    // We don't want these as static consts outside the class, but ultimately as members so that each sim type can define their own age boundaries.
+    
     float __age_bin_upper_values[] = { 1825.0,  3650.0,  5475.0,  7300.0,  9125.0, 10950.0, 12775.0, 14600.0, 16425.0, 18250.0, 20075.0, 21900.0, 23725.0, 25550.0, 27375.0, 29200.0, 31025.0, 32850.0, 34675.0, 36500.0, 999999.0 };
     char * __age_bin_friendly_names[] = { "<5",   "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", ">100" };
     _num_age_bins = sizeof( __age_bin_upper_values )/sizeof(float); 
 
-    // Now let's actually initialize the single underscore vector variables we're going to use (the "tedious" way).
-    // NOTE: 100 picked as "hopefully we won't need any bigger than this
+    // Now let's actually initialize the single underscore vector variables we're going to use (the "tedious" way)
+    // NOTE: 100 picked as "hopefully we won't need any bigger than this"
+
     _age_bin_friendly_names.resize( _num_age_bins );
     _age_bin_upper_values = new float[100];
     memset( _age_bin_upper_values, 0, sizeof( float ) * 100 );
-    // it can be fun to use 1-line STL initializers, but sometimes readability is more important.
+    // It can be fun to use 1-line STL initializers, but sometimes readability is more important
     for( int idx = 0; idx < _num_age_bins ; idx++ )
     {
         _age_bin_upper_values[idx] = __age_bin_upper_values[idx];

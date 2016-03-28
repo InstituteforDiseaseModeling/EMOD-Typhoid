@@ -22,7 +22,6 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "../../demog/Single_node_demographics_10000.json", 
         "Demographics_Filenames": [
             "Madagascar_Nosibe_2.5arcmin_demographics.json", 
             "../TB_04_CascadeOfCare_demographics_overlay.json"

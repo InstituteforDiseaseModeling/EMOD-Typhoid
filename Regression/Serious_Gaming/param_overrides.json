@@ -9,7 +9,7 @@
           }
      }, 
      "DEMOGRAPHICS": {
-          "Demographics_Filename": "Namawala_single_node_demographics.compiled.json"
+          "Demographics_Filenames": ["Namawala_single_node_demographics.compiled.json"]
      }, 
      "Default_Config_Path": "defaults/malaria_default_config.json", 
      "PRIMARY": {

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -65,7 +65,7 @@ VectorSpeciesReport::VectorSpeciesReport( const Kernel::jsonConfigurable::tDynam
 
     // push back species binning
     values_per_axis.push_back( std::vector<float>( rVectorSpeciesNames.size(), 0 ) ); // not going to use this...
-    //friendly_names_per_axis.push_back( std::vector<std::string>( rVectorSpeciesNames.begin(), rVectorSpeciesNames.end() ) );
+    // friendly_names_per_axis.push_back( std::vector<std::string>( rVectorSpeciesNames.begin(), rVectorSpeciesNames.end() ) );
     _age_bin_friendly_names = std::vector<std::string>( rVectorSpeciesNames.begin(), rVectorSpeciesNames.end() );
 }
 

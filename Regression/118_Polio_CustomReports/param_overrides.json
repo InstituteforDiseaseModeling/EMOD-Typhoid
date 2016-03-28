@@ -29,7 +29,7 @@
         }, 
         "DEMOGRAPHICS": {
             "Enable_Demographics_Reporting": 0, 
-            "Demographics_Filename": "immune_decay_demographics.json", 
+            "Demographics_Filenames": ["immune_decay_demographics.json"], 
             "Enable_Vital_Dynamics": 0, 
             "SAMPLING": {
                 "Sample_Rate_0_18mo": 1, 

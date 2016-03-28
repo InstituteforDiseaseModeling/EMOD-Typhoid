@@ -57,7 +57,6 @@
           "Enable_Demographics_Other": 0, 
           "Enable_Demographics_Reporting": 1, 
           "Enable_Disease_Mortality": 0, 
-          "Enable_Immunity_Initialization_Distribution": 0, 
           "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF",
           "Enable_Vital_Dynamics": 1, 
           "Minimum_Adult_Age_Years" : 15,

@@ -21,7 +21,7 @@
           },
           "PRIMARY": {
                "Config_Name": "95_Generic_InfectivityForcing_Boxcar", 
-               "Demographics_Filename": "../00_Default/demographics.json", 
+               "Demographics_Filenames": ["../00_Default/demographics.json"], 
                "Geography": "", 
                "Run_Number": 1, 
                "Simulation_Duration": 1825

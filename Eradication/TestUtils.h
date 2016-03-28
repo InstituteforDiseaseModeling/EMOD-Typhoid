@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -12,12 +12,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <string>
 #include <iostream>
 
-
-
 namespace TestUtils
 {
-    
-
     template<class OArchiveT, class ThingT>
     bool save_thing(/*const breaks if I cant make serialize() const?*/ ThingT *thing, const char * filename)
     {
@@ -52,4 +48,3 @@ namespace TestUtils
         return empty_thing;    
     }
 }
-
