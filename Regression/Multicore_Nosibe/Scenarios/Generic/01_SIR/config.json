@@ -23,7 +23,9 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json", 
+        "Demographics_Filenames": [
+            "Madagascar_Nosibe_2.5arcmin_demographics.json"
+        ], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
         "Enable_Birth": 1, 

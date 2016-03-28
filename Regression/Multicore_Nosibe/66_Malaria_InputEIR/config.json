@@ -48,7 +48,7 @@
         "Config_Name": "66_Malaria_InputEIR_Intervention -- multicore -- Madagascar_Nosibe", 
         "Cytokine_Gametocyte_Inactivation": 0.016666666666666666, 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;Madagascar_Nosibe_2.5arcmin_demographics_overlay.json", 
+        "Demographics_Filenames": ["Madagascar_Nosibe_2.5arcmin_demographics.json", "Madagascar_Nosibe_2.5arcmin_demographics_overlay.json"], 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "SATURATION_AT_OVIPOSITION", 
         "Enable_Absolute_Time": "NO", 

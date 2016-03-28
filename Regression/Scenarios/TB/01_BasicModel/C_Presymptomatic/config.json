@@ -21,7 +21,9 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "TB_01_BasicModel_demographics.json", 
+        "Demographics_Filenames": [
+            "TB_01_BasicModel_demographics.json"
+        ], 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
         "Enable_Continuous_Log_Flushing": 1, 

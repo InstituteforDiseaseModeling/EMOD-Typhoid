@@ -1,6 +1,8 @@
 {
     "parameters": {
-        ".Demographics_Filename": "Bihar_single_node_demographics.json", 
+        ".Demographics_Filenames": [
+            "Bihar_single_node_demographics.json"
+        ], 
         "Acquire_Rate_Default_Polio": 2e-07, 
         "Acquisition_Blocking_Immunity_Decay_Rate": 0.01, 
         "Acquisition_Blocking_Immunity_Duration_Before_Decay": 90, 
@@ -38,7 +40,9 @@
         "Default_Genome": 0, 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Bihar_single_node_demographics.compiled.json", 
+        "Demographics_Filenames": [
+            "Bihar_single_node_demographics.compiled.json"
+        ], 
         "Disease_Susceptible_Report_Poliovirus_Type": "WPV1", 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 

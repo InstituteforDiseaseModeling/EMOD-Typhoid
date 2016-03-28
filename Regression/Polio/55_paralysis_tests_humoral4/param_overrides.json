@@ -22,10 +22,9 @@
             }
         }, 
         "DEMOGRAPHICS": {
-            "Enable_Immunity_Initialization_Distribution": 1, 
             "Enable_Birth": 0, 
             "Enable_Demographics_Reporting": 0, 
-            "Demographics_Filename": "..\\polio_input\\WPV_humoral_4_demographics.compiled.json", 
+            "Demographics_Filenames": ["..\\polio_input\\WPV_humoral_4_demographics.compiled.json"], 
             "MORTALITY": {
                 "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF"
             }, 

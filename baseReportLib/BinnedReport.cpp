@@ -1,17 +1,11 @@
-/*****************************************************************************
+/***************************************************************************************************
 
-Copyright (c) 2014 by Global Good Fund I, LLC. All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
-Except for any rights expressly granted to you in a separate license with the
-Global Good Fund (GGF), GGF reserves all rights, title and interest in the
-software and documentation.  GGF grants recipients of this software and
-documentation no other rights either expressly, impliedly or by estoppel.
+EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 
-THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
-ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
-
-*****************************************************************************/
+***************************************************************************************************/
 
 #include "stdafx.h"
 #include "BinnedReport.h"
@@ -62,7 +56,7 @@ BinnedReport::BinnedReport()
     , num_bins_per_axis()
     , num_total_bins(0)
     , values_per_axis()
-    , friendly_names_per_axis()
+//    , friendly_names_per_axis()
     , population_bins(nullptr)
     , infected_bins(nullptr)
     , new_infections_bins(nullptr)
@@ -71,14 +65,21 @@ BinnedReport::BinnedReport()
     , _age_bin_upper_values(nullptr)
 {
     LOG_DEBUG( "BinnedReport ctor\n" );
+
+    // These __ variables exist for super-easy intialization/specification by humans and don't persist past the ctor.
+    // We don't want these as static consts outside the class, but ultimately as members so that each sim type can define their own age boundaries.
     
     float __age_bin_upper_values[] = { 1825.0,  3650.0,  5475.0,  7300.0,  9125.0, 10950.0, 12775.0, 14600.0, 16425.0, 18250.0, 20075.0, 21900.0, 23725.0, 25550.0, 27375.0, 29200.0, 31025.0, 32850.0, 34675.0, 36500.0, 999999.0 };
     char * __age_bin_friendly_names[] = { "<5",   "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", ">100" };
     _num_age_bins = sizeof( __age_bin_upper_values )/sizeof(float); 
 
+    // Now let's actually initialize the single underscore vector variables we're going to use (the "tedious" way)
+    // NOTE: 100 picked as "hopefully we won't need any bigger than this"
+
     _age_bin_friendly_names.resize( _num_age_bins );
     _age_bin_upper_values = new float[100];
     memset( _age_bin_upper_values, 0, sizeof( float ) * 100 );
+    // It can be fun to use 1-line STL initializers, but sometimes readability is more important
     for( int idx = 0; idx < _num_age_bins ; idx++ )
     {
         _age_bin_upper_values[idx] = __age_bin_upper_values[idx];
@@ -169,41 +170,6 @@ void BinnedReport::EndTimestep( float currentTime, float dt )
     Accumulate(_disease_deaths_label, disease_deaths_bins);
 
     clearChannelsBins();
-#if 1
-    // This is experimental for sending data via stdout. Don't check in without config option.
-    Kernel::JSerializer js;
-    auto * jsonSerializer = Kernel::CreateJsonObjAdapter();
-    jsonSerializer->CreateNewWriter();
-    jsonSerializer->BeginObject();
-    for (auto& entry : channelDataMap.channel_data_map)
-    {
-        auto vector_of_data = entry.second;
-        // OK, for binned report, this is an array of some length, and we want the last N values, where N is number of age bins.
-        const auto channel_name = entry.first.c_str();
-        auto last = vector_of_data.size() - _num_age_bins;
-        vector<float> segment;
-        for( int idx=last; idx<last+_num_age_bins; idx++ )
-        {
-            segment.push_back( vector_of_data[ idx ] );
-        }
-        // Populate last 5 values from vector_of_data
-        jsonSerializer->Insert(channel_name);
-        jsonSerializer->BeginArray();
-        js.JSerialize( segment, jsonSerializer );
-        //jsonSerializer->Insert( , last );
-        jsonSerializer->EndArray();
-    }
-    jsonSerializer->EndObject();
-
-    //std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
-
-#ifdef WIN32
-    _putenv_s( "JSON_SER_REPORT2", jsonSerializer->ToString() );
-#else
-    setenv( "JSON_SER_REPORT2", jsonSerializer->ToString(), 1 );
-#endif
-    delete jsonSerializer;
-#endif
 }
 
 void BinnedReport::Accumulate(std::string channel_name, float bin_data[])
@@ -368,7 +334,6 @@ void BinnedReport::Finalize()
     pIJsonObj->Insert("MeaningPerAxis");
     pIJsonObj->BeginArray();
     //for (auto& names : friendly_names_per_axis)
-    //for (auto& names : _age_bin_friendly_names)
     {
         pIJsonObj->BeginArray();
         //js.JSerialize(names, pIJsonObj);

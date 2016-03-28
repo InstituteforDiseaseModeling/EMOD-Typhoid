@@ -14,6 +14,7 @@ import httplib
 import json
 import os # e.g., mkdir
 import plotAllCharts
+import re
 import shutil # copyfile
 import subprocess
 import sys # for stdout.flush
@@ -1211,9 +1212,8 @@ def main():
     if "tests" in reglistjson:
         p = subprocess.Popen( (params.executable_path + " -v").split(), shell=False, stdout=subprocess.PIPE )
         [pipe_stdout, pipe_stderr] = p.communicate()
-        verstr_split = pipe_stdout.split("EMOD Disease Transmission Kernel ")[-1].split(' ')[:2]
         global version_string
-        version_string = ' '.join(verstr_split)
+        version_string = re.search('[0-9]+.[0-9]+.[0-9]+.[0-9]+', pipe_stdout).group(0)
 
         starttime = datetime.datetime.now()
         report = Report(params, version_string)

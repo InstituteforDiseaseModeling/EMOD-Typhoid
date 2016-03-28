@@ -43,7 +43,7 @@ mpiexec -n 2 Eradication-v17-Release-HINT.exe --config config_flat_noimmunity.js
 config_flat_IP_transmission_rates.json (derived from config_flat_paralysis_noimmunity_justWPV1.json)
 
 switch demographics to
-"Demographics_Filename": "Atlantis_nine_node_demographics.compiled.json;Atlantis_varaible_transmission_overlay_demographics.compiled.json", 
+"Demographics_Filenames": ["Atlantis_nine_node_demographics.compiled.json", "Atlantis_varaible_transmission_overlay_demographics.compiled.json"], 
 
 enable Heterogeneous_Intranode_Transmission
 

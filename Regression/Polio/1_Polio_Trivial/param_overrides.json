@@ -3,7 +3,7 @@
     "parameters": {
         "DEMOGRAPHICS": {
             "Enable_Birth": 0, 
-            "Demographics_Filename": "../polio_input/Bihar_single_node_demographics.smallpop.compiled.json", 
+            "Demographics_Filenames": ["../polio_input/Bihar_single_node_demographics.smallpop.compiled.json"], 
             "Enable_Vital_Dynamics": 0, 
             "SAMPLING": {
                 "Individual_Sampling_Type": "TRACK_ALL", 

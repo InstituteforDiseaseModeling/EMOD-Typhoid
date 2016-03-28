@@ -22,7 +22,6 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "", 
         "Demographics_Filenames": [
             "Namawala_single_node_demographics.json", 
             "Namawala_noinitprev.json"

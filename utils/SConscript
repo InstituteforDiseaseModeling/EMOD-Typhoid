@@ -12,6 +12,12 @@ if os.sys.platform != 'win32':
     SHA1STR = "-DREVISION_NUMBER='" + str(sha1) + "'"
     env.Append( CCFLAGS=[ SHA1STR ] )
 
+else:
+    root = Dir('#').abspath
+    version_info = '{0}\\scripts\\gitversion.cmd {0}\\utils'.format(root)
+    print("Executing '{0}'".format(version_info))
+    os.system(version_info)
+
 utilsSrcFiles = [
     "BinaryArchiveReader.cpp",
     "BinaryArchiveWriter.cpp",

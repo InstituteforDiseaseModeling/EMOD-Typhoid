@@ -20,7 +20,7 @@
           },
           "PRIMARY": {
                "Config_Name": "98_Immune_Dependent_Sampling", 
-               "Demographics_Filename": "../00_Default/demographics.json", 
+               "Demographics_Filenames": ["../00_Default/demographics.json"], 
                "Geography": "", 
                "Run_Number": 1, 
                "Simulation_Duration": 1825
