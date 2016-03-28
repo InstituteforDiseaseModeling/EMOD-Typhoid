@@ -3,19 +3,14 @@
 #
 # 1. builds utils static library
 import os
-
-#SVN_REV = os.popen("svn info | grep 'Last Changed Rev' | awk '{ print $4; }'").read()
+from subprocess import Popen, PIPE
 
 Import("env")
 if os.sys.platform != 'win32':
-    svn_url_define = "-DSVN_BRANCH_FROM_SCONS=\""
-    svn_url_define += env["SVN_BRANCH"]
-    svn_url_define += "'\""
-    #svn_url_define = svn_url_define.replace( "/", "&ampps" )
-    #svn_url_define = "-DSVN_URL="+env["SVN_URL"]
-    env.Append( CCFLAGS=[ svn_url_define ] )
-    #env.Append( CCFLAGS=[ "-save-temps" ] )
-
+    git_sha_handle = Popen( "git rev-list HEAD --count".split(), stdout=PIPE )
+    sha1 = git_sha_handle .stdout.read().rstrip()
+    SHA1STR = "-DREVISION_NUMBER='" + str(sha1) + "'"
+    env.Append( CCFLAGS=[ SHA1STR ] )
 
 utilsSrcFiles = [
     "BinaryArchiveReader.cpp",
