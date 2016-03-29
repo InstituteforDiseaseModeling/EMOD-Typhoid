@@ -32,6 +32,11 @@ ProgDllVersion::ProgDllVersion()
     m_nBuild = BUILD_NUMBER;
     strncpy( m_sSccsBranch, SCCS_BRANCH, VER_LEN );
     strncpy( m_sSccsDate, SCCS_DATE, VER_LEN );
+    for( int i=0; i<VER_LEN; i++ )
+    {
+        if( m_sSccsDate[i] == '_' )
+            m_sSccsDate[i] = ' ';
+    }
 
     m_nVersion = COMBINE_VER(m_nMajor, m_nMinor, m_nRevision);
 

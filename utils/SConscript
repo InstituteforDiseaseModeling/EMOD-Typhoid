@@ -19,11 +19,10 @@ if os.sys.platform != 'win32':
     BR_STR = '-DSCCS_BRANCH=\'"' + branch + '(' + sha1 + ')"\''
     env.Append( CCFLAGS=[ BR_STR ] )
 
-    git_date_handle = Popen( "git log -1 --format=%cd".split(), stdout=PIPE )
-    git_date = git_date_handle.stdout.read().rstrip()
-    GIT_DATE_STR = "-DDATE='" + str(git_date) + "'"
+    git_date_handle = Popen( "git log -1 --pretty=%ai".split(), stdout=PIPE )
+    git_date = git_date_handle.stdout.read().rstrip().replace( ' ', '_' )
+    GIT_DATE_STR = '-DSCCS_DATE=\'"' + git_date + '"\''
     env.Append( CCFLAGS=[ GIT_DATE_STR ] )
-
 else:
     root = Dir('#').abspath
     version_info = '{0}\\scripts\\gitversion.cmd {0}\\utils'.format(root)
