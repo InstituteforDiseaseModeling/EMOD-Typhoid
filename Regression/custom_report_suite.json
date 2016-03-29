@@ -1,7 +1,8 @@
 {
     "tests": [
         { "path": "44_Custom_Reporter_Demo"                                   , "reports" : "ReportEventCounter.json CustomReport.json" },
-        { "path": "68_Malaria_Barcode_Genetics"                               , "reports" : "ReportEventCounter.json MalariaSurveyJSONAnalyzer MalariaImmunityReport MalariaSummaryReport MalariaPatientReport.json" },
+        { "path": "68_Malaria_Barcode_Genetics"                               , "reports" : "ReportEventCounter.json MalariaSurveyJSONAnalyzer MalariaImmunityReport MalariaSummaryReport" },
+        { "path": "101_OneMalariaIndividual_MultipleAntigens"                 , "reports" : "MalariaPatientReport.json" },
         { "path": "108_Generic_MigrationByAgeAndGender"                       , "reports" : "ReportNodeDemographics.csv  ReportHumanMigrationTracking KML_Demo_Reporter AgeAtInfectionReport.json AgeAtInfectionHistogramReport.json" },
         { "path": "118_Polio_CustomReports"                                   , "reports" : "PolioSurveyJSONAnalyzer Infections.bin VirusPopulation.bin" },
         { "path": "119_MalariaSurvey_Multicore"                               , "reports" : "MalariaSurveyJSONAnalyzer" },
@@ -10,8 +11,10 @@
         { "path": "00_Households/test_suite/35_5x5_MigrateIndividuals_Moving" , "reports" : "ReportNodeDemographics.csv ReportMalariaFiltered.json" },
         { "path": "Multicore_Nosibe/Scenarios/TB/01_BasicModel/A_SEIR"        , "reports" : "Report_Scenarios.json" },
         { "path": "STI/40_STI_Trivial_All_Reporters"                          , "reports" : "RelationshipQueueReporter.json" },
-        { "path": "STI/61_STI_Marital_Only_Relationship_Migration_Multicore"  , "reports" : "ReportRelationshipMigrationTracking.csv" },
         { "path": "HIV/12_HIV_CascadeOfCare"                                  , "reports" : "Report_HIV_WHO2015.csv" }
+    ],
+    "Migration": [
+        { "path": "STI/61_STI_Marital_Only_Relationship_Migration_Multicore"  , "reports" : "ReportRelationshipMigrationTracking.csv" }
     ],
     "reporters_note" : [
         "ReportEventCounter.json",

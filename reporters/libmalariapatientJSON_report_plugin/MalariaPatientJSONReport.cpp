@@ -195,7 +195,7 @@ void MalariaPatientJSONReport::LogNodeData( INodeContext * pNC )
 
 bool MalariaPatientJSONReport::IsCollectingIndividualData( float currentTime, float dt ) const
 {
-    return ((365.0 < currentTime) && (currentTime < 395.0));
+    return true;
 }
 
 void MalariaPatientJSONReport::LogIndividualData( IIndividualHuman* individual )
