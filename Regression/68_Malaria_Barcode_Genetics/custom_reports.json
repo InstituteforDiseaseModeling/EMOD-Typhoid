@@ -93,11 +93,6 @@
                     "Reporting_Interval": 73
                 }
             ]
-        },
-        "MalariaPatientJSONReport" :
-        {
-            "Enabled" : 1,
-            "Reports" : [ {} ]
         }
     }
 }
