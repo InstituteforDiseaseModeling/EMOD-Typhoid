@@ -125,8 +125,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>call "$(ProjectDir)\..\Scripts\preutils.bat"</Command>
-      <Message>generate new version_info.h from svninfo.h</Message>
+      <Command>call "$(ProjectDir)..\Scripts\gitversion.cmd" "$(ProjectDir)"</Command>
+      <Message>Generate new version_info.h from repository</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
