@@ -137,7 +137,7 @@
 
 		"____________RARELY_CHANGED___________": {
             "Config_Name": "Config_Name_NOT_SET",
-            "Geography": "SamplesInput_HIV",
+            "Geography": "SamplesInput",
             "Animal_Reservoir_Type": "NO_ZOONOSIS",
             "Base_Mortality": 0,
             "Climate_Model": "CLIMATE_OFF",

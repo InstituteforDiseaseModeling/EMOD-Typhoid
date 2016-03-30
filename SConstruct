@@ -120,8 +120,8 @@ def get_build_var():
     else:
         bv = "Release"
 
-    if has_option( "Dlls" ):
-        bv = bv + "Dll"
+    #if has_option( "Dlls" ):
+        #bv = bv + "Dll"
 
     return bv
 
@@ -133,9 +133,9 @@ add_option( "Release" , "release build" , 0 , True)
 add_option( "Debug" , "debug build" , 0 , True )
 
 # module/linking options
-add_option( "Dlls" , "build all dlls" , 0 , True )
+#add_option( "Dlls" , "build all dlls" , 0 , True )
 #add_option( "Interventions" , "build all intervention dlls" , 0 , True )
-add_option( "DllDisease" , "build disease target dll" , 1 , True) #, Disease="Generic" )
+#add_option( "DllDisease" , "build disease target dll" , 1 , True) #, Disease="Generic" )
 add_option( "Disease" , "build only files for disease target " , 1 , True) #, Disease="Generic" )
 #add_option( "Report" , "build report target dll" , 1 , True) #, Report="Spatial" )
 #add_option( "Campaign" , "build all campaign target dll" , 1 , True) #, Campaign=Bednet
@@ -214,9 +214,6 @@ if os.sys.platform == 'win32':
                           "#/snappy",
                           "#/unittest/UnitTest++/src"])
 else:
-    SVN_BRANCH = os.popen("svn info|grep URL|awk '{ print $2 }'|awk -F/ '{ printf( \"/%s\", $NF) }'" ).read()
-    print( SVN_BRANCH )
-    env['SVN_BRANCH'] = SVN_BRANCH
     env['OS_FAMILY'] = 'posix'
     env['CC'] = "mpicxx"
     env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
@@ -375,6 +372,7 @@ elif "win32" == os.sys.platform:
     env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
 
     env.Append( CCFLAGS=["/DIDM_EXPORT"] )
+    env.Append( LIBS=["python27.lib"] )
 
     if Rel:
         # /MD: Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
@@ -394,7 +392,6 @@ elif "win32" == os.sys.platform:
         # NOTE: /DEBUG and Dbghelp.lib go together with changes in Exception.cpp which adds
         #       the ability to print a stack trace.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["python27.lib"] )
         # For MSVC <= 10.0
         #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
         
@@ -442,8 +439,8 @@ def doConfigure(myenv):
 
     if 'CheckCXX' in dir( conf ):
         if  not conf.CheckCXX():
-            print( "c++ compiler not installed!" )
-            print( "This sometimes happens even though the compiler is fine and can be resolved by performing a 'scons -c' followed by manually removing the .sconf_temp folder and .sconfsidg.dblite." )
+            print( "c++ compiler test failed!" )
+            print( "This sometimes happens even though the compiler is fine and can be resolved by performing a 'scons -c' followed by manually removing the .sconf_temp folder and .sconsign.dblite. It can also be because mpich_devel is not installed." )
             Exit(1)
             
     """
@@ -460,18 +457,18 @@ def doConfigure(myenv):
 def setEnvAttrs(myenv):
 
     diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'TB', "STI", "HIV" ]
-    diseases = ['Generic', 'Vector', 'Malaria', 'Waterborne', 'Polio', 'Airborne', 'TB', 'STI', 'HIV', 'Py' ]
+    diseases = ['Generic', 'Vector', 'Malaria', 'Polio', 'TB', 'STI', 'HIV', 'Py' ]
     reportdlls = ['Spatial', 'Binned']
     campaigndlls = ['Bednet', 'IRSHousing']
 
     myenv['AllDlls'] = False
-    dlldisease = has_option('DllDisease')
+    #dlldisease = has_option('DllDisease')
     #dllreport = has_option('Report')
     #dllcampaign = has_option('Campaign')
     monodisease = has_option('Disease')
 
-    if has_option('Dlls'):
-        myenv['AllDlls'] = True
+    #if has_option('Dlls'):
+        #myenv['AllDlls'] = True
 
     myenv['AllInterventions'] = False
     #if has_option('Interventions'):
@@ -480,7 +477,7 @@ def setEnvAttrs(myenv):
 #    if has_option('Dlls') or dlldisease or dllreport or dllcampaign:
 #        myenv.Append( CPPDEFINES=["_DLLS_" ] )
 
-    if dlldisease:
+    if False: # dlldisease:
         myenv['DiseaseDll'] = get_option( 'DllDisease' ) # careful, tricky
         print "DiseaseDll=" + myenv['DiseaseDll']
         if myenv['DiseaseDll'] not in diseasedlls:

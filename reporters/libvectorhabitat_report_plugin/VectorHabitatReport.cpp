@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -147,7 +147,8 @@ void VectorHabitatReport::initChannelBins()
             }
         }
     }
-    friendly_names_per_axis.push_back(axis_names);
+    // friendly_names_per_axis.push_back(axis_names);
+    _age_bin_friendly_names= std::vector<std::string>( axis_names.begin(), axis_names.end() );
 
     oss << endl;
     LOG_DEBUG(oss.str().c_str());

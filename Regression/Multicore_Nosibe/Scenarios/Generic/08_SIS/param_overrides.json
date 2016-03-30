@@ -8,7 +8,7 @@
         "DEMOGRAPHICS": {
             "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE",
             "Birth_Rate_Dependence": "POPULATION_DEP_RATE",
-            "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json",
+            "Demographics_Filenames": ["Madagascar_Nosibe_2.5arcmin_demographics.json"],
             "Enable_Aging": 1,
             "Enable_Birth": 0,
             "Enable_Demographics_Birth": 0,
@@ -77,7 +77,7 @@
         "PRIMARY": {
             "Config_Name": "08_SIS -- multicore -- Madagascar_Nosibe",
             "Simulation_Type": "GENERIC_SIM",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 0,
             "Simulation_Duration": 3650,
             "Simulation_Timestep": 1,

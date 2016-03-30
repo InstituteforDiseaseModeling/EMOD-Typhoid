@@ -1,6 +1,6 @@
 {
     "parameters": {
-        "Demographics_Filename": "../00_Default/demographics.json", 
+        "Demographics_Filenames": ["demographics.json"], 
         "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE", 
         "Base_Mortality": 0, 
         "Base_Population_Scale_Factor": 1, 

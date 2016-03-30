@@ -31,7 +31,7 @@
                }
           }, 
           "DEMOGRAPHICS": {
-               "Demographics_Filename": "Namawala_single_node_demographics.compiled.json"
+               "Demographics_Filenames": ["Namawala_single_node_demographics.compiled.json"]
           }, 
           "DISEASE": {
                "Node_Contagion_Decay_Rate": 0.3,

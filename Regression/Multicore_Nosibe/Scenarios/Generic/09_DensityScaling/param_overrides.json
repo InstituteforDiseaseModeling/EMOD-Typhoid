@@ -4,7 +4,7 @@
         "DEMOGRAPHICS": {
             "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
             "Enable_Birth": 0, 
-            "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json",
+            "Demographics_Filenames": ["Madagascar_Nosibe_2.5arcmin_demographics.json"],
             "MORTALITY": {
                 "Mortality_Time_Course": "MORTALITY_AFTER_INFECTIOUS", 
                 "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
@@ -68,7 +68,7 @@
             "Simulation_Duration": 360, 
             "Node_Grid_Size": 0.1, 
             "Config_Name": "09_DensityScaling -- multicore -- Madagascar_Nosibe", 
-            "Geography": "Test"
+            "Geography": "Madagascar_Nosibe"
         }
     }
 }

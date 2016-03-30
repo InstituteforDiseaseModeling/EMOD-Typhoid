@@ -29,7 +29,7 @@
         }, 
         "DEMOGRAPHICS": {
             "Enable_Demographics_Reporting": 0, 
-            "Demographics_Filename": "..\\polio_input\\immune_decay_demographics.compiled.json", 
+            "Demographics_Filenames": ["..\\polio_input\\immune_decay_demographics.compiled.json"], 
             "Enable_Vital_Dynamics": 0, 
             "SAMPLING": {
                 "Sample_Rate_0_18mo": 1, 

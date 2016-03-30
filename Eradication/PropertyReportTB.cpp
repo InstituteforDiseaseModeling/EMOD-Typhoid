@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -47,11 +47,10 @@ PropertyReportTB::LogIndividualData(
 {
     PropertyReport::LogIndividualData( individual );
 
-    const auto * pProp = individual->GetProperties();
     // Try an optimized solution that constructs a reporting bucket string based entirely
     // on the properties of the individual. But we need some rules. Let's start with simple
     // alphabetical ordering of category names
-    std::string reportingBucket = PropertiesToString( *pProp );
+    std::string reportingBucket = individual->GetPropertyReportString();
 
     float monte_carlo_weight = (float)individual->GetMonteCarloWeight();
     const Kernel::IndividualHumanTB* individual_tb = static_cast<const Kernel::IndividualHumanTB*>(individual);

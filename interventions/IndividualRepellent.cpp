@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -26,16 +26,10 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        //initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Blocking_Config", &blocking_config, SIR_Blocking_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
-            //auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
-            //killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
-            //delete tmp_killing;
-            //tmp_killing = nullptr;
-
             auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
             blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
             delete tmp_blocking;
@@ -45,24 +39,21 @@ namespace Kernel
     }
 
     SimpleIndividualRepellent::SimpleIndividualRepellent()
-        //: killing_effect( nullptr )
         : blocking_effect( nullptr )
-        //, current_killingrate( 0.0f )
         , current_blockingrate( 0.0f )
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, SIR_Cost_To_Consumer_DESC_TEXT, 0, 999999, 8.0);
     }
 
+    SimpleIndividualRepellent::~SimpleIndividualRepellent()
+    {
+        delete blocking_effect;
+    }
+
     SimpleIndividualRepellent::SimpleIndividualRepellent( const SimpleIndividualRepellent& master )
     : BaseIntervention( master )
     {
-        //killing_config = master.killing_config;
-        //auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
-        //killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
-        //delete tmp_killing;
-        //tmp_killing = nullptr;
-
         blocking_config = master.blocking_config;
         auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
         blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );

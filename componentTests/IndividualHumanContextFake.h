@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -125,6 +125,9 @@ public:
 
     virtual IIndividualHumanInterventionsContext* GetInterventionsContextbyInfection(Infection* infection)       override { throw std::exception("The method or operation is not implemented."); }
     virtual const NodeDemographicsDistribution*   GetDemographicsDistribution(std::string)                 const override { throw std::exception("The method or operation is not implemented."); }        
+
+    virtual const std::string& GetPropertyReportString() const     override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetPropertyReportString( const std::string& str ) override { throw std::exception("The method or operation is not implemented."); }
 
     // --------------------------------
     // --- IIndividualHuman Methods

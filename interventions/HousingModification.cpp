@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -73,8 +73,8 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Killing_Config", &killing_config, HM_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Blocking_Config", &blocking_config, HM_Blocking_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
@@ -98,6 +98,12 @@ namespace Kernel
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, HM_Cost_To_Consumer_DESC_TEXT, 0, 999999, 8.0);
+    }
+
+    SimpleHousingModification::~SimpleHousingModification()
+    {
+        delete killing_effect;
+        delete blocking_effect;
     }
 
     SimpleHousingModification::SimpleHousingModification( const SimpleHousingModification& master )

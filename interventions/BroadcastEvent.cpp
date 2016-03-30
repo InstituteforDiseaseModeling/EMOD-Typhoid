@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -37,7 +37,7 @@ namespace Kernel
 
         if( (broadcast_event == NO_TRIGGER_STR) || broadcast_event.IsUninitialized() )
         {
-            LOG_WARN_F("BroadcastEvent was configured with NoTrigger (or uninitialized) as the Broadcast_Event.  This special event will not be broadcast.");
+            LOG_WARN_F("BroadcastEvent was configured with NoTrigger (or uninitialized) as the Broadcast_Event.  This special event will not be broadcast.\n");
         }
         return ret;
     }

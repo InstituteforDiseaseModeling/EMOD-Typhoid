@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -73,10 +73,12 @@ namespace Kernel
     SimpleVaccine::SimpleVaccine( const SimpleVaccine& master )
     : BaseIntervention( master )
     {
-        vaccine_type = master.vaccine_type;
-        vaccine_take = master.vaccine_take;
-        cost_per_unit = master.cost_per_unit;
-        waning_config = master.waning_config;
+        vaccine_type             = master.vaccine_type;
+        vaccine_take             = master.vaccine_take;
+        current_reducedacquire   = master.current_reducedacquire;
+        current_reducedtransmit  = master.current_reducedtransmit;
+        current_reducedmortality = master.current_reducedmortality;
+        waning_config            = master.waning_config;
 
         auto tmp_waning = Configuration::CopyFromElement( waning_config._json );
         waning_effect = WaningEffectFactory::CreateInstance( tmp_waning );
@@ -84,7 +86,10 @@ namespace Kernel
         tmp_waning = nullptr;
     }
 
-    SimpleVaccine::~SimpleVaccine() { }
+    SimpleVaccine::~SimpleVaccine()
+    {
+        delete waning_effect;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -973,7 +973,7 @@ namespace Kernel
             m_simConfigObj->demographics_initial &&
             !migration_factory->IsAtLeastOneTypeConfiguredForIndividuals() )
         {
-            LOG_WARN("Enable_Demographics_Initial is set to true,  Migration_Model != NO_MIGRATION, and no migration file names have been defined and enabled.  No file-based migration will occur.");
+            LOG_WARN("Enable_Demographics_Initial is set to true,  Migration_Model != NO_MIGRATION, and no migration file names have been defined and enabled.  No file-based migration will occur.\n");
         }
 
         for (auto& entry : nodes)

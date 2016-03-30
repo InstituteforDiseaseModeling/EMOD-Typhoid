@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -236,7 +236,7 @@ static NaturalNumber num_adults_not_related = 0;
         channelDataMap.RemoveChannel( _cum_reported_infections_label );
         channelDataMap.RemoveChannel( _hum_infectious_res_label      );
         channelDataMap.RemoveChannel( _log_prev_label                );
-        channelDataMap.RemoveChannel( _prob_new_infection_label      );
+        channelDataMap.RemoveChannel( _infection_rate_label          );
         channelDataMap.RemoveChannel( _ymc      );
         channelDataMap.RemoveChannel( _yfc      );
     }

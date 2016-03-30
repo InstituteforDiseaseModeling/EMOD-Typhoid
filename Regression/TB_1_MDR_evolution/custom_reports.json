@@ -2,7 +2,7 @@
     "Custom_Reports" : 
     {
         "Use_Explicit_Dlls" : 1,
-        "TBPatientReport" :
+        "TBPatientJSONReport" :
         {
             "Enabled" : 1,
             "Reports" : [ {} ]

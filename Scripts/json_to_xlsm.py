@@ -65,6 +65,26 @@ for sheet in wb.sheets():
     if sheet.name=="CONTROL":
         control_sheet = sheet_num
     else:
+        if sheet.name.startswith( "STI_Network_Params" ):
+            #pdb.set_trace()
+            # need special handling
+            sti_param_group = sheet.name.split( "-" )[2] 
+            if sti_param_group not in cj["STI_Network_Params_By_Property"]:
+                print( "Yikes! config.json doesn't have section to override the STI_Network_Params property. Nothing will be changed here." )
+            else:
+                use_node = cj["STI_Network_Params_By_Property"][ sti_param_group ]
+                for row_id in range(0,sheet.nrows):
+                    row = sheet.row(row_id)
+                    param_name = row[0].value
+                    if param_name in use_node:
+                        if row[1].value != use_node[ param_name ]:
+                            if not isinstance(use_node[param_name],list):
+                                #print( "Replacing default value for " + param_name + " with config.json value of " + str( use_node[ param_name ] ) )
+                                sheet._cell_values[row_id][1] = use_node[ param_name ]
+                                print( "Replaced default value for " + param_name + " with config.json value of " + str( sheet.row(row_id)[1].value ) )
+                            #else:
+                                #sheet._cell_values[row_id][1] = str(use_node[ param_name ])
+
         for row_id in range(0,sheet.nrows):
             row = sheet.row(row_id)
             param_name = row[0].value

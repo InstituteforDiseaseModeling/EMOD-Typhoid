@@ -3,7 +3,7 @@
     "parameters": {
         "DEMOGRAPHICS": {
             "Birth_Rate_Dependence": "POPULATION_DEP_RATE",
-            "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json",
+            "Demographics_Filenames": ["Madagascar_Nosibe_2.5arcmin_demographics.json"],
             "MORTALITY": {
                 "Base_Mortality": 0
             },
@@ -55,7 +55,7 @@
         },         
         "PRIMARY": {
             "Config_Name": "07_SI -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 36500,
             "Simulation_Timestep": 10

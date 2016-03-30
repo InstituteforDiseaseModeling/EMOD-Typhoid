@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -85,32 +85,49 @@ namespace Kernel
         float larvalhabitat = GetCurrentLarvalCapacity();
         float total_larva_count = m_total_larva_count[CURRENT_TIME_STEP]; 
 
-        if (larvalhabitat > total_larva_count && m_new_egg_count > 0  && params()->egg_saturation) 
+        switch ( params()->egg_saturation )
         {
+            case EggSaturation::NO_SATURATION:
+                m_egg_crowding_correction = 1.0;
+                break;
+
             // Eggs divided up by habitat, neweggs holds number of female eggs.  Correcting for overcrowding, applies to all eggs evenly
             // Will hatch equal number of male larva, but these don't take up larval habitat in the calculations, to keep compatible with older results
-            if (m_new_egg_count > larvalhabitat - total_larva_count)
-            { 
-                m_egg_crowding_correction = float(larvalhabitat - total_larva_count) / float(m_new_egg_count);
-            }
-            else
-            {
-                m_egg_crowding_correction = 1.0;
-            }
-        }
-        else if (params()->egg_saturation == EggSaturation::NO_SATURATION)
-        {
-            m_egg_crowding_correction = 1.0;
-        }
-        else if (params()->egg_saturation == EggSaturation::SIGMOIDAL_SATURATION)
-        {
-            if(larvalhabitat > 0){m_egg_crowding_correction = exp(-total_larva_count/larvalhabitat);}
-            else{ m_egg_crowding_correction = 0.0;}
-        }
-        else
-        {
-            // Habitat is full.  No new eggs.
-            m_egg_crowding_correction = 0;
+
+            case EggSaturation::SATURATION_AT_OVIPOSITION:
+                if (larvalhabitat > total_larva_count)
+                {
+                    if (m_new_egg_count > (larvalhabitat - total_larva_count))
+                    { 
+                        m_egg_crowding_correction = float(larvalhabitat - total_larva_count) / float(m_new_egg_count);
+                    }
+                    else
+                    {
+                        m_egg_crowding_correction = 1.0;
+                    }
+                }
+                else
+                {
+                    // Habitat is full.  No new eggs.
+                    m_egg_crowding_correction = 0;
+                }
+                break;
+
+            case EggSaturation::SIGMOIDAL_SATURATION:
+                if (larvalhabitat > 0)
+                {
+                    m_egg_crowding_correction = exp(-total_larva_count/larvalhabitat);
+                }
+                else
+                {
+                    m_egg_crowding_correction = 0.0;
+                }
+                break;
+
+            default:
+                throw BadEnumInSwitchStatementException(__FILE__, __LINE__, __FUNCTION__,
+                                                        "params()->egg_saturation", params()->egg_saturation,
+                                                        EggSaturation::pairs::lookup_key(params()->egg_saturation));
         }
 
         // After egg-crowding calculation has been calculated, reset new egg counter
@@ -200,13 +217,15 @@ namespace Kernel
         }
         else if(params()->vector_larval_rainfall_mortality == VectorRainfallMortality::SIGMOID_HABITAT_SHIFTING)
         {
-            if( rainfall * MM_PER_METER < params()->larval_rainfall_mortality_threshold * dt * ( (m_max_larval_capacity - m_current_larval_capacity) / m_max_larval_capacity ) )
+            float full_habitat = m_max_larval_capacity * params()->lloffset * params()->lloffset;
+            float fraction_empty = (full_habitat - m_current_larval_capacity) / full_habitat;
+            if( rainfall * MM_PER_METER < params()->larval_rainfall_mortality_threshold * dt * fraction_empty )
             {
                 m_rainfall_mortality = 0;
             }
             else
             {
-                m_rainfall_mortality = ( rainfall * MM_PER_METER - params()->larval_rainfall_mortality_threshold * dt * ( (m_max_larval_capacity - m_current_larval_capacity) / m_max_larval_capacity ) ) / (params()->larval_rainfall_mortality_threshold * dt);
+                m_rainfall_mortality = (rainfall * MM_PER_METER - params()->larval_rainfall_mortality_threshold * dt * fraction_empty) / (params()->larval_rainfall_mortality_threshold * dt);
             }
         }
         else

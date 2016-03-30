@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -59,10 +59,12 @@ namespace Kernel
     bool Assortivity::Configure(const Configuration *config)
     {
         bool ret = false ;
+        bool prev_use_defaults = JsonConfigurable::_useDefaults ;
+        bool resetTrackMissing = JsonConfigurable::_track_missing;
+        JsonConfigurable::_track_missing = false;
+        JsonConfigurable::_useDefaults = false ;
         try
         {
-            bool prev_use_defaults = JsonConfigurable::_useDefaults ;
-            JsonConfigurable::_useDefaults = false ;
 
             initConfig( "Group", m_Group, config, MetadataDescriptor::Enum("m_Group", "TBD", MDD_ENUM_ARGS(AssortivityGroup)) ); 
 
@@ -90,15 +92,22 @@ namespace Kernel
             ret = JsonConfigurable::Configure( config );
 
             JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = resetTrackMissing;
         }
         catch( DetailedException& e )
         {
+            JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = resetTrackMissing;
+
             std::stringstream ss ;
             ss << e.GetMsg() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( m_RelType ) << "." ;
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
-        catch( json::Exception& e )
+        catch( const json::Exception &e )
         {
+            JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = resetTrackMissing;
+
             std::stringstream ss ;
             ss << e.what() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( m_RelType ) << "." ;
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );

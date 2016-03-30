@@ -38,7 +38,10 @@
         "Default_Genome": 0, 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;Madagascar_Nosibe_2.5arcmin_demographics_overlay.json", 
+        "Demographics_Filenames": [
+            "Madagascar_Nosibe_2.5arcmin_demographics.json", 
+            "Madagascar_Nosibe_2.5arcmin_demographics_overlay.json"
+        ], 
         "Disease_Susceptible_Report_Poliovirus_Type": "WPV1", 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
@@ -75,7 +78,7 @@
         "Evolution_Polio_WPV_Linear_Rate": 0.02191781, 
         "Excrement_Load": 300, 
         "Family_Migration_Filename": "", 
-        "Geography": "Test", 
+        "Geography": "Madagascar_Nosibe", 
         "Immunity_Acquisition_Factor": 1, 
         "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_OFF", 
         "Immunity_Mortality_Factor": 1, 
@@ -146,7 +149,6 @@
         "Prime_Log2_NAb_Stddev_OPV1": 2.3, 
         "Prime_Log2_NAb_Stddev_OPV2": 2.5, 
         "Prime_Log2_NAb_Stddev_OPV3": 2.5, 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Random_Type": "USE_PSEUDO_DES", 
         "Regional_Migration_Filename": "", 
         "Report_Event_Recorder": 0, 

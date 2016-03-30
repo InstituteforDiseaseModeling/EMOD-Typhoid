@@ -14,10 +14,9 @@
             "Event_Coordinator_Config": {
                 "class": "StandardInterventionDistributionEventCoordinator",
                 "Target_Demographic": "Everyone", 
-                "Demographic_Coverage": 0.1,
+                "Demographic_Coverage": 0.35,
                 "Intervention_Config": {
                     "class": "OutbreakIndividual",
-                    "Outbreak_Source": "ImportCases",
                     "Antigen": 0, 
                     "Genome": 0
                 }

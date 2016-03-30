@@ -69,7 +69,7 @@
         },
         "PRIMARY": {
             "Config_Name": "HINT_SchoolClosure -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 150
         },

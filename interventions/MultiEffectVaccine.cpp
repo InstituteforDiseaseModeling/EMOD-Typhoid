@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -32,9 +32,9 @@ namespace Kernel
     )
     {
         initConfigTypeMap("Vaccine_Take", &vaccine_take, SV_Vaccine_Take_DESC_TEXT, 0.0, 1.0, 1.0 ); 
-        initConfigComplexType("Acquire_Config",  &acquire_config, "TBD" );
-        initConfigComplexType("Transmit_Config",  &transmit_config, "TBD" );
-        initConfigComplexType("Mortality_Config", &mortality_config, "TBD" );
+        initConfigComplexType("Acquire_Config",  &acquire_config, MEV_Acquire_Config_DESC_TEXT );
+        initConfigComplexType("Transmit_Config",  &transmit_config, MEV_Transmit_Config_DESC_TEXT );
+        initConfigComplexType("Mortality_Config", &mortality_config, MEV_Mortality_Config_DESC_TEXT  );
 
         bool configured = BaseIntervention::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
@@ -89,7 +89,12 @@ namespace Kernel
         tmp_mortality = nullptr;
     }
 
-    MultiEffectVaccine::~MultiEffectVaccine() { }
+    MultiEffectVaccine::~MultiEffectVaccine()
+    {
+        delete acquire_effect;
+        delete transmit_effect;
+        delete mortality_effect;
+    }
 
     void MultiEffectVaccine::Update( float dt )
     {

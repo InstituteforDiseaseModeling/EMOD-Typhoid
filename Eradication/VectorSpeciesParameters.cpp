@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -26,35 +26,48 @@ namespace Kernel
     {
         LOG_DEBUG_F( "Configuring larval habitats from config.json\n" );
         // we have a map of enum keys to floats
-        const auto& tvcs_jo = json_cast<const json::Object&>( (*inputJson)[key] );
-        for( auto data = tvcs_jo.Begin();
-                  data != tvcs_jo.End();
-                  ++data )
-        {
-            auto tvcs = inputJson->As< json::Object >()[ key ];
+        try {
+            const auto& tvcs_jo = json_cast<const json::Object&>( (*inputJson)[key] );
+            for( auto data = tvcs_jo.Begin();
+                    data != tvcs_jo.End();
+                    ++data )
+            {
+                auto tvcs = inputJson->As< json::Object >()[ key ];
 
-            auto habitat_type_string = data->name;
-            VectorHabitatType::Enum habitat_type = (VectorHabitatType::Enum) VectorHabitatType::pairs::lookup_value( habitat_type_string.c_str() );
-            if( habitat_type == -1 )
-            {
-                std::stringstream msg;
-                msg << habitat_type_string 
-                    << " is not a valid VectorHabitatType.";
-                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+                auto habitat_type_string = data->name;
+                VectorHabitatType::Enum habitat_type = (VectorHabitatType::Enum) VectorHabitatType::pairs::lookup_value( habitat_type_string.c_str() );
+                if( habitat_type == -1 )
+                {
+                    std::stringstream msg;
+                    msg << habitat_type_string 
+                        << " is not a valid VectorHabitatType.";
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+                }
+                try
+                {
+                    NonNegativeFloat habitat_param = 0.0f;
+                    try {
+                        habitat_param = (NonNegativeFloat) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
+                    }
+                    catch( const json::Exception & )
+                    {
+                        throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, data->name.c_str(), json::QuickInterpreter( tvcs ), "Expected NUMBER" );
+                    }
+                    habitat_map.insert( std::make_pair( habitat_type, habitat_param ) );
+                }
+                catch( OutOfRangeException &except )
+                {
+                    LOG_WARN_F( "Out of range exception: %s(Rethrowing in more useful form.)\n", except.what() );
+                    throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
+                            habitat_type_string.c_str(), ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>()), 0 );
+                }
             }
-            try
-            {
-                NonNegativeFloat habitat_param = (NonNegativeFloat) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
-                habitat_map.insert( std::make_pair( habitat_type, habitat_param ) );
-            }
-            catch( OutOfRangeException &except )
-            {
-                LOG_WARN_F( "Out of range exception: %s(Rethrowing in more useful form.)\n", except.what() );
-                throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
-                                                   habitat_type_string.c_str(), ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>()), 0 );
-            }
+            LOG_DEBUG_F( "Found %d larval habitats\n", habitat_map.size() );
         }
-        LOG_DEBUG_F( "Found %d larval habitats\n", habitat_map.size() );
+        catch( const json::Exception & )
+        {
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected OBJECT" );
+        }
     }
 
     json::QuickBuilder

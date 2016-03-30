@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -57,14 +57,20 @@ namespace Kernel
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, SB_Cost_To_Consumer_DESC_TEXT, 0, 999999, 3.75 );
     }
 
+    SimpleBednet::~SimpleBednet()
+    {
+        delete killing_effect;
+        delete blocking_effect;
+    }
+
     bool
     SimpleBednet::Configure(
         const Configuration * inputJson
     )
     {
         initConfig( "Bednet_Type", bednet_type, inputJson, MetadataDescriptor::Enum("Bednet_Type", SB_Bednet_Type_DESC_TEXT, MDD_ENUM_ARGS(BednetType)) );
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Blocking_Config",  &blocking_config, "TBD" /*IVM_Blocking_Config_DESC_TEXT*/ );
+        initConfigComplexType("Killing_Config",  &killing_config, SB_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Blocking_Config",  &blocking_config, SB_Blocking_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {

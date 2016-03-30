@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -202,12 +202,12 @@ namespace Kernel
         // ---------------------------------------------------------------------------------
         // --- 10/16/2015 Jaline says that research shows that vectors don't necessarily go
         // --- to houses with more people, but do go to places with people versus no people.
-        // --- We use rawRate so that the amount of affect is related to the normal rate.
+        // --- Hence, 1 => go to node with people, 0 => avoid nodes without people.
         // ---------------------------------------------------------------------------------
         float pr = populationRatio ;
         if( pr > 0.0 )
         {
-            pr = rawRate ;
+            pr = 1.0 ;
         }
 
         float rate = 0.0 ;

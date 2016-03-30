@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -19,7 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "FactorySupport.h"
 #include "Configure.h"
-#include "WaningEffect.h"
+#include "IWaningEffect.h"
 
 namespace Kernel
 {
@@ -38,7 +38,7 @@ namespace Kernel
         bool Configure( const Configuration * config );
         HumanHostSeekingTrap();
         HumanHostSeekingTrap( const HumanHostSeekingTrap& );
-        virtual ~HumanHostSeekingTrap() { }
+        virtual ~HumanHostSeekingTrap();
 
         // IDistributableIntervention
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );

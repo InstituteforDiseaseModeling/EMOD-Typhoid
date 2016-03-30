@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -26,18 +26,38 @@ namespace Kernel
         const std::string& key
     )
     {
-        const Array dose_by_age = (*inputJson)[key].As<Array>();
-        std::ostringstream oss;
-        oss << "<drugType>" << ": fraction of adult dose\n";
-        for( int i=0; i<dose_by_age.Size(); i++)
-        {
-            QuickInterpreter dosing(dose_by_age[i]);
-            float upper_age_in_years = dosing["Upper_Age_In_Years"].As<Number>();
-            float fractional_dose = dosing["Fraction_Of_Adult_Dose"].As<Number>();
-            fractional_dose_by_upper_age[upper_age_in_years] = fractional_dose;
-            oss << "under " << int(upper_age_in_years) << ", " << fractional_dose << "\n";
+        try {
+            const Array dose_by_age = (*inputJson)[key].As<Array>();
+            std::ostringstream oss;
+            oss << "<drugType>" << ": fraction of adult dose\n";
+            for( int i=0; i<dose_by_age.Size(); i++)
+            {
+                QuickInterpreter dosing(dose_by_age[i]);
+                float upper_age_in_years = 0.0f;
+                float fractional_dose = 0.0f; 
+                try {
+                    upper_age_in_years = dosing["Upper_Age_In_Years"].As<Number>();
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Upper_Age_In_Years", dosing, "Expected NUMBER" );
+                }
+                try {
+                    fractional_dose = dosing["Fraction_Of_Adult_Dose"].As<Number>();
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Fraction_Of_Adult_Dose", dosing, "Expected NUMBER" );
+                }
+                fractional_dose_by_upper_age[upper_age_in_years] = fractional_dose;
+                oss << "under " << int(upper_age_in_years) << ", " << fractional_dose << "\n";
+                LOG_DEBUG_F(oss.str().c_str()); 
+            }
         }
-        LOG_DEBUG_F(oss.str().c_str()); 
+        catch( const json::Exception & )
+        {
+            throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected ARRAY" );
+        }
     }
 
     json::QuickBuilder
@@ -124,7 +144,7 @@ namespace Kernel
                 }
 
             }
-            catch(json::Exception &e)
+            catch( const json::Exception &e )
             {
                 // Exception getting parameter block for drug of type "drugType" from config.json
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); 

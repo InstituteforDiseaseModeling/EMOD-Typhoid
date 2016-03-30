@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -722,6 +722,8 @@ SimulationConfig::SimulationConfig()
     , larvalDensityMortalityScalar(10.0f)
     , larvalDensityMortalityOffset(0.1f)
     , demographics_initial(false)
+    , default_torus_size(10)
+    , default_node_population(1000)
     , lloffset(0)
     , coinfection_incidence(false)
     , enable_coinfection_mortality(false)

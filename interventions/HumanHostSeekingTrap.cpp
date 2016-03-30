@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -36,6 +36,12 @@ namespace Kernel
         
     }
 
+    HumanHostSeekingTrap::~HumanHostSeekingTrap()
+    {
+        delete killing_effect;
+        delete attract_effect;
+    }
+
     HumanHostSeekingTrap::HumanHostSeekingTrap( const HumanHostSeekingTrap& master )
     : BaseIntervention( master )
     {
@@ -59,8 +65,8 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfigComplexType("Killing_Config",  &killing_config, IVM_Killing_Config_DESC_TEXT );
-        initConfigComplexType("Attract_Config",  &attract_config, "TBD" /*IVM_attract_Config_DESC_TEXT*/ );
+        initConfigComplexType("Killing_Config",  &killing_config, HST_Killing_Config_DESC_TEXT );
+        initConfigComplexType("Attract_Config",  &attract_config, HST_Attract_Config_DESC_TEXT );
         bool configured = JsonConfigurable::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {

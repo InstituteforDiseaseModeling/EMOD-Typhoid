@@ -32,7 +32,9 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json", 
+        "Demographics_Filenames": [
+            "Madagascar_Nosibe_2.5arcmin_demographics.json"
+        ], 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "SATURATION_AT_OVIPOSITION", 
         "Enable_Absolute_Time": "NO", 
@@ -68,7 +70,7 @@
         "Enable_Vector_Mortality": 1, 
         "Enable_Vital_Dynamics": 1, 
         "Family_Migration_Filename": "", 
-        "Geography": "Test", 
+        "Geography": "Madagascar_Nosibe", 
         "HEG_Fecundity_Limiting": 0.0, 
         "HEG_Homing_Rate": 0.0, 
         "HEG_Model": "OFF", 
@@ -113,7 +115,6 @@
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Rainfall_Filename": "Madagascar_Nosibe_2.5arcmin_rainfall_daily.bin", 
         "Rainfall_In_mm_To_Fill_Swamp": 1000.0, 
         "Rainfall_Scale_Factor": 1, 

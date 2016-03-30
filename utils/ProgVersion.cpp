@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -30,7 +30,13 @@ ProgDllVersion::ProgDllVersion()
     m_nRevision = REVISION_NUMBER; 
 
     m_nBuild = BUILD_NUMBER;
-    strncpy(m_sBranch, std::string( SVN_URL ).substr( std::string( SVN_URL ).find_last_of( "/" )+1 ).c_str(), VER_LEN);
+    strncpy( m_sSccsBranch, SCCS_BRANCH, VER_LEN );
+    strncpy( m_sSccsDate, SCCS_DATE, VER_LEN );
+    for( int i=0; i<VER_LEN; i++ )
+    {
+        if( m_sSccsDate[i] == '_' )
+            m_sSccsDate[i] = ' ';
+    }
 
     m_nVersion = COMBINE_VER(m_nMajor, m_nMinor, m_nRevision);
 

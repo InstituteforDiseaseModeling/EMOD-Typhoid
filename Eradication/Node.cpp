@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -1562,7 +1562,7 @@ namespace Kernel
 
             // The per-individual infection rate will be later normalized by weighted population in transmissionGroups
             // The "zoonosis_rate" parameter is per individual, so scale by "statPop" before depositing contagion.
-            // N.B. the "Probability of New Infection" reporting channel does not include this effect or the InfectivityScaling above
+            // N.B. the "Daily (Human) Infection Rate" reporting channel does not include this effect or the InfectivityScaling above
 
             // Assume no heterogeneous transmission
             TransmissionGroupMembership_t defaultGroupMembership;

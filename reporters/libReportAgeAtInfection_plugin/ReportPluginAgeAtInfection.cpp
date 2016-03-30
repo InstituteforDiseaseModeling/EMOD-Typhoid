@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -167,7 +167,7 @@ ReportPluginAgeAtInfection::Finalize()
 
     ProgDllVersion pv;
     ostringstream dtk_ver;
-    dtk_ver << pv.getRevisionNumber() << " " << pv.getBranch() << " " << pv.getBuildDate();
+    dtk_ver << pv.getRevisionNumber() << " " << pv.getSccsBranch() << " " << pv.getBuildDate();
     qb["Header"]["DTK_Version"] = String(dtk_ver.str());
     qb["Header"]["Report_Version"] = String("3");
     qb["Header"]["Timesteps"] = String("3");

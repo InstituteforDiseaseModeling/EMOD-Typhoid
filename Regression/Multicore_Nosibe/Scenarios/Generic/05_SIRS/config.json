@@ -23,7 +23,9 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json", 
+        "Demographics_Filenames": [
+            "Madagascar_Nosibe_2.5arcmin_demographics.json"
+        ], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
         "Enable_Birth": 1, 
@@ -50,7 +52,7 @@
         "Enable_Superinfection": 0, 
         "Enable_Vital_Dynamics": 0, 
         "Family_Migration_Filename": "", 
-        "Geography": "Test", 
+        "Geography": "Madagascar_Nosibe", 
         "Immunity_Acquisition_Factor": 0, 
         "Immunity_Initialization_Distribution_Type": "DISTRIBUTION_OFF", 
         "Immunity_Mortality_Factor": 0, 

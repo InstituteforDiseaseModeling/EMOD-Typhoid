@@ -257,7 +257,6 @@
     <ClCompile Include="..\interventions\HIVPreARTNotification.cpp" />
     <ClCompile Include="..\interventions\HIVSetCascadeState.cpp" />
     <ClCompile Include="..\interventions\MigrateIndividuals.cpp" />
-    <ClCompile Include="..\interventions\ImportPressure.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBox.cpp" />
     <ClCompile Include="..\interventions\WaningEffectBoxExponential.cpp" />
     <ClCompile Include="..\interventions\WaningEffectExponential.cpp" />
@@ -301,7 +300,6 @@
     <ClCompile Include="..\interventions\RTSSVaccine.cpp" />
     <ClCompile Include="..\interventions\ScaleLarvalHabitat.cpp" />
     <ClCompile Include="..\interventions\SimpleVaccine.cpp" />
-    <ClCompile Include="..\interventions\SimpleImmunoglobulin.cpp" />
     <ClCompile Include="..\interventions\SmearDiagnostics.cpp" />
     <ClCompile Include="..\interventions\STIBarrier.cpp" />
     <ClCompile Include="..\interventions\StiCoInfectionDiagnostic.cpp" />
@@ -544,6 +542,7 @@
     <ClInclude Include="..\interventions\HIVARTStagingAbstract.h" />
     <ClInclude Include="..\interventions\HIVARTStagingByCD4Diagnostic.h" />
     <ClInclude Include="..\interventions\HIVARTStagingCD4AgnosticDiagnostic.h" />
+    <ClInclude Include="..\interventions\IWaningEffect.h" />
     <ClInclude Include="..\interventions\MalariaDiagnostic.h" />
     <ClInclude Include="..\interventions\MigrateFamily.h" />
     <ClInclude Include="..\interventions\STIIsPostDebut.h" />
@@ -568,7 +567,6 @@
     <ClInclude Include="..\interventions\IDrug.h" />
     <ClInclude Include="..\interventions\IHealthSeekingBehavior.h" />
     <ClInclude Include="..\interventions\IHIVCascadeStateIntervention.h" />
-    <ClInclude Include="..\interventions\ImportPressure.h" />
     <ClInclude Include="..\interventions\IndividualRepellent.h" />
     <ClInclude Include="..\interventions\InputEIR.h" />
     <ClInclude Include="..\interventions\Ivermectin.h" />
@@ -590,7 +588,6 @@
     <ClInclude Include="..\interventions\ResistanceDiagnostics.h" />
     <ClInclude Include="..\interventions\RTSSVaccine.h" />
     <ClInclude Include="..\interventions\ScaleLarvalHabitat.h" />
-    <ClInclude Include="..\interventions\SimpleImmunoglobulin.h" />
     <ClInclude Include="..\interventions\stdafx.h" />
     <ClInclude Include="..\interventions\SmearDiagnostics.h" />
     <ClInclude Include="..\interventions\StiCoInfectionDiagnostic.h" />

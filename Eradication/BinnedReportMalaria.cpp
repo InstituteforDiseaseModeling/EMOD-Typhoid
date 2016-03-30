@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -50,25 +50,6 @@ BinnedReportMalaria::BinnedReportMalaria()
     , ss_nonspec_variant_bins(nullptr)
     , ss_pfemp1_variant_bins(nullptr)
 {
-    LOG_DEBUG( "BinnedReportMalaria ctor\n" );
-    float __age_bin_upper_values[] = { 5*365.0, 12*365.0, 20*365.0, 55*365.0, 999999.0 };
-    //char * __age_bin_friendly_names[] = { "<5",   "5-12", "12-20", "20-50", "50+" };
-    char * __age_bin_friendly_names[] = { "Pre-Schoolers", "Kids", "Youth", "Adults", "Seniors" };
-    _num_age_bins = 5;
-
-    _age_bin_friendly_names.resize( _num_age_bins );
-
-    if( _age_bin_upper_values )
-    {
-        delete [] _age_bin_upper_values;
-    }
-    _age_bin_upper_values = new float[ _num_age_bins ];
-    memset( _age_bin_upper_values, 0, sizeof( float ) * _num_age_bins );
-    for( int idx = 0; idx < _num_age_bins ; idx++ )
-    {
-        _age_bin_upper_values[idx] = __age_bin_upper_values[idx];
-        _age_bin_friendly_names[idx] = __age_bin_friendly_names[idx];
-    }
 }
 
 BinnedReportMalaria::~BinnedReportMalaria()

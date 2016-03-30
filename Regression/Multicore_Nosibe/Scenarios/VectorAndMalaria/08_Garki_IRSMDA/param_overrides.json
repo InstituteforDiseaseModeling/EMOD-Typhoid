@@ -20,7 +20,7 @@
            }
         }, 
         "DEMOGRAPHICS": {
-            "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json",
+            "Demographics_Filenames": ["Madagascar_Nosibe_2.5arcmin_demographics.json"],
             "Enable_Birth": 1,
             "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
             "Population_Scale_Type": "FIXED_SCALING"
@@ -94,7 +94,7 @@
         }, 
         "PRIMARY": {
             "Config_Name": "PrimaryScenarios_8_Garki_IRSMDA -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 1,
             "Simulation_Duration": 3650,
             "Simulation_Type": "MALARIA_SIM",

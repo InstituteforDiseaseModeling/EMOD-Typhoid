@@ -30,7 +30,7 @@
             }
         },
         "DEMOGRAPHICS": {
-            "Demographics_Filename": "Garki_single_demographics.compiled.json"
+            "Demographics_Filenames": ["Garki_single_demographics.compiled.json"]
         },
         "PRIMARY": {
             "Config_Name": "PrimaryScenarios_4C_Garki_single_node_Vector",

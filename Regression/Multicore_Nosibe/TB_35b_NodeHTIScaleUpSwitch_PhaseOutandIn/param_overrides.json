@@ -44,7 +44,8 @@
         "EXECUTION": {
             "CLUSTER": {
                 "Load_Balance_Filename": "Madagascar_Nosibe_2.5arcmin_load_balancing_8procs.bin",
-                "Num_Cores": 8
+                "Num_Cores": 8,
+                "logLevel_JsonConfigurable": "WARNING"
             }
         },         
         "MIGRATION": {

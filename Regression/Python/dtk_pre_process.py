@@ -47,7 +47,8 @@ def application( config_file_name ):
         for sheet in wb.sheets():
             if sheet.name.startswith( "STI_Network_Params" ):
                 #pdb.set_trace()
-                config_json[param_key]["STI_Network_Params_By_Property"] = {}
+		if "STI_Network_Params_By_Property" not in config_json[param_key]:
+                    config_json[param_key]["STI_Network_Params_By_Property"] = {}
                 name_parsed = sheet.name.split( "-" )
                 ipn = name_parsed[1]
                 snpbp_key = name_parsed[2]
@@ -179,6 +180,8 @@ def application( config_file_name ):
                         param_list_new = []
                         for param in param_list:
 			    param = param.strip( " " ).strip( "'" ).replace( "u'", "" )
+                            if param == "u": # I'm tired -- need to figure out root cause solution to this
+                                param = ""
                             if param.isalpha() == False:
 			    	print( param )
 			    	#pdb.set_trace()

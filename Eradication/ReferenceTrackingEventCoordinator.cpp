@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -11,6 +11,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "ReferenceTrackingEventCoordinator.h"
 #include "SimulationConfig.h"
+#ifndef WIN32
+#include <cxxabi.h>
+#endif
 
 static const char * _module = "ReferenceTrackingEventCoordinator";
 
@@ -94,8 +97,12 @@ namespace Kernel
                 auto mcw = ihec->GetMonteCarloWeight();
                 totalQualifyingPop += mcw;
                 auto better_ptr = ihec->GetInterventionsContext();
-                // Check whether this individual has a non-zero quantity of this intervention, based on C++ mangled typename.
-                totalWithIntervention += ( better_ptr->GetInterventionsByType( typeid( *_di ).name() ).size() > 0 ? mcw : 0 );
+                // Check whether this individual has a non-zero quantity of this intervention, based on C++ mangled typename. 
+                std::string iv_type_name = typeid( *_di ).name();
+#ifndef WIN32
+                iv_type_name = abi::__cxa_demangle(iv_type_name.c_str(), 0, 0, nullptr );
+#endif
+                totalWithIntervention += ( better_ptr->GetInterventionsByType( iv_type_name ).size() > 0 ? mcw : 0 );
             }
         };
 

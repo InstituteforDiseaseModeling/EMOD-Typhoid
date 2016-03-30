@@ -13,7 +13,6 @@
                          "Outbreak_Source": "PrevalenceIncrease", 
                          "class": "Outbreak"
                     }, 
-                    "Number_Distributions": 1, 
                     "Number_Repetitions": 1, 
                     "Target_Demographic": "Everyone", 
                     "class": "StandardInterventionDistributionEventCoordinator"
@@ -91,7 +90,6 @@
                          "Treatment_Fraction": 1, 
                          "class": "ActiveDiagnostic"
                     }, 
-                    "Number_Distributions": -1, 
                     "Number_Repetitions": -1, 
                     "Target_Demographic": "Everyone", 
                     "Timesteps_Between_Repetitions": 73, 
@@ -128,7 +126,6 @@
                          "Treatment_Fraction": 1, 
                          "class": "SmearDiagnostic"
                     }, 
-                    "Number_Distributions": -1, 
                     "Number_Repetitions": -1, 
                     "Target_Demographic": "Everyone", 
                     "Timesteps_Between_Repetitions": 73, 

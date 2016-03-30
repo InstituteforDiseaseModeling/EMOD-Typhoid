@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -37,28 +37,41 @@ namespace Kernel
                   data != tvcs_jo.End();
                   ++data )
         {
-            auto tvcs = inputJson->As< json::Object >()[ key ];
+            try {
+                auto tvcs = inputJson->As< json::Object >()[ key ];
 
-            event = data->name;
-            float probability = (float) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
+                event = data->name;
+                float probability = 0.0f;
+                try {
+                    probability = (float) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
+                }
+                catch( const json::Exception & )
+                {
+                    throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, data->name.c_str(), (json::QuickInterpreter( tvcs )), "Expected NUMBER" );
+                }
 
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // !!! BEWARE when duplicating this pattern.  Try to use the initConfig() pattern.
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            if ( probability > MAX_PROBABILITY )
-            {
-                throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
-                                                   "HIVRandomChoices::Choices::Probability", probability, MAX_PROBABILITY );
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // !!! BEWARE when duplicating this pattern.  Try to use the initConfig() pattern.
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if ( probability > MAX_PROBABILITY )
+                {
+                    throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
+                            "HIVRandomChoices::Choices::Probability", probability, MAX_PROBABILITY );
+                }
+                else if ( probability < MIN_PROBABILITY )
+                {
+                    throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
+                            "HIVRandomChoices::Choices::Probability", probability, MIN_PROBABILITY );
+                }
+
+                (this)->insert( std::make_pair( event, probability ) );
+
+                total += probability ;
             }
-            else if ( probability < MIN_PROBABILITY )
+            catch( const json::Exception & )
             {
-                throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
-                                                   "HIVRandomChoices::Choices::Probability", probability, MIN_PROBABILITY );
+                throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, key.c_str(), (*inputJson), "Expected OBJECT" );
             }
-
-            (this)->insert( std::make_pair( event, probability ) );
-
-            total += probability ;
         }
 
         if( total == 0.0 )

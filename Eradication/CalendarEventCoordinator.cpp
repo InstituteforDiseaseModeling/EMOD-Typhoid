@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -142,7 +142,7 @@ namespace Kernel
                         grandTotal += totalIndivGivenIntervention;
                         LOG_INFO_F( "UpdateNodes() gave out %d interventions at node %d\n", totalIndivGivenIntervention, nec->GetId().data );
                     }                   
-                    catch(json::Exception &e)
+                    catch( const json::Exception &e )
                     {
                         throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() );
                     }

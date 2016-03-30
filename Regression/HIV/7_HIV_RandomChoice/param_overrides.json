@@ -16,7 +16,6 @@
         "Enable_Birth": 0,
 
 		"____________REPORTING___________": "",
-		"Enable_Demographics_Reporting": 1,
 		"Report_HIV_Infection": 1,
 		"Report_HIV_Infection_Start_Year": 1900,
 		"Report_HIV_Infection_Stop_Year": 2100,

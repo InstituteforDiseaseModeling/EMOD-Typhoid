@@ -1,19 +1,15 @@
-/*****************************************************************************
+/***************************************************************************************************
 
-Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
-Except for any rights expressly granted to you in a separate license with the
-Global Good Fund (GGF), GGF reserves all rights, title and interest in the
-software and documentation.  GGF grants recipients of this software and
-documentation no other rights either expressly, impliedly or by estoppel.
+EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 
-THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
-ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
-
-*****************************************************************************/
+***************************************************************************************************/
 
 #include "stdafx.h"
+
+#pragma warning(disable : 4996)
 
 #ifdef ENABLE_PYTHON
 #include "Debug.h"
@@ -66,9 +62,15 @@ namespace Kernel
                 static PyObject * vars = PyTuple_New(4); 
                 vars = Py_BuildValue( "lffs", _suid.data, monte_carlo_weight, initial_age, PyString_FromFormat( "%s", ( ( gender==0 ) ? "MALE" : "FEMALE" ) ) );
                 // now ready to call function
-                PyObject_CallObject( pFunc, vars );
+                auto ret = PyObject_CallObject( pFunc, vars );
+                if( ret == nullptr )
+                {
+                    PyErr_Print();
+                    std::stringstream msg;
+                    msg << "Embedded python code failed: PyObject_CallObject failed in call to 'create'.";
+                    throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+                }
                 // vars ref count is always 1 here
-                PyErr_Print();
             }
         }
 #endif
@@ -87,8 +89,14 @@ namespace Kernel
                 //vars = Py_BuildValue( "l", GetSuid().data ); // this gives errors. :(
                 PyObject* py_id = PyLong_FromLong( GetSuid().data );
                 PyTuple_SetItem(vars, 0, py_id );
-                PyObject_CallObject( pFunc, vars );
-                PyErr_Print();
+                auto ret = PyObject_CallObject( pFunc, vars );
+                if( ret == nullptr )
+                {
+                    PyErr_Print();
+                    std::stringstream msg;
+                    msg << "Embedded python code failed: PyObject_CallObject failed in call to 'destroy'.";
+                    throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+                }
             }
         }
 #endif
@@ -151,9 +159,15 @@ namespace Kernel
             // pass individual id AND dt
             static PyObject * vars = PyTuple_New(4);
 
-            vars = Py_BuildValue( "llls", GetSuid().data, int(cp->GetTotalContagion()), int(dt), PyLong_FromLong( transmission_route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ? 0 : 1 ) );
+            vars = Py_BuildValue( "llls", GetSuid().data, int(cp->GetTotalContagion()), int(dt), PyLong_FromLong( transmission_route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ? 0 : 1 ) ); 
             PyObject * retVal = PyObject_CallObject( pFunc, vars );
-            PyErr_Print();
+            if( retVal == nullptr )
+            {
+                PyErr_Print();
+                std::stringstream msg;
+                msg << "Embedded python code failed: PyObject_CallObject failed in call to 'expose'.";
+                throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            }
             bool val = false;
             PyArg_Parse( retVal, "b", &val );
             if( val )
@@ -186,8 +200,14 @@ namespace Kernel
                 static PyObject * vars = PyTuple_New(2);
 
                 vars = Py_BuildValue( "ls", GetSuid().data, PyString_FromFormat( "%s", route.c_str() ) );
-                PyObject * retVal = PyObject_CallObject( pFunc, vars );
-                PyErr_Print();
+                auto retVal = PyObject_CallObject( pFunc, vars );
+                if( retVal == nullptr )
+                {
+                    PyErr_Print();
+                    std::stringstream msg;
+                    msg << "Embedded python code failed: PyObject_CallObject failed in call to 'update_and_return_infectiousness'.";
+                    throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+                }
                 auto val = PyFloat_AsDouble(retVal);
                 infectiousness += val;
                 StrainIdentity tmp_strainID;
@@ -279,8 +299,14 @@ namespace Kernel
             PyTuple_SetItem(vars, 0, py_existing_id );
 
             //vars = Py_BuildValue( "l", GetSuid().data ); // BuildValue with 1 param seems to give errors
-            PyObject_CallObject( pFunc, vars );
-            PyErr_Print();
+            auto ret = PyObject_CallObject( pFunc, vars );
+            if( ret == nullptr )
+            {
+                PyErr_Print();
+                std::stringstream msg;
+                msg << "Embedded python code failed: PyObject_CallObject failed in call to 'acquire_infection'.";
+                throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            }
         }
 #endif
     }

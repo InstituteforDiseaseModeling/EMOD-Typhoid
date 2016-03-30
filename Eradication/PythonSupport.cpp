@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -40,17 +40,19 @@ namespace Kernel
 
 #pragma warning( push )
 #pragma warning( disable: 4996 )
-    char* PythonSupport::PythonHomePath()
+    std::string PythonSupport::PythonHomePath()
     {
-        char* python_path = getenv("PYTHONHOME");
-        if( python_path == nullptr )
+        char* c_python_path = getenv("PYTHONHOME");
+        if( c_python_path == nullptr )
         {
-            python_path = DEFAULT_PYTHON_HOME;
+            c_python_path = DEFAULT_PYTHON_HOME;
         }
+        std::string str_python_path = c_python_path;
+        str_python_path = FileSystem::RemoveTrailingChars( str_python_path );
+        
+        std::cout << "Python home path: " << str_python_path << std::endl;
 
-        std::cout << "Python home path: " << python_path << std::endl;
-
-        return python_path;
+        return str_python_path;
     }
 #pragma warning( pop )
 
@@ -143,8 +145,6 @@ namespace Kernel
         Py_SetPythonHome( const_cast<char*>(python_home.c_str()) ); // add capability to override from command line???
 #endif
 
-        //std::cout << __FUNCTION__ << ": " << python_script_name << ": " << python_function_name << std::endl;
-        //std::cout << "Calling Py_Initialize." << std::endl;
         Py_Initialize();
 
         //std::cout << "Calling PySys_GetObject('path')." << std::endl;
@@ -206,7 +206,9 @@ namespace Kernel
         if( !pFunc )
         {
             PyErr_Print();
-            throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, "Failed to find function 'application' in python script." );
+            std::stringstream msg;
+            msg << "Failed to find function '" << python_function_name << "' in python script.";
+            throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str());
         }
         //std::cout << "Returning from IdmPyInit." << std::endl;
         return pFunc;
@@ -227,7 +229,16 @@ namespace Kernel
                 PyTuple_SetItem(vars, 0, py_filename_str);
                 auto retValue = PyObject_CallObject( pFunc, vars );
                 PyErr_Print();
-                return_filename = PyString_AsString( retValue );
+                if( retValue != nullptr && std::string( retValue->ob_type->tp_name ) != "NoneType" )
+                {
+                    return_filename = PyString_AsString( retValue );
+                }
+                else
+                {
+                    std::stringstream msg;
+                    msg << "'application' function in python pre-process script failed to return string.";
+                    throw Kernel::IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str());
+                }
             }
         }
 #endif

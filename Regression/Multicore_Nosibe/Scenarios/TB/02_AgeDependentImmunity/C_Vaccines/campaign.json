@@ -11,7 +11,6 @@
                     "Outbreak_Source": "PrevalenceIncrease", 
                     "class": "OutbreakIndividual"
                 }, 
-                "Number_Distributions": 50, 
                 "Number_Repetitions": 2, 
                 "Property_Restrictions": [], 
                 "Target_Age_Max": 15, 
@@ -48,7 +47,6 @@
                     "Trigger_Condition": "Births", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 

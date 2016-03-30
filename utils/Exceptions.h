@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <sstream>
 #include <boost/lexical_cast.hpp> // no!!!
 #include "IdmApi.h"
+#include "CajunIncludes.h"
 
 // This is an exception library for the DTK. We wanted to keep it relatively flat and 
 // use-case driven, not theoretical. We have a DetailedException class that we use as our base that
@@ -264,5 +265,11 @@ namespace Kernel {
     {
     public:
         MissingParameterFromConfigurationException( const char* filename, int line_num, const char* function_name, const char * config_filename, const char * param_name );
+    };
+
+    class IDMAPI JsonTypeConfigurationException : public DetailedException
+    {
+    public:
+        JsonTypeConfigurationException( const char* filename, int line_num, const char* function_name, const char * param_name, const json::QuickInterpreter&, const char * caught_msg );
     };
 }

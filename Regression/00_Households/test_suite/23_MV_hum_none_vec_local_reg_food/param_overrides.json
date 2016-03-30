@@ -79,7 +79,7 @@
           "x_Vector_Migration_Regional" : 1.0,
 
           "Vector_Migration_Modifier_Equation" : "LINEAR",
-          "Vector_Migration_Food_Modifier" : 2.0,
+          "Vector_Migration_Food_Modifier" : 1,
           "Vector_Migration_Habitat_Modifier": 0.0, 
           "Vector_Migration_Stay_Put_Modifier" : 0.0,
 

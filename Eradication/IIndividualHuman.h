@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -53,6 +53,9 @@ namespace Kernel
         virtual IIndividualHumanInterventionsContext* GetInterventionsContext() const = 0;
 
         virtual tProperties* GetProperties() = 0;
+        virtual const std::string& GetPropertyReportString() const = 0;
+        virtual void SetPropertyReportString( const std::string& str ) = 0;
+
         virtual INodeContext* GetParent() const = 0;
 
         virtual IIndividualHumanEventContext *GetEventContext() = 0;    // access to specific attributes of the individual useful for events

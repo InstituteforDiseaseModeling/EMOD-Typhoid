@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -8,6 +8,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
+
+#pragma warning(disable:4996)
 
 #include <iostream>
 #include <fstream>
@@ -38,11 +40,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "InterventionFactory.h"
 #include "EventCoordinator.h"
-#include "WaningEffect.h"
+#include "IWaningEffect.h"
 #include "CampaignEvent.h"
 #include "StandardEventCoordinator.h"
 #include "DllLoader.h"
 #include "IdmMpi.h"
+#include "IdmString.h"
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !!! By creating an instance of this object, we ensure that the linker does not optimize it away.
@@ -72,6 +75,44 @@ void Usage(char* cmd)
     exit(1);
 }
 
+    const std::vector<std::string> 
+    getSimTypeList()
+    {
+    const char * simTypeListC[] = { "GENERIC_SIM"
+#ifndef DISABLE_VECTOR
+        , "VECTOR_SIM"
+#endif
+#ifndef DISABLE_MALARIA
+            , "MALARIA_SIM"
+#endif
+#ifndef DISABLE_AIRBORNE
+            , "AIRBORNE_SIM"
+#endif
+#ifdef ENABLE_POLIO
+            , "POLIO_SIM"
+#endif
+#ifdef ENABLE_TB
+            , "TB_SIM"
+#endif
+#ifdef ENABLE_TBHIV
+            , "TBHIV_SIM"
+#endif
+#ifndef DISABLE_STI
+            , "STI_SIM"
+#endif
+#ifndef DISABLE_HIV
+            , "HIV_SIM"
+#endif
+#ifdef ENABLE_PYTHON_FEVER
+            , "PY_SIM"
+#endif
+    };
+
+#define KNOWN_SIM_COUNT (sizeof(simTypeListC)/sizeof(simTypeListC[0]))
+    std::vector<std::string> simTypeList( simTypeListC, simTypeListC + KNOWN_SIM_COUNT );
+    return simTypeList;
+    }
+
 int main(int argc, char* argv[])
 {
     // First thing to do when app launches
@@ -86,7 +127,21 @@ int main(int argc, char* argv[])
 #endif
 
     ProgDllVersion* pv = new ProgDllVersion(); // why new this instead of just put it on the stack?
-    LOG_INFO_F( "Intellectual Ventures(R)/EMOD Disease Transmission Kernel %s %s %s\n", pv->getVersion(), pv->getBranch(), pv->getBuildDate() );
+    auto sims = getSimTypeList();
+    std::stringstream output;
+    output << "Intellectual Ventures(R)/EMOD Disease Transmission Kernel " << pv->getVersion() << std::endl
+           << "Built on " << pv->getBuildDate() << " from " << pv->getSccsBranch() << " checked in on " << pv->getSccsDate() << std::endl;
+    
+    std::string sim_types_str = "Supports sim_types: ";
+    for( auto sim_type: sims  )
+    {
+        sim_types_str += IdmString( sim_type ).split('_')[0];
+        sim_types_str += ", ";
+    }
+    sim_types_str.pop_back();
+    sim_types_str.pop_back();
+    output << sim_types_str << "." << std::endl;
+    LOG_INFO_F( output.str().c_str() );
     delete pv;
  
 /* // for debugging all kernel allocations, use inner block around controller lifetime to ignore some environment and mpi stuff
@@ -202,7 +257,7 @@ void IDMAPI writeInputSchemas(
     json::QuickBuilder versionSchema( vsRoot );
     ProgDllVersion pv;
     versionSchema["DTK_Version"] = json::String( pv.getVersion() );
-    versionSchema["DTK_Branch"] = json::String( pv.getBranch() );
+    versionSchema["DTK_Branch"] = json::String( pv.getSccsBranch() );
     versionSchema["DTK_Build_Date"] = json::String( pv.getBuildDate() );
     total_schema["Version"] = versionSchema.As<json::Object>();
 
@@ -239,35 +294,9 @@ void IDMAPI writeInputSchemas(
     Kernel::JsonConfigurable::_dryrun = true;
     std::ostringstream oss;
 
-    const char * simTypeListC[] = { "GENERIC_SIM"
-#ifndef DISABLE_VECTOR
-        , "VECTOR_SIM"
-#endif
-#ifndef DISABLE_MALARIA
-        , "MALARIA_SIM"
-#endif
-#ifdef ENABLE_POLIO
-        , "POLIO_SIM"
-#endif
-#ifdef ENABLE_TB
-        , "TB_SIM"
-#endif
-#ifdef ENABLE_TBHIV
-        , "TBHIV_SIM"
-#endif
-#ifndef DISABLE_STI
-        , "STI_SIM"
-#endif
-#ifndef DISABLE_HIV
-        , "HIV_SIM"
-#endif
-    };
-
-#define KNOWN_SIM_COUNT (sizeof(simTypeListC)/sizeof(simTypeListC[0]))
-
-    std::vector<std::string> simTypeList( simTypeListC, simTypeListC + KNOWN_SIM_COUNT );
+    
     json::Object configSchemaAll;
-    for (auto& sim_type : simTypeList)
+    for (auto& sim_type : getSimTypeList())
     {
         json::Object fakeSimTypeConfigJson;
         fakeSimTypeConfigJson["Simulation_Type"] = json::String(sim_type);
@@ -598,14 +627,14 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
         {
             status = controller->Execute();
             if (status)
+        {
+            release_assert( EnvPtr );
+            if ( EnvPtr->MPI.Rank == 0 )
             {
-                release_assert( EnvPtr );
-		if ( EnvPtr->MPI.Rank == 0 )
-		{
-                    PythonSupportPtr->RunPostProcessScript( EnvPtr->OutputPath );
-		}
-                LOG_INFO( "Controller executed successfully.\n" );
+                PythonSupportPtr->RunPostProcessScript( EnvPtr->OutputPath );
             }
+            LOG_INFO( "Controller executed successfully.\n" );
+        }
             else
             {
                 LOG_INFO( "Controller execution failed, exiting.\n" );
@@ -685,10 +714,13 @@ bool ControllerInitWrapper( int argc, char *argv[], IdmMpi::MessageInterface* pM
     if( EnvPtr != nullptr )
     {
         EnvPtr->Log->Flush();
+#if 0
+        // Workaround: let's not do this.
         if((Kernel::SimulationConfig*)EnvPtr->SimConfig)
         {
             ((Kernel::SimulationConfig*)EnvPtr->SimConfig)->Release();
         }
+#endif
         EnvPtr->Log->Flush();
     }
 
