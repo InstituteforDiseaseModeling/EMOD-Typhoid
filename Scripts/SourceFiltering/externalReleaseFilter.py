@@ -31,16 +31,16 @@ globals['directory_blacklist'] = [ '.svn', 'cajun/test', 'Regression/reports', '
 # the entries in 'reporter_whitelist' should be tuples of solution files, the associated directory, and the project file
 globals['reporter_whitelist'] = [ ('TBCustomReporterRelease.sln', 'lib_custom_tb_reporter_Scenarios', 'lib_custom_tb_reporter_Scenarios.vcxproj'), ('BasicReportPlugin.sln', 'libreportpluginbasic', 'BaseReportLib.vcxproj'), ('BasicReportPlugin.sln', 'libreportpluginbasic', 'libreportpluginbasic.vcxproj'), ('BasicReportPlugin.sln', 'libreporteventcounter', 'libreporteventcounter.vcxproj') ]
 # the entries in 'file_whitelist' and 'file_blacklist' should all be lower case (regardless of the file name casing on disk)
-globals['file_whitelist'] = [ 'eradicationkernel.sln', 'license.txt', 'notices.txt' ]
-globals['file_blacklist'] = [ 'sconscript', 'status.txt', 'time.txt', 'transitions.json' ]
+globals['file_whitelist'] = [ '.git', '.gitattributes', '.gitignore', 'eradicationkernel.sln', 'license.txt', 'notices.txt', 'readme.md', 'sconscript', 'sconstruct' ]
+globals['file_blacklist'] = [ 'status.txt', 'time.txt', 'transitions.json' ]
 globals['project_filter_exclude'] = set(['environmental', 'polio', 'tbhiv', 'hivtb'])
-globals['excluded_preprocessor_defines'] = set(['ENABLE_POLIO', 'ENABLE_TBHIV', 'ENABLE_PYTHON'])
-globals['regression_directory_file_whitelist'] = [ 'hiv.json', 'malaria.json', 'multicore.json', 'param_sweep.json', 'plotallcharts.py',
+globals['excluded_preprocessor_defines'] = set(['ENABLE_POLIO', 'ENABLE_TBHIV'])
+globals['regression_directory_file_whitelist'] = [ 'generic.json', 'hiv.json', 'households.json', 'malaria.json', 'multicore.json', 'multicore_nosibe_all.json', 'param_sweep.json', 'plotallcharts.py',
    'plotnewinfectionsbypool.py', 'plotsirchannels.py', 'prettyprintjson.py',
    'primaryscenarios.json', 'regression_test.cfg', 'regression_test.py',
-   'regression_utils.py', 'samples.json', 'sanity.json', 'sti.json', 'sti_hiv_samples.json', 'tb_samples.json', 'update_baselines.py',
-   'vector.json', 'warning.txt', 'win_v2_0.json' ]
-globals['allowed_sim_types'] = [ 'GENERIC_SIM', 'VECTOR_SIM', 'MALARIA_SIM', 'AIRBORNE_SIM', 'TB_SIM', 'STI_SIM', 'HIV_SIM' ]
+   'regression_utils.py', 'samples.json', 'sanity.json', 'sti.json', 'sti_hiv_samples.json', 'tb_all.json', 'tb_samples.json', 'update_baselines.py',
+   'vector.json', 'warning.txt', 'win_v2_5.json' ]
+globals['allowed_sim_types'] = [ 'GENERIC_SIM', 'VECTOR_SIM', 'MALARIA_SIM', 'AIRBORNE_SIM', 'TB_SIM', 'STI_SIM', 'HIV_SIM', 'PY_SIM' ]
 
 
 def process_directory_entries(predicate, path, whitelist, action):

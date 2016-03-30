@@ -2217,6 +2217,21 @@
     <ClInclude Include="..\interventions\IWaningEffect.h">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
     </ClInclude>
+    <ClInclude Include="IVectorMigrationReporting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\utils\BinaryArchiveReader.h" />
+    <ClInclude Include="..\utils\BinaryArchiveWriter.h" />
+    <ClInclude Include="..\utils\DurationDistribution.h" />
+    <ClInclude Include="..\utils\FileSystem.h" />
+    <ClInclude Include="..\utils\IArchive.h" />
+    <ClInclude Include="..\utils\ISerializable.h" />
+    <ClInclude Include="..\utils\JsonFullReader.h" />
+    <ClInclude Include="..\utils\JsonFullWriter.h" />
+    <ClInclude Include="..\utils\JsonRawReader.h" />
+    <ClInclude Include="..\utils\JsonRawWriter.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\rapidjson.h" />
+    <ClInclude Include="..\utils\Serialization.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Eradication.rc" />
