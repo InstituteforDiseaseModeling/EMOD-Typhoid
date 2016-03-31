@@ -59,8 +59,6 @@
                 "Demographic_Coverage": 0.3, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 10.0, 
-                    "Durability_Time_Profile": "BOXDURABILITY", 
-                    "Reduced_Acquire": 1, 
                     "Vaccine_Take": 1, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "class": "SimpleVaccine",

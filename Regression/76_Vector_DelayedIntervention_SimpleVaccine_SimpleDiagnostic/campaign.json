@@ -6,12 +6,15 @@
                     "Actual_IndividualIntervention_Configs": [
                         {
                             "Cost_To_Consumer": 15, 
-                            "Durability_Time_Profile": "DECAYDURABILITY", 
-                            "Primary_Decay_Time_Constant": 1579.7510697734149, 
-                            "Reduced_Acquire": 0.556, 
                             "Vaccine_Take": 1.0, 
                             "Vaccine_Type": "AcquisitionBlocking", 
-                            "class": "SimpleVaccine"
+                            "class": "SimpleVaccine",
+                            "Waning_Config": {
+                                "Box_Duration": 3650, 
+                                "Initial_Effect": 0.556,
+                                "Decay_Time_Constant": 1579.7510697734149, 
+                                "class": "WaningEffectExponential"
+                            }
                         }, 
                         {
                             "Base_Sensitivity": 0.8, 

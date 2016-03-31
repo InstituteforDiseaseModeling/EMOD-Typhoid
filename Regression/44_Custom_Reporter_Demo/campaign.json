@@ -5,7 +5,6 @@
                 "Demographic_Coverage": 0.5, 
                 "Intervention_Config": {
                     "Cost_To_Consumer": 8.0, 
-                    "Durability_Time_Profile": "BOXDURABILITY", 
                     "class": "SimpleHousingModification",
                     "Killing_Config": {
                         "Box_Duration": 3650, 

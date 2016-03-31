@@ -21,7 +21,9 @@ static const char *SCCS_URL   = "https://github.com/InstituteforDiseaseModeling/
 #ifndef SCCS_BRANCH
 #define    SCCS_BRANCH      "unknown-branch (unknown)"
 #endif
+#ifndef SCCS_DATE
 #define    SCCS_DATE        "date time unknown"
+#endif
 
 #define    MAJOR_VERSION    2
 #define    MINOR_VERSION    5

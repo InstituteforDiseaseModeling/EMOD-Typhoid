@@ -25,15 +25,14 @@
                 "Intervention_Config": {
                     "Actual_IndividualIntervention_Config": {
                         "Cost_To_Consumer": 1.0, 
-                        "Durability_Time_Profile": "BOXDURABILITY", 
                         "Vaccine_Take": 1, 
                         "Vaccine_Type": "AcquisitionBlocking", 
                         "class": "SimpleVaccine",
-			"Waning_Config": {
-			    "Initial_Effect": 1,
-			    "Box_Duration": 3650,
-			    "class": "WaningEffectBox"
-			}
+                        "Waning_Config": {
+                            "Initial_Effect": 1,
+                            "Box_Duration": 3650,
+                            "class": "WaningEffectBox"
+                        }
                     }, 
                     "Duration": 1, 
                     "Property_Restrictions_Within_Node": [
