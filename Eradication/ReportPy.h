@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include "ReportEnvironmental.h"
+#include "Report.h"
 #include "SimulationEnums.h" // for PyVirusTypes
 #include "TransmissionGroupMembership.h"
 #include <map>

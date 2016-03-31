@@ -11,7 +11,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Contexts.h"
 #include "InfectionPy.h"
-#include "IndividualEnvironmental.h"
+#include "Individual.h"
 #include "PythonSupport.h"
 
 namespace Kernel

@@ -8,10 +8,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #pragma once
-#include "NodeEnvironmental.h"
+#include "Node.h"
 #include "IndividualPy.h"
-#include <iostream>
-#include <list>
 
 class ReportPy;
 
@@ -57,13 +55,6 @@ namespace Kernel
 
         // wrap base-class function between creation and deletion of polio vaccine immunity initialization distributions.
         virtual void populateNewIndividualsFromDemographics(int count_new_individuals);
-
-    private:
-#if USE_BOOST_SERIALIZATION
-        friend class boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive & ar, NodePy &node, const unsigned int  file_version );
-#endif
     };
 
     class NodePyTest : public NodePy

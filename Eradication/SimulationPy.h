@@ -9,16 +9,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #pragma once
 
-#include "SimulationEnvironmental.h"
-#include "IndividualPy.h" // TODO: could eliminate need to include these headers if the TypedMigrationQueue template parameter was made a pointer type instead of a class type.  <ERAD-320>
+#include "Simulation.h"
 #include "NodePy.h"
 #include "InfectionPy.h"
 #include "SusceptibilityPy.h"
+#include "SimulationFactory.h"
 
 namespace Kernel
 {
     class NodePy;
-    class IndividualHumanPy;
 
     class SimulationPy : public Simulation
     {
@@ -44,15 +43,5 @@ namespace Kernel
     private:
 
         friend class Kernel::SimulationFactory; // allow them to create us
-
-#if USE_BOOST_SERIALIZATION
-        template<class Archive>
-        friend void serialize(Archive & ar, SimulationPy& sim, const unsigned int  file_version );
-#endif
-        //TypedPrivateMigrationQueueStorage<IndividualHumanPy> typed_migration_queue_storage;
     };
 }
-
-#ifndef WIN32
-//DECLARE_VIRTUAL_BASE_OF(Kernel::Simulation, Kernel::SimulationPy)
-#endif
