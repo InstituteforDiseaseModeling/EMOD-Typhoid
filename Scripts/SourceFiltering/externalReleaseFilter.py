@@ -29,7 +29,21 @@ globals = {}
 globals['directory_whitelist'] = [ 'basereportlib', 'cajun', 'campaign', 'componenttests', 'dependencies', 'eradication', 'interventions', 'jsonspirit', 'quickstart', 'rapidjson', 'regression', 'reporters', 'scripts', 'snappy', 'unittest++', 'utils' ]
 globals['directory_blacklist'] = [ '.svn', 'cajun/test', 'Regression/reports', 'Regression/Polio', 'Regression/NotreDame' ]
 # the entries in 'reporter_whitelist' should be tuples of solution files, the associated directory, and the project file
-globals['reporter_whitelist'] = [ ('TBCustomReporterRelease.sln', 'lib_custom_tb_reporter_Scenarios', 'lib_custom_tb_reporter_Scenarios.vcxproj'), ('BasicReportPlugin.sln', 'libreportpluginbasic', 'BaseReportLib.vcxproj'), ('BasicReportPlugin.sln', 'libreportpluginbasic', 'libreportpluginbasic.vcxproj'), ('BasicReportPlugin.sln', 'libreporteventcounter', 'libreporteventcounter.vcxproj') ]
+globals['reporter_whitelist'] = [
+    ('TBCustomReporterRelease.sln', 'lib_custom_tb_reporter_Scenarios',     'lib_custom_tb_reporter_Scenarios.vcxproj'),
+    ('BasicReportPlugin.sln',       'libreportpluginbasic',                 'BaseReportLib.vcxproj'),
+    ('BasicReportPlugin.sln',       'libreportpluginbasic',                 'libreportpluginbasic.vcxproj'),
+    ('BasicReportPlugin.sln',       'libreporteventcounter',                'libreporteventcounter.vcxproj'),
+    ('AllCustomReporters.sln',      'libReportMalariaFiltered',             'libReportMalariaFiltered.vcxproj'),
+    ('AllCustomReporters.sln',      'libReportNodeDemographics',            'libReportNodeDemographics.vcxproj'),
+    ('AllCustomReporters.sln',      'libvectorstats',                       'libvectorstats.vcxproj'),
+    ('MalariaCustomReporters.sln',  'libmalariaimmunity_report_plugin',     'libmalariaimmunity_report_plugin.vcxproj'),        # AllCustomReporters.sln
+    ('MalariaCustomReporters.sln',  'libmalariapatientJSON_report_plugin',  'libmalariapatientJSON_report_plugin.vcxproj'),     # AllCustomReporters.sln
+    ('MalariaCustomReporters.sln',  'libmalariasummary_report_plugin',      'libmalariasummary_report_plugin.vcxproj'),         # AllCustomReporters.sln
+    ('MalariaCustomReporters.sln',  'libmalariasurveyJSON_analyzer_plugin', 'libmalariasurveyJSON_analyzer_plugin.vcxproj'),    # AllCustomReporters.sln
+    ('AllCustomReporters.sln',      'libhumanmigrationtracking',            'libhumanmigrationtracking.vcxproj'),
+    ('VectorCustomReporters.sln',   'libvectorhabitat_report_plugin',       'libvectorhabitat_report_plugin.vcxproj'),          # AllCustomReporters.sln
+    ('AllCustomReporters.sln',      'libvectormigration',                   'libvectormigration.vcxproj' ) ]
 # the entries in 'file_whitelist' and 'file_blacklist' should all be lower case (regardless of the file name casing on disk)
 globals['file_whitelist'] = [ '.git', '.gitattributes', '.gitignore', 'eradicationkernel.sln', 'license.txt', 'notices.txt', 'readme.md', 'sconscript', 'sconstruct' ]
 globals['file_blacklist'] = [ 'status.txt', 'time.txt', 'transitions.json' ]
