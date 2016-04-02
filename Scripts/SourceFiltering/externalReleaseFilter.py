@@ -51,7 +51,7 @@ globals['project_filter_exclude'] = set(['environmental', 'polio', 'tbhiv', 'hiv
 globals['excluded_preprocessor_defines'] = set(['ENABLE_POLIO', 'ENABLE_TBHIV'])
 globals['regression_directory_file_whitelist'] = [ 'generic.json', 'hiv.json', 'households.json', 'malaria.json', 'multicore.json', 'multicore_nosibe_all.json', 'param_sweep.json', 'plotallcharts.py',
    'plotnewinfectionsbypool.py', 'plotsirchannels.py', 'prettyprintjson.py',
-   'primaryscenarios.json', 'regression_test.cfg', 'regression_test.py',
+   'primaryscenarios.json', 'py.json', 'regression_test.cfg', 'regression_test.py',
    'regression_utils.py', 'samples.json', 'sanity.json', 'sti.json', 'sti_hiv_samples.json', 'tb_all.json', 'tb_samples.json', 'update_baselines.py',
    'vector.json', 'warning.txt', 'win_v2_5.json' ]
 globals['allowed_sim_types'] = [ 'GENERIC_SIM', 'VECTOR_SIM', 'MALARIA_SIM', 'AIRBORNE_SIM', 'TB_SIM', 'STI_SIM', 'HIV_SIM', 'PY_SIM' ]
