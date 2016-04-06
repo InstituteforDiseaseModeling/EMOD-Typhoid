@@ -55,7 +55,7 @@ namespace Kernel
         virtual int32_t Release() override { return 0; }
 
         void CalculateEggCrowdingCorrection();
-        void UpdateCurrentLarvalCapacity(float dt, INodeContext* node);
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node);
         void UpdateLarvalProbabilities(float dt, INodeContext* node);
         void UpdateRainfallMortality(float dt, float rainfall);
         void AdvanceTotalLarvaCounts();
@@ -78,4 +78,95 @@ namespace Kernel
     };
 
     void serialize(IArchive&, map<VectorHabitatType::Enum, float>&);
+
+    /* TODO: transition some configuration parameters into these objects, e.g. decay constants, rainfall killing */
+    /* TODO: encapsulate allowed combinations of egg-crowding and density-dependent parameterization? */
+
+    class ConstantHabitat : public VectorHabitat
+    {
+    public:
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
+        ConstantHabitat( VectorHabitatType::Enum type, float max_capacity );  //boring... inherit
+    protected:
+        ConstantHabitat() {}
+        DECLARE_SERIALIZABLE(ConstantHabitat);
+    };
+
+    class TemporaryRainfallHabitat : public VectorHabitat
+    {
+    public:
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
+        TemporaryRainfallHabitat( VectorHabitatType::Enum type, float max_capacity );
+    protected:
+        TemporaryRainfallHabitat() {}
+        DECLARE_SERIALIZABLE(TemporaryRainfallHabitat);
+    };
+
+    class WaterVegetationHabitat : public VectorHabitat
+    {
+    public:
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
+        WaterVegetationHabitat( VectorHabitatType::Enum type, float max_capacity );
+    protected:
+        WaterVegetationHabitat() {}
+        DECLARE_SERIALIZABLE(WaterVegetationHabitat);
+    };
+
+    class HumanPopulationHabitat : public VectorHabitat
+    {
+    public:
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
+        HumanPopulationHabitat( VectorHabitatType::Enum type, float max_capacity );
+    protected:
+        HumanPopulationHabitat() {}
+        DECLARE_SERIALIZABLE(HumanPopulationHabitat);
+    };
+
+    class BrackishSwampHabitat : public VectorHabitat
+    {
+    public:
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
+        BrackishSwampHabitat( VectorHabitatType::Enum type, float max_capacity );
+    protected:
+        BrackishSwampHabitat() {}
+        DECLARE_SERIALIZABLE(BrackishSwampHabitat);
+    };
+
+    class MarshyStreamHabitat : public VectorHabitat
+    {
+    public:
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
+        MarshyStreamHabitat( VectorHabitatType::Enum type, float max_capacity );
+
+    protected:
+        MarshyStreamHabitat();
+
+        static const float rainfall_to_fill;
+        static const float water_table_outflow_days;
+        static const float stream_outflow_days;
+        static const float stream_outflow_threshold;
+        static const float evaporation_days;
+        static const float permeability;
+
+        float water_table;
+        float stream_level;
+
+        DECLARE_SERIALIZABLE(MarshyStreamHabitat);
+    };
+
+    class PiecewiseMonthlyHabitat : public VectorHabitat
+    {
+    public:
+        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
+        PiecewiseMonthlyHabitat( VectorHabitatType::Enum type, float max_capacity );
+
+    protected:
+        PiecewiseMonthlyHabitat();
+        
+        static std::vector<float> monthly_scales;
+
+        float day_of_year;
+
+        DECLARE_SERIALIZABLE(PiecewiseMonthlyHabitat);
+    };
 }

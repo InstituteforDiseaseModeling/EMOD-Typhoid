@@ -57,7 +57,32 @@ namespace Kernel
 
     IVectorHabitat* VectorHabitat::CreateHabitat( VectorHabitatType::Enum type, float max_capacity )
     {
-        return new VectorHabitat(type, max_capacity);
+        switch ( type )
+        {
+            case VectorHabitatType::CONSTANT:
+                return new ConstantHabitat(type, max_capacity);
+
+            case VectorHabitatType::TEMPORARY_RAINFALL:
+                return new TemporaryRainfallHabitat(type, max_capacity);
+
+            case VectorHabitatType::WATER_VEGETATION:
+                return new WaterVegetationHabitat(type, max_capacity);
+
+            case VectorHabitatType::HUMAN_POPULATION:
+                return new HumanPopulationHabitat(type, max_capacity);
+
+            case VectorHabitatType::BRACKISH_SWAMP: 
+                return new BrackishSwampHabitat(type, max_capacity);
+
+            case VectorHabitatType::MARSHY_STREAM:
+                return new MarshyStreamHabitat(type, max_capacity);
+
+            case VectorHabitatType::PIECEWISE_MONTHLY:
+                return new PiecewiseMonthlyHabitat(type, max_capacity);
+
+            default:
+                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "type", type, VectorHabitatType::pairs::lookup_key(type) );
+        }
     }
 
     void VectorHabitat::Update(float dt, INodeContext* node)
@@ -135,45 +160,119 @@ namespace Kernel
 
    void VectorHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
     {
-        // TODO: potentially we could differentiate the various update behaviors
-        //       by using derived classes, e.g. TemporaryRainfallHabitat, WaterVegetationHabitat
+        /* No-op */
+    }
 
+    void ConstantHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
+    {
+        LOG_DEBUG_F("Habitat type = CONSTANT, Max larval capacity = %f\n", m_max_larval_capacity);
+        m_current_larval_capacity = m_max_larval_capacity * params()->lloffset * params()->lloffset;
+    }
+
+    void TemporaryRainfallHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
+    {
         const Climate* localWeather = node->GetLocalWeather();
+        LOG_DEBUG_F("Habitat type = TEMPORARY_RAINFALL, Max larval capacity = %f\n", m_max_larval_capacity);
+        m_current_larval_capacity += float(localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - m_current_larval_capacity * exp(LARVAL_HABITAT_FACTOR1 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * LARVAL_HABITAT_FACTOR2 * params()->tempHabitatDecayScalar * sqrt(LARVAL_HABITAT_FACTOR3 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * (1.0f - localWeather->humidity()) * dt);
+    }
 
-        switch ( m_habitat_type )
+    void WaterVegetationHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
+    {
+        const Climate* localWeather = node->GetLocalWeather();
+        LOG_DEBUG_F("Habitat type = WATER_VEGETATION, Max larval capacity = %f\n", m_max_larval_capacity);
+        m_current_larval_capacity += localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
+    }
+
+    void HumanPopulationHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
+    {
+        LOG_DEBUG_F("Habitat type = HUMAN_POPULATION, Max larval capacity = %f\n", m_max_larval_capacity);
+        m_current_larval_capacity = m_max_larval_capacity * node->GetStatPop();
+    }
+
+    void BrackishSwampHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
+    {
+        const Climate* localWeather = node->GetLocalWeather();
+        LOG_DEBUG_F("Habitat type = BRACKISH_SWAMP, Max larval capacity = %f\n", m_max_larval_capacity);
+        m_current_larval_capacity += localWeather->accumulated_rainfall() * float(MM_PER_METER) / params()->mmRainfallToFillSwamp * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
+        if(m_current_larval_capacity > m_max_larval_capacity * params()->lloffset * params()->lloffset)
         {
-            case VectorHabitatType::CONSTANT:
-                LOG_DEBUG_F("Habitat type = CONSTANT, Max larval capacity = %f\n", m_max_larval_capacity);
-                m_current_larval_capacity = m_max_larval_capacity * params()->lloffset * params()->lloffset;
-                break;
-
-            case VectorHabitatType::TEMPORARY_RAINFALL:
-                LOG_DEBUG_F("Habitat type = TEMPORARY_RAINFALL, Max larval capacity = %f\n", m_max_larval_capacity);
-                m_current_larval_capacity += float(localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - m_current_larval_capacity * exp(LARVAL_HABITAT_FACTOR1 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * LARVAL_HABITAT_FACTOR2 * params()->tempHabitatDecayScalar * sqrt(LARVAL_HABITAT_FACTOR3 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * (1.0f - localWeather->humidity()) * dt);
-                break;
-
-            case VectorHabitatType::WATER_VEGETATION:
-                LOG_DEBUG_F("Habitat type = WATER_VEGETATION, Max larval capacity = %f\n", m_max_larval_capacity);
-                m_current_larval_capacity += localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
-                break;
-
-            case VectorHabitatType::HUMAN_POPULATION:
-                LOG_DEBUG_F("Habitat type = HUMAN_POPULATION, Max larval capacity = %f\n", m_max_larval_capacity);
-                m_current_larval_capacity = m_max_larval_capacity * node->GetStatPop();
-                break;
-
-            case VectorHabitatType::BRACKISH_SWAMP: 
-                LOG_DEBUG_F("Habitat type = BRACKISH_SWAMP, Max larval capacity = %f\n", m_max_larval_capacity);
-                m_current_larval_capacity += localWeather->accumulated_rainfall() * float(MM_PER_METER) / params()->mmRainfallToFillSwamp * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
-                if(m_current_larval_capacity > m_max_larval_capacity * params()->lloffset * params()->lloffset)
-                {
-                    m_current_larval_capacity = m_max_larval_capacity * params()->lloffset * params()->lloffset;
-                }
-                break;
-
-            default:
-                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "m_habitat_type", m_habitat_type, VectorHabitatType::pairs::lookup_key(m_habitat_type) );
+            m_current_larval_capacity = m_max_larval_capacity * params()->lloffset * params()->lloffset;
         }
+    }
+
+    MarshyStreamHabitat::MarshyStreamHabitat()
+        : VectorHabitat()
+        , water_table(0.0f)
+        , stream_level(0.0f)
+    {
+        // no-op
+    }
+
+    void MarshyStreamHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
+    {
+        const Climate* localWeather = node->GetLocalWeather();
+        LOG_DEBUG_F("Habitat type = MARSHY_STREAM, Max larval capacity = %f\n", m_max_larval_capacity);
+        float rain = localWeather->accumulated_rainfall() * float(MM_PER_METER);
+        water_table += permeability * rain;
+        stream_level += (1-permeability) * rain;
+
+        float surface_flow = max(0, water_table - rainfall_to_fill);
+        if (surface_flow > 0)
+        {
+            water_table -= surface_flow;
+            stream_level += surface_flow;
+        }
+
+        float water_table_outflow = water_table * dt / water_table_outflow_days;
+        water_table -= water_table_outflow;
+        stream_level += water_table_outflow;
+
+        if (stream_level > stream_outflow_threshold)
+        {
+            float stream_flow = (stream_level - stream_outflow_threshold) * dt / stream_outflow_days;
+            stream_level -= stream_flow;
+        }
+
+        float evaporation = stream_outflow_threshold * dt / evaporation_days;
+        stream_level -= evaporation;
+        stream_level = max(0, stream_level);
+
+        float scale; // = 0;
+        if (stream_level < stream_outflow_threshold)
+        {
+            scale = stream_level / stream_outflow_threshold;
+        }
+        else
+        {
+            scale = exp((stream_outflow_threshold - stream_level) / stream_outflow_threshold);
+        }
+        m_current_larval_capacity = m_max_larval_capacity * scale * params()->lloffset * params()->lloffset;
+
+        LOG_DEBUG_F("stream_level = %0.2f, habitat = %0.2f\n", stream_level, m_current_larval_capacity);
+    }
+
+    PiecewiseMonthlyHabitat::PiecewiseMonthlyHabitat()
+        : VectorHabitat()
+        , day_of_year(0.0f)
+    {
+        // no-op
+    }
+
+    void PiecewiseMonthlyHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
+    {
+        LOG_DEBUG_F("Habitat type = PIECEWISE_MONTHLY, Max larval capacity = %f\n", m_max_larval_capacity);
+        float days_per_month = DAYSPERYEAR / float(MONTHSPERYEAR);
+        float f_month = day_of_year / days_per_month;
+        int month = int(f_month);
+        float date = f_month - month;
+        month = month % MONTHSPERYEAR;
+        LOG_INFO_F("Month=%d, Date=%0.2f, t=%0.2f\n", month, date, day_of_year);
+
+        float scale = (1-date) * monthly_scales.at(month) + date * monthly_scales.at((month+1) % MONTHSPERYEAR);
+        m_current_larval_capacity = m_max_larval_capacity * scale * params()->lloffset * params()->lloffset;
+        LOG_INFO_F("Scale=%0.2f, habitat=%0.2f\n", scale, m_current_larval_capacity);
+
+        day_of_year += dt;
     }
 
     void VectorHabitat::UpdateLarvalProbabilities(float dt, INodeContext* node)
@@ -199,7 +298,8 @@ namespace Kernel
         //       in practice, this makes little difference for the Solomon Island rainfall patterns.
 
         // Paaijmans, K. P., M. O. Wandago, et al. (2007). "Unexpected High Losses of Anopheles gambiae Larvae Due to Rainfall." PLoS One 2(11): e1146.
-        if(params()->vector_larval_rainfall_mortality == VectorRainfallMortality::NONE)
+        if ( params()->vector_larval_rainfall_mortality == VectorRainfallMortality::NONE ||
+             m_habitat_type != VectorHabitatType::BRACKISH_SWAMP )
         {
             m_rainfall_mortality = 0;
         }
@@ -430,5 +530,119 @@ namespace Kernel
             }
         }
         ar.endArray();
+    }
+
+    ConstantHabitat::ConstantHabitat( VectorHabitatType::Enum type, float max_capacity )
+        : VectorHabitat(type, max_capacity)
+    {
+    }
+
+    TemporaryRainfallHabitat::TemporaryRainfallHabitat( VectorHabitatType::Enum type, float max_capacity )
+        : VectorHabitat(type, max_capacity)
+    {
+        /* TODO: configuration of habitat decay parameters etc. */
+    }
+
+    WaterVegetationHabitat::WaterVegetationHabitat( VectorHabitatType::Enum type, float max_capacity )
+        : VectorHabitat(type, max_capacity)
+    {
+        /* TODO: configuration of habitat decay parameters etc. */
+    }
+
+    HumanPopulationHabitat::HumanPopulationHabitat( VectorHabitatType::Enum type, float max_capacity )
+        : VectorHabitat(type, max_capacity)
+    {
+    }
+
+    BrackishSwampHabitat::BrackishSwampHabitat( VectorHabitatType::Enum type, float max_capacity )
+        : VectorHabitat(type, max_capacity)
+    {
+        /* TODO: configuration of habitat decay parameters, threshold, rainfall mortality, etc. */
+    }
+
+    const float MarshyStreamHabitat::rainfall_to_fill = 80.0f;
+    const float MarshyStreamHabitat::water_table_outflow_days = 100.0f;
+    const float MarshyStreamHabitat::stream_outflow_days = 2.5f;
+    const float MarshyStreamHabitat::stream_outflow_threshold = 3.0f;
+    const float MarshyStreamHabitat::evaporation_days = 15.0f;
+    const float MarshyStreamHabitat::permeability = 0.1f;
+
+    MarshyStreamHabitat::MarshyStreamHabitat( VectorHabitatType::Enum type, float max_capacity )
+        : VectorHabitat(type, max_capacity)
+        , water_table(0.0f)
+        , stream_level(0.0f)
+    {
+    }
+
+    static const float s[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.2f, 1.0f, 1.0f, 1.0f, 0.5f, 0.2f, 0.0f, 0.0f };
+    std::vector<float> PiecewiseMonthlyHabitat::monthly_scales(s, s + MONTHSPERYEAR);
+
+    PiecewiseMonthlyHabitat::PiecewiseMonthlyHabitat( VectorHabitatType::Enum type, float max_capacity )
+        : VectorHabitat(type, max_capacity)
+        , day_of_year(0)
+    {
+        for (auto h : monthly_scales)
+        {
+            LOG_DEBUG_F("PiecewiseMonthlyHabitat: monthly capacity = %0.2f\n", h);
+        }
+    }
+
+    REGISTER_SERIALIZABLE(ConstantHabitat);
+
+    void ConstantHabitat::serialize(IArchive& ar, ConstantHabitat* obj)
+    {
+        VectorHabitat::serialize(ar, obj);
+        // no-op
+    }
+
+    REGISTER_SERIALIZABLE(TemporaryRainfallHabitat);
+
+    void TemporaryRainfallHabitat::serialize(IArchive& ar, TemporaryRainfallHabitat* obj)
+    {
+        VectorHabitat::serialize(ar, obj);
+        // no-op
+    }
+
+    REGISTER_SERIALIZABLE(WaterVegetationHabitat);
+
+    void WaterVegetationHabitat::serialize(IArchive& ar, WaterVegetationHabitat* obj)
+    {
+        VectorHabitat::serialize(ar, obj);
+        // no-op
+    }
+
+    REGISTER_SERIALIZABLE(HumanPopulationHabitat);
+
+    void HumanPopulationHabitat::serialize(IArchive& ar, HumanPopulationHabitat* obj)
+    {
+        VectorHabitat::serialize(ar, obj);
+        // no-op
+    }
+
+    REGISTER_SERIALIZABLE(BrackishSwampHabitat);
+
+    void BrackishSwampHabitat::serialize(IArchive& ar, BrackishSwampHabitat* obj)
+    {
+        VectorHabitat::serialize(ar, obj);
+        // no-op
+    }
+
+    REGISTER_SERIALIZABLE(MarshyStreamHabitat);
+
+    void MarshyStreamHabitat::serialize(IArchive& ar, MarshyStreamHabitat* obj)
+    {
+        VectorHabitat::serialize(ar, obj);
+        MarshyStreamHabitat& habitat = *obj;
+        ar.labelElement("water_table") & habitat.water_table;
+        ar.labelElement("stream_level") & habitat.stream_level;
+    }
+
+    REGISTER_SERIALIZABLE(PiecewiseMonthlyHabitat);
+
+    void PiecewiseMonthlyHabitat::serialize(IArchive& ar, PiecewiseMonthlyHabitat* obj)
+    {
+        VectorHabitat::serialize(ar, obj);
+        PiecewiseMonthlyHabitat& habitat = *obj;
+        ar.labelElement("day_of_year") & habitat.day_of_year;
     }
 }
