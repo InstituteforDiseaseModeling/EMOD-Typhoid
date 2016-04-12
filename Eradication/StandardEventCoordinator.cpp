@@ -100,7 +100,7 @@ namespace Kernel
                 {
                     std::ostringstream msg ;
                     msg << "In StandardInterventionDistributionEventCoordinator, demographic restrictions such as 'Demographic_Coverage'\n";
-                    msg << "and 'Target_Gender' do not apply when distributing nodel level interventions such as ";
+                    msg << "and 'Target_Gender' do not apply when distributing node level interventions such as ";
                     msg << std::string( json::QuickInterpreter(intervention_config._json)["class"].As<json::String>() );
                     msg << ".\nThe node level intervention must handle the demographic restrictions.";
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
