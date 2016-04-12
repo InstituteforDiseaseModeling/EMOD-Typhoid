@@ -24,7 +24,7 @@
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filenames": [
-            "../../HIV/input/SA_UN_demographics.compiled.json", 
+            "../../HIV/input/SA_UN_demographics.json", 
             "../../HIV/input/PFA_overlay.json"
         ], 
         "Enable_Aging": 1, 
