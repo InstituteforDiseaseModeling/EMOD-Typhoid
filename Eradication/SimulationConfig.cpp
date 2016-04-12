@@ -160,15 +160,14 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         }
     }
 #endif
-     // susceptibility scaling enum
-     if ((susceptibility_scaling == SusceptibilityScaling::LOG_LINEAR_FUNCTION_OF_TIME) ||  (susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE))
-     {
-         initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-     }
-     if (susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE)
-     {
-         initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-         initConfigTypeMap( "Susceptibility_Scaling_Age0_Intercept", &susceptibility_scaling_intercept, Susceptibility_Scaling_Intercept_DESC_TEXT, 0.0f, 1.0f, 0.0f ); 
+    // susceptibility scaling enum
+    if( ( susceptibility_scaling == SusceptibilityScaling::LOG_LINEAR_FUNCTION_OF_TIME ) || ( susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE) )
+    {
+        initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
+    }
+    if( susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE )
+    {
+        initConfigTypeMap( "Susceptibility_Scaling_Age0_Intercept", &susceptibility_scaling_intercept, Susceptibility_Scaling_Intercept_DESC_TEXT, 0.0f, 1.0f, 0.0f ); 
     }
 
     // Generic parameters
