@@ -49,7 +49,7 @@ globals['file_whitelist'] = [ '.git', '.gitattributes', '.gitignore', 'eradicati
 globals['file_blacklist'] = [ 'status.txt', 'time.txt', 'transitions.json' ]
 globals['project_filter_exclude'] = set(['environmental', 'polio', 'tbhiv', 'hivtb'])
 globals['excluded_preprocessor_defines'] = set(['ENABLE_POLIO', 'ENABLE_TBHIV'])
-globals['regression_directory_file_whitelist'] = [ 'generic.json', 'hiv.json', 'households.json', 'malaria.json', 'multicore.json', 'multicore_nosibe_all.json', 'param_sweep.json', 'plotallcharts.py',
+globals['regression_directory_file_whitelist'] = [ 'generic.json', 'hiv.json', 'households.json', 'lin_v25.json', 'malaria.json', 'multicore.json', 'multicore_nosibe_all.json', 'param_sweep.json', 'plotallcharts.py',
    'plotnewinfectionsbypool.py', 'plotsirchannels.py', 'prettyprintjson.py',
    'primaryscenarios.json', 'py.json', 'regression_test.cfg', 'regression_test.py',
    'regression_utils.py', 'samples.json', 'sanity.json', 'sti.json', 'sti_hiv_samples.json', 'tb_all.json', 'tb_samples.json', 'update_baselines.py',

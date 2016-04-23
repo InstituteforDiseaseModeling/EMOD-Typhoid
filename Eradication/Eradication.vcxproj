@@ -240,7 +240,7 @@
     <ClCompile Include="..\interventions\AntiPoliovirusDrug.cpp" />
     <ClCompile Include="..\interventions\AntiTBDrug.cpp" />
     <ClCompile Include="..\interventions\AntiTBPropertyDependentDrug.cpp" />
-    <ClCompile Include="..\interventions\ArtBasic.cpp" />
+    <ClCompile Include="..\interventions\ARTBasic.cpp" />
     <ClCompile Include="..\interventions\ARTDropout.cpp" />
     <ClCompile Include="..\interventions\Bednet.cpp" />
     <ClCompile Include="..\interventions\BCGVaccine.cpp" />
