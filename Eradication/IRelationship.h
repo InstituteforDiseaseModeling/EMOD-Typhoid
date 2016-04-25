@@ -26,6 +26,8 @@ namespace Kernel
     struct IIndividualHumanSTI;
     typedef std::set< IIndividualHumanSTI* > tRelationshipMembers;
 
+#define MAX_SLOTS (63)
+
     ENUM_DEFINE(RelationshipType,
         ENUM_VALUE_SPEC( TRANSITORY  , 0)
         ENUM_VALUE_SPEC( INFORMAL    , 1)
@@ -71,6 +73,7 @@ namespace Kernel
         virtual const suids::suid& GetSuid() const = 0;
         virtual const std::string& GetPropertyKey() = 0;
         virtual const std::string& GetPropertyName() const = 0;
+        virtual unsigned int GetSlotNumberForPartner( bool forPartnerB ) const = 0;
         virtual const tRelationshipMembers GetMembers() const = 0;
         virtual bool IsDiscordant() const = 0;
         virtual float GetDuration() const = 0;

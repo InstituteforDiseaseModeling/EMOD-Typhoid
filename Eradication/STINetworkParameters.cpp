@@ -80,12 +80,12 @@ namespace Kernel
             initConfigTypeMap( "Prob_Extra_Marital_Given_Extra_Informal_Female", &(prob_extra_relational[RelationshipType::MARITAL][Gender::FEMALE]), STI_Prob_Extra_Marital_Given_Extra_Informal_Female_DESC_TEXT, 0.0, 1.0f, 0.1f );
         }
 
-        initConfigTypeMap( "Max_Simultaneous_Transitory_Relationships_Males", &max_simultaneous_rels[RelationshipType::TRANSITORY][Gender::MALE], STI_Max_Simultaneous_Transitory_Relationships_Males_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Informal_Relationships_Males", &max_simultaneous_rels[RelationshipType::INFORMAL][Gender::MALE], STI_Max_Simultaneous_Informal_Relationships_Males_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Marital_Relationships_Males", &max_simultaneous_rels[RelationshipType::MARITAL][Gender::MALE], STI_Max_Simultaneous_Marital_Relationships_Males_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Transitory_Relationships_Females", &max_simultaneous_rels[RelationshipType::TRANSITORY][Gender::FEMALE], STI_Max_Simultaneous_Transitory_Relationships_Females_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Informal_Relationships_Females", &max_simultaneous_rels[RelationshipType::INFORMAL][Gender::FEMALE], STI_Max_Simultaneous_Informal_Relationships_Females_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Marital_Relationships_Females", &max_simultaneous_rels[RelationshipType::MARITAL][Gender::FEMALE], STI_Max_Simultaneous_Marital_Relationships_Females_DESC_TEXT, 0, 10, 1 ); 
+        initConfigTypeMap( "Max_Simultaneous_Transitory_Relationships_Males",   &max_simultaneous_rels[RelationshipType::TRANSITORY][Gender::MALE  ], STI_Max_Simultaneous_Transitory_Relationships_Males_DESC_TEXT,   0, MAX_SLOTS, 1 );
+        initConfigTypeMap( "Max_Simultaneous_Informal_Relationships_Males",     &max_simultaneous_rels[RelationshipType::INFORMAL  ][Gender::MALE  ], STI_Max_Simultaneous_Informal_Relationships_Males_DESC_TEXT,     0, MAX_SLOTS, 1 );
+        initConfigTypeMap( "Max_Simultaneous_Marital_Relationships_Males",      &max_simultaneous_rels[RelationshipType::MARITAL   ][Gender::MALE  ], STI_Max_Simultaneous_Marital_Relationships_Males_DESC_TEXT,      0, MAX_SLOTS, 1 );
+        initConfigTypeMap( "Max_Simultaneous_Transitory_Relationships_Females", &max_simultaneous_rels[RelationshipType::TRANSITORY][Gender::FEMALE], STI_Max_Simultaneous_Transitory_Relationships_Females_DESC_TEXT, 0, MAX_SLOTS, 1 );
+        initConfigTypeMap( "Max_Simultaneous_Informal_Relationships_Females",   &max_simultaneous_rels[RelationshipType::INFORMAL  ][Gender::FEMALE], STI_Max_Simultaneous_Informal_Relationships_Females_DESC_TEXT,   0, MAX_SLOTS, 1 );
+        initConfigTypeMap( "Max_Simultaneous_Marital_Relationships_Females",    &max_simultaneous_rels[RelationshipType::MARITAL   ][Gender::FEMALE], STI_Max_Simultaneous_Marital_Relationships_Females_DESC_TEXT,    0, MAX_SLOTS, 1 ); 
 
         return JsonConfigurable::Configure( config );
     }

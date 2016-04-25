@@ -31,6 +31,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 static const char* _module = "IndividualSTI";
 
+// Assume MAX_SLOTS == 63 => 64-bits are full
+#define SLOTS_FILLED (uint64_t(0xFFFFFFFFFFFFFFFF))
+
 #define EXTRA_RELATIONAL_ALLOWED(rel)   (1 << (unsigned int)rel)
 #define EXTRA_TRANSITORY_ALLOWED    (EXTRA_RELATIONAL_ALLOWED(Kernel::RelationshipType::TRANSITORY))
 #define EXTRA_INFORMAL_ALLOWED    (EXTRA_RELATIONAL_ALLOWED(Kernel::RelationshipType::INFORMAL))
@@ -133,7 +136,7 @@ namespace Kernel
         return status;
     }
 
-#define MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES (9)
+#define MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES (MAX_SLOTS)
     void IndividualHumanSTI::SetSTINetworkParams( const STINetworkParameters& rNewNetParams )
     {
         net_params = rNewNetParams ;
@@ -718,10 +721,10 @@ namespace Kernel
         release_assert( queued_relationships[relationship_type] == 0 );
 
         // set slot bit
-        auto slot = GetOpenRelationshipSlot();
-        int bitmask = 1 << slot;
+        uint64_t slot = GetOpenRelationshipSlot();
+        uint64_t bitmask = uint64_t(1) << slot;
         relationshipSlots |= bitmask;
-        release_assert(relationshipSlots < 0x400);
+        release_assert(relationshipSlots <= SLOTS_FILLED);
         LOG_DEBUG_F( "%s: relationshipSlots = %d, individual = %d\n", __FUNCTION__, relationshipSlots, GetSuid().data );
         slot2RelationshipDebugMap[ slot ] = pNewRelationship->GetSuid().data;
         LOG_DEBUG_F( "%s: Individual %d gave slot %d to relationship %d\n", __FUNCTION__, GetSuid().data, slot, pNewRelationship->GetSuid().data );
@@ -751,22 +754,14 @@ namespace Kernel
         // These are unsigned quantities, so we'll loop for wrap-around.
         --active_relationships[relationship_type] ;
 
-        // DJK: We'll need more than 10! <ERAD-1874>
-        // Note: this solution assumes max of 10 relationships, i.e., exactly 1 decimal digit for relationship number
-        unsigned int slotIndex = strlen( "Relationship" );
-        if( GetGender() == Gender::FEMALE ) // yes, assumes heterosexual relationship
-        {
-            slotIndex++;
-        }
-
-        auto slotNumber = atoi( pRelationship->GetPropertyKey().substr( slotIndex, 1 ).c_str() );
-        int bitmask = 1 << slotNumber;
+        uint64_t slot = pRelationship->GetSlotNumberForPartner( GetGender() == Gender::FEMALE );
+        uint64_t bitmask = uint64_t(1) << slot;
         relationshipSlots &= (~bitmask);
-        release_assert(relationshipSlots < 0x400);
+        release_assert(relationshipSlots < SLOTS_FILLED);
         LOG_DEBUG_F( "%s: relationshipSlots = %d, individual=%d\n", __FUNCTION__, relationshipSlots, GetSuid().data );
-        LOG_DEBUG_F( "%s: individual %d freed up slot %d for relationship %d\n", __FUNCTION__, GetSuid().data, slotNumber, pRelationship->GetSuid().data );
-        release_assert( slot2RelationshipDebugMap[ slotNumber ] == pRelationship->GetSuid().data );
-        slot2RelationshipDebugMap[ slotNumber ] = -1;
+        LOG_DEBUG_F( "%s: individual %d freed up slot %d for relationship %d\n", __FUNCTION__, GetSuid().data, slot, pRelationship->GetSuid().data );
+        release_assert( slot2RelationshipDebugMap[ slot ] == pRelationship->GetSuid().data );
+        slot2RelationshipDebugMap[ slot ] = -1;
 
         delay_between_adding_relationships_timer = 0.0f;
     }
@@ -896,7 +891,7 @@ namespace Kernel
                      (effective_rels[relType] < max_relationships[relType])
                    );
 
-        if( GetOpenRelationshipSlot() > 9 && ret == true )
+        if( (relationshipSlots == SLOTS_FILLED) && (ret == true) )
         {
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "Individual reporting available when all slots filled up." );
         }
@@ -939,18 +934,21 @@ namespace Kernel
     IndividualHumanSTI::GetOpenRelationshipSlot()
     const
     {
-        release_assert(relationshipSlots < 0x400);
-        int bit = 1, counter = 0;
-        for( ; bit > 0; bit <<= 1, counter++ )
+        release_assert( relationshipSlots < SLOTS_FILLED );
+        uint64_t bit = 1;
+        for( unsigned int counter = 0 ; counter <= MAX_SLOTS ; ++counter )
         {
-            if( (relationshipSlots & bit ) == 0 )
+            if( (relationshipSlots & bit) == 0 )
             {
                 LOG_DEBUG_F( "%s: Returning %d as first open slot for individual %d\n", __FUNCTION__, counter, suid.data );
                 release_assert( counter <= MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES );
                 return counter;
             }
+            bit <<= 1;
         }
-        throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "Cannot be in 32 relationships." );
+        std::stringstream ss;
+        ss << "Cannot be in more than " << MAX_SLOTS << " simultaneous relationship." ;
+        throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
     }
 
     NaturalNumber
