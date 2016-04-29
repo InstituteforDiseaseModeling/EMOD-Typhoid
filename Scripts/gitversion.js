@@ -6,8 +6,8 @@
 // $BRANCH$ - should be commit branch
 // $HASH$   - e.g. git SHA1 hash for current commit
 // $DATE$   - commit date
-// $REV$    - revision number
-// $NOW$    - current date
+// $BUILD$  - build number
+// Deprecated: $NOW$    - current date
 
 version_info_filename = WScript.Arguments.Unnamed.Item(0);
 template_filename     = WScript.Arguments.Unnamed.Item(1);
@@ -33,7 +33,7 @@ f.close()
 WScript.Echo("branch: " + sccs_branch)
 WScript.Echo("commit: " + sccs_hash)
 WScript.Echo("date:   " + sccs_date)
-WScript.Echo("rev:    " + commit_count)
+WScript.Echo("build:  " + commit_count)
 
 function escapeRegExp(str) {
     return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
@@ -46,9 +46,10 @@ function replaceAll(str, find, replace) {
 template = replaceAll(template, '$BRANCH$', sccs_branch);
 template = replaceAll(template, '$HASH$', sccs_hash);
 template = replaceAll(template, '$DATE$', sccs_date);
-template = replaceAll(template, '$REV$', commit_count);
-now = new Date();
-template = replaceAll(template, '$NOW$', now)
+template = replaceAll(template, '$BUILD$', commit_count);
+// Prefer __DATE__ and __TIME__ macros from the compiler.
+// now = new Date();
+// template = replaceAll(template, '$NOW$', now)
 
 // Write header file (version_file.h)
 s = fso.CreateTextFile(header_filename, true /* overwrite */);

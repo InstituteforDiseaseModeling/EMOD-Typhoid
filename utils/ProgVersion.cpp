@@ -67,9 +67,9 @@ int ProgDllVersion::checkProgVersion(const char* sVersion)
     int ret = -2;
     uint8_t maj, min;
     uint16_t rev;
-    if (parseProgVersion(sVersion,maj, min, rev))
+    if (parseProgVersion(sVersion, maj, min, rev))
     {
-        ret = checkProgVersion(maj, min,rev);
+        ret = checkProgVersion(maj, min, rev);
     }
     return ret;
 }
