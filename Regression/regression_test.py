@@ -218,7 +218,7 @@ class RuntimeParameters:
     @property
     def local_execution(self):
         return self.args.local
-        
+
 class Monitor(threading.Thread):
     def __init__(self, sim_id, config_id, report, config_json=None, compare_results_to_baseline=True):
         threading.Thread.__init__( self )
@@ -983,16 +983,11 @@ class MyRegressionRunner():
         # now we have the config_json, find out if we're commissioning locally or on HPC
 
         def is_local_simulation( some_json, id ):
-            global params
-            is_local = params.local_execution
-            # TODO - consider deprecating this now that we have a --local command line option
-            if ('parameters' in reply_json) and ('Local_Simulation' in reply_json['parameters']):
-                if (reply_json['parameters']['Local_Simulation'] == 1):
-                    is_local = True
-            else:
-                print( "Didn't find key 'parameters/Local_Simulation' in json '{0}'.".format( id ) )
+            if os.name == "posix":
+                return True
 
-            return is_local
+            global params
+            return params.local_execution 
 
         sim_dir = os.path.join( self.params.sim_root, sim_id )
         bin_dir = os.path.join( self.params.bin_root, self.dtk_hash ) # may not exist yet
