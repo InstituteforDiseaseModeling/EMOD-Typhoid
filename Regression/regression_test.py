@@ -214,6 +214,10 @@ class RuntimeParameters:
             nvp = raw_nvp.split(":")
             constraints_dict[ nvp[0] ] = nvp[1]
         return constraints_dict
+    
+    @property
+    def local_execution(self):
+        return self.args.local
         
 class Monitor(threading.Thread):
     def __init__(self, sim_id, config_id, report, config_json=None, compare_results_to_baseline=True):
@@ -979,7 +983,9 @@ class MyRegressionRunner():
         # now we have the config_json, find out if we're commissioning locally or on HPC
 
         def is_local_simulation( some_json, id ):
-            is_local = False
+            global params
+            is_local = params.local_execution
+            # TODO - consider deprecating this now that we have a --local command line option
             if ('parameters' in reply_json) and ('Local_Simulation' in reply_json['parameters']):
                 if (reply_json['parameters']['Local_Simulation'] == 1):
                     is_local = True
@@ -1397,6 +1403,8 @@ def setup():
     parser.add_argument("--skip-emodule-check", action="store_true", default=False, help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
     parser.add_argument("--config-constraints", default=[], action="append", help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
     parser.add_argument("--scons", action="store_true", default=False, help="Indicates scons build so look for custom DLLs in the build/64/Release directory.")
+    parser.add_argument('--local', default=False, action='store_true', help='Run all simulations locally.')
+
     args = parser.parse_args()
 
     global params
