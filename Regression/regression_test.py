@@ -1403,7 +1403,7 @@ def setup():
     parser.add_argument("--skip-emodule-check", action="store_true", default=False, help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
     parser.add_argument("--config-constraints", default=[], action="append", help="Use this to skip sometimes slow check that EMODules on cluster are up-to-date.")
     parser.add_argument("--scons", action="store_true", default=False, help="Indicates scons build so look for custom DLLs in the build/64/Release directory.")
-    parser.add_argument('--local', default=False, action='store_true', help='Tells {0} to run simulations locally.'.format(os.path.basename(__file__)))
+    parser.add_argument('--local', default=False, action='store_true', help='Run all simulations locally.')
 
     args = parser.parse_args()
 
