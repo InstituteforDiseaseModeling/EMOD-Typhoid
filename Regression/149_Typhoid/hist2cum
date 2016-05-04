@@ -1,0 +1,14 @@
+#!/usr/bin/python
+
+data = open( "ages_hist" ).read()
+data_list = data.split()
+age_counts=[]
+for datum in data_list:
+    age_counts.append( int( datum ) )
+print( sum(age_counts) )
+cum = 0
+for bin in age_counts:
+    fraction = 1.0 * bin/sum(age_counts)
+    cum += fraction
+    print cum
+

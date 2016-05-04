@@ -1,0 +1,1 @@
+../dtk_typhoid_individual.py
