@@ -1,23 +1,31 @@
-/***************************************************************************************************
+/*****************************************************************************
 
-Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
 
-EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
-To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+Except for any rights expressly granted to you in a separate license with the
+Global Good Fund (GGF), GGF reserves all rights, title and interest in the
+software and documentation.  GGF grants recipients of this software and
+documentation no other rights either expressly, impliedly or by estoppel.
 
-***************************************************************************************************/
+THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
+ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
+
+*****************************************************************************/
 
 #include "stdafx.h"
 
 #include "StrainAwareTransmissionGroups.h"
+#include "Exceptions.h"
 
 // These includes are required to bring in randgen
 #include "Environment.h"
 #include "Contexts.h"
 #include "RANDOM.h"
-#include "Log.h"
+#include "SimulationConfig.h"
 
 static const char* _module = "StrainAwareTransmissionGroups";
+static map< unsigned int, Kernel::TransmissionRoute::Enum > routeIndex2EnumMap;
 
 namespace Kernel
 {
@@ -55,6 +63,13 @@ namespace Kernel
             LOG_DEBUG_F("For Route %d, Group size = %d\n", i, getGroupCountForRoute(i));
         }
         LOG_DEBUG_F("Built groups with %d strains and %d substrains.\n", numberOfStrains, numberOfSubstrains);
+#if 1
+        if(routeIndex2EnumMap.size() == 0 )
+        {
+            routeIndex2EnumMap.insert( std::make_pair( 0, Kernel::TransmissionRoute::TRANSMISSIONROUTE_CONTACT ) );
+            routeIndex2EnumMap.insert( std::make_pair( 1, Kernel::TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) );
+        }
+#endif
     }
 
     void StrainAwareTransmissionGroups::AllocateAccumulators( int routeCount, int numberOfStrains, int numberOfSubstrains )
@@ -128,15 +143,38 @@ namespace Kernel
             {
                 routeIndex  = entry.first;
                 groupIndex  = entry.second;
-                forceOfInfection += forceOfInfectionForRouteAndGroup[routeIndex][groupIndex];
+                forceOfInfection = forceOfInfectionForRouteAndGroup[routeIndex][groupIndex];
+                if( routeIndex == 1 ) // I know 1 == ENVIRO, can we do this with an actual variable? 
+                {
+                    forceOfInfection = 0;
+                    if( enviroContagionQ.size() == int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period) ))
+                    {
+                        forceOfInfection = enviroContagionQ.back()[iAntigen];
+                    }
+                }
                 substrainDistributions.push_back(&sumInfectivityByAntigenRouteGroupSubstrain[iAntigen][routeIndex][groupIndex]);
-            }
 
-            if ((forceOfInfection > 0) && (candidate != nullptr))
-            {
-                LOG_DEBUG_F("ExposureToContagion: [Antigen:%d] Route:%d, Group:%d, exposure qty = %f\n", iAntigen, routeIndex, groupIndex, forceOfInfection );
-                SubstrainPopulationImpl contagionPopulation(iAntigen, forceOfInfection, substrainDistributions);
-                candidate->Expose((IContagionPopulation*)&contagionPopulation, deltaTee, Kernel::TransmissionRoute::TRANSMISSIONROUTE_ALL);
+                if ((forceOfInfection > 0) && (candidate != NULL))
+                {
+                    LOG_DEBUG_F("ExposureToContagion: [Antigen:%d] Route:%d, Group:%d, exposure qty = %f\n", iAntigen, routeIndex, groupIndex, forceOfInfection );
+                    SubstrainPopulationImpl contagionPopulation(iAntigen, forceOfInfection, substrainDistributions);
+                    // need a map from route index to enum
+#if 1
+                    auto txroute = routeIndex2EnumMap.at( routeIndex );
+#else
+                    auto txroute = Kernel::TransmissionRoute::TRANSMISSIONROUTE_ALL;
+                    if( routeNameToIndexMap.find( "contact" ) != routeNameToIndexMap.end() && routeNameToIndexMap.at("contact") == routeIndex )
+                    {
+                        txroute = Kernel::TransmissionRoute::TRANSMISSIONROUTE_CONTACT;
+                    }
+                    else if( routeNameToIndexMap.find( "environmental" ) != routeNameToIndexMap.end() && routeNameToIndexMap.at("environmental") == routeIndex )
+                    {
+                        txroute = Kernel::TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL;
+                    }
+#endif
+                    candidate->Expose((IContagionPopulation*)&contagionPopulation, deltaTee, txroute );
+                }
+                substrainDistributions.clear();
             }
         }
     }
@@ -164,37 +202,34 @@ namespace Kernel
 
     void StrainAwareTransmissionGroups::CorrectInfectivityByGroup(float infectivityCorrection, const TransmissionGroupMembership_t* transmissionGroupMembership)
     {
-        if (infectivityCorrection != 1.0f)
+        //by antigen total
+        for (int iAntigen = 0; iAntigen < antigenCount; iAntigen++)
         {
-            //by antigen total
-            for (int iAntigen = 0; iAntigen < antigenCount; iAntigen++)
+            for (const auto& entry : (*transmissionGroupMembership))
             {
-                for (const auto& entry : (*transmissionGroupMembership))
-                {
-                    int routeIndex = entry.first;
-                    int groupIndex = entry.second;
-                    LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d] Route:%d, Group:%d, ContagionBefore = %f, infectivityCorrection = %f\n", iAntigen, routeIndex, groupIndex, newInfectivityByAntigenRouteGroup[iAntigen][routeIndex][groupIndex], infectivityCorrection);
-                    newInfectivityByAntigenRouteGroup[iAntigen][routeIndex][groupIndex] *= infectivityCorrection;
-                    LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d] Route:%d, Group:%d, ContagionAfter = %f\n", iAntigen, routeIndex, groupIndex, newInfectivityByAntigenRouteGroup[iAntigen][routeIndex][groupIndex]);
-                }
+                int routeIndex = entry.first;
+                int groupIndex = entry.second;
+                LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d] Route:%d, Group:%d, ContagionBefore = %f, infectivityCorrection = %f\n", iAntigen, routeIndex, groupIndex, newInfectivityByAntigenRouteGroup[iAntigen][routeIndex][groupIndex], infectivityCorrection);
+                newInfectivityByAntigenRouteGroup[iAntigen][routeIndex][groupIndex] *= infectivityCorrection;
+                LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d] Route:%d, Group:%d, ContagionAfter = %f\n", iAntigen, routeIndex, groupIndex, newInfectivityByAntigenRouteGroup[iAntigen][routeIndex][groupIndex]);
             }
+        }
 
-            //by substrain
-            for (int iAntigen = 0; iAntigen < antigenCount; iAntigen++)
+        //by substrain
+        for (int iAntigen = 0; iAntigen < antigenCount; iAntigen++)
+        {
+            RouteGroupSubstrainMap_t& shedAntigen = newInfectivityByAntigenRouteGroupSubstrain[iAntigen];
+            for (const auto& membership : *transmissionGroupMembership)
             {
-                RouteGroupSubstrainMap_t& shedAntigen = newInfectivityByAntigenRouteGroupSubstrain[iAntigen];
-                for (const auto& membership : *transmissionGroupMembership)
-                {
-                    int routeIndex = membership.first;
-                    int groupIndex = membership.second;
+                int routeIndex = membership.first;
+                int groupIndex = membership.second;
 
-                    for (auto& entry : shedAntigen[routeIndex][groupIndex])
-                    {
-                        unsigned int iSubstrain = entry.first;
-                        LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d][Route:%d][Group:%d][Substrain:%d], ContagionBefore = %f, infectivityCorrection = %f\n", iAntigen, routeIndex, groupIndex, iSubstrain, shedAntigen[routeIndex][groupIndex][iSubstrain], infectivityCorrection);
-                        entry.second *= infectivityCorrection;
-                        LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d][Route:%d][Group:%d][Substrain:%d], ContagionAfter  = %f\n", iAntigen, routeIndex, groupIndex, iSubstrain, shedAntigen[routeIndex][groupIndex][iSubstrain]);
-                    }
+                for (auto& entry : shedAntigen[routeIndex][groupIndex])
+                {
+                    unsigned int iSubstrain = entry.first;
+                    LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d][Route:%d][Group:%d][Substrain:%d], ContagionBefore = %f, infectivityCorrection = %f\n", iAntigen, routeIndex, groupIndex, iSubstrain, shedAntigen[routeIndex][groupIndex][iSubstrain], infectivityCorrection);
+                    entry.second *= infectivityCorrection;
+                    LOG_DEBUG_F("CorrectInfectivityByGroup: [Antigen:%d][Route:%d][Group:%d][Substrain:%d], ContagionAfter  = %f\n", iAntigen, routeIndex, groupIndex, iSubstrain, shedAntigen[routeIndex][groupIndex][iSubstrain]);
                 }
             }
         }
@@ -239,6 +274,16 @@ namespace Kernel
                     LOG_DEBUG_F("Contagion for [antigen:%d,route:%d] scaled by %f\n", iAntigen, iRoute, populationForRoute);
                     memcpy(forceOfInfectionForAntigenAndRoute.data(), currentAntigen.data(), groupCount * sizeof(float));
                     VectorScalarMultiplyInPlace(forceOfInfectionForAntigenAndRoute, 1.0f/populationForRoute);
+
+                    // This might be a really good place to enque the FOI
+                    if( iRoute == 1 ) // I know 1 == ENVIRO, can we do this with an actual variable?
+                    {
+                        enviroContagionQ.push( forceOfInfectionForAntigenAndRoute );
+                        if( enviroContagionQ.size() > int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period )))
+                        {
+                            enviroContagionQ.pop();
+                        }
+                    }
                 }
                 else
                 {
@@ -329,7 +374,7 @@ namespace Kernel
 
     AntigenId StrainAwareTransmissionGroups::SubstrainPopulationImpl::GetAntigenId( void ) const
     {
-        return AntigenId(antigenId);
+        return (AntigenId)antigenId;
     }
 
     float StrainAwareTransmissionGroups::SubstrainPopulationImpl::GetTotalContagion( void ) const

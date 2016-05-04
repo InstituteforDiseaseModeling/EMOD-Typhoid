@@ -1,16 +1,23 @@
-/***************************************************************************************************
+/*****************************************************************************
 
-Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
 
-EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
-To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+Except for any rights expressly granted to you in a separate license with the
+Global Good Fund (GGF), GGF reserves all rights, title and interest in the
+software and documentation.  GGF grants recipients of this software and
+documentation no other rights either expressly, impliedly or by estoppel.
 
-***************************************************************************************************/
+THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
+ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
+
+*****************************************************************************/
 
 #pragma once
 
 #include "MultiRouteTransmissionGroups.h"
 #include "IContagionPopulation.h"
+#include <queue>
 
 using namespace std;
 
@@ -37,6 +44,7 @@ namespace Kernel
         typedef vector<RouteGroupSubstrainMap_t> AntigenRouteGroupSubstrainMap_t;
         AntigenRouteGroupSubstrainMap_t newInfectivityByAntigenRouteGroupSubstrain;
         AntigenRouteGroupSubstrainMap_t sumInfectivityByAntigenRouteGroupSubstrain;
+        std::queue< TransmissionGroupsBase::ContagionAccumulator_t> enviroContagionQ;
 
         class SubstrainPopulationImpl : IContagionPopulation
         {

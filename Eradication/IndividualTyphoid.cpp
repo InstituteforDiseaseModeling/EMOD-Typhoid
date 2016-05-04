@@ -241,6 +241,7 @@ namespace Kernel
 
     void IndividualHumanTyphoid::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
     { 
+        release_assert( transmission_route != TransmissionRoute::TRANSMISSIONROUTE_ALL );
 #ifdef ENABLE_PYTHOID
         if( randgen->e() > GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_fraction )
         {
@@ -323,7 +324,7 @@ namespace Kernel
 
                 //LOG_INFO_F("Reduced Acquire multiplier %f\n", interventions->GetInterventionReducedAcquire());
                 //LOG_INFO_F("Environ contagion %f %f\n", fEnvironment, infects);
-                //LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
+                LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
                 if (prob>0.0f && randgen->e() < prob)
                 {
                     //LOG_DEBUG("Expose::INDIVIDUAL INFECTED BY ENVIRONMENT.\n");
@@ -354,9 +355,10 @@ namespace Kernel
 			int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_contact_exposure_rate * GET_CONFIGURABLE(SimulationConfig)->typhoid_contact_exposure_rate_seasonal_multiplier * dt);
 			float prob = 0;
 			if (number_of_exposures > 0)
-				{
+            {
 				prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
-				}
+            }
+            LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_CONTACT %f, %f, %f, %f\n", prob, infects, immunity, fContact);
             if (prob>0.0f && randgen->e() < prob) {
                 //LOG_DEBUG("Expose::INDIVIDUAL INFECTED BY CONTACT.\n");
                 LOG_DEBUG("INDIVIDUAL INFECTED BY CONTACT.\n"); // FOR REPORTING
