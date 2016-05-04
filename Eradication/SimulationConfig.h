@@ -344,6 +344,23 @@ namespace Kernel
         float prob_maternal_transmission;
         float maternal_transmission_ART_multiplier;
 
+        float environmental_incubation_period; // NaturalNumber please
+        float typhoid_acute_infectivity;
+        float typhoid_chronic_infectivity;
+        float typhoid_environmental_amplification;
+        float typhoid_seasonal_amplification;
+//        float typhoid_environmental_exposure;
+        float typhoid_prepatent_infectivity;
+        float typhoid_protection_per_infection;
+        float typhoid_subclinical_infectivity;
+        float typhoid_carrier_probability;
+		float typhoid_3year_susceptible_fraction;
+		float typhoid_6month_susceptible_fraction;
+		float typhoid_environmental_exposure_rate;
+		float typhoid_contact_exposure_rate;
+		float typhoid_environmental_exposure_rate_seasonal_multiplier;
+		float typhoid_contact_exposure_rate_seasonal_multiplier;
+
         ///////////////////////////////////////////
         SimulationConfig();
         virtual ~SimulationConfig();

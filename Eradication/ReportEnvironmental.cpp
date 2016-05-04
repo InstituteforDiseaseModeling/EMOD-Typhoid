@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 
-#ifdef ENABLE_POLIO
+#if defined(ENABLE_POLIO) || defined(ENABLE_TYPHOID)
 
 #include "ReportEnvironmental.h" // for base class
 

@@ -26,6 +26,8 @@ namespace Kernel {
         friend class SimulationHIV;
         friend class ReportHIVByAgeAndGender;
         friend class CampaignEventByYear;
+        friend class SimulationTyphoid;
+        friend class ReportTyphoidByAgeAndGender;
         public:
         IdmDateTime()
         {

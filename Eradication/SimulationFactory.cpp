@@ -31,6 +31,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #ifdef ENABLE_POLIO
 #include "SimulationPolio.h"
 #endif
+#ifdef ENABLE_TYPHOID
+#include "SimulationTyphoid.h"
+#endif
 
 #ifndef DISABLE_AIRBORNE
 #include "SimulationAirborne.h"
@@ -88,6 +91,12 @@ namespace Kernel
             else if (sSimType == "POLIO_SIM")
                 sim_type = SimType::POLIO_SIM;
 #endif
+#ifdef ENABLE_TYPHOID
+            else if (sSimType == "ENVIRONMENTAL_SIM")
+                sim_type = SimType::ENVIRONMENTAL_SIM;
+            else if (sSimType == "TYPHOID_SIM")
+                sim_type = SimType::TYPHOID_SIM;
+#endif
 #ifndef DISABLE_AIRBORNE
             else if (sSimType == "AIRBORNE_SIM")
                 sim_type = SimType::AIRBORNE_SIM;
@@ -144,13 +153,19 @@ namespace Kernel
                 case SimType::GENERIC_SIM:
                     newsim = Simulation::CreateSimulation(EnvPtr->Config);
                 break;
-#ifdef ENABLE_POLIO
+#if defined(ENABLE_POLIO) || defined(ENABLE_TYPHOID)
                 case SimType::ENVIRONMENTAL_SIM:
                     newsim = SimulationEnvironmental::CreateSimulation(EnvPtr->Config);
                 break;
-
+#endif
+#if defined( ENABLE_POLIO)
                 case SimType::POLIO_SIM:
                     newsim = SimulationPolio::CreateSimulation(EnvPtr->Config);
+                break;
+#endif        
+#if defined( ENABLE_TYPHOID)
+                case SimType::TYPHOID_SIM:
+                    newsim = SimulationTyphoid::CreateSimulation(EnvPtr->Config);
                 break;
 #endif        
 #ifndef DISABLE_VECTOR

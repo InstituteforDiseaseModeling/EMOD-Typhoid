@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 
-#ifdef ENABLE_POLIO
+#if defined(ENABLE_POLIO) || defined(ENABLE_TYPHOID)
 
 #include "NodeEnvironmental.h"
 #include "IndividualEnvironmental.h"
@@ -17,6 +17,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 
 static const char * _module = "NodeEnvironmental";
+
+#define Node_Contagion_Decay_Rate_DESC_TEXT "Rate per day of exponential decay of the contagion in the environment or fomites. If there is no lifetime of contagion, set this parameter to reflect the time step."
 
 namespace Kernel
 {

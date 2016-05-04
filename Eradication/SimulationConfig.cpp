@@ -479,6 +479,29 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif // DISABLE_HIV
 #endif // DISABLE_STI
 
+#ifdef ENABLE_TYPHOID
+    if( sim_type == SimType::TYPHOID_SIM )
+    {
+        initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 0, 100, 30 );
+        initConfigTypeMap( "Typhoid_Acute_Infectivity", &typhoid_acute_infectivity, "Typhoid_Acute_Infectivity.", 0, 1e7, 4000 );
+        initConfigTypeMap( "Typhoid_Chronic_Infectivity", &typhoid_chronic_infectivity, "Typhoid_Chronic_Infectivity.", 0, 1e7, 1000 ); 
+        initConfigTypeMap( "Typhoid_Environmental_Amplification", &typhoid_environmental_amplification, "Typhoid_Environmental_Amplification.", 0, 100, 20 );
+        initConfigTypeMap( "Typhoid_Seasonal_Amplification", &typhoid_seasonal_amplification, "Typhoid_Seasonal_Amplification.", 0, 100, 3 );
+        //initConfigTypeMap( "Typhoid_Environmental_Exposure", &typhoid_environmental_exposure, "Typhoid_Environmental_Exposure.", 0, 1, 0.2 ); 
+        initConfigTypeMap( "Typhoid_Prepatent_Infectivity", &typhoid_prepatent_infectivity, "Typhoid_Prepatent_Infectivity.", 0, 1e7, 3e3 ); 
+        initConfigTypeMap( "Typhoid_Protection_Per_Infection", &typhoid_protection_per_infection, "Typhoid_Protection_Per_Infection.", 0, 1, 0.1 ); 
+        initConfigTypeMap( "Typhoid_Subclinical_Infectivity", &typhoid_subclinical_infectivity, "Typhoid_Subclinical_Infectivity.", 0, 1e7, 2000 );
+        initConfigTypeMap( "Typhoid_Carrier_Probability", &typhoid_carrier_probability, "Typhoid_Carrier_Probability.", 0, 1, 0.25 );
+		initConfigTypeMap( "Typhoid_6month_Susceptible_Fraction", &typhoid_6month_susceptible_fraction, "Typhoid_6month_Susceptible_Fraction.", 0, 1, 0.5);
+		initConfigTypeMap( "Typhoid_3year_Susceptible_Fraction", &typhoid_3year_susceptible_fraction, "Typhoid_3year_Susceptible_Fraction.", 0, 1, 0.5);
+    	initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate", &typhoid_environmental_exposure_rate, "Typhoid_Environmental_Exposure_Rate.", 0, 10, 0.5);
+		initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 1, 0.5);
+		initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier", &typhoid_environmental_exposure_rate_seasonal_multiplier, "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
+		initConfigTypeMap( "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier", &typhoid_contact_exposure_rate_seasonal_multiplier, "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
+	
+	}
+#endif 
+
     LOG_DEBUG( "Calling main Configure...\n" );
     bool ret = JsonConfigurable::Configure( inputJson );
 

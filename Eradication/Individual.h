@@ -124,6 +124,7 @@ namespace Kernel
         virtual bool   IsPregnant()           const override { return is_pregnant; };
         virtual inline int GetAbovePoverty()  const override { return above_poverty; } // financially secure = 1, less financially secure = 0
         virtual double GetAge()               const override { return m_age; }
+		inline float getAgeInYears()		const {return floor(GetAge()/DAYSPERYEAR);}
         virtual int    GetGender()            const override { return m_gender; }
         virtual double GetMonteCarloWeight()  const override { return m_mc_weight; }
         virtual bool   IsPossibleMother()     const override;

@@ -133,6 +133,7 @@ namespace Kernel
         virtual bool IsValidTransmissionRoute( string& transmissionRoute );
 
         virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership) override;
+        //virtual std::map< std::string, float > GetTotalContagion() const;
         virtual const RouteList_t& GetTransmissionRoutes() const override;
         //Methods for implementing time dependence in various quantities; infectivity, birth rate, migration rate
         virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const override;

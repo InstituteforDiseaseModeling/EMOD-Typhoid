@@ -234,6 +234,20 @@ else:
                             "../interventions/PolioVaccine.cpp",
                         ]
                         
+    typhoidSrcFiles = environmentalSrcFiles + [
+                            # Typhoid
+                            "BinnedReportTyphoid.cpp",
+                            "IndividualTyphoid.cpp",
+                            "InfectionTyphoid.cpp",
+                            "NodeTyphoid.cpp",
+                            "TyphoidInterventionsContainer.cpp",
+                            "ReportTyphoid.cpp",
+                            "ReportTyphoidByAgeAndGender.cpp",
+                            "SimulationTyphoid.cpp",
+                            "SpatialReportTyphoid.cpp",
+                            "SusceptibilityTyphoid.cpp",
+                        ]
+                        
     airborneSrcFiles = [
                             # Airborne
                             "IndividualAirborne.cpp",
@@ -422,6 +436,16 @@ else:
             env.Append( CPPDEFINES=["DISABLE_HIV" ] )
             env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
 
+        if env["Disease"] == "Typhoid":
+            eradicationSrcFiles.extend( typhoidSrcFiles )
+            env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+            env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+            env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+            env.Append( CPPDEFINES=["ENABLE_TYPHOID" ] )
+            env.Append( CPPDEFINES=["DISABLE_STI" ] )
+            env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+            env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
         if env["Disease"] == "Environmental":
             eradicationSrcFiles.extend( environmentalSrcFiles )
             env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
@@ -458,6 +482,7 @@ else:
             env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
     else:
         print( "Monolithic all-disease build." )
+        env.Append( CPPDEFINES=["ENABLE_TYPHOID" ] )
         env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
         env.Append( CPPDEFINES=["ENABLE_PYTHON_FEVER" ] )
         env.Append( CPPDEFINES=["ENABLE_TB" ] )
@@ -467,6 +492,7 @@ else:
         eradicationSrcFiles.extend( tbSrcFiles )
         eradicationSrcFiles.extend( tbhivSrcFiles )
         eradicationSrcFiles.extend( polioSrcFiles )
+        eradicationSrcFiles.extend( typhoidSrcFiles )
         eradicationSrcFiles.extend( pyDemoSrcFiles )
 
     # Monolithic
