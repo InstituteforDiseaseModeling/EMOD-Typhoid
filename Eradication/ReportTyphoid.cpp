@@ -120,13 +120,11 @@ ReportTyphoid::LogNodeData(
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTyphoid", "INodeContext" );
     }
-//#warning "HACK: Commented out code until I merge Typhoid & mainline solutions for GetTotalContagion."
-#if 0
+
     auto contactContagionPop = pNC->GetTotalContagion();
     Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
     Accumulate( "Environmental Contagion Population", contactContagionPop["environmental"] );
     //Accumulate( _aoi_label, pTyphoidNode->GetMeanAgeInfection() * total_infections ); // weight the age of infection by the number of infections in the node. global normalization happens in SimulationTyphoid
-#endif
 }
 
 #if USE_BOOST_SERIALIZATION
