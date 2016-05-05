@@ -92,7 +92,7 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\utils\;..\campaign\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\python27\include;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;ENABLE_TYPHOID;WIN32;IDM_EXPORT;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -142,7 +142,7 @@
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\Python27\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;ENABLE_TYPHOID;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -193,7 +193,7 @@
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;C:\Python27\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DISABLE_MPI;BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DISABLE_MPI;BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;ENABLE_TYPHOID;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -313,6 +313,7 @@
     <ClCompile Include="BinnedReportPolio.cpp" />
     <ClCompile Include="BinnedReportPy.cpp" />
     <ClCompile Include="BinnedReportTB.cpp" />
+    <ClCompile Include="BinnedReportTyphoid.cpp" />
     <ClCompile Include="CalendarEventCoordinator.cpp" />
     <ClCompile Include="CoverageByNodeEventCoordinator.cpp" />
     <ClCompile Include="DemographicRestrictions.cpp" />
@@ -327,6 +328,8 @@
     <ClCompile Include="IIndividualHuman.cpp" />
     <ClCompile Include="IInfection.cpp" />
     <ClCompile Include="IMigrationInfo.cpp" />
+    <ClCompile Include="IndividualTyphoid.cpp" />
+    <ClCompile Include="InfectionTyphoid.cpp" />
     <ClCompile Include="ISusceptibilityContext.cpp" />
     <ClCompile Include="JsonObjectDemog.cpp" />
     <ClCompile Include="LoadBalanceScheme.cpp" />
@@ -339,6 +342,7 @@
     <ClCompile Include="NodeInfo.cpp" />
     <ClCompile Include="NodeInfoSTI.cpp" />
     <ClCompile Include="NodeInfoVector.cpp" />
+    <ClCompile Include="NodeTyphoid.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="PythonSupport.cpp" />
     <ClCompile Include="ReferenceTrackingEventCoordinator.cpp" />
@@ -347,6 +351,8 @@
     <ClCompile Include="ReportHIVART.cpp" />
     <ClCompile Include="ReportHIVByAgeAndGender.cpp" />
     <ClCompile Include="ReportHIVInfection.cpp" />
+    <ClCompile Include="ReportTyphoid.cpp" />
+    <ClCompile Include="ReportTyphoidByAgeAndGender.cpp" />
     <ClCompile Include="SimpleTransmissionGroups.cpp" />
     <ClCompile Include="Properties.cpp" />
     <ClCompile Include="PropertyReport.cpp" />
@@ -366,6 +372,8 @@
     <ClCompile Include="FlowControllerImpl.cpp" />
     <!-- <ClCompile Include="GroupEventCoordinatorHIV.cpp" /> -->
     <ClCompile Include="HIVInterventionsContainer.cpp" />
+    <ClCompile Include="SimulationTyphoid.cpp" />
+    <ClCompile Include="SpatialReportTyphoid.cpp" />
     <ClCompile Include="STINetworkParameters.cpp" />
     <ClCompile Include="StiObjectFactory.cpp" />
     <ClCompile Include="HivObjectFactory.cpp" />
@@ -479,6 +487,7 @@
     <ClCompile Include="SusceptibilityPy.cpp" />
     <ClCompile Include="SusceptibilitySTI.cpp" />
     <ClCompile Include="SusceptibilityTB.cpp" />
+    <ClCompile Include="SusceptibilityTyphoid.cpp" />
     <ClCompile Include="SusceptibilityVector.cpp" />
     <ClCompile Include="SusceptibilityEnvironmental.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -490,6 +499,7 @@
     <ClCompile Include="TBInterventionsContainer.cpp" />
     <ClCompile Include="TransmissionGroupsBase.cpp" />
     <ClCompile Include="TransmissionGroupsFactory.cpp" />
+    <ClCompile Include="TyphoidInterventionsContainer.cpp" />
     <ClCompile Include="VectorCohort.cpp" />
     <ClCompile Include="VectorCohortAging.cpp" />
     <ClCompile Include="VectorCohortIndividual.cpp" />
@@ -657,6 +667,8 @@
     <ClInclude Include="IInfectionHIV.h" />
     <ClInclude Include="IMigrationInfo.h" />
     <ClInclude Include="IMigrationInfoVector.h" />
+    <ClInclude Include="IndividualTyphoid.h" />
+    <ClInclude Include="InfectionTyphoid.h" />
     <ClInclude Include="INodeContext.h" />
     <ClInclude Include="INodeHIV.h" />
     <ClInclude Include="INodeInfo.h" />
@@ -680,6 +692,7 @@
     <ClInclude Include="NodeInfoSTI.h" />
     <ClInclude Include="NodeInfoVector.h" />
     <ClInclude Include="NodeTBHIV.h" />
+    <ClInclude Include="NodeTyphoid.h" />
     <ClInclude Include="PolioContexts.h" />
     <ClInclude Include="PropertyReportTB.h" />
     <ClInclude Include="PythonSupport.h" />
@@ -695,6 +708,7 @@
     <ClInclude Include="ReportTBHIV.h" />
     <ClInclude Include="..\interventions\STIBarrier.h" />
     <ClInclude Include="SimulationTBHIV.h" />
+    <ClInclude Include="SimulationTyphoid.h" />
     <ClInclude Include="STIEventCoordinator.h" />
     <ClInclude Include="BehaviorPfa.h" />
     <ClInclude Include="BinnedReportMalaria.h" />

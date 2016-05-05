@@ -187,6 +187,15 @@
     <Filter Include="Source Files\Campaign\InterventionContainers\Py">
       <UniqueIdentifier>{7146defc-43a0-4968-9aa1-29480c975dfe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Environmental\Typhoid">
+      <UniqueIdentifier>{6cea4406-8cf1-40d8-8412-c10cbfece52b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Reporting\Environmental\Typhoid">
+      <UniqueIdentifier>{94dd86a9-b11e-4fb7-a742-59a782a7f26d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Campaign\InterventionContainers\Typhoid">
+      <UniqueIdentifier>{4399bf43-de86-4a88-afad-2d1b667ec269}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VectorPopulation.cpp">
@@ -1022,6 +1031,36 @@
     </ClCompile>
     <ClCompile Include="PyInterventionsContainer.cpp">
       <Filter>Source Files\Campaign\InterventionContainers\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="IndividualTyphoid.cpp">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="InfectionTyphoid.cpp">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTyphoid.cpp">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulationTyphoid.cpp">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="SusceptibilityTyphoid.cpp">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="BinnedReportTyphoid.cpp">
+      <Filter>Source Files\Reporting\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="ReportTyphoid.cpp">
+      <Filter>Source Files\Reporting\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="ReportTyphoidByAgeAndGender.cpp">
+      <Filter>Source Files\Reporting\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialReportTyphoid.cpp">
+      <Filter>Source Files\Reporting\Environmental\Typhoid</Filter>
+    </ClCompile>
+    <ClCompile Include="TyphoidInterventionsContainer.cpp">
+      <Filter>Source Files\Campaign\InterventionContainers\Typhoid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2232,6 +2271,18 @@
     <ClInclude Include="..\utils\JsonRawWriter.h" />
     <ClInclude Include="..\rapidjson\include\rapidjson\rapidjson.h" />
     <ClInclude Include="..\utils\Serialization.h" />
+    <ClInclude Include="IndividualTyphoid.h">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClInclude>
+    <ClInclude Include="InfectionTyphoid.h">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTyphoid.h">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulationTyphoid.h">
+      <Filter>Source Files\Environmental\Typhoid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Eradication.rc" />
