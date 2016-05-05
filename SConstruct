@@ -223,7 +223,7 @@ else:
     env.Append( CCFLAGS=["-w"] )
     env.Append( CCFLAGS=["-ffloat-store"] )
     env.Append( CCFLAGS=["-Wno-unknown-pragmas"] )
-    env.Append( CCFLAGS=["-save-temps"] )
+    #env.Append( CCFLAGS=["-save-temps"] )
     env.Append( EXTRACPPPATH=[
                           "#/Eradication",
                           "#/interventions",
