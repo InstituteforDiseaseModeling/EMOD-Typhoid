@@ -101,7 +101,7 @@ namespace Kernel
         }
     }
 
-    void InfectionTyphoid::InitInfectionImmunology(Susceptibility* _immunity)
+    void InfectionTyphoid::InitInfectionImmunology(ISusceptibilityContext* _immunity)
     {
         ISusceptibilityTyphoid* immunity = NULL;
         if( _immunity->QueryInterface( GET_IID( ISusceptibilityTyphoid ), (void**)&immunity ) != s_OK )
@@ -113,7 +113,7 @@ namespace Kernel
         return InfectionEnvironmental::InitInfectionImmunology( _immunity );
     }
 
-    void InfectionTyphoid::Update(float dt, Susceptibility* _immunity)
+    void InfectionTyphoid::Update(float dt, ISusceptibilityContext* _immunity)
     {
         return;
         /*
@@ -128,6 +128,7 @@ namespace Kernel
 
     void InfectionTyphoid::Clear()
     {
+        LOG_DEBUG_F( "Infection cleared.\n" );
         StateChange = InfectionStateChange::Cleared;
     }
 }

@@ -51,11 +51,11 @@ namespace Kernel
         static InfectionTyphoid *CreateInfection(IIndividualHumanContext *context, suids::suid _suid);
         virtual ~InfectionTyphoid(void);
 
-        virtual void SetParameters(StrainIdentity* infstrain = NULL, int incubation_period_override = -1);
-        virtual void InitInfectionImmunology(Susceptibility* _immunity);
-        virtual void Update(float dt, Susceptibility* _immunity = NULL);
+        virtual void SetParameters(StrainIdentity* infstrain = NULL, int incubation_period_override = -1) override;
+        virtual void InitInfectionImmunology(ISusceptibilityContext* _immunity) override;
+        virtual void Update(float dt, ISusceptibilityContext* _immunity = NULL) override;
         void SetMCWeightOfHost(float ind_mc_weight);
-        virtual void Clear();
+        virtual void Clear() override;
 
         // InfectionTyphoidReportable methods
     protected:
