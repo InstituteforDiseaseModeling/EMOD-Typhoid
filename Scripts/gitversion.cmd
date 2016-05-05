@@ -20,8 +20,9 @@ IF %ERRORLEVEL% NEQ 0 ECHO Didn't find git.exe to gather commit information. & G
 CALL git status > NUL: 2> NUL:
 IF %ERRORLEVEL% NEQ 0 ECHO Doesn't appear to be a Git repository. & GOTO NOGIT
 
+ECHO %USERNAME%> %TEMP_SCRATCH_FILE%
 :: Seed temp version info file with branch name
-git rev-parse --abbrev-ref HEAD > %TEMP_SCRATCH_FILE%
+git rev-parse --abbrev-ref HEAD >> %TEMP_SCRATCH_FILE%
 :: Append short commit hash and date to version info file (use --pretty=format to prevent extra newline)
 git show --no-patch --pretty="format:%%h%%n%%ai%%n" HEAD >> %TEMP_SCRATCH_FILE%
 :: Append length (count) of commit chain to version info file for revision number
@@ -32,7 +33,8 @@ GOTO TEMPLATE
 :NOGIT
 
 :: butt redirects up against text to prevent extraneous spacing
-ECHO unknown-branch> %TEMP_SCRATCH_FILE%
+ECHO %USERNAME%> %TEMP_SCRATCH_FILE%
+ECHO unknown-branch>> %TEMP_SCRATCH_FILE%
 ECHO unknown>> %TEMP_SCRATCH_FILE%
 ECHO date time unknown>> %TEMP_SCRATCH_FILE%
 ECHO 00>> %TEMP_SCRATCH_FILE%

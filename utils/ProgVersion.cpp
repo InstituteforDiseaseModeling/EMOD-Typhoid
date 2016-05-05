@@ -30,6 +30,7 @@ ProgDllVersion::ProgDllVersion()
     m_nRevision = REVISION_NUMBER; 
 
     m_nBuild = BUILD_NUMBER;
+    strncpy( m_builderName, BUILDER_NAME, VER_LEN );
     strncpy( m_sSccsBranch, SCCS_BRANCH, VER_LEN );
     strncpy( m_sSccsDate, SCCS_DATE, VER_LEN );
     for( int i=0; i<VER_LEN; i++ )
