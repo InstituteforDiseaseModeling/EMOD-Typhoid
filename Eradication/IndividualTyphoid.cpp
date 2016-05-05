@@ -602,7 +602,9 @@ namespace Kernel
                     float p2=0.0; // probability of infection turning chronic from subclinical
                     int agebin = int(floor(getAgeInYears()/10));
                     if (agebin>=GallstoneDataLength)
+                    {
                         agebin=GallstoneDataLength-1;
+                    }
                     if (GetGender()==1)
                     {
                         p2=FemaleGallstones[agebin];
@@ -731,17 +733,24 @@ namespace Kernel
         }
         LOG_DEBUG_F( "state_to_report for individual %d = %s\n", GetSuid().data, state_to_report.c_str() );
 
-        if( state_to_report == "S" && state_changed && GetInfections().size() > 0 )
+        if( state_to_report == "S" )
         {
-            // ClearInfection
-            auto inf = GetInfections().front();
-            IInfectionTyphoid * inf_typhoid  = NULL;
-            if (s_OK != inf->QueryInterface(GET_IID(IInfectionTyphoid ), (void**)&inf_typhoid) )
+            if( state_changed && GetInfections().size() > 0 )
             {
-                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionTyphoid ", "Infection" );
+                // ClearInfection
+                auto inf = GetInfections().front();
+                IInfectionTyphoid * inf_typhoid  = NULL;
+                if (s_OK != inf->QueryInterface(GET_IID(IInfectionTyphoid ), (void**)&inf_typhoid) )
+                {
+                    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionTyphoid ", "Infection" );
+                }
+                // get InfectionTyphoid pointer
+                inf_typhoid->Clear();
             }
-            // get InfectionTyphoid pointer
-            inf_typhoid->Clear();
+            else
+            {
+                LOG_DEBUG_F( "State is 'S', number infections = %d.\n", GetInfections().size() );
+            }
         }
         else if( state_to_report == "D" && state_changed )
         {    
@@ -882,14 +891,14 @@ BOOST_CLASS_EXPORT(Kernel::IndividualHumanTyphoid)
        ar.template register_type<Kernel::SusceptibilityTyphoid>();
        ar.template register_type<Kernel::TyphoidInterventionsContainer>();
 
-    // Serialize fields - N/A
+        // Serialize fields - N/A
 
 
-    // Serialize base class
-    ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
-    }
-    }
-    */
+        // Serialize base class
+        ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
+        }
+        }
+        */
 
 #endif
 
