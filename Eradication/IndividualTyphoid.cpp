@@ -1,17 +1,17 @@
 /*****************************************************************************
 
-Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
+  Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
 
-Except for any rights expressly granted to you in a separate license with the
-Global Good Fund (GGF), GGF reserves all rights, title and interest in the
-software and documentation.  GGF grants recipients of this software and
-documentation no other rights either expressly, impliedly or by estoppel.
+  Except for any rights expressly granted to you in a separate license with the
+  Global Good Fund (GGF), GGF reserves all rights, title and interest in the
+  software and documentation.  GGF grants recipients of this software and
+  documentation no other rights either expressly, impliedly or by estoppel.
 
-THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
-ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
+  THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
+  ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 #include "stdafx.h"
 
@@ -36,9 +36,9 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "Python.h"
 extern PyObject *
 IdmPyInit(
-    const char * python_script_name,
-    const char * python_function_name
-);
+        const char * python_script_name,
+        const char * python_function_name
+        );
 #endif
 
 #pragma warning(disable: 4244)
@@ -124,17 +124,17 @@ namespace Kernel
     // environmental exposure constants
     const int IndividualHumanTyphoid::N50 = 1110000;
     const float IndividualHumanTyphoid::alpha = 0.175f;
-	
-	const int GallstoneDataLength= 9;
-  const double FemaleGallstones[GallstoneDataLength] = {0.0, 0.097, 0.234, 0.431, 0.517, 0.60, 0.692, 0.692, 0.555}; // 10-year age bins
-  const double MaleGallstones[GallstoneDataLength] = {0.0, 0.0, 0.045, 0.134, 0.167, 0.198, 0.247, 0.435, 0.4};
-    GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Individual,IndividualHumanTyphoid)
-    BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanTyphoid, IndividualHumanEnvironmental)
-        HANDLE_INTERFACE(IIndividualHumanTyphoid)
-    END_QUERY_INTERFACE_DERIVED(IndividualHumanTyphoid, IndividualHumanEnvironmental)
 
-    IndividualHumanTyphoid::IndividualHumanTyphoid(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
-        IndividualHumanEnvironmental(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
+    const int GallstoneDataLength= 9;
+    const double FemaleGallstones[GallstoneDataLength] = {0.0, 0.097, 0.234, 0.431, 0.517, 0.60, 0.692, 0.692, 0.555}; // 10-year age bins
+    const double MaleGallstones[GallstoneDataLength] = {0.0, 0.0, 0.045, 0.134, 0.167, 0.198, 0.247, 0.435, 0.4};
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Individual,IndividualHumanTyphoid)
+        BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanTyphoid, IndividualHumanEnvironmental)
+        HANDLE_INTERFACE(IIndividualHumanTyphoid)
+        END_QUERY_INTERFACE_DERIVED(IndividualHumanTyphoid, IndividualHumanEnvironmental)
+
+        IndividualHumanTyphoid::IndividualHumanTyphoid(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
+            IndividualHumanEnvironmental(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
     {
 #ifdef ENABLE_PYTHOID
         volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
@@ -199,23 +199,23 @@ namespace Kernel
     }
 
     bool
-    IndividualHumanTyphoid::Configure( const Configuration* config ) // just called once!
-    {
-        LOG_DEBUG( "Configure\n" );
-        // typhoid
-        SusceptibilityTyphoidConfig fakeImmunity;
-        fakeImmunity.Configure( config );
-        InfectionTyphoidConfig fakeInfection;
-        fakeInfection.Configure( config );
+        IndividualHumanTyphoid::Configure( const Configuration* config ) // just called once!
+        {
+            LOG_DEBUG( "Configure\n" );
+            // typhoid
+            SusceptibilityTyphoidConfig fakeImmunity;
+            fakeImmunity.Configure( config );
+            InfectionTyphoidConfig fakeInfection;
+            fakeInfection.Configure( config );
 
-        //do we need to call initConfigTypeMap? DLC 
-        return IndividualHumanEnvironmental::Configure( config );
-    }
+            //do we need to call initConfigTypeMap? DLC 
+            return IndividualHumanEnvironmental::Configure( config );
+        }
 
     IndividualHumanTyphoid *IndividualHumanTyphoid::CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
     {
         IndividualHumanTyphoid *newhuman = _new_ IndividualHumanTyphoid(id, monte_carlo_weight, initial_age, gender, initial_poverty);
-        
+
         newhuman->SetContextTo(context);
         LOG_DEBUG_F( "Created human with age=%f\n", newhuman->m_age );
         return newhuman;
@@ -298,44 +298,44 @@ namespace Kernel
 
         if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL) 
         {
-                int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
-                int nDayOfYear = SimDay % 365;
-                float fEnvironment = cp->GetTotalContagion();
-                if (fEnvironment==0.0)
-                {
-                    return;
-                }
-	        if (nDayOfYear <=151 || nDayOfYear>=305) // irrigation from November 1-May 31
-                {
-		  fEnvironment *= GET_CONFIGURABLE(SimulationConfig)->typhoid_seasonal_amplification;// amplification during the irrigation season
-                }
-                
-                float fExposure = fEnvironment * GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_amplification;
-                float infects = 1.0f-pow(1.0f + fExposure * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha); // Dose-response for prob of infection
-				float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count); // change this later to distribution
-                //float prob = 1.0f- pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt);
-				
-				int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate * GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate_seasonal_multiplier * dt);
-				float prob = 0;
-				if (number_of_exposures > 0)
-				{
-					prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
-				}
+            int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
+            int nDayOfYear = SimDay % 365;
+            float fEnvironment = cp->GetTotalContagion();
+            if (fEnvironment==0.0)
+            {
+                return;
+            }
+            if (nDayOfYear <=151 || nDayOfYear>=305) // irrigation from November 1-May 31
+            {
+                fEnvironment *= GET_CONFIGURABLE(SimulationConfig)->typhoid_seasonal_amplification;// amplification during the irrigation season
+            }
 
-                //LOG_INFO_F("Reduced Acquire multiplier %f\n", interventions->GetInterventionReducedAcquire());
-                //LOG_INFO_F("Environ contagion %f %f\n", fEnvironment, infects);
-                LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
-                if (prob>0.0f && randgen->e() < prob)
-                {
-                    //LOG_DEBUG("Expose::INDIVIDUAL INFECTED BY ENVIRONMENT.\n");
-                    _routeOfInfection = transmission_route;
-                    StrainIdentity strainId;
-                    //LOG_DEBUG("INDIVIDUAL INFECTED BY ENVIRONMENT.\n"); // This is for reporting DON'T DELETE :)
-                    AcquireNewInfection(&strainId);
-                    return;
-                } else {
-                    return;
-                }
+            float fExposure = fEnvironment * GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_amplification;
+            float infects = 1.0f-pow(1.0f + fExposure * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha); // Dose-response for prob of infection
+            float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count); // change this later to distribution
+            //float prob = 1.0f- pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt);
+
+            int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate * GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate_seasonal_multiplier * dt);
+            float prob = 0;
+            if (number_of_exposures > 0)
+            {
+                prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
+            }
+
+            //LOG_INFO_F("Reduced Acquire multiplier %f\n", interventions->GetInterventionReducedAcquire());
+            //LOG_INFO_F("Environ contagion %f %f\n", fEnvironment, infects);
+            LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
+            if (prob>0.0f && randgen->e() < prob)
+            {
+                //LOG_DEBUG("Expose::INDIVIDUAL INFECTED BY ENVIRONMENT.\n");
+                _routeOfInfection = transmission_route;
+                StrainIdentity strainId;
+                //LOG_DEBUG("INDIVIDUAL INFECTED BY ENVIRONMENT.\n"); // This is for reporting DON'T DELETE :)
+                AcquireNewInfection(&strainId);
+                return;
+            } else {
+                return;
+            }
         }
 
         else if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_CONTACT)
@@ -347,16 +347,16 @@ namespace Kernel
             }
             //LOG_INFO_F("contact congation %f\n", fContact);
             //float infects = 1-pow(1 + fContact * (pow(2,(1/alpha)-1)/N50),-alpha);
-			float infects = 1.0f-pow(1.0f + fContact * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha);
-			//LOG_INFO_F("Environ contagion %f %f\n", fContact, infects);
+            float infects = 1.0f-pow(1.0f + fContact * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha);
+            //LOG_INFO_F("Environ contagion %f %f\n", fContact, infects);
 
-			float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count);             
-			//float prob = min(1.0f, 1.0f- (float) pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt));
-			int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_contact_exposure_rate * GET_CONFIGURABLE(SimulationConfig)->typhoid_contact_exposure_rate_seasonal_multiplier * dt);
-			float prob = 0;
-			if (number_of_exposures > 0)
+            float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count);             
+            //float prob = min(1.0f, 1.0f- (float) pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt));
+            int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_contact_exposure_rate * GET_CONFIGURABLE(SimulationConfig)->typhoid_contact_exposure_rate_seasonal_multiplier * dt);
+            float prob = 0;
+            if (number_of_exposures > 0)
             {
-				prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
+                prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
             }
             LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_CONTACT %f, %f, %f, %f\n", prob, infects, immunity, fContact);
             if (prob>0.0f && randgen->e() < prob) {
@@ -437,7 +437,7 @@ namespace Kernel
         for (auto infection : infections)
         {
             LOG_DEBUG("Getting infectiousness by route.\n");
-            
+
             StrainIdentity tmp_strainID;
             infection->GetInfectiousStrainID(&tmp_strainID);
 
@@ -449,7 +449,7 @@ namespace Kernel
                 LOG_DEBUG_F("Found route:%s.\n",entry.first.c_str());
                 if (entry.first==string("contact"))
                 {
-//          float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousnessByRoute(string("contact"));
+                    //          float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousnessByRoute(string("contact"));
                     float tmp_infectiousnessOral = infectiousness;
                     if (tmp_infectiousnessOral > 0.0f)
                     {
@@ -460,7 +460,7 @@ namespace Kernel
                 }
                 else if (entry.first==string("environmental"))
                 {
-//                    float tmp_infectiousnessFecal =  m_mc_weight * infection->GetInfectiousnessByRoute(string("environmental"));
+                    //                    float tmp_infectiousnessFecal =  m_mc_weight * infection->GetInfectiousnessByRoute(string("environmental"));
 
                     float tmp_infectiousnessFecal =  infectiousness;
                     if (tmp_infectiousnessFecal > 0.0f)
@@ -474,8 +474,8 @@ namespace Kernel
                 {
                     LOG_WARN_F("unknown route %s, do not deposit anything.\n", entry.first.c_str());
                 }
-           }
-       }
+            }
+        }
 #endif
     }
 
@@ -511,7 +511,7 @@ namespace Kernel
                 char * state = "UNSET";
                 PyArg_ParseTuple(pyVal,"si",&state, &state_changed ); //o-> pyobject |i-> int|s-> char*
                 state_to_report = state;
-                 //= PyString_AsString(ob1); 
+                //= PyString_AsString(ob1); 
                 //state_changed = (bool) PyInt_AsLong(ob2); 
             }
             else
@@ -546,14 +546,14 @@ namespace Kernel
         state_to_report = "S"; // default state is susceptible
         if( IsInfected() )
         {
-//            LOG_INFO_F("%d INFECTED!!!%d,%d,%d,%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
+            //            LOG_INFO_F("%d INFECTED!!!%d,%d,%d,%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
             if (prepatent_timer > UNINIT_TIMER)
             { // pre-patent
                 state_to_report="P";
                 prepatent_timer -= dt;
                 if( UNINIT_TIMER<prepatent_timer && prepatent_timer<=0 )
                 {
-					//LOG_INFO_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer);
+                    //LOG_INFO_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer);
 
                     prepatent_timer=UNINIT_TIMER;
                     if (hasClinicalImmunity) {
@@ -564,7 +564,7 @@ namespace Kernel
                         // DLC - Do we need to truncate the duration to 365?
                         subclinical_timer = _subclinical_duration;
                         //if (_subclinical_duration > 365){
-              //isChronic = true; // will be a chronic carrier
+                        //isChronic = true; // will be a chronic carrier
                         //} else {
                         //    isChronic = false;}
                     } else if (!hasClinicalImmunity) {
@@ -585,53 +585,53 @@ namespace Kernel
                             subclinical_timer = _subclinical_duration;
                             //if (_subclinical_duration > 365)
                             //    isChronic = true;
-                                //state_to_report="C";
+                            //state_to_report="C";
                         }
                     }
                 }
             }
             if (subclinical_timer > UNINIT_TIMER)
-                { // asymptomatic infection
-//              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
-                    state_to_report="SUB";
-                    subclinical_timer -= dt;
-                    if (UNINIT_TIMER<subclinical_timer && subclinical_timer<=0)
+            { // asymptomatic infection
+                //              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
+                state_to_report="SUB";
+                subclinical_timer -= dt;
+                if (UNINIT_TIMER<subclinical_timer && subclinical_timer<=0)
+                {
+                    //LOG_INFO_F("SOMEONE FINSIHED SUB %d, %d\n", _subclinical_duration, subclinical_timer);
+                    subclinical_timer = UNINIT_TIMER;
+                    float p2=0.0; // probability of infection turning chronic from subclinical
+                    int agebin = int(floor(getAgeInYears()/10));
+                    if (agebin>=GallstoneDataLength)
+                        agebin=GallstoneDataLength-1;
+                    if (GetGender()==1)
                     {
-                      //LOG_INFO_F("SOMEONE FINSIHED SUB %d, %d\n", _subclinical_duration, subclinical_timer);
-                        subclinical_timer = UNINIT_TIMER;
-                        float p2=0.0; // probability of infection turning chronic from subclinical
-			int agebin = int(floor(getAgeInYears()/10));
-			if (agebin>=GallstoneDataLength)
-			  agebin=GallstoneDataLength-1;
-                        if (GetGender()==1)
+                        p2=FemaleGallstones[agebin];
+                    } 
+                    else if (GetGender()==0)
+                    {
+                        p2=MaleGallstones[agebin];
+                    }
+                    //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
+                    if (randgen->e() < p2*GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability) {
+                        chronic_timer = _chronic_duration;
+                    }
+                    else
+                    {
+                        // shift individuals who recovered into immunity states
+                        if (hasClinicalImmunity)
                         {
-			  p2=FemaleGallstones[agebin];
-                        } 
-			else if (GetGender()==0)
-                        {
-			  p2=MaleGallstones[agebin];
-                        }
-						//LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
-                        if (randgen->e() < p2*GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability) {
-                            chronic_timer = _chronic_duration;
+                            clinical_immunity_timer += _clinical_immunity_duration;
                         }
                         else
                         {
-                            // shift individuals who recovered into immunity states
-                            if (hasClinicalImmunity)
+                            if (P10>0.0 && randgen->e() < P10)
                             {
-                                clinical_immunity_timer += _clinical_immunity_duration;
-                            }
-                            else
-                            {
-                                if (P10>0.0 && randgen->e() < P10)
-                                {
-                                    hasClinicalImmunity = true;
-                                    clinical_immunity_timer = _clinical_immunity_duration;
-                                }
+                                hasClinicalImmunity = true;
+                                clinical_immunity_timer = _clinical_immunity_duration;
                             }
                         }
                     }
+                }
             }
             if (acute_timer > UNINIT_TIMER)
             {
@@ -639,8 +639,8 @@ namespace Kernel
                 state_to_report = "A";
                 acute_timer -= dt;
                 if( ( _acute_duration - acute_timer ) >= acute_treatment_day &&
-                    ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day )
-                    )
+                        ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day )
+                  )
                 {
                     if (randgen->e() < treatmentprobability)
                     {
@@ -648,8 +648,8 @@ namespace Kernel
                         if (randgen->e() < CFRH)
                         {
                             isDead = true;
-                state_to_report = "D";
-                                    acute_timer = UNINIT_TIMER;
+                            state_to_report = "D";
+                            acute_timer = UNINIT_TIMER;
                         } else 
                         {
                             acute_timer = UNINIT_TIMER;
@@ -669,22 +669,22 @@ namespace Kernel
                         if (randgen->e() < CFRU)
                         {
                             isDead = true;
-                state_to_report = "D";
+                            state_to_report = "D";
                         }
                         else
                         {  //if they survived, calculate probability of being a carrier
                             float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
                             int agebin = int(floor(getAgeInYears()/10));
-			    if (agebin>=GallstoneDataLength)
-			      agebin=GallstoneDataLength-1;
-			    if (GetGender()==1)
-			      {
-				p3=FemaleGallstones[agebin];
-			      } 
-			    else if (GetGender()==0)
-			      {
-				p3=MaleGallstones[agebin];
-			      }
+                            if (agebin>=GallstoneDataLength)
+                                agebin=GallstoneDataLength-1;
+                            if (GetGender()==1)
+                            {
+                                p3=FemaleGallstones[agebin];
+                            } 
+                            else if (GetGender()==0)
+                            {
+                                p3=MaleGallstones[agebin];
+                            }
                             if (randgen->e()< p3*GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability)
                             {
                                 chronic_timer = _chronic_duration;
@@ -702,7 +702,7 @@ namespace Kernel
                     }
                 }
             }
-        
+
 
             if (chronic_timer > UNINIT_TIMER) {
                 state_to_report="C";
@@ -769,17 +769,17 @@ namespace Kernel
         }
         delete check;
 #else
-    //        infectious_timer = 30; // Do we need this variable?
+        //        infectious_timer = 30; // Do we need this variable?
         if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL) {
-      _prepatent_duration = (int)(generateRandFromLogNormal(mpe, spe));
-            
+            _prepatent_duration = (int)(generateRandFromLogNormal(mpe, spe));
+
         } else if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_CONTACT) {
             _prepatent_duration = (int)(generateRandFromLogNormal(mpf, spf));
         } else {
             // neither environmental nor contact source. probably from initial seeding
             _prepatent_duration = (int)(generateRandFromLogNormal(mpf, spf));
         }
-//		LOG_INFO_F("Prepatent %d.\n", _prepatent_duration);
+        //		LOG_INFO_F("Prepatent %d.\n", _prepatent_duration);
         _infection_count ++;
         prepatent_timer=_prepatent_duration;
 #endif
@@ -800,9 +800,9 @@ namespace Kernel
     bool IndividualHumanTyphoid::IsChronicCarrier( bool incidence_only ) const
     {
         if( state_to_report == "C" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
+                ( ( incidence_only && state_changed ) ||
+                  ( incidence_only == false )
+                )
           )
         {
             return true;
@@ -816,9 +816,9 @@ namespace Kernel
     bool IndividualHumanTyphoid::IsSubClinical( bool incidence_only ) const
     {
         if( state_to_report == "SUB" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
+                ( ( incidence_only && state_changed ) ||
+                  ( incidence_only == false )
+                )
           )
         {
             return true;
@@ -832,9 +832,9 @@ namespace Kernel
     bool IndividualHumanTyphoid::IsAcute( bool incidence_only ) const
     {
         if( state_to_report == "A" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
+                ( ( incidence_only && state_changed ) ||
+                  ( incidence_only == false )
+                )
           )
         {
             return true;
@@ -848,9 +848,9 @@ namespace Kernel
     bool IndividualHumanTyphoid::IsPrePatent( bool incidence_only ) const
     {
         if( state_to_report == "P" &&
-            ( ( incidence_only && state_changed ) ||
-              ( incidence_only == false )
-            )
+                ( ( incidence_only && state_changed ) ||
+                  ( incidence_only == false )
+                )
           )
         {
             return true;
@@ -870,26 +870,26 @@ namespace Kernel
 #include <boost/serialization/export.hpp>
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanTyphoid)
 
-/*
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, IndividualHumanTyphoid& human, const unsigned int  file_version )
-    {
-        LOG_DEBUG("(De)serializing IndividualHumanTyphoid\n");
+    /*
+       namespace Kernel
+       {
+       template<class Archive>
+       void serialize(Archive & ar, IndividualHumanTyphoid& human, const unsigned int  file_version )
+       {
+       LOG_DEBUG("(De)serializing IndividualHumanTyphoid\n");
 
-        ar.template register_type<Kernel::InfectionTyphoid>();
-        ar.template register_type<Kernel::SusceptibilityTyphoid>();
-        ar.template register_type<Kernel::TyphoidInterventionsContainer>();
-            
-        // Serialize fields - N/A
-        
+       ar.template register_type<Kernel::InfectionTyphoid>();
+       ar.template register_type<Kernel::SusceptibilityTyphoid>();
+       ar.template register_type<Kernel::TyphoidInterventionsContainer>();
 
-        // Serialize base class
-        ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
+    // Serialize fields - N/A
+
+
+    // Serialize base class
+    ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
     }
-}
-*/
+    }
+    */
 
 #endif
 
