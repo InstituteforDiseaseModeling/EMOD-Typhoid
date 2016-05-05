@@ -196,7 +196,7 @@ namespace Kernel
     void SimulationTyphoid::resolveMigration()
     {
         //resolveMigrationInternal( typed_migration_queue_storage, migratingIndividualQueues );
-#warning "HACK: Commented out body of SimulationTyphoid::resolveMigration()"
+//#warning "HACK: Commented out body of SimulationTyphoid::resolveMigration()"
     }
 
     void SimulationTyphoid::Reports_CreateBuiltIn()

@@ -120,7 +120,7 @@ ReportTyphoid::LogNodeData(
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTyphoid", "INodeContext" );
     }
-#warning "HACK: Commented out code until I merge Typhoid & mainline solutions for GetTotalContagion."
+//#warning "HACK: Commented out code until I merge Typhoid & mainline solutions for GetTotalContagion."
 #if 0
     auto contactContagionPop = pNC->GetTotalContagion();
     Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
