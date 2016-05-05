@@ -1268,6 +1268,14 @@ namespace Kernel
         transmissionGroups->GetGroupMembershipForProperties( route, properties, transmissionGroupMembership );
     }
 
+    std::map< std::string, float >
+    Node::GetTotalContagion()
+    const
+    {
+        // Honestly not sure how to implement this in the general case yet.
+        throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "This function is only supported in NodeTyphoid at this time." );
+    }
+
     float Node::GetTotalContagion(const TransmissionGroupMembership_t* membership)
     {
         return transmissionGroups->GetTotalContagion(membership);

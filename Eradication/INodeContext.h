@@ -74,6 +74,7 @@ namespace Kernel
         virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual) = 0;
         virtual void GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) = 0;
         virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight) = 0;
+        virtual std::map< std::string, float > GetTotalContagion() const = 0; // developed for Typhoid
         virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership) = 0;
         virtual const RouteList_t& GetTransmissionRoutes( ) const = 0;
         
