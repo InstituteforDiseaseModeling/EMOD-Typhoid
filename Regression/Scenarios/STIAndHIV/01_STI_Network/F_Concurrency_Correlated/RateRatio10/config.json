@@ -113,23 +113,37 @@
         "STI_Network_Params_By_Property": {
             "Individual_Property_Name": "NONE", 
             "NONE": {
+                "Correlated_Relationship_Type_Order": [
+                    "TRANSITORY", 
+                    "INFORMAL", 
+                    "MARITAL", 
+                    "TRANSACTIONAL"
+                ], 
                 "Extra_Relational_Flag_Type": "Correlated", 
-                "Max_Simultaneous_Informal_Relationships_Females": 2, 
-                "Max_Simultaneous_Informal_Relationships_Males": 3, 
-                "Max_Simultaneous_Marital_Relationships_Females": 2, 
-                "Max_Simultaneous_Marital_Relationships_Males": 2, 
-                "Max_Simultaneous_Transitory_Relationships_Females": 2, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 4, 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Female": 0.5, 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Male": 1, 
-                "Prob_Extra_Informal_Relationship_Female": 0, 
-                "Prob_Extra_Informal_Relationship_Male": 0, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Female": 0.25, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Male": 0.5, 
-                "Prob_Extra_Marital_Relationship_Female": 0, 
-                "Prob_Extra_Marital_Relationship_Male": 0, 
-                "Prob_Extra_Transitory_Relationship_Female": 0.8, 
-                "Prob_Extra_Transitory_Relationship_Male": 0.2
+                "Max_Simultaneous_Relationships_Female": [
+                    2, 
+                    2, 
+                    2, 
+                    0
+                ], 
+                "Max_Simultaneous_Relationships_Male": [
+                    4, 
+                    3, 
+                    2, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Female": [
+                    0.8, 
+                    0.5, 
+                    0.25, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Male": [
+                    0.2, 
+                    1.0, 
+                    0.5, 
+                    0
+                ]
             }
         }, 
         "Serialization_Test_Cycles": 0, 

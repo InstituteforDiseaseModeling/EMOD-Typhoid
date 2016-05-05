@@ -35,18 +35,13 @@ static const char* _module = "IndividualSTI";
 #define SLOTS_FILLED (uint64_t(0xFFFFFFFFFFFFFFFF))
 
 #define EXTRA_RELATIONAL_ALLOWED(rel)   (1 << (unsigned int)rel)
-#define EXTRA_TRANSITORY_ALLOWED    (EXTRA_RELATIONAL_ALLOWED(Kernel::RelationshipType::TRANSITORY))
-#define EXTRA_INFORMAL_ALLOWED    (EXTRA_RELATIONAL_ALLOWED(Kernel::RelationshipType::INFORMAL))
-#define EXTRA_MARITAL_ALLOWED    (EXTRA_RELATIONAL_ALLOWED(Kernel::RelationshipType::MARITAL))
 #define SUPER_SPREADER 0x8
 
-#define IS_SUPER_SPREADER()             ((promiscuity_flags & SUPER_SPREADER) != 0)
-#define IS_EXTRA_TRANSITORY_ALLOWED()   ((promiscuity_flags & EXTRA_TRANSITORY_ALLOWED) != 0)
-#define IS_EXTRA_INFORMAL_ALLOWED()     ((promiscuity_flags & EXTRA_INFORMAL_ALLOWED) != 0)
-#define IS_EXTRA_MARITAL_ALLOWED()      ((promiscuity_flags & EXTRA_MARITAL_ALLOWED) != 0)
-#define IS_EXTRA_ALLOWED(rel)           ((promiscuity_flags & EXTRA_RELATIONAL_ALLOWED((Kernel::RelationshipType::Enum)rel)) != 0)
-#define EXTRARELATIONAL_FLAGS()         (promiscuity_flags & (EXTRA_TRANSITORY_ALLOWED | EXTRA_INFORMAL_ALLOWED | EXTRA_MARITAL_ALLOWED))
+#define IS_SUPER_SPREADER()   ((promiscuity_flags & SUPER_SPREADER) != 0)
+#define IS_EXTRA_ALLOWED(rel) ((promiscuity_flags & EXTRA_RELATIONAL_ALLOWED((Kernel::RelationshipType::Enum)rel)) != 0)
+
 #define SIX_MONTHS (6*IDEALDAYSPERMONTH)
+#define MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES (MAX_SLOTS)
 
 namespace Kernel
 {
@@ -136,7 +131,6 @@ namespace Kernel
         return status;
     }
 
-#define MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES (MAX_SLOTS)
     void IndividualHumanSTI::SetSTINetworkParams( const STINetworkParameters& rNewNetParams )
     {
         net_params = rNewNetParams ;
@@ -157,7 +151,12 @@ namespace Kernel
             float intpart = 0.0;
 
             float fractpart = modff(max_num , &intpart);
-            max_relationships[rel] = int(intpart) + ((randgen->e() < fractpart) ? 1 : 0);
+            unsigned int fp = 0;
+            if( fractpart > 0.0 )
+            {
+                fp = ((randgen->e() < fractpart) ? 1 : 0);
+            }
+            max_relationships[rel] = int(intpart) + fp;
             totalMax += max_relationships[rel];
         }
         if( totalMax > MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES )
@@ -337,12 +336,6 @@ namespace Kernel
         , relationships_at_death()
         , num_lifetime_relationships(0)
         , last_6_month_relationships()
-        , age_for_transitory_stats(-42.0f)
-        , age_for_informal_stats(-42.0f)
-        , age_for_marital_stats(-42.0f)
-        , transitory_eligibility(0)
-        , informal_eligibility(0)
-        , marital_elibigility(0)
     {
         ZERO_ARRAY( queued_relationships );
         ZERO_ARRAY( active_relationships );
@@ -365,7 +358,7 @@ namespace Kernel
         sexual_debut_age = (std::max)(min_age_sexual_debut_in_days, debut_draw );
 
         // Promiscuity flags, including behavioral super-spreader
-        auto draw = Environment::getInstance()->RNG->e();
+        auto draw = randgen->e();
         if( draw < GET_CONFIGURABLE(SimulationConfig)->prob_super_spreader )
         {
             promiscuity_flags |= SUPER_SPREADER;
@@ -628,7 +621,7 @@ namespace Kernel
 
         bool is_any_available = false ;
         bool available[RelationshipType::COUNT];
-        float formation_rates[RelationshipType::COUNT];  // TRANSITORY, INFORMAL, MARITAL
+        float formation_rates[RelationshipType::COUNT];
         ZERO_ARRAY(formation_rates);
         float cumulative_rate = 0.0f;
         for( int type = 0; type < RelationshipType::COUNT; type++ )
@@ -647,12 +640,25 @@ namespace Kernel
 
         if( is_any_available )
         {
-            LOG_DEBUG_F( "%s: individual %d availability { %d, %d, %d }\n",
-                         __FUNCTION__, 
-                         suid.data, 
-                         available[RelationshipType::TRANSITORY], 
-                         available[RelationshipType::INFORMAL], 
-                         available[RelationshipType::MARITAL] );
+            if (LOG_LEVEL(DEBUG)) 
+            {
+                std::stringstream ss;
+                ss << __FUNCTION__ << "individual " << suid.data << " availability { ";
+                for( int i = 0 ; i < RelationshipType::COUNT ; ++i )
+                {
+                    ss << available[i];
+                    if( (i+1) < RelationshipType::COUNT )
+                    {
+                        ss << ", ";
+                    }
+                    else
+                    {
+                        ss << " ";
+                    }
+                }
+                ss << "\n";
+                LOG_DEBUG_F( ss.str().c_str() );
+            }
 
             // At least one relationship could be formed
             if (cumulative_rate > 0.0f)
@@ -775,7 +781,13 @@ namespace Kernel
     unsigned int
     IndividualHumanSTI::GetExtrarelationalFlags() const
     {
-        return EXTRARELATIONAL_FLAGS();
+        unsigned int bitmask = 0;
+        for( int i = 0 ; i < RelationshipType::COUNT ; ++i )
+        {
+            bitmask |= EXTRA_RELATIONAL_ALLOWED(i);
+        }
+        unsigned int flags = promiscuity_flags & bitmask;
+        return flags;
     }
 
     void
@@ -912,21 +924,6 @@ namespace Kernel
     IndividualHumanSTI::GetRelationshipsAtDeath()
     {
         return relationships_at_death;
-    }
-
-    std::string
-    promiscuity_flags_as_string( unsigned char byteIn )
-    {
-        //std::ostringstream retThis;
-        char retThis[5];
-        //fprintf( stdout, "promiscuity_flags=%x\n", byteIn );
-        retThis[0] = ( ( byteIn & SUPER_SPREADER ) ? 'S' : '-' );
-        retThis[1] = ( ( byteIn & EXTRA_MARITAL_ALLOWED ) ? 'M' : '-' );
-        retThis[2] = ( ( byteIn & EXTRA_INFORMAL_ALLOWED ) ? 'I' : '-' );
-        retThis[3] = ( ( byteIn & EXTRA_TRANSITORY_ALLOWED ) ? 'T' : '-' );
-        retThis[4] = '\0';
-        //fprintf( stdout, "promiscuity_flags=%s\n", retThis );
-        return retThis;
     }
 
     // This method finds the lowest 0 in the relationshipSlots bitmask
@@ -1114,13 +1111,13 @@ namespace Kernel
         {
             for( int rel = 0; rel < RelationshipType::COUNT; rel++ )
             {
-                float prob_extrarelational = net_params.prob_extra_relational[rel][gender];
-                float draw = Environment::getInstance()->RNG->e();
+                RelationshipType::Enum rel_type = net_params.rel_type_order[rel];
+                float prob = net_params.prob_extra_rels[gender][rel];
 
-                if( draw < prob_extrarelational )
+                if( (prob > 0.0) && ((prob == 1.0) || (prob > randgen->e()) ) )
                 {
-                    LOG_DEBUG_F("extra %s allowed for %d\n", RelationshipType::pairs::lookup_key(rel), (int)(GetSuid().data));
-                    ret |= EXTRA_RELATIONAL_ALLOWED(rel);
+                    LOG_DEBUG_F("extra %s allowed for %d\n", RelationshipType::pairs::lookup_key(rel_type), (int)(GetSuid().data));
+                    ret |= EXTRA_RELATIONAL_ALLOWED(rel_type);
                 }
                 else if( net_params.extra_relational_flag_type != ExtraRelationalFlagType::Independent )
                 {
@@ -1133,7 +1130,7 @@ namespace Kernel
 
     float IndividualHumanSTI::GetMaxNumRels(Gender::Enum gender, RelationshipType::Enum type)
     {
-        return net_params.max_simultaneous_rels[type][gender];
+        return net_params.max_simultaneous_rels[gender][type];
     }
 
     void IndividualHumanSTI::disengageFromSociety()
@@ -1228,11 +1225,5 @@ namespace Kernel
         ar.labelElement("num_lifetime_relationships"              ) & human_sti.num_lifetime_relationships;
         ar.labelElement("last_6_month_relationships"              ) & human_sti.last_6_month_relationships;
         ar.labelElement("slot2RelationshipDebugMap"               ) & human_sti.slot2RelationshipDebugMap;
-        ar.labelElement("age_for_transitory_stats"                ) & human_sti.age_for_transitory_stats;
-        ar.labelElement("age_for_informal_stats"                  ) & human_sti.age_for_informal_stats;
-        ar.labelElement("age_for_marital_stats"                   ) & human_sti.age_for_marital_stats;
-        ar.labelElement("transitory_eligibility"                  ) & human_sti.transitory_eligibility;
-        ar.labelElement("informal_eligibility"                    ) & human_sti.informal_eligibility;
-        ar.labelElement("marital_elibigility"                     ) & human_sti.marital_elibigility;
     }
 }

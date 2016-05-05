@@ -39,8 +39,9 @@ namespace Kernel
         std::string key_colon_val;
 
         ExtraRelationalFlagType::Enum extra_relational_flag_type;
-        float prob_extra_relational[RelationshipType::COUNT][Gender::COUNT];
-        float max_simultaneous_rels[RelationshipType::COUNT][Gender::COUNT];
+        std::vector<std::vector<float>> prob_extra_rels;
+        std::vector<std::vector<float>> max_simultaneous_rels;
+        std::vector<RelationshipType::Enum> rel_type_order;
     };
 
     struct IIndividualHuman ;

@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.5.1041.0",
-		"DTK_Branch" : "SVN_Merge (9537c95)",
-		"DTK_Build_Date" : "May 13 2016 11:41:08"
+		"DTK_Version" : "2.6.1091.0",
+		"DTK_Branch" : "SVN_Merge3_Plus_SimpleCSW (004d8bf)",
+		"DTK_Build_Date" : "May 26 2016 10:20:14"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -4127,89 +4127,38 @@
 						"description" : "Determines if extra-relational flags will be distributed in an independent or correlated way.  Possible values are INDEPENDENT and CORRELATED.",
 						"default" : "Independent"
 					},
-					"Prob_Extra_Transitory_Relationship_Male" : {
-						"description" : "Probability of a male receiving an extra-transitory flag.  The flag allows the individual to seek additional relationships while currently in a transitory relationship. Used for INDEPENDENT and CORRELATED values of STI_Extra_Relational_Flag_Type.",
-						"type" : "float",
+					"Prob_Extra_Relationship_Male" : {
+						"description" : "Probability of a male receiving an extra relationship flag.  The flag allows the individual to seek additional relationships while currently in a relationship of the same type. Used for INDEPENDENT and CORRELATED values of STI_Extra_Relational_Flag_Type.",
+						"type" : "Vector Float",
 						"min" : 0,
 						"max" : 1,
 						"default" : 0.1
 					},
-					"Prob_Extra_Transitory_Relationship_Female" : {
-						"description" : "Probability of a female receiving an extra-transitory flag. The flag allows the individual to seek additional relationships while currently in a transitory relationship.  Used for INDEPENDENT and CORRELATED values of STI_Extra_Relational_Flag_Type.",
-						"type" : "float",
+					"Prob_Extra_Relationship_Female" : {
+						"description" : "Probability of a female receiving an extra relationship flag.  The flag allows the individual to seek additional relationships while currently in a relationship of the same type. Used for INDEPENDENT and CORRELATED values of STI_Extra_Relational_Flag_Type.",
+						"type" : "Vector Float",
 						"min" : 0,
 						"max" : 1,
 						"default" : 0.1
 					},
-					"Prob_Extra_Informal_Given_Extra_Transitory_Male" : {
-						"description" : "Probability of a male that received an extra-transitory flag also receiving an extra-informal flag. The flag allows the individual to seek additional relationships while currently in an informal relationship. Used only when STI_Extra_Relational_Flag_Type is CORRELATED.",
-						"type" : "float",
+					"Max_Simultaneous_Relationships_Male" : {
+						"description" : "Upper bound on the number of concurrent relationships of the given type that a male is allowed to have.",
+						"type" : "Vector Float",
 						"min" : 0,
-						"max" : 1,
-						"default" : 0.1
-					},
-					"Prob_Extra_Marital_Given_Extra_Informal_Male" : {
-						"description" : "Probability of a male that received an extra-informal flag also receiving an extra-marital flag. The flag allows the individual to seek additional relationships while currently in a marital relationship. Used only when STI_Extra_Relational_Flag_Type is CORRELATED.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.1
-					},
-					"Prob_Extra_Informal_Given_Extra_Transitory_Female" : {
-						"description" : "Probability of a female that received an extra-transitory flag also receiving an extra-informal flag. The flag allows the individual to seek additional relationships while currently in an informal relationship. Used only when STI_Extra_Relational_Flag_Type is CORRELATED.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.1
-					},
-					"Prob_Extra_Marital_Given_Extra_Informal_Female" : {
-						"description" : "Probability of a female that received an extra-informal flag also receiving an extra-marital flag. The flag allows the individual to seek additional relationships while currently in a marital relationship. Used only when STI_Extra_Relational_Flag_Type is CORRELATED.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.1
-					},
-					"Max_Simultaneous_Transitory_Relationships_Males" : {
-						"description" : "Upper bound on the number of concurrent transitory relationships that a male is allowed to have.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 10,
+						"max" : 63,
 						"default" : 1
 					},
-					"Max_Simultaneous_Informal_Relationships_Males" : {
-						"description" : "Upper bound on the number of concurrent informal relationships that a male is allowed to have.",
-						"type" : "float",
+					"Max_Simultaneous_Relationships_Female" : {
+						"description" : "Upper bound on the number of concurrent relationships of the given type that a female is allowed to have.",
+						"type" : "Vector Float",
 						"min" : 0,
-						"max" : 10,
+						"max" : 63,
 						"default" : 1
 					},
-					"Max_Simultaneous_Marital_Relationships_Males" : {
-						"description" : "Upper bound on the number of concurrent marital relationships that a male is allowed to have.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 10,
-						"default" : 1
-					},
-					"Max_Simultaneous_Transitory_Relationships_Females" : {
-						"description" : "Upper bound on the number of concurrent transitory relationships that a female is allowed to have.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 10,
-						"default" : 1
-					},
-					"Max_Simultaneous_Informal_Relationships_Females" : {
-						"description" : "Upper bound on the number of concurrent informal relationships that a female is allowed to have.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 10,
-						"default" : 1
-					},
-					"Max_Simultaneous_Marital_Relationships_Females" : {
-						"description" : "Upper bound on the number of concurrent marital relationships that a female is allowed to have.",
-						"type" : "float",
-						"min" : 0,
-						"max" : 10,
-						"default" : 1
+					"Correlated_Relationship_Type_Order" : {
+						"description" : "TBD",
+						"type" : "Vector String",
+						"value_source" : "RelationshipType::Enum"
 					}
 				}
 			},
@@ -12889,6 +12838,7 @@
 							"TRANSITORY",
 							"INFORMAL",
 							"MARITAL",
+							"TRANSACTIONAL",
 							"COUNT"
 						],
 						"description" : "The relationship type to which the condom usage probability is applied.",

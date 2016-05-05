@@ -360,18 +360,17 @@
                 {
                     "key_colon_val" : "Risk:HIGH",
                     "extra_relational_flag_type" : 1,
-                    "prob_extra_relational" :
+                    "prob_extra_rels" :
                     [
-                        [ 0.11, 0.12 ],
-                        [ 0.21, 0.22 ],
-                        [ 0.31, 0.32 ]
+                        [ 0.11, 0.12, 0.13, 0.14 ],
+                        [ 0.21, 0.22, 0.23, 0.24 ]
                     ],
                     "max_simultaneous_rels" :
                     [
-                        [ 1, 2 ],
-                        [ 3, 4 ],
-                        [ 5, 6 ]
-                    ]
+                        [ 1, 2, 3, 4 ],
+                        [ 5, 6, 7, 8 ]
+                    ],
+                    "rel_type_order" : [ 3, 0, 1, 2 ]
                 },
                 "relationships" : 
                 [
@@ -516,9 +515,9 @@
                         "has_migrated"      : true
                     }
                 ],
-                "max_relationships"                        : [ 4, 2, 1 ],
-                "queued_relationships"                     : [ 1, 1, 0 ],
-                "active_relationships"                     : [ 2, 1, 1 ],
+                "max_relationships"                        : [ 4, 2, 1, 63 ],
+                "queued_relationships"                     : [ 1, 1, 0,  0 ],
+                "active_relationships"                     : [ 2, 1, 1,  2 ],
                 "migrating_because_of_partner"             : false,
                 "promiscuity_flags"                        : 5,
                 "sexual_debut_age"                         : 14.5,
@@ -549,12 +548,6 @@
                         "value" : 1
                     }
                 ],
-                "age_for_transitory_stats"                 : 1.1,
-                "age_for_informal_stats"                   : 2.2,
-                "age_for_marital_stats"                    : 3.3,
-                "transitory_eligibility"                   : 4,
-                "informal_eligibility"                     : 5,
-                "marital_elibigility"                      : 6,
                 "has_active_TB"                            : true,
                 "pos_num_partners_while_CD4500plus"        : 3,
                 "neg_num_partners_while_CD4500plus"        : 4
@@ -2081,18 +2074,17 @@
                 {
                     "key_colon_val" : "Risk:HIGH",
                     "extra_relational_flag_type" : 1,
-                    "prob_extra_relational" :
+                    "prob_extra_rels" :
                     [
-                        [ 0.11, 0.12 ],
-                        [ 0.21, 0.22 ],
-                        [ 0.31, 0.32 ]
+                        [ 0.11, 0.12, 0.13, 0.14 ],
+                        [ 0.21, 0.22, 0.23, 0.24 ]
                     ],
                     "max_simultaneous_rels" :
                     [
-                        [ 1, 2 ],
-                        [ 3, 4 ],
-                        [ 5, 6 ]
-                    ]
+                        [ 1, 2, 3, 4 ],
+                        [ 5, 6, 7, 8 ]
+                    ],
+                    "rel_type_order" : [ 3, 0, 1, 2 ]
                 },
                 "relationships" : 
                 [
@@ -2237,9 +2229,9 @@
                         "has_migrated"      : true
                     }
                 ],
-                "max_relationships"                        : [ 4, 2, 1 ],
-                "queued_relationships"                     : [ 1, 1, 0 ],
-                "active_relationships"                     : [ 2, 1, 1 ],
+                "max_relationships"                        : [ 4, 2, 1, 63 ],
+                "queued_relationships"                     : [ 1, 1, 0,  0 ],
+                "active_relationships"                     : [ 2, 1, 1,  2 ],
                 "migrating_because_of_partner"             : false,
                 "promiscuity_flags"                        : 5,
                 "sexual_debut_age"                         : 14.5,
@@ -2269,13 +2261,7 @@
                         "key" : 4,
                         "value" : 1
                     }
-                ],
-                "age_for_transitory_stats"                 : 1.1,
-                "age_for_informal_stats"                   : 2.2,
-                "age_for_marital_stats"                    : 3.3,
-                "transitory_eligibility"                   : 4,
-                "informal_eligibility"                     : 5,
-                "marital_elibigility"                      : 6
+                ]
             }
         },
         {

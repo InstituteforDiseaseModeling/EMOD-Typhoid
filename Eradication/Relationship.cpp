@@ -842,6 +842,10 @@ namespace Kernel {
                 p_rel = new MarriageRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
                 break;
 
+            case RelationshipType::TRANSACTIONAL:
+                p_rel = new TransactionalRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
+                break;
+
             default:
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, 
                                                          "pParams->GetType()", 
@@ -967,6 +971,45 @@ namespace Kernel {
     {
         Relationship::serialize( ar, obj );
         MarriageRelationship& rel = *obj;
+    }
+
+    // ------------------------------------------------------------------------
+    // --- TransactionalRelationship
+    // ------------------------------------------------------------------------
+    BEGIN_QUERY_INTERFACE_DERIVED(TransactionalRelationship, Relationship)
+    END_QUERY_INTERFACE_DERIVED(TransactionalRelationship, Relationship)
+
+    TransactionalRelationship::TransactionalRelationship()
+    : Relationship()
+    {
+    }
+
+    TransactionalRelationship::TransactionalRelationship( const suids::suid& rRelId,
+                                                          IRelationshipManager* pRelMan,
+                                                          IRelationshipParameters* pParams,
+                                                          IIndividualHumanSTI * male_partnerIn, 
+                                                          IIndividualHumanSTI * female_partnerIn )
+        : Relationship( rRelId, pRelMan, pParams, male_partnerIn, female_partnerIn )
+    {
+        LOG_INFO_F( "(EEL) Creating TransactionalRelationship %d between %s and %s of length %f.\n",
+                    GetSuid().data,
+                    male_partnerIn->toString().c_str(),
+                    female_partnerIn->toString().c_str(),
+                    rel_timer
+                  );
+    }
+
+    Relationship* TransactionalRelationship::Clone()
+    {
+        return new TransactionalRelationship( *this );
+    }
+
+    REGISTER_SERIALIZABLE(TransactionalRelationship);
+
+    void TransactionalRelationship::serialize(IArchive& ar, TransactionalRelationship* obj)
+    {
+        Relationship::serialize( ar, obj );
+        TransactionalRelationship& rel = *obj;
     }
 }
 

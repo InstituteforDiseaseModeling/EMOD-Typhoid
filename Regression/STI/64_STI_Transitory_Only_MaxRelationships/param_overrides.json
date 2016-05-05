@@ -27,18 +27,12 @@
             "Individual_Property_Name": "NONE", 
             "NONE": {
                 "Extra_Relational_Flag_Type": "Independent", 
-                "Max_Simultaneous_Informal_Relationships_Females": 0, 
-                "Max_Simultaneous_Informal_Relationships_Males": 0, 
-                "Max_Simultaneous_Marital_Relationships_Females": 0, 
-                "Max_Simultaneous_Marital_Relationships_Males": 0, 
-                "Max_Simultaneous_Transitory_Relationships_Females": 63, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 63, 
-                "Prob_Extra_Informal_Relationship_Female": 0, 
-                "Prob_Extra_Informal_Relationship_Male": 0, 
-                "Prob_Extra_Marital_Relationship_Female": 0, 
-                "Prob_Extra_Marital_Relationship_Male": 0, 
-                "Prob_Extra_Transitory_Relationship_Female": 1, 
-                "Prob_Extra_Transitory_Relationship_Male": 1
+
+                "Prob_Extra_Relationship_Female": [ 1, 0, 0, 0 ],
+                "Prob_Extra_Relationship_Male"  : [ 1, 0, 0, 0 ],
+
+                "Max_Simultaneous_Relationships_Female": [ 63, 0, 0, 0 ],
+                "Max_Simultaneous_Relationships_Male"  : [ 63, 0, 0, 0 ]
             }
         }, 
 

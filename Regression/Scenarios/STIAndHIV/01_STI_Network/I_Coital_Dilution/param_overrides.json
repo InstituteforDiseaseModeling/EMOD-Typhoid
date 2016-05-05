@@ -3,6 +3,7 @@
     "parameters": {
         "Config_Name": "01I_Coital_Dilution",
 
+        "Run_Number" : 210,
         "Simulation_Duration": 730,
         "Demographics_Filenames": ["uniform_demographics.json","pfa_simple.json","PFA_overlay_rates.json"],
         "Base_Population_Scale_Factor": 0.002, 
@@ -26,11 +27,11 @@
             "Individual_Property_Name" : "NONE",
             "NONE" :
             {
-                "Prob_Extra_Transitory_Relationship_Female": 0.5,
-                "Prob_Extra_Transitory_Relationship_Male": 0.5,
+                "Prob_Extra_Relationship_Female": [ 0.5, 0, 0, 0 ],
+                "Prob_Extra_Relationship_Male"  : [ 0.5, 0, 0, 0 ],
 
-                "Max_Simultaneous_Transitory_Relationships_Females": 3, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 3
+                "Max_Simultaneous_Relationships_Female": [ 3, 1, 1, 0 ],
+                "Max_Simultaneous_Relationships_Male"  : [ 3, 1, 1, 0 ]
             }
         }
     }

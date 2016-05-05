@@ -37,15 +37,6 @@
 
 		"Sexual_Debut_Age_Min": 0,
 
-        "STI_Network_Params_By_Property" :
-        {
-            "NONE" :
-            {
-                "Prob_Extra_Transitory_Relationship_Female": 0,
-                "Prob_Extra_Transitory_Relationship_Male": 0
-            }
-        },
-
 		"____________REPORTING___________": "",
 		"Report_HIV_Period": 365,
 		"Report_Transmission": 1,

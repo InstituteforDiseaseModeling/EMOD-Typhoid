@@ -196,4 +196,26 @@ namespace Kernel
             DECLARE_SERIALIZABLE(MarriageRelationship);
 #pragma warning( pop )
     };
+
+    class TransactionalRelationship : public Relationship
+    {
+        public:
+            friend class RelationshipFactory;
+            DECLARE_QUERY_INTERFACE()
+
+        protected:
+            TransactionalRelationship();
+            TransactionalRelationship( const suids::suid& rRelId,
+                                       IRelationshipManager* pRelMan,
+                                       IRelationshipParameters* pParams, 
+                                       IIndividualHumanSTI* male_partner, 
+                                       IIndividualHumanSTI* female_partner );
+
+            virtual Relationship* Clone() override;
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+            DECLARE_SERIALIZABLE(TransactionalRelationship);
+#pragma warning( pop )
+    };
 }

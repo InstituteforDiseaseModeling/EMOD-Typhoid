@@ -29,10 +29,11 @@ namespace Kernel
 #define MAX_SLOTS (63)
 
     ENUM_DEFINE(RelationshipType,
-        ENUM_VALUE_SPEC( TRANSITORY  , 0)
-        ENUM_VALUE_SPEC( INFORMAL    , 1)
-        ENUM_VALUE_SPEC( MARITAL     , 2)
-        ENUM_VALUE_SPEC( COUNT       , 3))
+        ENUM_VALUE_SPEC( TRANSITORY    , 0)
+        ENUM_VALUE_SPEC( INFORMAL      , 1)
+        ENUM_VALUE_SPEC( MARITAL       , 2)
+        ENUM_VALUE_SPEC( TRANSACTIONAL , 3)
+        ENUM_VALUE_SPEC( COUNT         , 4))
 
     ENUM_DEFINE(RelationshipState,
         ENUM_VALUE_SPEC( NORMAL      , 0)
