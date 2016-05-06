@@ -498,6 +498,10 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 		initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 1, 0.5);
 		initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier", &typhoid_environmental_exposure_rate_seasonal_multiplier, "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
 		initConfigTypeMap( "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier", &typhoid_contact_exposure_rate_seasonal_multiplier, "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
+		initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate_Seasonal_Max", &typhoid_environmental_exposure_rate_seasonal_max, "Typhoid_Environmental_Exposure_Rate_Seasonal_Max.", 0, 10000, 0.5);
+		initConfigTypeMap( "Typhoid_Irrigation_Duration", &typhoid_irrigation_duration, "Typhoid_Irrigation_Duration.", 0, 200, 2);
+		initConfigTypeMap( "Typhoid_Irrigation_T2", &typhoid_irrigation_t2, "Typhoid_Irrigation_T2.", 0, 365, 2);
+		initConfigTypeMap( "Typhoid_Irrigation_T1", &typhoid_irrigation_t1, "Typhoid_Irrigation_T1.", 0, 365, 2);
 	
 	}
 #endif 
