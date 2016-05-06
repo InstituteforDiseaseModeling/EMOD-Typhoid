@@ -1,0 +1,9 @@
+{
+    "Default_Config_Path": "defaults/typhoid_default_config.json", 
+    "parameters": {
+        "Typhoid_Subclinical_Infectivity": 4000, 
+        "Typhoid_Acute_Infectivity": 4000, 
+        "Typhoid_Contact_Exposure_Rate": 0.01, 
+        "Typhoid_Prepatent_Infectivity": 2000
+    }
+}
