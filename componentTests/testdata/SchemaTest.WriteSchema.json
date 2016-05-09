@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.5.984.0",
-		"DTK_Branch" : "GitHub-369-FixComponentTests (f8e2dde)",
-		"DTK_Build_Date" : "Mar 28 2016 17:33:35"
+		"DTK_Version" : "2.5.1038.0",
+		"DTK_Branch" : "HIV-Ongoing (dd1c4a4)",
+		"DTK_Build_Date" : "May  6 2016 15:03:47"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -11724,33 +11724,6 @@
 					"Sim_Types" : [
 						"*"
 					],
-					"idmType:IndividualIntervention" : {
-						"base" : "interventions.idmAbstractType.IndividualIntervention"
-					},
-					"Actual_IndividualIntervention_Config" : {
-						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
-						"type" : "idmType:IndividualIntervention"
-					},
-					"Duration" : {
-						"description" : "The number of days to continue this intervention.",
-						"type" : "float",
-						"min" : -1,
-						"max" : 3.40282e+038,
-						"default" : -1
-					},
-					"Blackout_Period" : {
-						"description" : "TBD",
-						"type" : "float",
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 0
-					},
-					"Blackout_Event_Trigger" : {
-						"default" : "UNINITIALIZED STRING",
-						"description" : "TBD",
-						"type" : "Constrained String",
-						"value_source" : "<configuration>:Listed_Events.*"
-					},
 					"Demographic_Coverage_Time_Profile" : {
 						"type" : "enum",
 						"enum" : [
@@ -11775,9 +11748,36 @@
 						"max" : 365000,
 						"default" : 1
 					},
+					"idmType:IndividualIntervention" : {
+						"base" : "interventions.idmAbstractType.IndividualIntervention"
+					},
 					"Not_Covered_IndividualIntervention_Configs" : {
 						"description" : "if you qualify by everything except demographic coverage, you get this array of interventions",
 						"type" : "idmType:IndividualIntervention"
+					},
+					"Actual_IndividualIntervention_Config" : {
+						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"type" : "idmType:IndividualIntervention"
+					},
+					"Duration" : {
+						"description" : "The number of days to continue this intervention.",
+						"type" : "float",
+						"min" : -1,
+						"max" : 3.40282e+038,
+						"default" : -1
+					},
+					"Blackout_Period" : {
+						"description" : "TBD",
+						"type" : "float",
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 0
+					},
+					"Blackout_Event_Trigger" : {
+						"default" : "UNINITIALIZED STRING",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
 					},
 					"Demographic_Coverage" : {
 						"description" : "Fraction of individuals in the target demographic that will receive this intervention.",
