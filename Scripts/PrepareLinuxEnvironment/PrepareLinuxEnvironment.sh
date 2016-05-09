@@ -11,12 +11,13 @@ FontMagenta="\x1b[35;01m"
 FontCyan="\x1b[36;01m"
 OSTypeCheck=$(cat /etc/*-release | grep 'ID="centos"')
 OSVersionCheck=$(cat /etc/*-release | grep 'VERSION_ID="7"')
-declare -a EMODPackageRequired=("wget" "curl" "epel-release" "python-pip" "python-devel" "gcc-c++" "numpy" "scons" "python-matplotlib" "mpich" "mpich-devel" "boost-mpich" "boost-mpich-devel" "git" "xorg-x11-xauth" "git-lfs" "PyYAML")
+declare -a EMODPackageRequired=("wget" "curl" "python-devel" "gcc-c++" "numpy" "scons" "python-matplotlib" "mpich" "mpich-devel" "git" "xorg-x11-xauth" "git-lfs" "PyYAML")
 declare -a EMODPythonLibraryRequired=("numpy" "xlrd")
 EMODGitHubURL="https://github.com/InstituteforDiseaseModeling/"
 declare -a EMODSoftware=("EMOD" "EMOD-InputData")
 WarningMessage="\n${FontRed}Warning: $FontReset"
 IDMSupportEmail="idm-support@intven.com"
+LogFile=/tmp/EMODInstall.txt
 LineBreak="${FontGreen}********************************************************************************$FontReset\n"
 
 # Clear the screen for better presentation.
@@ -132,20 +133,30 @@ case ${AnswerYN:0:1} in
 esac
 
 # Prompt the user to udpate their system, providing a warning if they decline.
-read -p "Are you ready update on your system?  This is not required, but recommended. (y/n) " AnswerYN
+read -p "Are you ready update on your system?  This is a required step. (y/n) " AnswerYN
 case ${AnswerYN:0:1} in
   y|Y )
-    printf "\nThe system is silently updating now (yum -y update) and may take some time.  Your patience is appreciated.\n\n"
+    printf "\nThe system will begin the update process now (yum -y update) and may take some time.  This also requires the installation of the epel-release RPM repository and Python's pip library.
+
+For future reference all of the background steps will be written into ${LogFile}.
+
+Your patience is appreciated.\n"
     if [ ${TestState} -eq 0 ]
     then
-      sudo yum -y update
+      sudo yum -y update > ${LogFile}
+      if ! rpm -qa | grep -qw epel-release; then
+        sudo yum -y install epel-release >> ${LogFile}
+        sudo yum -y install python-pip >> ${LogFile}
+        sudo pip install --upgrade pip >> ${LogFile}
+      fi
     else
-      printf "${FontRed}TEST STATE ENABLED: sudo yum -y update${FontReset}\n"
+      printf "\n${FontRed}TEST STATE ENABLED: sudo yum -y update${FontReset}\n"
     fi
-    printf "\nThe system update check has completed.  We're now going to continue by installing third-party software packages that are required by the EMOD software.\n"
+    printf "\n${FontGreen}The system update check has completed.${FontReset}  We're now going to continue by installing third-party software packages that are required by the EMOD software.\n"
   ;;
   * )
-    printf "\nOK.  You may need to manually update your system to ensure any specific dependency versions are up-to-date.\n\nWe're now going to attempt to install the packages required by the EMOD software.\n"
+    printf "\nThis script cannot continue unless all of the up-to-date dependiences are installed.  Exiting.\n"
+    exit 0
   ;;
 esac
 
@@ -225,8 +236,7 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
       if [ ${TestState} -eq 0 ]
       then
         printf "\n"
-        sudo curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash
-        sudo pip install --upgrade pip
+        sudo curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash > ${LogFile}
       else
         printf "\n"
         printf "${LineBreak}"
@@ -235,8 +245,8 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
       do
         if [ ${TestState} -eq 0 ]
         then
-          printf "${LineBreak}"
-          sudo yum -y install ${Package}
+          printf "\nInstalling ${Package}"
+          sudo yum -y install ${Package} >> ${LogFile}
         else
           printf "${FontRed}TEST STATE ENABLED: sudo yum -y ${Package}\n"
         fi
@@ -245,14 +255,16 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
       do
         if [ ${TestState} -eq 0 ]
         then
-          printf "${LineBreak}"
-          sudo pip install ${MissingPIP}
+          printf "\nInstalling ${MissingPIP}"
+          sudo pip install ${MissingPIP} >> ${LogFile}
         else
           printf "${FontRed}TEST STATE ENABLED: sudo pip install ${MissingPIP}\n"
         fi
       done
-      printf "${LineBreak}" 
-      printf "\nIf an error was reported by the package manager, [CTRL]+[C] from this script and investigate.  Otherwise, we're continuing with the remaining steps.\n"
+      if more ${LogFile} | grep "error\|Error\|ERROR"; then
+        printf "\n\nOne or more errors may have occurred during the installation of the packages.  You'll need to review the ${LogFile} file and resolve the reported errors.  In the meantime, this script is exiting.\n\n"
+        exit 0
+      fi
     ;;
     * )
       printf "${WarningMessage}Without the required packages installed, the EMOD software will not run.  Exiting.\n\n"
@@ -293,14 +305,14 @@ case ${AnswerYN:0:1} in
         if [ ${TestState} -eq 0 ]
         then
           mkdir ~/${NewDirectory}
-          printf "\nA directory named ${FontYellow}${NewDirectory}${FontReset} was created in your home directory.\n"
+          printf "\n\nA directory named ${FontYellow}${NewDirectory}${FontReset} was created in your home directory.\n"
           cd ~/${NewDirectory}
         else
-          printf "\n${FontRed}TEST STATE ENABLED: Directory ${NewDirectory} not created.${FontReset}\n"
+          printf "\n$\n{FontRed}TEST STATE ENABLED: Directory ${NewDirectory} not created.${FontReset}\n"
         fi
       else
         DirectoryExists=0
-        printf "\nA directory named ${FontRed}${NewDirectory}${FontReset} already exists in your home directory.  Please enter another name.\n"
+        printf "\n\nA directory named ${FontRed}${NewDirectory}${FontReset} already exists in your home directory.  Please enter another name.\n"
       fi
     done
 
@@ -374,7 +386,7 @@ then
       else
         printf "\n${FontRed}TEST STATE ENABLED: ${BashChange}${FontReset}\n"
       fi
-      printf "\nA new environment variable has been added to your .bashrc file.  You'll need to source this file for these changes to take effect during your current session.\n"
+      printf "\n\nNew environment variables have been added to your .bashrc file.  You'll need to source this file for these changes to take effect during your current session.\n"
     ;;
     * )
       printf "${WarningMessage}You will need to add the following to your .bashrc file to ensure the EMOD software runs:\n\n${FontGreen}${BashChange}${FontReset}\n\n"
@@ -392,7 +404,7 @@ fi
 # Display the final message, completing the script run.
 printf "\n${FontGreen}Your EMOD software environment set-up is now complete!${FontReset}
 
-Remember to source your .bashrc files to make environment changes available for this session.
+Remember to source your .bashrc files to make environment changes available for this session.  Also, the output for the package installations is stored in ${LogFile}.
 
 If you have any questions you may refer to our documentation found at ${FontGreen}http://idmod.org/idmdoc${FontReset}.
 
