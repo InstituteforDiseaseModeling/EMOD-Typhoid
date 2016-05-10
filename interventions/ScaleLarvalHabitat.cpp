@@ -18,6 +18,16 @@ namespace Kernel
 
     IMPLEMENT_FACTORY_REGISTERED(ScaleLarvalHabitat)
 
+    ScaleLarvalHabitat::ScaleLarvalHabitat()
+    : SimpleVectorControlNode()
+    {
+    }
+
+    ScaleLarvalHabitat::ScaleLarvalHabitat( const ScaleLarvalHabitat& master )
+    : SimpleVectorControlNode( master )
+    {
+    }
+
     void ScaleLarvalHabitat::Update( float dt )
     {
         // Do not decay the scaled habitat,

@@ -92,6 +92,12 @@ namespace Kernel
     }
 
     MosquitoRelease::MosquitoRelease()
+    : BaseNodeIntervention()
+    , releasedSpecies()
+    , vector_genetics()
+    , self()
+    , mate()
+    , releasedNumber(10000)
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
         initConfigTypeMap( "Released_Number", &releasedNumber, MR_Released_Number_DESC_TEXT, 1, 1e8, 10000);
@@ -101,6 +107,16 @@ namespace Kernel
         initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, MR_Cost_To_Consumer_DESC_TEXT, 0, 999999, 0.0f);
         mate.pesticideResistance = VectorAllele::NotMated;
         mate.HEG = VectorAllele::NotMated;
+    }
+
+    MosquitoRelease::MosquitoRelease( const MosquitoRelease& master )
+    : BaseNodeIntervention( master )
+    , releasedSpecies( master.releasedSpecies )
+    , vector_genetics( master.vector_genetics )
+    , self( master.self )
+    , mate( master.mate )
+    , releasedNumber( master.releasedNumber )
+    {
     }
 
     bool

@@ -18,6 +18,10 @@ namespace Kernel
         DECLARE_FACTORY_REGISTERED(InterventionFactory, ScaleLarvalHabitat, INodeDistributableIntervention) 
 
     public:
+        ScaleLarvalHabitat();
+        ScaleLarvalHabitat( const ScaleLarvalHabitat& master );
+        virtual ~ScaleLarvalHabitat() {};
+
         virtual bool Configure( const Configuration * config );
         virtual void Update(float dt);
 

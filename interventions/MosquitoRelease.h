@@ -44,6 +44,7 @@ namespace Kernel
 
     public:
         MosquitoRelease();
+        MosquitoRelease( const MosquitoRelease& master );
         virtual ~MosquitoRelease() { }
 
         // INodeDistributableIntervention

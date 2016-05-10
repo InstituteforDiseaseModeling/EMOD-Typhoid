@@ -24,6 +24,7 @@
         { "path": "116_Generic_SimpleVaccine_LinearInterpolation" },
         { "path": "117_Generic_SimpleVaccine_Piecewise" },
         { "path": "120_Generic_MigrationHeterogeneity" },
+        { "path": "123_Generic_NLHTIV_Distributing_Node_Targeted" },
         { "path": "Scenarios/Generic/01_SIR" },
         { "path": "Scenarios/Generic/02_SIR_Vaccinations/A_BaselineOutbreak" },
         { "path": "Scenarios/Generic/02_SIR_Vaccinations/B_Vaccinations" },
