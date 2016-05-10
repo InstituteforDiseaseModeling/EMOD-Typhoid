@@ -11,7 +11,7 @@ FontMagenta="\x1b[35;01m"
 FontCyan="\x1b[36;01m"
 OSTypeCheck=$(cat /etc/*-release | grep 'ID="centos"')
 OSVersionCheck=$(cat /etc/*-release | grep 'VERSION_ID="7"')
-declare -a EMODPackageRequired=("wget" "curl" "python-devel" "gcc-c++" "numpy" "scons" "python-matplotlib" "mpich" "mpich-devel" "git" "xorg-x11-xauth" "git-lfs" "PyYAML")
+declare -a EMODPackageRequired=("wget" "curl" "python-devel" "boost" "gcc-c++" "numpy" "scons" "python-matplotlib" "mpich" "mpich-devel" "git" "xorg-x11-xauth" "git-lfs" "PyYAML")
 declare -a EMODPythonLibraryRequired=("numpy" "xlrd")
 EMODGitHubURL="https://github.com/InstituteforDiseaseModeling/"
 declare -a EMODSoftware=("EMOD" "EMOD-InputData")
@@ -81,7 +81,7 @@ You'll need:
 1. sudo privileges to install packages.
 2. 6GB free in your home directory.
 3. Your computer connected to the Internet.
-4. A GitHub account with permissions to download the EMOD software.  Contact ${IDMSupportEmail} for details.
+4. A GitHub account to download the EMOD software.
 
 If you're not ready with the prerequisites, answer 'n' to the next question.\n\n"
 
@@ -342,8 +342,8 @@ esac
 # This is dynamic based upon the user's selection to download the source.
 if [ ${NewDirectory} ]
 then
-  declare -a BashChanges=("export EMOD_ROOT=~/${NewDirectory}/EMOD/DtkTrunk/" "export PATH=\$PATH:/usr/lib/mpich/bin/" "export PATH=\$PATH:.:\$EMOD_ROOT/Scripts/")
-  ln -s ~/${NewDirectory}/EMOD-InputData ~/${NewDirectory}/EMOD/DtkTrunk/
+  declare -a BashChanges=("export EMOD_ROOT=~/${NewDirectory}/EMOD" "export PATH=\$PATH:/usr/lib/mpich/bin/" "export PATH=\$PATH:.:\$EMOD_ROOT/Scripts/")
+  ln -s ~/${NewDirectory}/EMOD-InputData ~/${NewDirectory}/EMOD/InputData
 else
   declare -a BashChanges=("export PATH=\$PATH:.:/usr/lib/mpich/bin/")
 fi
