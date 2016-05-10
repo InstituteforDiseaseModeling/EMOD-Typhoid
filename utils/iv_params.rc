@@ -464,4 +464,6 @@ EXPONENTIAL_DURATION"
 #define Male_Circumcision_Distributed_Event_Trigger_DESC_TEXT "TBD"
 #define Male_Circumcision_Apply_If_Higher_Reduced_Acquire_DESC_TEXT "TBD"
 
-
+#define RV_Distributed_Event_Trigger_DESC_TEXT "TBD"
+#define RV_Expired_Event_Trigger_DESC_TEXT "TBD"
+#define RV_Duration_To_Wait_Before_Revaccination_DESC_TEXT "TBD"

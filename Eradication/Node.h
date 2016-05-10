@@ -116,6 +116,7 @@ namespace Kernel
         virtual float GetMeanAgeInfection()      const override;
         virtual void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer) override;
         virtual void UnregisterNewInfectionObserver(void* id) override;
+        virtual float GetBasePopulationScaleFactor() const override;
 
         // This method will ONLY be used for spatial reporting by input node ID, don't use it elsewhere!
         virtual ExternalNodeId_t GetExternalID() const;

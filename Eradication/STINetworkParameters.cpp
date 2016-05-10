@@ -179,7 +179,7 @@ namespace Kernel
 
     json::QuickBuilder STINetworkParametersMap::GetSchema()
     {
-        STINetworkParameters tmp_params("NONE") ;\
+        STINetworkParameters tmp_params("NONE");
         if( JsonConfigurable::_dryrun )
         {
             tmp_params.Configure( nullptr );

@@ -130,10 +130,10 @@ namespace Kernel
             }
             LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
                             dc,
-                            (float) target_coverage,
-                            (float) currentCoverageForIntervention,
-                            (float) totalWithoutIntervention,
-                            (float) totalWithIntervention
+                            float(target_coverage),
+                            float(currentCoverageForIntervention),
+                            float(totalWithoutIntervention),
+                            float(totalWithIntervention)
                         );
         }
         else

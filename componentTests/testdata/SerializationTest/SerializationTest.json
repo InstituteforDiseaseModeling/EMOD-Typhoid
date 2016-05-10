@@ -16,6 +16,70 @@
         {
             "Test" :
             {
+                "__class__":"RevaccinatableVaccine",
+                "cost_per_unit"                 : 1,
+                "expired"                       : false,
+                "dont_allow_duplicates"         : false,
+                "vaccine_type"                  : 2,
+                "vaccine_take"                  : 3.3,
+                "waning_effect" :
+                {
+                    "__class__":"WaningEffectMapLinear",
+                    "m_Expired"                : false,
+                    "m_EffectOriginal"         : 1.0,
+                    "m_EffectCurrent"          : 0.5,
+                    "m_ExpireAtDurationMapEnd" : true,
+                    "m_TimeSinceStart"         : 123,
+                    "m_DurationMap"            :
+                    [
+                        { "key": 1990, "value" : 0.1 },
+                        { "key": 1995, "value" : 0.2 },
+                        { "key": 2000, "value" : 0.3 }
+                    ]
+                },
+                "m_TimeSinceVaccination"              : 123,
+                "m_DurationToWaitBeforeRevaccination" : 200,
+                "m_DistributedEventTrigger"           : "Event_8",
+                "m_ExpiredEventTrigger"               : "Event_7"
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectMapPiecewise",
+                "m_Expired"                : false,
+                "m_EffectOriginal"         : 0.5,
+                "m_EffectCurrent"          : 0.4,
+                "m_ExpireAtDurationMapEnd" : false,
+                "m_TimeSinceStart"         : 1,
+                "m_DurationMap"            :
+                [
+                    { "key": 1991, "value" : 0.31 },
+                    { "key": 1992, "value" : 0.22 },
+                    { "key": 1993, "value" : 0.13 }
+                ]
+            }
+        },
+        {
+            "Test" :
+            {
+                "__class__":"WaningEffectMapLinear",
+                "m_Expired"                : false,
+                "m_EffectOriginal"         : 1.0,
+                "m_EffectCurrent"          : 0.5,
+                "m_ExpireAtDurationMapEnd" : true,
+                "m_TimeSinceStart"         : 123,
+                "m_DurationMap"            :
+                [
+                    { "key": 1990, "value" : 0.1 },
+                    { "key": 1995, "value" : 0.2 },
+                    { "key": 2000, "value" : 0.3 }
+                ]
+            }
+        },
+        {
+            "Test" :
+            {
                 "__class__":"WaningEffectConstant",
                 "currentEffect" : 0.1
             }
@@ -695,9 +759,6 @@
                 "dont_allow_duplicates"         : false,
                 "vaccine_type"                  : 2,
                 "vaccine_take"                  : 3.3,
-                "current_reducedacquire"        : 4.4,
-                "current_reducedtransmit"       : 5.5,
-                "current_reducedmortality"      : 6.6,
                 "waning_effect" :
                 {
                     "__class__":"WaningEffectBoxExponential",
@@ -2541,9 +2602,6 @@
                         "dont_allow_duplicates"         : false,
                         "vaccine_type"                  : 1,
                         "vaccine_take"                  : 0.1,
-                        "current_reducedacquire"        : 0.2,
-                        "current_reducedtransmit"       : 0.3,
-                        "current_reducedmortality"      : 0.4,
                         "waning_effect" :
                         {
                             "__class__":"WaningEffectBoxExponential",

@@ -357,6 +357,7 @@
         "Report_HIV_ART": 0, 
         "Report_HIV_ByAgeAndGender": 0, 
         "Report_HIV_ByAgeAndGender_Collect_Circumcision_Data": 0, 
+        "Report_HIV_ByAgeAndGender_Collect_HIV_Data": 0, 
         "Report_HIV_ByAgeAndGender_Collect_IP_Data": 0, 
         "Report_HIV_ByAgeAndGender_Event_Counter_List": [], 
         "Report_HIV_ByAgeAndGender_Start_Year": 1980, 
