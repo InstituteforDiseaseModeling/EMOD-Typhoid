@@ -133,7 +133,7 @@ class RuntimeParameters:
         
     @property
     def input_path(self):
-        return self.config.get(self.os_type, 'local_input_root')
+        return self.config.get(self.os_type, 'home_input')
         
     @property
     def local_bin_root(self):
@@ -145,7 +145,11 @@ class RuntimeParameters:
         
     @property
     def shared_input(self):
-        return self.config.get('ENVIRONMENT', 'input_root')
+        #pdb.set_trace()
+        if params.local_execution or os.name=="posix":
+            return self.config.get(self.os_type, 'local_input_root')
+        else:
+            return self.config.get('ENVIRONMENT', 'input_root')
         
     @property
     def bin_root(self):
@@ -153,7 +157,10 @@ class RuntimeParameters:
         
     @property
     def user_input(self):
-        return self.config.get('ENVIRONMENT', 'home_input')
+        if params.local_execution or os.name=="posix":
+            return self.config.get(self.os_type, 'home_input')
+        else:
+            return self.config.get('ENVIRONMENT', 'home_input')
         
     @property
     def py_input(self):
