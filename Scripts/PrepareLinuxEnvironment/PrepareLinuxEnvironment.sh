@@ -363,6 +363,7 @@ case ${AnswerYN:0:1} in
     then
       cd EMOD-InputData
       git lfs fetch
+      git lfs checkout
       cd ..
     fi
     cd ~
