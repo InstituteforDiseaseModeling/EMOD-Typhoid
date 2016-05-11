@@ -11,6 +11,7 @@ FontMagenta="\x1b[35;01m"
 FontCyan="\x1b[36;01m"
 OSTypeCheck=$(cat /etc/*-release | grep 'ID="centos"')
 OSVersionCheck=$(cat /etc/*-release | grep 'VERSION_ID="7"')
+declare -a RequiredBasePackages=("epel-release" "python-pip")
 declare -a EMODPackageRequired=("wget" "curl" "python-devel" "boost" "boost-mpich" "boost-mpich-devel" "gcc-c++" "numpy" "scons" "python-matplotlib" "mpich" "mpich-devel" "git" "xorg-x11-xauth" "git-lfs" "PyYAML")
 declare -a EMODPythonLibraryRequired=("numpy" "xlrd")
 EMODGitHubURL="https://github.com/InstituteforDiseaseModeling/"
@@ -133,6 +134,7 @@ case ${AnswerYN:0:1} in
 esac
 
 # Prompt the user to udpate their system, providing a warning if they decline.
+# First, epel-release and python-pip have to be installed before all else.
 read -p "Are you ready to update your system?  This is a required step. (y/n) " AnswerYN
 case ${AnswerYN:0:1} in
   y|Y )
@@ -141,12 +143,27 @@ case ${AnswerYN:0:1} in
 Your patience is appreciated.\n\n${LineBreak}"
     if [ ${TestState} -eq 0 ]
     then
-      sudo yum -y update
-      if ! rpm -qa | grep -qw epel-release; then
-        sudo yum -y install epel-release
-        sudo yum -y install python-pip
-        sudo pip install --upgrade pip
-      fi
+      for BasePackageName in "${RequiredBasePackages[@]}"
+      do
+        while ! rpm -qa | grep -qw ${BasePackageName}; do
+          sudo yum -y install ${BasePackageName}
+          if ! rpm -qa | grep -qw ${BaseName}; then
+            read -p "The package ${BasePackageName} is still not found.  This may be due to network latency in downloading the software.  Try again? (y/n) " AnswerYN
+            case ${AnswerYN:0:1} in
+              y|Y )
+                printf "\n\nOK.  We'll try to install the package again.\n"
+              ;;
+              * )
+                printf "\nWithout the required packages in place, this script cannot continue.  Exiting.\n\n"
+                exit 0
+              ;;
+            esac
+          fi
+          if rpm -qa | grep -qw python-pip; then
+            sudo pip install --upgrade pip
+          fi
+        done
+      done
     else
       printf "\n${FontYellow}TEST STATE ENABLED: sudo yum -y update${FontReset}\n"
     fi
@@ -181,6 +198,7 @@ do
   StatusBar=${StatusBar}"\\u178C"
 done
 
+# Create two arrays of the packages that are missing.
 printf "\n\nWe're checking now to see if the required packages and libraries are present on this system.\n\nStatus:\n${FontYellow}${StatusBar}${FontReset}\n"
 declare -a EMODMissing
 for PackageRequired in "${EMODPackageRequired[@]}"
@@ -240,11 +258,27 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
         printf "\n"
         printf "${LineBreak}"
       fi
+      # Loop through the packages, checking it successfully installed each time.
+      # Prompt the user if the package cannot be found.  This is in place becuase some times network latency can impact the installation of packages.  Trying again sometimes results in a positive installation.
       for Package in "${EMODMissing[@]}"
       do
         if [ ${TestState} -eq 0 ]
         then
-          sudo yum -y install ${Package}
+          while ! rpm -qa | grep -qw ${Package}; do
+            sudo yum -y install ${Package}
+            if ! rpm -qa | grep -qw ${Package}; then
+              read -p "The package ${Package} did not install correctly.  Try again? (y/n) " AnswerYN
+              case ${AnswerYN:0:1} in
+                y|Y )
+                  printf "\n\nOK.  We'll try to install the package again.\n"
+                ;;
+                * )
+                  printf "\nWithout the required packages in place, this script cannot continue.  Exiting.\n\n"
+                  exit 0
+                ;;
+              esac
+            fi
+          done
         else
           printf "${FontYellow}TEST STATE ENABLED: sudo yum -y ${Package}\n"
         fi
