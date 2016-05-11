@@ -147,14 +147,17 @@ Your patience is appreciated.\n\n${LineBreak}"
       do
         while ! rpm -qa | grep -qw ${BasePackageName}; do
           sudo yum -y install ${BasePackageName}
-          if ! rpm -qa | grep -qw ${BaseName}; then
+          if ! rpm -qa | grep -qw ${BasePackageName}; then
             read -p "The package ${BasePackageName} is still not found.  This may be due to network latency in downloading the software.  Try again? (y/n) " AnswerYN
             case ${AnswerYN:0:1} in
               y|Y )
                 printf "\n\nOK.  We'll try to install the package again.\n"
               ;;
               * )
-                printf "\nWithout the required packages in place, this script cannot continue.  Exiting.\n\n"
+                printf "\nWithout the required packages in place, this script cannot continue.  You may try to install this package using the following command:
+     ${FontYellow}sudo yum install ${BasePackageName}${FontReset}
+
+Exiting.\n\n"
                 exit 0
               ;;
             esac
@@ -273,7 +276,10 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
                   printf "\n\nOK.  We'll try to install the package again.\n"
                 ;;
                 * )
-                  printf "\nWithout the required packages in place, this script cannot continue.  Exiting.\n\n"
+                  printf "\nWithout the required packages in place, this script cannot continue.  You may try to install the missing package using the following command:
+     ${FontYellow}sudo yum install ${Package}${FontReset}
+
+Exiting.\n\n"
                   exit 0
                 ;;
               esac
