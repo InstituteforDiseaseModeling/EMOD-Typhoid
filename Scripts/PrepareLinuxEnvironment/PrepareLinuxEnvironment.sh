@@ -11,7 +11,7 @@ FontMagenta="\x1b[35;01m"
 FontCyan="\x1b[36;01m"
 OSTypeCheck=$(cat /etc/*-release | grep 'ID="centos"')
 OSVersionCheck=$(cat /etc/*-release | grep 'VERSION_ID="7"')
-declare -a EMODPackageRequired=("wget" "curl" "python-devel" "boost" "gcc-c++" "numpy" "scons" "python-matplotlib" "mpich" "mpich-devel" "git" "xorg-x11-xauth" "git-lfs" "PyYAML")
+declare -a EMODPackageRequired=("wget" "curl" "python-devel" "boost" "boost-mpich" "boost-mpich-devel" "gcc-c++" "numpy" "scons" "python-matplotlib" "mpich" "mpich-devel" "git" "xorg-x11-xauth" "git-lfs" "PyYAML")
 declare -a EMODPythonLibraryRequired=("numpy" "xlrd")
 EMODGitHubURL="https://github.com/InstituteforDiseaseModeling/"
 declare -a EMODSoftware=("EMOD" "EMOD-InputData")
@@ -29,7 +29,7 @@ TestState=0
 if [ $1 ] && [ $1 == "test" ]
 then
   TestState=1
-  printf "${FontRed}********************************************************************************
+  printf "${FontYellow}********************************************************************************
 * TEST STATE ENABLED. Permanent system changes will not occur.                 *
 ********************************************************************************${FontReset}\n"
 fi
@@ -123,7 +123,7 @@ case ${AnswerYN:0:1} in
         exit 0
       fi
     else
-      printf "\n${FontRed}TEST STATE ENABLED: sudo option disabled${FontReset}\n\n"
+      printf "\n${FontYellow}TEST STATE ENABLED: sudo option disabled${FontReset}\n\n"
     fi
   ;;
   * )
@@ -148,10 +148,10 @@ Your patience is appreciated.\n\n${LineBreak}"
         sudo pip install --upgrade pip
       fi
     else
-      printf "\n${FontRed}TEST STATE ENABLED: sudo yum -y update${FontReset}\n"
+      printf "\n${FontYellow}TEST STATE ENABLED: sudo yum -y update${FontReset}\n"
     fi
     printf ${LineBreak}
-    printf "\n${FontGreen}The system update check has completed.${FontReset}  We're now going to continue by installing third-party software packages that are required by the EMOD software.\n"
+    printf "\n${FontGreen}The system update process has completed.${FontReset}  We're now going to continue by installing third-party software packages that are required by the EMOD software.\n"
   ;;
   * )
     printf "\nThis script cannot continue unless all of the up-to-date dependiences are installed.  Exiting.\n"
@@ -246,7 +246,7 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
         then
           sudo yum -y install ${Package}
         else
-          printf "${FontRed}TEST STATE ENABLED: sudo yum -y ${Package}\n"
+          printf "${FontYellow}TEST STATE ENABLED: sudo yum -y ${Package}\n"
         fi
       done
       for MissingPIP in "${EMODPIPMissing[@]}"
@@ -256,7 +256,7 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
           printf "\nInstalling ${MissingPIP}"
           sudo pip install ${MissingPIP}
         else
-          printf "${FontRed}TEST STATE ENABLED: sudo pip install ${MissingPIP}\n"
+          printf "${FontYellow}TEST STATE ENABLED: sudo pip install ${MissingPIP}\n"
         fi
       done
     ;;
@@ -268,7 +268,6 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
 else
   printf "\n\nAll of the required EMOD software dependencies are found on your system.  No additional software needs to be installed.\n"
 fi
-
 
 # Ask the user if they want to download the EMOD source.
 # Create a directory within their home and then prompt for GitHub credentials.
@@ -302,7 +301,7 @@ case ${AnswerYN:0:1} in
           printf "\nA directory named ${FontYellow}${NewDirectory}${FontReset} was created in your home directory.\n"
           cd ~/${NewDirectory}
         else
-          printf "\n${FontRed}TEST STATE ENABLED: Directory ${NewDirectory} not created.${FontReset}\n"
+          printf "\n${FontYellow}TEST STATE ENABLED: Directory ${NewDirectory} not created.${FontReset}\n"
         fi
       else
         DirectoryExists=0
@@ -316,14 +315,16 @@ case ${AnswerYN:0:1} in
       if [ ${TestState} -eq 0 ]
       then
         git clone ${EMODGitHubURL}${ToDownload}
-        if [ ${ToDownload}=="EMOD-InputData" ]
-        then
-          git lfs fetch
-        fi
       else
-        printf "${FontRed}TEST STATE ENABLED: git clone ${EMODGitHubURL}${ToDownload}${FontReset}\n"
+        printf "${FontYellow}TEST STATE ENABLED: git clone ${EMODGitHubURL}${ToDownload}${FontReset}\n"
       fi
     done
+    if [ -d "EMOD-InputData" ]
+    then
+      cd EMOD-InputData
+      git lfs fetch
+      cd ..
+    fi
     cd ~
     printf "${LineBreak}"
     printf "\nThe download from GitHub has finished and the software is located on this system at ${FontGreen}~/${NewDirectory}${FontReset}.\n"
@@ -379,7 +380,7 @@ then
         done
         echo "# END EMOD SOFTWARE CHANGES HERE" >> ~/.bashrc
       else
-        printf "\n${FontRed}TEST STATE ENABLED: .bashrc changes would occur here${FontReset}"
+        printf "\n${FontYellow}TEST STATE ENABLED: .bashrc changes would occur here${FontReset}"
       fi
       printf "\n\nNew environment variables have been added to your .bashrc file.  You'll need to source this file for these changes to take effect during your current session.\n"
     ;;
@@ -392,7 +393,7 @@ else
   then
     printf "\nYour .bashrc file appears to be up-to-date.  No additional changes were needed.\n"
   else
-    printf "${FontRed}TEST STATE ENABLED: .bashrc file already contains values${FontReset}\n"
+    printf "${FontYellow}TEST STATE ENABLED: .bashrc file already contains values${FontReset}\n"
   fi
 fi
 
