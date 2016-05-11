@@ -145,9 +145,9 @@ Your patience is appreciated.\n\n${LineBreak}"
     then
       for BasePackageName in "${RequiredBasePackages[@]}"
       do
-        while ! rpm -qa | grep -qw ${BasePackageName}; do
+        while ! rpm -qa | grep -qw ^${BasePackageName}; do
           sudo yum -y install ${BasePackageName}
-          if ! rpm -qa | grep -qw ${BasePackageName}; then
+          if ! rpm -qa | grep -qw ^${BasePackageName}; then
             read -p "The package ${BasePackageName} is still not found.  This may be due to network latency in downloading the software.  Try again? (y/n) " AnswerYN
             case ${AnswerYN:0:1} in
               y|Y )
@@ -207,7 +207,7 @@ declare -a EMODMissing
 for PackageRequired in "${EMODPackageRequired[@]}"
 do
   printf "${FontGreen}\\u178C${FontReset}"
-  if ! rpm -qa | grep -qw ${PackageRequired}; then
+  if ! rpm -qa | grep -qw ^${PackageRequired}; then
     EMODMissing+=(${PackageRequired}) 
   fi
 done
@@ -267,9 +267,9 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
       do
         if [ ${TestState} -eq 0 ]
         then
-          while ! rpm -qa | grep -qw ${Package}; do
+          while ! rpm -qa | grep -qw ^${Package}; do
             sudo yum -y install ${Package}
-            if ! rpm -qa | grep -qw ${Package}; then
+            if ! rpm -qa | grep -qw ^${Package}; then
               read -p "The package ${Package} did not install correctly.  Try again? (y/n) " AnswerYN
               case ${AnswerYN:0:1} in
                 y|Y )
