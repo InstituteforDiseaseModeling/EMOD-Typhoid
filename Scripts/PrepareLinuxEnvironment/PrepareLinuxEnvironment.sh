@@ -321,7 +321,7 @@ If you lack sufficient permissions to download the EMOD software, please contact
 read -p "Do you want to download the EMOD software now? (y/n)? " AnswerYN
 case ${AnswerYN:0:1} in
   y|Y )
-    printf "\nBefore we begin the download a new directory to house the files should be created.  This directory will be located in your home directory and must not currently exist.\n\n"
+    printf "\nBefore we begin the download a new directory to house the files should be created.  This directory will be located in your home directory and must not currently exist.  Special characters will be automatically stripped.\n\n"
     DirectoryExists=0
     until [ ${DirectoryExists} -eq 1 ]
     do
@@ -330,7 +330,7 @@ case ${AnswerYN:0:1} in
       then
         NewDirectory="IDM"
       else
-        NewDirectory="$(echo -e "${NewDirectory}" | tr -d '[[:space:]]')"
+        NewDirectory=${foo//[\ \!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\]\\\{\}\|\;\:\'\"\,\.\/\<\>\?]/}
       fi
       if [ ! -d "${NewDirectory}" ]
       then
