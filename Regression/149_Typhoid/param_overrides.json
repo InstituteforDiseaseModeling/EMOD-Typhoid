@@ -1,23 +1,3 @@
 {
-    "Default_Config_Path": "defaults/typhoid_default_config.json", 
-    "parameters": {
-        "Base_Year": 1940, 
-        "Simulation_Duration": 10000, 
-        "Typhoid_Subclinical_Infectivity": 400, 
-        "Typhoid_6month_Susceptible_Fraction": 0.1, 
-        "Typhoid_Acute_Infectivity": 400, 
-        "Typhoid_Environmental_Amplification": 3, 
-        "Python_Script_Path": ".", 
-        "Typhoid_Environmental_Exposure_Rate": 1, 
-        "Demographics_Filename": "TestDemographics2.json", 
-        "Report_Typhoid_ByAgeAndGender_Start_Year": 1970, 
-        "Environmental_Incubation_Period": 1, 
-        "Typhoid_3year_Susceptible_Fraction": 0.1, 
-        "Typhoid_Chronic_Infectivity": 4000, 
-        "Campaign_Filename": "campaign_vaccine_conservative.json", 
-        "Typhoid_Seasonal_Amplification": 3, 
-        "Base_Population_Scale_Factor": 0.1, 
-        "Default_Geography_Torus_Size": 10, 
-        "Typhoid_Prepatent_Infectivity": 200
-    }
+    "Default_Config_Path": "defaults/typhoid_default_config.json"
 }
