@@ -1,0 +1,346 @@
+{
+    "Events": [
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0025, 
+                "Intervention_Config": {
+                    "Delay_Distribution": "UNIFORM_DURATION", 
+                    "Delay_Period_Max": 30, 
+                    "Delay_Period_Min": 1, 
+                    "Outbreak_Source": "PrevalenceIncrease", 
+                    "class": "OutbreakIndividual"
+                }, 
+                "Number_Repetitions": 10, 
+                "Timesteps_Between_Repetitions": 730, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "Outbreak", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1930, 
+            "Target_Demographic": "Everyone", 
+            "class": "CampaignEvent"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0218, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 720, 
+                        "Initial_Effect": 0.59, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 27620, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 5, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "NorteVaccination1982 TWO DOSES", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1982.4167, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0218, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 720, 
+                        "Initial_Effect": 0.29, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 27618, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 5, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "NorteVaccination1982 ONE DOSE", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1982.4167, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0175, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 2555, 
+                        "Initial_Effect": 0.62, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 22168, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 6, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "OccidenteVaccination1983 SHORT INTERVAL ENTERIC CAPSULE", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1983.5833, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.017, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1095, 
+                        "Initial_Effect": 0.49, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 21598, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 6, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "OccidenteVaccination1983 LONG INTERVAL ENTERIC CAPSULE", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1983.5833, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0526, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1095, 
+                        "Initial_Effect": 0.44, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 66615, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 6, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "SurCentralVaccination1984 2 DOSES", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1984.8333, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0512, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1095, 
+                        "Initial_Effect": 0.51, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 64783, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 6, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "SurCentralVaccination1984 3 DOSES", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1984.8333, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.046, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1095, 
+                        "Initial_Effect": 0.69, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 58421, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 6, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "SurCentralVaccination1984 4 DOSES", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1984.8333, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0569, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1825, 
+                        "Initial_Effect": 0, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 21128, 
+                "Target_Age_Max": 9, 
+                "Target_Age_Min": 6, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "SurOrienteNorteVaccination1986EntericCoated", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1986.75, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0152, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1095, 
+                        "Initial_Effect": 0.535, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 13568, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 10, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "SurOrienteVaccination1986EntericCoated", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1986.75, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.06, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1825, 
+                        "Initial_Effect": 0.78, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 22586, 
+                "Target_Age_Max": 9, 
+                "Target_Age_Min": 5, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "SurOrienteNorteVaccination1986LiquidCapsule", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1986.75, 
+            "class": "CampaignEventByYear"
+        }, 
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 0.0157, 
+                "Intervention_Config": {
+                    "Cost_To_Consumer": 10.0, 
+                    "Vaccine_Take": 1, 
+                    "Vaccine_Type": "AcquisitionBlocking", 
+                    "Waning_Config": {
+                        "Box_Duration": 1825, 
+                        "Initial_Effect": 0.78, 
+                        "class": "WaningEffectBox"
+                    }, 
+                    "class": "SimpleVaccine"
+                }, 
+                "Number_Repetitions": 1, 
+                "Number_Vaccinated": 14037, 
+                "Target_Age_Max": 19, 
+                "Target_Age_Min": 10, 
+                "Target_Demographic": "ExplicitAgeRanges", 
+                "Timesteps_Between_Repetitions": 0, 
+                "class": "StandardInterventionDistributionEventCoordinator"
+            }, 
+            "Event_Name": "SurOrienteVaccination1986LiquidCapsule", 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Year": 1986.75, 
+            "class": "CampaignEventByYear"
+        }
+    ], 
+    "Use_Defaults": 1
+}
