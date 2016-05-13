@@ -1,11 +1,17 @@
-/***************************************************************************************************
+/*****************************************************************************
 
-Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2015 by Global Good Fund I, LLC. All rights reserved.
 
-EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
-To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+Except for any rights expressly granted to you in a separate license with the
+Global Good Fund (GGF), GGF reserves all rights, title and interest in the
+software and documentation.  GGF grants recipients of this software and
+documentation no other rights either expressly, impliedly or by estoppel.
 
-***************************************************************************************************/
+THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
+ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
+
+*****************************************************************************/
 
 #include "stdafx.h"
 #ifdef WIN32
@@ -44,13 +50,13 @@ static const char* _module = "SimulationConfig";
 namespace Kernel
 {
 
-ISimulationConfigFactory * SimulationConfigFactory::_instance = nullptr;
+ISimulationConfigFactory * SimulationConfigFactory::_instance = NULL;
 static const char* tb_drug_placeholder_string = "<tb_drug_name_goes_here>";
 static const char* malaria_drug_placeholder_string = "<malaria_drug_name_goes_here>";
 
 ISimulationConfigFactory * SimulationConfigFactory::getInstance()
 {
-    if( _instance == nullptr )
+    if( _instance == NULL )
     {
         _instance = new SimulationConfigFactory();
     }
@@ -70,7 +76,7 @@ SimulationConfig* SimulationConfigFactory::CreateInstance(const Configuration * 
         else
         {
             SimConfig->Release();
-            SimConfig = nullptr;
+            SimConfig = NULL;
         }
     }
     return SimConfig;
@@ -93,9 +99,6 @@ BEGIN_QUERY_INTERFACE_BODY(SimulationConfig)
      HANDLE_INTERFACE(IConfigurable)
 END_QUERY_INTERFACE_BODY(SimulationConfig)
 
-SimulationConfig::~SimulationConfig()
-{
-}
 
 bool SimulationConfig::Configure(const Configuration * inputJson)
 {
@@ -111,10 +114,11 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     initConfig( "Age_Initialization_Distribution_Type", age_initialization_distribution_type, inputJson, MetadataDescriptor::Enum(Age_Initialization_Distribution_Type_DESC_TEXT, Age_Initialization_Distribution_Type_DESC_TEXT, MDD_ENUM_ARGS(DistributionType)) );     // 'global'
 
     initConfig( "Migration_Model", migration_structure, inputJson, MetadataDescriptor::Enum(Migration_Model_DESC_TEXT, Migration_Model_DESC_TEXT, MDD_ENUM_ARGS(MigrationStructure)) ); // 'global'
+    initConfig( "Mortality_Time_Course", mortality_time_course, inputJson, MetadataDescriptor::Enum(Mortality_Time_Course_DESC_TEXT, Mortality_Time_Course_DESC_TEXT, MDD_ENUM_ARGS(MortalityTimeCourse)) ); // infection only (move)
     initConfig( "Population_Scale_Type", population_scaling, inputJson, MetadataDescriptor::Enum(Population_Scale_Type_DESC_TEXT, Population_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(PopulationScaling)) ); // node only (move)
     initConfig( "Simulation_Type", sim_type, inputJson, MetadataDescriptor::Enum(Simulation_Type_DESC_TEXT, Simulation_Type_DESC_TEXT, MDD_ENUM_ARGS(SimType)) ); // simulation only (???move)
+    initConfig( "Birth_Rate_Dependence", vital_birth_dependence, inputJson, MetadataDescriptor::Enum(Birth_Rate_Dependence_DESC_TEXT, Birth_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthDependence)) ); // node only (move)
     initConfig( "Death_Rate_Dependence", vital_death_dependence, inputJson, MetadataDescriptor::Enum(Death_Rate_Dependence_DESC_TEXT, Death_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalDeathDependence)) ); // node only (move)
-    initConfig( "Susceptibility_Scale_Type", susceptibility_scaling, inputJson, MetadataDescriptor::Enum("susceptibility_scaling", Susceptibility_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(SusceptibilityScaling)) ); // Can be node-level or individual susceptibility-level
 
     //vector enums
     if (sim_type == SimType::VECTOR_SIM || sim_type == SimType::MALARIA_SIM)
@@ -154,22 +158,14 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     {
         initConfig( "Evolution_Polio_Clock_Type", evolution_polio_clock_type, inputJson, MetadataDescriptor::Enum(Evolution_Polio_Clock_Type_DESC_TEXT, Evolution_Polio_Clock_Type_DESC_TEXT, MDD_ENUM_ARGS(EvolutionPolioClockType)) ); // infection (polio) only
         initConfig( "VDPV_Virulence_Model_Type", VDPV_virulence_model_type, inputJson, MetadataDescriptor::Enum(VDPV_Virulence_Model_Type_DESC_TEXT, VDPV_Virulence_Model_Type_DESC_TEXT, MDD_ENUM_ARGS(VDPVVirulenceModelType)) ); // susceptibility polio only
+        initConfig( "Susceptibility_Scale_Type", susceptibility_scaling, inputJson, MetadataDescriptor::Enum(Susceptibility_Scale_Type_DESC_TEXT, Susceptibility_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(SusceptibilityScaling)) ); // node only (move)
+
         if ((susceptibility_scaling == SusceptibilityScaling::LOG_LINEAR_FUNCTION_OF_TIME) || JsonConfigurable::_dryrun)
         {
             initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
         }
     }
 #endif
-     // susceptibility scaling enum
-     if ((susceptibility_scaling == SusceptibilityScaling::LOG_LINEAR_FUNCTION_OF_TIME) ||  (susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE))
-     {
-         initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-     }
-     if (susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE)
-     {
-         initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-         initConfigTypeMap( "Susceptibility_Scaling_Age0_Intercept", &susceptibility_scaling_intercept, Susceptibility_Scaling_Intercept_DESC_TEXT, 0.0f, 1.0f, 0.0f ); 
-    }
 
     // Generic parameters
     // Controller/high level stuff
@@ -184,9 +180,8 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     initConfigTypeMap( "Config_Name", &ConfigName, Config_Name_DESC_TEXT );
 
 
+    initConfigTypeMap( "Enable_Demographics_Reporting", &demographic_tracking, Enable_Demographics_Reporting_DESC_TEXT, true ); 
     initConfigTypeMap( "Enable_Demographics_Initial", &demographics_initial, Enable_Demographics_Initial_DESC_TEXT, true ); // 'global' (3 files)
-    initConfigTypeMap( "Default_Geography_Torus_Size", &default_torus_size, Default_Geography_Torus_Size_DESC_TEXT, 3, 100, 10);
-    initConfigTypeMap( "Default_Geography_Initial_Node_Population", &default_node_population, Default_Geography_Initial_Node_Population_DESC_TEXT, 0, INT_MAX, 1000);
 
     initConfigTypeMap( "Enable_Vital_Dynamics", &vital_dynamics, Enable_Vital_Dynamics_DESC_TEXT, true );
     initConfigTypeMap( "Enable_Disease_Mortality", &vital_disease_mortality, Enable_Disease_Mortality_DESC_TEXT, true );
@@ -202,7 +197,10 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
     initConfigTypeMap( "Maternal_Transmission_Probability", &prob_maternal_transmission, Maternal_Transmission_Probability_DESC_TEXT, 0.0f, 1.0f,    0.0f  );
 
-    initConfig( "Immunity_Initialization_Distribution_Type", immunity_initialization_distribution_type, inputJson, MetadataDescriptor::Enum("immunity_initialization_distribution_type", Immunity_Initialization_Distribution_Type_DESC_TEXT, MDD_ENUM_ARGS(DistributionType)) ); // polio and malaria
+    if (sim_type == SimType::POLIO_SIM || sim_type == SimType::MALARIA_SIM)
+    {
+        initConfigTypeMap( "Enable_Immunity_Initialization_Distribution", &enable_immunity_initialization_distribution, Enable_Immunity_Initialization_Distribution_DESC_TEXT, false ); // polio and malaria
+    }
 
     // Vector parameters
     if (sim_type == SimType::VECTOR_SIM || sim_type == SimType::MALARIA_SIM)
@@ -379,6 +377,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         }
     }
 
+#if !defined(_DLLS_)
 #ifdef ENABLE_TB
     if( sim_type == SimType::TB_SIM )
     {
@@ -396,6 +395,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         }
     }
 #endif
+#endif
 
 #ifdef ENABLE_TB
 #ifdef ENABLE_TBHIV
@@ -408,6 +408,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif // TB
 
 #ifndef DISABLE_MALARIA
+#if !defined(_DLLS_)
     if( sim_type == SimType::MALARIA_SIM )
     {
         // for schema?
@@ -420,12 +421,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         }
     }
 #endif
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // !!! See below after JsonConfigure::Configure() is called.  !!!
-    // !!! Below this value is updated with the built-in events   !!!
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    initConfigTypeMap( "Listed_Events", &listed_events, Listed_Events_DESC_TEXT);
+#endif
 
 #ifdef ENABLE_POLIO
 #if !defined(_DLLS_)
@@ -454,7 +450,8 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif
 #endif
 
-#ifndef DISABLE_STI
+    float days_between_symptomatic_and_death_mean = 0.0f;
+
     if( sim_type == SimType::STI_SIM ||
         sim_type == SimType::HIV_SIM 
       )
@@ -463,73 +460,89 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
         // DJK TODO: These parameters should be owned by Relationship
         initConfigTypeMap( "Enable_Coital_Dilution", &enable_coital_dilution, Enable_Coital_Dilution_DESC_TEXT, true );
-        initConfigTypeMap( "Coital_Dilution_Factor_2_Partners", &coital_dilution_2_partners, Coital_Dilution_Factor_2_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
-        initConfigTypeMap( "Coital_Dilution_Factor_3_Partners", &coital_dilution_3_partners, Coital_Dilution_Factor_3_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f);
-        initConfigTypeMap( "Coital_Dilution_Factor_4_Plus_Partners", &coital_dilution_4_plus_partners, Coital_Dilution_Factor_4_Plus_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
+        initConfigTypeMap( "Coital_Dilution_Factor_2_Partners", &coital_dilution_2_partners, Coital_Dilution_Factor_2_Partners_DESC_TEXT, 0.0f, 1.0f, 1.0f );
+        initConfigTypeMap( "Coital_Dilution_Factor_3_Partners", &coital_dilution_3_partners, Coital_Dilution_Factor_3_Partners_DESC_TEXT, 0.0f, 1.0f, 1.0f);
+        initConfigTypeMap( "Coital_Dilution_Factor_4_Plus_Partners", &coital_dilution_4_plus_partners, Coital_Dilution_Factor_4_Plus_Partners_DESC_TEXT, 0.0f, 1.0f, 1.0f );
+    
+        initConfigTypeMap( "Coital_Act_Rate_Transitory", &coital_act_rate[RelationshipType::TRANSITORY], Coital_Act_Rate_Transitory_DESC_TEXT, 0.0f, 20.0f, 0.33f );
+        initConfigTypeMap( "Coital_Act_Rate_Informal", &coital_act_rate[RelationshipType::INFORMAL], Coital_Act_Rate_Informal_DESC_TEXT, 0.0f, 20.0f, 0.33f );
+        initConfigTypeMap( "Coital_Act_Rate_Marital", &coital_act_rate[RelationshipType::MARITAL], Coital_Act_Rate_Marital_DESC_TEXT, 0.0f, 20.0f, 0.33f );
+    
+        initConfigTypeMap( "Mean_Length_Transitory_Relationships", &transitoryRelLengthMean, Mean_Length_Transitory_Relationships_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
+        initConfigTypeMap( "Spread_Length_Transitory_Relationships", &transitoryRelLengthSpread, Spread_Length_Transitory_Relationships_DESC_TEXT, 0.0001f, 100.0f, 1.0f );
+        initConfigTypeMap( "Mean_Length_Informal_Relationships", &informalRelLengthMean, Mean_Length_Informal_Relationships_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
+        initConfigTypeMap( "Spread_Length_Informal_Relationships", &informalRelLengthSpread, Spread_Length_Informal_Relationships_DESC_TEXT, 0.0001f, 100.0f, 1.0f );
+        initConfigTypeMap( "Mean_Length_Marital_Relationships", &maritalRelLengthMean, Mean_Length_Marital_Relationships_DESC_TEXT, 0.002739f, FLT_MAX, 1.0f );
+        initConfigTypeMap( "Spread_Length_Marital_Relationships", &maritalRelLengthSpread, Spread_Length_Marital_Relationships_DESC_TEXT, 0.0001f, 100.0f, 1.0f );
     }
 
-#ifndef DISABLE_HIV
     if( sim_type == SimType::HIV_SIM )
     {
         initConfigTypeMap( "Maternal_Transmission_ART_Multiplier", &maternal_transmission_ART_multiplier, Maternal_Transmission_ART_Multiplier_DESC_TEXT, 0.0f, 1.0f, 0.1f );
 
-        initConfigTypeMap( "Days_Between_Symptomatic_And_Death_Weibull_Scale", &days_between_symptomatic_and_death_lambda, Days_Between_Symptomatic_And_Death_Weibull_Scale_DESC_TEXT, 1, 3650.0f, 183.0f );   // Constrain away from 0 for use as a rate
+        initConfigTypeMap( "Probability_Willing_To_Enroll_In_ART",         &prob_willing_to_enroll_in_ART,         Probability_Willing_To_Enroll_In_ART_DESC_TEXT, 0, 1, 1 );
+        initConfigTypeMap( "Probability_Willing_To_Enroll_In_PreART",      &prob_willing_to_enroll_in_PreART,      Probability_Willing_To_Enroll_In_PreART_DESC_TEXT, 0, 1, 1 );
+        initConfigTypeMap( "Probability_Willing_To_Enroll_In_ANC",         &prob_willing_to_enroll_in_ANC,         Probability_Willing_To_Enroll_In_ANC_DESC_TEXT, 0, 1, 1 );
+        initConfigTypeMap( "Probability_Intends_To_Breastfeed",            &prob_intends_to_breastfeed,            Probability_Intends_To_Breastfeed_DESC_TEXT, 0, 1, 1 );
+
+        initConfigTypeMap( "Days_Between_Symptomatic_And_Death_Weibull_Mean", &days_between_symptomatic_and_death_mean, Days_Between_Symptomatic_And_Death_Weibull_Mean_DESC_TEXT, 1, 3650.0f, 183.0f );   // Constrain away from 0 for use as a rate
         initConfigTypeMap( "Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity", &days_between_symptomatic_and_death_inv_kappa, Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity_DESC_TEXT, 0.1f, 10.0f, 1.0f );   // Constrain away from 0 for use as a rate
     }
-#endif // DISABLE_HIV
-#endif // DISABLE_STI
 
-#ifdef ENABLE_TYPHOID
     if( sim_type == SimType::TYPHOID_SIM )
     {
-        initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 0, 100, 30 );
+        initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 1, 100, 30 );
         initConfigTypeMap( "Typhoid_Acute_Infectivity", &typhoid_acute_infectivity, "Typhoid_Acute_Infectivity.", 0, 1e7, 4000 );
         initConfigTypeMap( "Typhoid_Chronic_Infectivity", &typhoid_chronic_infectivity, "Typhoid_Chronic_Infectivity.", 0, 1e7, 1000 ); 
-        initConfigTypeMap( "Typhoid_Environmental_Amplification", &typhoid_environmental_amplification, "Typhoid_Environmental_Amplification.", 0, 100, 20 );
-        initConfigTypeMap( "Typhoid_Seasonal_Amplification", &typhoid_seasonal_amplification, "Typhoid_Seasonal_Amplification.", 0, 100, 3 );
         //initConfigTypeMap( "Typhoid_Environmental_Exposure", &typhoid_environmental_exposure, "Typhoid_Environmental_Exposure.", 0, 1, 0.2 ); 
         initConfigTypeMap( "Typhoid_Prepatent_Infectivity", &typhoid_prepatent_infectivity, "Typhoid_Prepatent_Infectivity.", 0, 1e7, 3e3 ); 
         initConfigTypeMap( "Typhoid_Protection_Per_Infection", &typhoid_protection_per_infection, "Typhoid_Protection_Per_Infection.", 0, 1, 0.1 ); 
         initConfigTypeMap( "Typhoid_Subclinical_Infectivity", &typhoid_subclinical_infectivity, "Typhoid_Subclinical_Infectivity.", 0, 1e7, 2000 );
-        initConfigTypeMap( "Typhoid_Carrier_Probability", &typhoid_carrier_probability, "Typhoid_Carrier_Probability.", 0, 1, 0.25 );
+		initConfigTypeMap( "Typhoid_Carrier_Probability_Male", &typhoid_carrier_probability_male, "Typhoid_Carrier_Probability_Male.", 0, 1, 0.25 );
 		initConfigTypeMap( "Typhoid_6month_Susceptible_Fraction", &typhoid_6month_susceptible_fraction, "Typhoid_6month_Susceptible_Fraction.", 0, 1, 0.5);
 		initConfigTypeMap( "Typhoid_3year_Susceptible_Fraction", &typhoid_3year_susceptible_fraction, "Typhoid_3year_Susceptible_Fraction.", 0, 1, 0.5);
-    	initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate", &typhoid_environmental_exposure_rate, "Typhoid_Environmental_Exposure_Rate.", 0, 10, 0.5);
-		initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 1, 0.5);
-		initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier", &typhoid_environmental_exposure_rate_seasonal_multiplier, "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
-		initConfigTypeMap( "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier", &typhoid_contact_exposure_rate_seasonal_multiplier, "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
-		initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate_Seasonal_Max", &typhoid_environmental_exposure_rate_seasonal_max, "Typhoid_Environmental_Exposure_Rate_Seasonal_Max.", 0, 10000, 0.5);
-		initConfigTypeMap( "Typhoid_Irrigation_Duration", &typhoid_irrigation_duration, "Typhoid_Irrigation_Duration.", 0, 200, 2);
-		initConfigTypeMap( "Typhoid_Irrigation_T2", &typhoid_irrigation_t2, "Typhoid_Irrigation_T2.", 0, 365, 2);
-		initConfigTypeMap( "Typhoid_Irrigation_T1", &typhoid_irrigation_t1, "Typhoid_Irrigation_T1.", 0, 365, 2);
-	
+		initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
+		initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 100, 0.5);
+		initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate", &typhoid_environmental_exposure_rate, "Typhoid_Environmental_Exposure_Rate.", 0, 100, 0.5);
+		initConfigTypeMap( "Typhoid_Environmental_Ramp_Duration", &typhoid_environmental_ramp_duration, "Typhoid_Environmental_Ramp_Duration.", 0, 200, 2);
+		initConfigTypeMap( "Typhoid_Environmental_Peak_End", &typhoid_environmental_peak_end, "Typhoid_Environmental_Peak_End.", 0, 365, 2);
+		initConfigTypeMap( "Typhoid_Environmental_Peak_Start", &typhoid_environmental_peak_start, "Typhoid_Environmental_Peak_Start.", 0, 365, 2);
+		initConfigTypeMap( "Typhoid_Environmental_Peak_Multiplier", &typhoid_environmental_peak_multiplier, "Typhoid_Environmental_Peak_Multiplier.", 0, 10000, 3 );
+
 	}
-#endif 
 
     LOG_DEBUG( "Calling main Configure...\n" );
     bool ret = JsonConfigurable::Configure( inputJson );
+    if( sim_type == SimType::TYPHOID_SIM )
+    {
+        environmental_incubation_period /= Sim_Tstep;
+    }
 
-#ifndef DISABLE_VECTOR
-        for (const auto& vector_species_name : vector_species_names)
+
+//LOG_DEBUG_F( "base_year initialized to %d\n", base_year );
+
+    if( sim_type == SimType::STI_SIM || sim_type == SimType::HIV_SIM )
+    {
+        maritalRelLengthScale    = maritalRelLengthMean       / Gamma::WindschitlApproximation(1.0 + 1.0/maritalRelLengthSpread);
+        informalRelLengthScale     = informalRelLengthMean   / Gamma::WindschitlApproximation(1.0 + 1.0/informalRelLengthSpread);
+        transitoryRelLengthScale = transitoryRelLengthMean / Gamma::WindschitlApproximation(1.0 + 1.0/transitoryRelLengthSpread);
+
+        LOG_DEBUG_F( "Transitory ~Weibull(%f,%f,mu=%f), Informal ~Weibull(%f,%f,mu=%f), Marital ~Weibull(%f,%f, mu=%f)\n",
+            transitoryRelLengthScale, transitoryRelLengthSpread, transitoryRelLengthMean,
+            informalRelLengthScale, informalRelLengthSpread, informalRelLengthMean,
+            maritalRelLengthScale, maritalRelLengthSpread, maritalRelLengthMean
+            );
+
+
+        if( sim_type == SimType::HIV_SIM )
         {
-            // vspMap only in SimConfig now. No more static map in VSP.
-            vspMap[ vector_species_name ] = VectorSpeciesParameters::CreateVectorSpeciesParameters(vector_species_name);
+            days_between_symptomatic_and_death_lambda = days_between_symptomatic_and_death_mean / Gamma::WindschitlApproximation(1.0 + days_between_symptomatic_and_death_inv_kappa);
         }
-#endif
-
+    }
 
     if( JsonConfigurable::_dryrun == true )
     {
         return true;
-    }
-
-    for( int i = 0 ; i < IndividualEventTriggerType::pairs::count()-2 ; i++ )
-    {
-        auto trigger = IndividualEventTriggerType::pairs::lookup_key( i );
-        if( trigger != nullptr )
-        {
-            listed_events.insert( trigger );
-        }
     }
 
     if( sim_type == SimType::VECTOR_SIM || sim_type == SimType::MALARIA_SIM )
@@ -539,10 +552,20 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             LOG_WARN("The simulation is being run without any mosquitoes!  Unless this was intentional, please specify the name of one or more vector species in the 'Vector_Species_Names' array and their associated vector species parameters.\n\n                     ,-.\n         `._        /  |        ,\n            `--._  ,   '    _,-'\n     _       __  `.|  / ,--'\n      `-._,-'  `-. \\ : /\n           ,--.-.-`'.'.-.,_-\n         _ `--'-'-;.'.'-'`--\n     _,-' `-.__,-' / : \\\n                _,'|  \\ `--._\n           _,--'   '   .     `-.\n         ,'         \\  |        `\n                     `-'\n\n");
         }
 
+#ifndef DISABLE_VECTOR
+#if !defined(_DLLS_)
+        for (const auto& vector_species_name : vector_species_names)
+        {
+            // going to do this a different way
+            // both these lines are still necessary. Arg... 
+            VectorSpeciesParameters::CreateVectorSpeciesParameters(vector_species_name);
+        }
+#endif
+#endif
     }
 
 #ifdef ENABLE_TB
-//#if !defined(_DLLS_)
+#if !defined(_DLLS_)
     //this section needs to be below the JsonConfigurable::Configure
     if( sim_type == SimType::TB_SIM )
     {    
@@ -551,21 +574,20 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             LOG_INFO("No custom drugs in config file!\n");
         }
 
-        LOG_DEBUG_F("Reading in drugs \n");
         for (const auto& tb_drug_name : tb_drug_names_for_this_sim)
         {
+            LOG_DEBUG_F("Reading in drugs \n");
             LOG_DEBUG_F("Reading in drug %s \n", tb_drug_name.c_str());
-            auto * tbdtp = TBDrugTypeParameters::CreateTBDrugTypeParameters(tb_drug_name);
-            release_assert( tbdtp  );
-            TBDrugMap[ tb_drug_name ] = tbdtp;
+            TBDrugTypeParameters::CreateTBDrugTypeParameters(tb_drug_name);
         }
     }
-//#endif
+#endif
 #endif
 
     if ( sim_type == SimType::MALARIA_SIM )
     {
 #ifndef DISABLE_MALARIA
+#if !defined(_DLLS_)
         // for each key in Malaria_Drug_Params, create/configure MalariaDrugTypeParameters object and add to static map
         try
         {
@@ -573,10 +595,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             json::Object::const_iterator itMdp;
             for (itMdp = mdp.Begin(); itMdp != mdp.End(); itMdp++)
             {
-                std::string drug_name( itMdp->name );
-                auto * mdtp = MalariaDrugTypeParameters::CreateMalariaDrugTypeParameters( drug_name );
-                release_assert( mdtp );
-                MalariaDrugMap[ drug_name ] = mdtp;
+                MalariaDrugTypeParameters::CreateMalariaDrugTypeParameters(itMdp->name);
             }
         }
         catch(json::Exception &e)
@@ -584,6 +603,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
             // Exception casting Malaria_Drug_Params to json::Object
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, e.what() ); 
         }
+#endif
 #endif
     }
 
@@ -717,6 +737,7 @@ SimulationConfig::SimulationConfig()
     , larval_density_dependence(LarvalDensityDependence::NO_DENSITY_DEPENDENCE)
     , load_balancing(LoadBalancingScheme::STATIC)
     , migration_structure(MigrationStructure::NO_MIGRATION)
+    , mortality_time_course(MortalityTimeCourse::MORTALITY_AFTER_INFECTIOUS)
     , PKPD_model(PKPDModel::FIXED_DURATION_CONSTANT_EFFECT)
     , population_scaling(PopulationScaling::USE_INPUT_FILE)
     , susceptibility_scaling(SusceptibilityScaling::CONSTANT_SUSCEPTIBILITY)
@@ -725,8 +746,9 @@ SimulationConfig::SimulationConfig()
     , vector_sugar_feeding(VectorSugarFeeding::VECTOR_SUGAR_FEEDING_NONE)
     , vector_larval_rainfall_mortality(VectorRainfallMortality::NONE)
     , heg_model(HEGModel::OFF)
+    , vital_birth_dependence(VitalBirthDependence::FIXED_BIRTH_RATE)
     , susceptibility_scaling_rate(-42.0f)
-    , susceptibility_scaling_intercept(-42.0f)
+    , demographic_tracking(false)
     , vector_aging(false)
     , temperature_dependent_feeding_cycle(false)
     , meanEggHatchDelay(0.0f)
@@ -735,7 +757,7 @@ SimulationConfig::SimulationConfig()
     , HEGhomingRate(0.0f)
     , HEGfecundityLimiting(0.0f)
     , human_feeding_mortality(DEFAULT_HUMAN_FEEDING_MORTALITY)
-    , immunity_initialization_distribution_type( DistributionType::DISTRIBUTION_OFF )
+    , enable_immunity_initialization_distribution(false)
     , parasiteSmearSensitivity(-42.0f)
     , newDiagnosticSensitivity(-42.0f)
     , falciparumMSPVars(0)
@@ -749,8 +771,6 @@ SimulationConfig::SimulationConfig()
     , larvalDensityMortalityScalar(10.0f)
     , larvalDensityMortalityOffset(0.1f)
     , demographics_initial(false)
-    , default_torus_size(10)
-    , default_node_population(1000)
     , lloffset(0)
     , coinfection_incidence(false)
     , enable_coinfection_mortality(false)
@@ -823,6 +843,7 @@ SimulationConfig::SimulationConfig()
 #endif
 
     , heterogeneous_intranode_transmission_enabled(false)
+    , Ind_Sample_Rate(-42.0f)
     , Sim_Duration(-42.0f)
     , Sim_Tstep(-42.0f)
     , starttime(-42.0f)
@@ -843,8 +864,6 @@ SimulationConfig::SimulationConfig()
 #ifdef ENABLE_TB
     , tb_drug_names_for_this_sim()
     , TBDrugMap()
-#endif
-#ifdef ENABLE_TBHIV
     , cd4_count_at_beginning_of_hiv_infection(0.0f)
     , cd4_count_at_end_of_hiv_infection(0.0f)
 #endif
@@ -876,22 +895,34 @@ SimulationConfig::SimulationConfig()
     , vspMap()
     , MalariaDrugMap()
     , m_jsonConfig(nullptr)
-#ifndef DISABLE_STI
     //, shortTermRelationshipLength(10.0f)
     , prob_super_spreader(0.0f)
     , enable_coital_dilution(true)
+    , coital_act_rate( )
     , coital_dilution_2_partners(1)
     , coital_dilution_3_partners(1)
     , coital_dilution_4_plus_partners(1)
+    , maritalRelLengthMean(20.0f)
+    , maritalRelLengthSpread(1.0f)
+    , maritalRelLengthScale(1.0f)
+    , informalRelLengthMean(1.0f)
+    , informalRelLengthSpread(1.0f)
+    , informalRelLengthScale(1.0f)
+    , transitoryRelLengthMean(0.01f)
+    , transitoryRelLengthSpread(1.0f)
+    , transitoryRelLengthScale(1.0f)
     //, femaleToMaleRelativeInfectivity(1.0f)
 
-#ifndef DISABLE_HIV
     , prob_maternal_transmission(1.0f)
     , days_between_symptomatic_and_death_lambda(183.0f)
     , days_between_symptomatic_and_death_inv_kappa(1.0f)
     , maternal_transmission_ART_multiplier(1.0f)
-#endif // DISABLE_HIV
-#endif // DISABLE_STI
+    , prob_willing_to_enroll_in_ART(0)
+    , prob_willing_to_enroll_in_PreART(0)
+    , prob_willing_to_enroll_in_ANC(0)
+    , prob_intends_to_breastfeed(0)
+    , environmental_incubation_period(0)
+  //    , typhoid_exposure_fraction(0.25)
 {
 #ifdef ENABLE_POLIO
     ZERO_ARRAY(PVinf0);
@@ -917,6 +948,10 @@ SimulationConfig::SimulationConfig()
     ZERO_ARRAY(vaccine_strains);
 #endif
 #endif
+}
+
+SimulationConfig::~SimulationConfig()
+{
 }
 
 }
