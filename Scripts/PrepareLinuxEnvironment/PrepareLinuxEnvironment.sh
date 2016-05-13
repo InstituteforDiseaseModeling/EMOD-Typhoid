@@ -31,7 +31,7 @@ if [ $1 ] && [ $1 == "test" ]
 then
   TestState=1
   printf "${FontYellow}********************************************************************************
-* TEST STATE ENABLED. Permanent system changes will not occur.                 *
+* TEST STATE ENABLED. Your system will not be changed.              *
 ********************************************************************************${FontReset}\n"
 fi
 
@@ -55,45 +55,40 @@ printf "
 # Eject the user if they attempt to run the script as root.
 if [ "$EUID" -eq 0 ]
 then
-  printf "${WarningMessage}This script should not be executed as root.  Exiting.\n\n"
+  printf "${WarningMessage}You cannot execute this script as root. Exiting the script.\n\n"
   exit 0
 fi
 
 # Display a welcome message to the user.
-printf "Welcome!  Inspired by a collaborative and multidisciplinary effort from the scientific community, IDM's innovative EMOD software tools provide a qualitative and analytical means to model infectious disease.  Our software source and input data files are provided to the scientific community to accelerate the exploration of disease eradication through the use of computational modeling.
-
-The purpose of this script is to ready a CentOS 7 machine for EMOD software."
+printf "Welcome! IDM's Epidemiological MODeling software (EMOD) provides a qualitative and analytical means to model infectious disease control and eradication. IDM provides the EMOD source and input data files to accelerate the exploration of disease eradication through the use of computational modeling.
+This script is an example of creating an environment for using EMOD. It was designed and tested to run on an Azure CentOS 7 virtual machine."
 
 # Check the user's version, displaying a message and exiting the script if not found to be supported.
 if [ ${#OSTypeCheck} -eq 0 ] || [ ${#OSVersionCheck} -eq 0 ]
 then
-  printf "\n${WarningMessage}CentOS 7 is currently the only version supported by this script and the EMOD software.  This script cannot proceed further.  Exiting.\n\n"
+  printf "\n${WarningMessage}This script is only supported on CentOS 7. Exiting the script.\n\n"
   exit 0
 fi
 
 # Provide an imformational message about the script's process to the user.
-printf "\n\nThe script will:
-1. Attempt to update your system.
-2. Install packages needed by the EMOD software.
-3. Modify your \$PATH variable.
-4. Download the EMOD software from our GitHub repository.
-
+printf "\n\nThis script will guide you through the following process:
+1. Attempt to update your system. (Optional)
+2. Install software packages needed to build the EMOD executable and run simulations. (Required)
+3. Modify your \$PATH variable. (Optional)
+4. Download the EMOD source and input data files from IDM's GitHub repository. (Optional)
 You'll need:
 1. sudo privileges to install packages.
 2. 6GB free in your home directory.
-3. Your computer connected to the Internet.
-4. A GitHub account to download the EMOD software.
-
-If you're not ready with the prerequisites, answer 'n' to the next question.\n\n"
+3. An Internet connection.\n\n"
 
 # Prompt the user to update their system, providing a warning if they decline.
-read -p "Are you ready to begin this process (y/n)? " AnswerYN
+read -p "Are you ready to begin? (y/n) " AnswerYN
 case ${AnswerYN:0:1} in
   y|Y )
-    printf "\nGreat!  Let's get started.\n\n"
+    printf "\nBeginning the process.\n\n"
   ;;
   * )
-    printf "${WarningMessage}OK.  Exiting the EMOD software environment preparation script now.\n\n"
+    printf "${WarningMessage}Exiting the script.\n\n"
     exit 0
   ;;
 esac
@@ -101,7 +96,7 @@ esac
 # Elevate the user to root level to update the system and install dependencies.
 # The user is prompted and the script will then execute a sudo command.
 # The system will then prompt for a password.
-read -p "First, you'll need to elevate your permissions.  Are you ready to sudo to root (y/n)? " AnswerYN
+read -p "You'll need to elevate your permissions. Are you ready to sudo to root? (y/n) " AnswerYN
 case ${AnswerYN:0:1} in
   y|Y )
     if [ $TestState -eq 0 ]
@@ -110,17 +105,17 @@ case ${AnswerYN:0:1} in
       sudoCheck=$(sudo sh -c 'echo $UID')
       if [ -z $sudoCheck ]
       then
-        printf "${WarningMessage}Without sudo permissions you cannot install the packages required by the EMOD software.  Exiting.\n\n"
+        printf "${WarningMessage}Without sudo permissions you cannot install the packages required by EMOD. Exiting the script.\n\n"
         exit 0
       elif [ $sudoCheck -eq 0 ]
       then
-        printf "\n${FontRed}********************************************************************************
-* Caution!  To install software on this system you're now sudo'd to root.  If  *
-* you escape this script, remember to reduce your permissions to prevent       *
-* accidental and catastrophic damage to your system.                           *
+        printf "\n${FontYellow}********************************************************************************
+* Caution!  You are now sudo'd to root. If you escape this script, remember    *
+* to reduce your permissions to prevent any accidental and/or catastrophic     *
+* damage to your system.                                                       *
 ********************************************************************************${FontReset}\n\n"
       else
-        printf "${WarningMessage}Elevation to sudo failed.  This script cannot proceed further with the installation of required software packages.  Exiting.\n\n"
+        printf "${WarningMessage}Elevation to sudo failed. The required software packages cannot be installed. Exiting the script.\n\n"
         exit 0
       fi
     else
@@ -128,19 +123,17 @@ case ${AnswerYN:0:1} in
     fi
   ;;
   * )
-    printf "${WarningMessage}The prerequisite libraries cannot be installed if you lack sudo permission.  Exiting.\n\n"
+    printf "${WarningMessage}Without sudo permissions, the prerequisite libraries cannot be installed. Exiting the script.\n\n"
     exit 0
   ;;
 esac
 
 # Prompt the user to udpate their system, providing a warning if they decline.
 # First, epel-release and python-pip have to be installed before all else.
-read -p "Are you ready to update your system?  This is a required step. (y/n) " AnswerYN
+read -p "Are you ready to update your system? This is required. (y/n) " AnswerYN
 case ${AnswerYN:0:1} in
   y|Y )
-    printf "\nThe system will begin the update process now (yum -y update) and may take some time.  This also requires the installation of the epel-release RPM repository and Python's pip library.
-
-Your patience is appreciated.\n\n${LineBreak}"
+    printf "\nThe system will begin the update process (yum -y update) which may take some time. It also requires the installation of the epel-release RPM repository and Python's pip library.\n\n${LineBreak}"
     if [ ${TestState} -eq 0 ]
     then
       for BasePackageName in "${RequiredBasePackages[@]}"
@@ -148,16 +141,16 @@ Your patience is appreciated.\n\n${LineBreak}"
         while ! rpm -qa | grep -qw ^${BasePackageName}; do
           sudo yum -y install ${BasePackageName}
           if ! rpm -qa | grep -qw ^${BasePackageName}; then
-            read -p "The package ${BasePackageName} is still not found.  This may be due to network latency in downloading the software.  Try again? (y/n) " AnswerYN
+            read -p "The package ${BasePackageName} is still not found. It may be due to network latency in downloading the software. Try again? (y/n) " AnswerYN
             case ${AnswerYN:0:1} in
               y|Y )
-                printf "\n\nOK.  We'll try to install the package again.\n"
+                printf "\n\nAttempting to install the package again.\n"
               ;;
               * )
-                printf "\nWithout the required packages in place, this script cannot continue.  You may try to install this package using the following command:
+                printf "\nWithout the required packages installed, the script cannot continue. You can try to install the package using the following command:
      ${FontYellow}sudo yum install ${BasePackageName}${FontReset}
 
-Exiting.\n\n"
+Exiting the script.\n\n"
                 exit 0
               ;;
             esac
@@ -171,10 +164,10 @@ Exiting.\n\n"
       printf "\n${FontYellow}TEST STATE ENABLED: sudo yum -y update${FontReset}\n"
     fi
     printf ${LineBreak}
-    printf "\n${FontGreen}The system update process has completed.${FontReset}  We're now going to continue by installing third-party software packages that are required by the EMOD software.\n"
+    printf "\n${FontGreen}The system update process has completed.${FontReset} Installing third-party software packages required by EMOD.\n"
   ;;
   * )
-    printf "\nThis script cannot continue unless all of the up-to-date dependiences are installed.  Exiting.\n"
+    printf "\nWithout all of the up-to-date dependencies installed, the script cannot continue. Exiting the script.\n"
     exit 0
   ;;
 esac
@@ -183,7 +176,7 @@ esac
 # The first two loops set the length of the status bar while the last two increase the user's status bar.
 # Initially these tasks look like they could be combined, but the printf statement for status
 # is needed and interrupts the flow.
-printf "\nThe EMOD software requires the following packages and their dependencies to be installed:"
+printf "\nEMOD requires the following packages and their dependencies:"
 Counter=1
 StatusBar=""
 for PackageRequired in "${EMODPackageRequired[@]}"
@@ -192,7 +185,7 @@ do
   Counter=$((Counter + 1))
   StatusBar=${StatusBar}"\\u178C"
 done
-printf "\n\nIn addition, the following Python packages need to be installed using pip:"
+printf "\n\nThe following Python packages need to be installed using pip:"
 Counter=1
 for PIPRequired in "${EMODPythonLibraryRequired[@]}"
 do
@@ -202,7 +195,7 @@ do
 done
 
 # Create two arrays of the packages that are missing.
-printf "\n\nWe're checking now to see if the required packages and libraries are present on this system.\n\nStatus:\n${FontYellow}${StatusBar}${FontReset}\n"
+printf "\n\nChecking to see if the required packages and libraries are on your system.\n\nStatus:\n${FontYellow}${StatusBar}${FontReset}\n"
 declare -a EMODMissing
 for PackageRequired in "${EMODPackageRequired[@]}"
 do
@@ -225,7 +218,7 @@ done
 
 # Once the EMODMissing array exists, present them to the user in an ordered list.
 if [ ${#EMODMissing[@]} -gt 0 ]; then
-  printf "\n\nThe following software is missing on this system and required for the EMOD software to work properly:\n"
+  printf "\n\nThe following software required by EMOD is missing on your system:\n"
   printf "\nPackages:\n"
   Counter=1
   for PackageMissing in "${EMODMissing[@]}"
@@ -248,9 +241,9 @@ fi
 if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
   # Prompt the user and automatically install the missing packages.
   # After the packages are installed pip is then used to install the required Python numby library.
-  # Note the curl command to add the repository.  This is for the git-lfs packaging.
+  # Note the curl command to add the repository. This is for the git-lfs packaging.
   printf "\n"
-  read -p "Are you ready to install these dependencies (packages and libraries) now?  This is a required step. (y/n) " AnswerYN
+  read -p "Are you ready to install the packages and libraries? (y/n) [This is required.] " AnswerYN
   case ${AnswerYN:0:1} in
     y|Y )
       if [ ${TestState} -eq 0 ]
@@ -261,8 +254,8 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
         printf "\n"
         printf "${LineBreak}"
       fi
-      # Loop through the packages, checking it successfully installed each time.
-      # Prompt the user if the package cannot be found.  This is in place becuase some times network latency can impact the installation of packages.  Trying again sometimes results in a positive installation.
+      # Loop through the packages, checking if successfully installed each time.
+      # Prompt the user if the package cannot be found. This is in place becuase some times network latency can impact the installation of packages  Trying again sometimes results in a positive installation.
       for Package in "${EMODMissing[@]}"
       do
         if [ ${TestState} -eq 0 ]
@@ -270,16 +263,16 @@ if [ ${#EMODMissing[@]} -gt 0 ] || [ ${#EMODPIPMissing[@]} -gt 0 ]; then
           while ! rpm -qa | grep -qw ^${Package}; do
             sudo yum -y install ${Package}
             if ! rpm -qa | grep -qw ^${Package}; then
-              read -p "The package ${Package} did not install correctly.  Try again? (y/n) " AnswerYN
+              read -p "The package ${Package} did not install correctly. Try again? (y/n) " AnswerYN
               case ${AnswerYN:0:1} in
                 y|Y )
-                  printf "\n\nOK.  We'll try to install the package again.\n"
+                  printf "\n\nAttempting to install the package again.\n"
                 ;;
                 * )
-                  printf "\nWithout the required packages in place, this script cannot continue.  You may try to install the missing package using the following command:
+                  printf "\nWithout the required packages, the script cannot continue. You can try to install the package using the following command:
      ${FontYellow}sudo yum install ${Package}${FontReset}
 
-Exiting.\n\n"
+Exiting the script.\n\n"
                   exit 0
                 ;;
               esac
@@ -301,27 +294,25 @@ Exiting.\n\n"
       done
     ;;
     * )
-      printf "${WarningMessage}Without the required packages installed, the EMOD software will not run.  Exiting.\n\n"
+      printf "${WarningMessage}Without the required packages installed, EMOD will not run. Exiting the script.\n\n"
       exit 0
     ;;
   esac
 else
-  printf "\n\nAll of the required EMOD software dependencies are found on your system.  No additional software needs to be installed.\n"
+  printf "\n\nAll of the required EMOD dependencies are on your system. No additional software needs to be installed.\n"
 fi
 
 # Ask the user if they want to download the EMOD source.
 # Create a directory within their home and then prompt for GitHub credentials.
 # The git client will then prompt the user for their credentials.
 # Visual feedback on the clone status is displayed by the git client.
-# Note the special case for the EMOD-InputData repository.  This is the only
+# Note the special case for the EMOD-InputData repository. This is the only
 # one that uses lfs support.
-printf "\nYour environment is now ready to get the EMOD source code (~4GB) from GitHub.  If you want to stop now, answer 'n' at the next prompt.  Otherwise, you'll be prompted for your GitHub credentials.
-
-If you lack sufficient permissions to download the EMOD software, please contact ${IDMSupportEmail}.\n\n"
-read -p "Do you want to download the EMOD software now? (y/n)? " AnswerYN
+printf "\nYour environment is now ready to get the EMOD source and data input files (~6GB) from GitHub.\n\n"
+read -p "Do you want to download the EMOD source? (y/n)? " AnswerYN
 case ${AnswerYN:0:1} in
   y|Y )
-    printf "\nBefore we begin the download a new directory to house the files should be created.  This directory will be located in your home directory and must not currently exist.  Special characters will be automatically stripped.\n\n"
+    printf "\nA new directory needs to be created for the EMOD source and the input data files. This directory will be located in your home directory and must not currently exist. Special characters will be automatically stripped.\n\n"
     DirectoryExists=0
     until [ ${DirectoryExists} -eq 1 ]
     do
@@ -330,7 +321,7 @@ case ${AnswerYN:0:1} in
       then
         NewDirectory="IDM"
       else
-        NewDirectory=${foo//[\ \!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\]\\\{\}\|\;\:\'\"\,\.\/\<\>\?]/}
+        NewDirectory=${NewDirectory//[\ \!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\]\\\{\}\|\;\:\'\"\,\.\/\<\>\?]/}
       fi
       if [ ! -d "${NewDirectory}" ]
       then
@@ -345,7 +336,7 @@ case ${AnswerYN:0:1} in
         fi
       else
         DirectoryExists=0
-        printf "\nA directory named ${FontRed}${NewDirectory}${FontReset} already exists in your home directory.  Please enter another name.\n"
+        printf "\nA directory named ${FontRed}${NewDirectory}${FontReset} already exists in your home directory. Please enter another name.\n"
       fi
     done
 
@@ -368,10 +359,10 @@ case ${AnswerYN:0:1} in
     fi
     cd ~
     printf "${LineBreak}"
-    printf "\nThe download from GitHub has finished and the software is located on this system at ${FontGreen}~/${NewDirectory}${FontReset}.\n"
+    printf "\nThe download from GitHub has finished. The EMOD source and input data files are located at ${FontGreen}~/${NewDirectory}${FontReset}.\n"
   ;;
   * )
-    printf "\nYour environment is ready for the EMOD software, but you selected to not download EMOD source and support GitHub.\n\nTo complete this process manually, execute the following from your command prompt:"
+    printf "\nYour environment is ready but you did not download the EMOD source.\n\nIf you want to manually download the source, execute the following from your command prompt:"
     for ToDownload in "${EMODSoftware[@]}"
     do
       printf "\n     ${FontGreen}git clone ${EMODGitHubURL}${ToDownload}${FontReset}"
@@ -384,7 +375,7 @@ esac
 # This is dynamic based upon the user's selection to download the source.
 if [ ${NewDirectory} ]
 then
-  declare -a BashChanges=("export EMOD_ROOT=~/${NewDirectory}/EMOD" "export PATH=\$PATH:/usr/lib/mpich/bin/" "export PATH=\$PATH:.:\$EMOD_ROOT/Scripts/")
+  declare -a BashChanges=("export EMOD_ROOT=~/${NewDirectory}/EMOD" "export PATH=\$PATH:/usr/lib64/mpich/bin/" "export PATH=\$PATH:.:\$EMOD_ROOT/Scripts/")
   ln -s ~/${NewDirectory}/EMOD-InputData ~/${NewDirectory}/EMOD/InputData
 else
   declare -a BashChanges=("export PATH=\$PATH:.:/usr/lib/mpich/bin/")
@@ -402,13 +393,13 @@ fi
 # Display commands to the user and remind them to source the file.
 if [ ${ENVChangesNeeded} -eq 1 ]
 then
-  printf "\nThe following PATH values need to be included into your environment file:"
+  printf "\nThe following PATH values need to be included in your environment file:"
   for AddToBash in "${BashChanges[@]}"
   do
     printf "\n     ${FontYellow}${AddToBash}${FontReset}"
   done
   printf "\n\n"
-  read -p "Are you OK with this change to your .bashrc file? (y/n) " AnswerYN
+  read -p "Do you want to add the PATH values to your .bashrc file? (y/n) " AnswerYN
   case ${AnswerYN:0:1} in
     y|Y )
       if [ ${TestState} -eq 0 ]
@@ -423,7 +414,7 @@ then
       else
         printf "\n${FontYellow}TEST STATE ENABLED: .bashrc changes would occur here${FontReset}"
       fi
-      printf "\n\nNew environment variables have been added to your .bashrc file.  You'll need to source this file for these changes to take effect during your current session.\n"
+      printf "\n\nThe environment variables have been added to your .bashrc file. You'll need to source this file for the changes to take effect during your current session.\n"
     ;;
     * )
       printf "${WarningMessage}You will need to add the following to your .bashrc file to ensure the EMOD software runs:\n\n${FontGreen}${BashChange}${FontReset}\n\n"
@@ -432,17 +423,13 @@ then
 else
   if [ ${TestState} -eq 0 ]
   then
-    printf "\nYour .bashrc file appears to be up-to-date.  No additional changes were needed.\n"
+    printf "\nYour .bashrc file appears to be up-to-date. No additional changes were needed.\n"
   else
     printf "${FontYellow}TEST STATE ENABLED: .bashrc file already contains values${FontReset}\n"
   fi
 fi
 
 # Display the final message, completing the script run.
-printf "\n${FontGreen}Your EMOD software environment set-up is now complete!${FontReset}
-
-Remember to source your .bashrc files to make environment changes available for this session.
-
-If you have any questions you may refer to our documentation found at ${FontGreen}http://idmod.org/idmdoc${FontReset}.
-
-Thank you for your interest in our software.\n\n"
+printf "\n${FontGreen}Your EMOD environment set-up is complete.${FontReset}
+Remember to source your .bashrc files to make the environment changes available for this session.
+For instructions on building the EMOD executable, go to the IDM documentation at ${FontGreen}http://idmod.org/idmdoc/#EMOD/EMODBuildAndRegression/MonolithicSCons.htm${FontReset}.\n\n"
