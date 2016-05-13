@@ -321,7 +321,7 @@ case ${AnswerYN:0:1} in
       then
         NewDirectory="IDM"
       else
-        NewDirectory=${NewDirectory//[\ \!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\]\\\{\}\|\;\:\'\"\,\.\/\<\>\?]/}
+        NewDirectory=${NewDirectory//[\ \!\@\#\$\%\^\&\*\(\)\=\+\[\]\\\{\}\|\;\:\'\"\,\.\/\<\>\?]/}
       fi
       if [ ! -d "${NewDirectory}" ]
       then
@@ -378,7 +378,7 @@ then
   declare -a BashChanges=("export EMOD_ROOT=~/${NewDirectory}/EMOD" "export PATH=\$PATH:/usr/lib64/mpich/bin/" "export PATH=\$PATH:.:\$EMOD_ROOT/Scripts/")
   ln -s ~/${NewDirectory}/EMOD-InputData ~/${NewDirectory}/EMOD/InputData
 else
-  declare -a BashChanges=("export PATH=\$PATH:.:/usr/lib/mpich/bin/")
+  declare -a BashChanges=("export PATH=\$PATH:.:/usr/lib64/mpich/bin/")
 fi
 
 # Check that environment variables are in the .bashrc file.
