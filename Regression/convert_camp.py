@@ -2,6 +2,7 @@
 
 import json
 import pdb
+import sys
 
 
 def createWaningBlock( profile, const, init, extra ):
@@ -22,7 +23,10 @@ def createWaningBlock( profile, const, init, extra ):
         waning_config["class"] = "WaningEffectBoxExponential"
     return waning_config 
 
-campaign = json.loads( open( "campaign.json" ).read() )
+campaign_filename = "campaign.json"
+if len( sys.argv > 0 ):
+    campaign_filename = sys.argv[1]
+campaign = json.loads( open( campaign_filename ).read() )
 
 for event in campaign["Events"]:
     if event["Event_Coordinator_Config"]["Intervention_Config"]["class"] in [ "SimpleBednet", "IRSHousingModification", "SugarTrap", "InsectKillingFence", "Larvicides", "SpaceSpraying", "SpatialRepellent", "ArtificialDiet", "OvipositionTrap", "OutdoorRestKill", "AnimalFeedKill", "SpatialRepellentHousingModification", "SimpleIndividualRepellent", "SimpleHousingModification", "ScreeningHousingModification", "InsectKillingFenceHousingModification", "ArtificialDietHousingModification", "HumanHostSeekingTrap" ]:
@@ -82,6 +86,18 @@ for event in campaign["Events"]:
             init = iv.pop("Reduced_Transmit")
         elif iv["Vaccine_Type"] == "MortalityBlocking":
             init = iv.pop("Reduced_Mortality")
+        try:
+            iv.pop("Reduced_Mortality")
+        except Exception as ex:
+            print( "Wouldn't waste your time with error message but some people say never have an unprocessed exception handler." )
+        try:
+            iv.pop("Reduced_Acquire")
+        except Exception as ex:
+            print( "Wouldn't waste your time with error message but some people say never have an unprocessed exception handler." )
+        try:
+            iv.pop("Reduced_Transmit")
+        except Exception as ex:
+            print( "Wouldn't waste your time with error message but some people say never have an unprocessed exception handler." )
 
         waning_config = createWaningBlock( profile, prime_const, init, second_const )
         iv[ "Waning_Config" ] = waning_config
