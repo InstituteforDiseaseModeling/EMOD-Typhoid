@@ -347,23 +347,27 @@ namespace Kernel
         float environmental_incubation_period; // NaturalNumber please
         float typhoid_acute_infectivity;
         float typhoid_chronic_infectivity;
-        float typhoid_environmental_amplification;
-        float typhoid_seasonal_amplification;
+
 //        float typhoid_environmental_exposure;
         float typhoid_prepatent_infectivity;
         float typhoid_protection_per_infection;
         float typhoid_subclinical_infectivity;
-        float typhoid_carrier_probability;
-		float typhoid_3year_susceptible_fraction;
-		float typhoid_6month_susceptible_fraction;
-		float typhoid_environmental_exposure_rate;
-		float typhoid_contact_exposure_rate;
-		float typhoid_environmental_exposure_rate_seasonal_multiplier;
-		float typhoid_contact_exposure_rate_seasonal_multiplier;
-		float typhoid_environmental_exposure_rate_seasonal_max;
-		float typhoid_irrigation_duration;
-		float typhoid_irrigation_t1;
-		float typhoid_irrigation_t2;
+        float typhoid_carrier_probability_male;
+        float typhoid_3year_susceptible_fraction;
+        float typhoid_6month_susceptible_fraction;
+        float typhoid_6year_susceptible_fraction;
+
+
+        float typhoid_environmental_exposure_rate;
+        float typhoid_contact_exposure_rate;
+        float typhoid_environmental_exposure_rate_seasonal_multiplier;
+        float typhoid_contact_exposure_rate_seasonal_multiplier;
+        //float typhoid_environmental_exposure_rate_seasonal_max;
+        float typhoid_environmental_ramp_duration;
+        float typhoid_environmental_peak_start;
+        float typhoid_environmental_peak_end;
+        //float typhoid_environmental_amplification;
+        float typhoid_environmental_peak_multiplier;
 
         ///////////////////////////////////////////
         SimulationConfig();

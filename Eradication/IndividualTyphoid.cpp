@@ -346,10 +346,10 @@ namespace Kernel
             }
 
 */
-            float irrigation_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_irrigation_duration;
-            float max_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_seasonal_amplification;
-            float t1 = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_irrigation_t1); //we assume ramp up must happen before day 365.. given.
-            float t2 = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_irrigation_t2); // last possible day to end infections is... august??
+            float irrigation_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_duration;
+            float max_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_multiplier;
+            float t1 = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_start); //we assume ramp up must happen before day 365.. given.
+            float t2 = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_end); // last possible day to end infections is... august??
 
             float slope = max_amplification / irrigation_days;
             float amplification = 0;
@@ -661,20 +661,24 @@ namespace Kernel
                     {
                         //LOG_INFO_F("SOMEONE FINSIHED SUB %d, %d\n", _subclinical_duration, subclinical_timer);
                         subclinical_timer = UNINIT_TIMER;
-                        float p2=0.0; // probability of infection turning chronic from subclinical
+                        float p2 = 0;
+                        float carrier_prob = 0;
                         int agebin = int(floor(getAgeInYears()/10));
                         if (agebin>=GallstoneDataLength)
                             agebin=GallstoneDataLength-1;
                         if (GetGender()==1)
                         {
                             p2=FemaleGallstones[agebin];
+                            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male * 1.3793;
                         } 
                         else if (GetGender()==0)
                         {
                             p2=MaleGallstones[agebin];
+                            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
+
                         }
                         //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
-                        if (randgen->e() < p2*GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability) {
+                        if (randgen->e() < p2*carrier_prob) {
                             chronic_timer = _chronic_duration;
                         }
                         else
@@ -736,18 +740,21 @@ namespace Kernel
                             else
                             {  //if they survived, calculate probability of being a carrier
                                 float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
+                                float carrier_prob = 0;
                                 int agebin = int(floor(getAgeInYears()/10));
                                 if (agebin>=GallstoneDataLength)
                                     agebin=GallstoneDataLength-1;
                                 if (GetGender()==1)
                                 {
                                     p3=FemaleGallstones[agebin];
+                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male * 1.3793;
                                 } 
                                 else if (GetGender()==0)
                                 {
                                     p3=MaleGallstones[agebin];
+                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
                                 }
-                                if (randgen->e()< p3*GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability)
+                                if (randgen->e()< p3*carrier_prob)
                                 {
                                     chronic_timer = _chronic_duration;
                                 }

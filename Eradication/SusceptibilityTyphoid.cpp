@@ -123,17 +123,26 @@ namespace Kernel
                 mod_acquire = 1.0f;
             }
         }
-
-        float age_boundary_3 = 6 * DAYSPERYEAR;
+		float age_boundary_3 = 6 * DAYSPERYEAR;
         if( age >= age_boundary_3 && age-dt< age_boundary_3 && mod_acquire == 0 )
+        {
+           if( randgen->e() < GET_CONFIGURABLE(SimulationConfig)->typhoid_6year_susceptible_fraction )
+            {
+                LOG_DEBUG_F( "6-yo being made susceptible.\n" );
+                mod_acquire = 1.0f;
+            }
+        }
+
+        float age_boundary_4 = 10 * DAYSPERYEAR;
+        if( age >= age_boundary_4 && age-dt< age_boundary_4 && mod_acquire == 0 )
         {
                 LOG_DEBUG_F( "Schoolkids being made susceptible.\n" );
                 mod_acquire = 1.0f;
             }
 
-        if( age > age_boundary_3+dt && mod_acquire == 0)
+        if( age > age_boundary_4+dt && mod_acquire == 0)
         {
-            LOG_INFO_F("SOMEONE WAS MISSED AGE %f CUTOFF DAY %f MODACQUIRE %f\n", age, age_boundary_3+dt, mod_acquire);
+            LOG_INFO_F("SOMEONE WAS MISSED AGE %f CUTOFF DAY %f MODACQUIRE %f\n", age, age_boundary_4+dt, mod_acquire);
         } 
     }
 }

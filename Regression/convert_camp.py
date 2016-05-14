@@ -24,7 +24,7 @@ def createWaningBlock( profile, const, init, extra ):
     return waning_config 
 
 campaign_filename = "campaign.json"
-if len( sys.argv > 0 ):
+if len( sys.argv ) > 1:
     campaign_filename = sys.argv[1]
 campaign = json.loads( open( campaign_filename ).read() )
 
