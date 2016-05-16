@@ -78,7 +78,7 @@ printf "\n\nThis script will guide you through the following process:
 4. Download the EMOD source and input data files from IDM's GitHub repository. (Optional)
 You'll need:
 1. sudo privileges to install packages.
-2. 6GB free in your home directory.
+2. 15GB free in your home directory.
 3. An Internet connection.\n\n"
 
 # Prompt the user to update their system, providing a warning if they decline.

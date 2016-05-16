@@ -24,7 +24,7 @@ This script will:
 
 Before running the script, you will need:
    1. sudo privileges to install packages.
-   2. 6GB free in your home directory.
+   2. 15GB free in your home directory.
    3. An Internet connection.
 
 "

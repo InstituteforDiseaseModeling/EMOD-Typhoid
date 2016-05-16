@@ -14,7 +14,7 @@ PrepareLinuxEnvironment.sh is an interactive script that will ask if you agree t
 
 Before running the script, you will need:
    1. sudo privileges to install packages.
-   2. 6GB free in your home directory.
+   2. 15GB free in your home directory.
    3. An Internet connection.
 
 Before you run the script you'll need to execute the following:
