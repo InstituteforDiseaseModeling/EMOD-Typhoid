@@ -42,9 +42,10 @@ namespace Kernel
     {
         if( !JsonConfigurable::_dryrun &&
             (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::STI_SIM) &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::TYPHOID_SIM) &&
             (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::HIV_SIM) )
         {
-            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "ReferenceTrackingEventCoordinator can only be used in STI and HIV simulations." );
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "ReferenceTrackingEventCoordinator can only be used in STI, HIV, and TYPHOID simulations." );
         }
 
         float update_period = DAYSPERYEAR;
@@ -64,6 +65,7 @@ namespace Kernel
                 tsteps_between_reps = 1;
             }
         }
+        LOG_DEBUG_F( "ReferenceTrackingEventCoordinator configured with update_period = %f, end_year = %f, and tsteps_between_reps (derived) = %d.\n", update_period, end_year, tsteps_between_reps );
         return ret;
     }
 
@@ -76,6 +78,7 @@ namespace Kernel
             LOG_INFO_F( "ReferenceTrackingEventCoordinator expired.\n" );
             distribution_complete = true;
         }
+        LOG_DEBUG_F( "Update...ing.\n" );
         return StandardInterventionDistributionEventCoordinator::Update( dt );
     }
 
@@ -83,6 +86,7 @@ namespace Kernel
     // and then to set the target coverage based on the error between measured and configured (for current time).
     void ReferenceTrackingEventCoordinator::preDistribute()
     {
+        LOG_DEBUG_F( "preDistributed.\n" );
         // Two variables that will be used by lambda function that's called for each individual;
         // these vars accumulate values across the population. 
         NonNegativeFloat totalWithIntervention = 0.0f;

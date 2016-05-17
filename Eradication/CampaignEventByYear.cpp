@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-#ifndef DISABLE_STI
+#if !defined(DISABLE_STI) || defined(ENABLE_TYPHOID)
     //
     // CampaignEventByYear class here.
     //
@@ -45,7 +45,11 @@ namespace Kernel
 
         // Bypasss CampaignEvent base class so that we don't break without Start_Day!
         bool ret = JsonConfigurable::Configure( inputJson );
+#if defined(ENABLE_TYPHOID)
+        start_day = (start_year - SimulationTyphoid::base_year) * DAYSPERYEAR;
+#else
         start_day = (start_year - SimulationSTI::base_year) * DAYSPERYEAR;
+#endif
         return ret;
     }
 

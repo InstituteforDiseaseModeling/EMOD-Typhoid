@@ -106,6 +106,9 @@ void Usage(char* cmd)
 #ifdef ENABLE_PYTHON_FEVER
             , "PY_SIM"
 #endif
+#ifdef ENABLE_TYPHOID
+            , "TYPHOID_SIM"
+#endif
     };
 
 #define KNOWN_SIM_COUNT (sizeof(simTypeListC)/sizeof(simTypeListC[0]))
