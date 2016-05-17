@@ -18,6 +18,7 @@ static const char* _module = "RevaccinatableVaccine";
 namespace Kernel
 {
     BEGIN_QUERY_INTERFACE_DERIVED(RevaccinatableVaccine,SimpleVaccine)
+        HANDLE_INTERFACE(IRevaccinatableVaccine)
     END_QUERY_INTERFACE_DERIVED(RevaccinatableVaccine,SimpleVaccine)
 
     IMPLEMENT_FACTORY_REGISTERED(RevaccinatableVaccine)
@@ -65,10 +66,10 @@ namespace Kernel
         // --- re-vaccinated at 18-months to ensure you have good coverage.
         // ------------------------------------------------------------------------------------------------
         bool distribute = true;
-        auto existing_vaccine_list = context->GetInterventionsByType(typeid(*this).name());
-        for( auto p_di : existing_vaccine_list )
+        std::list<void*> allowable_list = context->GetInterventionsByInterface( GET_IID(IRevaccinatableVaccine) );
+        for( auto p_allow : allowable_list )
         {
-            RevaccinatableVaccine* p_existing_vaccine = dynamic_cast<RevaccinatableVaccine*>(p_di);
+            IRevaccinatableVaccine* p_existing_vaccine = static_cast<IRevaccinatableVaccine*>(p_allow);
             if( !p_existing_vaccine->AllowRevaccination() )
             {
                 distribute = false;

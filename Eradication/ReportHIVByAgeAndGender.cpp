@@ -42,6 +42,7 @@ namespace Kernel
         , is_collecting_hiv_data(false)
         , is_collecting_ip_data(false)
         , stratify_infected_by_CD4(false)
+        , name_of_intervention_to_count()
         , ip_key_list()
         , ip_key_value_list_map()
         , map_key_constants()
@@ -79,6 +80,11 @@ namespace Kernel
                            &event_list,  
                            Report_HIV_ByAgeAndGender_Event_Counter_List_DESC_TEXT, 
                            false );
+
+        initConfigTypeMap( "Report_HIV_ByAgeAndGender_Has_Intervention_With_Name",
+                           &name_of_intervention_to_count,  
+                           "TBD"/*Report_HIV_ByAgeAndGender_Has_Intervention_With_Name_DESC_TEXT*/, 
+                           "" );
 
         bool ret = JsonConfigurable::Configure( inputJson );
 
@@ -249,8 +255,12 @@ namespace Kernel
                << "Tested Ever HIVPos"         << ", "
                << "Tested Ever HIVNeg"         << ", "
                << "Tested Positive"            << ", "
-               << "Tested Negative"            << ", "
-               << "Is Vaccinated";
+               << "Tested Negative"            ;
+
+        if( name_of_intervention_to_count.size() > 0 )
+        {
+            header << ", " << "HasIntervention(" << name_of_intervention_to_count << ")" ;
+        }
 
         for( auto ev : event_list )
         {
@@ -367,8 +377,12 @@ namespace Kernel
                                               << "," << rd.tested_ever_HIVpos
                                               << "," << rd.tested_ever_HIVneg
                                               << "," << rd.tested_positive
-                                              << "," << rd.tested_negative
-                                              << "," << rd.is_vaccinated;
+                                              << "," << rd.tested_negative;
+
+                            if( name_of_intervention_to_count.size() > 0 )
+                            {
+                                GetOutputStream() << "," << rd.has_intervention;
+                            }
 
                             for( auto ev : event_list )
                             {
@@ -471,10 +485,13 @@ namespace Kernel
             }
         }
 
-        auto existing_vaccines = individual->GetInterventionsContext()->GetInterventionsByType( "class Kernel::RevaccinatableVaccine" );
-        if( existing_vaccines.size() > 0 )
+        if( name_of_intervention_to_count.length() > 0 )
         {
-            data_map[ map_key ].is_vaccinated += mc_weight;
+            auto existing_vaccines = individual->GetInterventionsContext()->GetInterventionsByName( name_of_intervention_to_count );
+            if( existing_vaccines.size() > 0 )
+            {
+                data_map[ map_key ].has_intervention += mc_weight;
+            }
         }
     }
 

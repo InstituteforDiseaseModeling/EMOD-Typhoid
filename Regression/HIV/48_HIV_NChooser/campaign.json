@@ -37,8 +37,9 @@
                         "End_Year"   : 1961.25,
                         "Target_Disease_State" :
                         [ 
-                            [ "HIV_Negative", "Vaccinated_Negative" ]
+                            [ "HIV_Negative", "Not_Have_Intervention" ]
                         ],
+                        "Target_Disease_State_Has_Intervention_Name" : "Vaccine48",
                         "Property_Restrictions_Within_Node" : [],
                         "Age_Ranges_Years" : [ { "Min": 10, "Max": 19 }, { "Min": 40, "Max": 49 } ],
                         "Num_Targeted"     : [           600000,                    300000          ]
@@ -48,8 +49,9 @@
                         "End_Year"   : 1963.5,
                         "Target_Disease_State" :
                         [ 
-                            [ "HIV_Negative", "Vaccinated_Negative" ]
+                            [ "HIV_Negative", "Not_Have_Intervention" ]
                         ],
+                        "Target_Disease_State_Has_Intervention_Name" : "Vaccine48",
                         "Property_Restrictions_Within_Node" : [],
                         "Age_Ranges_Years"     : [ { "Min": 20, "Max": 29 }, { "Min": 50, "Max": 59 } ],
                         "Num_Targeted_Males"   : [           400000,                    200000          ],
@@ -60,8 +62,9 @@
                         "End_Year"   : 1965.25,
                         "Target_Disease_State" :
                         [ 
-                            [ "HIV_Negative", "Vaccinated_Negative" ]
+                            [ "HIV_Negative", "Not_Have_Intervention" ]
                         ],
+                        "Target_Disease_State_Has_Intervention_Name" : "Vaccine48",
                         "Property_Restrictions_Within_Node" : [],
                         "Age_Ranges_Years"     : [ { "Min": 10, "Max": 19 }, { "Min": 30, "Max": 39 }, { "Min": 50, "Max": 59 } ],
                         "Num_Targeted_Males"   : [           600000,                    400000,                     200000         ],
@@ -70,6 +73,7 @@
                 ],
                 "Intervention_Config": {
                     "class": "RevaccinatableVaccine",
+                    "Intervention_Name" : "Vaccine48",
                     "Vaccine_Type": "AcquisitionBlocking",
                     "Vaccine_Take": 1.0,
                     "Waning_Config": {

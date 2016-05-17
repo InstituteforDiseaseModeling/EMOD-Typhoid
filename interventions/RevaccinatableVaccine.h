@@ -14,10 +14,16 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class RevaccinatableVaccine : public SimpleVaccine
+    struct IRevaccinatableVaccine : ISupports
+    {
+        virtual bool AllowRevaccination() const = 0;
+    };
+
+    class RevaccinatableVaccine : public SimpleVaccine, public IRevaccinatableVaccine
     {
         DECLARE_FACTORY_REGISTERED(InterventionFactory, RevaccinatableVaccine, IDistributableIntervention)
         DECLARE_QUERY_INTERFACE()
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     public:
         RevaccinatableVaccine();
@@ -31,7 +37,7 @@ namespace Kernel
         virtual void Update(float dt) override;
 
     protected:
-        virtual bool AllowRevaccination() const;
+        virtual bool AllowRevaccination() const override;
 
         float        m_DurationToWaitBeforeRevaccination;
         float        m_TimeSinceVaccination;

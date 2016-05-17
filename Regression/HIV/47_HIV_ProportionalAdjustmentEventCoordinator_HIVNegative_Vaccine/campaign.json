@@ -25,6 +25,7 @@
                "Event_Coordinator_Config": {
                     "Intervention_Config": {
                         "class": "RevaccinatableVaccine",
+                        "Intervention_Name" : "Vaccine47",
                         "Vaccine_Type": "AcquisitionBlocking",
                         "Vaccine_Take": 0.75,
                         "Waning_Config": {

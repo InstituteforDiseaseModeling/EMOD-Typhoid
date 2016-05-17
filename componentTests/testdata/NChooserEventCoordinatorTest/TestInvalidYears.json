@@ -6,6 +6,7 @@
             "Start_Year" : 2000,
             "End_Year"   : 2001,
             "Target_Disease_State" : [ [ "HIV_Negative", "Male_Circumcision_Negative" ] ],
+            "Target_Disease_State_Has_Intervention_Name" : "",
             "Property_Restrictions_Within_Node" : 
             [
                 { "Location": "URBAN", "Income": "HIGH" },
@@ -22,9 +23,10 @@
             "End_Year"   : 1950,
             "Target_Disease_State" :
             [ 
-                [ "HIV_Negative", "Vaccinated_Negative" ], 
+                [ "HIV_Negative", "Not_Have_Intervention" ], 
                 [ "Male_Circumcision_Positive", "Tested_Negative" ]
             ],
+            "Target_Disease_State_Has_Intervention_Name" : "TheVaccine",
             "Property_Restrictions_Within_Node" : [],
             "Age_Ranges_Years" : [ { "Min": 18, "Max": 23 } ],
             "Num_Targeted"     : [           500            ],
@@ -33,21 +35,22 @@
         }
     ],
     "Intervention_Config": {
-        "class": "SimpleVaccine",
+        "class": "RevaccinatableVaccine",
+        "Intervention_Name" : "TheVaccine",
         "Vaccine_Type": "AcquisitionBlocking",
         "Vaccine_Take": 0.75,
-        "Primary_Decay_Time_Constant" : 0,
-        "Durability_Time_Profile": "LINEAR_INTERPOLATION_DURABILITY",
-        "Reduced_Acquire": 1,
-        "Durability_Map" :
-        {
-            "Times"  : [   0, 120, 240, 360 ],
-            "Values" : [ 0.7, 0.8, 1.0, 0.0 ]
+        "Waning_Config": {
+            "class": "WaningEffectMapLinear",
+            "Initial_Effect" : 1.0,
+            "Expire_At_Durability_Map_End" : 1,
+            "Durability_Map" :
+            {
+                "Times"  : [   0, 120, 240, 360 ],
+                "Values" : [ 0.7, 0.8, 1.0, 0.0 ]
+            }
         },
-        "Expire_At_Durability_Map_End" : 1,
         "Distributed_Event_Trigger" : "Vaccinated",
         "Expired_Event_Trigger"     : "VaccineExpired",
-        "Distribute_Only_If_Take" : 0,
         "Duration_To_Wait_Before_Revaccination" : 240,
         "Cost_To_Consumer": 10
     }

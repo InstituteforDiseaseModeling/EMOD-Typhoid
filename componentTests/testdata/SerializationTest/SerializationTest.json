@@ -17,6 +17,7 @@
             "Test" :
             {
                 "__class__":"RevaccinatableVaccine",
+                "name"                          : "class Kernel::RevaccinatableVaccine",
                 "cost_per_unit"                 : 1,
                 "expired"                       : false,
                 "dont_allow_duplicates"         : false,
@@ -218,6 +219,7 @@
                     [
                         {
                             "__class__" : "MaleCircumcision",
+                            "name"          : "class Kernel::MaleCircumcision",
                             "cost_per_unit" : 1,
                             "expired"       : false,
                             "dont_allow_duplicates" : false,
@@ -227,6 +229,7 @@
                         },
                         {
                             "__class__" : "ModifyStiCoInfectionStatus",
+                            "name"          : "class Kernel::ModifyStiCoInfectionStatus",
                             "cost_per_unit" : 2,
                             "expired"       : false,
                             "dont_allow_duplicates" : false,
@@ -234,6 +237,7 @@
                         },
                         {
                             "__class__":"HIVPreARTNotification",
+                            "name"         : "class Kernel::HIVPreARTNotification",
                             "cost_per_unit":3,
                             "expired":false,
                             "dont_allow_duplicates" : true,
@@ -567,6 +571,7 @@
                 [
                     {
                         "__class__" : "MaleCircumcision",
+                        "name"                          : "class Kernel::MaleCircumcision",
                         "cost_per_unit"                 : 1,
                         "expired"                       : false,
                         "dont_allow_duplicates"         : false,
@@ -576,6 +581,7 @@
                     },
                     {
                         "__class__" : "ModifyStiCoInfectionStatus",
+                        "name"          : "class Kernel::ModifyStiCoInfectionStatus",
                         "cost_per_unit" : 2,
                         "expired"       : false,
                         "dont_allow_duplicates" : false,
@@ -583,6 +589,7 @@
                     },
                     {
                         "__class__":"HIVDelayedIntervention",
+                        "name"          : "class Kernel::HIVDelayedIntervention",
                         "cost_per_unit":1,
                         "expired":false,
                         "dont_allow_duplicates" : true,
@@ -754,6 +761,7 @@
             "Test" :
             {
                 "__class__":"SimpleVaccine",
+                "name"                          : "class Kernel::SimpleVaccine",
                 "cost_per_unit"                 : 1,
                 "expired"                       : false,
                 "dont_allow_duplicates"         : false,
@@ -772,6 +780,7 @@
             "Test" :
             {
                 "__class__":"PropertyValueChanger",
+                "name"                  : "class Kernel::PropertyValueChanger",
                 "cost_per_unit"         : 1,
                 "expired"               : false,
                 "dont_allow_duplicates" : false,
@@ -788,6 +797,7 @@
             "Test" :
             {
                 "__class__":"MigrateIndividuals",
+                "name"          : "class Kernel::MigrateIndividuals",
                 "cost_per_unit":1,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -811,6 +821,7 @@
             "Test" :
             {
                 "__class__":"BroadcastEvent",
+                "name"          : "class Kernel::BroadcastEvent",
                 "cost_per_unit":1,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -821,6 +832,7 @@
             "Test" :
             {
                 "__class__":"PMTCT",
+                "name"          : "class Kernel::PMTCT",
                 "cost_per_unit":7,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -837,6 +849,7 @@
             "Test" :
             {
                 "__class__":"HIVSigmoidByYearAndSexDiagnostic",
+                "name"          : "class Kernel::HIVSigmoidByYearAndSexDiagnostic",
                 "cost_per_unit":7,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -889,6 +902,7 @@
             "Test" :
             {
                 "__class__":"HIVSetCascadeState",
+                "name"          : "class Kernel::HIVSetCascadeState",
                 "cost_per_unit":7,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -936,6 +950,7 @@
             "Test" :
             {
                 "__class__":"HIVRapidHIVDiagnostic",
+                "name"          : "class Kernel::HIVRapidHIVDiagnostic",
                 "cost_per_unit":7,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -984,6 +999,7 @@
             "Test" :
             {
                 "__class__":"HIVRandomChoice",
+                "name"          : "class Kernel::HIVRandomChoice",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1037,6 +1053,7 @@
             "Test" :
             {
                 "__class__":"HIVPreARTNotification",
+                "name"          : "class Kernel::HIVPreARTNotification",
                 "cost_per_unit":3,
                 "expired":false,
                 "dont_allow_duplicates" : true,
@@ -1047,6 +1064,7 @@
             "Test" :
             {
                 "__class__":"HIVPiecewiseByYearAndSexDiagnostic",
+                "name"          : "class Kernel::HIVPiecewiseByYearAndSexDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1105,6 +1123,7 @@
             "Test" :
             {
                 "__class__":"HIVMuxer",
+                "name"          : "class Kernel::HIVMuxer",
                 "cost_per_unit":5,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1146,6 +1165,7 @@
             "Test" :
             {
                 "__class__":"HIVDrawBlood",
+                "name"          : "class Kernel::HIVDrawBlood",
                 "cost_per_unit":4,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1193,6 +1213,7 @@
             "Test" :
             {
                 "__class__":"HIVDelayedIntervention",
+                "name"          : "class Kernel::HIVDelayedIntervention",
                 "cost_per_unit":1,
                 "expired":false,
                 "dont_allow_duplicates" : true,
@@ -1232,6 +1253,7 @@
             "Test" :
             {
                 "__class__":"DelayedIntervention",
+                "name"          : "class Kernel::DelayedIntervention",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1250,6 +1272,7 @@
             "Test" :
             {
                 "__class__":"HIVARTStagingCD4AgnosticDiagnostic",
+                "name"          : "class Kernel::HIVARTStagingCD4AgnosticDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1336,6 +1359,7 @@
             "Test" :
             {
                 "__class__":"HIVARTStagingByCD4Diagnostic",
+                "name"          : "class Kernel::HIVARTStagingByCD4Diagnostic",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1403,6 +1427,7 @@
             "Test" :
             {
                 "__class__":"HIVSimpleDiagnostic",
+                "name"          : "class Kernel::HIVSimpleDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1450,6 +1475,7 @@
             "Test" :
             {
                 "__class__":"CD4Diagnostic",
+                "name"          : "class Kernel::CD4Diagnostic",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1496,6 +1522,7 @@
             "Test" :
             {
                 "__class__":"ARTDropout",
+                "name"          : "class Kernel::ARTDropout",
                 "cost_per_unit"             : 2,
                 "expired"                   : false,
                 "dont_allow_duplicates"     : true,
@@ -1524,6 +1551,7 @@
             "Test" :
             {
                 "__class__":"ARTBasic",
+                "name"          : "class Kernel::ARTBasic",
                 "cost_per_unit"             : 1,
                 "expired"                   : false,
                 "dont_allow_duplicates"     : false,
@@ -1554,6 +1582,7 @@
             "Test" :
             {
                 "__class__":"AgeDiagnostic",
+                "name"          : "class Kernel::AgeDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1600,6 +1629,7 @@
             "Test" :
             {
                 "__class__":"GenericDrug",
+                "name"          : "class Kernel::GenericDrug",
                 "cost_per_unit"             : 1,
                 "expired"                   : false,
                 "dont_allow_duplicates"     : false,
@@ -1628,6 +1658,7 @@
             "Test" :
             {
                 "__class__":"BroadcastEventToOtherNodes",
+                "name"          : "class Kernel::BroadcastEventToOtherNodes",
                 "cost_per_unit":1,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -1956,6 +1987,7 @@
                     [
                         {
                             "__class__" : "MaleCircumcision",
+                            "name"          : "class Kernel::MaleCircumcision",
                             "cost_per_unit" : 1,
                             "expired"       : false,
                             "dont_allow_duplicates" : false,
@@ -1965,6 +1997,7 @@
                         },
                         {
                             "__class__" : "ModifyStiCoInfectionStatus",
+                            "name"          : "class Kernel::ModifyStiCoInfectionStatus",
                             "cost_per_unit" : 2,
                             "expired"       : false,
                             "dont_allow_duplicates" : false,
@@ -2332,6 +2365,7 @@
                 [
                     {
                         "__class__" : "MaleCircumcision",
+                        "name"          : "class Kernel::MaleCircumcision",
                         "cost_per_unit" : 1,
                         "expired"       : false,
                         "dont_allow_duplicates" : false,
@@ -2341,6 +2375,7 @@
                     },
                     {
                         "__class__" : "ModifyStiCoInfectionStatus",
+                        "name"          : "class Kernel::ModifyStiCoInfectionStatus",
                         "cost_per_unit" : 2,
                         "expired"       : false,
                         "dont_allow_duplicates" : false,
@@ -2348,6 +2383,7 @@
                     },
                     {
                         "__class__" : "STIBarrier",
+                        "name"          : "class Kernel::STIBarrier",
                         "cost_per_unit" : 3,
                         "expired"       : false,
                          "dont_allow_duplicates" : false,
@@ -2359,12 +2395,14 @@
                     },
                     {
                         "__class__" : "StiCoInfectionDiagnostic",
+                        "name"          : "class Kernel::StiCoInfectionDiagnostic",
                         "cost_per_unit" : 4,
                         "expired"       : false,
                         "dont_allow_duplicates" : false
                     },
                     {
                         "__class__" : "STIIsPostDebut",
+                        "name"          : "class Kernel::STIIsPostDebut",
                         "cost_per_unit" : 5,
                         "expired"       : false,
                         "dont_allow_duplicates" : false,
@@ -2434,6 +2472,7 @@
             "Test" :
             {
                 "__class__":"SimpleDiagnostic",
+                "name"          : "class Kernel::SimpleDiagnostic",
                 "cost_per_unit":9,
                 "expired":false,
                 "dont_allow_duplicates" : false,
@@ -2530,6 +2569,7 @@
                 [
                     {
                         "__class__" : "AntiTBDrug",
+                        "name"                      : "class Kernel::AntiTBDrug",
                         "cost_per_unit"             : 1,
                         "expired"                   : false,
                         "dont_allow_duplicates"     : false,
@@ -2560,6 +2600,7 @@
                     },
                     {
                         "__class__" : "AntiTBPropDepDrug",
+                        "name"                      : "class Kernel::AntiTBPropDepDrug",
                         "cost_per_unit"             : 2,
                         "expired"                   : false,
                         "dont_allow_duplicates"     : false,
@@ -2597,6 +2638,7 @@
                     },
                     {
                         "__class__" : "BCGVaccine",
+                        "name"                          : "class Kernel::BCGVaccine",
                         "cost_per_unit"                 : 3,
                         "expired"                       : false,
                         "dont_allow_duplicates"         : false,
@@ -2613,6 +2655,7 @@
                     },
                     {
                         "__class__" : "DiagnosticTreatNeg",
+                        "name"            : "class Kernel::DiagnosticTreatNeg",
                         "cost_per_unit"   : 4,
                         "expired"         : true,
                         "dont_allow_duplicates" : false,
@@ -2646,6 +2689,7 @@
                     },
                     {
                         "__class__" : "HealthSeekingBehaviorUpdateable",
+                        "name"                       : "class Kernel::HealthSeekingBehaviorUpdateable",
                         "cost_per_unit"              : 5,
                         "expired"                    : false,
                         "dont_allow_duplicates"      : false,

@@ -24,8 +24,8 @@ namespace Kernel
         ENUM_VALUE_SPEC( Tested_Negative            , 4)
         ENUM_VALUE_SPEC( Male_Circumcision_Positive , 5)
         ENUM_VALUE_SPEC( Male_Circumcision_Negative , 6)
-        ENUM_VALUE_SPEC( Vaccinated_Positive        , 7)
-        ENUM_VALUE_SPEC( Vaccinated_Negative        , 8))
+        ENUM_VALUE_SPEC( Has_Intervention           , 7)
+        ENUM_VALUE_SPEC( Not_Have_Intervention      , 8))
 
     // ------------------------------------------------------------------------
     // --- AgeRange
@@ -101,6 +101,7 @@ namespace Kernel
 
         void FindQualifyingIndividuals( INodeEventContext* pNEC, 
                                         const std::vector<std::vector<TargetedDiseaseState::Enum>>& diseaseStates,
+                                        const std::string& rHasInterventionName,
                                         PropertyRestrictions& rPropertyRestrictions );
 
         std::vector<IIndividualHumanEventContext*> SelectIndividuals();
@@ -156,6 +157,7 @@ namespace Kernel
         float m_StartYear;
         float m_EndYear;
         std::vector<std::vector<TargetedDiseaseState::Enum>> m_DiseaseStates;
+        std::string m_HasInterventionName;
         PropertyRestrictions m_PropertyRestrictions;
         AgeRangeList m_AgeRangeList;
         std::vector<int> m_NumTargeted;

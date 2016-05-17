@@ -114,7 +114,7 @@ public:
     virtual void SetContextTo(INodeContext* context)         { throw std::exception("The method or operation is not implemented."); }
     virtual void PurgeExisting( const std::string& iv_name ) { throw std::exception("The method or operation is not implemented."); }
 
-    virtual std::list<INodeDistributableIntervention*> GetInterventionsByType(const std::string& type_name) { throw std::exception("The method or operation is not implemented."); }
+    virtual std::list<INodeDistributableIntervention*> GetInterventionsByType(const std::string& type_name)         { throw std::exception("The method or operation is not implemented."); }
        
     virtual bool IsInPolygon(float* vertex_coords, int numcoords) { throw std::exception("The method or operation is not implemented."); }
     virtual bool IsInPolygon( const json::Array &poly )           { throw std::exception("The method or operation is not implemented."); }

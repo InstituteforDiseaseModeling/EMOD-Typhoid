@@ -74,6 +74,7 @@ namespace Kernel
     }
 
     bool HasDiseaseState( TargetedDiseaseState::Enum state,
+                          const std::string& rHasInterventionName,
                           IIndividualHumanEventContext *pHEC,
                           IIndividualHumanSTI* pSTI,
                           IIndividualHumanHIV *pHIV,
@@ -99,11 +100,11 @@ namespace Kernel
             case TargetedDiseaseState::Male_Circumcision_Negative:
                 return !pSTI->IsCircumcised();
 
-            case TargetedDiseaseState::Vaccinated_Positive:
-                return (pHEC->GetInterventionsContext()->GetInterventionsByType( "class Kernel::RevaccinatableVaccine" ).size() > 0);
+            case TargetedDiseaseState::Has_Intervention:
+                return (pHEC->GetInterventionsContext()->GetInterventionsByName( rHasInterventionName ).size() > 0);
 
-            case TargetedDiseaseState::Vaccinated_Negative:
-                return !(pHEC->GetInterventionsContext()->GetInterventionsByType( "class Kernel::RevaccinatableVaccine" ).size() > 0);
+            case TargetedDiseaseState::Not_Have_Intervention:
+                return !(pHEC->GetInterventionsContext()->GetInterventionsByName( rHasInterventionName ).size() > 0);
                 break;
 
             default:
@@ -112,6 +113,7 @@ namespace Kernel
     }
 
     bool QualifiesByDiseaseState( const std::vector<std::vector<TargetedDiseaseState::Enum>>& diseaseStates,
+                                  const std::string& rHasInterventionName,
                                   IIndividualHumanEventContext *pHEC )
     {
         if( diseaseStates.size() == 0 )
@@ -143,7 +145,7 @@ namespace Kernel
             for( int i = 0 ; qualifies && (i < states_to_and.size()) ; ++i )
             {
                 auto state = states_to_and[i];
-                qualifies = HasDiseaseState( state, pHEC, p_ind_sti, p_ind_hiv, p_med_history );
+                qualifies = HasDiseaseState( state, rHasInterventionName, pHEC, p_ind_sti, p_ind_hiv, p_med_history );
             }
             if( qualifies )
             {
@@ -355,13 +357,14 @@ namespace Kernel
 
     void TargetedByAgeAndGender::FindQualifyingIndividuals( INodeEventContext* pNEC, 
                                                             const std::vector<std::vector<TargetedDiseaseState::Enum>>& diseaseStates,
+                                                            const std::string& rHasInterventionName,
                                                             PropertyRestrictions& rPropertyRestrictions )
     {
         m_QualifyingIndividuals.clear();
         m_QualifyingIndividuals.reserve( pNEC->GetIndividualHumanCount() );
 
         INodeEventContext::individual_visit_function_t fn = 
-            [ this, &diseaseStates, &rPropertyRestrictions ](IIndividualHumanEventContext *ihec)
+            [ this, &diseaseStates, &rHasInterventionName, &rPropertyRestrictions ](IIndividualHumanEventContext *ihec)
         {
             if( !m_AgeRange.IsInRange( ihec->GetAge()/DAYSPERYEAR ) ) return;
 
@@ -369,7 +372,7 @@ namespace Kernel
 
             if( !rPropertyRestrictions.Qualifies( ihec ) ) return;
 
-            if( !QualifiesByDiseaseState( diseaseStates, ihec ) ) return;
+            if( !QualifiesByDiseaseState( diseaseStates, rHasInterventionName, ihec ) ) return;
 
             m_QualifyingIndividuals.push_back( ihec );
         };
@@ -440,6 +443,7 @@ namespace Kernel
 #define NC_TD_Age_Ranges_Years_DESC_TEXT      "An array of age bins, where a person can be selected if min <= age < max.  It must have the same number of objects as Num_Targeted_XXX has elements."
 #define NC_TD_Target_Disease_State_DESC_TEXT  "If not empty, a targeted individual is expected to have a particular disease specific state.  To be flexible, this is a two-dimensional array of TargetDiseaseState where the elements of the inner array are AND'd and these arrays are OR'd. "
 #define NC_TD_Property_Restrictions_Within_Node_DESC_TEXT "TBD"
+#define NC_TD_Has_Intervention_Name_DESC_TEXT "TBD"
 
     BEGIN_QUERY_INTERFACE_BODY(TargetedDistribution)
     END_QUERY_INTERFACE_BODY(TargetedDistribution)
@@ -450,6 +454,7 @@ namespace Kernel
     , m_StartYear(1900.0)
     , m_EndYear(2200.0)
     , m_DiseaseStates()
+    , m_HasInterventionName()
     , m_PropertyRestrictions()
     , m_AgeRangeList()
     , m_NumTargeted()
@@ -478,7 +483,8 @@ namespace Kernel
         initConfigTypeMap("Num_Targeted_Males",   &m_NumTargetedMales,   NC_TD_Num_Targeted_Males_DESC_TEXT,        0, INT_MAX,      0 );
         initConfigTypeMap("Num_Targeted_Females", &m_NumTargetedFemales, NC_TD_Num_Targeted_Females_DESC_TEXT,      0, INT_MAX,      0 );
 
-        initConfigTypeMap("Target_Disease_State", &vector2d_string_disease_states, NC_TD_Target_Disease_State_DESC_TEXT, nullptr, allowed_states );
+        initConfigTypeMap("Target_Disease_State",                       &vector2d_string_disease_states, NC_TD_Target_Disease_State_DESC_TEXT, nullptr, allowed_states );
+        initConfigTypeMap("Target_Disease_State_Has_Intervention_Name", &m_HasInterventionName,          NC_TD_Has_Intervention_Name_DESC_TEXT, "" );
 
         initConfigComplexType("Age_Ranges_Years",                  &m_AgeRangeList,         NC_TD_Age_Ranges_Years_DESC_TEXT );
         initConfigComplexType("Property_Restrictions_Within_Node", &m_PropertyRestrictions, NC_TD_Property_Restrictions_Within_Node_DESC_TEXT );
@@ -527,6 +533,23 @@ namespace Kernel
             m_AgeRangeList.CheckForOverlap();
 
             m_DiseaseStates = ConvertStringsToDiseaseState( vector2d_string_disease_states );
+
+            for( auto& inner : m_DiseaseStates )
+            {
+                for( auto state : inner )
+                {
+                    if( ( (state == TargetedDiseaseState::Has_Intervention     ) || 
+                          (state == TargetedDiseaseState::Not_Have_Intervention)  ) &&
+                        (m_HasInterventionName == "") )
+                    {
+                        const char* state_name = TargetedDiseaseState::pairs::lookup_key( state );
+                        throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
+                            "Target_Disease_State", state_name,
+                            "Target_Disease_State_Has_Intervention_Name", "<empty>", 
+                            "If using 'Has_Intervention' or 'Not_Have_Intervention', you must also define 'Target_Disease_State_Has_Intervention_Name' to the name of the intervention." );
+                    }
+                }
+            }
         }
         return ret;
     }
@@ -682,7 +705,7 @@ namespace Kernel
         {
             for( auto p_nec : nodeList )
             {
-                r_ag.FindQualifyingIndividuals( p_nec, m_DiseaseStates, m_PropertyRestrictions );
+                r_ag.FindQualifyingIndividuals( p_nec, m_DiseaseStates, m_HasInterventionName, m_PropertyRestrictions );
             }
         }
 

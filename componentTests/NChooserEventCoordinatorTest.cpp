@@ -238,7 +238,8 @@ SUITE(NChooserEventCoordinatorTest)
 
         TargetedByAgeAndGender ag1( AgeRange( 15.0, 30.0 ), Gender::COUNT, 10, 3, 0 );
 
-        ag1.FindQualifyingIndividuals( &nec, ds, pr );
+        std::string intervention_name;
+        ag1.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_1 = ag1.SelectIndividuals();
         CHECK_EQUAL(  4, selected_list_1.size() );
@@ -249,7 +250,7 @@ SUITE(NChooserEventCoordinatorTest)
 
         ag1.IncrementNextNumTargets();
 
-        ag1.FindQualifyingIndividuals( &nec, ds, pr );
+        ag1.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_2 = ag1.SelectIndividuals();
         CHECK_EQUAL(  3, selected_list_2.size() );
@@ -259,7 +260,7 @@ SUITE(NChooserEventCoordinatorTest)
 
         ag1.IncrementNextNumTargets();
 
-        ag1.FindQualifyingIndividuals( &nec, ds, pr );
+        ag1.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_3 = ag1.SelectIndividuals();
         CHECK_EQUAL(  3, selected_list_3.size() );
@@ -280,7 +281,7 @@ SUITE(NChooserEventCoordinatorTest)
 
         TargetedByAgeAndGender ag2( AgeRange( 15.0, 30.0 ), Gender::MALE, 10, 1, 0 );
 
-        ag2.FindQualifyingIndividuals( &nec, ds, pr );
+        ag2.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_4 = ag2.SelectIndividuals();
         CHECK_EQUAL(  6, selected_list_4.size() );
@@ -293,7 +294,7 @@ SUITE(NChooserEventCoordinatorTest)
 
         TargetedByAgeAndGender ag3( AgeRange( 15.0, 30.0 ), Gender::MALE, 6, 2, 0 );
 
-        ag3.FindQualifyingIndividuals( &nec, ds, pr );
+        ag3.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_5 = ag3.SelectIndividuals();
         CHECK_EQUAL(  3, selected_list_5.size() );
@@ -327,6 +328,7 @@ SUITE(NChooserEventCoordinatorTest)
         catch( DetailedException& de )
         {
             PrintDebug( de.GetMsg() );
+            CHECK( false );
         }
     }
 
@@ -419,7 +421,7 @@ SUITE(NChooserEventCoordinatorTest)
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidDiseaseState)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/NChooserEventCoordinatorTest/TestInvalidDiseaseState.json",
-            "Constrained strings (dynamic enum) with specified value XXXXXXX invalid. Possible values are: HIV_Negative...HIV_Positive...Male_Circumcision_Negative...Male_Circumcision_Positive...Tested_Negative...Tested_Positive...Vaccinated_Negative...Vaccinated_Positive..." );
+            "Constrained strings (dynamic enum) with specified value XXXXXXX invalid. Possible values are: HIV_Negative...HIV_Positive...Has_Intervention...Male_Circumcision_Negative...Male_Circumcision_Positive...Not_Have_Intervention...Tested_Negative...Tested_Positive..." );
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidPeriodOverlap)

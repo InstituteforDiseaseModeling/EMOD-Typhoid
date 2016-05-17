@@ -136,6 +136,7 @@
             "Vaccinated", 
             "VaccineExpired"
         ], 
+        "Report_HIV_ByAgeAndGender_Has_Intervention_With_Name": "Vaccine47", 
         "Report_HIV_ByAgeAndGender_Start_Year": 1960, 
         "Report_HIV_ByAgeAndGender_Stop_Year": 1970, 
         "Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4": 0, 

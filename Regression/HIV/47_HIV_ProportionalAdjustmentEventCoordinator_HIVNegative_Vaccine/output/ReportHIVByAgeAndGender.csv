@@ -1,4 +1,4 @@
-Year, NodeId, Gender, HasHIV, Age, Population, Infected, Newly Infected, On_ART, Died, Died_from_HIV, Tested Past Year or On_ART, Tested Ever HIVPos, Tested Ever HIVNeg, Tested Positive, Tested Negative, Is Vaccinated,Vaccinated,VaccineExpired
+Year, NodeId, Gender, HasHIV, Age, Population, Infected, Newly Infected, On_ART, Died, Died_from_HIV, Tested Past Year or On_ART, Tested Ever HIVPos, Tested Ever HIVNeg, Tested Positive, Tested Negative, HasIntervention(Vaccine47),Vaccinated,VaccineExpired
 1960.5,1,0,0,0,154,0,0,0,5,0,0,0,0,0,0,0,0,0
 1960.5,1,0,0,1,141,0,0,0,3,0,0,0,0,0,0,0,0,0
 1960.5,1,0,0,2,156,0,0,0,3,0,0,0,0,0,0,0,0,0
