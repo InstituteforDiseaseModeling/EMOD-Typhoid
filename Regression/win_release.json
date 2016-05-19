@@ -1,5 +1,5 @@
 {
-    "suite":"win_trunk.json",
+    "suite":"win_release.json",
     "tests": [
         { "path" : "00_Households" },
         { "path" : "1_Generic_Seattle_MultiNode" },
@@ -9,7 +9,6 @@
         { "path" : "10_Vector_Namawala_Oviposition" },
         { "path" : "11_Vector_Namawala_Larvicides" },
         { "path" : "12_Malaria_Namawala_LargeVectorCampaign" },
-        { "path" : "14_Polio_Bihar_Larger" },
         { "path" : "18_Vector_Namawala_Indoor_IRSOnly" },
         { "path" : "19_Vector_Namawala_Indoor_4Interventions" },
         { "path" : "20_Vector_Namawala_IRSOnly" },
@@ -29,13 +28,11 @@
         { "path" : "39_Vector_Namawala_HostSeekingTrap" },
         { "path" : "40_Malaria_Namawala_LargeVectorCampaign_StrainGenerator" },
         { "path" : "41_Malaria_Default_Geography" },
-        { "path" : "42_Polio_Default_Geography" },
         { "path" : "43_Vector_Garki_MultiCore_VectorMigration" },
         { "path" : "45_Vector_An_farauti_IRS" },
         { "path" : "46_Vector_An_arabiensis_MultipleHabitats" },
         { "path" : "47_Vector_An_arabiensis_MultipleHabitats_Oviposition" },
         { "path" : "48_Generic_Seattle_SingleCore_Zoonosis" },
-        { "path" : "49_Environmental_Namawala" },
         { "path" : "50_Airborne_Namawala" },
         { "path" : "51_Vector_Namawala_SugarTrap_WeatherDependentFeed" },
         { "path" : "52_Vector_Namawala_Cohort_WeatherDependentFeed" },
