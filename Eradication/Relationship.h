@@ -49,6 +49,7 @@ namespace Kernel
             virtual const suids::suid& GetSuid() const override;
             virtual const std::string& GetPropertyKey() override;
             virtual const std::string& GetPropertyName() const override;
+            virtual unsigned int GetSlotNumberForPartner( bool forPartnerB ) const override;
             virtual const tRelationshipMembers GetMembers() const override;
             virtual bool IsDiscordant() const override;
             virtual float GetTimer() const override;
@@ -193,6 +194,28 @@ namespace Kernel
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
             DECLARE_SERIALIZABLE(MarriageRelationship);
+#pragma warning( pop )
+    };
+
+    class TransactionalRelationship : public Relationship
+    {
+        public:
+            friend class RelationshipFactory;
+            DECLARE_QUERY_INTERFACE()
+
+        protected:
+            TransactionalRelationship();
+            TransactionalRelationship( const suids::suid& rRelId,
+                                       IRelationshipManager* pRelMan,
+                                       IRelationshipParameters* pParams, 
+                                       IIndividualHumanSTI* male_partner, 
+                                       IIndividualHumanSTI* female_partner );
+
+            virtual Relationship* Clone() override;
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+            DECLARE_SERIALIZABLE(TransactionalRelationship);
 #pragma warning( pop )
     };
 }

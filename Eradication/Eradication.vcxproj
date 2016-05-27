@@ -252,6 +252,7 @@
     <ClCompile Include="..\interventions\HIVARTStagingAbstract.cpp" />
     <ClCompile Include="..\interventions\MalariaDiagnostic.cpp" />
     <ClCompile Include="..\interventions\MigrateFamily.cpp" />
+    <ClCompile Include="..\interventions\RevaccinatableVaccine.cpp" />
     <ClCompile Include="..\interventions\STIIsPostDebut.cpp" />
     <ClCompile Include="..\interventions\HIVMuxer.cpp" />
     <ClCompile Include="..\interventions\HIVPreARTNotification.cpp" />
@@ -305,6 +306,7 @@
     <ClCompile Include="..\interventions\StiCoInfectionDiagnostic.cpp" />
     <ClCompile Include="..\interventions\PMTCT.cpp" />
     <ClCompile Include="..\interventions\VectorControlNodeTargeted.cpp" />
+    <ClCompile Include="..\interventions\WaningEffectMap.cpp" />
     <ClCompile Include="Assortivity.cpp" />
     <ClCompile Include="AssortivityFactory.cpp" />
     <ClCompile Include="AssortivityHIV.cpp" />
@@ -335,13 +337,16 @@
     <ClCompile Include="MpiDataExchanger.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
+    <ClCompile Include="NChooserEventCoordinator.cpp" />
     <ClCompile Include="NodeEventCoordinator.cpp" />
     <ClCompile Include="NodeInfo.cpp" />
     <ClCompile Include="NodeInfoSTI.cpp" />
     <ClCompile Include="NodeInfoVector.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
+    <ClCompile Include="PropertyRestrictions.cpp" />
     <ClCompile Include="PythonSupport.cpp" />
     <ClCompile Include="ReferenceTrackingEventCoordinator.cpp" />
+    <ClCompile Include="ReferenceTrackingEventCoordinatorHIV.cpp" />
     <ClCompile Include="RelationshipParameters.cpp" />
     <ClCompile Include="ReportEventRecorder.cpp" />
     <ClCompile Include="ReportHIVART.cpp" />
@@ -545,6 +550,7 @@
     <ClInclude Include="..\interventions\IWaningEffect.h" />
     <ClInclude Include="..\interventions\MalariaDiagnostic.h" />
     <ClInclude Include="..\interventions\MigrateFamily.h" />
+    <ClInclude Include="..\interventions\RevaccinatableVaccine.h" />
     <ClInclude Include="..\interventions\STIIsPostDebut.h" />
     <ClInclude Include="..\interventions\HIVDelayedIntervention.h" />
     <ClInclude Include="..\interventions\Diagnostics.h" />
@@ -594,6 +600,7 @@
     <ClInclude Include="..\interventions\Vaccine.h" />
     <ClInclude Include="..\interventions\VectorControlNodeTargeted.h" />
     <ClInclude Include="..\interventions\WaningEffect.h" />
+    <ClInclude Include="..\interventions\WaningEffectMap.h" />
     <ClInclude Include="..\rapidjson\include\rapidjson\internal\pow10.h" />
     <ClInclude Include="..\rapidjson\include\rapidjson\rapidjson.h" />
     <ClInclude Include="..\utils\BinaryArchiveReader.h" />
@@ -674,6 +681,7 @@
     <ClInclude Include="MalariaBarcode.h" />
     <ClInclude Include="MigrationInfoVector.h" />
     <ClInclude Include="MpiDataExchanger.h" />
+    <ClInclude Include="NChooserEventCoordinator.h" />
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />
     <ClInclude Include="NodeInfo.h" />
@@ -682,8 +690,10 @@
     <ClInclude Include="NodeTBHIV.h" />
     <ClInclude Include="PolioContexts.h" />
     <ClInclude Include="PropertyReportTB.h" />
+    <ClInclude Include="PropertyRestrictions.h" />
     <ClInclude Include="PythonSupport.h" />
     <ClInclude Include="ReferenceTrackingEventCoordinator.h" />
+    <ClInclude Include="ReferenceTrackingEventCoordinatorHIV.h" />
     <ClInclude Include="RelationshipManager.h" />
     <ClInclude Include="RelationshipManagerFactory.h" />
     <ClInclude Include="RelationshipParameters.h" />

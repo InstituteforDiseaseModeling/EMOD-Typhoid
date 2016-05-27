@@ -19,12 +19,17 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "STIInterventionsContainer.h" // for ISTIBarrierConsumer (which should be in ISTIBarrierConsumer.h) TODO
 #include "IndividualSTI.h"
 #include "ISociety.h"
+#include "IdmString.h"
 
 #include <map>
 #include <ctime>
 #include <algorithm>
 
 static const char * _module = "Relationship";
+
+#define PROPERTY_KEY_PREFIX "Relationship:"
+#define PROPERTY_KEY_PREFIX_LENGTH (13)
+#define SLOT_SEPARATOR ('-')
 
 void 
 howlong(
@@ -418,11 +423,28 @@ namespace Kernel {
     {
         if( propertyKey == "" )
         {
-            propertyKey = "Relationship";
+            propertyKey = PROPERTY_KEY_PREFIX;
             propertyKey += std::to_string( male_partner->GetOpenRelationshipSlot() );
+            propertyKey += SLOT_SEPARATOR;
             propertyKey += std::to_string( female_partner->GetOpenRelationshipSlot() ); // does this work? TBD
         }
         return propertyKey;
+    }
+
+    unsigned int Relationship::GetSlotNumberForPartner( bool forPartnerB ) const
+    {
+        // Note: this solution assumes max of MAX_SLOT relationships
+        unsigned int slot_index = 0;
+        if( forPartnerB ) // B=Female
+        {
+            slot_index = 1;
+        }
+        IdmString key( propertyKey.substr( PROPERTY_KEY_PREFIX_LENGTH ) );
+        auto slot_strs = key.split( SLOT_SEPARATOR );
+
+        auto slot_number = atoi( slot_strs[ slot_index ].c_str() );
+        release_assert( slot_number <= MAX_SLOTS );
+        return slot_number;
     }
 
     const tRelationshipMembers
@@ -820,6 +842,10 @@ namespace Kernel {
                 p_rel = new MarriageRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
                 break;
 
+            case RelationshipType::TRANSACTIONAL:
+                p_rel = new TransactionalRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
+                break;
+
             default:
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, 
                                                          "pParams->GetType()", 
@@ -945,6 +971,45 @@ namespace Kernel {
     {
         Relationship::serialize( ar, obj );
         MarriageRelationship& rel = *obj;
+    }
+
+    // ------------------------------------------------------------------------
+    // --- TransactionalRelationship
+    // ------------------------------------------------------------------------
+    BEGIN_QUERY_INTERFACE_DERIVED(TransactionalRelationship, Relationship)
+    END_QUERY_INTERFACE_DERIVED(TransactionalRelationship, Relationship)
+
+    TransactionalRelationship::TransactionalRelationship()
+    : Relationship()
+    {
+    }
+
+    TransactionalRelationship::TransactionalRelationship( const suids::suid& rRelId,
+                                                          IRelationshipManager* pRelMan,
+                                                          IRelationshipParameters* pParams,
+                                                          IIndividualHumanSTI * male_partnerIn, 
+                                                          IIndividualHumanSTI * female_partnerIn )
+        : Relationship( rRelId, pRelMan, pParams, male_partnerIn, female_partnerIn )
+    {
+        LOG_INFO_F( "(EEL) Creating TransactionalRelationship %d between %s and %s of length %f.\n",
+                    GetSuid().data,
+                    male_partnerIn->toString().c_str(),
+                    female_partnerIn->toString().c_str(),
+                    rel_timer
+                  );
+    }
+
+    Relationship* TransactionalRelationship::Clone()
+    {
+        return new TransactionalRelationship( *this );
+    }
+
+    REGISTER_SERIALIZABLE(TransactionalRelationship);
+
+    void TransactionalRelationship::serialize(IArchive& ar, TransactionalRelationship* obj)
+    {
+        Relationship::serialize( ar, obj );
+        TransactionalRelationship& rel = *obj;
     }
 }
 

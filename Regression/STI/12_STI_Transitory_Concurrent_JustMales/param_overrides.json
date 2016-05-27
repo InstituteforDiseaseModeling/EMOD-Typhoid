@@ -27,10 +27,11 @@
         {
             "NONE" :
             {
-                "Prob_Extra_Transitory_Relationship_Female": 0, 
-                "Prob_Extra_Transitory_Relationship_Male": 1, 
-                "Max_Simultaneous_Transitory_Relationships_Females": 1, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 2
+                "Prob_Extra_Relationship_Female": [ 0, 0, 0, 0 ],
+                "Prob_Extra_Relationship_Male"  : [ 1, 0, 0, 0 ],
+
+                "Max_Simultaneous_Relationships_Female": [ 1, 2, 1, 0 ],
+                "Max_Simultaneous_Relationships_Male"  : [ 2, 2, 1, 0 ]
             }
         }
 

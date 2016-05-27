@@ -479,6 +479,28 @@ namespace Kernel
     void
     JsonConfigurable::initConfigTypeMap(
         const char* paramName,
+        std::vector< std::vector< std::string > > * pVariable,
+        const char* description,
+        const char* constraint_schema,
+        const std::set< std::string > &constraint_variable
+    )
+    {
+        LOG_DEBUG_F( "initConfigTypeMap<vector<vector<string>>>: %s\n", paramName);
+        vector2dStringConfigTypeMap[ paramName ] = pVariable;
+        vector2dStringConstraintsTypeMap[ paramName ] = &constraint_variable;
+        json::Object newVectorStringSchema;
+        newVectorStringSchema["description"] = json::String(description);
+        newVectorStringSchema["type"] = json::String("Vector 2d String");
+        if( constraint_schema )
+        {
+            newVectorStringSchema["value_source"] = json::String( constraint_schema );
+        }
+        jsonSchemaBase[paramName] = newVectorStringSchema;
+    }
+
+    void
+    JsonConfigurable::initConfigTypeMap(
+        const char* paramName,
         std::vector< float > * pVariable,
         const char* description,
         float min, float max, float defaultvalue
@@ -1084,6 +1106,49 @@ namespace Kernel
             }
         }
 
+        // ---------------------------------- VECTOR VECTOR of STRINGs ------------------------------------
+        for (auto& entry : vector2dStringConfigTypeMap)
+        {
+            const std::string& key = entry.first;
+            json::QuickInterpreter schema = jsonSchemaBase[key];
+            if ( inputJson->Exist(key) )
+            {
+                *(entry.second) = GET_CONFIG_VECTOR2D_STRING( inputJson, (entry.first).c_str() );
+            }
+            else
+            {
+                if( _useDefaults )
+                {
+                    // using the default value
+                    LOG_INFO_F( "Using the default value ( \"%s\" : <empty string Vector2D> ) for unspecified string Vector2D parameter.\n", key.c_str() );
+                }
+
+                if( _track_missing )
+                {
+                    missing_parameters_set.insert(key);
+                }
+            }
+            auto allowed_values = vector2dStringConstraintsTypeMap[ key ];
+            for( auto &candidate_vector : *(entry.second) )
+            {
+                for( auto &candidate : candidate_vector )
+                {
+                    if( allowed_values->size() > 0 && std::find( allowed_values->begin(), allowed_values->end(), candidate ) == allowed_values->end() )
+                    {
+                        std::ostringstream msg;
+                        msg << "Constrained strings (dynamic enum) with specified value " 
+                            << candidate 
+                            << " invalid. Possible values are: ";
+                        for( auto value: *allowed_values )
+                        {
+                            msg << value << "...";
+                        }
+                        throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+                    }
+                }
+            }
+        }
+
         //----------------------------------- VECTOR of FLOATs ------------------------------
         for (auto& entry : vectorFloatConfigTypeMap)
         {
@@ -1096,7 +1161,7 @@ namespace Kernel
 
                 EnforceVectorParameterRanges<float>(key, configValues, schema);
             }
-            else
+            else if( !_useDefaults )
             {
                 handleMissingParam( key );
             }
@@ -1114,7 +1179,7 @@ namespace Kernel
 
                 EnforceVectorParameterRanges<int>(key, configValues, schema);
             }
-            else
+            else if( !_useDefaults )
             {
                 handleMissingParam( key );
             }
@@ -1135,7 +1200,7 @@ namespace Kernel
                     EnforceVectorParameterRanges<float>(key, values, schema);
                 }
             }
-            else
+            else if( !_useDefaults )
             {
                 handleMissingParam( key );
             }
@@ -1156,7 +1221,7 @@ namespace Kernel
                     EnforceVectorParameterRanges<int>(key, values, schema);
                 }
             }
-            else
+            else if( !_useDefaults )
             {
                 handleMissingParam( key );
             }

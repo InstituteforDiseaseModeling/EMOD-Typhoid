@@ -24,17 +24,26 @@ namespace Kernel
     STINetworkParameters::STINetworkParameters()
     : key_colon_val("UNINITIALIZED")
     , extra_relational_flag_type(ExtraRelationalFlagType::Correlated)
+    , prob_extra_rels()
+    , max_simultaneous_rels()
+    , rel_type_order()
     {
-        memset( prob_extra_relational, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
-        memset( max_simultaneous_rels, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
+        prob_extra_rels.push_back( std::vector<float>() );
+        prob_extra_rels.push_back( std::vector<float>() );
+
+        max_simultaneous_rels.push_back( std::vector<float>() );
+        max_simultaneous_rels.push_back( std::vector<float>() );
     }
 
     STINetworkParameters::STINetworkParameters( const std::string& key )
     : key_colon_val(key)
     , extra_relational_flag_type(ExtraRelationalFlagType::Correlated)
     {
-        memset( prob_extra_relational, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
-        memset( max_simultaneous_rels, 0, sizeof(float)*RelationshipType::COUNT*Gender::COUNT );
+        prob_extra_rels.push_back( std::vector<float>() );
+        prob_extra_rels.push_back( std::vector<float>() );
+
+        max_simultaneous_rels.push_back( std::vector<float>() );
+        max_simultaneous_rels.push_back( std::vector<float>() );
     }
 
     STINetworkParameters::~STINetworkParameters()
@@ -55,39 +64,70 @@ namespace Kernel
         return params;
     }
 
+    void CheckVectorSize( int vectorSize, const char* vectorName, int lineNumber, const char* funcName )
+    {
+        if( vectorSize != RelationshipType::COUNT )
+        {
+            std::stringstream ss;
+            ss << vectorName << " has " << vectorSize << " elements when it needs " << RelationshipType::COUNT << " elements.\n";
+            ss << "It needs one element for each RelationshipType - ";
+            for( int i = 0 ; i < RelationshipType::COUNT ; i++ )
+            {
+                ss << "'" << RelationshipType::pairs::get_keys()[i] << "'";
+                if( (i+1) < RelationshipType::COUNT )
+                {
+                    ss << ", ";
+                }
+            }
+            throw GeneralConfigurationException( __FILE__, lineNumber, funcName, ss.str().c_str() );
+        }
+    }
+
     bool STINetworkParameters::Configure( const ::Configuration *config )
     {
         LOG_DEBUG( "Configure\n" );
 
         initConfig( "Extra_Relational_Flag_Type", extra_relational_flag_type, config, MetadataDescriptor::Enum("extra_relational_flag_type", STI_Extra_Relational_Flag_Type_DESC_TEXT, MDD_ENUM_ARGS(ExtraRelationalFlagType)) ); 
-        initConfigTypeMap( "Prob_Extra_Transitory_Relationship_Male", &(prob_extra_relational[RelationshipType::TRANSITORY][Gender::MALE]), STI_Prob_Extra_Transitory_Relationship_Male_DESC_TEXT, 0.0, 1.0f, 0.1f );
-        initConfigTypeMap( "Prob_Extra_Transitory_Relationship_Female", &(prob_extra_relational[RelationshipType::TRANSITORY][Gender::FEMALE]), STI_Prob_Extra_Transitory_Relationship_Female_DESC_TEXT, 0.0, 1.0f, 0.1f );
 
-        if( extra_relational_flag_type == ExtraRelationalFlagType::Independent )
+        initConfigTypeMap( "Prob_Extra_Relationship_Male",   &prob_extra_rels[ Gender::MALE   ], STI_Prob_Extra_Relationship_Male_DESC_TEXT,   0.0, 1.0f, 0.1f );
+        initConfigTypeMap( "Prob_Extra_Relationship_Female", &prob_extra_rels[ Gender::FEMALE ], STI_Prob_Extra_Relationship_Female_DESC_TEXT, 0.0, 1.0f, 0.1f );
+
+        initConfigTypeMap( "Max_Simultaneous_Relationships_Male",   &max_simultaneous_rels[ Gender::MALE   ], STI_Max_Simultaneous_Relationships_Male_DESC_TEXT,   0, MAX_SLOTS, 1 );
+        initConfigTypeMap( "Max_Simultaneous_Relationships_Female", &max_simultaneous_rels[ Gender::FEMALE ], STI_Max_Simultaneous_Relationships_Female_DESC_TEXT, 0, MAX_SLOTS, 1 );
+
+        std::vector<std::string> order_tmp;
+        if( JsonConfigurable::_dryrun || extra_relational_flag_type == ExtraRelationalFlagType::Correlated )
         {
-            initConfigTypeMap( "Prob_Extra_Informal_Relationship_Male", &(prob_extra_relational[RelationshipType::INFORMAL][Gender::MALE]), STI_Prob_Extra_Informal_Relationship_Male_DESC_TEXT, 0.0, 1.0f, 0.1f );
-            initConfigTypeMap( "Prob_Extra_Marital_Relationship_Male", &(prob_extra_relational[RelationshipType::MARITAL][Gender::MALE]), STI_Prob_Extra_Marital_Relationship_Male_DESC_TEXT, 0.0, 1.0f, 0.1f );
-
-            initConfigTypeMap( "Prob_Extra_Informal_Relationship_Female", &(prob_extra_relational[RelationshipType::INFORMAL][Gender::FEMALE]), STI_Prob_Extra_Informal_Relationship_Female_DESC_TEXT, 0.0, 1.0f, 0.1f );
-            initConfigTypeMap( "Prob_Extra_Marital_Relationship_Female", &(prob_extra_relational[RelationshipType::MARITAL][Gender::FEMALE]), STI_Prob_Extra_Marital_Relationship_Female_DESC_TEXT, 0.0, 1.0f, 0.1f );
-        }
-        else
-        {
-            initConfigTypeMap( "Prob_Extra_Informal_Given_Extra_Transitory_Male", &(prob_extra_relational[RelationshipType::INFORMAL][Gender::MALE]), STI_Prob_Extra_Informal_Given_Extra_Transitory_Male_DESC_TEXT, 0.0, 1.0f, 0.1f );
-            initConfigTypeMap( "Prob_Extra_Marital_Given_Extra_Informal_Male", &(prob_extra_relational[RelationshipType::MARITAL][Gender::MALE]), STI_Prob_Extra_Marital_Given_Extra_Informal_Male_DESC_TEXT, 0.0, 1.0f, 0.1f );
-
-            initConfigTypeMap( "Prob_Extra_Informal_Given_Extra_Transitory_Female", &(prob_extra_relational[RelationshipType::INFORMAL][Gender::FEMALE]), STI_Prob_Extra_Informal_Given_Extra_Transitory_Female_DESC_TEXT, 0.0, 1.0f, 0.1f );
-            initConfigTypeMap( "Prob_Extra_Marital_Given_Extra_Informal_Female", &(prob_extra_relational[RelationshipType::MARITAL][Gender::FEMALE]), STI_Prob_Extra_Marital_Given_Extra_Informal_Female_DESC_TEXT, 0.0, 1.0f, 0.1f );
+            initConfigTypeMap( "Correlated_Relationship_Type_Order", &order_tmp, STI_Correlated_Relationship_Type_Order_DESC_TEXT, "RelationshipType::Enum" );
         }
 
-        initConfigTypeMap( "Max_Simultaneous_Transitory_Relationships_Males", &max_simultaneous_rels[RelationshipType::TRANSITORY][Gender::MALE], STI_Max_Simultaneous_Transitory_Relationships_Males_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Informal_Relationships_Males", &max_simultaneous_rels[RelationshipType::INFORMAL][Gender::MALE], STI_Max_Simultaneous_Informal_Relationships_Males_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Marital_Relationships_Males", &max_simultaneous_rels[RelationshipType::MARITAL][Gender::MALE], STI_Max_Simultaneous_Marital_Relationships_Males_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Transitory_Relationships_Females", &max_simultaneous_rels[RelationshipType::TRANSITORY][Gender::FEMALE], STI_Max_Simultaneous_Transitory_Relationships_Females_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Informal_Relationships_Females", &max_simultaneous_rels[RelationshipType::INFORMAL][Gender::FEMALE], STI_Max_Simultaneous_Informal_Relationships_Females_DESC_TEXT, 0, 10, 1 );
-        initConfigTypeMap( "Max_Simultaneous_Marital_Relationships_Females", &max_simultaneous_rels[RelationshipType::MARITAL][Gender::FEMALE], STI_Max_Simultaneous_Marital_Relationships_Females_DESC_TEXT, 0, 10, 1 ); 
+        bool ret = JsonConfigurable::Configure( config );
+        if( ret && !JsonConfigurable::_dryrun )
+        {
+            if( extra_relational_flag_type == ExtraRelationalFlagType::Correlated )
+            {
+                CheckVectorSize( order_tmp.size(), "Correlated_Relationship_Type_Order", __LINE__, __FUNCTION__ );
 
-        return JsonConfigurable::Configure( config );
+                for( auto rel_type_str : order_tmp )
+                {
+                    RelationshipType::Enum rel_type = (RelationshipType::Enum)RelationshipType::pairs::lookup_value( rel_type_str.c_str() );
+                    rel_type_order.push_back( rel_type );
+                }
+            }
+            else
+            {
+                for( int i = 0 ; i < RelationshipType::COUNT ; ++i )
+                {
+                    rel_type_order.push_back( (RelationshipType::Enum)i );
+                }
+            }
+
+            CheckVectorSize( prob_extra_rels[ Gender::MALE         ].size(), "Prob_Extra_Relationship_Male",          __LINE__, __FUNCTION__ );
+            CheckVectorSize( prob_extra_rels[ Gender::FEMALE       ].size(), "Prob_Extra_Relationship_Female",        __LINE__, __FUNCTION__ );
+            CheckVectorSize( max_simultaneous_rels[ Gender::MALE   ].size(), "Max_Simultaneous_Relationships_Male",   __LINE__, __FUNCTION__ );
+            CheckVectorSize( max_simultaneous_rels[ Gender::FEMALE ].size(), "Max_Simultaneous_Relationships_Female", __LINE__, __FUNCTION__ );
+        }
+        return ret;
     }
 
     QueryResult STINetworkParameters::QueryInterface( iid_t iid, void **ppvObject )
@@ -99,26 +139,29 @@ namespace Kernel
     {
         ar.startObject();
 
-        ar.labelElement("key_colon_val") & parameters.key_colon_val;
-        ar.labelElement("extra_relational_flag_type") & (uint32_t&)parameters.extra_relational_flag_type;
+        ar.labelElement( "key_colon_val"              ) & parameters.key_colon_val;
+        ar.labelElement( "extra_relational_flag_type" ) & (uint32_t&)parameters.extra_relational_flag_type;
+        ar.labelElement( "prob_extra_rels"            ) & parameters.prob_extra_rels;
+        ar.labelElement( "max_simultaneous_rels"      ) & parameters.max_simultaneous_rels;
 
-        size_t count = RelationshipType::COUNT;
-
-        ar.labelElement("prob_extra_relational");
-        ar.startArray(count);
-        for( int i = 0 ; i < RelationshipType::COUNT ; i++ )
+        std::vector<int> tmp_order;
+        if( ar.IsReader() )
         {
-            ar.serialize( parameters.prob_extra_relational[i], Gender::COUNT );
+            ar.labelElement( "rel_type_order" ) & tmp_order;
+            for( auto order : tmp_order )
+            {
+                parameters.rel_type_order.push_back( RelationshipType::Enum(order) );
+            }
         }
-        ar.endArray();
-
-        ar.labelElement("max_simultaneous_rels");
-        ar.startArray(count);
-        for( int i = 0 ; i < RelationshipType::COUNT ; i++ )
+        else
         {
-            ar.serialize( parameters.max_simultaneous_rels[i], Gender::COUNT );
+            for( auto order : parameters.rel_type_order )
+            {
+                tmp_order.push_back( int(order) );
+            }
+            ar.labelElement( "rel_type_order" ) & tmp_order;
         }
-        ar.endArray();
+            
         ar.endObject();
     }
 
@@ -179,7 +222,8 @@ namespace Kernel
 
     json::QuickBuilder STINetworkParametersMap::GetSchema()
     {
-        STINetworkParameters tmp_params("NONE") ;\
+        STINetworkParameters tmp_params("NONE");
+
         if( JsonConfigurable::_dryrun )
         {
             tmp_params.Configure( nullptr );

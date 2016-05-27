@@ -128,5 +128,8 @@
     <ClCompile Include="MigrateIndividualsTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NChooserEventCoordinatorTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

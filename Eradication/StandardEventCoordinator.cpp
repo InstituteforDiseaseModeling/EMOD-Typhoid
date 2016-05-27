@@ -65,8 +65,6 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
-
         initializeInterventionConfig( inputJson );
 
         //initConfigTypeMap("Number_Distributions", &num_distributions, Number_Distributions_DESC_TEXT, -1, 1e6, -1 ); // by convention, -1 means no limit
@@ -108,7 +106,6 @@ namespace Kernel
             }
         }
 
-        JsonConfigurable::_useDefaults = false;
         return retValue;
     }
 

@@ -2838,6 +2838,11 @@ namespace Kernel
 
     INodeContext *Node::getContextPointer()    { return this; }
 
+    float Node::GetBasePopulationScaleFactor() const
+    {
+        return population_scaling_factor;
+    }
+
     const SimulationConfig* Node::params() const
     {
         return GET_CONFIGURABLE(SimulationConfig);

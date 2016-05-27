@@ -108,8 +108,8 @@ namespace Kernel
         virtual void  ClearStiCoInfectionState() override;
         virtual bool  HasSTICoInfection() const override;
         virtual bool IsCircumcised() const override;
-        virtual void onEmigrating();
-        virtual void onImmigrating();
+        virtual void onEmigrating() override;
+        virtual void onImmigrating() override;
 
         void disengageFromSociety();
         virtual ProbabilityNumber getProbabilityUsingCondomThisAct( const IRelationshipParameters* pRelParams ) const;
@@ -155,7 +155,7 @@ namespace Kernel
         float co_infective_factor;
         bool  has_other_sti_co_infection;
         bool  transmissionInterventionsDisabled;
-        unsigned int relationshipSlots;
+        uint64_t relationshipSlots;
         float delay_between_adding_relationships_timer;
         bool potential_exposure_flag;
 
@@ -165,13 +165,7 @@ namespace Kernel
         RelationshipSet_t relationships_at_death ;
         unsigned int num_lifetime_relationships;
         std::list<int> last_6_month_relationships;
-        std::map< int, int > slot2RelationshipDebugMap; // for debug only
-        float age_for_transitory_stats;
-        float age_for_informal_stats;
-        float age_for_marital_stats;
-        int transitory_eligibility;
-        int informal_eligibility;
-        int marital_elibigility;
+        std::map< unsigned int, suids::suid_data_t > slot2RelationshipDebugMap; // for debug only
 
         DECLARE_SERIALIZABLE(IndividualHumanSTI);
     };

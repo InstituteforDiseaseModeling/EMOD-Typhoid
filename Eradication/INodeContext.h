@@ -129,6 +129,8 @@ namespace Kernel
                                               float timeUntilTrip, 
                                               float timeAtDestination,
                                               bool isDestinationNewHome ) = 0;
+
+        virtual float GetBasePopulationScaleFactor() const = 0;
     };
 }
 

@@ -126,6 +126,7 @@
     <ClCompile Include="LoadBalanceSchemeTest.cpp" />
     <ClCompile Include="MigrateIndividualsTest.cpp" />
     <ClCompile Include="MigrationTest.cpp" />
+    <ClCompile Include="NChooserEventCoordinatorTest.cpp" />
     <ClCompile Include="SerializationTest.cpp" />
     <ClCompile Include="STIIsPostDebutTest.cpp" />
     <ClCompile Include="HIVSimpleDiagnosticTest.cpp" />

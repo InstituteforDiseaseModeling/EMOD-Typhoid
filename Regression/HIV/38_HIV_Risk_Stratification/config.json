@@ -371,35 +371,65 @@
         "STI_Coinfection_Multiplier": 10, 
         "STI_Network_Params_By_Property": {
             "HIGH": {
+                "Correlated_Relationship_Type_Order": [
+                    "TRANSITORY", 
+                    "INFORMAL", 
+                    "MARITAL", 
+                    "TRANSACTIONAL"
+                ], 
                 "Extra_Relational_Flag_Type": "Correlated", 
-                "Max_Simultaneous_Informal_Relationships_Females": 2, 
-                "Max_Simultaneous_Informal_Relationships_Males": 2, 
-                "Max_Simultaneous_Marital_Relationships_Females": 2, 
-                "Max_Simultaneous_Marital_Relationships_Males": 2, 
-                "Max_Simultaneous_Transitory_Relationships_Females": 2, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 4, 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Female": 0.4, 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Male": 0.95, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Female": 0.2, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Male": 0.45, 
-                "Prob_Extra_Transitory_Relationship_Female": 0.8, 
-                "Prob_Extra_Transitory_Relationship_Male": 0.2
+                "Max_Simultaneous_Relationships_Female": [
+                    2, 
+                    2, 
+                    2, 
+                    0
+                ], 
+                "Max_Simultaneous_Relationships_Male": [
+                    4, 
+                    2, 
+                    2, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Female": [
+                    0.8, 
+                    0.4, 
+                    0.2, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Male": [
+                    0.2, 
+                    0.95, 
+                    0.45, 
+                    0
+                ]
             }, 
             "Individual_Property_Name": "Risk", 
             "LOW": {
                 "Extra_Relational_Flag_Type": "Independent", 
-                "Max_Simultaneous_Informal_Relationships_Females": 1, 
-                "Max_Simultaneous_Informal_Relationships_Males": 1, 
-                "Max_Simultaneous_Marital_Relationships_Females": 1, 
-                "Max_Simultaneous_Marital_Relationships_Males": 1, 
-                "Max_Simultaneous_Transitory_Relationships_Females": 2, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 2, 
-                "Prob_Extra_Informal_Relationship_Female": 0.07, 
-                "Prob_Extra_Informal_Relationship_Male": 0.14, 
-                "Prob_Extra_Marital_Relationship_Female": 0.09, 
-                "Prob_Extra_Marital_Relationship_Male": 0.12, 
-                "Prob_Extra_Transitory_Relationship_Female": 0.1, 
-                "Prob_Extra_Transitory_Relationship_Male": 0.2
+                "Max_Simultaneous_Relationships_Female": [
+                    2, 
+                    1, 
+                    1, 
+                    0
+                ], 
+                "Max_Simultaneous_Relationships_Male": [
+                    2, 
+                    1, 
+                    1, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Female": [
+                    0.1, 
+                    0.07, 
+                    0.09, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Male": [
+                    0.2, 
+                    0.14, 
+                    0.12, 
+                    0
+                ]
             }
         }, 
         "Serialization_Test_Cycles": 0, 
