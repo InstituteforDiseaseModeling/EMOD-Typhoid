@@ -10,11 +10,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "CampaignEventByYear.h"
 #include "SimulationSTI.h"
+#include "SimulationTyphoid.h"
 #include "SimulationConfig.h"
 
 namespace Kernel
 {
-#ifndef DISABLE_STI
+#if !defined(DISABLE_STI) || defined(ENABLE_TYPHOID)
     //
     // CampaignEventByYear class here.
     //
@@ -31,6 +32,7 @@ namespace Kernel
     )
     {
         if( !JsonConfigurable::_dryrun &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::TYPHOID_SIM) &&
             (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::STI_SIM) &&
             (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::HIV_SIM) )
         {
@@ -44,7 +46,11 @@ namespace Kernel
 
         // Bypasss CampaignEvent base class so that we don't break without Start_Day!
         bool ret = JsonConfigurable::Configure( inputJson );
+#if defined(ENABLE_TYPHOID)
+        start_day = (start_year - SimulationTyphoid::base_year) * DAYSPERYEAR;
+#else
         start_day = (start_year - SimulationSTI::base_year) * DAYSPERYEAR;
+#endif
         return ret;
     }
 
