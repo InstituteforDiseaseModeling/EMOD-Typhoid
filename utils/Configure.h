@@ -535,7 +535,10 @@ namespace Kernel
         )
         {
             MetadataDescriptor::Enum * pEnumMd = const_cast<MetadataDescriptor::Enum *>(&enum_md);
-            jsonSchemaBase[key] = pEnumMd->GetSchemaElement();
+            if ( _dryrun )
+            {
+                jsonSchemaBase[key] = pEnumMd->GetSchemaElement();
+            }
 
             // parsing: unspecified case
             if (pJson && pJson->Exist(key) == false && _useDefaults )
