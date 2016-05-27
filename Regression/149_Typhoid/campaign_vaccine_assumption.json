@@ -175,8 +175,8 @@
                     "Vaccine_Take": 1, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "Waning_Config": {
-                        "Box_Duration": 1095, 
-                        "Initial_Effect": 0.51, 
+                        "Box_Duration": 2555, 
+                        "Initial_Effect": 0.62, 
                         "class": "WaningEffectBox"
                     }, 
                     "class": "SimpleVaccine"
@@ -204,8 +204,8 @@
                     "Vaccine_Take": 1, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "Waning_Config": {
-                        "Box_Duration": 1095, 
-                        "Initial_Effect": 0.69, 
+                        "Box_Duration": 2555, 
+                        "Initial_Effect": 0.62, 
                         "class": "WaningEffectBox"
                     }, 
                     "class": "SimpleVaccine"
@@ -233,8 +233,8 @@
                     "Vaccine_Take": 1, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "Waning_Config": {
-                        "Box_Duration": 1825, 
-                        "Initial_Effect": 0, 
+                        "Box_Duration": 2555, 
+                        "Initial_Effect": 0.62, 
                         "class": "WaningEffectBox"
                     }, 
                     "class": "SimpleVaccine"
@@ -262,8 +262,8 @@
                     "Vaccine_Take": 1, 
                     "Vaccine_Type": "AcquisitionBlocking", 
                     "Waning_Config": {
-                        "Box_Duration": 1095, 
-                        "Initial_Effect": 0.535, 
+                        "Box_Duration": 2555, 
+                        "Initial_Effect": 0.62, 
                         "class": "WaningEffectBox"
                     }, 
                     "class": "SimpleVaccine"

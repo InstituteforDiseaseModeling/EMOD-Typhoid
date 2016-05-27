@@ -34,6 +34,7 @@ namespace Kernel
         if( !JsonConfigurable::_dryrun &&
             (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::TYPHOID_SIM) &&
             (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::STI_SIM) &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::TYPHOID_SIM) &&
             (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::HIV_SIM) )
         {
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "CampainEventByYear can only be used in STI and HIV simulations." );
