@@ -81,6 +81,7 @@ else:
                             # Campaign
                             "CalendarEventCoordinator.cpp",
                             "CampaignEvent.cpp",
+                            "CampaignEventByYear.cpp",
                             "EventTrigger.cpp",
                             "InterventionsContainer.cpp",
                             "NodeEventContext.cpp",
