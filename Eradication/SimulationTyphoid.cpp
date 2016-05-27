@@ -182,7 +182,7 @@ namespace Kernel
     )
     {
         // Set base_year
-        float base_year = DEFAULT_BASE_YEAR ;
+        base_year = DEFAULT_BASE_YEAR ;
         initConfigTypeMap( "Base_Year",  &base_year, Base_Year_DESC_TEXT, 1800.0, 2100.0, DEFAULT_BASE_YEAR );
 
         bool ret = SimulationEnvironmental::Configure( inputJson );
