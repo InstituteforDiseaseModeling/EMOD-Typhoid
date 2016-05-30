@@ -99,6 +99,8 @@ namespace Kernel
             BaseTextReportEvents::UpdateEventRegistration( currentTime, dt, rNodeEventContextList );
             is_collecting_data = true ;
 
+            // I don't think this should ever be 0. Encountered this error case. This line would have helped.
+            release_assert( SimulationTyphoid::base_year > 0 );
             next_report_time = DAYSPERYEAR*(startYear - SimulationTyphoid::base_year) + DAYSPERYEAR - dt; // / 2.0f ;
             // e.g., Suppose we started sim in 1940, and want to report from 1943 through 1944. dt=1
             //       nrt = 365 * ( 1943.0 - 1940.0 ) +365 - 1
