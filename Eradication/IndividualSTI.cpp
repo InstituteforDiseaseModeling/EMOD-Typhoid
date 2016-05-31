@@ -1161,7 +1161,7 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTIBarrierConsumer", "InterventionsContainer" );
         }
-        auto probs = p_barrier->GetSTIBarrierProbabilitiesByRelType( pRelParams );
+        const Sigmoid& probs = p_barrier->GetSTIBarrierProbabilitiesByRelType( pRelParams );
         float year = float(GetParent()->GetTime().Year());
         ProbabilityNumber prob = probs.variableWidthAndHeightSigmoid( year );
         //LOG_DEBUG_F( "%s: returning %f from Sigmoid::vWAHS( %f, %f, %f, %f, %f )\n", __FUNCTION__, (float) prob, year, probs.midyear, probs.rate, probs.early, probs.late );
