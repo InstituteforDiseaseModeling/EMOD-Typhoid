@@ -19,12 +19,23 @@ namespace Kernel
 {
     class SusceptibilityPolio;
 
+    class IndividualHumanPolioConfig : public JsonConfigurable 
+    {
+        GET_SCHEMA_STATIC_WRAPPER(IndividualHumanPolioConfig)
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
+        DECLARE_QUERY_INTERFACE()
+
+    public:
+        virtual bool Configure( const Configuration* config );
+
+        static bool ReportSabinWildPhenotypeAsWild; // changes categorization from VDPV to WPV for reporting based on phenotype
+    };
+
     class IndividualHumanPolio : public IndividualHumanEnvironmental, public IIndividualHumanPolio
     {
         friend class SimulationPolio;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
-        DECLARE_QUERY_INTERFACE()
-        GET_SCHEMA_STATIC_WRAPPER(IndividualHumanPolio);
+        DECLARE_QUERY_INTERFACE();
 
     public:
         static IndividualHumanPolio *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
@@ -45,9 +56,7 @@ namespace Kernel
         virtual const infection_polio_reportable_list_t *GetInfectionReportables(bool getNewInfectionsOnly=true) const override;
 
     protected:
-
-        // POLIO, just temporarily here
-        static bool ReportSabinWildPhenotypeAsWild; // changes categorization from VDPV to WPV for reporting based on phenotype
+        static void InitializeStaticsPolio( const Configuration* config );
 
         float age_most_recent_infection;
         int paralysisVirusTypeMask; // Bit mask with bit 1=WPV1, 2=WPV2, 3=WPV3, 4=VDPV1, 5=VDPV2, 6=VDPV3
@@ -71,15 +80,5 @@ namespace Kernel
 
     private:
         SusceptibilityPolio * polio_susceptibility;
-
-        virtual bool Configure( const Configuration* config ) override;
-
-        // IIndividualHumanPolio
-
-        //virtual const infection_polio_reportable_list_t *GetNewInfectionReportables() const;
-
-/*    private:
-        SusceptibilityPolio * polio_susceptibility;
-*/
     };
 }

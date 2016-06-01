@@ -25,6 +25,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class InfectionPolio;
+        
         static double         antibody_IRBC_killrate;
         static bool           tracecontact_mode;          // flag for genome mutation algorithm for serial infection tracing
         static int            default_antigen;            // default infection antigenID
@@ -39,8 +41,7 @@ namespace Kernel
 
     class InfectionPolio
         : public InfectionEnvironmental,
-          public IInfectionPolioReportable,
-          protected InfectionPolioConfig
+          public IInfectionPolioReportable
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

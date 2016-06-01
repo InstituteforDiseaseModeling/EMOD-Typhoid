@@ -27,6 +27,9 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class Susceptibility;
+        friend class SusceptibilityTB;
+
         static bool  immune_decay;
 
         static float acqdecayrate;
@@ -44,7 +47,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
     };
 
-    class Susceptibility : public ISusceptibilityContext, protected SusceptibilityConfig
+    class Susceptibility : public ISusceptibilityContext
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

@@ -35,6 +35,7 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class InfectionHIV;
 
         //these are the config params
         static float HIV_drug_inactivation_rate;
@@ -51,7 +52,7 @@ namespace Kernel
     };
 
     //---------------------------- InfectionHIV ----------------------------------------
-    class InfectionHIV : public InfectionSTI, public IInfectionHIV, protected InfectionHIVConfig
+    class InfectionHIV : public InfectionSTI, public IInfectionHIV
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

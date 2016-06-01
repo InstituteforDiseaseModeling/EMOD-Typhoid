@@ -13,8 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualSTI.h"
 
 #include "Debug.h"
-#include "MathFunctions.h"
-#include "IndividualEventContext.h"
 #include "IIndividualHuman.h"
 #include "InfectionSTI.h"
 #include "NodeEventContext.h"
@@ -173,7 +171,7 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "this", "IIndividualHuman", "IndividualHumanSTI" );
         }
 
-        const STINetworkParameters* p_new_params = net_param_map.GetParameters( individual, prop, new_value );
+        const STINetworkParameters* p_new_params = IndividualHumanSTIConfig::net_param_map.GetParameters( individual, prop, new_value );
         if( p_new_params != nullptr )
         {
             SetSTINetworkParams( *p_new_params );
@@ -215,7 +213,7 @@ namespace Kernel
             UpdateGroupMembership(); // we "JIT" this function (just in time)
             LOG_DEBUG_F( "Exposing individual %d\n", GetSuid().data );
             release_assert( IsInfected() == false );
-            parent->ExposeIndividual((IInfectable*)this, transmissionGroupMembership, dt);
+            parent->ExposeIndividual(this, transmissionGroupMembership, dt);
             potential_exposure_flag = false;
         }
     }
@@ -242,7 +240,7 @@ namespace Kernel
         {
             if( IsCircumcised() )
             {
-                ISTICircumcisionConsumer *ic = NULL;
+                ISTICircumcisionConsumer *ic = nullptr;
                 if (s_OK != interventions->QueryInterface(GET_IID( ISTICircumcisionConsumer ), (void**)&ic) )
                 {
                     throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTICircumcisionConsumer", "InterventionsContainer" );
@@ -250,7 +248,7 @@ namespace Kernel
                 mult *= (1.0 - ic->GetCircumcisedReducedAcquire());
             }
         }
-        else if( maleToFemaleRelativeInfectivityAges.size() > 0 )
+        else if(IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityAges.size() > 0 )
         {
             // Individual is female. If user specified a male-to-female infectivity multiplier, 
             // we need to apply that to the probability of infection. The base infectivity
@@ -258,29 +256,29 @@ namespace Kernel
             NonNegativeFloat multiplier = 0.0f;
             NonNegativeFloat age_in_yrs = GetAge()/DAYSPERYEAR;
             unsigned int idx = 0;
-            while( idx < maleToFemaleRelativeInfectivityAges.size() &&
-                   age_in_yrs > maleToFemaleRelativeInfectivityAges[ idx ] )
+            while( idx < IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityAges.size() &&
+                   age_in_yrs > IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityAges[ idx ] )
             {
                 idx++;
             }
             // 3 possible cases
             if( idx == 0 )
             {
-                multiplier = maleToFemaleRelativeInfectivityMultipliers[0];
+                multiplier = IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityMultipliers[0];
                 LOG_DEBUG_F( "Using value of %f for age-asymmetric infection multiplier for female age (in yrs) %f.\n", float(multiplier), (float) age_in_yrs );
             }
-            else if( idx == maleToFemaleRelativeInfectivityAges.size() )
+            else if( idx == IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityAges.size() )
             {
-                multiplier = maleToFemaleRelativeInfectivityMultipliers.back();
+                multiplier = IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityMultipliers.back();
                 LOG_DEBUG_F( "Using value of %f for age-asymmetric infection multiplier for female age (in yrs) %f.\n", float(multiplier), (float) age_in_yrs );
             }
             else 
             {
                 // do some linear interp math.
-                float left_age = maleToFemaleRelativeInfectivityAges[idx-1];
-                float right_age = maleToFemaleRelativeInfectivityAges[idx];
-                float left_mult = maleToFemaleRelativeInfectivityMultipliers[idx-1];
-                float right_mult = maleToFemaleRelativeInfectivityMultipliers[idx];
+                float left_age = IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityAges[idx-1];
+                float right_age = IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityAges[idx];
+                float left_mult = IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityMultipliers[idx-1];
+                float right_mult = IndividualHumanSTIConfig::maleToFemaleRelativeInfectivityMultipliers[idx];
                 multiplier = left_mult + ( age_in_yrs - left_age ) / ( right_age - left_age ) * ( right_mult - left_mult );
                 LOG_DEBUG_F( "Using interpolated value of %f for age-asymmetric infection multiplier for age (in yrs) %f.\n", float(multiplier), (float) age_in_yrs );
             } 
@@ -341,18 +339,18 @@ namespace Kernel
         ZERO_ARRAY( active_relationships );
 
         // Sexual debut
-        float min_age_sexual_debut_in_days = debutAgeYrsMin * DAYSPERYEAR;
+        float min_age_sexual_debut_in_days = IndividualHumanSTIConfig::debutAgeYrsMin * DAYSPERYEAR;
         float debut_lambda = 0;
         float debut_inv_kappa = 0;
         if( GetGender() == Gender::MALE ) 
         {
-            debut_inv_kappa = debutAgeYrsMale_inv_kappa;
-            debut_lambda    = debutAgeYrsMale_lambda;
+            debut_inv_kappa = IndividualHumanSTIConfig::debutAgeYrsMale_inv_kappa;
+            debut_lambda    = IndividualHumanSTIConfig::debutAgeYrsMale_lambda;
         }
         else
         {
-            debut_inv_kappa = debutAgeYrsFemale_inv_kappa;
-            debut_lambda    = debutAgeYrsFemale_lambda;
+            debut_inv_kappa = IndividualHumanSTIConfig::debutAgeYrsFemale_inv_kappa;
+            debut_lambda    = IndividualHumanSTIConfig::debutAgeYrsFemale_lambda;
         }
         float debut_draw = float(DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( debut_lambda, debut_inv_kappa ));
         sexual_debut_age = (std::max)(min_age_sexual_debut_in_days, debut_draw );
@@ -426,7 +424,6 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "Node*" );
         }
-        auto manager = sti_node->GetRelationshipManager();
 
         for (auto iterator = relationships.begin(); iterator != relationships.end(); /**/ )
         {
@@ -441,7 +438,7 @@ namespace Kernel
 
     IndividualHumanSTI::~IndividualHumanSTI()
     {
-        LOG_DEBUG_F( "%lu (STI) destructor.\n", this->GetSuid().data );
+        LOG_DEBUG_F( "%lu (STI) destructor.\n", suid.data );
 
         for( auto p_rel : relationships_at_death )
         {
@@ -455,14 +452,10 @@ namespace Kernel
         return InfectionSTI::CreateInfection(this, _suid);
     }
 
-    bool
-    IndividualHumanSTI::Configure(
-        const Configuration* config
-    )
+    void IndividualHumanSTI::InitializeStaticsSTI( const Configuration* config )
     {
-        IndividualHumanSTIConfig adamInfection;
-        adamInfection.Configure( config );
-        return true;
+        IndividualHumanSTIConfig individual_config;
+        individual_config.Configure( config );
     }
 
     void IndividualHumanSTI::setupInterventionsContainer()
@@ -545,8 +538,8 @@ namespace Kernel
     void IndividualHumanSTI::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
     {
         int numInfs = int(infections.size());
-        if( (numInfs >= max_ind_inf) ||
-            (!superinfection && numInfs > 0 )
+        if( (numInfs >= IndividualHumanConfig::max_ind_inf) ||
+            (!IndividualHumanConfig::superinfection && numInfs > 0 )
           )
         {
             return;
@@ -735,9 +728,9 @@ namespace Kernel
         slot2RelationshipDebugMap[ slot ] = pNewRelationship->GetSuid().data;
         LOG_DEBUG_F( "%s: Individual %d gave slot %d to relationship %d\n", __FUNCTION__, GetSuid().data, slot, pNewRelationship->GetSuid().data );
 
-        if( min_days_between_adding_relationships > 0)
+        if(IndividualHumanSTIConfig::min_days_between_adding_relationships > 0)
         {
-            delay_between_adding_relationships_timer = min_days_between_adding_relationships;
+            delay_between_adding_relationships_timer = IndividualHumanSTIConfig::min_days_between_adding_relationships;
         }
         // DJK: Can these counters live elsewhere?  Either reporter or something parallel to interventions container, e.g. counters container
         num_lifetime_relationships++;
@@ -815,7 +808,7 @@ namespace Kernel
     {
         if( has_other_sti_co_infection )
         {
-            return sti_coinfection_mult;
+            return IndividualHumanSTIConfig::sti_coinfection_mult;
         }
         else
         {
@@ -825,7 +818,7 @@ namespace Kernel
 
     bool IndividualHumanSTI::IsCircumcised() const
     {
-        ISTICircumcisionConsumer *ic = NULL;
+        ISTICircumcisionConsumer *ic = nullptr;
         if (s_OK != interventions->QueryInterface(GET_IID( ISTICircumcisionConsumer ), (void**)&ic) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "interventions", "ISTICircumcisionConsumer", "interventions" );

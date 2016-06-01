@@ -29,7 +29,6 @@ namespace Kernel
         virtual ~IndividualHumanTB(void) { }
         static   IndividualHumanTB *CreateHuman(INodeContext *context, suids::suid _suid, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
         virtual void InitializeHuman() override;
-        virtual bool Configure( const Configuration* config ) override;
 
         // Infections and Susceptibility
         virtual void CreateSusceptibility(float=1.0, float=1.0) override;
@@ -70,6 +69,8 @@ namespace Kernel
         std::set < IInfectionIncidenceObserver * > infectionIncidenceObservers;
         virtual void onInfectionIncidence() override;
         virtual void onInfectionMDRIncidence() override;
+
+        static void IndividualHumanTB::InitializeStaticsTB( const Configuration* config );
 
         DECLARE_SERIALIZABLE(IndividualHumanTB);
     };

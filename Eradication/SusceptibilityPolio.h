@@ -50,7 +50,6 @@ namespace Kernel
 
     class SusceptibilityPolio :
         public SusceptibilityEnvironmental,
-        public SusceptibilityPolioConfig,
         public ISusceptibilityPolio,
         public ISusceptibilityPolioReportable
     {

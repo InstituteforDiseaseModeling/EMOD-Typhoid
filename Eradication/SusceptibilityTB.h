@@ -44,7 +44,7 @@ namespace Kernel
         virtual void SetCD4ActFlag( bool bin) = 0;
     };
 
-    class SusceptibilityTB : public SusceptibilityAirborne, public ISusceptibilityTB, SusceptibilityTBConfig
+    class SusceptibilityTB : public SusceptibilityAirborne, public ISusceptibilityTB
     {
     public:
         friend class IndividualHumanTB;

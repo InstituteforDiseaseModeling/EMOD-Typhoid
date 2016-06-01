@@ -51,6 +51,8 @@ namespace Kernel
         
 
     protected:
+        friend class InfectionTB;
+        
         static float TB_latent_cure_rate;
         static float TB_fast_progressor_rate;
         static float TB_slow_progressor_rate;
@@ -79,7 +81,7 @@ namespace Kernel
     };
 
     //---------------------------- InfectionTB ----------------------------------------
-    class InfectionTB : public InfectionAirborne, public IInfectionTB, protected InfectionTBConfig
+    class InfectionTB : public InfectionAirborne, public IInfectionTB
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
