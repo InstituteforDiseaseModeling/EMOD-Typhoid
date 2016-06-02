@@ -38,6 +38,7 @@
         "Coital_Dilution_Factor_4_Plus_Partners": 0.45, 
         "Condom_Transmission_Blocking_Probability": 0.8, 
         "Config_Name": "GitHub-459", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "DEMOGRAPHICS": "", 
         "Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity": 0.5, 
         "Days_Between_Symptomatic_And_Death_Weibull_Scale": 618.341625, 
@@ -438,39 +439,71 @@
         "STI_Coinfection_Multiplier": 5.5, 
         "STI_Network_Params_By_Property": {
             "HIGH": {
+                "Correlated_Relationship_Type_Order": [
+                    "TRANSITORY", 
+                    "INFORMAL", 
+                    "MARITAL", 
+                    "TRANSACTIONAL"
+                ], 
                 "Extra_Relational_Flag_Type": "Correlated", 
-                "Max_Simultaneous_Informal_Relationships_Females": 3, 
-                "Max_Simultaneous_Informal_Relationships_Males": 3, 
-                "Max_Simultaneous_Marital_Relationships_Females": 2, 
-                "Max_Simultaneous_Marital_Relationships_Males": 2, 
-                "Max_Simultaneous_Transitory_Relationships_Females": 4, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 4, 
-                "PARAMETERS_FOR_CORRELATED_FLAGS": "", 
-                "PARAMETERS_FOR_SHARED_FLAGS": "", 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Female": 0.65, 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Male": 0.5, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Female": 1, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Male": 1, 
-                "Prob_Extra_Transitory_Relationship_Female": 0.25, 
-                "Prob_Extra_Transitory_Relationship_Male": 1
+                "Max_Simultaneous_Relationships_Female": [
+                    4, 
+                    3, 
+                    2, 
+                    0
+                ], 
+                "Max_Simultaneous_Relationships_Male": [
+                    4, 
+                    3, 
+                    2, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Female": [
+                    0.25, 
+                    0.65, 
+                    1, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Male": [
+                    1.0, 
+                    0.5, 
+                    1, 
+                    0
+                ]
             }, 
             "Individual_Property_Name": "Risk", 
             "LOW": {
+                "Correlated_Relationship_Type_Order": [
+                    "TRANSITORY", 
+                    "INFORMAL", 
+                    "MARITAL", 
+                    "TRANSACTIONAL"
+                ], 
                 "Extra_Relational_Flag_Type": "Correlated", 
-                "Max_Simultaneous_Informal_Relationships_Females": 1, 
-                "Max_Simultaneous_Informal_Relationships_Males": 1, 
-                "Max_Simultaneous_Marital_Relationships_Females": 1, 
-                "Max_Simultaneous_Marital_Relationships_Males": 1, 
-                "Max_Simultaneous_Transitory_Relationships_Females": 1, 
-                "Max_Simultaneous_Transitory_Relationships_Males": 1, 
-                "PARAMETERS_FOR_CORRELATED_FLAGS": "", 
-                "PARAMETERS_FOR_SHARED_FLAGS": "", 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Female": 0, 
-                "Prob_Extra_Informal_Given_Extra_Transitory_Male": 0, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Female": 0, 
-                "Prob_Extra_Marital_Given_Extra_Informal_Male": 0, 
-                "Prob_Extra_Transitory_Relationship_Female": 0, 
-                "Prob_Extra_Transitory_Relationship_Male": 0
+                "Max_Simultaneous_Relationships_Female": [
+                    1, 
+                    1, 
+                    1, 
+                    0
+                ], 
+                "Max_Simultaneous_Relationships_Male": [
+                    1, 
+                    1, 
+                    1, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Female": [
+                    0, 
+                    0, 
+                    0, 
+                    0
+                ], 
+                "Prob_Extra_Relationship_Male": [
+                    0, 
+                    0, 
+                    0, 
+                    0
+                ]
             }
         }, 
         "Scenario": "Baseline", 
