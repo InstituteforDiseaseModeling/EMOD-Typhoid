@@ -5,6 +5,7 @@
         "Base_Year": 1960.5, 
         "Run_Number": 174097, 
         "Campaign_Filename": "campaign_FastTrack_Reference_StratPlan.json", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Enable_Aging": 1, 
         "Enable_Interventions": 1, 
         "Simulation_Duration": 26095, 
