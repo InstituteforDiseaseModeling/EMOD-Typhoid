@@ -18,7 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class IndividualHumanSTIConfig : public JsonConfigurable
+    class IndividualHumanSTIConfig : public IndividualHumanConfig
     {
         GET_SCHEMA_STATIC_WRAPPER( IndividualHumanSTIConfig )
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
@@ -29,7 +29,6 @@ namespace Kernel
     protected:
         friend class SimulationSTI;
         friend class IndividualHumanSTI;
-        friend class IndividualHumanHIV;
         friend class Relationship;
 
         static STINetworkParametersMap net_param_map;

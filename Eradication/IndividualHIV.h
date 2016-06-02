@@ -17,6 +17,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class IndividualHumanHIVConfig : public IndividualHumanSTIConfig
+    {
+    protected:
+        friend class IndividualHumanHIV;
+    };
+
     class IHIVInfection;
     class IHIVSusceptibility;
     class IndividualHumanHIV : public IndividualHumanSTI, public IIndividualHumanHIV

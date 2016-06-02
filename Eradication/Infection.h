@@ -37,9 +37,6 @@ namespace Kernel
 
     protected:
         friend class Infection;
-        friend class InfectionHIV;
-        friend class InfectionMalaria;
-        friend class InfectionTB;
 
         static DurationDistribution incubation_distribution;
         static DurationDistribution infectious_distribution;

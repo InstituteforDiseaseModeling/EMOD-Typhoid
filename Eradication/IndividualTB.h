@@ -17,6 +17,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class IndividualHumanTBConfig : public IndividualHumanAirborneConfig
+    {
+    protected:
+        friend class IndividualHumanTB;
+    };
+
     class IInfectionIncidenceObserver;
 
     class IndividualHumanTB : public IndividualHumanAirborne, public IIndividualHumanTB2

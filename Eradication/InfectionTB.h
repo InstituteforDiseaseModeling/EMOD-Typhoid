@@ -37,7 +37,7 @@ namespace Kernel
         virtual bool IsExtrapulmonary() const = 0; 
     };
 
-    class InfectionTBConfig : public JsonConfigurable
+    class InfectionTBConfig : public InfectionAirborneConfig
     {
         friend class IndividualTB;
         GET_SCHEMA_STATIC_WRAPPER(InfectionTBConfig)
@@ -49,7 +49,6 @@ namespace Kernel
         std::map <float,float> GetCD4Map();
         InfectionStateChange::_enum TB_event_type_associated_with_infectious_timer;
         
-
     protected:
         friend class InfectionTB;
         

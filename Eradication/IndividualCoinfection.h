@@ -56,7 +56,7 @@ namespace Kernel
         virtual int   GetNumCD4TimeSteps() const = 0;
     };
 
-    class IndividualHumanCoinfectionConfig : public JsonConfigurable
+    class IndividualHumanCoinfectionConfig : public IndividualHumanAirborneConfig
     {
         GET_SCHEMA_STATIC_WRAPPER( IndividualHumanCoinfectionConfig )
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()

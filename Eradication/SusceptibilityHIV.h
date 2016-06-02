@@ -28,7 +28,7 @@ namespace Kernel
         virtual void         TerminateSuppression(float days_till_death) = 0;
     };
 
-    class SusceptibilityHIVConfig : public JsonConfigurable
+    class SusceptibilityHIVConfig : public SusceptibilitySTIConfig
     {
         friend class IndividualHumanCoinfection;
         GET_SCHEMA_STATIC_WRAPPER(SusceptibilityHIVConfig)

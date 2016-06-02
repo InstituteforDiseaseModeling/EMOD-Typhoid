@@ -28,7 +28,6 @@ namespace Kernel
 
     protected:
         friend class Susceptibility;
-        friend class SusceptibilityTB;
 
         static bool  immune_decay;
 

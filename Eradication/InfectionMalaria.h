@@ -30,7 +30,7 @@ namespace Kernel
         virtual void    reset_FemaleGametocytes(int stage) = 0;
     };
 
-    class InfectionMalariaConfig : public JsonConfigurable
+    class InfectionMalariaConfig : public InfectionVectorConfig
     {
         GET_SCHEMA_STATIC_WRAPPER(InfectionMalariaConfig)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()

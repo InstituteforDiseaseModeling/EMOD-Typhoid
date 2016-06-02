@@ -53,10 +53,6 @@ namespace Kernel
 
     protected:
         friend class IndividualHuman;
-        friend class IndividualHumanSTI;
-        friend class IndividualHumanHIV;
-        friend class IndividualHumanTB;
-        friend class IndividualHumanCoinfection;
 
         static bool aging;
         static float min_adult_age_years ;

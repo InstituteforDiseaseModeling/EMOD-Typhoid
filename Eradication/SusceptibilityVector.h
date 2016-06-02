@@ -17,7 +17,7 @@ namespace Kernel
 {
     class SimulationConfig;
 
-    class SusceptibilityVectorConfig : public JsonConfigurable 
+    class SusceptibilityVectorConfig : public SusceptibilityConfig
     {
         friend class IndividualHumanVector;
     public:

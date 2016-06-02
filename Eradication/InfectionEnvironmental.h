@@ -14,6 +14,12 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class InfectionEnvironmentalConfig : public InfectionConfig
+    {
+    protected:
+        friend class InfectionEnvironmental;
+    };
+
     class InfectionEnvironmental : public Infection
     {
     public:

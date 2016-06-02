@@ -18,7 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class SusceptibilityMalariaConfig : public JsonConfigurable 
+    class SusceptibilityMalariaConfig : public SusceptibilityVectorConfig
     {
         friend class IndividualHumanMalaria;
 
