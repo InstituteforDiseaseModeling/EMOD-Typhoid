@@ -80,8 +80,6 @@ namespace Kernel
 #endif
             std::string _label;
     };
-
-    const float IndividualHumanTyphoid::P1 = 0.1111f; // probability that an infection becomes clinical
     const float IndividualHumanTyphoid::P5 = 0.05f; // probability of typhoid death
     const float IndividualHumanTyphoid::P7 = 0.0f; // probability of clinical immunity after acute infection
     const float IndividualHumanTyphoid::P10 = 0.0f; // probability of clinical immunity from a subclinical infection
@@ -477,21 +475,22 @@ namespace Kernel
                 return;
             }
             infectiousness = 0.0f;
+			float base_infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_acute_infectiousness;
             if (acute_timer>=0)
             {
-                infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_acute_infectivity*interventions->GetInterventionReducedTransmit();
+                infectiousness = base_infectiousness*interventions->GetInterventionReducedTransmit();
             }
             else if (prepatent_timer>=0)
             {
-                infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_prepatent_infectivity*interventions->GetInterventionReducedTransmit();
+                infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_prepatent_relative_infectiousness*interventions->GetInterventionReducedTransmit();
             }
             else if (subclinical_timer>=0)
             {
-                infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_subclinical_infectivity*interventions->GetInterventionReducedTransmit();
+                infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_subclinical_relative_infectiousness*interventions->GetInterventionReducedTransmit();
             }
             else if (chronic_timer>=0)
             {
-                infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_chronic_infectivity*interventions->GetInterventionReducedTransmit();
+                infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_chronic_relative_infectiousness*interventions->GetInterventionReducedTransmit();
             }
 
             //parent->GetTransmissionRoutes()
@@ -630,7 +629,7 @@ namespace Kernel
                             //} else {
                             //    isChronic = false;}
                         } else if (!hasClinicalImmunity) {
-                            if (randgen->e()<(P1*interventions->GetInterventionReducedMortality())) { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
+                            if (randgen->e()<(GET_CONFIGURABLE(SimulationConfig)->typhoid_symptomatic_fraction*interventions->GetInterventionReducedMortality())) { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
                                 if (getAgeInYears() < 30.0)
                                     _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
                                 else
