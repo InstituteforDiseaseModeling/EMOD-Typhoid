@@ -18,16 +18,18 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class IndividualHumanSTIConfig : public JsonConfigurable
+    class IndividualHumanSTIConfig : public IndividualHumanConfig
     {
         GET_SCHEMA_STATIC_WRAPPER( IndividualHumanSTIConfig )
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
 
     public:
-        friend class SimulationSTI;
 
     protected:
+        friend class SimulationSTI;
+        friend class IndividualHumanSTI;
+        friend class Relationship;
 
         static STINetworkParametersMap net_param_map;
 
@@ -44,20 +46,17 @@ namespace Kernel
         static float sti_coinfection_mult;
 
         static float min_days_between_adding_relationships;
-    public:
+
         static float condom_transmission_blocking_probability;
 
         static std::vector<float> maleToFemaleRelativeInfectivityAges;
         static std::vector<float> maleToFemaleRelativeInfectivityMultipliers;
 
-        friend class IndividualHumanSTI;
-        friend class Relationship;
         virtual bool Configure( const Configuration* config ) override;
     };
 
     class IndividualHumanSTI :  public IndividualHuman, 
-                                public IIndividualHumanSTI,
-                                public IndividualHumanSTIConfig
+                                public IIndividualHumanSTI
     {
     public:
         DECLARE_QUERY_INTERFACE()
@@ -71,7 +70,6 @@ namespace Kernel
                                                   int gender = 0, 
                                                   float initial_poverty = 0.5f );
         virtual void InitializeHuman() override;
-        virtual bool Configure( const Configuration* config ) override;
         virtual void Update(float currenttime, float dt) override;
 
         virtual void UpdateSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) override;
@@ -129,6 +127,7 @@ namespace Kernel
         float GetMaxNumRels(Gender::Enum gender, RelationshipType::Enum rel_type);
         virtual void NotifyPotentialExposure() override;
 
+        static void InitializeStaticsSTI( const Configuration* config );
 
     protected:
         IndividualHumanSTI( suids::suid id = suids::nil_suid(), 

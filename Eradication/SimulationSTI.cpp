@@ -93,9 +93,7 @@ namespace Kernel
     )
     {
         Simulation::Initialize(config);
-        IndividualHumanSTIConfig fakeHumanSTIConfig;
-        LOG_INFO( "Calling Configure on fakeHumanSTIConfig\n" );
-        fakeHumanSTIConfig.Configure( config );
+        IndividualHumanSTI::InitializeStaticsSTI( config );
     }
 
     bool

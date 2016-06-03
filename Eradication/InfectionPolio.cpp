@@ -169,8 +169,8 @@ void Kernel::InfectionPolio::SetParameters(StrainIdentity* infstrain, int incuba
     if(infstrain == nullptr)
     {
         // using default strainIDs
-        infection_strain->SetAntigenID(default_antigen);
-        infection_strain->SetGeneticID(default_genome);
+        infection_strain->SetAntigenID(InfectionPolioConfig::default_antigen);
+        infection_strain->SetGeneticID(InfectionPolioConfig::default_genome);
     }
     else
     {
@@ -330,8 +330,8 @@ void Kernel::InfectionPolio::Update(float dt, ISusceptibilityContext* _immunity)
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionsContext()", "IDrugVaccineInterventionEffects", "IIndividualHumanEventContext" );
             }
 
-            if( ( paralytic_case_mortality * idvie->GetInterventionReducedMortality() ) &&
-                randgen->e() < paralytic_case_mortality * idvie->GetInterventionReducedMortality() )
+            if( (InfectionPolioConfig::paralytic_case_mortality * idvie->GetInterventionReducedMortality() ) &&
+                randgen->e() < InfectionPolioConfig::paralytic_case_mortality * idvie->GetInterventionReducedMortality() )
             {
                 StateChange = InfectionStateChange::Fatal;
             }
@@ -381,7 +381,7 @@ void Kernel::InfectionPolio::evolveStrain(ISusceptibilityPolio* immunity, float 
         float prob_mutation;
         if( IS_WILD_TYPE( infection_strain->GetAntigenID() ) )
         {
-            prob_mutation = evolutionWPVLinearRate * dt; // wild type only uses linear mutation
+            prob_mutation = InfectionPolioConfig::evolutionWPVLinearRate * dt; // wild type only uses linear mutation
         }
         else // VRPV (vaccine-related poliovirus)
         {
@@ -392,19 +392,19 @@ void Kernel::InfectionPolio::evolveStrain(ISusceptibilityPolio* immunity, float 
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_LINEAR:
-                    prob_mutation = dt * evolutionSabinLinearRate[serotype];
+                    prob_mutation = dt * InfectionPolioConfig::evolutionSabinLinearRate[serotype];
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_IMMUNITY:
-                    prob_mutation = float((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2));
+                    prob_mutation = float((dt * InfectionPolioConfig::evolutionSabinLinearRate[serotype]) + (dt * InfectionPolioConfig::evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2));
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_REVERSION_AND_IMMUNITY:
-                    prob_mutation = float((evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + evolutionHalfmaxReversion)) * ((dt * evolutionSabinLinearRate[serotype]) + (dt * evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2)));
+                    prob_mutation = float((InfectionPolioConfig::evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + InfectionPolioConfig::evolutionHalfmaxReversion)) * ((dt * InfectionPolioConfig::evolutionSabinLinearRate[serotype]) + (dt * InfectionPolioConfig::evolutionImmuneRate * log(immunity->GetMucosalImmunity(infection_strain)) / LOG_2)));
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_REVERSION:
-                    prob_mutation = (evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + evolutionHalfmaxReversion)) * (dt * evolutionSabinLinearRate[serotype]);
+                    prob_mutation = (InfectionPolioConfig::evolutionHalfmaxReversion / (immunity->GetReversionDegree(infection_strain) + InfectionPolioConfig::evolutionHalfmaxReversion)) * (dt * InfectionPolioConfig::evolutionSabinLinearRate[serotype]);
                     break;
 
                 case EvolutionPolioClockType::POLIO_EVOCLOCK_POISSONSITES:
@@ -472,7 +472,7 @@ void Kernel::InfectionPolio::evolveStrain(ISusceptibilityPolio* immunity, float 
             infection_strain->SetGeneticID(int(bin_genome)); // new genome selected under host pressures, now ready to compete for new hosts in the community
         }
         // override mutation results in trace contact mode
-        if(tracecontact_mode)
+        if(InfectionPolioConfig::tracecontact_mode)
         {
             if(shed_genome_traceContactMode < 0)
             {
