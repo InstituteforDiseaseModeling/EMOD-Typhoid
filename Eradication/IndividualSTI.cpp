@@ -1112,7 +1112,7 @@ namespace Kernel
             for( int rel = 0; rel < RelationshipType::COUNT; rel++ )
             {
                 RelationshipType::Enum rel_type = net_params.rel_type_order[rel];
-                float prob = net_params.prob_extra_rels[gender][rel];
+                float prob = net_params.prob_extra_rels[gender][rel_type];
 
                 if( (prob > 0.0) && ((prob == 1.0) || (prob > randgen->e()) ) )
                 {

@@ -70,6 +70,12 @@
         { "path": "STI/68_STI_Transactional_Concurrent_JustFemales" },
         { "path": "STI/69_STI_Transactional_Concurrent_Max" },
         { "path": "STI/70_STI_Simple_CSW" },
+        { "path": "STI/71_STI_Correlated_TI" },
+        { "path": "STI/72_STI_Correlated_TIM" },
+        { "path": "STI/73_STI_Correlated_TIMC" },
+        { "path": "STI/74_STI_Correlated_CM" },
+        { "path": "STI/75_STI_Correlated_CMI" },
+        { "path": "STI/76_STI_Correlated_CMIT" },
         { "path": "STI/101_MaleCircumcision" },
         { "path": "STI/102_STIBarrier" }
     ],
