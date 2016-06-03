@@ -30,7 +30,7 @@
         "Campaign_Filename": "campaign.json", 
         "Climate_Model": "CLIMATE_OFF", 
         "Climate_Update_Resolution": "CLIMATE_UPDATE_DAY", 
-        "Config_Name": "Typhoid_SingleIndividualIntrahost", 
+        "Config_Name": "Typhoid_SingleIndividualIntraHost", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 

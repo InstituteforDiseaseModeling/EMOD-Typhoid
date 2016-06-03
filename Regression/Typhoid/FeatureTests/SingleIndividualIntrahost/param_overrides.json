@@ -2,7 +2,7 @@
     "Default_Config_Path": "defaults/typhoid_default_config.json", 
     "parameters": {
         "Simulation_Duration": 60, 
-        "Config_Name": "Typhoid_SingleIndividualIntrahost",
+        "Config_Name": "Typhoid_SingleIndividualIntraHost", 
         "Typhoid_Protection_Per_Infection": 1, 
         "Typhoid_Chronic_Infectivity": 40, 
         "Base_Population_Scale_Factor": 1e-05, 
