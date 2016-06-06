@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -103,8 +103,8 @@ namespace Kernel {
         friend PoolManager<classname>; \
         static ISerializable* construct() { return dynamic_cast<ISerializable*>(PoolManager<classname>::_allocate()); }    \
         virtual void Recycle() override { PoolManager<classname>::_recycle(this); } \
-    protected: \
-        static void serialize(IArchive&, classname*);                               
+    protected:\
+        static void serialize(IArchive&, classname*);                               \
 
 #define REGISTER_SERIALIZABLE(classname)                                                     \
     char* classname::_class_name = #classname;                                               \
