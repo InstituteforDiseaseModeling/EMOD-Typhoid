@@ -7,7 +7,7 @@
         "Start_Time": 0,
         "Simulation_Timestep": 1,
         "Timesteps": 1500,
-        "Channels": 24
+        "Channels": 25
     },
     "Channels": {
         "Active INFORMAL Relationships": {
