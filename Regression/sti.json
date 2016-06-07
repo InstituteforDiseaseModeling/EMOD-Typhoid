@@ -76,6 +76,7 @@
         { "path": "STI/74_STI_Correlated_CM" },
         { "path": "STI/75_STI_Correlated_CMI" },
         { "path": "STI/76_STI_Correlated_CMIT" },
+        { "path": "STI/77_STI_GitHub_521" },
         { "path": "STI/101_MaleCircumcision" },
         { "path": "STI/102_STIBarrier" }
     ],
