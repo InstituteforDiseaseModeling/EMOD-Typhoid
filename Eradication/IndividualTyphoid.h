@@ -75,7 +75,6 @@ namespace Kernel
             subclinical_timer,
             acute_timer,
             prepatent_timer,
-      //            infectious_timer,
             clinical_immunity_timer;  // timers of days left in state, or UNINIT_TIMER if not used //JG- I'm going to leave clinical immunity in for now. 
         int _subclinical_duration,
             _prepatent_duration,
