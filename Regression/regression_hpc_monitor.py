@@ -4,6 +4,7 @@ import regression_local_monitor
 import subprocess
 import datetime
 import json
+#from hashlib import md5
 import regression_utils as ru
 
 class HpcMonitor(regression_local_monitor.Monitor):
@@ -17,7 +18,7 @@ class HpcMonitor(regression_local_monitor.Monitor):
 
     def run(self):
     
-        MyRegressionRunner.sems.acquire()
+        self.sems.acquire()
         def get_num_cores( some_json ):
             num_cores = 1
             if ('parameters' in some_json) and ('Num_Cores' in some_json['parameters']):
@@ -184,6 +185,6 @@ class HpcMonitor(regression_local_monitor.Monitor):
                                         self.verify( sim_dir, file, "Channels" )
                     break
             time.sleep(5)
-        MyRegressionRunner.sems.release()
+        self.sems.release()
 
 

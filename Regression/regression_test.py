@@ -4,7 +4,6 @@
 This file is the root of regression. Almost everything here is about copying files around.
 """
 
-from hashlib import md5
 import regression_utils as ru
 import BaseHTTPServer
 import SimpleHTTPServer
@@ -63,14 +62,13 @@ def setup():
     global params
     params = regression_runtime_params.RuntimeParameters(args)
 
-    global emodules_map, regression_runner, version_string
+    global emodules_map, regression_runner
     emodules_map = {}
     emodules_map[ "interventions" ] = []
     emodules_map[ "disease_plugins" ] = []
     emodules_map[ "reporter_plugins" ] = []
 
     regression_runner = MyRegressionRunner(params)
-    version_string = None
 
     if params.dll_root is not None and params.use_dlls is True:
         #print( "dll_root (remote) = " + params.dll_root )
@@ -439,7 +437,6 @@ def main():
     if "tests" in reglistjson:
         p = subprocess.Popen( (params.executable_path + " -v").split(), shell=False, stdout=subprocess.PIPE )
         [pipe_stdout, pipe_stderr] = p.communicate()
-        global version_string
         version_string = re.search('[0-9]+.[0-9]+.[0-9]+.[0-9]+', pipe_stdout).group(0)
 
         starttime = datetime.datetime.now()

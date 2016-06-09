@@ -13,6 +13,7 @@ completed = 0
 cache_cwd = os.getcwd()
 final_warnings = ""
 reg_threads = []
+version_string = None
 
 def recursive_json_overrider( ref_json, flat_input_json ):
     for val in ref_json:

@@ -7,6 +7,7 @@ import datetime
 import threading
 import json
 import tempfile
+from hashlib import md5
 import regression_utils as ru
 
 MAX_ACTIVE_JOBS=20
@@ -60,14 +61,14 @@ class Monitor(threading.Thread):
                 for file in os.listdir( os.path.join( self.config_id, "output" ) ):
                     if ( file.endswith( ".json" ) or file.endswith( ".csv" ) ) and file[0] != ".":
                         self.verify( sim_dir, file, "Channels" )
-        MyRegressionRunner.sems.release()
+        self.sems.release()
 
     def get_json_data_hash( self, data ):
         #json_data = collections.OrderedDict([])
         #json_data["Data"] = data
         with tempfile.TemporaryFile() as handle:
             json.dump( data, handle )
-            hash = md5_hash( handle )
+            hash = ru.md5_hash( handle )
         return hash
 
     def compareJsonOutputs( self, sim_dir, report_name, ref_path, test_path, failures ):
@@ -76,8 +77,8 @@ class Monitor(threading.Thread):
 
         ref_json = json.loads( open( os.path.join( ru.cache_cwd, ref_path ) ).read() )
         if "Channels" not in ref_json.keys():
-            ref_md5  = md5_hash_of_file( ref_path )
-            test_md5 = md5_hash_of_file( test_path )
+            ref_md5  = ru.md5_hash_of_file( ref_path )
+            test_md5 = ru.md5_hash_of_file( test_path )
             if ref_md5 == test_md5:
                 return False, ""
             else:
@@ -294,11 +295,10 @@ class Monitor(threading.Thread):
             print( self.config_id + " passed (" + str(self.duration) + ") - " + report_name )
             self.report.addPassingTest(self.config_id, self.duration)
             
-            global version_string
-            if version_string is not None:
+            if ru.version_string is not None:
                 try:
                     timefile = open( os.path.join( self.config_id, "time.txt" ), 'a' )
-                    timefile.write(version_string + '\t' + str(self.duration) + '\n')
+                    timefile.write(ru.version_string + '\t' + str(self.duration) + '\n')
                     timefile.close()
                 except Exception as e:
                     print("Problem writing time.txt file (repeat of error Jonathan was seeing on linux?)\n")
