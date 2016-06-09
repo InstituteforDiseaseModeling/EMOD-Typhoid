@@ -4,12 +4,16 @@ import regression_local_monitor
 import subprocess
 import datetime
 import json
+import time
+import os
 #from hashlib import md5
 import regression_utils as ru
+import regression_clg as clg
 
 class HpcMonitor(regression_local_monitor.Monitor):
     def __init__(self, sim_id, config_id, report, params, suffix, config_json=None, compare_results_to_baseline=True):
-        Monitor.__init__( self, sim_id, config_id, params, report, config_json, compare_results_to_baseline )
+        #super(regression_local_monitor.Monitor,self).__init__( sim_id, config_id, report, params, config_json, compare_results_to_baseline )
+        regression_local_monitor.Monitor.__init__( self, sim_id, config_id, report, params, config_json, compare_results_to_baseline )
         #print "Running DTK execution and monitor thread for HPC commissioning."
         self.sim_root = self.params.sim_root # override base Monitor which uses local sim directory
         self.config_json = config_json
@@ -66,7 +70,7 @@ class HpcMonitor(regression_local_monitor.Monitor):
         #if params.dll_root is not None and params.use_dlls is True:
         #    eradication_options['--dll-path'] = params.dll_root
         eradication_params = []
-        eradication_command = CommandlineGenerator(eradication_bin, eradication_options, eradication_params)
+        eradication_command = clg.CommandlineGenerator(eradication_bin, eradication_options, eradication_params)
 
         #mpiexec commandline
         mpi_bin = 'mpiexec'
@@ -74,7 +78,7 @@ class HpcMonitor(regression_local_monitor.Monitor):
         if mpi_core_option is not None:
             mpi_options[mpi_core_option] = mpi_core_count
         mpi_params = [eradication_command.Commandline]
-        mpi_command = CommandlineGenerator(mpi_bin, mpi_options, mpi_params)
+        mpi_command = clg.CommandlineGenerator(mpi_bin, mpi_options, mpi_params)
         
         #job submit commandline
         jobsubmit_bin = 'job submit'
@@ -93,7 +97,7 @@ class HpcMonitor(regression_local_monitor.Monitor):
         jobsubmit_options['/stderr:'] = 'StdErr.txt'
         jobsubmit_options['/priority:'] = 'Lowest'
         jobsubmit_params = [mpi_command.Commandline]
-        jobsubmit_command = CommandlineGenerator(jobsubmit_bin, jobsubmit_options, jobsubmit_params)
+        jobsubmit_command = clg.CommandlineGenerator(jobsubmit_bin, jobsubmit_options, jobsubmit_params)
 
         #print 'simulation command line:', eradication_command.Commandline
         #print 'mpiexec command line:   ', mpi_command.Commandline
@@ -164,7 +168,7 @@ class HpcMonitor(regression_local_monitor.Monitor):
                         #self.finish(sim_dir, False)
                     elif state == "Completed" or state == "Finished":
                         ru.completed = ru.completed + 1
-                        print( str(ru.completed) + " out of " + str(len(ru.reg_threads)) + " ru.completed." )
+                        print( str(ru.completed) + " out of " + str(len(ru.reg_threads)) + " completed." )
                         check_status = False
 
                         status_file = open(os.path.join(sim_dir, "status.txt"))

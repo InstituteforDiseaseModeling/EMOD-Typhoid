@@ -24,7 +24,6 @@ class Monitor(threading.Thread):
         self.duration = None
         # can I make this static?
         self.params = params
-        self.sim_root = self.params.local_sim_root
         self.compare_results_to_baseline = compare_results_to_baseline
 
     def run(self):
@@ -34,6 +33,7 @@ class Monitor(threading.Thread):
 
         starttime = datetime.datetime.now()
 
+        self.sim_root = self.params.local_sim_root
         with open(os.path.join(sim_dir, "stdout.txt"), "w") as stdout, open(os.path.join(sim_dir, "stderr.txt"), "w") as stderr:
             actual_input_dir = os.path.join( self.params.input_path, self.config_json["parameters"]["Geography"] )
             cmd = None

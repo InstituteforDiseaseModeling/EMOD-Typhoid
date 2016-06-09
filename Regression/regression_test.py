@@ -20,7 +20,7 @@ import shutil # copyfile
 import subprocess
 import sys # for stdout.flush
 import threading
-import time # for sleep
+#import time # for sleep
 import urllib
 import urlparse
 import regression_runtime_params
