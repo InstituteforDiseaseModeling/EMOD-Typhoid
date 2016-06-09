@@ -7,6 +7,13 @@ import tempfile
 import string
 from hashlib import md5
 
+cache_cwd = None
+final_warnings = None
+completed = 0
+cache_cwd = os.getcwd()
+final_warnings = ""
+reg_threads = []
+
 def recursive_json_overrider( ref_json, flat_input_json ):
     for val in ref_json:
         #if not leaf, call recursive_json_leaf_reader
