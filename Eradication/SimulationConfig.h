@@ -281,8 +281,6 @@ namespace Kernel
 #endif
 #ifndef DISABLE_STI
         // STI: these will all move to IndividualHumanSTIConfig soon.
-        float shortTermRelationshipLength;
-        float concurrentRelationshipLength;
         float prob_super_spreader;
         bool  enable_coital_dilution;
 
