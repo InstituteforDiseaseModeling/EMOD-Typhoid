@@ -4,15 +4,19 @@
 This file is the root of regression. Almost everything here is about copying files around.
 """
 
-import regression_utils as ru
-import BaseHTTPServer
-import SimpleHTTPServer
-import SocketServer
+# These imports are from original version of regression_test.py that ran as a REST-ful web service 
+# inside mod_wsgi/apache setup. Was a good idea then and still might be...
+#import BaseHTTPServer
+#import SimpleHTTPServer
+#import SocketServer
+#import cgi
+#import httplib
+#import urllib
+#import urlparse
+
 import argparse
-import cgi
 import datetime
 import glob
-import httplib
 import json
 import os # e.g., mkdir
 import re
@@ -20,25 +24,19 @@ import shutil # copyfile
 import subprocess
 import sys # for stdout.flush
 import threading
-#import time # for sleep
-import urllib
-import urlparse
+import pdb
+
+import regression_utils as ru
 import regression_runtime_params
 import regression_local_monitor
 import regression_hpc_monitor
 import regression_report
 import regression_clg
-import pdb
 
 
-# global variable >:p -- actually, it's a module variable :) 
-params = None
-#regression_id = None
-#regression_id, params
-            
 def setup():
 
-    # non-main global code starts here
+    # non-main module code starts here
     parser = argparse.ArgumentParser()
     parser.add_argument("suite", help="JSON test-suite to run - e.g. full.json, sanity (converted to sanity.json), 25 (just run 25_Vector_Madagascar)")
     parser.add_argument("exe_path", metavar="exe-path", help="Path to the Eradication.exe binary to run")
@@ -59,28 +57,27 @@ def setup():
 
     args = parser.parse_args()
 
-    global params
     params = regression_runtime_params.RuntimeParameters(args)
+    return params
 
-    global emodules_map, regression_runner
-    emodules_map = {}
-    emodules_map[ "interventions" ] = []
-    emodules_map[ "disease_plugins" ] = []
-    emodules_map[ "reporter_plugins" ] = []
-
-    regression_runner = MyRegressionRunner(params)
-
-    if params.dll_root is not None and params.use_dlls is True:
-        #print( "dll_root (remote) = " + params.dll_root )
-        copyEModulesOver(params)
-    else:
-        print( "Not using DLLs" )
 
 class MyRegressionRunner():
+
+    emodules_map = {}
+
     def __init__(self, params):
         self.params = params
         self.dtk_hash = ru.md5_hash_of_file( self.params.executable_path )
         self.sim_dir_sem = threading.Semaphore()
+        self.emodules_map[ "interventions" ] = []
+        self.emodules_map[ "disease_plugins" ] = []
+        self.emodules_map[ "reporter_plugins" ] = []
+        if params.dll_root is not None and params.use_dlls is True:
+            #print( "dll_root (remote) = " + params.dll_root )
+            self.copyEModulesOver(params)
+        else:
+            print( "Not using DLLs" )
+
         # print( "md5 of executable = " + self.dtk_hash )
         
     def copy_demographics_files_to_user_input(self, sim_id, reply_json, actual_input_dir, local_input_dir, remote_input_dir):
@@ -191,6 +188,69 @@ class MyRegressionRunner():
         self.copy_climate_and_migration_files_to_user_input(reply_json, remote_input_dir, actual_input_dir)
         self.params.use_user_input_root = True
         
+    # Copy just build dlls to deployed places based on commandline argument 
+    # - The default is to use all of the DLLs found in the location the DLL projects
+    #   place the DLLs (<trunk>\x64\Release).
+    # - --dll-path allows the user to override this default path
+    def copyEModulesOver( params ):
+
+        print "src_root = " + params.src_root
+
+        if params.dll_path is not None:
+            emodule_dir = params.dll_path
+        else:
+            if params.scons:
+                emodule_dir = os.path.join( params.src_root, "build" )
+                emodule_dir = os.path.join( emodule_dir, "x64" )
+            else:
+                emodule_dir = os.path.join( params.src_root, "x64" )
+            if params.debug == True:
+                emodule_dir = os.path.join( emodule_dir, "Debug" )
+            elif params.quick_start == True:
+                emodule_dir = os.path.join( emodule_dir, "QuickStart" )
+            else:
+                emodule_dir = os.path.join( emodule_dir, "Release" )
+
+        print( 'Assuming emodules (dlls) are in local directory: ' + emodule_dir )
+
+        if os.path.exists( emodule_dir ) == False:
+            print( "Except that directory does not exist!  Not copying emodules." )
+            return
+
+        #print "dll_root = " + params.dll_root
+
+        dll_dirs = [ "disease_plugins",  "reporter_plugins", "interventions"]
+
+        for dll_subdir in dll_dirs:
+            dlls = glob.glob( os.path.join( os.path.join( emodule_dir, dll_subdir ), "*.dll" ) )
+            for dll in dlls:
+                dll_hash = md5_hash_of_file( dll )
+                #print( dll_hash )
+                # 1) calc md5 of dll
+                # 2) check for existence of rivendell (or whatever) for <root>/emodules/<subdir>/<md5>
+                # 3) if no exist, create and copy
+                # 4) put full path in emodules_json
+                # 5) write out emodules_json when done to target sim dir
+                try:
+                    target_dir = os.path.join( params.dll_root, dll_subdir )
+                    target_dir = os.path.join( target_dir, dll_hash )
+
+                    if params.sec:
+                        print( dll + " will be used without checking 'new-ness'." )
+                    elif not (os.path.isdir( target_dir ) ):
+                        print( dll + ": copying to cluster" )
+                    else:
+                        print( dll + ": Already on cluster" )
+
+                    if not (os.path.isdir( target_dir ) ) and params.sec == False: # sec = command-line option to skip this
+                        os.makedirs( target_dir )
+                        shutil.copy( dll, os.path.join( target_dir, os.path.basename( dll ) ) )
+
+                    self.emodules_map[ dll_subdir ].append( os.path.join( target_dir, os.path.basename( dll ) ) )
+        
+                except IOError:
+                    print "Failed to copy dll " + dll + " to " + os.path.join( os.path.join( params.dll_root, dll_dirs[1] ), os.path.basename( dll ) ) 
+                    ru.final_warnings += "Failed to copy dll " + dll + " to " + os.path.join( os.path.join( params.dll_root, dll_dirs[1] ), os.path.basename( dll )) + "\n"
     def copy_sim_file( self, config_id, sim_dir, filename ):
         if( len( filename ) != 0 ):
             filename = os.path.join( config_id, filename )
@@ -210,8 +270,7 @@ class MyRegressionRunner():
             if os.name == "posix":
                 return True
 
-            global params
-            return params.local_execution 
+            return self.params.local_execution 
 
         sim_dir = os.path.join( self.params.sim_root, sim_id )
         bin_dir = os.path.join( self.params.bin_root, self.dtk_hash ) # may not exist yet
@@ -276,7 +335,7 @@ class MyRegressionRunner():
             if psp_param == "LOCAL":
                 py_input = "."
                 for py_file in glob.glob( os.path.join( config_id, "dtk_*.py" ) ):
-                    regression_runner.copy_sim_file( config_id, sim_dir, os.path.basename( py_file ) )
+                    self.copy_sim_file( config_id, sim_dir, os.path.basename( py_file ) )
             elif psp_param == "SHARED":
                 py_input = params.py_input
             elif psp_param != "NO":
@@ -303,7 +362,7 @@ class MyRegressionRunner():
         f.close()
 
         f = open( sim_dir + "/emodules_map.json", 'w' )
-        f.write( json.dumps( emodules_map, sort_keys=True, indent=4 ) )
+        f.write( json.dumps( self.emodules_map, sort_keys=True, indent=4 ) )
         f.close()
         
         # ------------------------------------------------------------------
@@ -316,7 +375,7 @@ class MyRegressionRunner():
         # ------------------------------------------------------------------
 
         if os.path.exists( os.path.join( config_id, "dtk_post_process.py" ) ):
-            regression_runner.copy_sim_file( config_id, sim_dir, "dtk_post_process.py" )
+            self.copy_sim_file( config_id, sim_dir, "dtk_post_process.py" )
 
         monitorThread = None # need scoped here
 
@@ -324,7 +383,7 @@ class MyRegressionRunner():
         if is_local_simulation(reply_json, config_id):
             monitorThread = regression_local_monitor.Monitor( sim_id, config_id, report, self.params, reply_json, compare_results_to_baseline )
         else:
-            monitorThread = regression_hpc_monitor.HpcMonitor( sim_id, config_id, report, self.params, params.label, reply_json, compare_results_to_baseline )
+            monitorThread = regression_hpc_monitor.HpcMonitor( sim_id, config_id, report, self.params, self.params.label, reply_json, compare_results_to_baseline )
 
         #monitorThread.daemon = True
         monitorThread.daemon = False
@@ -347,75 +406,12 @@ class MyRegressionRunner():
             print( "schema failed!" )
             return "fail"
 
-# Copy just build dlls to deployed places based on commandline argument 
-# - The default is to use all of the DLLs found in the location the DLL projects
-#   place the DLLs (<trunk>\x64\Release).
-# - --dll-path allows the user to override this default path
-def copyEModulesOver( params ):
-
-    print "src_root = " + params.src_root
-
-    if params.dll_path is not None:
-        emodule_dir = params.dll_path
-    else:
-        if params.scons:
-            emodule_dir = os.path.join( params.src_root, "build" )
-            emodule_dir = os.path.join( emodule_dir, "x64" )
-        else:
-            emodule_dir = os.path.join( params.src_root, "x64" )
-        if params.debug == True:
-            emodule_dir = os.path.join( emodule_dir, "Debug" )
-        elif params.quick_start == True:
-            emodule_dir = os.path.join( emodule_dir, "QuickStart" )
-        else:
-            emodule_dir = os.path.join( emodule_dir, "Release" )
-
-    print( 'Assuming emodules (dlls) are in local directory: ' + emodule_dir )
-
-    if os.path.exists( emodule_dir ) == False:
-        print( "Except that directory does not exist!  Not copying emodules." )
-        return
-
-    #print "dll_root = " + params.dll_root
-
-    dll_dirs = [ "disease_plugins",  "reporter_plugins", "interventions"]
-
-    for dll_subdir in dll_dirs:
-        dlls = glob.glob( os.path.join( os.path.join( emodule_dir, dll_subdir ), "*.dll" ) )
-        for dll in dlls:
-            dll_hash = md5_hash_of_file( dll )
-            #print( dll_hash )
-            # 1) calc md5 of dll
-            # 2) check for existence of rivendell (or whatever) for <root>/emodules/<subdir>/<md5>
-            # 3) if no exist, create and copy
-            # 4) put full path in emodules_json
-            # 5) write out emodules_json when done to target sim dir
-            try:
-                target_dir = os.path.join( params.dll_root, dll_subdir )
-                target_dir = os.path.join( target_dir, dll_hash )
-
-                if params.sec:
-                    print( dll + " will be used without checking 'new-ness'." )
-                elif not (os.path.isdir( target_dir ) ):
-                    print( dll + ": copying to cluster" )
-                else:
-                    print( dll + ": Already on cluster" )
-
-                if not (os.path.isdir( target_dir ) ) and params.sec == False: # sec = command-line option to skip this
-                    os.makedirs( target_dir )
-                    shutil.copy( dll, os.path.join( target_dir, os.path.basename( dll ) ) )
-
-                emodules_map[ dll_subdir ].append( os.path.join( target_dir, os.path.basename( dll ) ) )
-    
-            except IOError:
-                print "Failed to copy dll " + dll + " to " + os.path.join( os.path.join( params.dll_root, dll_dirs[1] ), os.path.basename( dll ) ) 
-                ru.final_warnings += "Failed to copy dll " + dll + " to " + os.path.join( os.path.join( params.dll_root, dll_dirs[1] ), os.path.basename( dll )) + "\n"
 
 def main():
-    report = None
-    reglistjson = None
-    regression_id = None
+    params = setup()
+    regression_runner = MyRegressionRunner(params)
 
+    reglistjson = None
     if(str.isdigit(params.suite)):
         dirs = glob.glob(params.suite + "_*")
         for dir in dirs:
@@ -434,6 +430,8 @@ def main():
                 else:
                     print( suite + " does not appear to be a suite, missing key 'tests'" )
 
+    report = None
+    regression_id = None
     if "tests" in reglistjson:
         p = subprocess.Popen( (params.executable_path + " -v").split(), shell=False, stdout=subprocess.PIPE )
         [pipe_stdout, pipe_stderr] = p.communicate()
@@ -609,5 +607,4 @@ if __name__ == "__main__":
         ru.flattenConfig( sys.argv[2] )
         sys.exit(0)
 
-    setup()
     main()

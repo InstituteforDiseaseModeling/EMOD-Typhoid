@@ -158,7 +158,6 @@ class HpcMonitor(regression_local_monitor.Monitor):
                         ru.completed = ru.completed + 1
                         print( self.config_id + " FAILED!" )
                         check_status = False
-                        global regression_id
                         self.report.addErroringTest( self.config_id, "", sim_dir )
                         #self.finish(sim_dir, False)
                     if state == "Canceled":

@@ -250,9 +250,7 @@ class Monitor(threading.Thread):
         
         # different reports obviously have different structure. The only report we currently have defailt 
         # structural knowledge about is InsetChart, but we should know the top level keys. PolioPatientSurvey
-        # has "patient_array" as the top level key.
-        global regression_id
-
+        # has "patient_array" as the top level key. 
         fail_validation = False
         failures = []
         failure_txt = ""
