@@ -57,8 +57,6 @@ namespace Kernel {
         IPairFormationAgent*            pfa[           RelationshipType::COUNT ];
         IPairFormationFlowController*   controller[    RelationshipType::COUNT ];
 
-        float extra_relational_rate_ratio_male;
-        float extra_relational_rate_ratio_female;
         float pfa_selection_threshold ;
     };
 }

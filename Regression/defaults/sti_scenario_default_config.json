@@ -81,8 +81,6 @@
         },
 
 		"____________NETWORK___________": {
-            "Extra_Relational_Rate_Ratio_Male": 1,
-            "Extra_Relational_Rate_Ratio_Female": 1,
             "Min_Days_Between_Adding_Relationships": 0,
 
             "PFA_Burnin_Duration_In_Days": 5475,

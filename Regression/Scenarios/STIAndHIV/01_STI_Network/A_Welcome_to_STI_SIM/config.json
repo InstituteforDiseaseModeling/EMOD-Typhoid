@@ -47,8 +47,6 @@
         "Enable_Spatial_Output": 0, 
         "Enable_Superinfection": 0, 
         "Enable_Vital_Dynamics": 0, 
-        "Extra_Relational_Rate_Ratio_Female": 1, 
-        "Extra_Relational_Rate_Ratio_Male": 1, 
         "Geography": "SamplesInput", 
         "Heterogeneous_Infectiousness_Weibull_Heterogeneity": 0, 
         "Heterogeneous_Infectiousness_Weibull_Scale": 1, 

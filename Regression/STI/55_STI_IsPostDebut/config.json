@@ -56,8 +56,6 @@
             "ERROR_Pre_Debut_On_Debut", 
             "STIDebut"
         ], 
-        "Extra_Relational_Rate_Ratio_Female": 1, 
-        "Extra_Relational_Rate_Ratio_Male": 1, 
         "Geography": "SouthAfrica", 
         "Heterogeneous_Infectiousness_Weibull_Heterogeneity": 0, 
         "Heterogeneous_Infectiousness_Weibull_Scale": 1, 

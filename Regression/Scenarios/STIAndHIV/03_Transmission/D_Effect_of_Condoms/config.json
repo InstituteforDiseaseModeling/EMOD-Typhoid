@@ -60,8 +60,6 @@
         "Enable_Spatial_Output": 0, 
         "Enable_Superinfection": 0, 
         "Enable_Vital_Dynamics": 1, 
-        "Extra_Relational_Rate_Ratio_Female": 1, 
-        "Extra_Relational_Rate_Ratio_Male": 1, 
         "Geography": "SamplesInput", 
         "HIV_Adult_Survival_Scale_Parameter_Intercept": 21.182, 
         "HIV_Adult_Survival_Scale_Parameter_Slope": -0.2717, 

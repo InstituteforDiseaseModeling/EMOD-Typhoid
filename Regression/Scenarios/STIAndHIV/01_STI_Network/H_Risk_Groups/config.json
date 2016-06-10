@@ -28,7 +28,8 @@
             "SSA_Demographics_With_Risk_Group.json", 
             "pfa_overlay.json", 
             "pfa_overlay_risk_assortivity.json", 
-            "PFA_Add_Informal_Marital.json"
+            "PFA_Add_Informal_Marital.json", 
+            "PFA_Extra_Rel_Rate_4M_2F.json"
         ], 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
@@ -49,8 +50,6 @@
         "Enable_Spatial_Output": 0, 
         "Enable_Superinfection": 0, 
         "Enable_Vital_Dynamics": 1, 
-        "Extra_Relational_Rate_Ratio_Female": 2, 
-        "Extra_Relational_Rate_Ratio_Male": 4, 
         "Geography": "SamplesInput", 
         "Heterogeneous_Infectiousness_Weibull_Heterogeneity": 0, 
         "Heterogeneous_Infectiousness_Weibull_Scale": 1, 

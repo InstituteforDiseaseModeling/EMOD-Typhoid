@@ -37,8 +37,6 @@ namespace Kernel {
 
     SocietyImpl::SocietyImpl( IRelationshipManager* manager )
         : relationship_manager(manager)
-        , extra_relational_rate_ratio_male(1.0f)
-        , extra_relational_rate_ratio_female(1.0f)
         , pfa_selection_threshold(0.2f)
     {
         for( int irel = 0; irel < RelationshipType::COUNT; irel++ )
@@ -83,8 +81,6 @@ namespace Kernel {
         // -------------------------------
         // --- Parameters from config.json
         // -------------------------------
-        initConfigTypeMap( "Extra_Relational_Rate_Ratio_Male",      &extra_relational_rate_ratio_male, PFA_Extra_Relational_Rate_Ratio_Male_DESC_TEXT, 1.0, FLT_MAX, 1.0f );
-        initConfigTypeMap( "Extra_Relational_Rate_Ratio_Female",    &extra_relational_rate_ratio_female, PFA_Extra_Relational_Rate_Ratio_Female_DESC_TEXT, 1.0, FLT_MAX, 1.0f );
         initConfigTypeMap( "PFA_Cum_Prob_Selection_Threshold",      &pfa_selection_threshold, PFA_Cum_Prob_Selection_Threshold_DESC_TEXT, 0.0f, 1.0f, 0.2f );
 
         bool ret = JsonConfigurable::Configure( config );
@@ -117,7 +113,7 @@ namespace Kernel {
             }; 
 
             rel_params[  irel ] = p_rel_params ;
-            form_params[ irel ] = PairFormationParamsFactory::Create( rel_type, config_form, extra_relational_rate_ratio_male, extra_relational_rate_ratio_female );
+            form_params[ irel ] = PairFormationParamsFactory::Create( rel_type, config_form );
             pfa[         irel ] = PfaFactory::CreatePfa( config_form, form_params[ irel ], pfa_selection_threshold, randgen, rc );
             rates[       irel ] = RateTableFactory::CreateRateTable( form_params[ irel ] );
             stats[       irel ] = PairFormationStatsFactory::CreateStatistician( form_params[ irel ] );
