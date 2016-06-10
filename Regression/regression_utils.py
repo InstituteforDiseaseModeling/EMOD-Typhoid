@@ -10,9 +10,6 @@ from hashlib import md5
 # below is list of 'global' variables that are shared across >1 modules in the regression suite of code. 
 # probably all of them could ultimately be made at least a static member of MyRegressionRunner or Monitor.
 
-cache_cwd = None
-final_warnings = None
-completed = 0
 cache_cwd = os.getcwd()
 final_warnings = ""
 reg_threads = []

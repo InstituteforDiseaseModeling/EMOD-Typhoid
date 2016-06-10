@@ -8,11 +8,15 @@ import threading
 import json
 import tempfile
 from hashlib import md5
+import pdb
+
 import regression_utils as ru
 
 MAX_ACTIVE_JOBS=20
 class Monitor(threading.Thread):
     sems = threading.Semaphore( MAX_ACTIVE_JOBS )
+    completed = 0
+
     def __init__(self, sim_id, config_id, report, params, config_json=None, compare_results_to_baseline=True):
         threading.Thread.__init__( self )
         #print "Running DTK execution and monitor thread."
@@ -27,7 +31,7 @@ class Monitor(threading.Thread):
         self.compare_results_to_baseline = compare_results_to_baseline
 
     def run(self):
-        self.sems.acquire()
+        self.__class__.sems.acquire()
         self.sim_root = self.params.local_sim_root
         sim_dir = os.path.join( self.sim_root, self.sim_timestamp )
         #os.chdir( sim_dir )    # NOT THREAD SAFE!
@@ -49,8 +53,8 @@ class Monitor(threading.Thread):
         endtime = datetime.datetime.now()
         self.duration = endtime - starttime
         os.chdir( ru.cache_cwd )
-        ru.completed = ru.completed + 1
-        print( str(ru.completed) + " out of " + str(len(ru.reg_threads)) + " completed." )
+        self.__class__.completed = self.__class__.completed + 1
+        print( str(self.__class__.completed) + " out of " + str(len(ru.reg_threads)) + " completed." )
         # JPS - should check here and only do the verification if it passed... ?
         if self.compare_results_to_baseline:
             if self.params.all_outputs == False:
@@ -61,7 +65,7 @@ class Monitor(threading.Thread):
                 for file in os.listdir( os.path.join( self.config_id, "output" ) ):
                     if ( file.endswith( ".json" ) or file.endswith( ".csv" ) ) and file[0] != ".":
                         self.verify( sim_dir, file, "Channels" )
-        self.sems.release()
+        self.__class__.sems.release()
 
     def get_json_data_hash( self, data ):
         #json_data = collections.OrderedDict([])

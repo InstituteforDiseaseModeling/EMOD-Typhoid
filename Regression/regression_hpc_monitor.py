@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
-import regression_local_monitor
 import subprocess
 import datetime
 import json
 import time
 import os
-#from hashlib import md5
+import pdb
+
+import regression_local_monitor
 import regression_utils as ru
 import regression_clg as clg
 
@@ -22,7 +23,7 @@ class HpcMonitor(regression_local_monitor.Monitor):
 
     def run(self):
     
-        self.sems.acquire()
+        self.__class__.sems.acquire()
         def get_num_cores( some_json ):
             num_cores = 1
             if ('parameters' in some_json) and ('Num_Cores' in some_json['parameters']):
@@ -155,19 +156,19 @@ class HpcMonitor(regression_local_monitor.Monitor):
                 if res[0].strip() == "State":
                     state = res[1].strip()
                     if state == "Failed":
-                        ru.completed = ru.completed + 1
+                        self.__class__.completed = self.__class__.completed + 1
                         print( self.config_id + " FAILED!" )
                         check_status = False
                         self.report.addErroringTest( self.config_id, "", sim_dir )
                         #self.finish(sim_dir, False)
                     if state == "Canceled":
-                        ru.completed = ru.completed + 1
+                        self.__class__.completed = self.__class__.completed + 1
                         print( "Canceled!" )
                         check_status = False
                         #self.finish(sim_dir, False)
                     elif state == "Completed" or state == "Finished":
-                        ru.completed = ru.completed + 1
-                        print( str(ru.completed) + " out of " + str(len(ru.reg_threads)) + " completed." )
+                        self.__class__.completed = self.__class__.completed + 1
+                        print( str(self.__class__.completed) + " out of " + str(len(ru.reg_threads)) + " completed." )
                         check_status = False
 
                         status_file = open(os.path.join(sim_dir, "status.txt"))
@@ -188,6 +189,6 @@ class HpcMonitor(regression_local_monitor.Monitor):
                                         self.verify( sim_dir, file, "Channels" )
                     break
             time.sleep(5)
-        self.sems.release()
+        self.__class__.sems.release()
 
 
