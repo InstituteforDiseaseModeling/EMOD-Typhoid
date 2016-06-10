@@ -3,6 +3,7 @@
 import os
 import json
 import threading
+import subprocess
 import shutil # copyfile
 import regression_local_monitor
 import regression_hpc_monitor
