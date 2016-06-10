@@ -28,12 +28,12 @@ class Monitor(threading.Thread):
 
     def run(self):
         self.sems.acquire()
+        self.sim_root = self.params.local_sim_root
         sim_dir = os.path.join( self.sim_root, self.sim_timestamp )
         #os.chdir( sim_dir )    # NOT THREAD SAFE!
 
         starttime = datetime.datetime.now()
 
-        self.sim_root = self.params.local_sim_root
         with open(os.path.join(sim_dir, "stdout.txt"), "w") as stdout, open(os.path.join(sim_dir, "stderr.txt"), "w") as stderr:
             actual_input_dir = os.path.join( self.params.input_path, self.config_json["parameters"]["Geography"] )
             cmd = None

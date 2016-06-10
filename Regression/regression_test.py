@@ -396,7 +396,7 @@ class MyRegressionRunner():
     def doSchemaTest( self ):
         #print( "Testing schema generation..." )
         test_schema_path = "test-schema.json"
-        subprocess.call( [ params.executable_path, "--get-schema", "--schema-path", test_schema_path ], stdout=open(os.devnull) )
+        subprocess.call( [ self.params.executable_path, "--get-schema", "--schema-path", test_schema_path ], stdout=open(os.devnull) )
         try:
             schema = json.loads( open( test_schema_path ).read() )
             print( "schema works." )
