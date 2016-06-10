@@ -334,6 +334,7 @@ namespace Kernel
         , relationships_at_death()
         , num_lifetime_relationships(0)
         , last_6_month_relationships()
+        , p_sti_node(nullptr)
     {
         ZERO_ARRAY( queued_relationships );
         ZERO_ARRAY( active_relationships );
@@ -417,13 +418,6 @@ namespace Kernel
 
         // Remove self from PFAs if queued up
         disengageFromSociety();
-
-        // Remove self from relationships if active
-        INodeSTI* sti_node = nullptr;
-        if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_node) != s_OK)
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "Node*" );
-        }
 
         for (auto iterator = relationships.begin(); iterator != relationships.end(); /**/ )
         {
@@ -579,24 +573,16 @@ namespace Kernel
     IndividualHumanSTI::UpdateEligibility()
     {
         // DJK: Could return if pre-sexual-debut, related to <ERAD-1869>
+        release_assert( p_sti_node );
+        ISociety* society = p_sti_node->GetSociety();
 
-        INodeSTI* sti_parent = nullptr;
-        if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_parent) != s_OK)
+        for( int type=0; type<RelationshipType::COUNT; type++ )
         {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "INodeContext" );
-        }
-        else
-        {
-            ISociety* society = sti_parent->GetSociety();
-
-            for( int type=0; type<RelationshipType::COUNT; type++ )
+            RelationshipType::Enum rel_type = RelationshipType::Enum(type);
+            if( AvailableForRelationship( rel_type ) )
             {
-                RelationshipType::Enum rel_type = RelationshipType::Enum(type);
-                if( AvailableForRelationship( rel_type ) )
-                {
-                    RiskGroup::Enum risk_group = IS_EXTRA_ALLOWED(rel_type) ? RiskGroup::HIGH : RiskGroup::LOW;
-                    society->GetStats(rel_type)->UpdateEligible(m_age, m_gender, risk_group, 1);    // DJK: Should use MC weight <ERAD-1870>
-                }
+                RiskGroup::Enum risk_group = IS_EXTRA_ALLOWED(rel_type) ? RiskGroup::HIGH : RiskGroup::LOW;
+                society->GetStats(rel_type)->UpdateEligible(m_age, m_gender, risk_group, 1);    // DJK: Should use MC weight <ERAD-1870>
             }
         }
     }
@@ -604,13 +590,8 @@ namespace Kernel
     void
     IndividualHumanSTI::ConsiderRelationships(float dt)
     {
-        INodeSTI* sti_parent = nullptr;
-        if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_parent) != s_OK)
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "INodeContext" );
-        }
-
-        ISociety* society = sti_parent->GetSociety();
+        release_assert( p_sti_node );
+        ISociety* society = p_sti_node->GetSociety();
 
         bool is_any_available = false ;
         bool available[RelationshipType::COUNT];
@@ -839,13 +820,9 @@ namespace Kernel
         LOG_DEBUG_F( "%s()\n", __FUNCTION__ );
         migrating_because_of_partner = false;
 
-        INodeSTI* sti_node = nullptr;
-        if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_node) != s_OK)
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "INodeContext" );
-        }
-        auto society = sti_node->GetSociety();
-        auto manager = sti_node->GetRelationshipManager();
+        release_assert( p_sti_node );
+        auto society = p_sti_node->GetSociety();
+        auto manager = p_sti_node->GetRelationshipManager();
 
         // copy the set of pointers so we can iterate through one and delete from the other.
         RelationshipSet_t tmp_relationships = relationships;
@@ -998,6 +975,18 @@ namespace Kernel
     {
         LOG_DEBUG_F( "%s: individual %d setting context to 0x%08X.\n", __FUNCTION__, suid.data, context );
         IndividualHuman::SetContextTo(context);
+        if( context == nullptr )
+        {
+            p_sti_node = nullptr;
+        }
+        else
+        {
+            if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&p_sti_node) != s_OK)
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "INodeContext" );
+            }
+            release_assert( p_sti_node );
+        }
     }
 
     void
@@ -1014,12 +1003,8 @@ namespace Kernel
             IndividualHuman::CheckForMigration( currenttime, dt );
             if( StateChange == HumanStateChange::Migrating )
             {
-                INodeSTI* sti_node = nullptr;
-                if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_node) != s_OK)
-                {
-                    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "Node*" );
-                }
-                auto manager = sti_node->GetRelationshipManager();
+                release_assert( p_sti_node );
+                auto manager = p_sti_node->GetRelationshipManager();
 
                 // NOTE: This for loop is done this way since terminate() will remove relationships
                 // from the set.  If you use range-based loops, you will get an errlr.
@@ -1128,12 +1113,8 @@ namespace Kernel
 
     void IndividualHumanSTI::disengageFromSociety()
     {
-        INodeSTI* sti_node = nullptr;
-        if (parent->QueryInterface(GET_IID(INodeSTI), (void**)&sti_node) != s_OK)
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "INodeSTI", "INodeContext" );
-        }
-        ISociety* society = sti_node->GetSociety();
+        release_assert( p_sti_node );
+        ISociety* society = p_sti_node->GetSociety();
 
         for( int type = 0; type < RelationshipType::COUNT; type++ )
         {

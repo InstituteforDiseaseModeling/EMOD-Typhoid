@@ -18,6 +18,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class INodeSTI;
+
     class IndividualHumanSTIConfig : public IndividualHumanConfig
     {
         GET_SCHEMA_STATIC_WRAPPER( IndividualHumanSTIConfig )
@@ -165,6 +167,7 @@ namespace Kernel
         unsigned int num_lifetime_relationships;
         std::list<int> last_6_month_relationships;
         std::map< unsigned int, suids::suid_data_t > slot2RelationshipDebugMap; // for debug only
+        INodeSTI* p_sti_node;
 
         DECLARE_SERIALIZABLE(IndividualHumanSTI);
     };
