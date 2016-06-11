@@ -120,15 +120,15 @@ SUITE(ConcurrencyParametersTest)
         CHECK_EQUAL(  8, p_cc->GetProbExtraRelationalBitMask( "RISK", "LOW",  Gender::FEMALE, false ) ); 
         CHECK_EQUAL( 10, p_cc->GetProbExtraRelationalBitMask( "RISK", "LOW",  Gender::MALE,   false ) ); 
 
-        CHECK_EQUAL( 13, p_cc->GetMaxAllowableRelationships( "RISK", "HIGH", Gender::FEMALE, RelationshipType::TRANSACTIONAL ) );
+        CHECK_EQUAL( 13, p_cc->GetMaxAllowableRelationships( "RISK", "HIGH", Gender::FEMALE, RelationshipType::COMMERCIAL ) );
         CHECK_EQUAL(  3, p_cc->GetMaxAllowableRelationships( "RISK", "HIGH", Gender::MALE,   RelationshipType::MARITAL       ) );
         CHECK_EQUAL(  6, p_cc->GetMaxAllowableRelationships( "RISK", "HIGH", Gender::FEMALE, RelationshipType::INFORMAL      ) );
         CHECK_EQUAL(  8, p_cc->GetMaxAllowableRelationships( "RISK", "HIGH", Gender::FEMALE, RelationshipType::TRANSITORY    ) );
-        CHECK_EQUAL(  8, p_cc->GetMaxAllowableRelationships( "RISK", "MED",  Gender::FEMALE, RelationshipType::TRANSACTIONAL ) );
+        CHECK_EQUAL(  8, p_cc->GetMaxAllowableRelationships( "RISK", "MED",  Gender::FEMALE, RelationshipType::COMMERCIAL ) );
         CHECK_EQUAL(  1, p_cc->GetMaxAllowableRelationships( "RISK", "MED",  Gender::FEMALE, RelationshipType::MARITAL       ) );
         CHECK_EQUAL(  6, p_cc->GetMaxAllowableRelationships( "RISK", "MED",  Gender::MALE,   RelationshipType::INFORMAL      ) );
         CHECK_EQUAL(  2, p_cc->GetMaxAllowableRelationships( "RISK", "MED",  Gender::FEMALE, RelationshipType::TRANSITORY    ) );
-        CHECK_EQUAL(  5, p_cc->GetMaxAllowableRelationships( "RISK", "LOW",  Gender::FEMALE, RelationshipType::TRANSACTIONAL ) );
+        CHECK_EQUAL(  5, p_cc->GetMaxAllowableRelationships( "RISK", "LOW",  Gender::FEMALE, RelationshipType::COMMERCIAL ) );
         CHECK_EQUAL(  0, p_cc->GetMaxAllowableRelationships( "RISK", "LOW",  Gender::FEMALE, RelationshipType::MARITAL       ) );
         CHECK_EQUAL(  3, p_cc->GetMaxAllowableRelationships( "RISK", "LOW",  Gender::FEMALE, RelationshipType::INFORMAL      ) );
         CHECK_EQUAL(  2, p_cc->GetMaxAllowableRelationships( "RISK", "LOW",  Gender::MALE,   RelationshipType::TRANSITORY    ) );
@@ -181,7 +181,7 @@ SUITE(ConcurrencyParametersTest)
         CHECK_EQUAL( 10, p_cc->GetProbExtraRelationalBitMask( "NONE", "NONE", Gender::FEMALE, false ) ); 
         CHECK_EQUAL(  8, p_cc->GetProbExtraRelationalBitMask( "NONE", "NONE", Gender::MALE,   false ) ); 
 
-        CHECK_EQUAL(  5, p_cc->GetMaxAllowableRelationships( "NONE", "NONE", Gender::FEMALE, RelationshipType::TRANSACTIONAL ) );
+        CHECK_EQUAL(  5, p_cc->GetMaxAllowableRelationships( "NONE", "NONE", Gender::FEMALE, RelationshipType::COMMERCIAL ) );
         CHECK_EQUAL(  1, p_cc->GetMaxAllowableRelationships( "NONE", "NONE", Gender::MALE,   RelationshipType::MARITAL       ) );
         CHECK_EQUAL(  3, p_cc->GetMaxAllowableRelationships( "NONE", "NONE", Gender::FEMALE, RelationshipType::INFORMAL      ) );
         CHECK_EQUAL(  2, p_cc->GetMaxAllowableRelationships( "NONE", "NONE", Gender::MALE,   RelationshipType::TRANSITORY    ) );
@@ -264,7 +264,7 @@ SUITE(ConcurrencyParametersTest)
     TEST_FIXTURE(ConcurrencyParametersFixture, TestBadConfigRelTypeOrderInvalidValue)
     {
         TestHelper_Exception( __LINE__, "testdata/ConcurrencyParametersTest/TestBadConfigRelTypeOrderInvalidValue.json",
-            "Constrained strings (dynamic enum) with specified value TRANSITORY_XXX invalid. Possible values are: COUNT...INFORMAL...MARITAL...TRANSACTIONAL...TRANSITORY...\n Occured while reading 'Concurrency_Configuration' from the demographics." );
+            "Constrained strings (dynamic enum) with specified value TRANSITORY_XXX invalid. Possible values are: COMMERCIAL...COUNT...INFORMAL...MARITAL...TRANSITORY...\n Occured while reading 'Concurrency_Configuration' from the demographics." );
     }
 
     TEST_FIXTURE(ConcurrencyParametersFixture, TestBadConfigRelTypeOrderNotEnough)

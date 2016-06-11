@@ -12601,7 +12601,7 @@
 							"TRANSITORY",
 							"INFORMAL",
 							"MARITAL",
-							"TRANSACTIONAL",
+							"COMMERCIAL",
 							"COUNT"
 						],
 						"description" : "The relationship type to which the condom usage probability is applied.",

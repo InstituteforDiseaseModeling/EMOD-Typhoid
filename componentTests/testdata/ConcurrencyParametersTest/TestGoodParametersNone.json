@@ -47,7 +47,7 @@
             }
         }
     },
-    "TRANSACTIONAL" :
+    "COMMERCIAL" :
     {
         "Concurrency_Parameters" :
         {

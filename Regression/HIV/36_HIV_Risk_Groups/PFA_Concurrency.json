@@ -18,7 +18,7 @@
                 "HIGH": 
                 {
                     "Extra_Relational_Flag_Type": "Correlated",
-                    "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "TRANSACTIONAL" ]
+                    "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "COMMERCIAL" ]
                 }
             },
             "TRANSITORY" :
@@ -81,7 +81,7 @@
                     }
                 }
             },
-            "TRANSACTIONAL" :
+            "COMMERCIAL" :
             {
                 "Concurrency_Parameters" :
                 {

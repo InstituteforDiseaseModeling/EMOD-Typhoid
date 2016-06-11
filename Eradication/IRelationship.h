@@ -32,7 +32,7 @@ namespace Kernel
         ENUM_VALUE_SPEC( TRANSITORY    , 0)
         ENUM_VALUE_SPEC( INFORMAL      , 1)
         ENUM_VALUE_SPEC( MARITAL       , 2)
-        ENUM_VALUE_SPEC( TRANSACTIONAL , 3)
+        ENUM_VALUE_SPEC( COMMERCIAL    , 3)
         ENUM_VALUE_SPEC( COUNT         , 4))
 
     ENUM_DEFINE(RelationshipState,
