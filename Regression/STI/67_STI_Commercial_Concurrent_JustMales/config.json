@@ -18,7 +18,7 @@
         "Coital_Dilution_Factor_3_Partners": 0.6, 
         "Coital_Dilution_Factor_4_Plus_Partners": 0.45, 
         "Condom_Transmission_Blocking_Probability": 0.9, 
-        "Config_Name": "68_STI_Transactional_Concurrent_JustFemales", 
+        "Config_Name": "67_STI_Commercial_Concurrent_JustMales", 
         "Custom_Reports_Filename": "NoCustomReports", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
@@ -26,8 +26,8 @@
         "Demographics_Filenames": [
             "../../HIV/input/SA_UN_demographics.json", 
             "../../HIV/input/PFA_overlay.json", 
-            "../../HIV/input/PFA_overlay_transactional.json", 
-            "../../HIV/input/PFA_overlay_transactional_only.json", 
+            "../../HIV/input/PFA_overlay_commercial.json", 
+            "../../HIV/input/PFA_overlay_commercial_only.json", 
             "PFA_Concurrency.json"
         ], 
         "Enable_Aging": 1, 

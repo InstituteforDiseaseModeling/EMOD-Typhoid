@@ -6,7 +6,7 @@
             "Demographics_Filenames": [
                  "../../HIV/input/SA_UN_demographics.json", 
                  "../../HIV/input/PFA_overlay.json", 
-                 "../../HIV/input/PFA_overlay_transactional.json",
+                 "../../HIV/input/PFA_overlay_commercial.json",
                  "PFA_Concurrency.json"
             ],
             "MORTALITY": {
