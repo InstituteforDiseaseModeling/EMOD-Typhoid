@@ -14,19 +14,7 @@
         "Enable_Maternal_Transmission": 1, 
 
         "____________NETWORK___________": "",
-        "PFA_Burnin_Duration_In_Days": 5475, 
-        "STI_Network_Params_By_Property": {
-            "Individual_Property_Name": "NONE", 
-            "NONE": {
-                "Extra_Relational_Flag_Type": "Independent", 
-
-                "Prob_Extra_Relationship_Female": [ 0.5, 0.5, 0, 0 ],
-                "Prob_Extra_Relationship_Male"  : [ 0.5, 0.5, 0, 0 ],
-
-                "Max_Simultaneous_Relationships_Female": [ 3, 2, 1, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 3, 2, 1, 0 ]
-            }
-        }, 
+        "PFA_Burnin_Duration_In_Days": 5475,
         
         "____________TRANSMISSION___________": "",
         "Condom_Transmission_Blocking_Probability": 1.0, 
@@ -37,7 +25,7 @@
         "Base_Population_Scale_Factor": 0.0001, 
         "Birth_Rate_Dependence": "POPULATION_DEP_RATE", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_OFF", 
-        "Demographics_Filenames": ["../../HIV/input/SA_UN_demographics.compiled.json", "../../HIV/input/PFA_overlay.json"],
+        "Demographics_Filenames": ["../../HIV/input/SA_UN_demographics.compiled.json", "../../HIV/input/PFA_overlay.json","PFA_Concurrency.json"],
 
         "____________MIGRATION___________": "",
         "____________REPORTING___________": "",

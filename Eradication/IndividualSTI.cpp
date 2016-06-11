@@ -26,13 +26,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IPairFormationStats.h"
 #include "IPairFormationRateTable.h"
 #include "IPairFormationAgent.h"
+#include "IConcurrency.h"
 
 static const char* _module = "IndividualSTI";
 
 // Assume MAX_SLOTS == 63 => 64-bits are full
 #define SLOTS_FILLED (uint64_t(0xFFFFFFFFFFFFFFFF))
 
-#define EXTRA_RELATIONAL_ALLOWED(rel)   (1 << (unsigned int)rel)
 #define SUPER_SPREADER 0x8
 
 #define IS_SUPER_SPREADER()   ((promiscuity_flags & SUPER_SPREADER) != 0)
@@ -43,8 +43,6 @@ static const char* _module = "IndividualSTI";
 
 namespace Kernel
 {
-    STINetworkParametersMap IndividualHumanSTIConfig::net_param_map;
-
     float IndividualHumanSTIConfig::debutAgeYrsMale_inv_kappa = 1.0f;
     float IndividualHumanSTIConfig::debutAgeYrsMale_lambda = 1.0f;
     float IndividualHumanSTIConfig::debutAgeYrsFemale_inv_kappa = 1.0f;
@@ -83,8 +81,6 @@ namespace Kernel
         initConfigTypeMap( "Male_To_Female_Relative_Infectivity_Multipliers", &maleToFemaleRelativeInfectivityMultipliers, STI_Male_To_Female_Relative_Infectivity_Multipliers_DESC_TEXT, 0.0f, 25.0f, 1.0f );
 
         initConfigTypeMap( "Condom_Transmission_Blocking_Probability", &condom_transmission_blocking_probability, STI_Condom_Transmission_Blocking_Probability_DESC_TEXT, 0.0f, 1.0f, 0.9f );
-
-        initConfigComplexType( "STI_Network_Params_By_Property", &net_param_map, STI_Network_Params_By_Property_DESC_TEXT );
 
         bool ret = JsonConfigurable::Configure( config );
 
@@ -129,32 +125,23 @@ namespace Kernel
         return status;
     }
 
-    void IndividualHumanSTI::SetSTINetworkParams( const STINetworkParameters& rNewNetParams )
+    void IndividualHumanSTI::SetConcurrencyParameters( const char *prop, const char* prop_value )
     {
-        net_params = rNewNetParams ;
-
         // Update promiscuity flags.  Begin with a reset.
         if( IS_SUPER_SPREADER() )
             promiscuity_flags = SUPER_SPREADER;
         else
             promiscuity_flags = 0;
 
-        promiscuity_flags |= GetProbExtraRelationalBitMask( Gender::Enum(GetGender()) );
+        IConcurrency* p_concurrency = p_sti_node->GetSociety()->GetConcurrency();
+
+        promiscuity_flags |= p_concurrency->GetProbExtraRelationalBitMask( prop, prop_value, Gender::Enum(GetGender()), IS_SUPER_SPREADER() );
 
         // Max allowable relationships
         NaturalNumber totalMax = 0;
         for( int rel = 0; rel < RelationshipType::COUNT; rel++)
         {
-            float max_num = GetMaxNumRels( Gender::Enum(GetGender()), RelationshipType::Enum(rel));
-            float intpart = 0.0;
-
-            float fractpart = modff(max_num , &intpart);
-            unsigned int fp = 0;
-            if( fractpart > 0.0 )
-            {
-                fp = ((randgen->e() < fractpart) ? 1 : 0);
-            }
-            max_relationships[rel] = int(intpart) + fp;
+            max_relationships[rel] = p_concurrency->GetMaxAllowableRelationships( prop, prop_value, Gender::Enum(GetGender()), RelationshipType::Enum(rel) );
             totalMax += max_relationships[rel];
         }
         if( totalMax > MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES )
@@ -163,18 +150,19 @@ namespace Kernel
         }
     }
 
-    void IndividualHumanSTI::UpdateSTINetworkParams(const char *prop, const char* new_value)
+    void IndividualHumanSTI::UpdateSTINetworkParams( const char *prop, const char* new_value )
     {
-        IIndividualHuman* individual = nullptr;
-        if( QueryInterface( GET_IID( IIndividualHuman ), (void**)&individual ) != s_OK )
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "this", "IIndividualHuman", "IndividualHumanSTI" );
-        }
+        IConcurrency* p_concurrency = p_sti_node->GetSociety()->GetConcurrency();
 
-        const STINetworkParameters* p_new_params = IndividualHumanSTIConfig::net_param_map.GetParameters( individual, prop, new_value );
-        if( p_new_params != nullptr )
+        if( (prop == nullptr) || p_concurrency->IsConcurrencyProperty( prop ) )
         {
-            SetSTINetworkParams( *p_new_params );
+            const char* prop_key = prop;
+            if( prop == nullptr )
+            {
+                prop_key = p_concurrency->GetPropertyKey().c_str();
+            }
+            const char* prop_value = p_concurrency->GetConcurrencyPropertyValue( GetProperties(), prop_key, new_value );
+            SetConcurrencyParameters( prop_key, prop_value );
         }
     }
 
@@ -183,9 +171,44 @@ namespace Kernel
         IndividualHumanSTI *newindividual = _new_ IndividualHumanSTI(id, MCweight, init_age, gender, init_poverty);
 
         newindividual->SetContextTo(context);
+        newindividual->InitializeConcurrency();
         LOG_DEBUG_F( "Created human with age=%f\n", newindividual->m_age );
 
         return newindividual;
+    }
+
+    void IndividualHumanSTI::InitializeConcurrency()
+    {
+        // -------------------------------------------------------------------------------------------------------------
+        // --- DMB 6-11-2016  I'm not doing this in InitializeHuman() because it change the random number stream.
+        // --- This used to be called in the constructor, but I can't do that because we need p_sti_node to be defined.
+        // -------------------------------------------------------------------------------------------------------------
+
+        // Sexual debut
+        float min_age_sexual_debut_in_days = IndividualHumanSTIConfig::debutAgeYrsMin * DAYSPERYEAR;
+        float debut_lambda = 0;
+        float debut_inv_kappa = 0;
+        if( GetGender() == Gender::MALE ) 
+        {
+            debut_inv_kappa = IndividualHumanSTIConfig::debutAgeYrsMale_inv_kappa;
+            debut_lambda    = IndividualHumanSTIConfig::debutAgeYrsMale_lambda;
+        }
+        else
+        {
+            debut_inv_kappa = IndividualHumanSTIConfig::debutAgeYrsFemale_inv_kappa;
+            debut_lambda    = IndividualHumanSTIConfig::debutAgeYrsFemale_lambda;
+        }
+        float debut_draw = float(DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( debut_lambda, debut_inv_kappa ));
+        sexual_debut_age = (std::max)(min_age_sexual_debut_in_days, debut_draw );
+
+        LOG_DEBUG_F( "Individual ? will debut at age %f (yrs)f.\n", sexual_debut_age/DAYSPERYEAR );
+
+        // Promiscuity flags, including behavioral super-spreader
+        auto draw = randgen->e();
+        if( draw < p_sti_node->GetSociety()->GetConcurrency()->GetProbSuperSpreader() )
+        {
+            promiscuity_flags |= SUPER_SPREADER;
+        }
     }
 
     void IndividualHumanSTI::InitializeHuman()
@@ -319,9 +342,8 @@ namespace Kernel
         m_new_infection_state = NewInfectionState::NewInfection;
     }
 
-    IndividualHumanSTI::IndividualHumanSTI(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
+    IndividualHumanSTI::IndividualHumanSTI(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty )
         : IndividualHuman(_suid, monte_carlo_weight, initial_age, gender, initial_poverty)
-        , net_params( "<NONE>" )
         , relationships()
         , migrating_because_of_partner(false)
         , promiscuity_flags(0)
@@ -338,32 +360,6 @@ namespace Kernel
     {
         ZERO_ARRAY( queued_relationships );
         ZERO_ARRAY( active_relationships );
-
-        // Sexual debut
-        float min_age_sexual_debut_in_days = IndividualHumanSTIConfig::debutAgeYrsMin * DAYSPERYEAR;
-        float debut_lambda = 0;
-        float debut_inv_kappa = 0;
-        if( GetGender() == Gender::MALE ) 
-        {
-            debut_inv_kappa = IndividualHumanSTIConfig::debutAgeYrsMale_inv_kappa;
-            debut_lambda    = IndividualHumanSTIConfig::debutAgeYrsMale_lambda;
-        }
-        else
-        {
-            debut_inv_kappa = IndividualHumanSTIConfig::debutAgeYrsFemale_inv_kappa;
-            debut_lambda    = IndividualHumanSTIConfig::debutAgeYrsFemale_lambda;
-        }
-        float debut_draw = float(DAYSPERYEAR * Environment::getInstance()->RNG->Weibull2( debut_lambda, debut_inv_kappa ));
-        sexual_debut_age = (std::max)(min_age_sexual_debut_in_days, debut_draw );
-
-        // Promiscuity flags, including behavioral super-spreader
-        auto draw = randgen->e();
-        if( draw < GET_CONFIGURABLE(SimulationConfig)->prob_super_spreader )
-        {
-            promiscuity_flags |= SUPER_SPREADER;
-        }
-
-        LOG_DEBUG_F( "Individual ? will debut at age %f (yrs)f.\n", sexual_debut_age/DAYSPERYEAR );
     }
 
     suids::suid IndividualHumanSTI::GetNodeSuid() const
@@ -1073,44 +1069,6 @@ namespace Kernel
         }
     }
 
-    unsigned char IndividualHumanSTI::GetProbExtraRelationalBitMask(Gender::Enum gender)
-    {
-        unsigned char ret = 0;
-
-        if( IS_SUPER_SPREADER() ) 
-        {
-            LOG_DEBUG_F("Individual %d is a super spreader, enabling all extra-relational flags\n", int(GetSuid().data));
-            for( int rel = 0; rel < RelationshipType::COUNT; rel++ )
-            {
-                ret |= EXTRA_RELATIONAL_ALLOWED( rel );
-            }
-        }
-        else
-        {
-            for( int rel = 0; rel < RelationshipType::COUNT; rel++ )
-            {
-                RelationshipType::Enum rel_type = net_params.rel_type_order[rel];
-                float prob = net_params.prob_extra_rels[gender][rel_type];
-
-                if( (prob > 0.0) && ((prob == 1.0) || (prob > randgen->e()) ) )
-                {
-                    LOG_DEBUG_F("extra %s allowed for %d\n", RelationshipType::pairs::lookup_key(rel_type), (int)(GetSuid().data));
-                    ret |= EXTRA_RELATIONAL_ALLOWED(rel_type);
-                }
-                else if( net_params.extra_relational_flag_type != ExtraRelationalFlagType::Independent )
-                {
-                    return ret ;
-                }
-            }
-        }
-        return ret;
-    }
-
-    float IndividualHumanSTI::GetMaxNumRels(Gender::Enum gender, RelationshipType::Enum type)
-    {
-        return net_params.max_simultaneous_rels[gender][type];
-    }
-
     void IndividualHumanSTI::disengageFromSociety()
     {
         release_assert( p_sti_node );
@@ -1175,7 +1133,6 @@ namespace Kernel
         IndividualHuman::serialize( ar, obj );
         IndividualHumanSTI& human_sti = *obj;
 
-        ar.labelElement("net_params"                              ) & human_sti.net_params;
         ar.labelElement("relationships"                           ); serialize_relationships( ar, human_sti.relationships );
         ar.labelElement("max_relationships"                       ); ar.serialize( human_sti.max_relationships,    rel_count );
         ar.labelElement("queued_relationships"                    ); ar.serialize( human_sti.queued_relationships, rel_count );

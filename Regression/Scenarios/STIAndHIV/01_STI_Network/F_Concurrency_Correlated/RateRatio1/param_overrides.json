@@ -6,7 +6,8 @@
             "Demographics_Filenames": [
                 "uniform_demographics.json", 
                 "pfa_simple.json",
-                "PFA_Add_Informal_Marital.json"
+                "PFA_Add_Informal_Marital.json",
+                "PFA_Concurrency.json"
             ]
         }, 
         "____________SIMULATION___________": {
@@ -26,22 +27,6 @@
         }, 
         "____________NETWORK___________": {
 
-            "STI_Network_Params_By_Property" :
-            {
-                "Individual_Property_Name": "NONE",
-                "NONE" :
-                {
-                    "Extra_Relational_Flag_Type": "Correlated",
-
-                    "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "TRANSACTIONAL" ],
-
-                    "Prob_Extra_Relationship_Female": [ 0.8, 0.5, 0.25, 0 ],
-                    "Prob_Extra_Relationship_Male"  : [ 0.2, 1.0, 0.50, 0 ],
-
-                    "Max_Simultaneous_Relationships_Female": [ 2, 2, 2, 0 ],
-                    "Max_Simultaneous_Relationships_Male"  : [ 4, 3, 2, 0 ]
-                }
-            }
         }, 
         "____________RARELY_CHANGED___________": {
             "Config_Name": "01F_Concurrency_Correlated_Rate_Ratio_1"

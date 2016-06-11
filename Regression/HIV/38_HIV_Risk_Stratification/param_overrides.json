@@ -13,7 +13,8 @@
             "../input/SA_UN_demographics_extrapolated_WithProperties_Smoothed_with_RiskGroup.json",
             "../input/Risk_LOW_overlay.json",
             "../input/PFA_overlay.json",
-            "../input/PFA_overlay_risk_assortivity.json"
+            "../input/PFA_overlay_risk_assortivity.json",
+            "PFA_Concurrency.json"
         ],
 
         "_____________INTRAHOST___________": "",
@@ -21,30 +22,6 @@
         "_____________TRANSMISSION___________": "",
 
         "_____________NETWORK___________": "",
-        "STI_Network_Params_By_Property" :
-        {
-            "Individual_Property_Name" : "Risk",
-            "HIGH" :
-            {
-                "Extra_Relational_Flag_Type": "Correlated",
-
-                "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "TRANSACTIONAL" ],
-                "Prob_Extra_Relationship_Female": [ 0.8, 0.40, 0.20, 0 ],
-                "Prob_Extra_Relationship_Male"  : [ 0.2, 0.95, 0.45, 0 ],
-                "Max_Simultaneous_Relationships_Female": [ 2, 2, 2, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 4, 2, 2, 0 ]
-            },
-            "LOW" :
-            {
-                "Extra_Relational_Flag_Type": "Independent",
-
-                "Prob_Extra_Relationship_Female": [ 0.1, 0.07, 0.09, 0 ],
-                "Prob_Extra_Relationship_Male"  : [ 0.2, 0.14, 0.12, 0 ],
-                "Max_Simultaneous_Relationships_Female": [ 2, 1, 1, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 2, 1, 1, 0 ]
-            }
-        },
-
 
         "_____________REPORTING___________": "",
         "Enable_Property_Output": 1,

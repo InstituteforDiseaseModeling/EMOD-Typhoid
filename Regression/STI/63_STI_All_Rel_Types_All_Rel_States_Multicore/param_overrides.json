@@ -13,26 +13,12 @@
 
         "____________NETWORK___________": "",
         "PFA_Burnin_Duration_In_Days": 10000, 
-        "STI_Network_Params_By_Property_COMMENT" : "We need this so that we test having multiple relationships to break when migrating a relationship.",
-        "STI_Network_Params_By_Property": {
-            "Individual_Property_Name": "NONE", 
-            "NONE": {
-                "Extra_Relational_Flag_Type": "Independent", 
-
-                "Prob_Extra_Relationship_Female": [ 1, 1, 1, 0 ],
-                "Prob_Extra_Relationship_Male"  : [ 1, 1, 1, 0 ],
-
-                "Max_Simultaneous_Relationships_Female": [ 4, 3, 2, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 4, 3, 2, 0 ]
-
-            }
-        }, 
         
         "____________TRANSMISSION___________": "",
 
         "____________DEMOGRAPHICS___________": "",
         "Base_Population_Scale_Factor": 2e-4,
-        "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics_extrapolated_WithProperties_Smoothed_4_Nodes.json", "../../HIV/input/PFA_overlay.json", "PFA_overlay_rates.json" ],
+        "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics_extrapolated_WithProperties_Smoothed_4_Nodes.json", "../../HIV/input/PFA_overlay.json", "PFA_overlay_rates.json","PFA_Concurrency.json" ],
         "Enable_Birth": 1,
 
         "____________MIGRATION___________": "",

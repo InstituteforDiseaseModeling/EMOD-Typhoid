@@ -117,6 +117,7 @@
     <ClCompile Include="BaseEventReportTest.cpp" />
     <ClCompile Include="BehaviorPfaTest.cpp" />
     <ClCompile Include="componentTests.cpp" />
+    <ClCompile Include="ConcurrencyParametersTest.cpp" />
     <ClCompile Include="FileSystemTest.cpp" />
     <ClCompile Include="FlowControllerImplTest.cpp" />
     <ClCompile Include="HIVARTStagingByCD4DiagnosticTest.cpp" />

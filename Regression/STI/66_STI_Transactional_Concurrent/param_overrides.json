@@ -7,7 +7,8 @@
                  "../../HIV/input/SA_UN_demographics.json", 
                  "../../HIV/input/PFA_overlay.json", 
                  "../../HIV/input/PFA_overlay_transactional.json",
-                 "../../HIV/input/PFA_overlay_transactional_only.json"
+                 "../../HIV/input/PFA_overlay_transactional_only.json",
+                 "PFA_Concurrency.json"
             ],
             "MORTALITY": {
                 "Base_Mortality": 0.01, 
@@ -27,17 +28,6 @@
         "PRIMARY": {
             "Simulation_Duration": 1500, 
             "Config_Name": "66_STI_Transactional_Concurrent"
-        },
-        "STI_Network_Params_By_Property" :
-        {
-            "NONE" :
-            {
-                "Prob_Extra_Relationship_Female": [ 0, 0, 0, 1 ],
-                "Prob_Extra_Relationship_Male"  : [ 0, 0, 0, 1 ],
-
-                "Max_Simultaneous_Relationships_Female": [ 3, 2, 1, 3 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 3, 2, 1, 3 ]
-            }
         }
     }
 }

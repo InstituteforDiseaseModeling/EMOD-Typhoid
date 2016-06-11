@@ -5,7 +5,7 @@
         "DEMOGRAPHICS": {
             "Base_Population_Scale_Factor": 0.0001, 
             "Enable_Vital_Dynamics": 0,
-            "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics.json", "../../HIV/input/PFA_overlay.json", "PFA_overlay_transitory_only_64.json" ],
+            "Demographics_Filenames": [ "../../HIV/input/SA_UN_demographics.json", "../../HIV/input/PFA_overlay.json", "PFA_overlay_transitory_only_64.json","PFA_Concurrency.json" ],
             "MORTALITY": {
                 "Base_Mortality": 0.01, 
                 "Immunity_Mortality_Factor": 0.5
@@ -23,18 +23,6 @@
         }, 
 
         "Min_Days_Between_Adding_Relationships": 1, 
-        "STI_Network_Params_By_Property": {
-            "Individual_Property_Name": "NONE", 
-            "NONE": {
-                "Extra_Relational_Flag_Type": "Independent", 
-
-                "Prob_Extra_Relationship_Female": [ 1, 0, 0, 0 ],
-                "Prob_Extra_Relationship_Male"  : [ 1, 0, 0, 0 ],
-
-                "Max_Simultaneous_Relationships_Female": [ 63, 0, 0, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 63, 0, 0, 0 ]
-            }
-        }, 
 
 
         "PRIMARY": {

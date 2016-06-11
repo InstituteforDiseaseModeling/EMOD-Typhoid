@@ -97,9 +97,7 @@
             "Enable_Coital_Dilution": 1,
             "Coital_Dilution_Factor_2_Partners": 0.75,
             "Coital_Dilution_Factor_3_Partners": 0.60,
-            "Coital_Dilution_Factor_4_Plus_Partners": 0.45,
-
-            "Probability_Person_Is_Behavioral_Super_Spreader": 0
+            "Coital_Dilution_Factor_4_Plus_Partners": 0.45
         },
 
         "NETWORK": {
@@ -112,21 +110,7 @@
             "Sexual_Debut_Age_Female_Weibull_Scale": 15.919654846190999,
             "Sexual_Debut_Age_Male_Weibull_Heterogeneity": 0.05,
             "Sexual_Debut_Age_Male_Weibull_Scale": 16.946729660033998,
-            "Sexual_Debut_Age_Min": 13,
-
-            "STI_Network_Params_By_Property": 
-            { 
-                "Individual_Property_Name": "NONE",
-                "NONE": 
-                { 
-                    "Extra_Relational_Flag_Type": "Correlated",
-                    "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "TRANSACTIONAL" ],
-                    "Prob_Extra_Relationship_Female": [ 0.8, 0.5, 0.5, 0 ],
-                    "Prob_Extra_Relationship_Male"  : [ 0.2, 1.0, 0.5, 0 ],
-                    "Max_Simultaneous_Relationships_Female": [ 2, 2, 2, 0 ],
-                    "Max_Simultaneous_Relationships_Male"  : [ 4, 3, 2, 0 ]
-                }
-            }
+            "Sexual_Debut_Age_Min": 13
         },
 
         "REPORTING": {

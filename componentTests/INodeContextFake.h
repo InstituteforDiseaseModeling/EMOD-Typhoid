@@ -167,7 +167,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual const tDistrib& GetIndividualPropertyDistributions() const override
+    virtual const tPropertiesDistrib& GetIndividualPropertyDistributions() const override
     {
         throw std::exception("The method or operation is not implemented.");
     }

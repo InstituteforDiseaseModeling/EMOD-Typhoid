@@ -26,6 +26,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IInfectable.h"
 #include "MathFunctions.h"
 #include "Serialization.h"
+#include "Properties.h"
 
 class RANDOMBASE;
 
@@ -71,7 +72,7 @@ namespace Kernel
         virtual suids::suid   GetSuid() const override;
         virtual suids::suid   GetNextInfectionSuid() override;
         virtual ::RANDOMBASE* GetRng() override;
-        virtual const INodeContext::tDistrib& GetIndividualPropertyDistributions() const override;
+        virtual const tPropertiesDistrib& GetIndividualPropertyDistributions() const override;
         virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override;
 
 
@@ -158,7 +159,7 @@ namespace Kernel
     private:
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        static INodeContext::tDistrib base_distribs;
+        static tPropertiesDistrib base_distribs;
 
         SerializationFlags serializationMask;
 
@@ -167,7 +168,7 @@ namespace Kernel
         float _longitude;
 
     protected:
-        INodeContext::tDistrib distribs;
+        ::tPropertiesDistrib distribs;
 
         // moved from SimulationConfig
         IndSamplingType::Enum                        ind_sampling_type;                         // Individual_Sampling_Type

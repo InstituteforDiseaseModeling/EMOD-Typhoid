@@ -897,9 +897,6 @@
     <ClCompile Include="..\interventions\PMTCT.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClCompile>
-    <ClCompile Include="STINetworkParameters.cpp">
-      <Filter>Source Files\STI</Filter>
-    </ClCompile>
     <ClCompile Include="NodeInfo.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
@@ -1040,6 +1037,9 @@
     </ClCompile>
     <ClCompile Include="..\interventions\WaningEffectMap.cpp">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="ConcurrencyParameters.cpp">
+      <Filter>Source Files\STI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2019,9 +2019,6 @@
     <ClInclude Include="..\interventions\PMTCT.h">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClInclude>
-    <ClInclude Include="STINetworkParameters.h">
-      <Filter>Source Files\STI</Filter>
-    </ClInclude>
     <ClInclude Include="ISTIInterventionsContainer.h">
       <Filter>Source Files\Campaign\InterventionContainers\STI</Filter>
     </ClInclude>
@@ -2264,6 +2261,12 @@
     </ClInclude>
     <ClInclude Include="..\interventions\WaningEffectMap.h">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcurrencyParameters.h">
+      <Filter>Source Files\STI</Filter>
+    </ClInclude>
+    <ClInclude Include="IConcurrency.h">
+      <Filter>Source Files\STI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

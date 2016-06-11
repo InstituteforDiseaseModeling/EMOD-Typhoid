@@ -316,6 +316,7 @@
     <ClCompile Include="BinnedReportPy.cpp" />
     <ClCompile Include="BinnedReportTB.cpp" />
     <ClCompile Include="CalendarEventCoordinator.cpp" />
+    <ClCompile Include="ConcurrencyParameters.cpp" />
     <ClCompile Include="CoverageByNodeEventCoordinator.cpp" />
     <ClCompile Include="DemographicRestrictions.cpp" />
     <ClCompile Include="EventsForOtherNodes.cpp" />
@@ -371,7 +372,6 @@
     <ClCompile Include="FlowControllerImpl.cpp" />
     <!-- <ClCompile Include="GroupEventCoordinatorHIV.cpp" /> -->
     <ClCompile Include="HIVInterventionsContainer.cpp" />
-    <ClCompile Include="STINetworkParameters.cpp" />
     <ClCompile Include="StiObjectFactory.cpp" />
     <ClCompile Include="HivObjectFactory.cpp" />
     <ClCompile Include="StiRelationshipEndReporter.cpp" />
@@ -647,6 +647,7 @@
     <ClInclude Include="BinnedReportTB.h" />
     <ClInclude Include="..\utils\BoostLibWrapper.h" />
     <ClInclude Include="CalendarEventCoordinator.h" />
+    <ClInclude Include="ConcurrencyParameters.h" />
     <ClInclude Include="DemographicRestrictions.h" />
     <ClInclude Include="EventsForOtherNodes.h" />
     <ClInclude Include="EventTrigger.h" />
@@ -658,6 +659,7 @@
     <ClInclude Include="HIVReportEventRecorder.h" />
     <ClInclude Include="HIVTransmissionReporter.h" />
     <ClInclude Include="IAssortivity.h" />
+    <ClInclude Include="IConcurrency.h" />
     <ClInclude Include="IHIVInterventionsContainer.h" />
     <ClInclude Include="IIndividualHumanHIV.h" />
     <ClInclude Include="IInfection.h" />
@@ -847,7 +849,6 @@
     <ClInclude Include="StandardEventCoordinator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="STIInterventionsContainer.h" />
-    <ClInclude Include="STINetworkParameters.h" />
     <ClInclude Include="StiObjectFactory.h" />
     <ClInclude Include="StiRelationshipConsummatedReporter.h" />
     <ClInclude Include="StiRelationshipEndReporter.h" />

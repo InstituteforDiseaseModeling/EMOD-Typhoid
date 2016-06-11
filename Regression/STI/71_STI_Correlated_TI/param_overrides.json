@@ -6,7 +6,8 @@
             "Demographics_Filenames": [
                  "../../HIV/input/SA_UN_demographics.json", 
                  "../../HIV/input/PFA_overlay.json", 
-                 "../../HIV/input/PFA_overlay_transactional.json"
+                 "../../HIV/input/PFA_overlay_transactional.json",
+                 "PFA_Concurrency.json"
             ],
             "MORTALITY": {
                 "Base_Mortality": 0.01, 
@@ -27,20 +28,6 @@
             "Report_Relationship_Start": 1, 
             "Simulation_Duration": 1500, 
             "Config_Name": "71_STI_Correlated_TI"
-        },
-        "STI_Network_Params_By_Property" :
-        {
-            "NONE" :
-            {
-                "Extra_Relational_Flag_Type": "Correlated",
-
-                "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "TRANSACTIONAL" ],
-
-                "Prob_Extra_Relationship_Male"  : [ 0.6, 0.4, 0, 0 ],
-                "Prob_Extra_Relationship_Female": [ 0.7, 0.3, 0, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 3, 3, 0, 0 ],
-                "Max_Simultaneous_Relationships_Female": [ 3, 3, 0, 0 ]
-            }
         }
     }
 }

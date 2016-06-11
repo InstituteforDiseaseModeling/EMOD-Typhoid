@@ -5,7 +5,7 @@
 
         "Run_Number" : 210,
         "Simulation_Duration": 730,
-        "Demographics_Filenames": ["uniform_demographics.json","pfa_simple.json","PFA_overlay_rates.json"],
+        "Demographics_Filenames": ["uniform_demographics.json","pfa_simple.json","PFA_overlay_rates.json","PFA_Concurrency.json"],
         "Base_Population_Scale_Factor": 0.002, 
         "Enable_Vital_Dynamics": 0,
 
@@ -20,19 +20,6 @@
         "Sexual_Debut_Age_Female_Weibull_Scale": 0,
         "Sexual_Debut_Age_Male_Weibull_Heterogeneity": 0,
         "Sexual_Debut_Age_Male_Weibull_Scale": 0,
-        "Sexual_Debut_Age_Min": 0,
-
-        "STI_Network_Params_By_Property" :
-        {
-            "Individual_Property_Name" : "NONE",
-            "NONE" :
-            {
-                "Prob_Extra_Relationship_Female": [ 0.5, 0, 0, 0 ],
-                "Prob_Extra_Relationship_Male"  : [ 0.5, 0, 0, 0 ],
-
-                "Max_Simultaneous_Relationships_Female": [ 3, 1, 1, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 3, 1, 1, 0 ]
-            }
-        }
+        "Sexual_Debut_Age_Min": 0
     }
 }
