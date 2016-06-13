@@ -520,3 +520,24 @@ NO_DENSITY_DEPENDENCE."
 #define Family_Migration_Roundtrip_Duration_DESC_TEXT "TBD"
 
 #define Load_Balance_Scheme_DESC_TEXT "TBD"
+
+#define NC_AR_Min_DESC_TEXT  "TBD-Minimum age in years of range - greater than or equal to"
+#define NC_AR_Max_DESC_TEXT  "TBD-Maximum age in years of range - less than but not equal to"
+
+#define NC_TD_Start_Day_DESC_TEXT            "TBD-The day to start distributing the intervention"
+#define NC_TD_End_Day_DESC_TEXT              "TBD-The day to stop distributing the intervention"
+#define NC_TD_Num_Targeted_DESC_TEXT          "TBD-The number of individuals to distribute interventions to during this time period (both genders randomly); Num_Targeted_Males/Females must be empty if using this"
+#define NC_TD_Num_Targeted_Males_DESC_TEXT    "TBD-The number of individuals to distribute interventions to during this time period (males only); Num_Targeted must be empty if using this and Num_Targeted_Females must be same length"
+#define NC_TD_Num_Targeted_Females_DESC_TEXT  "TBD-The number of individuals to distribute interventions to during this time period (females only); Num_Targeted must be empty if using this and Num_Targeted_Males must be same length"
+#define NC_TD_Age_Ranges_Years_DESC_TEXT      "TBD-An array of age bins, where a person can be selected if min <= age < max.  It must have the same number of objects as Num_Targeted_XXX has elements."
+#define NC_TD_Property_Restrictions_Within_Node_DESC_TEXT "TBD-Individuals must have these properties in order to be selected."
+
+#define NC_Distributions_DESC_TEXT       "TBD-The ordered list of elements defining when, who, and how many interventions to distribute."
+#define NC_Intervention_Config_DESC_TEXT "TBD-The intervention to be distributed by NChooserEventCoordinator."
+
+
+#define NC_STI_TD_Start_Year_DESC_TEXT            "TBD-The year to start distributing the intervention - January 1st of year"
+#define NC_STI_TD_End_Year_DESC_TEXT              "TBD-The year to stop distributing the intervention - January 1st of year"
+
+#define NC_HIV_TD_Target_Disease_State_DESC_TEXT  "TBD-If not empty, a targeted individual is expected to have a particular disease specific state.  To be flexible, this is a two-dimensional array of TargetDiseaseState where the elements of the inner array are AND'd and these arrays are OR'd. "
+#define NC_HIV_TD_Has_Intervention_Name_DESC_TEXT "TBD-If usinng Has_Intervention or Not_Have_Intervention disease states, then this is the name of the intervention considered."

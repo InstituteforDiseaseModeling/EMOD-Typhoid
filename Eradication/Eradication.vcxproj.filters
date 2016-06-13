@@ -1026,9 +1026,6 @@
     <ClCompile Include="PyInterventionsContainer.cpp">
       <Filter>Source Files\Campaign\InterventionContainers\Py</Filter>
     </ClCompile>
-    <ClCompile Include="NChooserEventCoordinator.cpp">
-      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
-    </ClCompile>
     <ClCompile Include="PropertyRestrictions.cpp">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClCompile>
@@ -1040,6 +1037,15 @@
     </ClCompile>
     <ClCompile Include="..\interventions\WaningEffectMap.cpp">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="NChooserEventCoordinator.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClCompile>
+    <ClCompile Include="NChooserEventCoordinatorHIV.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
+    </ClCompile>
+    <ClCompile Include="NChooserEventCoordinatorSTI.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2250,9 +2256,6 @@
     <ClInclude Include="..\utils\JsonRawWriter.h" />
     <ClInclude Include="..\rapidjson\include\rapidjson\rapidjson.h" />
     <ClInclude Include="..\utils\Serialization.h" />
-    <ClInclude Include="NChooserEventCoordinator.h">
-      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
-    </ClInclude>
     <ClInclude Include="PropertyRestrictions.h">
       <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClInclude>
@@ -2264,6 +2267,15 @@
     </ClInclude>
     <ClInclude Include="..\interventions\WaningEffectMap.h">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="NChooserEventCoordinator.h">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClInclude>
+    <ClInclude Include="NChooserEventCoordinatorHIV.h">
+      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
+    </ClInclude>
+    <ClInclude Include="NChooserEventCoordinatorSTI.h">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
