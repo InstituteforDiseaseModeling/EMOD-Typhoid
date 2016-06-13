@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.6.1112.0",
-		"DTK_Branch" : "GitHub-492-NChooserRefactor (4ec74a8)",
-		"DTK_Build_Date" : "Jun  9 2016 11:37:56"
+		"DTK_Version" : "2.6.1115.0",
+		"DTK_Branch" : "GitHub-488-ConcurrencyParameters (46ce742)",
+		"DTK_Build_Date" : "Jun 10 2016 12:45:32"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -3031,13 +3031,6 @@
 				"type" : "Dynamic String Set",
 				"value_source" : ""
 			},
-			"Probability_Person_Is_Behavioral_Super_Spreader" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.001,
-				"description" : "Probability that an individual is a behavioral super spreader.",
-				"type" : "float"
-			},
 			"Enable_Coital_Dilution" : {
 				"default" : 1,
 				"description" : "Switch to enable coital dilution.",
@@ -3249,13 +3242,6 @@
 				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
 				"type" : "Dynamic String Set",
 				"value_source" : ""
-			},
-			"Probability_Person_Is_Behavioral_Super_Spreader" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.001,
-				"description" : "Probability that an individual is a behavioral super spreader.",
-				"type" : "float"
 			},
 			"Enable_Coital_Dilution" : {
 				"default" : 1,
@@ -4109,62 +4095,6 @@
 				"default" : 0.9,
 				"description" : "Per-act multiplier of the transmission probability when a condom is used.",
 				"type" : "float"
-			},
-			"idmType:STINetworkParametersMap" : {
-				"Individual_Property_Name" : {
-					"type" : "Constrained String",
-					"constraints" : "<demographics>::Defaults.Individual_Properties.*.Property.<keys> or NONE",
-					"description" : "Individual Property Key from demographics file or only one with value of NONE."
-				},
-				"<Individual Property Value>" : {
-					"Extra_Relational_Flag_Type" : {
-						"type" : "enum",
-						"enum" : [
-							"Independent",
-							"Correlated",
-							"COUNT"
-						],
-						"description" : "Determines if extra-relational flags will be distributed in an independent or correlated way.  Possible values are INDEPENDENT and CORRELATED.",
-						"default" : "Independent"
-					},
-					"Prob_Extra_Relationship_Male" : {
-						"description" : "Probability of a male receiving an extra relationship flag.  The flag allows the individual to seek additional relationships while currently in a relationship of the same type. Used for INDEPENDENT and CORRELATED values of STI_Extra_Relational_Flag_Type.",
-						"type" : "Vector Float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.1
-					},
-					"Prob_Extra_Relationship_Female" : {
-						"description" : "Probability of a female receiving an extra relationship flag.  The flag allows the individual to seek additional relationships while currently in a relationship of the same type. Used for INDEPENDENT and CORRELATED values of STI_Extra_Relational_Flag_Type.",
-						"type" : "Vector Float",
-						"min" : 0,
-						"max" : 1,
-						"default" : 0.1
-					},
-					"Max_Simultaneous_Relationships_Male" : {
-						"description" : "Upper bound on the number of concurrent relationships of the given type that a male is allowed to have.",
-						"type" : "Vector Float",
-						"min" : 0,
-						"max" : 63,
-						"default" : 1
-					},
-					"Max_Simultaneous_Relationships_Female" : {
-						"description" : "Upper bound on the number of concurrent relationships of the given type that a female is allowed to have.",
-						"type" : "Vector Float",
-						"min" : 0,
-						"max" : 63,
-						"default" : 1
-					},
-					"Correlated_Relationship_Type_Order" : {
-						"description" : "TBD",
-						"type" : "Vector String",
-						"value_source" : "RelationshipType::Enum"
-					}
-				}
-			},
-			"STI_Network_Params_By_Property" : {
-				"description" : "The STI networking parameters to use for an individual given the individual's particular Individual Properties.",
-				"type" : "idmType:STINetworkParametersMap"
 			}
 		},
 		"Infection" : {
@@ -6171,20 +6101,6 @@
 			}
 		},
 		"SocietyImpl" : {
-			"Extra_Relational_Rate_Ratio_Male" : {
-				"min" : 1,
-				"max" : 3.40282e+038,
-				"default" : 1,
-				"description" : "The ratio of relationship formation rates, for a particular relationship type, between individuals having an extra-relational flag (numerator) and those without a flag (denominator). This parameter applies to males.",
-				"type" : "float"
-			},
-			"Extra_Relational_Rate_Ratio_Female" : {
-				"min" : 1,
-				"max" : 3.40282e+038,
-				"default" : 1,
-				"description" : "The ratio of relationship formation rates, for a particular relationship type, between individuals having an extra-relational flag (numerator) and those without a flag (denominator). This parameter applies to females.",
-				"type" : "float"
-			},
 			"PFA_Cum_Prob_Selection_Threshold" : {
 				"min" : 0,
 				"max" : 1,
@@ -12869,7 +12785,7 @@
 							"TRANSITORY",
 							"INFORMAL",
 							"MARITAL",
-							"TRANSACTIONAL",
+							"COMMERCIAL",
 							"COUNT"
 						],
 						"description" : "The relationship type to which the condom usage probability is applied.",

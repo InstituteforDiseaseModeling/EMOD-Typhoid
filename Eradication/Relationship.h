@@ -197,15 +197,15 @@ namespace Kernel
 #pragma warning( pop )
     };
 
-    class TransactionalRelationship : public Relationship
+    class CommercialRelationship : public Relationship
     {
         public:
             friend class RelationshipFactory;
             DECLARE_QUERY_INTERFACE()
 
         protected:
-            TransactionalRelationship();
-            TransactionalRelationship( const suids::suid& rRelId,
+            CommercialRelationship();
+            CommercialRelationship( const suids::suid& rRelId,
                                        IRelationshipManager* pRelMan,
                                        IRelationshipParameters* pParams, 
                                        IIndividualHumanSTI* male_partner, 
@@ -215,7 +215,7 @@ namespace Kernel
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-            DECLARE_SERIALIZABLE(TransactionalRelationship);
+            DECLARE_SERIALIZABLE(CommercialRelationship);
 #pragma warning( pop )
     };
 }

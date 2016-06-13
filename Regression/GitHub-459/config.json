@@ -49,7 +49,8 @@
             "Kenya_Provincial_Demographics.json", 
             "Accessibility_and_Risk_IP_Overlay.json", 
             "PFA_Overlay.json", 
-            "Risk_Assortivity_Overlay.json"
+            "Risk_Assortivity_Overlay.json", 
+            "PFA_Concurrency.json"
         ], 
         "Enable_Aging": 1, 
         "Enable_Air_Migration": 0, 
@@ -78,8 +79,6 @@
         "Enable_Superinfection": 0, 
         "Enable_Timestep_Channel_In_Report": 0, 
         "Enable_Vital_Dynamics": 1, 
-        "Extra_Relational_Rate_Ratio_Female": 10, 
-        "Extra_Relational_Rate_Ratio_Male": 10, 
         "Family_Migration_Filename": "", 
         "Family_Migration_Roundtrip_Duration": 0.0, 
         "Geography": "Test", 
@@ -395,7 +394,6 @@
         "PFA_Cum_Prob_Selection_Threshold": 0.2, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Probability_Person_Is_Behavioral_Super_Spreader": 0, 
         "RARELY_CHANGED": "", 
         "REPORTING": "", 
         "Regional_Migration_Filename": "Kenya_Regional_Migration_from_Census.bin", 
@@ -437,75 +435,6 @@
         "Run_Number": 174097, 
         "SIMULATION": "", 
         "STI_Coinfection_Multiplier": 5.5, 
-        "STI_Network_Params_By_Property": {
-            "HIGH": {
-                "Correlated_Relationship_Type_Order": [
-                    "TRANSITORY", 
-                    "INFORMAL", 
-                    "MARITAL", 
-                    "TRANSACTIONAL"
-                ], 
-                "Extra_Relational_Flag_Type": "Correlated", 
-                "Max_Simultaneous_Relationships_Female": [
-                    4, 
-                    3, 
-                    2, 
-                    0
-                ], 
-                "Max_Simultaneous_Relationships_Male": [
-                    4, 
-                    3, 
-                    2, 
-                    0
-                ], 
-                "Prob_Extra_Relationship_Female": [
-                    0.25, 
-                    0.65, 
-                    1, 
-                    0
-                ], 
-                "Prob_Extra_Relationship_Male": [
-                    1.0, 
-                    0.5, 
-                    1, 
-                    0
-                ]
-            }, 
-            "Individual_Property_Name": "Risk", 
-            "LOW": {
-                "Correlated_Relationship_Type_Order": [
-                    "TRANSITORY", 
-                    "INFORMAL", 
-                    "MARITAL", 
-                    "TRANSACTIONAL"
-                ], 
-                "Extra_Relational_Flag_Type": "Correlated", 
-                "Max_Simultaneous_Relationships_Female": [
-                    1, 
-                    1, 
-                    1, 
-                    0
-                ], 
-                "Max_Simultaneous_Relationships_Male": [
-                    1, 
-                    1, 
-                    1, 
-                    0
-                ], 
-                "Prob_Extra_Relationship_Female": [
-                    0, 
-                    0, 
-                    0, 
-                    0
-                ], 
-                "Prob_Extra_Relationship_Male": [
-                    0, 
-                    0, 
-                    0, 
-                    0
-                ]
-            }
-        }, 
         "Scenario": "Baseline", 
         "Sea_Migration_Filename": "", 
         "Sea_Migration_Roundtrip_Duration": 0.0, 

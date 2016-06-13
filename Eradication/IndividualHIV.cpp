@@ -35,6 +35,7 @@ namespace Kernel
         IndividualHumanHIV *newindividual = _new_ IndividualHumanHIV(id, MCweight, init_age, gender, init_poverty);
 
         newindividual->SetContextTo(context);
+        newindividual->InitializeConcurrency();
         LOG_DEBUG_F( "Created human with age=%f\n", newindividual->m_age );
 
         return newindividual;

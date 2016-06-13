@@ -842,8 +842,8 @@ namespace Kernel {
                 p_rel = new MarriageRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
                 break;
 
-            case RelationshipType::TRANSACTIONAL:
-                p_rel = new TransactionalRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
+            case RelationshipType::COMMERCIAL:
+                p_rel = new CommercialRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
                 break;
 
             default:
@@ -974,24 +974,24 @@ namespace Kernel {
     }
 
     // ------------------------------------------------------------------------
-    // --- TransactionalRelationship
+    // --- CommercialRelationship
     // ------------------------------------------------------------------------
-    BEGIN_QUERY_INTERFACE_DERIVED(TransactionalRelationship, Relationship)
-    END_QUERY_INTERFACE_DERIVED(TransactionalRelationship, Relationship)
+    BEGIN_QUERY_INTERFACE_DERIVED(CommercialRelationship, Relationship)
+    END_QUERY_INTERFACE_DERIVED(CommercialRelationship, Relationship)
 
-    TransactionalRelationship::TransactionalRelationship()
+    CommercialRelationship::CommercialRelationship()
     : Relationship()
     {
     }
 
-    TransactionalRelationship::TransactionalRelationship( const suids::suid& rRelId,
+    CommercialRelationship::CommercialRelationship( const suids::suid& rRelId,
                                                           IRelationshipManager* pRelMan,
                                                           IRelationshipParameters* pParams,
                                                           IIndividualHumanSTI * male_partnerIn, 
                                                           IIndividualHumanSTI * female_partnerIn )
         : Relationship( rRelId, pRelMan, pParams, male_partnerIn, female_partnerIn )
     {
-        LOG_INFO_F( "(EEL) Creating TransactionalRelationship %d between %s and %s of length %f.\n",
+        LOG_INFO_F( "(EEL) Creating CommercialRelationship %d between %s and %s of length %f.\n",
                     GetSuid().data,
                     male_partnerIn->toString().c_str(),
                     female_partnerIn->toString().c_str(),
@@ -999,17 +999,17 @@ namespace Kernel {
                   );
     }
 
-    Relationship* TransactionalRelationship::Clone()
+    Relationship* CommercialRelationship::Clone()
     {
-        return new TransactionalRelationship( *this );
+        return new CommercialRelationship( *this );
     }
 
-    REGISTER_SERIALIZABLE(TransactionalRelationship);
+    REGISTER_SERIALIZABLE(CommercialRelationship);
 
-    void TransactionalRelationship::serialize(IArchive& ar, TransactionalRelationship* obj)
+    void CommercialRelationship::serialize(IArchive& ar, CommercialRelationship* obj)
     {
         Relationship::serialize( ar, obj );
-        TransactionalRelationship& rel = *obj;
+        CommercialRelationship& rel = *obj;
     }
 }
 

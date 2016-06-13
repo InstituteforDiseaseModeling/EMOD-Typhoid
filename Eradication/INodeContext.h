@@ -115,8 +115,7 @@ namespace Kernel
 
         // for interventions
         virtual INodeEventContext* GetEventContext() = 0;
-        typedef std::map< std::string, std::multimap< float, std::string > > tDistrib;
-        virtual const tDistrib& GetIndividualPropertyDistributions() const = 0;
+        virtual const tPropertiesDistrib& GetIndividualPropertyDistributions() const = 0;
         virtual void checkValidIPValue( const std::string& key, const std::string& to_value ) = 0;
         virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) = 0;
 

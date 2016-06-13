@@ -464,8 +464,8 @@ namespace Kernel
                         data_map[ map_key ].infected_noART_cd4_above_500 += mc_weight;
                 }
             }
-                data_map[ map_key ].infected += mc_weight;
-            }
+            data_map[ map_key ].infected += mc_weight;
+        }
 
         if( isOnART )
             data_map[ map_key ].on_ART += mc_weight;

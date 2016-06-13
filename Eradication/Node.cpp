@@ -805,7 +805,8 @@ namespace Kernel
     // Distrib["QoC"][0.2] = "Bad";
     // Distrib["QoC"][0.7] = "Ok";
     // Distrib["QoC"][1.0] = "Good";
-    Node::tDistrib Node::base_distribs;
+    tPropertiesDistrib Node::base_distribs;
+
     void Node::SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory)
     {
         // Parameters set from an input filestream
@@ -2848,7 +2849,7 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    const INodeContext::tDistrib&
+    const tPropertiesDistrib&
     Node::GetIndividualPropertyDistributions() const
     {
         return distribs;

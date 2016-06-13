@@ -299,7 +299,8 @@
             "Kenya_Provincial_Demographics.json", 
             "Accessibility_and_Risk_IP_Overlay.json", 
             "PFA_Overlay.json", 
-            "Risk_Assortivity_Overlay.json"
+            "Risk_Assortivity_Overlay.json",
+            "PFA_Concurrency.json"
         ], 
         "Enable_Birth": 1, 
         "Enable_Demographics_Birth": 0, 
@@ -361,7 +362,6 @@
         "Coital_Dilution_Factor_2_Partners": 0.75, 
         "Coital_Dilution_Factor_3_Partners": 0.6, 
         "Coital_Dilution_Factor_4_Plus_Partners": 0.45, 
-        "Probability_Person_Is_Behavioral_Super_Spreader": 0, 
         "NETWORK": "", 
         "Min_Days_Between_Adding_Relationships": 0, 
         "PFA_Burnin_Duration_In_Days": 5475, 
@@ -371,27 +371,6 @@
         "Sexual_Debut_Age_Male_Weibull_Heterogeneity": 0.05, 
         "Sexual_Debut_Age_Male_Weibull_Scale": 16.946729660034, 
         "Sexual_Debut_Age_Min": 13, 
-        "Extra_Relational_Rate_Ratio_Male": 10, 
-        "Extra_Relational_Rate_Ratio_Female": 10, 
-        "STI_Network_Params_By_Property": {
-            "Individual_Property_Name": "Risk", 
-            "LOW": {
-                "Extra_Relational_Flag_Type": "Correlated", 
-                "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "TRANSACTIONAL" ],
-                "Prob_Extra_Relationship_Male"         : [ 0, 0, 0, 0 ], 
-                "Prob_Extra_Relationship_Female"       : [ 0, 0, 0, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 1, 1, 1, 0 ],
-                "Max_Simultaneous_Relationships_Female": [ 1, 1, 1, 0 ]
-            }, 
-            "HIGH": {
-                "Extra_Relational_Flag_Type": "Correlated", 
-                "Correlated_Relationship_Type_Order" : [ "TRANSITORY", "INFORMAL", "MARITAL", "TRANSACTIONAL" ],
-                "Prob_Extra_Relationship_Male"         : [ 1.00, 0.50, 1, 0 ], 
-                "Prob_Extra_Relationship_Female"       : [ 0.25, 0.65, 1, 0 ],
-                "Max_Simultaneous_Relationships_Male"  : [ 4, 3, 2, 0 ],
-                "Max_Simultaneous_Relationships_Female": [ 4, 3, 2, 0 ]
-            }
-        }, 
         "REPORTING": "", 
         "Enable_Default_Reporting": 1, 
         "Enable_Timestep_Channel_In_Report": 0, 

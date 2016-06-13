@@ -8,8 +8,27 @@
     },
     "Defaults": {
         "Society" : {
+            "Concurrency_Configuration" : 
+            {
+                "Probability_Person_Is_Behavioral_Super_Spreader" : 0,
+                "Individual_Property_Name": "NONE", 
+                "NONE": 
+                {
+                    "Extra_Relational_Flag_Type": "Independent"
+                }
+            },
             "TRANSITORY" :
             {
+                "Concurrency_Parameters" :
+                {
+                    "NONE": 
+                    {
+                        "Max_Simultaneous_Relationships_Female": 1,
+                        "Max_Simultaneous_Relationships_Male"  : 1,
+                        "Prob_Extra_Relationship_Female"       : 0,
+                        "Prob_Extra_Relationship_Male"         : 0
+                    }
+                },
                 "Relationship_Parameters" :
                 {
                     "Coital_Act_Rate" : 0.33,
@@ -30,6 +49,8 @@
                     "Formation_Rate_Type" : "CONSTANT",
                     "Formation_Rate_Constant": 0.0027397260,
                     "Update_Period" : 7,
+                    "Extra_Relational_Rate_Ratio_Male": 1,
+                    "Extra_Relational_Rate_Ratio_Female": 1,
                     "Number_Age_Bins_Male"   : 20,
                     "Number_Age_Bins_Female" : 20,
                     "Age_of_First_Bin_Edge_Male"   : 17.5,
@@ -67,6 +88,16 @@
             },
             "INFORMAL" :
             {
+                "Concurrency_Parameters" :
+                {
+                    "NONE": 
+                    {
+                        "Max_Simultaneous_Relationships_Female": 1,
+                        "Max_Simultaneous_Relationships_Male"  : 1,
+                        "Prob_Extra_Relationship_Female"       : 0,
+                        "Prob_Extra_Relationship_Male"         : 0
+                    }
+                },
                 "Relationship_Parameters" :
                 {
                     "Coital_Act_Rate" : 0.33,
@@ -87,6 +118,8 @@
                     "Formation_Rate_Type" : "CONSTANT",
                     "Formation_Rate_Constant": 0,
                     "Update_Period"   : 7,
+                    "Extra_Relational_Rate_Ratio_Male": 1,
+                    "Extra_Relational_Rate_Ratio_Female": 1,
                     "Number_Age_Bins_Male"   : 20,
                     "Number_Age_Bins_Female" : 20,
                     "Age_of_First_Bin_Edge_Male"   : 17.5,
@@ -124,6 +157,16 @@
             },
             "MARITAL" :
             {
+                "Concurrency_Parameters" :
+                {
+                    "NONE": 
+                    {
+                        "Max_Simultaneous_Relationships_Female": 1,
+                        "Max_Simultaneous_Relationships_Male"  : 1,
+                        "Prob_Extra_Relationship_Female"       : 0,
+                        "Prob_Extra_Relationship_Male"         : 0
+                    }
+                },
                 "Relationship_Parameters" :
                 {
                     "Coital_Act_Rate" : 0.33,
@@ -144,6 +187,8 @@
                     "Formation_Rate_Type" : "CONSTANT",
                     "Formation_Rate_Constant": 0,
                     "Update_Period"    : 14,
+                    "Extra_Relational_Rate_Ratio_Male": 1,
+                    "Extra_Relational_Rate_Ratio_Female": 1,
                     "Number_Age_Bins_Male"   : 20,
                     "Number_Age_Bins_Female" : 20,
                     "Age_of_First_Bin_Edge_Male"   : 17.5,
@@ -179,8 +224,18 @@
                     }
                 }
             },
-            "TRANSACTIONAL" :
+            "COMMERCIAL" :
             {
+                "Concurrency_Parameters" :
+                {
+                    "NONE": 
+                    {
+                        "Max_Simultaneous_Relationships_Female": 0,
+                        "Max_Simultaneous_Relationships_Male"  : 0,
+                        "Prob_Extra_Relationship_Female"       : 0,
+                        "Prob_Extra_Relationship_Male"         : 0
+                    }
+                },
                 "Relationship_Parameters" :
                 {
                     "Coital_Act_Rate" : 0.33,
@@ -201,6 +256,8 @@
                     "Formation_Rate_Type" : "CONSTANT",
                     "Formation_Rate_Constant": 0.0,
                     "Update_Period" : 7.0,
+                    "Extra_Relational_Rate_Ratio_Male": 1,
+                    "Extra_Relational_Rate_Ratio_Female": 1,
                     "Number_Age_Bins_Male"   : 2,
                     "Number_Age_Bins_Female" : 2,
                     "Age_of_First_Bin_Edge_Male"   : 50,

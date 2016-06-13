@@ -1338,16 +1338,22 @@ namespace Kernel
         // ---------------------------------- JsonConfigurable MAP ------------------------------------
         for (auto& entry : jcTypeMap)
         {
-            // NOTE that this could be used for general float to float, but right now hard-coding year-as-int to float
             const auto & key = entry.first;
             JsonConfigurable * pJc = entry.second;
 
-            Configuration * p_config = Configuration::CopyFromElement( (*inputJson)[key] );
+            if( inputJson->Exist( key ) )
+            {
+                Configuration * p_config = Configuration::CopyFromElement( (*inputJson)[key] );
 
-            pJc->Configure( p_config );
+                pJc->Configure( p_config );
 
-            delete p_config ;
-            p_config = nullptr;
+                delete p_config ;
+                p_config = nullptr;
+            }
+            else if( !_useDefaults )
+            {
+                handleMissingParam( key );
+            }
         }
 
         return true;

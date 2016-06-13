@@ -14,10 +14,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BoostLibWrapper.h"
 #include "Individual.h"
 #include "IIndividualHumanSTI.h"
-#include "STINetworkParameters.h"
 
 namespace Kernel
 {
+    class INodeSTI;
+
     class IndividualHumanSTIConfig : public IndividualHumanConfig
     {
         GET_SCHEMA_STATIC_WRAPPER( IndividualHumanSTIConfig )
@@ -30,11 +31,6 @@ namespace Kernel
         friend class SimulationSTI;
         friend class IndividualHumanSTI;
         friend class Relationship;
-
-        static STINetworkParametersMap net_param_map;
-
-        static float extra_relational_rate_ratio_male;
-        static float extra_relational_rate_ratio_female;
 
         static float debutAgeYrsMale_inv_kappa;
         static float debutAgeYrsFemale_inv_kappa;
@@ -134,14 +130,12 @@ namespace Kernel
                             float monte_carlo_weight = 1.0f, 
                             float initial_age = 0.0f,
                             int gender = 0,
-                            float initial_poverty = 0.5f);
+                            float initial_poverty = 0.5f );
+        virtual void InitializeConcurrency();
 
         virtual IInfection* createInfection(suids::suid _suid) override;
         virtual void setupInterventionsContainer() override;
         virtual void ReportInfectionState() override;
-
-        // Local version of individual-property-dependent parameters from STINetworkParameters
-        STINetworkParameters net_params;
 
         RelationshipSet_t relationships;
         unsigned int max_relationships[RelationshipType::Enum::COUNT];
@@ -159,12 +153,13 @@ namespace Kernel
         bool potential_exposure_flag;
 
     private:
-        virtual void SetSTINetworkParams( const STINetworkParameters& rNewNetParams );
+        virtual void IndividualHumanSTI::SetConcurrencyParameters( const char *prop, const char* prop_value );
 
         RelationshipSet_t relationships_at_death ;
         unsigned int num_lifetime_relationships;
         std::list<int> last_6_month_relationships;
         std::map< unsigned int, suids::suid_data_t > slot2RelationshipDebugMap; // for debug only
+        INodeSTI* p_sti_node;
 
         DECLARE_SERIALIZABLE(IndividualHumanSTI);
     };

@@ -459,8 +459,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         sim_type == SimType::HIV_SIM 
       )
     {
-        initConfigTypeMap( "Probability_Person_Is_Behavioral_Super_Spreader", &prob_super_spreader, Probability_Person_Is_Behavioral_Super_Spreader_DESC_TEXT, 0.0, 1.0f, 0.001f );
-
         // DJK TODO: These parameters should be owned by Relationship
         initConfigTypeMap( "Enable_Coital_Dilution", &enable_coital_dilution, Enable_Coital_Dilution_DESC_TEXT, true );
         initConfigTypeMap( "Coital_Dilution_Factor_2_Partners", &coital_dilution_2_partners, Coital_Dilution_Factor_2_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
@@ -850,13 +848,10 @@ SimulationConfig::SimulationConfig()
     , MalariaDrugMap()
     , m_jsonConfig(nullptr)
 #ifndef DISABLE_STI
-    //, shortTermRelationshipLength(10.0f)
-    , prob_super_spreader(0.0f)
     , enable_coital_dilution(true)
     , coital_dilution_2_partners(1)
     , coital_dilution_3_partners(1)
     , coital_dilution_4_plus_partners(1)
-    //, femaleToMaleRelativeInfectivity(1.0f)
 
 #ifndef DISABLE_HIV
     , prob_maternal_transmission(1.0f)

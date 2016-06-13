@@ -134,5 +134,8 @@
     <ClCompile Include="RelationshipParametersTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConcurrencyParametersTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
