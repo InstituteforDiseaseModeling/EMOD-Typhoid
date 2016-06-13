@@ -64,7 +64,7 @@ namespace Kernel
                            false );
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Collect_HIV_Data",  
                            &is_collecting_hiv_data,  
-                           "TBD"/*Report_HIV_ByAgeAndGender_Collect_HIV_Data_DESC_TEXT*/,
+                           Report_HIV_ByAgeAndGender_Collect_HIV_Data_DESC_TEXT,
                            false );
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Collect_IP_Data",
                            &is_collecting_ip_data,  
@@ -78,12 +78,11 @@ namespace Kernel
 
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Event_Counter_List",
                            &event_list,  
-                           Report_HIV_ByAgeAndGender_Event_Counter_List_DESC_TEXT, 
-                           false );
+                           Report_HIV_ByAgeAndGender_Event_Counter_List_DESC_TEXT );
 
         initConfigTypeMap( "Report_HIV_ByAgeAndGender_Has_Intervention_With_Name",
                            &name_of_intervention_to_count,  
-                           "TBD"/*Report_HIV_ByAgeAndGender_Has_Intervention_With_Name_DESC_TEXT*/, 
+                           Report_HIV_ByAgeAndGender_Has_Intervention_With_Name_DESC_TEXT, 
                            "" );
 
         bool ret = JsonConfigurable::Configure( inputJson );

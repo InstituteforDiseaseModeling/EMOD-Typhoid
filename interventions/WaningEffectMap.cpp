@@ -46,10 +46,10 @@ namespace Kernel
 
     bool WaningEffectMapAbstract::Configure( const Configuration * pInputJson )
     {
-        initConfigTypeMap( "Initial_Effect",                        &m_EffectCurrent,                     WEE_Initial_Effect_DESC_TEXT,       0, 1, 1);
-        initConfigTypeMap( "Expire_At_Durability_Map_End",          &m_ExpireAtDurationMapEnd,            "TBD",                              false );
+        initConfigTypeMap( "Initial_Effect",               &m_EffectCurrent,          WEE_Initial_Effect_DESC_TEXT,                0, 1, 1);
+        initConfigTypeMap( "Expire_At_Durability_Map_End", &m_ExpireAtDurationMapEnd, WEM_Expire_At_Durability_Map_End_DESC_TEXT, false );
 
-        initConfigComplexType( "Durability_Map", &m_DurationMap, "TBD" );
+        initConfigComplexType( "Durability_Map", &m_DurationMap, WEM_Durability_Map_End_DESC_TEXT );
 
         bool ret = JsonConfigurable::Configure(pInputJson);
         if( ret )
