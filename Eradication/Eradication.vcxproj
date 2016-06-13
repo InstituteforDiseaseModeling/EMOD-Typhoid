@@ -339,6 +339,8 @@
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
     <ClCompile Include="NChooserEventCoordinator.cpp" />
+    <ClCompile Include="NChooserEventCoordinatorHIV.cpp" />
+    <ClCompile Include="NChooserEventCoordinatorSTI.cpp" />
     <ClCompile Include="NodeEventCoordinator.cpp" />
     <ClCompile Include="NodeInfo.cpp" />
     <ClCompile Include="NodeInfoSTI.cpp" />
@@ -684,6 +686,8 @@
     <ClInclude Include="MigrationInfoVector.h" />
     <ClInclude Include="MpiDataExchanger.h" />
     <ClInclude Include="NChooserEventCoordinator.h" />
+    <ClInclude Include="NChooserEventCoordinatorHIV.h" />
+    <ClInclude Include="NChooserEventCoordinatorSTI.h" />
     <ClInclude Include="NoCrtWarnings.h" />
     <ClInclude Include="MasterInterventionsContainer.h" />
     <ClInclude Include="NodeInfo.h" />

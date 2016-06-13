@@ -16,151 +16,14 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHumanSTI.h"
 #include "IIndividualHumanHIV.h"
 #include "IHIVInterventionsContainer.h"
-//#include "SimulationConfig.h"
 
 static const char * _module = "NChooserEventCoordinator";
 
 namespace Kernel
 {
-    uint32_t RandInt( RANDOMBASE* pRNG, uint32_t N )
-    {
-        uint64_t ulA = uint64_t(pRNG->ul());
-        uint64_t ulB = uint64_t(pRNG->ul());
-        ulB <<= 32;
-        ulA += ulB;
-        uint64_t ll = (ulA & 0xFFFFFFFFL) * N;
-        ll >>= 32;
-        return ll;
-    }
-
-
-
-    std::set< std::string > GetAllowedTargetDiseaseStates()
-    {
-        std::set< std::string > allowed;
-        for( int i = 0 ; i < TargetedDiseaseState::pairs::count() ; ++i )
-        {
-            allowed.insert( std::string(TargetedDiseaseState::pairs::get_keys()[i]) );
-        }
-
-        return allowed;
-    }
-
-    std::vector<std::vector<TargetedDiseaseState::Enum>> ConvertStringsToDiseaseState( std::vector<std::vector<std::string>>& rStringMatrix )
-    {
-        std::vector<std::vector<TargetedDiseaseState::Enum>> enum_matrix;
-        for( auto& vec : rStringMatrix )
-        {
-            std::vector<TargetedDiseaseState::Enum> enum_vec ;
-            for( auto& str : vec )
-            {
-                 int int_state = TargetedDiseaseState::pairs::lookup_value( str.c_str() );
-                 if( int_state == -1 )
-                 {
-                    std::stringstream ss ;
-                    ss << "The 'Target_Disease_State' value of '" << str << "' is not a valid enum of TargetedDiseaseState.  Valid values are:\n";
-                    for( int i = 0 ; i < TargetedDiseaseState::pairs::count() ; ++i )
-                    {
-                        ss << TargetedDiseaseState::pairs::get_keys()[i] << "\n" ;
-                    }
-                    throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
-                 }
-                 TargetedDiseaseState::Enum state = (TargetedDiseaseState::Enum)int_state;
-                 enum_vec.push_back( state );
-            }
-            enum_matrix.push_back( enum_vec );
-        }
-        return enum_matrix;
-    }
-
-    bool HasDiseaseState( TargetedDiseaseState::Enum state,
-                          const std::string& rHasInterventionName,
-                          IIndividualHumanEventContext *pHEC,
-                          IIndividualHumanSTI* pSTI,
-                          IIndividualHumanHIV *pHIV,
-                          IHIVMedicalHistory * pMedHistory)
-    {
-        switch( state )
-        {
-            case TargetedDiseaseState::HIV_Positive:
-                return pHIV->HasHIV();
-
-            case TargetedDiseaseState::HIV_Negative:
-                return !pHIV->HasHIV();
-
-            case TargetedDiseaseState::Tested_Positive:
-                return pMedHistory->EverTestedHIVPositive();
-
-            case TargetedDiseaseState::Tested_Negative:
-                return (pMedHistory->EverTested() && !pMedHistory->EverTestedHIVPositive());
-
-            case TargetedDiseaseState::Male_Circumcision_Positive:
-                return pSTI->IsCircumcised();
-
-            case TargetedDiseaseState::Male_Circumcision_Negative:
-                return !pSTI->IsCircumcised();
-
-            case TargetedDiseaseState::Has_Intervention:
-                return (pHEC->GetInterventionsContext()->GetInterventionsByName( rHasInterventionName ).size() > 0);
-
-            case TargetedDiseaseState::Not_Have_Intervention:
-                return !(pHEC->GetInterventionsContext()->GetInterventionsByName( rHasInterventionName ).size() > 0);
-                break;
-
-            default:
-                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "TargetedDiseaseState", state );
-        }
-    }
-
-    bool QualifiesByDiseaseState( const std::vector<std::vector<TargetedDiseaseState::Enum>>& diseaseStates,
-                                  const std::string& rHasInterventionName,
-                                  IIndividualHumanEventContext *pHEC )
-    {
-        if( diseaseStates.size() == 0 )
-        {
-            return true;
-        }
-
-        IIndividualHumanSTI* p_ind_sti = NULL;
-        if( pHEC->QueryInterface( GET_IID( IIndividualHumanSTI ), (void**)&p_ind_sti ) != s_OK )
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "ihec", "IIndividualSTI", "IIndividualHumanEventContext" );
-        }
-
-        IIndividualHumanHIV * p_ind_hiv = nullptr;
-        if( pHEC->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&p_ind_hiv) != s_OK )
-        {
-            throw QueryInterfaceException(__FILE__, __LINE__, __FUNCTION__, "ihec", "IIndividualHumanHIV", "IIndividualHumanEventContext");
-        }
-
-        IHIVMedicalHistory * p_med_history = nullptr;
-        if( p_ind_hiv->GetHIVInterventionsContainer()->QueryInterface(GET_IID(IHIVMedicalHistory), (void**)&p_med_history) != s_OK )
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "p_ind_hiv", "IHIVMedicalHistory", "IHIVInterventionsContainer" );
-        }
-
-        for( auto& states_to_and : diseaseStates )
-        {
-            bool qualifies = true;
-            for( int i = 0 ; qualifies && (i < states_to_and.size()) ; ++i )
-            {
-                auto state = states_to_and[i];
-                qualifies = HasDiseaseState( state, rHasInterventionName, pHEC, p_ind_sti, p_ind_hiv, p_med_history );
-            }
-            if( qualifies )
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // ------------------------------------------------------------------------
     // --- AgeRange
     // ------------------------------------------------------------------------
-#define NC_AR_Min_DESC_TEXT  "Minimum age in years of range - greater than or equal to"
-#define NC_AR_Max_DESC_TEXT  "Maximum age in years of range - less than but not equal to"
-
     BEGIN_QUERY_INTERFACE_BODY(AgeRange)
     END_QUERY_INTERFACE_BODY(AgeRange)
 
@@ -356,15 +219,14 @@ namespace Kernel
     }
 
     void TargetedByAgeAndGender::FindQualifyingIndividuals( INodeEventContext* pNEC, 
-                                                            const std::vector<std::vector<TargetedDiseaseState::Enum>>& diseaseStates,
-                                                            const std::string& rHasInterventionName,
+                                                            const DiseaseQualifications& rDisease,
                                                             PropertyRestrictions& rPropertyRestrictions )
     {
         m_QualifyingIndividuals.clear();
         m_QualifyingIndividuals.reserve( pNEC->GetIndividualHumanCount() );
 
         INodeEventContext::individual_visit_function_t fn = 
-            [ this, &diseaseStates, &rHasInterventionName, &rPropertyRestrictions ](IIndividualHumanEventContext *ihec)
+            [ this, &rDisease, &rPropertyRestrictions ](IIndividualHumanEventContext *ihec)
         {
             if( !m_AgeRange.IsInRange( ihec->GetAge()/DAYSPERYEAR ) ) return;
 
@@ -372,7 +234,7 @@ namespace Kernel
 
             if( !rPropertyRestrictions.Qualifies( ihec ) ) return;
 
-            if( !QualifiesByDiseaseState( diseaseStates, rHasInterventionName, ihec ) ) return;
+            if( !rDisease.Qualifies( ihec ) ) return;
 
             m_QualifyingIndividuals.push_back( ihec );
         };
@@ -393,12 +255,12 @@ namespace Kernel
         // ----------------------------------------------------------------------------------
 
         std::set<int> selected_indexes;
-        int N = m_QualifyingIndividuals.size();
-        int M = GetNumTargeted();
+        uint32_t N = m_QualifyingIndividuals.size();
+        uint32_t M = GetNumTargeted();
 
-        for( int j = (N - M) ; j < N ; j++ )
+        for( uint32_t j = (N - M) ; j < N ; j++ )
         {
-            int index = RandInt( EnvPtr->RNG, j+1 );
+            uint32_t index = EnvPtr->RNG->uniformZeroToN( j+1 );
             release_assert( index < N );
             if( selected_indexes.find( index ) == selected_indexes.end() )
             {
@@ -435,26 +297,21 @@ namespace Kernel
     // ------------------------------------------------------------------------
     // --- TargetedDistribution
     // ------------------------------------------------------------------------
-#define NC_TD_Start_Year_DESC_TEXT            "The year to start distributing the intervention - January 1st of year"
-#define NC_TD_End_Year_DESC_TEXT              "The year to stop distributing the intervention - January 1st of year"
-#define NC_TD_Num_Targeted_DESC_TEXT          "The number of individuals to distribute interventions to during this time period (both genders randomly); Num_Targeted_Males/Females must be empty if using this"
-#define NC_TD_Num_Targeted_Males_DESC_TEXT    "The number of individuals to distribute interventions to during this time period (males only); Num_Targeted must be empty if using this and Num_Targeted_Females must be same length"
-#define NC_TD_Num_Targeted_Females_DESC_TEXT  "The number of individuals to distribute interventions to during this time period (females only); Num_Targeted must be empty if using this and Num_Targeted_Males must be same length"
-#define NC_TD_Age_Ranges_Years_DESC_TEXT      "An array of age bins, where a person can be selected if min <= age < max.  It must have the same number of objects as Num_Targeted_XXX has elements."
-#define NC_TD_Target_Disease_State_DESC_TEXT  "If not empty, a targeted individual is expected to have a particular disease specific state.  To be flexible, this is a two-dimensional array of TargetDiseaseState where the elements of the inner array are AND'd and these arrays are OR'd. "
-#define NC_TD_Property_Restrictions_Within_Node_DESC_TEXT "TBD"
-#define NC_TD_Has_Intervention_Name_DESC_TEXT "TBD"
 
     BEGIN_QUERY_INTERFACE_BODY(TargetedDistribution)
     END_QUERY_INTERFACE_BODY(TargetedDistribution)
 
+    bool TargetedDistribution::LeftLessThanRight( const TargetedDistribution* pLeft, const TargetedDistribution* pRight )
+    {
+        return *pLeft < *pRight;
+    }
 
-    TargetedDistribution::TargetedDistribution()
+    TargetedDistribution::TargetedDistribution( NChooserObjectFactory* pObjectFactory )
     : JsonConfigurable()
-    , m_StartYear(1900.0)
-    , m_EndYear(2200.0)
-    , m_DiseaseStates()
-    , m_HasInterventionName()
+    , m_pObjectFactory( pObjectFactory )
+    , m_pDiseaseQualifications( nullptr )
+    , m_StartDay(0.0)
+    , m_EndDay(FLT_MAX)
     , m_PropertyRestrictions()
     , m_AgeRangeList()
     , m_NumTargeted()
@@ -469,22 +326,34 @@ namespace Kernel
 
     bool TargetedDistribution::operator<( const TargetedDistribution& rThat ) const
     {
-        return (this->m_StartYear < rThat.m_StartYear);
+        return (this->m_StartDay < rThat.m_StartDay);
+    }
+
+    void TargetedDistribution::AddTimeConfiguration()
+    {
+        initConfigTypeMap("Start_Day", &m_StartDay, NC_TD_Start_Day_DESC_TEXT, 0.0,  FLT_MAX, 0.0 );
+        initConfigTypeMap("End_Day",   &m_EndDay,   NC_TD_End_Day_DESC_TEXT,   0.0,  FLT_MAX, FLT_MAX );
+    }
+
+    void TargetedDistribution::CheckTimePeriod() const
+    {
+        if( m_StartDay >= m_EndDay )
+        {
+            throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
+                "Start_Day", m_StartDay,
+                "End_Day", m_EndDay,
+                "Start_Day must be < End_Day" );
+        }
     }
 
     bool TargetedDistribution::Configure( const Configuration * inputJson )
     {
-        std::vector<std::vector<std::string>> vector2d_string_disease_states;
-        std::set< std::string > allowed_states = GetAllowedTargetDiseaseStates();
+        AddTimeConfiguration();
+        AddDiseaseConfiguration();
 
-        initConfigTypeMap("Start_Year",           &m_StartYear,          NC_TD_Start_Year_DESC_TEXT,           1900.0,  2200.0, 1900.0 );
-        initConfigTypeMap("End_Year",             &m_EndYear,            NC_TD_End_Year_DESC_TEXT,             1900.0,  2200.0, 2200.0 );
         initConfigTypeMap("Num_Targeted",         &m_NumTargeted,        NC_TD_Num_Targeted_DESC_TEXT,              0, INT_MAX,      0 );
         initConfigTypeMap("Num_Targeted_Males",   &m_NumTargetedMales,   NC_TD_Num_Targeted_Males_DESC_TEXT,        0, INT_MAX,      0 );
         initConfigTypeMap("Num_Targeted_Females", &m_NumTargetedFemales, NC_TD_Num_Targeted_Females_DESC_TEXT,      0, INT_MAX,      0 );
-
-        initConfigTypeMap("Target_Disease_State",                       &vector2d_string_disease_states, NC_TD_Target_Disease_State_DESC_TEXT, nullptr, allowed_states );
-        initConfigTypeMap("Target_Disease_State_Has_Intervention_Name", &m_HasInterventionName,          NC_TD_Has_Intervention_Name_DESC_TEXT, "" );
 
         initConfigComplexType("Age_Ranges_Years",                  &m_AgeRangeList,         NC_TD_Age_Ranges_Years_DESC_TEXT );
         initConfigComplexType("Property_Restrictions_Within_Node", &m_PropertyRestrictions, NC_TD_Property_Restrictions_Within_Node_DESC_TEXT );
@@ -492,13 +361,7 @@ namespace Kernel
         bool ret = JsonConfigurable::Configure( inputJson );
         if( ret && !JsonConfigurable::_dryrun )
         {
-            if( m_StartYear >= m_EndYear )
-            {
-                throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
-                    "Start_Year", m_StartYear,
-                    "End_Year", m_EndYear,
-                    "Start_Year must be < End_Year" );
-            }
+            CheckTimePeriod();
 
             if( (m_NumTargeted.size() > 0) && ((m_NumTargetedMales.size() > 0) || (m_NumTargetedFemales.size() > 0)) )
             {
@@ -530,26 +393,9 @@ namespace Kernel
 
             CheckForZeroTargeted();
 
+            CheckDiseaseConfiguration();
+
             m_AgeRangeList.CheckForOverlap();
-
-            m_DiseaseStates = ConvertStringsToDiseaseState( vector2d_string_disease_states );
-
-            for( auto& inner : m_DiseaseStates )
-            {
-                for( auto state : inner )
-                {
-                    if( ( (state == TargetedDiseaseState::Has_Intervention     ) || 
-                          (state == TargetedDiseaseState::Not_Have_Intervention)  ) &&
-                        (m_HasInterventionName == "") )
-                    {
-                        const char* state_name = TargetedDiseaseState::pairs::lookup_key( state );
-                        throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, 
-                            "Target_Disease_State", state_name,
-                            "Target_Disease_State_Has_Intervention_Name", "<empty>", 
-                            "If using 'Has_Intervention' or 'Not_Have_Intervention', you must also define 'Target_Disease_State_Has_Intervention_Name' to the name of the intervention." );
-                    }
-                }
-            }
         }
         return ret;
     }
@@ -627,28 +473,28 @@ namespace Kernel
         }
     }
 
-    bool TargetedDistribution::IsInRange( float currentYear ) const
+    float TargetedDistribution::GetStartInDays() const
     {
-        return ((m_StartYear <= currentYear) && (currentYear < m_EndYear));
+        return m_StartDay;
     }
 
-    float TargetedDistribution::GetStartYear() const
+    float TargetedDistribution::GetEndInDays() const
     {
-        return m_StartYear;
+        return m_EndDay;
     }
 
-    float TargetedDistribution::GetEndYear() const
+    float TargetedDistribution::GetCurrentInDays( const IdmDateTime& rDateTime ) const
     {
-        return m_EndYear;
+        return rDateTime.Year() * DAYSPERYEAR;
     }
 
     void TargetedDistribution::CreateAgeAndGenderList( const IdmDateTime& rDateTime, float dt )
     {
-        float start_days = m_StartYear * DAYSPERYEAR;
-        float end_days   = m_EndYear   * DAYSPERYEAR;
+        float start_days = GetStartInDays();
+        float end_days   = GetEndInDays();
         int num_time_steps = int( (end_days - start_days) / dt );
 
-        float current_days = rDateTime.Year() * DAYSPERYEAR;
+        float current_days = GetCurrentInDays( rDateTime );
         int current_time_step = int( (current_days - start_days) / dt );
 
         for( int i = 0 ; i < m_AgeRangeList.Size(); ++i )
@@ -657,21 +503,33 @@ namespace Kernel
             {
                 if( m_NumTargeted[i] > 0 )
                 {
-                    TargetedByAgeAndGender tbag( m_AgeRangeList[i], Gender::COUNT, m_NumTargeted[i], num_time_steps, current_time_step );
-                    m_AgeAndGenderList.push_back( tbag );
+                    TargetedByAgeAndGender* p_tbag = m_pObjectFactory->CreateTargetedByAgeAndGender( m_AgeRangeList[i],
+                                                                                                     Gender::COUNT, 
+                                                                                                     m_NumTargeted[i],
+                                                                                                     num_time_steps,
+                                                                                                     current_time_step );
+                    m_AgeAndGenderList.push_back( p_tbag );
                 }
             }
             else
             {
                 if( m_NumTargetedMales[i] > 0 )
                 {
-                    TargetedByAgeAndGender tbag_males(   m_AgeRangeList[i], Gender::MALE,   m_NumTargetedMales[i],  num_time_steps, current_time_step  );
-                    m_AgeAndGenderList.push_back( tbag_males );
+                    TargetedByAgeAndGender* p_tbag = m_pObjectFactory->CreateTargetedByAgeAndGender( m_AgeRangeList[i],
+                                                                                                     Gender::MALE, 
+                                                                                                     m_NumTargetedMales[i],
+                                                                                                     num_time_steps,
+                                                                                                     current_time_step );
+                    m_AgeAndGenderList.push_back( p_tbag );
                 }
                 if( m_NumTargetedFemales[i] > 0 )
                 {
-                    TargetedByAgeAndGender tbag_females( m_AgeRangeList[i], Gender::FEMALE, m_NumTargetedFemales[i], num_time_steps, current_time_step );
-                    m_AgeAndGenderList.push_back( tbag_females );
+                    TargetedByAgeAndGender* p_tbag = m_pObjectFactory->CreateTargetedByAgeAndGender( m_AgeRangeList[i],
+                                                                                                     Gender::FEMALE, 
+                                                                                                     m_NumTargetedFemales[i],
+                                                                                                     num_time_steps,
+                                                                                                     current_time_step );
+                    m_AgeAndGenderList.push_back( p_tbag );
                 }
             }
         }
@@ -686,9 +544,9 @@ namespace Kernel
         }
         else
         {
-            for( auto& r_ag : m_AgeAndGenderList )
+            for( auto p_ag : m_AgeAndGenderList )
             {
-                r_ag.IncrementNextNumTargets();
+                p_ag->IncrementNextNumTargets();
             }
         }
     }
@@ -700,12 +558,17 @@ namespace Kernel
         // --- Find the individuals for each age and gender
         // --- that meet the demographic restrictions
         // ---------------------------------------------------------
+        if( m_pDiseaseQualifications == nullptr )
+        {
+            m_pDiseaseQualifications = m_pObjectFactory->CreateDiseaseQualifications( this );
+            release_assert( m_pDiseaseQualifications );
+        }
 
-        for( auto& r_ag : m_AgeAndGenderList )
+        for( auto p_ag : m_AgeAndGenderList )
         {
             for( auto p_nec : nodeList )
             {
-                r_ag.FindQualifyingIndividuals( p_nec, m_DiseaseStates, m_HasInterventionName, m_PropertyRestrictions );
+                p_ag->FindQualifyingIndividuals( p_nec, *m_pDiseaseQualifications, m_PropertyRestrictions );
             }
         }
 
@@ -715,18 +578,18 @@ namespace Kernel
 
         // Determine the total number of individuals that can receive the intervention
         int num_total = 0;
-        for( auto& r_ag : m_AgeAndGenderList )
+        for( auto p_ag : m_AgeAndGenderList )
         {
-            num_total += r_ag.GetNumTargeted();
+            num_total += p_ag->GetNumTargeted();
         }
 
         // Create the vector to return and allocate space for the individuals
         std::vector< IIndividualHumanEventContext* > distribute_to;
         distribute_to.reserve( num_total );
 
-        for( auto& r_ag : m_AgeAndGenderList )
+        for( auto p_ag : m_AgeAndGenderList )
         {
-            std::vector< IIndividualHumanEventContext* > selected = r_ag.SelectIndividuals();
+            std::vector< IIndividualHumanEventContext* > selected = p_ag->SelectIndividuals();
             distribute_to.insert( distribute_to.end(), selected.begin(), selected.end() );
         }
         return distribute_to;
@@ -743,28 +606,56 @@ namespace Kernel
 
         for( int i = 0 ; is_finished && (i < m_AgeAndGenderList.size()) ; ++i )
         {
-            is_finished = m_AgeAndGenderList[i].IsFinished();
+            is_finished = m_AgeAndGenderList[i]->IsFinished();
         }
         return is_finished;
     }
 
+    void TargetedDistribution::CheckOverlaped( const TargetedDistribution& rPrev ) const
+    {
+        if( rPrev.m_EndDay > this->m_StartDay )
+        {
+            std::stringstream ss;
+            ss << "'Distributions' cannot have time periods that overlap.  ";
+            ss << "(" << rPrev.m_StartDay << ", " << rPrev.m_EndDay << ") vs (" << this->m_StartDay << ", " << this->m_EndDay << ")";
+            throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+        }
+    }
+
+    bool TargetedDistribution::IsPastStart( const IdmDateTime& rDateTime ) const
+    {
+        return m_StartDay <= rDateTime.time;
+    }
+
+    bool TargetedDistribution::IsPastEnd( const IdmDateTime& rDateTime ) const
+    {
+        return m_EndDay <= rDateTime.time;
+    }
+
     // ------------------------------------------------------------------------
-    // --- TargetedDistribution
+    // --- TargetedDistributionList
     // ------------------------------------------------------------------------
 
     BEGIN_QUERY_INTERFACE_BODY(TargetedDistributionList)
     END_QUERY_INTERFACE_BODY(TargetedDistributionList)
 
-    TargetedDistributionList::TargetedDistributionList()
+    TargetedDistributionList::TargetedDistributionList( NChooserObjectFactory* pObjectFactory )
     : JsonConfigurable()
+    , m_pObjectFactory( pObjectFactory )
     , m_CurrentIndex(0)
     , m_pCurrentTargets(nullptr)
     , m_TargetedDistributions()
     {
+        release_assert( m_pObjectFactory );
     }
 
     TargetedDistributionList::~TargetedDistributionList()
     {
+        for( auto td : m_TargetedDistributions )
+        {
+            delete td;
+        }
+        m_TargetedDistributions.clear();
     }
 
     void TargetedDistributionList::ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key )
@@ -777,10 +668,10 @@ namespace Kernel
         {
             Configuration* p_element_config = Configuration::CopyFromElement( *data );
 
-            TargetedDistribution td;
-            td.Configure( p_element_config );
+            TargetedDistribution* p_td = m_pObjectFactory->CreateTargetedDistribution();
+            p_td->Configure( p_element_config );
 
-            Add( td );
+            Add( p_td );
 
             delete p_element_config ;
         }
@@ -789,10 +680,10 @@ namespace Kernel
 
     json::QuickBuilder TargetedDistributionList::GetSchema()
     {
-        TargetedDistribution td;
+        TargetedDistribution* p_td = m_pObjectFactory->CreateTargetedDistribution();
         if( JsonConfigurable::_dryrun )
         {
-            td.Configure( nullptr );
+            p_td->Configure( nullptr );
         }
 
         json::QuickBuilder schema( jsonSchemaBase );
@@ -801,7 +692,9 @@ namespace Kernel
         schema[ tn ] = json::String( "idmType:TargetedDistributionList" );
 
         schema[ts] = json::Object();
-        schema[ts]["<TargetedDistribution Value>"] = td.GetSchema().As<Object>();
+        schema[ts]["<TargetedDistribution Value>"] = p_td->GetSchema().As<Object>();
+
+        delete p_td;
 
         return schema;
     }
@@ -813,27 +706,16 @@ namespace Kernel
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, "'Distributions' cannot have zero elements." );
         }
 
-        float prev_start = m_TargetedDistributions[0].GetStartYear();
-        float prev_end   = m_TargetedDistributions[0].GetEndYear();
         for( int i = 1 ; i < m_TargetedDistributions.size() ; ++i )
         {
-            float this_start = m_TargetedDistributions[i].GetStartYear();
-            float this_end   = m_TargetedDistributions[i].GetEndYear();
-
-            if( prev_end > this_start )
-            {
-                std::stringstream ss;
-                ss << "'Distributions' cannot have time periods that overlap.  ";
-                ss << "(" << prev_start << ", " << prev_end << ") vs (" << this_start << ", " << this_end << ")";
-                throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
-            }
+            m_TargetedDistributions[i]->CheckOverlaped( *m_TargetedDistributions[i-1] );
         }
     }
 
-    void TargetedDistributionList::Add( const TargetedDistribution& rtd )
+    void TargetedDistributionList::Add( TargetedDistribution* ptd )
     {
-        m_TargetedDistributions.push_back( rtd );
-        std::sort( m_TargetedDistributions.begin(), m_TargetedDistributions.end() );
+        m_TargetedDistributions.push_back( ptd );
+        std::sort( m_TargetedDistributions.begin(), m_TargetedDistributions.end(), TargetedDistribution::LeftLessThanRight );
     }
 
     void TargetedDistributionList::UpdateTargeting( const IdmDateTime& rDateTime, float dt )
@@ -841,7 +723,7 @@ namespace Kernel
         // ----------------------------------------------------
         // --- Update where we are in the list of distributions
         // ----------------------------------------------------
-        while( m_TargetedDistributions[ m_CurrentIndex ].GetEndYear() <= rDateTime.Year() )
+        while( m_TargetedDistributions[ m_CurrentIndex ]->IsPastEnd( rDateTime ) )
         {
             ++m_CurrentIndex;
         }
@@ -851,9 +733,9 @@ namespace Kernel
         // -----------------------------------------
         m_pCurrentTargets = nullptr;
         if( (m_CurrentIndex < m_TargetedDistributions.size()) &&
-            (m_TargetedDistributions[ m_CurrentIndex ].GetStartYear() <= rDateTime.Year()) )
+            (m_TargetedDistributions[ m_CurrentIndex ]->IsPastStart( rDateTime )) )
         {
-            m_pCurrentTargets = &m_TargetedDistributions[ m_CurrentIndex ];
+            m_pCurrentTargets = m_TargetedDistributions[ m_CurrentIndex ];
 
             m_pCurrentTargets->UpdateTargeting( rDateTime, dt );
         }
@@ -868,8 +750,8 @@ namespace Kernel
     {
         bool is_finished = false;
         while( (m_CurrentIndex < m_TargetedDistributions.size()) &&
-               ( (m_TargetedDistributions[ m_CurrentIndex ].GetEndYear() <= rDateTime.Year()) ||
-                  m_TargetedDistributions[ m_CurrentIndex ].IsFinished() ) )
+               ( (m_TargetedDistributions[ m_CurrentIndex ]->IsPastEnd( rDateTime )) ||
+                  m_TargetedDistributions[ m_CurrentIndex ]->IsFinished() ) )
         {
             ++m_CurrentIndex;
         }
@@ -883,35 +765,83 @@ namespace Kernel
 
     void TargetedDistributionList::ScaleTargets( float popScaleFactor )
     {
-        for( auto& rtd : m_TargetedDistributions )
+        for( auto p_td : m_TargetedDistributions )
         {
-            rtd.ScaleTargets( popScaleFactor );
+            p_td->ScaleTargets( popScaleFactor );
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // --- NChooserObjectFactory
+    // ------------------------------------------------------------------------
+
+    NChooserObjectFactory::NChooserObjectFactory()
+    {
+    }
+
+    NChooserObjectFactory::~NChooserObjectFactory()
+    {
+    }
+
+    TargetedDistribution*   NChooserObjectFactory::CreateTargetedDistribution()
+    {
+        return new TargetedDistribution( this );
+    }
+
+    TargetedByAgeAndGender* NChooserObjectFactory::CreateTargetedByAgeAndGender( const AgeRange& rar, 
+                                                                                 Gender::Enum gender, 
+                                                                                 int numTargeted, 
+                                                                                 int numTimeSteps, 
+                                                                                 int initialTimeStep )
+    {
+        return new TargetedByAgeAndGender( rar, gender, numTargeted, numTimeSteps, initialTimeStep );
+    }
+
+    DiseaseQualifications*  NChooserObjectFactory::CreateDiseaseQualifications( TargetedDistribution* ptd )
+    {
+        return new DiseaseQualifications();
     }
 
     // ------------------------------------------------------------------------
     // --- NChooserEventCoordinator
     // ------------------------------------------------------------------------
 
-
     IMPLEMENT_FACTORY_REGISTERED(NChooserEventCoordinator)
     IMPL_QUERY_INTERFACE2(NChooserEventCoordinator, IEventCoordinator, IConfigurable)
 
     NChooserEventCoordinator::NChooserEventCoordinator()
     : m_Parent( nullptr )
+    , m_pObjectFactory( new NChooserObjectFactory() )
     , m_CachedNodes()
     , m_InterventionName()
     , m_pIntervention( nullptr )
     , m_InterventionConfig()
-    , m_TargetedDistributionList()
+    , m_TargetedDistributionList( m_pObjectFactory )
     , m_DistributionIndex(0)
     , m_IsFinished(false)
     , m_HasBeenScaled(false)
     {
+        release_assert( m_pObjectFactory );
+    }
+
+    NChooserEventCoordinator::NChooserEventCoordinator( NChooserObjectFactory* pObjectFactory )
+    : m_Parent( nullptr )
+    , m_pObjectFactory( pObjectFactory )
+    , m_CachedNodes()
+    , m_InterventionName()
+    , m_pIntervention( nullptr )
+    , m_InterventionConfig()
+    , m_TargetedDistributionList( m_pObjectFactory )
+    , m_DistributionIndex(0)
+    , m_IsFinished(false)
+    , m_HasBeenScaled(false)
+    {
+        release_assert( m_pObjectFactory );
     }
 
     NChooserEventCoordinator::~NChooserEventCoordinator()
     {
+        delete m_pObjectFactory;
     }
 
 
@@ -922,8 +852,8 @@ namespace Kernel
 
     bool NChooserEventCoordinator::Configure( const Configuration * inputJson )
     {
-        initConfigComplexType(     "Distributions",   &m_TargetedDistributionList, "TBD" );
-        initConfigComplexType( "Intervention_Config", &m_InterventionConfig,       "TBD" );
+        initConfigComplexType(     "Distributions",   &m_TargetedDistributionList, NC_Distributions_DESC_TEXT       );
+        initConfigComplexType( "Intervention_Config", &m_InterventionConfig,       NC_Intervention_Config_DESC_TEXT );
 
         bool retValue = JsonConfigurable::Configure( inputJson );
 

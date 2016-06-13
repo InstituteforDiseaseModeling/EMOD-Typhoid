@@ -10,7 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include <memory> // unique_ptr
 #include "UnitTest++.h"
-#include "NChooserEventCoordinator.h"
+#include "NChooserEventCoordinatorHIV.h"
 #include "Node.h"
 #include "SimulationConfig.h"
 
@@ -20,9 +20,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualHumanInterventionsContextFake.h"
 #include "IdmMpi.h"
 
-
-//#include "RandomFake.h"
-//#include "HIVEnums.h"
 
 using namespace std; 
 using namespace Kernel; 
@@ -115,52 +112,6 @@ SUITE(NChooserEventCoordinatorTest)
         return (IIndividualHumanContext*)p_human ;
     }
 
-    //uint32_t RandInt(uint32_t N)
-    //{
-    //    uint64_t ulA = uint64_t(EnvPtr->RNG->ul());
-    //    uint64_t ulB = uint64_t(EnvPtr->RNG->ul());
-    //    ulB <<= 32;
-    //    ulA += ulB;
-    //    uint64_t ll = (ulA & 0xFFFFFFFFL);
-    //    ll = ll * N;
-    //    ll >>= 32;
-    //    return ll;
-    //}
-
-    //TEST_FIXTURE(NChooserEventCoordinatorFixture, TestRandom)
-    //{
-    //    int range = 100;
-    //    int sample_size = range*range*range*range;
-    //    std::map<uint32_t,uint32_t> data;
-    //    for( int i = 0 ; i < range ; i++ )
-    //    {
-    //        data[i] = 0;
-    //    }
-    //    data[range] = 0;
-
-    //    for( int i = 0 ; i < sample_size ; i++ )
-    //    {
-    //        uint32_t r = RandInt(range+1);
-    //        data[ r ] += 1;
-    //    }
-
-    //    for( auto entry : data )
-    //    {
-    //        printf("%d, ",entry.first);
-    //    }
-    //    printf("\n");
-    //    for( auto entry : data )
-    //    {
-    //        printf("%d, ",entry.second);
-    //    }
-    //    printf("\n");
-    //    for( auto entry : data )
-    //    {
-    //        printf("%7.5f, ",double(entry.second)/double(sample_size));
-    //    }
-    //    printf("\n");
-    //}
-
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestTargetedByAgeAndGenderNumTargeted)
     {
         TargetedByAgeAndGender ag1( AgeRange( 15.0, 30.0 ), Gender::COUNT, 100, 1, 0 );
@@ -233,13 +184,12 @@ SUITE(NChooserEventCoordinatorTest)
         nec.Add( CreateHuman( &nc, &nec, Gender::FEMALE, 20*DAYSPERYEAR, true,  false, false, "Location", "RURAL" ) );
         nec.Add( CreateHuman( &nc, &nec, Gender::MALE,   20*DAYSPERYEAR, false, false, true,  "Location", "URBAN" ) );
 
-        std::vector<std::vector<TargetedDiseaseState::Enum>> ds;
+        DiseaseQualifications disease_qual;
         PropertyRestrictions pr;
 
         TargetedByAgeAndGender ag1( AgeRange( 15.0, 30.0 ), Gender::COUNT, 10, 3, 0 );
 
-        std::string intervention_name;
-        ag1.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
+        ag1.FindQualifyingIndividuals( &nec, disease_qual, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_1 = ag1.SelectIndividuals();
         CHECK_EQUAL(  4, selected_list_1.size() );
@@ -250,7 +200,7 @@ SUITE(NChooserEventCoordinatorTest)
 
         ag1.IncrementNextNumTargets();
 
-        ag1.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
+        ag1.FindQualifyingIndividuals( &nec, disease_qual, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_2 = ag1.SelectIndividuals();
         CHECK_EQUAL(  3, selected_list_2.size() );
@@ -260,7 +210,7 @@ SUITE(NChooserEventCoordinatorTest)
 
         ag1.IncrementNextNumTargets();
 
-        ag1.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
+        ag1.FindQualifyingIndividuals( &nec, disease_qual, pr );
 
         std::vector<IIndividualHumanEventContext*> selected_list_3 = ag1.SelectIndividuals();
         CHECK_EQUAL(  3, selected_list_3.size() );
@@ -268,47 +218,6 @@ SUITE(NChooserEventCoordinatorTest)
         CHECK_EQUAL( 13, selected_list_3[1]->GetSuid().data );
         CHECK_EQUAL( 16, selected_list_3[2]->GetSuid().data );
 
-        // -----------------------------------------------
-        // --- Test Filtering by Disease State and Gender
-        // -----------------------------------------------
-        std::vector<TargetedDiseaseState::Enum> ds_1;
-        ds_1.push_back( TargetedDiseaseState::HIV_Negative               );
-        ds_1.push_back( TargetedDiseaseState::Male_Circumcision_Positive );
-        ds.push_back( ds_1 );
-        std::vector<TargetedDiseaseState::Enum> ds_2;
-        ds_2.push_back( TargetedDiseaseState::HIV_Positive               );
-        ds.push_back( ds_2 );
-
-        TargetedByAgeAndGender ag2( AgeRange( 15.0, 30.0 ), Gender::MALE, 10, 1, 0 );
-
-        ag2.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
-
-        std::vector<IIndividualHumanEventContext*> selected_list_4 = ag2.SelectIndividuals();
-        CHECK_EQUAL(  6, selected_list_4.size() );
-        CHECK_EQUAL(  6, selected_list_4[0]->GetSuid().data );
-        CHECK_EQUAL(  7, selected_list_4[1]->GetSuid().data );
-        CHECK_EQUAL(  9, selected_list_4[2]->GetSuid().data );
-        CHECK_EQUAL( 12, selected_list_4[3]->GetSuid().data );
-        CHECK_EQUAL( 16, selected_list_4[4]->GetSuid().data );
-        CHECK_EQUAL( 20, selected_list_4[5]->GetSuid().data );
-
-        TargetedByAgeAndGender ag3( AgeRange( 15.0, 30.0 ), Gender::MALE, 6, 2, 0 );
-
-        ag3.FindQualifyingIndividuals( &nec, ds, intervention_name, pr );
-
-        std::vector<IIndividualHumanEventContext*> selected_list_5 = ag3.SelectIndividuals();
-        CHECK_EQUAL(  3, selected_list_5.size() );
-        CHECK_EQUAL(  6, selected_list_5[0]->GetSuid().data );
-        CHECK_EQUAL(  7, selected_list_5[1]->GetSuid().data );
-        CHECK_EQUAL( 12, selected_list_5[2]->GetSuid().data );
-
-        ag3.IncrementNextNumTargets();
-
-        std::vector<IIndividualHumanEventContext*> selected_list_6 = ag3.SelectIndividuals();
-        CHECK_EQUAL(  3, selected_list_6.size() );
-        CHECK_EQUAL(  6, selected_list_6[0]->GetSuid().data );
-        CHECK_EQUAL( 16, selected_list_6[1]->GetSuid().data );
-        CHECK_EQUAL( 20, selected_list_6[2]->GetSuid().data );
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestSample)
@@ -318,7 +227,7 @@ SUITE(NChooserEventCoordinatorTest)
         // --------------------
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/NChooserEventCoordinatorTest/TestSample.json" ) );
 
-        NChooserEventCoordinator coordinator;
+        NChooserEventCoordinatorHIV coordinator;
 
         try
         {
@@ -344,7 +253,7 @@ SUITE(NChooserEventCoordinatorTest)
 
             unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( rFilename ) );
 
-            NChooserEventCoordinator coordinator;
+            NChooserEventCoordinatorHIV coordinator;
 
             bool ret = coordinator.Configure( p_config.get() );
             CHECK( ret );

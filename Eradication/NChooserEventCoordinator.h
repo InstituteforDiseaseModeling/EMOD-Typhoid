@@ -17,25 +17,19 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    ENUM_DEFINE(TargetedDiseaseState,
-        ENUM_VALUE_SPEC( HIV_Positive               , 1) 
-        ENUM_VALUE_SPEC( HIV_Negative               , 2) 
-        ENUM_VALUE_SPEC( Tested_Positive            , 3) 
-        ENUM_VALUE_SPEC( Tested_Negative            , 4)
-        ENUM_VALUE_SPEC( Male_Circumcision_Positive , 5)
-        ENUM_VALUE_SPEC( Male_Circumcision_Negative , 6)
-        ENUM_VALUE_SPEC( Has_Intervention           , 7)
-        ENUM_VALUE_SPEC( Not_Have_Intervention      , 8))
+    class NChooserObjectFactory;
 
     // ------------------------------------------------------------------------
     // --- AgeRange
     // ------------------------------------------------------------------------
 
+    // A container for specifying an age range.  It handles the values and how they are read in.
     class IDMAPI AgeRange : public JsonConfigurable
     {
+    public:
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
-    public:
+
         AgeRange( float minYears=0.0, float maxYears=MAX_HUMAN_AGE);
         virtual ~AgeRange();
 
@@ -57,11 +51,13 @@ namespace Kernel
     // --- AgeRangeList
     // ------------------------------------------------------------------------
 
+    // This is a container for the AgeRange objects
     class IDMAPI AgeRangeList : public JsonConfigurable
     {
+    public:
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
-    public:
+
         AgeRangeList();
         virtual ~AgeRangeList();
 
@@ -81,10 +77,30 @@ namespace Kernel
 #pragma warning( pop )
     };
 
+
+    // ------------------------------------------------------------------------
+    // --- DiseaseQualifications
+    // ------------------------------------------------------------------------
+
+    // Allow sub classes of NChooserEventCoordinator to override this class with
+    // disease specific demographic targeting.
+    class DiseaseQualifications
+    {
+    public:
+        DiseaseQualifications() {}
+        virtual ~DiseaseQualifications() {}
+
+        // Return true of the person qualifies due to their specific disease state
+        virtual bool Qualifies( IIndividualHumanEventContext *ihec ) const { return true; };
+    };
+
     // ------------------------------------------------------------------------
     // --- TargetedByAgeAndGender
     // ------------------------------------------------------------------------
 
+    // For each demographic and number targeted defined in the TargetedDistribution, 
+    // this object determines how many people to target each time step and then 
+    // selects the individuals to receive the intervention.
     class IDMAPI TargetedByAgeAndGender
     {
     public:
@@ -95,18 +111,17 @@ namespace Kernel
                                 int initialTimeStep );
         ~TargetedByAgeAndGender();
 
-        void IncrementNextNumTargets();
+        virtual void IncrementNextNumTargets();
 
-        int GetNumTargeted() const;
+        virtual int GetNumTargeted() const;
 
-        void FindQualifyingIndividuals( INodeEventContext* pNEC, 
-                                        const std::vector<std::vector<TargetedDiseaseState::Enum>>& diseaseStates,
-                                        const std::string& rHasInterventionName,
-                                        PropertyRestrictions& rPropertyRestrictions );
+        virtual void FindQualifyingIndividuals( INodeEventContext* pNEC, 
+                                                const DiseaseQualifications& rDisease,
+                                                PropertyRestrictions& rPropertyRestrictions );
 
-        std::vector<IIndividualHumanEventContext*> SelectIndividuals();
+        virtual std::vector<IIndividualHumanEventContext*> SelectIndividuals();
 
-        bool IsFinished() const;
+        virtual bool IsFinished() const;
 
     private:
 #pragma warning( push )
@@ -124,46 +139,59 @@ namespace Kernel
     // --- TargetedDistribution
     // ------------------------------------------------------------------------
 
+    // A targeted distribution defines a collection of demographics and the number of interventions
+    // to be distributed to each demographic.
     class IDMAPI TargetedDistribution : public JsonConfigurable
     {
+    public:
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
-    public:
-        TargetedDistribution();
+
+        static bool LeftLessThanRight( const TargetedDistribution* pLeft, const TargetedDistribution* pRight );
+
+        TargetedDistribution( NChooserObjectFactory* pObjectFactory );
         virtual ~TargetedDistribution();
 
-        bool operator<( const TargetedDistribution& rThat ) const;
+        virtual bool operator<( const TargetedDistribution& rThat ) const;
 
         virtual bool Configure( const Configuration * inputJson ) override;
 
-        bool IsInRange( float currentYear ) const;
+        virtual bool IsFinished() const;
+        virtual void CheckOverlaped( const TargetedDistribution& rPrev ) const;
+        virtual bool IsPastStart( const IdmDateTime& rDateTime ) const;
+        virtual bool IsPastEnd( const IdmDateTime& rDateTime ) const;
 
-        bool IsFinished() const;
-        float GetStartYear() const;
-        float GetEndYear() const;
+        virtual void UpdateTargeting( const IdmDateTime& rDateTime, float dt );
+        virtual std::vector< IIndividualHumanEventContext* > DetermineWhoGetsIntervention( const std::vector<INodeEventContext*> nodeList );
 
-        void UpdateTargeting( const IdmDateTime& rDateTime, float dt );
-        std::vector< IIndividualHumanEventContext* > DetermineWhoGetsIntervention( const std::vector<INodeEventContext*> nodeList );
+        virtual void CreateAgeAndGenderList( const IdmDateTime& rDateTime, float dt );
 
-        void CreateAgeAndGenderList( const IdmDateTime& rDateTime, float dt );
+        virtual void ScaleTargets( float popScaleFactor );
 
-        void ScaleTargets( float popScaleFactor );
+    protected:
+        virtual void AddTimeConfiguration();
+        virtual void CheckTimePeriod() const;
+        virtual void AddDiseaseConfiguration() {};
+        virtual void CheckDiseaseConfiguration() {};
+        virtual float GetStartInDays() const;
+        virtual float GetEndInDays() const;
+        virtual float GetCurrentInDays( const IdmDateTime& rDateTime ) const;
 
-    private:
+
         void CheckForZeroTargeted();
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        float m_StartYear;
-        float m_EndYear;
-        std::vector<std::vector<TargetedDiseaseState::Enum>> m_DiseaseStates;
-        std::string m_HasInterventionName;
+        NChooserObjectFactory* m_pObjectFactory;
+        DiseaseQualifications* m_pDiseaseQualifications;
+        float m_StartDay;
+        float m_EndDay;
         PropertyRestrictions m_PropertyRestrictions;
         AgeRangeList m_AgeRangeList;
         std::vector<int> m_NumTargeted;
         std::vector<int> m_NumTargetedMales;
         std::vector<int> m_NumTargetedFemales;
-        std::vector<TargetedByAgeAndGender> m_AgeAndGenderList;
+        std::vector<TargetedByAgeAndGender*> m_AgeAndGenderList;
 #pragma warning( pop )
     };
 
@@ -171,48 +199,74 @@ namespace Kernel
     // --- TargetedDistributionList
     // ------------------------------------------------------------------------
 
+    // This is an ordered list of targeted distributions where each distribution defines
+    // a demographic to target with a specific number of interventions.  The elements of
+    // this list are to be in order based on the period they are covering.  The elements
+    // are not allowed to overlap so that the coordinator is only distributing interventions
+    // for one of the items in this list.
     class IDMAPI TargetedDistributionList : public JsonConfigurable
     {
+    public:
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
-    public:
-        TargetedDistributionList();
+
+        TargetedDistributionList( NChooserObjectFactory* pObjectFactory );
         virtual ~TargetedDistributionList();
 
         virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
         virtual json::QuickBuilder GetSchema();
 
-        void CheckForOverlap();
-        void Add( const TargetedDistribution& rtd );
+        virtual void CheckForOverlap();
+        virtual void Add( TargetedDistribution* ptd );
 
-        void UpdateTargeting( const IdmDateTime& rDateTime, float dt );
-        TargetedDistribution* GetCurrentTargets();
-        bool IsFinished( const IdmDateTime& rDateTime, float dt );
+        virtual void UpdateTargeting( const IdmDateTime& rDateTime, float dt );
+        virtual TargetedDistribution* GetCurrentTargets();
+        virtual bool IsFinished( const IdmDateTime& rDateTime, float dt );
 
-        void ScaleTargets( float popScaleFactor );
+        virtual void ScaleTargets( float popScaleFactor );
 
     private:
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
+        NChooserObjectFactory* m_pObjectFactory;
         int m_CurrentIndex;
         TargetedDistribution* m_pCurrentTargets;
-        std::vector<TargetedDistribution> m_TargetedDistributions;
+        std::vector<TargetedDistribution*> m_TargetedDistributions;
 #pragma warning( pop )
+    };
+
+    // ------------------------------------------------------------------------
+    // --- NChooserObjectFactory
+    // ------------------------------------------------------------------------
+    class IDMAPI NChooserObjectFactory
+    {
+    public:
+        NChooserObjectFactory();
+        virtual ~NChooserObjectFactory();
+
+        virtual TargetedDistribution*   CreateTargetedDistribution();
+        virtual TargetedByAgeAndGender* CreateTargetedByAgeAndGender( const AgeRange& rar, 
+                                                                      Gender::Enum gender, 
+                                                                      int numTargeted, 
+                                                                      int numTimeSteps, 
+                                                                      int initialTimeStep );
+        virtual DiseaseQualifications*  CreateDiseaseQualifications( TargetedDistribution* ptd );
     };
 
     // ------------------------------------------------------------------------
     // --- NChooserEventCoordinator
     // ------------------------------------------------------------------------
 
-    class IDMAPI NChooserEventCoordinator : public IEventCoordinator, /*public IVisitIndividual,*/ public JsonConfigurable
+    // This is an event coordinator that distributes N interventions over a given time period to a particular demographic.
+    class IDMAPI NChooserEventCoordinator : public IEventCoordinator, public JsonConfigurable
     {
         DECLARE_FACTORY_REGISTERED_EXPORT(EventCoordinatorFactory, NChooserEventCoordinator, IEventCoordinator)    
-
     public:
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
 
         NChooserEventCoordinator();
+        NChooserEventCoordinator( NChooserObjectFactory* pObjectFactory );
         virtual ~NChooserEventCoordinator();
 
         virtual bool Configure( const Configuration * inputJson ) override;
@@ -223,10 +277,7 @@ namespace Kernel
         virtual void AddNode( const suids::suid& suid) override;
         virtual void Update(float dt) override;
         virtual void UpdateNodes(float dt) override;
-        virtual bool IsFinished() override; // returns false when the EC requires no further updates and can be disposed of
-
-        // IVisitIndividual methods
-        //virtual bool visitIndividualCallback( IIndividualHumanEventContext *ihec, float & incrementalCostOut, ICampaignCostObserver * pICCO ) override;
+        virtual bool IsFinished() override;
 
     protected:
 
@@ -236,6 +287,7 @@ namespace Kernel
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         ISimulationEventContext*        m_Parent;
+        NChooserObjectFactory*          m_pObjectFactory;
         std::vector<INodeEventContext*> m_CachedNodes;
         std::string                     m_InterventionName;
         IDistributableIntervention*     m_pIntervention;
@@ -245,19 +297,5 @@ namespace Kernel
         bool                            m_IsFinished;
         bool                            m_HasBeenScaled;
 #pragma warning( pop )
-
-
-#if USE_JSON_SERIALIZATION
-    public:
-        // IJsonSerializable Interfaces
-        virtual void JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const;
-        virtual void JDeserialize( IJsonObjectAdapter* root, JSerializer* helper );
-#endif    
-#if USE_BOOST_SERIALIZATION
-    private:
-        friend class ::boost::serialization::access;
-        template<class Archive>
-        friend void serialize(Archive &ar, StandardInterventionDistributionEventCoordinator &ec, const unsigned int v);
-#endif
     };
 }
