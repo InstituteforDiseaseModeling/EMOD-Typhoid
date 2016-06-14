@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.6.1124.0",
-		"DTK_Branch" : "HIV-MiscFixes (df54847)",
-		"DTK_Build_Date" : "Jun 13 2016 14:38:22"
+		"DTK_Version" : "2.7.1148.0",
+		"DTK_Branch" : "GitHub-520 (54b7990)",
+		"DTK_Build_Date" : "Jun 14 2016 01:29:09"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -8465,7 +8465,7 @@
 						"type" : "string"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
@@ -8968,7 +8968,7 @@
 						"default" : "AD_WithinVillage"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Attraction_Config" : {
 						"description" : "Fraction of feeds attracted to the artificial diet. A parameter that is decayed.",
@@ -9007,7 +9007,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -9067,7 +9067,7 @@
 						"default" : "Generic"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Waning_Config" : {
 						"description" : "Configuration of drug-killing efficacy and waning",
@@ -10912,7 +10912,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -10948,7 +10948,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -11055,7 +11055,7 @@
 						"type" : "string"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
@@ -11094,7 +11094,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -11130,7 +11130,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "Configuration of drug-killing efficacy and waning",
@@ -11163,7 +11163,7 @@
 						"default" : "TEMPORARY_RAINFALL"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -11962,7 +11962,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Acquire_Config" : {
 						"description" : "TBD",
@@ -12425,7 +12425,7 @@
 						"type" : "string"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
@@ -12465,7 +12465,7 @@
 						"default" : "TEMPORARY_RAINFALL"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
@@ -12720,7 +12720,7 @@
 						"default" : "Generic"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Waning_Config" : {
 						"description" : "Configuration of drug-killing efficacy and waning",
@@ -12934,7 +12934,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -12981,7 +12981,7 @@
 						"default" : "Barrier"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "A fraction of feed attempts that kill the vector. The rate at which the mosquito dies conditional on a successfully blocked feed. A parameter that is decayed.",
@@ -13148,7 +13148,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -13184,7 +13184,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Blocking_Config" : {
 						"description" : "TBD",
@@ -13233,7 +13233,7 @@
 						"default" : "Generic"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Waning_Config" : {
 						"description" : "Configuration of drug-killing efficacy and waning",
@@ -13353,7 +13353,7 @@
 						"default" : "SpaceSpray_FemalesOnly"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -13384,7 +13384,7 @@
 						"type" : "string"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Repellency_Config" : {
 						"description" : "TBD",
@@ -13423,7 +13423,7 @@
 						"type" : "float"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "TBD",
@@ -13525,7 +13525,7 @@
 						"type" : "string"
 					},
 					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.Waning"
+						"base" : "interventions.idmType.WaningEffect"
 					},
 					"Killing_Config" : {
 						"description" : "Killing of the targeted stage. A parameter that is decayed.",
