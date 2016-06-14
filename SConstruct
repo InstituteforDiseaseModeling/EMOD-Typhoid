@@ -342,7 +342,8 @@ elif "win32" == os.sys.platform:
     env.Append(CCFLAGS=["/EHsc","/W3"])
 
     # /bigobj for an object file bigger than 64K
-    env.Append(CCFLAGS=["/bigobj"])
+    # DMB It is in the VS build parameters but it doesn't show up in the Command Line view
+    #env.Append(CCFLAGS=["/bigobj"])
 
     # some warnings we don't like:
     # c4355
@@ -369,17 +370,22 @@ elif "win32" == os.sys.platform:
     # /Z7 debug info goes into each individual .obj file -- no .pdb created 
     env.Append( CCFLAGS= ["/errorReport:none"] )
 
-    #env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Zi"])
-    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
+    # Switching from /Z7 to /Zi in order to be more like VS
+    #env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
+    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Zi"])
 
     env.Append( CCFLAGS=["/DIDM_EXPORT"] )
     env.Append( LIBS=["python27.lib"] )
 
     if Rel:
-        # /MD: Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
-        # /MT: use static lib
-        # /O2: optimize for speed (as opposed to size)
-        env.Append( CCFLAGS= ["/O2", "/MD"] )
+        # /MD  : Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
+        # /MT  : use static lib
+        # /O2  : optimize for speed (as opposed to size)
+        # /MP  : build with multiple processes
+        # /Gm- : No minimal build
+        # /WX- : Do NOT treat warnings as errors
+        # /Gd  : the default setting, specifies the __cdecl calling convention for all functions
+        env.Append( CCFLAGS= ["/O2", "/MD", "/MP", "/Gm-", "/WX-", "/Gd" ] )
         env.Append( CPPDEFINES= ["NDEBUG"] )
 
         # Disable these two for faster generation of codes
@@ -397,7 +403,15 @@ elif "win32" == os.sys.platform:
         #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
         
         # For MSVC >= 11.0
-        env.Append( LINKFLAGS=[ "/MACHINE:X64"] )
+        # /OPT:REF : eliminates functions and data that are never referenced
+        # /OPT:ICF : to perform identical COMDAT folding
+        # /DYNAMICBASE:NO : Don't Use address space layout randomization
+        # /SUBSYSTEM:CONSOLE : Win32 character-mode application.
+        env.Append( LINKFLAGS=[ "/MACHINE:X64", "/MANIFEST", "/HEAP:\"100000000\"\",100000000\" ", "/OPT:REF", "/OPT:ICF ", "/DYNAMICBASE:NO", "/SUBSYSTEM:CONSOLE"] )
+
+        # This causes problems with the report DLLs.  Don't have time right now to figure out
+        # how to remove flags from the DLL build.
+        #env.Append( LINKFLAGS=[ "/STACK:\"100000000\"\",100000000\"" ] )
 
     else: 
         # /RTC1: - Enable Stack Frame Run-Time Error Checking; Reports when a variable is used without having been initialized
@@ -432,8 +446,6 @@ env.Append( LIBPATH=['$EXTRALIBPATH'] )
 #print env['EXTRACPPPATH']
 
 # --- check system ---
-boostCompiler = "-vc110"
-boostVersion = "-1_51"
 
 def doConfigure(myenv):
     conf = Configure(myenv)
@@ -444,14 +456,6 @@ def doConfigure(myenv):
             print( "This sometimes happens even though the compiler is fine and can be resolved by performing a 'scons -c' followed by manually removing the .sconf_temp folder and .sconsign.dblite. It can also be because mpich_devel is not installed." )
             Exit(1)
             
-    """
-    for b in boostLibs:
-        l = "boost_" + b
-
-        if not conf.CheckLib([ l + boostCompiler + "-mt" + boostVersion,
-                               l + boostCompiler + boostVersion ], language='C++' ):
-            Exit(1)
-    """
     return conf.Finish()
 
 

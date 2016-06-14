@@ -38,7 +38,7 @@ namespace Kernel
         virtual PolioVaccineType::Enum GetVaccineType() const override;
 
         // IVaccine
-        virtual void  ApplyVaccineTake() override {} // Take is handled in live vaccines
+        virtual bool  ApplyVaccineTake( IIndividualHumanContext* pihc ) {return true;} // Take is handled in live vaccines
         
         /* clorton virtual */ float GetVaccineReducedAcquire()  const { return 0; }
         /* clorton virtual */ float GetVaccineReducedTransmit() const { return 0; }

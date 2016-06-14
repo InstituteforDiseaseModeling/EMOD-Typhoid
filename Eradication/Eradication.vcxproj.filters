@@ -187,6 +187,9 @@
     <Filter Include="Source Files\Campaign\InterventionContainers\Py">
       <UniqueIdentifier>{7146defc-43a0-4968-9aa1-29480c975dfe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Campaign\EventCoordinator\STI\HIV">
+      <UniqueIdentifier>{b7c8e051-7d1e-447d-afa6-3a3dd9b651cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VectorPopulation.cpp">
@@ -894,9 +897,6 @@
     <ClCompile Include="..\interventions\PMTCT.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClCompile>
-    <ClCompile Include="STINetworkParameters.cpp">
-      <Filter>Source Files\STI</Filter>
-    </ClCompile>
     <ClCompile Include="NodeInfo.cpp">
       <Filter>Source Files\Kernel</Filter>
     </ClCompile>
@@ -1022,6 +1022,30 @@
     </ClCompile>
     <ClCompile Include="PyInterventionsContainer.cpp">
       <Filter>Source Files\Campaign\InterventionContainers\Py</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyRestrictions.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceTrackingEventCoordinatorHIV.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\RevaccinatableVaccine.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\WaningEffectMap.cpp">
+      <Filter>Source Files\Campaign\WaningEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="ConcurrencyParameters.cpp">
+      <Filter>Source Files\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="NChooserEventCoordinator.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
+    </ClCompile>
+    <ClCompile Include="NChooserEventCoordinatorHIV.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
+    </ClCompile>
+    <ClCompile Include="NChooserEventCoordinatorSTI.cpp">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2001,9 +2025,6 @@
     <ClInclude Include="..\interventions\PMTCT.h">
       <Filter>Source Files\Campaign\IndividualTargeted\STI\HIV</Filter>
     </ClInclude>
-    <ClInclude Include="STINetworkParameters.h">
-      <Filter>Source Files\STI</Filter>
-    </ClInclude>
     <ClInclude Include="ISTIInterventionsContainer.h">
       <Filter>Source Files\Campaign\InterventionContainers\STI</Filter>
     </ClInclude>
@@ -2220,41 +2241,44 @@
     <ClInclude Include="IVectorMigrationReporting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\BinaryArchiveReader.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\utils\BinaryArchiveReader.h" />
+    <ClInclude Include="..\utils\BinaryArchiveWriter.h" />
+    <ClInclude Include="..\utils\DurationDistribution.h" />
+    <ClInclude Include="..\utils\FileSystem.h" />
+    <ClInclude Include="..\utils\IArchive.h" />
+    <ClInclude Include="..\utils\ISerializable.h" />
+    <ClInclude Include="..\utils\JsonFullReader.h" />
+    <ClInclude Include="..\utils\JsonFullWriter.h" />
+    <ClInclude Include="..\utils\JsonRawReader.h" />
+    <ClInclude Include="..\utils\JsonRawWriter.h" />
+    <ClInclude Include="..\rapidjson\include\rapidjson\rapidjson.h" />
+    <ClInclude Include="..\utils\Serialization.h" />
+    <ClInclude Include="PropertyRestrictions.h">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\BinaryArchiveWriter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ReferenceTrackingEventCoordinatorHIV.h">
+      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\DurationDistribution.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\interventions\RevaccinatableVaccine.h">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\FileSystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\interventions\WaningEffectMap.h">
+      <Filter>Source Files\Campaign\WaningEffects</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\IArchive.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ConcurrencyParameters.h">
+      <Filter>Source Files\STI</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\ISerializable.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="IConcurrency.h">
+      <Filter>Source Files\STI</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\JsonFullReader.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="NChooserEventCoordinator.h">
+      <Filter>Source Files\Campaign\EventCoordinator</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\JsonFullWriter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="NChooserEventCoordinatorHIV.h">
+      <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\JsonRawReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utils\JsonRawWriter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\rapidjson\include\rapidjson\rapidjson.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utils\Serialization.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="NChooserEventCoordinatorSTI.h">
+      <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

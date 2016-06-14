@@ -89,6 +89,7 @@ else:
                             "StandardEventCoordinator.cpp",
                             "CoverageByNodeEventCoordinator.cpp",
                             "DemographicRestrictions.cpp",
+                            "PropertyRestrictions.cpp",
                             
                             # Reporting
                             "../baseReportLib/ChannelDataMap.cpp",
@@ -143,6 +144,7 @@ else:
                             "../interventions/PropertyValueChanger.cpp",
                             "../interventions/Outbreak.cpp",
                             "../interventions/OutbreakIndividual.cpp",
+                            "../interventions/RevaccinatableVaccine.cpp",
                             "../interventions/SimpleVaccine.cpp",
                             "../interventions/MultiEffectVaccine.cpp",
                             "../interventions/WaningEffectBox.cpp",
@@ -150,6 +152,7 @@ else:
                             "../interventions/WaningEffectConstant.cpp",
                             "../interventions/WaningEffectExponential.cpp",
                             "../interventions/WaningEffectFactory.cpp",
+                            "../interventions/WaningEffectMap.cpp",
     ]
 
     vectorSrcFiles = [
@@ -284,6 +287,7 @@ else:
                             "AssortivityHIV.cpp",
                             "AssortivityFactory.cpp",
                             "CampaignEventByYear.cpp",
+                            "ConcurrencyParameters.cpp",
                             "IndividualSTI.cpp",
                             "InfectionSTI.cpp",
                             "NodeInfoSTI.cpp",
@@ -312,7 +316,6 @@ else:
                             "SocietyImpl.cpp",
                             "StiObjectFactory.cpp",
                             "StiTransmissionReporter.cpp",
-                            "STINetworkParameters.cpp",
                             "StiRelationshipEndReporter.cpp",
                             "StiRelationshipStartReporter.cpp",
                             "StiRelationshipConsummatedReporter.cpp",
@@ -330,12 +333,15 @@ else:
                             "IndividualHIV.cpp",
                             "InfectionHIV.cpp",
                             "FerrandAgeDependentDistribution.cpp",
+                            "NChooserEventCoordinator.cpp",
                             "NodeHIV.cpp",
                             "ReportHIV.cpp",
+                            "ReferenceTrackingEventCoordinatorHIV.cpp",
                             "HIVInterventionsContainer.cpp",
                             "SusceptibilityHIV.cpp",
                             "SimulationHIV.cpp",
                             "HivObjectFactory.cpp",
+                            "HIVDrugTypeParameters.cpp",
                             "HIVRelationshipStartReporter.cpp",
                             "HIVReportEventRecorder.cpp",
                             "HIVTransmissionReporter.cpp",

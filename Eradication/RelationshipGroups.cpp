@@ -168,42 +168,41 @@ namespace Kernel {
     {
         (*membershipOut)[0] = (GroupIndex)0; // map route 0 to index 0 // why?
         membershipOut->clear();
-        /*std::ostringstream* msg = nullptr;
-        if (LOG_LEVEL(DEBUG))
-        {
-            msg = new std::ostringstream();
-            *msg << "(fn=GetPoolMembershipForProperties) ";
-        }*/
-        //release_assert( properties->size() );
+
         for (tProperties::const_iterator iProperty = properties->begin(); iProperty != properties->end(); iProperty++)
         {
             const string& propertyName = iProperty->first;
             const string& propertyValue = iProperty->second;
-            /*if (LOG_LEVEL(DEBUG))
-            {
-                *msg << propertyName << "=" << propertyValue << ", ";
-            }*/
-            //std::cout << propertyName << "=" << propertyValue << std::endl;
+
             if (propertyValueToIndexMap.find(propertyName) != propertyValueToIndexMap.end())
             {
                 if( propertyValueToIndexMap.at(propertyName).find( propertyValue ) != propertyValueToIndexMap.at(propertyName).end() )
                 {
-                    (*membershipOut)[ atoi( propertyValue.c_str() ) ] = propertyValueToIndexMap.at(propertyName).at(propertyValue);
-                    /*if( msg )
+                    // ------------------------------------------------------------------------------------------------------
+                    // --- DMB 6-6-2016 In RelationshipManager::RemoveFromPrimaryRelationships(), we gain a very significant
+                    // --- reduction in runtime by batching the deleting of the relationships from the transmission group.
+                    // --- However, this means that we try to function with entries in the map that do not exist.
+                    // --- For example, when a person migrates, their relationship should be removed.  Since it is not removed
+                    // --- immediately, the index value could be invalid.  The check makes sure that the index is at least
+                    // --- a valid value.  This implies that we need other checks to make sure we don't spread the disease
+                    // --- when people are not in a normal relationship (i.e. in the same node).
+                    // ------------------------------------------------------------------------------------------------------
+                    if( (unsigned int)propertyValueToIndexMap.at(propertyName).at(propertyValue) <= max_index  )
                     {
-                        *msg << "Set value for value=" << propertyValue << " --> " << propertyValueToIndexMap.at(propertyName).at(propertyValue) << std::endl;
-                    }*/
-                    release_assert( (unsigned int)propertyValueToIndexMap.at(propertyName).at(propertyValue) <= max_index );
+                        (*membershipOut)[ atoi( propertyValue.c_str() ) ] = propertyValueToIndexMap.at(propertyName).at(propertyValue);
+                    }
                 }
                 else
                 {
-                    /*for( auto it = propertyValueToIndexMap[propertyName].cbegin();
-                               it != propertyValueToIndexMap[propertyName].cend();
-                               ++it )
-                    {
-                        std::cout << it->first << ":" << it->second << std::endl;
-                    }*/
-                    LOG_INFO_F( "Couldn't find property (name=%s,value=%s) at this node (%d). Valid for multi-node sims?\n",
+                    // --------------------------------------------------------------------------------------
+                    // --- DMB 6-6-2016 One can get here when people are migrating.  You can get here
+                    // --- from UpdateGroupMembership() that happens during immigration.  Relationship does
+                    // --- an AddProperty(), but we don't do the Build() until after all the pair forming
+                    // --- in NodeSTI::Update().  It seems like we need to do a Build after each AddProperty()
+                    // --- or something so that this method adds the relationship to membershipOut.
+                    // --- Basically, I'm still confused but I'm moving on because tests pass.
+                    // --------------------------------------------------------------------------------------
+                    LOG_INFO_F( "Couldn't find property (name=%s,value=%s) at this node (%d).\n",
                                propertyName.c_str(),
                                propertyValue.c_str(),
                                m_parent->GetRelationshipManager()->GetNode()->GetSuid().data );

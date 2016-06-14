@@ -14,11 +14,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    ENUM_DEFINE(InterventionDurabilityProfile,
-        ENUM_VALUE_SPEC(BOXDURABILITY       , 1)
-        ENUM_VALUE_SPEC(DECAYDURABILITY     , 2)
-        ENUM_VALUE_SPEC(BOXDECAYDURABILITY  , 3))
-
     ENUM_DEFINE(TargetDemographicType,
         ENUM_VALUE_SPEC(Everyone                    , 1) 
         ENUM_VALUE_SPEC(ExplicitAgeRanges           , 2) 
