@@ -133,7 +133,7 @@ namespace Kernel
 
         // ----------------------------------------------------------------------
         // --- If the vaccine did not take, do not attempt to update the vaccine
-        // --- behavior wihtin the individual.  
+        // --- behavior within the individual.  
         // ----------------------------------------------------------------------
         if( vaccine_took )
         {
