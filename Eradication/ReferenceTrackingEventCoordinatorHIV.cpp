@@ -37,7 +37,7 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfig("Target_Disease_State", target_disease_state, inputJson, MetadataDescriptor::Enum("Target_Disease_State", "TBD", MDD_ENUM_ARGS(TargetDiseaseStateType))) ;
+        initConfig("Target_Disease_State", target_disease_state, inputJson, MetadataDescriptor::Enum("Target_Disease_State", RTEC_HIV_Target_Disease_State_DESC_TEXT, MDD_ENUM_ARGS(TargetDiseaseStateType))) ;
 
         auto ret = ReferenceTrackingEventCoordinator::Configure( inputJson );
         return ret;

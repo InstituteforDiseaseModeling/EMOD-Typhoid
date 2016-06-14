@@ -23,6 +23,7 @@
                 "dont_allow_duplicates"         : false,
                 "vaccine_type"                  : 2,
                 "vaccine_take"                  : 3.3,
+                "vaccine_took"                  : true,
                 "waning_effect" :
                 {
                     "__class__":"WaningEffectMapLinear",
@@ -744,6 +745,7 @@
                 "dont_allow_duplicates"         : false,
                 "vaccine_type"                  : 2,
                 "vaccine_take"                  : 3.3,
+                "vaccine_took"                  : false,
                 "waning_effect" :
                 {
                     "__class__":"WaningEffectBoxExponential",
@@ -2598,6 +2600,7 @@
                         "dont_allow_duplicates"         : false,
                         "vaccine_type"                  : 1,
                         "vaccine_take"                  : 0.1,
+                        "vaccine_took"                  : true,
                         "waning_effect" :
                         {
                             "__class__":"WaningEffectBoxExponential",

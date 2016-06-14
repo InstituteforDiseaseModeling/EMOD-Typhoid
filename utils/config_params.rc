@@ -507,10 +507,12 @@ NO_DENSITY_DEPENDENCE."
 
 #define Enable_Vector_Mortality_DESC_TEXT "TBD"
 
-#define Report_HIV_ByAgeAndGender_Collect_Circumcision_Data_DESC_TEXT "TBD"
-#define Report_HIV_ByAgeAndGender_Collect_IP_Data_DESC_TEXT           "TBD"
-#define Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT  "TBD"
-#define Report_HIV_ByAgeAndGender_Event_Counter_List_DESC_TEXT        "TBD"
+#define Report_HIV_ByAgeAndGender_Collect_Circumcision_Data_DESC_TEXT  "TBD"
+#define Report_HIV_ByAgeAndGender_Collect_HIV_Data_DESC_TEXT           "TBD"
+#define Report_HIV_ByAgeAndGender_Collect_IP_Data_DESC_TEXT            "TBD"
+#define Report_HIV_ByAgeAndGender_Stratify_Infected_By_CD4_DESC_TEXT   "TBD"
+#define Report_HIV_ByAgeAndGender_Event_Counter_List_DESC_TEXT         "TBD"
+#define Report_HIV_ByAgeAndGender_Has_Intervention_With_Name_DESC_TEXT "TBD"
 
 #define Enable_Family_Migration_DESC_TEXT   "TBD"
 #define Family_Migration_Filename_DESC_TEXT "TBD"
@@ -539,3 +541,5 @@ NO_DENSITY_DEPENDENCE."
 
 #define NC_HIV_TD_Target_Disease_State_DESC_TEXT  "TBD-If not empty, a targeted individual is expected to have a particular disease specific state.  To be flexible, this is a two-dimensional array of TargetDiseaseState where the elements of the inner array are AND'd and these arrays are OR'd. "
 #define NC_HIV_TD_Has_Intervention_Name_DESC_TEXT "TBD-If usinng Has_Intervention or Not_Have_Intervention disease states, then this is the name of the intervention considered."
+
+#define RTEC_HIV_Target_Disease_State_DESC_TEXT "TBD-Options are: Everyone, HIV_Positive, HIV_Negative, Tested_Positive, Tested_Negative, Not_Tested_Or_Tested_Negative"

@@ -62,6 +62,7 @@ namespace Kernel
         IIndividualHumanContext *parent;
         int   vaccine_type;
         float vaccine_take;
+        bool  vaccine_took;
         WaningConfig   waning_config;
         IWaningEffect* waning_effect;
         IVaccineConsumer * ivc; // interventions container
