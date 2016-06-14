@@ -63,6 +63,7 @@ namespace Kernel
     , parent(nullptr) 
     , vaccine_type(SimpleVaccineType::Generic)
     , vaccine_take(0.0)
+    , vaccine_took(false)
     , waning_effect( nullptr )
     , ivc( nullptr )
     {
@@ -74,6 +75,7 @@ namespace Kernel
     , parent(nullptr) 
     , vaccine_type(master.vaccine_type)
     , vaccine_take(master.vaccine_take)
+    , vaccine_took(master.vaccine_took)
     , waning_config(master.waning_config)
     , waning_effect( nullptr )
     , ivc( nullptr )
@@ -109,11 +111,13 @@ namespace Kernel
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IVaccineConsumer", "IIndividualHumanInterventionsContext" );
         }
 
-        bool vaccine_took = ApplyVaccineTake( context->GetParent() );
-        if( !vaccine_took )
-        {
-            expired = true;
-        }
+        // ---------------------------------------------------------------------------------------------
+        // --- One does not know if a vaccine 'took' or not unless they go through a specific test
+        // --- to see if they have developed the correct antibodies.  Normally, once they have received
+        // --- a vaccine, they are considered vaccinated and are counted in the vaccinated group.
+        // --- However, if the vaccine did not take, we need to have the vaccine be ineffective.
+        // ---------------------------------------------------------------------------------------------
+        vaccine_took = ApplyVaccineTake( context->GetParent() );
 
         bool distribute =  BaseIntervention::Distribute( context, pCCO );
         return distribute;
@@ -121,32 +125,43 @@ namespace Kernel
 
     void SimpleVaccine::Update( float dt )
     {
+        // -----------------------------------------------------------------
+        // --- Still update waning_effect even if the vaccine did not take.
+        // --- This allows it to expire on schedule.
+        // -----------------------------------------------------------------
         waning_effect->Update(dt);
-        release_assert(ivc);
 
-        switch( vaccine_type )
+        // ----------------------------------------------------------------------
+        // --- If the vaccine did not take, do not attempt to update the vaccine
+        // --- behavior wihtin the individual.  
+        // ----------------------------------------------------------------------
+        if( vaccine_took )
         {
-            case SimpleVaccineType::AcquisitionBlocking:
-                ivc->UpdateVaccineAcquireRate( waning_effect->Current() );
-                break;
+            release_assert(ivc);
+            switch( vaccine_type )
+            {
+                case SimpleVaccineType::AcquisitionBlocking:
+                    ivc->UpdateVaccineAcquireRate( waning_effect->Current() );
+                    break;
 
-            case SimpleVaccineType::TransmissionBlocking:
-                ivc->UpdateVaccineTransmitRate( waning_effect->Current() );
-                break;
+                case SimpleVaccineType::TransmissionBlocking:
+                    ivc->UpdateVaccineTransmitRate( waning_effect->Current() );
+                    break;
 
-            case SimpleVaccineType::MortalityBlocking:
-                ivc->UpdateVaccineMortalityRate( waning_effect->Current() );
-                break;
+                case SimpleVaccineType::MortalityBlocking:
+                    ivc->UpdateVaccineMortalityRate( waning_effect->Current() );
+                    break;
 
-            case SimpleVaccineType::Generic:
-                ivc->UpdateVaccineAcquireRate(   waning_effect->Current() );
-                ivc->UpdateVaccineTransmitRate(  waning_effect->Current() );
-                ivc->UpdateVaccineMortalityRate( waning_effect->Current() );
-                break;
+                case SimpleVaccineType::Generic:
+                    ivc->UpdateVaccineAcquireRate(   waning_effect->Current() );
+                    ivc->UpdateVaccineTransmitRate(  waning_effect->Current() );
+                    ivc->UpdateVaccineMortalityRate( waning_effect->Current() );
+                    break;
 
-            default:
-                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "vaccine_type", vaccine_type, SimpleVaccineType::pairs::lookup_key( vaccine_type ) );
-                break;
+                default:
+                    throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "vaccine_type", vaccine_type, SimpleVaccineType::pairs::lookup_key( vaccine_type ) );
+                    break;
+            }
         }
 
         if( !expired )
@@ -159,16 +174,16 @@ namespace Kernel
     {
         release_assert( pihc );
 
-        bool vaccine_took = true;
+        bool did_vaccine_take = true;
         if(vaccine_take<1.0)
         {
             if(pihc->GetRng()->e()>vaccine_take)
             {
                 LOG_DEBUG("Vaccine did not take.\n");
-                vaccine_took = false;
+                did_vaccine_take = false;
             }
         }
-        return vaccine_took;
+        return did_vaccine_take;
     }
 
     void SimpleVaccine::SetContextTo(
@@ -191,6 +206,7 @@ namespace Kernel
         SimpleVaccine& vaccine = *obj;
         ar.labelElement("vaccine_type")  & vaccine.vaccine_type;
         ar.labelElement("vaccine_take")  & vaccine.vaccine_take;
+        ar.labelElement("vaccine_took")  & vaccine.vaccine_took;
         ar.labelElement("waning_effect") & vaccine.waning_effect;
     }
 }

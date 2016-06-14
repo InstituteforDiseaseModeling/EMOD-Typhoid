@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.6.1115.0",
-		"DTK_Branch" : "GitHub-488-ConcurrencyParameters (46ce742)",
-		"DTK_Build_Date" : "Jun 10 2016 12:45:32"
+		"DTK_Version" : "2.6.1124.0",
+		"DTK_Branch" : "HIV-MiscFixes (df54847)",
+		"DTK_Build_Date" : "Jun 13 2016 14:38:22"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -7802,7 +7802,7 @@
 							"Tested_Negative",
 							"Not_Tested_Or_Tested_Negative"
 						],
-						"description" : "TBD",
+						"description" : "TBD-Options are: Everyone, HIV_Positive, HIV_Negative, Tested_Positive, Tested_Negative, Not_Tested_Or_Tested_Negative",
 						"default" : "Everyone"
 					},
 					"idmType:InterpolatedValueMap" : {
@@ -13656,7 +13656,7 @@
 					},
 					"Expire_At_Durability_Map_End" : {
 						"default" : 0,
-						"description" : "TBD",
+						"description" : "TBD-If true, the intervention will expire when the end of the map is reached.",
 						"type" : "bool"
 					},
 					"idmType:InterpolatedValueMap" : {
@@ -13678,7 +13678,7 @@
 						]
 					},
 					"Durability_Map" : {
-						"description" : "TBD",
+						"description" : "TBD-Time since the intervention was distributed to a multiplier times the Initial_Effect",
 						"type" : "idmType:InterpolatedValueMap"
 					},
 					"class" : "WaningEffectMapLinear"
@@ -13693,7 +13693,7 @@
 					},
 					"Expire_At_Durability_Map_End" : {
 						"default" : 0,
-						"description" : "TBD",
+						"description" : "TBD-If true, the intervention will expire when the end of the map is reached.",
 						"type" : "bool"
 					},
 					"idmType:InterpolatedValueMap" : {
@@ -13715,7 +13715,7 @@
 						]
 					},
 					"Durability_Map" : {
-						"description" : "TBD",
+						"description" : "TBD-Time since the intervention was distributed to a multiplier times the Initial_Effect",
 						"type" : "idmType:InterpolatedValueMap"
 					},
 					"class" : "WaningEffectMapPiecewise"

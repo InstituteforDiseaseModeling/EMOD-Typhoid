@@ -73,7 +73,7 @@ namespace Kernel
         //total_intervention_counter++;
         initSimTypes( 1, "*" );
         initConfigTypeMap( "Dont_Allow_Duplicates", &dont_allow_duplicates, Dont_Allow_Duplicates_DESC_TEXT, false );
-        initConfigTypeMap( "Intervention_Name", &name, "TBD"/*Intervention_Name_DESC_TEXT*/, typeid(*this).name() );
+        initConfigTypeMap( "Intervention_Name", &name, Intervention_Name_DESC_TEXT, typeid(*this).name() );
         //LOG_DEBUG_F("New intervention, total_intervention_counter = %d\n", total_intervention_counter);
     }
 
@@ -151,7 +151,7 @@ namespace Kernel
         name = abi::__cxa_demangle(name.c_str(), 0, 0, nullptr );
 #endif
         initSimTypes( 1, "*" );
-        initConfigTypeMap( "Intervention_Name", &name, "TBD"/*Intervention_Name_DESC_TEXT*/, typeid(*this).name() );
+        initConfigTypeMap( "Intervention_Name", &name, Intervention_Name_DESC_TEXT, typeid(*this).name() );
         LOG_DEBUG_F("New intervention, cost_per_unit = %f\n", cost_per_unit);
     }
 
