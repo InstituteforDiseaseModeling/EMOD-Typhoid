@@ -343,7 +343,6 @@ else:
                             "SusceptibilityHIV.cpp",
                             "SimulationHIV.cpp",
                             "HivObjectFactory.cpp",
-                            "HIVDrugTypeParameters.cpp",
                             "HIVRelationshipStartReporter.cpp",
                             "HIVReportEventRecorder.cpp",
                             "HIVTransmissionReporter.cpp",
