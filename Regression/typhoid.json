@@ -16,7 +16,8 @@
         { "path": "Typhoid/Typhoid_14" },
         { "path": "Typhoid/Typhoid_15" },
         { "path": "Typhoid/Typhoid_16" },
-        { "path": "Typhoid/Typhoid_17" }
+        { "path": "Typhoid/Typhoid_17" },
+        { "path": "Typhoid/Typhoid_18" }
     ],
     "_tests": [
         { "path": "149_Typhoid" },
