@@ -16,8 +16,8 @@
         {
             "Test" :
             {
-                "__class__":"RevaccinatableVaccine",
-                "name"                          : "class Kernel::RevaccinatableVaccine",
+                "__class__":"ControlledVaccine",
+                "name"                          : "class Kernel::ControlledVaccine",
                 "cost_per_unit"                 : 1,
                 "expired"                       : false,
                 "dont_allow_duplicates"         : false,

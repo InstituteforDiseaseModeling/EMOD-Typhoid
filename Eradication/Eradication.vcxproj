@@ -252,7 +252,7 @@
     <ClCompile Include="..\interventions\HIVARTStagingAbstract.cpp" />
     <ClCompile Include="..\interventions\MalariaDiagnostic.cpp" />
     <ClCompile Include="..\interventions\MigrateFamily.cpp" />
-    <ClCompile Include="..\interventions\RevaccinatableVaccine.cpp" />
+    <ClCompile Include="..\interventions\ControlledVaccine.cpp" />
     <ClCompile Include="..\interventions\STIIsPostDebut.cpp" />
     <ClCompile Include="..\interventions\HIVMuxer.cpp" />
     <ClCompile Include="..\interventions\HIVPreARTNotification.cpp" />
@@ -552,7 +552,7 @@
     <ClInclude Include="..\interventions\IWaningEffect.h" />
     <ClInclude Include="..\interventions\MalariaDiagnostic.h" />
     <ClInclude Include="..\interventions\MigrateFamily.h" />
-    <ClInclude Include="..\interventions\RevaccinatableVaccine.h" />
+    <ClInclude Include="..\interventions\ControlledVaccine.h" />
     <ClInclude Include="..\interventions\STIIsPostDebut.h" />
     <ClInclude Include="..\interventions\HIVDelayedIntervention.h" />
     <ClInclude Include="..\interventions\Diagnostics.h" />

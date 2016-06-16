@@ -14,21 +14,21 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IRevaccinatableVaccine : ISupports
+    struct IControlledVaccine : ISupports
     {
         virtual bool AllowRevaccination() const = 0;
     };
 
-    class RevaccinatableVaccine : public SimpleVaccine, public IRevaccinatableVaccine
+    class ControlledVaccine : public SimpleVaccine, public IControlledVaccine
     {
-        DECLARE_FACTORY_REGISTERED(InterventionFactory, RevaccinatableVaccine, IDistributableIntervention)
+        DECLARE_FACTORY_REGISTERED(InterventionFactory, ControlledVaccine, IDistributableIntervention)
         DECLARE_QUERY_INTERFACE()
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     public:
-        RevaccinatableVaccine();
-        RevaccinatableVaccine( const RevaccinatableVaccine& );
-        virtual ~RevaccinatableVaccine();
+        ControlledVaccine();
+        ControlledVaccine( const ControlledVaccine& );
+        virtual ~ControlledVaccine();
 
 
         // SimpleVaccine
@@ -44,6 +44,6 @@ namespace Kernel
         EventTrigger m_DistributedEventTrigger;
         EventTrigger m_ExpiredEventTrigger;
 
-        DECLARE_SERIALIZABLE(RevaccinatableVaccine);
+        DECLARE_SERIALIZABLE(ControlledVaccine);
     };
 }

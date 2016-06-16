@@ -8,23 +8,23 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 ***************************************************************************************************/
 
 #include "stdafx.h"
-#include "RevaccinatableVaccine.h"
+#include "ControlledVaccine.h"
 #include "Interventions.h"
 #include "IndividualEventContext.h"
 #include "NodeEventContext.h"
 
-static const char* _module = "RevaccinatableVaccine";
+static const char* _module = "ControlledVaccine";
 
 namespace Kernel
 {
-    BEGIN_QUERY_INTERFACE_DERIVED(RevaccinatableVaccine,SimpleVaccine)
-        HANDLE_INTERFACE(IRevaccinatableVaccine)
-    END_QUERY_INTERFACE_DERIVED(RevaccinatableVaccine,SimpleVaccine)
+    BEGIN_QUERY_INTERFACE_DERIVED(ControlledVaccine,SimpleVaccine)
+        HANDLE_INTERFACE(IControlledVaccine)
+    END_QUERY_INTERFACE_DERIVED(ControlledVaccine,SimpleVaccine)
 
-    IMPLEMENT_FACTORY_REGISTERED(RevaccinatableVaccine)
+    IMPLEMENT_FACTORY_REGISTERED(ControlledVaccine)
 
     bool
-    RevaccinatableVaccine::Configure(
+    ControlledVaccine::Configure(
         const Configuration * inputJson
     )
     {
@@ -36,7 +36,7 @@ namespace Kernel
         return configured;
     }
 
-    RevaccinatableVaccine::RevaccinatableVaccine() 
+    ControlledVaccine::ControlledVaccine() 
     : SimpleVaccine()
     , m_DurationToWaitBeforeRevaccination(FLT_MAX)
     , m_TimeSinceVaccination(0.0)
@@ -45,7 +45,7 @@ namespace Kernel
     {
     }
 
-    RevaccinatableVaccine::RevaccinatableVaccine( const RevaccinatableVaccine& master )
+    ControlledVaccine::ControlledVaccine( const ControlledVaccine& master )
     : SimpleVaccine( master )
     , m_DurationToWaitBeforeRevaccination( master.m_DurationToWaitBeforeRevaccination )
     , m_TimeSinceVaccination(              master.m_TimeSinceVaccination              )
@@ -54,11 +54,11 @@ namespace Kernel
     {
     }
 
-    RevaccinatableVaccine::~RevaccinatableVaccine()
+    ControlledVaccine::~ControlledVaccine()
     {
     }
 
-    bool RevaccinatableVaccine::Distribute( IIndividualHumanInterventionsContext *context, ICampaignCostObserver * pCCO )
+    bool ControlledVaccine::Distribute( IIndividualHumanInterventionsContext *context, ICampaignCostObserver * pCCO )
     {
         // ------------------------------------------------------------------------------------------------
         // --- Check if the person is already vaccinated.  If they are see if we should revaccinate them.
@@ -66,10 +66,10 @@ namespace Kernel
         // --- re-vaccinated at 18-months to ensure you have good coverage.
         // ------------------------------------------------------------------------------------------------
         bool distribute = true;
-        std::list<void*> allowable_list = context->GetInterventionsByInterface( GET_IID(IRevaccinatableVaccine) );
+        std::list<void*> allowable_list = context->GetInterventionsByInterface( GET_IID(IControlledVaccine) );
         for( auto p_allow : allowable_list )
         {
-            IRevaccinatableVaccine* p_existing_vaccine = static_cast<IRevaccinatableVaccine*>(p_allow);
+            IControlledVaccine* p_existing_vaccine = static_cast<IControlledVaccine*>(p_allow);
             if( !p_existing_vaccine->AllowRevaccination() )
             {
                 distribute = false;
@@ -98,7 +98,7 @@ namespace Kernel
         return distribute;
     }
 
-    void RevaccinatableVaccine::Update( float dt )
+    void ControlledVaccine::Update( float dt )
     {
         SimpleVaccine::Update( dt );
         m_TimeSinceVaccination += dt;
@@ -117,7 +117,7 @@ namespace Kernel
         }
     }
 
-    bool RevaccinatableVaccine::AllowRevaccination() const
+    bool ControlledVaccine::AllowRevaccination() const
     {
         bool allow = false;
         if( m_TimeSinceVaccination >= m_DurationToWaitBeforeRevaccination )
@@ -127,12 +127,12 @@ namespace Kernel
         return allow;
     }
 
-    REGISTER_SERIALIZABLE(RevaccinatableVaccine);
+    REGISTER_SERIALIZABLE(ControlledVaccine);
 
-    void RevaccinatableVaccine::serialize(IArchive& ar, RevaccinatableVaccine* obj)
+    void ControlledVaccine::serialize(IArchive& ar, ControlledVaccine* obj)
     {
         SimpleVaccine::serialize( ar, obj );
-        RevaccinatableVaccine& vaccine = *obj;
+        ControlledVaccine& vaccine = *obj;
         ar.labelElement( "m_TimeSinceVaccination"              ) & vaccine.m_TimeSinceVaccination;
         ar.labelElement( "m_DurationToWaitBeforeRevaccination" ) & vaccine.m_DurationToWaitBeforeRevaccination;
         ar.labelElement( "m_DistributedEventTrigger"           ) & vaccine.m_DistributedEventTrigger;

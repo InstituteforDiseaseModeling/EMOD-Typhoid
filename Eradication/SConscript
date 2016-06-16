@@ -132,6 +132,7 @@ else:
 
                             "../interventions/BirthTriggeredIV.cpp",
                             "../interventions/CalendarIV.cpp",
+                            "../interventions/ControlledVaccine.cpp",
                             "../interventions/DelayedIntervention.cpp",
                             "../interventions/Diagnostics.cpp",
                             "../interventions/BroadcastEvent.cpp",
@@ -145,7 +146,6 @@ else:
                             "../interventions/PropertyValueChanger.cpp",
                             "../interventions/Outbreak.cpp",
                             "../interventions/OutbreakIndividual.cpp",
-                            "../interventions/RevaccinatableVaccine.cpp",
                             "../interventions/SimpleVaccine.cpp",
                             "../interventions/MultiEffectVaccine.cpp",
                             "../interventions/WaningEffectBox.cpp",
