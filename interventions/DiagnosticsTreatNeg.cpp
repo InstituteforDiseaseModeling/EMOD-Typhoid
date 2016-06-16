@@ -90,8 +90,9 @@ namespace Kernel
     {
         //flag for pos/neg test result so that if you are counting down days_to_diagnosis you know what to give when the time comes
         m_gets_positive_test_intervention = true;
-        return SimpleDiagnostic::Distribute( context, pICCO );
-
+        bool ret = SimpleDiagnostic::Distribute( context, pICCO );
+        days_to_diagnosis.handle = std::bind( &DiagnosticTreatNeg::onDiagnosisComplete, this, 0 );
+        return ret;
     }
 
     void DiagnosticTreatNeg::Update( float dt )
@@ -102,23 +103,23 @@ namespace Kernel
             return; // don't give expired intervention.  should be cleaned up elsewhere anyways, though.
         }
 
-        // You have already been chosen to not default, count down the time until your intervention
-        days_to_diagnosis -= dt;
+        // You have already been chosen to not default, count down the time until your intervention 
+        days_to_diagnosis.Decrement( dt );
         LOG_DEBUG_F( "Individual %d will not default and has a diagnosis but has %f more days until the intervention is distributed.\n", parent->GetSuid().data, float(days_to_diagnosis) );
+    }
 
+    void DiagnosticTreatNeg::onDiagnosisComplete( float dt )
+    {
         // Give the intervention if the test has come back
-        if( days_to_diagnosis <= 0 )
-        {
-            LOG_DEBUG_F("Individual %d finished counting down days_to_diagnosis, my treatment outcome flag is %d \n", parent->GetSuid().data, m_gets_positive_test_intervention);
+        LOG_DEBUG_F("Individual %d finished counting down days_to_diagnosis, my treatment outcome flag is %d \n", parent->GetSuid().data, m_gets_positive_test_intervention);
 
-            if (m_gets_positive_test_intervention)
-            {
-                positiveTestDistribute();
-            }
-            else
-            {
-                negativeTestDistribute();
-            }
+        if (m_gets_positive_test_intervention)
+        {
+            positiveTestDistribute();
+        }
+        else
+        {
+            negativeTestDistribute();
         }
     }
     

@@ -191,6 +191,8 @@
         "____________REPORTING___________": "", 
         "____________SIMULATION___________": "", 
         "____________TRANSMISSION___________": "", 
+        "logLevel_SimpleDiagnostic": "DEBUG", 
+        "logLevel_STIIsPostDebut": "DEBUG", 
         "logLevel_Simulation": "INFO", 
         "logLevel_default": "WARNING", 
         "x_Birth": 1.025, 

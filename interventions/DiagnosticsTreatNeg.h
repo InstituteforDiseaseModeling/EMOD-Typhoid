@@ -33,6 +33,7 @@ namespace Kernel
 
         virtual bool positiveTestResult();
 
+        void onDiagnosisComplete( float dt );
         virtual void onNegativeTestResult();
         virtual void negativeTestDistribute();
 

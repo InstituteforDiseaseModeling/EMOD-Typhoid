@@ -67,6 +67,7 @@ namespace Kernel
 
         bool ret = JsonConfigurable::Configure( inputJson );
         LOG_DEBUG_F( "Base_Sensitivity = %f, Base_Specificity = %f\n", (float) base_sensitivity, (float) base_specificity );
+        LOG_DEBUG_F( "Days_To_Diagnosis = %f\n", (float) days_to_diagnosis );
         EventOrConfig::Enum use_event_or_config = getEventOrConfig( inputJson );
         if( ret )
         {
@@ -105,7 +106,7 @@ namespace Kernel
         initConfigTypeMap("Base_Specificity",   &base_specificity, SD_Base_Specificity_DESC_TEXT,     1.0f );
         initConfigTypeMap("Base_Sensitivity",   &base_sensitivity, SD_Base_Sensitivity_DESC_TEXT,     1.0f );
         initConfigTypeMap("Treatment_Fraction", &treatment_fraction, SD_Treatment_Fraction_DESC_TEXT, 1.0f );
-        initConfigTypeMap("Days_To_Diagnosis",  &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT,   0 );
+        initConfigTypeMap("Days_To_Diagnosis",  &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT,   FLT_MAX, 0  );
         initConfigTypeMap("Cost_To_Consumer",   &cost_per_unit, SD_Cost_To_Consumer_DESC_TEXT,        0);
     }
 
@@ -117,6 +118,7 @@ namespace Kernel
         base_sensitivity = master.base_sensitivity;
         treatment_fraction = master.treatment_fraction;
         days_to_diagnosis = master.days_to_diagnosis;
+        //LOG_DEBUG_F( "Days_To_Diagnosis = %f\n", (float) days_to_diagnosis );
         positive_diagnosis_event = master.positive_diagnosis_event;
         positive_diagnosis_config = master.positive_diagnosis_config;
     }
@@ -126,6 +128,8 @@ namespace Kernel
         ICampaignCostObserver * const pICCO
     )
     {
+        days_to_diagnosis.handle = std::bind( &SimpleDiagnostic::Callback, this, std::placeholders::_1 );
+
         parent = context->GetParent();
         LOG_DEBUG_F( "Individual %d is getting tested and positive_diagnosis_event = %s.\n", parent->GetSuid().data, positive_diagnosis_event.c_str() );
 
@@ -136,13 +140,16 @@ namespace Kernel
 
             if( SMART_DRAW(treatment_fraction) )
             {
-                if ( days_to_diagnosis <= 0 )
+                // Don't act at distribute; wait until update so everything is consistent
+                if ( days_to_diagnosis == 0 ) // use exactly 0. If configured to negative value, assume that's an ignore
                 {
-                    positiveTestDistribute(); // since there is no waiting time, distribute intervention right now
+                    LOG_DEBUG_F( "Individual %d getting a diagnostic right now during Distribute, instead of waiting till Update.\n", parent->GetSuid().data );
+                    //positiveTestDistribute(); // since there is no waiting time, distribute intervention right now
+                    Callback( 0 ); // since there is no waiting time, distribute intervention right now
                 }
-            }
-            else
-            {
+			}
+			else
+			{
                 onPatientDefault();
                 expired = true;         // this person doesn't get the intervention despite the positive test
             }
@@ -167,13 +174,7 @@ namespace Kernel
         }
 
         // Count down the time until a positive test result comes back
-        days_to_diagnosis -= dt;
-
-        // Give the intervention if the test has come back
-        if( days_to_diagnosis <= 0 )
-        {
-            positiveTestDistribute();
-        }
+        days_to_diagnosis.Decrement( dt );
     }
 
     bool
@@ -226,8 +227,14 @@ namespace Kernel
         }
     }
 
+    void SimpleDiagnostic::Callback( float dt )
+    {
+        positiveTestDistribute();
+    }
+
     void SimpleDiagnostic::positiveTestDistribute()
     {
+        release_assert( parent );
         LOG_DEBUG_F( "Individual %d tested 'positive' in SimpleDiagnostic, receiving actual intervention: event = %s.\n", parent->GetSuid().data, positive_diagnosis_event.c_str() );
 
         // Next alternative is that we were configured to broadcast a raw event string. In which case the value will not
