@@ -70,7 +70,7 @@ namespace Kernel
         for( auto p_allow : allowable_list )
         {
             IControlledVaccine* p_existing_vaccine = static_cast<IControlledVaccine*>(p_allow);
-            if( !p_existing_vaccine->AllowRevaccination() )
+            if( !p_existing_vaccine->AllowRevaccination( *this ) )
             {
                 distribute = false;
                 break;
@@ -117,10 +117,16 @@ namespace Kernel
         }
     }
 
-    bool ControlledVaccine::AllowRevaccination() const
+    const std::string& ControlledVaccine::GetInterventionName() const
+    {
+        return GetName();
+    }
+
+    bool ControlledVaccine::AllowRevaccination( const IControlledVaccine& rNewVaccine ) const
     {
         bool allow = false;
-        if( m_TimeSinceVaccination >= m_DurationToWaitBeforeRevaccination )
+        if( (m_TimeSinceVaccination >= m_DurationToWaitBeforeRevaccination) ||
+            (this->GetInterventionName() != rNewVaccine.GetInterventionName()) )
         {
             allow = true;
         }

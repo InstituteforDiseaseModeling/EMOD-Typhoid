@@ -16,7 +16,8 @@ namespace Kernel
 {
     struct IControlledVaccine : ISupports
     {
-        virtual bool AllowRevaccination() const = 0;
+        virtual const std::string& GetInterventionName() const = 0;
+        virtual bool AllowRevaccination( const IControlledVaccine& rNewVaccine ) const = 0;
     };
 
     class ControlledVaccine : public SimpleVaccine, public IControlledVaccine
@@ -37,7 +38,8 @@ namespace Kernel
         virtual void Update(float dt) override;
 
     protected:
-        virtual bool AllowRevaccination() const override;
+        virtual const std::string& GetInterventionName() const override;
+        virtual bool AllowRevaccination( const IControlledVaccine& rNewVaccine ) const override;
 
         float        m_DurationToWaitBeforeRevaccination;
         float        m_TimeSinceVaccination;
