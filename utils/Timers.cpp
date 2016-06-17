@@ -7,6 +7,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 ***************************************************************************************************/
 
+#include <stdafx.h>
 #include "Timers.h"
 
 namespace Kernel { 

@@ -323,6 +323,9 @@
     <ClCompile Include="IdmMpi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Timers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\cajun\include\cast.inl">
