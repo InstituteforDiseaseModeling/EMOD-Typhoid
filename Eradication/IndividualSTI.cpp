@@ -398,14 +398,15 @@ namespace Kernel
             }
             broadcaster->TriggerNodeEventObservers( GetEventContext(), IndividualEventTriggerType::STIDebut );
         }
+    }
 
-        auto now = parent->GetTime().time;
-
-        while( last_6_month_relationships.size() && ( now - last_6_month_relationships.front() ) > SIX_MONTHS )
+   void IndividualHumanSTI::UpdateHistory( const IdmDateTime& rCurrentTime, float dt )
+   {
+        while( last_6_month_relationships.size() && ( rCurrentTime.time - last_6_month_relationships.front() ) > SIX_MONTHS )
         {
             last_6_month_relationships.pop_front();
         }
-    }
+   }
 
     void IndividualHumanSTI::Die(
         HumanStateChange newState
