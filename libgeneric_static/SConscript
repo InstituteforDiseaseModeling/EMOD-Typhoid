@@ -20,6 +20,7 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/Instrumentation.cpp",
                        "../Eradication/JsonObjectDemog.cpp",
                        "../Eradication/Migration.cpp",
+                       "../Eradication/IMigrationInfo.cpp",
                        "../Eradication/MultiRouteTransmissionGroups.cpp",
                        "../Eradication/Node.cpp",
                        "../Eradication/NodeDemographics.cpp",
@@ -58,7 +59,15 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/VectorTransmissionGroups.cpp",
                        "../Eradication/VectorSpeciesParameters.cpp",
                        "../Eradication/MalariaDrugTypeParameters.cpp",
-                       "../Eradication/TBDrugTypeParameters.cpp"
+                       "../Eradication/TBDrugTypeParameters.cpp",
+                       "../Eradication/DemographicRestrictions.cpp",
+                       "../Eradication/EventsForOtherNodes.cpp",
+                       "../Eradication/EventTrigger.cpp",
+                       "../Eradication/NodeInfo.cpp",
+                       "../Eradication/MpiDataExchanger.cpp",
+                       "../Eradication/LoadBalanceScheme.cpp",
+                       "../Eradication/PropertyRestrictions.cpp",
+                       "../Eradication/PythonSupport.cpp"
                        ]
 
 libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]

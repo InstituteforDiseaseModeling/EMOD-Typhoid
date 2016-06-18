@@ -57,7 +57,7 @@ SConscript( [ 'baseReportLib/SConscript',
 
 # not sure yet exactly right set of conditions for this
 #if env['AllDlls'] or ( 'AllInterventions' in env and env['AllInterventions'] ) or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or ( 'Report' in env and env[ 'Report' ] != "" ) or ( 'Campaign' in env and env[ 'Campaign' ] != "" ):
-if env['AllDlls'] or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ):
+if env['AllDlls'] or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or ( 'Report' in env and env[ 'Report' ] != "" ):
     print "Build libgeneric_static.lib for dll...."
     SConscript( 'libgeneric_static/SConscript' )
 
