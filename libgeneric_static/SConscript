@@ -67,7 +67,7 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/MpiDataExchanger.cpp",
                        "../Eradication/LoadBalanceScheme.cpp",
                        "../Eradication/PropertyRestrictions.cpp",
-                       "../Eradication/PythonSupport.cpp",
+                       "../Eradication/PythonSupport.cpp"
                        ]
 
 libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]
