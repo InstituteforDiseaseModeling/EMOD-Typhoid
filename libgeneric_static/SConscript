@@ -67,14 +67,11 @@ libgenericSrcFiles = [ "stdafx.cpp",
                        "../Eradication/MpiDataExchanger.cpp",
                        "../Eradication/LoadBalanceScheme.cpp",
                        "../Eradication/PropertyRestrictions.cpp",
-                       "../Eradication/PythonSupport.cpp"
+                       "../Eradication/PythonSupport.cpp",
                        ]
 
 libgenericIncFiles = [  "Report.h", "libgeneric_classes.h" ]
 libgenericLocalInc = [  "stdafx.h" ]
-
-libgeneric_static = env.StaticLibrary('libgeneric_static', libgenericSrcFiles)
-print "building libgeneric_static: " + str(libgeneric_static)
 
 #env.Append( CPPDEFINES=["ENABLE_TB" ] )
 #env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
@@ -87,16 +84,94 @@ if env['DiseaseDll'] != "Vector" and env['DiseaseDll'] != "Malaria" and env['Dis
 #else:
 #    libgenericSrcFiles.append( "../Eradication/VectorTransmissionGroups.cpp" )
 
-if env['DiseaseDll'] != "Malaria":
-    env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
-if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":
-    env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
-if env['DiseaseDll'] != "HIV" and env['DiseaseDll'] != "STI":
-    env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+#if env['DiseaseDll'] != "Malaria":
+#    env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+#if env['DiseaseDll'] == "Environmental" or env['DiseaseDll'] == "Polio":
+#    env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+#if env['DiseaseDll'] != "HIV" and env['DiseaseDll'] != "STI":
+#    env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+
+if 'DiseaseDll' in env and len(env['DiseaseDll']) > 0:
+    if env["DiseaseDll"] == "Generic":
+        #env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+
+    if env["DiseaseDll"] == "Vector":
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+        libgenericSrcFiles.extend( [ "../Eradication/NodeInfoVector.cpp", "../Eradication/MigrationInfoVector.cpp" ] )
+
+    if env["DiseaseDll"] ==  "Malaria":
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        libgenericSrcFiles.extend( [ "../Eradication/NodeInfoVector.cpp", "../Eradication/MigrationInfoVector.cpp" ] )
+
+    if env["DiseaseDll"] == "STI":
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+        env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+
+    if env["DiseaseDll"] == "HIV":
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+        env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+    if env["DiseaseDll"] == "Polio":
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+        env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+    if env["DiseaseDll"] == "Environmental":
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+
+    if env["DiseaseDll"] == "TB":
+        env.Append( CPPDEFINES=["ENABLE_TB" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+        env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+    if env["DiseaseDll"] == "TBHIV":
+        env.Append( CPPDEFINES=["ENABLE_TBHIV" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
+        env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+
+    if env["DiseaseDll"] == "Py":
+        env.Append( CPPDEFINES=["ENABLE_PYTHON_FEVER" ] )
+        env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )
+        env.Append( CPPDEFINES=["DISABLE_AIRBORNE" ] )
+        env.Append( CPPDEFINES=["DISABLE_HIV" ] )
+        env.Append( CPPDEFINES=["DISABLE_STI" ] )
+        env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+        env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
 #eradenv.Append(LIBS=['libvector_static'])
 # I'm confused: for vector builds, we want to build libgeneric_static WITHOUT Vector (or it won't link because it can't resolve VectorTransmissionGroups), but 
 # when we do the vector_static build, we want it WITH Vector ... :(
 #env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
+
+libgeneric_static = env.StaticLibrary('libgeneric_static', libgenericSrcFiles)
+print "building libgeneric_static: " + str(libgeneric_static)
 
 msvc = GetOption( "MSVC" )
 if msvc is not None and msvc != False and msvc != "":
