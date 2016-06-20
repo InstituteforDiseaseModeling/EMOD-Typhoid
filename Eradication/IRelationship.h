@@ -84,6 +84,9 @@ namespace Kernel
         virtual bool GetUsingCondom() const = 0;
         virtual suids::suid GetMalePartnerId() const = 0;
         virtual suids::suid GetFemalePartnerId() const = 0;
+        virtual bool IsMalePartnerAbsent() const = 0;
+        virtual bool IsFemalePartnerAbsent() const = 0;
+
         virtual RelationshipType::Enum GetType() const = 0;
         virtual unsigned int GetOriginalNodeId() const = 0;
         virtual float GetCoitalRate() const = 0;

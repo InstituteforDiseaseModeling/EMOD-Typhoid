@@ -102,6 +102,11 @@ namespace Kernel
 
         for (auto relationship : relationships)
         {
+            // ------------------------------------------------------------------------------------
+            // --- The partner could be null when the relationship is paused and the individual has
+            // --- moved nodes.  We don't want to check RelationshipState because the couple could
+            // --- have consumated and then had one of the partners decide to move/migrate.
+            // ------------------------------------------------------------------------------------
             auto sti_partner = relationship->GetPartner(p_sti_dest);
             if (sti_partner)
             {
@@ -136,7 +141,8 @@ namespace Kernel
             }
             else
             {
-                LOG_WARN_F("%s: partner is absent (or deceased)\n", __FUNCTION__);
+                // if the partner is null, then the relationship had better be paused.
+                release_assert( relationship->GetState() == RelationshipState::PAUSED );
             }
         }
 

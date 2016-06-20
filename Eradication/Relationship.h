@@ -61,6 +61,8 @@ namespace Kernel
             virtual suids::suid GetMalePartnerId() const override;
             virtual suids::suid GetFemalePartnerId() const override;
             virtual ExternalNodeId_t GetOriginalNodeId() const override;
+            virtual bool IsMalePartnerAbsent() const override;
+            virtual bool IsFemalePartnerAbsent() const override;
 
             virtual float GetCoitalRate() const override;
             virtual ProbabilityNumber getProbabilityUsingCondomThisAct() const override;

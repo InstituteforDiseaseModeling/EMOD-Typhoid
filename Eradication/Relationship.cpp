@@ -64,9 +64,9 @@ namespace Kernel {
         return false;
     }
 
-#define MALE_PARTNER_ID()       ( male_partner             ? male_partner->GetSuid()             : absent_male_partner_id   )
-#define FEMALE_PARTNER_ID()     ( female_partner           ? female_partner->GetSuid()           : absent_female_partner_id )
-#define PARTNERID( individual)  ( GetPartner( individual ) ? GetPartner( individual )->GetSuid() : suids::nil_suid()        )
+#define MALE_PARTNER_ID()       ( (absent_male_partner_id   == suids::nil_suid()) ? male_partner->GetSuid()   : absent_male_partner_id   )
+#define FEMALE_PARTNER_ID()     ( (absent_female_partner_id == suids::nil_suid()) ? female_partner->GetSuid() : absent_female_partner_id )
+#define PARTNERID( individual ) ( GetPartner( individual ) ? GetPartner( individual )->GetSuid() : suids::nil_suid()        )
 
     BEGIN_QUERY_INTERFACE_BODY(Relationship)
         HANDLE_INTERFACE(IRelationship)
@@ -396,13 +396,10 @@ namespace Kernel {
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
         }
 
-        // MULTI-CORE: We need to support nullptr for the partners
-        release_assert( partner );
-
-        if (!partner)
-        {
-            LOG_WARN_F( "%s: partner of individual %lu in relationship %d is absent or deceased.\n", __FUNCTION__, individual->GetSuid().data, GetSuid().data );
-        }
+        // ----------------------------------------------------------------------------
+        // --- We allow the return to be null.  If the relationship is paused and the
+        // --- individual moved nodes, then the pointer could be null.
+        // ----------------------------------------------------------------------------
 
         return partner;
     }
@@ -494,33 +491,33 @@ namespace Kernel {
         // --- partner to reset the relationship.  For example, if one partner pauses
         // --- relationship due to migration, and then returns.  That individual's call
         // --- to Resume() should get the relationship back to normal.
+        // ---
+        // --- Not setting absent partner to null so that the pointer can be used in the Transmission report.
+        // --- The couple could have consumated and then one of them decided to pause the relationship.
+        // --- The report needs the pointer.
         // -------------------------------------------------------------------------
         if( p_staying_rel->male_partner == departee )
         {
             LOG_DEBUG_F( "%s: departee was male_partner, clearing male_partner from relationship %d\n", __FUNCTION__, p_staying_rel->GetSuid().data );
 
-            p_staying_rel->male_partner = nullptr;
             p_staying_rel->absent_male_partner_id = departee->GetSuid();
 
             if( p_leaving_rel != nullptr )
             {
                 release_assert( p_staying_rel->female_partner );
                 p_leaving_rel->absent_female_partner_id = p_staying_rel->female_partner->GetSuid();
-                p_leaving_rel->female_partner = nullptr;
             }
         }
         else if( p_staying_rel->female_partner == departee )
         {
             LOG_DEBUG_F( "%s: departee was female_partner, clearing female_partner from relationship %d\n", __FUNCTION__, GetSuid().data );
 
-            p_staying_rel->female_partner = nullptr;
             p_staying_rel->absent_female_partner_id = departee->GetSuid();
 
             if( p_leaving_rel != nullptr )
             {
                 release_assert( p_staying_rel->male_partner );
                 p_leaving_rel->absent_male_partner_id = p_staying_rel->male_partner->GetSuid();
-                p_leaving_rel->male_partner = nullptr;
             }
         }
         else
@@ -748,6 +745,16 @@ namespace Kernel {
         return original_node_id;
     }
 
+    bool Relationship::IsMalePartnerAbsent() const
+    {
+        return (absent_male_partner_id != suids::nil_suid());
+    }
+
+    bool Relationship::IsFemalePartnerAbsent() const
+    {
+        return (absent_female_partner_id != suids::nil_suid());
+    }
+
     float Relationship::GetCoitalRate() const
     {
         return p_rel_params->GetCoitalActRate();
@@ -783,11 +790,11 @@ namespace Kernel {
 
         if( ar.IsWriter() )
         {
-            if( rel.male_partner != nullptr )
+            if( (rel.absent_male_partner_id == suids::nil_suid()) && (rel.male_partner != nullptr) )
             {
                 rel.absent_male_partner_id = rel.male_partner->GetSuid();
             }
-            if( rel.female_partner != nullptr )
+            if( (rel.absent_female_partner_id == suids::nil_suid()) && (rel.female_partner != nullptr) )
             {
                 rel.absent_female_partner_id = rel.female_partner->GetSuid();
             }
