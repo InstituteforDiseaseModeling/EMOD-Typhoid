@@ -26,7 +26,7 @@ namespace Kernel
     {
         std::set<std::string> allowable;
 
-        for( int i = 0 ; i < RelationshipType::pairs::count() ; ++i )
+        for( int i = 0 ; i < RelationshipType::COUNT ; ++i )
         {
             allowable.insert( RelationshipType::pairs::get_keys()[i] );
         }

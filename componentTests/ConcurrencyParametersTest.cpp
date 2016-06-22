@@ -264,7 +264,7 @@ SUITE(ConcurrencyParametersTest)
     TEST_FIXTURE(ConcurrencyParametersFixture, TestBadConfigRelTypeOrderInvalidValue)
     {
         TestHelper_Exception( __LINE__, "testdata/ConcurrencyParametersTest/TestBadConfigRelTypeOrderInvalidValue.json",
-            "Constrained strings (dynamic enum) with specified value TRANSITORY_XXX invalid. Possible values are: COMMERCIAL...COUNT...INFORMAL...MARITAL...TRANSITORY...\n Occured while reading 'Concurrency_Configuration' from the demographics." );
+            "Constrained strings (dynamic enum) with specified value TRANSITORY_XXX invalid. Possible values are: COMMERCIAL...INFORMAL...MARITAL...TRANSITORY...\n Occured while reading 'Concurrency_Configuration' from the demographics." );
     }
 
     TEST_FIXTURE(ConcurrencyParametersFixture, TestBadConfigRelTypeOrderNotEnough)
