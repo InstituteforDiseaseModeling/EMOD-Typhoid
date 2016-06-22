@@ -189,18 +189,10 @@ if env['AllDlls'] or env[ 'DiseaseDll' ] != "":
     SConscript( 'libgeneric/PropertyvaluechangerSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/SimplevaccineSConscript', variant_dir=dll_op_path )
 
-# report dlls
-# NOT YET if env['AllDlls'] or env['Report'] != "":
-# NOT YET SConscript( 'libgeneric/TajikSConscript' )
-
 # Finally executable
 SConscript('Eradication/SConscript')
+
 if os.sys.platform == 'win32':
-
-    dict = env.Dictionary()
-    dict['LIBS'].remove( "delayimp.lib" )
-    dict['LINKFLAGS'].remove( "/DELAYLOAD:\"python27.dll\"" )
-
     SConscript('reporters/SConscript_Generic_AgeAtInfection')
     SConscript('reporters/SConscript_Generic_AgeAtInfectionHistogram')
     SConscript('reporters/SConscript_Generic_Basic')
