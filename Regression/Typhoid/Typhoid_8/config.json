@@ -88,6 +88,7 @@
         "Number_Basestrains": 1, 
         "Number_Substrains": 1, 
         "PKPD_Model": "FIXED_DURATION_CONSTANT_EFFECT", 
+        "Parameter": 8.0, 
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
