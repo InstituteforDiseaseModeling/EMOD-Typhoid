@@ -122,8 +122,20 @@ namespace Kernel
                << "Node_ID,"
                << "Rel_start_time,"
                << "Rel_scheduled_end_time,"
-               << "Rel_actual_end_time,"
-               << "Rel_type (0 = transitory 1 = informal 2 = marital),"
+               << "Rel_actual_end_time,";
+
+        header << "Rel_type (";
+        for( int i = 0 ; i < RelationshipType::COUNT ; ++i )
+        {
+            header << i << " = " << RelationshipType::pairs::get_keys()[i];
+            if( (i+1) < RelationshipType::COUNT )
+            {
+                header << "; ";
+            }
+        }
+        header << "),";
+
+        header 
                << "male_ID,"
                << "female_ID,"
                << "male_age,"

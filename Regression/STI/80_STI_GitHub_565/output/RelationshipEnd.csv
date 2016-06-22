@@ -1,4 +1,4 @@
-Rel_ID,Node_ID,Rel_start_time,Rel_scheduled_end_time,Rel_actual_end_time,Rel_type (0 = transitory 1 = informal 2 = marital),male_ID,female_ID,male_age,female_age,Termination_Reason
+Rel_ID,Node_ID,Rel_start_time,Rel_scheduled_end_time,Rel_actual_end_time,Rel_type (0 = TRANSITORY; 1 = INFORMAL; 2 = MARITAL; 3 = COMMERCIAL),male_ID,female_ID,male_age,female_age,Termination_Reason
 8,4,0,409.17,1,0,1292,1214,21.2809,16.2184,SELF_MIGRATING
 24,3,0,761.252,1,1,776,979,27.9666,25.4232,SELF_MIGRATING
 26,3,0,349.114,2,1,904,1029,21.5345,20.0624,SELF_MIGRATING
