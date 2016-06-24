@@ -563,8 +563,17 @@ namespace Kernel
             }
         }
 
-        //release_assert( good == true );
-        return IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
+        IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
+
+        INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+        if (parent->GetEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster) != s_OK)
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
+                                            "parent->GetEventContext()",
+                                            "INodeTriggeredInterventionConsumer",
+                                            "IIndividualHumanEventContext" );
+        }
+        broadcaster->TriggerNodeEventObservers( GetEventContext(), IndividualEventTriggerType::STINewInfection );
     }
 
     void

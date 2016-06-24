@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHumanSTI.h"
 #include "IRelationship.h"
 #include "IInfection.h"
+#include "IndividualEventContext.h"
 
 static const char* _module = "StiTransmissionReporter";
 
@@ -21,35 +22,30 @@ namespace Kernel
 {
     IReport* StiTransmissionReporter::Create(ISimulation* simulation)
     {
-        return new StiTransmissionReporter(simulation);
+        return new StiTransmissionReporter();
     }
 
-    StiTransmissionReporter::StiTransmissionReporter(ISimulation* sim)
-        : BaseTextReport("TransmissionReport.csv")
-        , simulation(sim)
+    StiTransmissionReporter::StiTransmissionReporter()
+        : BaseTextReportEvents("TransmissionReport.csv")
         , report_data()
     {
-        simulation->RegisterNewNodeObserver(this, [&](INodeContext* node){ this->onNewNode(node); });
+        eventTriggerList.push_back( "STINewInfection" );
     }
 
     StiTransmissionReporter::~StiTransmissionReporter()
     {
-        simulation->UnregisterNewNodeObserver(this);
     }
 
-    void StiTransmissionReporter::onNewNode(Kernel::INodeContext* node)
+    bool StiTransmissionReporter::notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange )
     {
-        node->RegisterNewInfectionObserver(this, [&](IIndividualHuman* individual)
-            {
-                this->onTransmission(individual);
-            }
-        );
-    }
-
-    void StiTransmissionReporter::onTransmission(IIndividualHuman* individual)
-    {
-        LOG_DEBUG_F( "transmission event for individual %d\n", individual->GetSuid().data );
+        LOG_DEBUG_F( "transmission event for individual %d\n", context->GetSuid().data );
         StiTransmissionInfo info;
+
+        IIndividualHuman* individual = nullptr;
+        if (context->QueryInterface(GET_IID(IIndividualHuman), (void**)&individual) != s_OK)
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IIndividualHuman", "IIndividualHumanEventContext" );
+        }
 
         IIndividualHumanSTI* p_sti_dest = nullptr;
         if (individual->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&p_sti_dest) != s_OK)
@@ -68,7 +64,7 @@ namespace Kernel
         if( infections.size() == 0 )
         {
             // This person cleared their infection on this timestep already! Nothing to report.
-            return;
+            return true;
         }
         //release_assert( infections.size() > 0 );
         auto infection = infections.front(); // Assuming no super-infections here obviously.
@@ -84,7 +80,7 @@ namespace Kernel
         if( infector == 0 )
         {
             // presumably from outbreak!?!?
-            return;
+            return true;
         }
 
         bool found = false;
@@ -123,7 +119,7 @@ namespace Kernel
 
                     info.rel_id                                     = relationship->GetSuid().data;
                     info.source_id                                  = partner->GetSuid().data;
-                    info.source_is_infected                         = partner->IsInfected();
+                    info.source_is_infected                         = (partner->GetInfections().size() > 0); // see GitHub-589 - Remove m_is_infected
                     info.source_gender                              = partner->GetGender();
                     info.source_age                                 = partner->GetAge();
 
@@ -160,7 +156,7 @@ namespace Kernel
 
         // DESTINATION
         info.destination_id                             = individual->GetSuid().data;
-        info.destination_is_infected                    = individual->IsInfected();
+        info.destination_is_infected                    = (individual->GetInfections().size() > 0); // see GitHub-589 - Remove m_is_infected
         info.destination_gender                         = individual->GetGender();
         info.destination_age                            = individual->GetAge();
 
@@ -176,6 +172,8 @@ namespace Kernel
         CollectOtherData( info.rel_id, p_sti_source, p_sti_dest );
 
         report_data.push_back(info);
+
+        return true;
     }
 
     std::string StiTransmissionReporter::GetHeader() const
