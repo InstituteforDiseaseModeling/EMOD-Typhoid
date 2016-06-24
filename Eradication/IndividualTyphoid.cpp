@@ -770,6 +770,19 @@ namespace Kernel
         void IndividualHumanTyphoid::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
         {
             LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
+            if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL)
+            {
+                infstrain->SetGeneticID( 0 );
+            }
+            else if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_CONTACT)
+            {
+                infstrain->SetGeneticID( 1 );
+            }
+            else
+            {
+                infstrain->SetGeneticID( 2 );
+            }
+                // neither environmental nor contact source. probably from initial seeding
             IndividualHumanEnvironmental::AcquireNewInfection( infstrain, incubation_period_override );
 #ifdef ENABLE_PYTHOID
             volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
