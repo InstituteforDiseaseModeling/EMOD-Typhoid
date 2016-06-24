@@ -106,6 +106,18 @@ ReportTyphoid::LogIndividualData(
         {
             Accumulate( _num_acute_infections_label, mc_weight );
         }
+        auto inf = individual->GetInfections().back();
+        StrainIdentity si;
+        inf->GetInfectiousStrainID( &si );
+        if( si.GetGeneticID() == 0 )
+        {
+            Accumulate( "Number of Contact Infections", mc_weight );
+        }
+        else if( si.GetGeneticID() == 1 )
+        {
+            Accumulate( "Number of Environmental Infections", mc_weight );
+        }
+        //std::cout << "si.GetGeneticID() = " << si.GetGeneticID() << std::endl;
     }
 }
 
