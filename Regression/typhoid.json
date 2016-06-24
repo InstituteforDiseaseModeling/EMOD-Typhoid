@@ -1,0 +1,7 @@
+{
+    "tests": [
+        { "path": "149_Typhoid" },
+        { "path": "Typhoid/FeatureTests/SingleIndividualIntrahost" },
+        { "path": "Typhoid/FeatureTests/SingleIndividualOutbreakSeries" }
+    ]
+}

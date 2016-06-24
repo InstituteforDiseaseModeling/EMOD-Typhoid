@@ -50,7 +50,7 @@ namespace Kernel {
     private:
 
         //const float report_half_period;
-        float next_report_time;
+        NonNegativeFloat next_report_time;
         bool doReport;
 
         float population[Gender::Enum::COUNT][MAX_AGE];         //Gender, Age --> Population

@@ -483,24 +483,23 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     if( sim_type == SimType::TYPHOID_SIM )
     {
         initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 1, 100, 30 );
-        initConfigTypeMap( "Typhoid_Acute_Infectivity", &typhoid_acute_infectivity, "Typhoid_Acute_Infectivity.", 0, 1e7, 4000 );
-        initConfigTypeMap( "Typhoid_Chronic_Infectivity", &typhoid_chronic_infectivity, "Typhoid_Chronic_Infectivity.", 0, 1e7, 1000 ); 
-        initConfigTypeMap( "Typhoid_Prepatent_Infectivity", &typhoid_prepatent_infectivity, "Typhoid_Prepatent_Infectivity.", 0, 1e7, 3e3 ); 
-        initConfigTypeMap( "Typhoid_Protection_Per_Infection", &typhoid_protection_per_infection, "Typhoid_Protection_Per_Infection.", 0, 1, 0.1 ); 
-        initConfigTypeMap( "Typhoid_Subclinical_Infectivity", &typhoid_subclinical_infectivity, "Typhoid_Subclinical_Infectivity.", 0, 1e7, 2000 );
+        initConfigTypeMap( "Typhoid_Acute_Infectiousness", &typhoid_acute_infectiousness, "Typhoid_Acute_Infectiousness.", 0, 1e7, 4000 );
+        initConfigTypeMap( "Typhoid_Chronic_Relative_Infectiousness", &typhoid_chronic_relative_infectiousness, "Typhoid_Chronic_Relative_Infectiousness.", 0, 1e7, 1000 ); 
+        initConfigTypeMap( "Typhoid_Prepatent_Relative_Infectiousness", &typhoid_prepatent_relative_infectiousness, "Typhoid_Prepatent_Relative_Infectiousness.", 0, 1e7, 3e3 ); 
+        initConfigTypeMap( "Typhoid_Protection_Per_Infection", &typhoid_protection_per_infection, "Typhoid_Protection_Per_Infection.", 0, 1, 0.1f ); 
+        initConfigTypeMap( "Typhoid_Subclinical_Relative_Infectiousness", &typhoid_subclinical_relative_infectiousness, "Typhoid_Subclinical_Relative_Infectiousness.", 0, 1e7, 2000 );
         initConfigTypeMap( "Typhoid_Carrier_Probability_Male", &typhoid_carrier_probability_male, "Typhoid_Carrier_Probability_Male.", 0, 1, 0.25 );
         initConfigTypeMap( "Typhoid_6month_Susceptible_Fraction", &typhoid_6month_susceptible_fraction, "Typhoid_6month_Susceptible_Fraction.", 0, 1, 0.5);
         initConfigTypeMap( "Typhoid_3year_Susceptible_Fraction", &typhoid_3year_susceptible_fraction, "Typhoid_3year_Susceptible_Fraction.", 0, 1, 0.5);
         initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate", &typhoid_environmental_exposure_rate, "Typhoid_Environmental_Exposure_Rate.", 0, 10, 0.5);
-        initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 1, 0.5);
-        initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier", &typhoid_environmental_exposure_rate_seasonal_multiplier, "Typhoid_Environmental_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
-        initConfigTypeMap( "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier", &typhoid_contact_exposure_rate_seasonal_multiplier, "Typhoid_Contact_Exposure_Rate_Seasonal_Multiplier.", 0, 1, 0.5);
+        initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 100, 0.5);
         initConfigTypeMap( "Typhoid_Environmental_Ramp_Duration", &typhoid_environmental_ramp_duration, "Typhoid_Environmental_Ramp_Duration.", 0, 200, 2);
         initConfigTypeMap( "Typhoid_Environmental_Peak_End", &typhoid_environmental_peak_end, "Typhoid_Environmental_Peak_End.", 0, 365, 2);
         initConfigTypeMap( "Typhoid_Environmental_Peak_Start", &typhoid_environmental_peak_start, "Typhoid_Environmental_Peak_Start.", 0, 365, 2);
         initConfigTypeMap( "Typhoid_Environmental_Peak_Multiplier", &typhoid_environmental_peak_multiplier, "Typhoid_Environmental_Peak_Multiplier.", 0, 10000, 3 );
-        initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
-    }
+		initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
+		initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);	
+	}
 #endif 
     LOG_DEBUG( "Calling main Configure...\n" );
     bool ret = JsonConfigurable::Configure( inputJson );
