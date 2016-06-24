@@ -65,15 +65,13 @@ def plotCompareFromMongo():
     plt.show()
 
 def plotCompareFromDisk( label = "" ):
-    #random_sim = mc.find()[mc.find().count()-1]
-    #ref_sim = open( "/tmp/InsetChart.pb.bloedow.json" )
-    #print sys.argv[1]
     ref_sim = open( sys.argv[1] )
     ref_data = json.loads( ref_sim.read() )
-
-    #test_sim = open( "/tmp/InsetChart.pb.jeff.json" )
-    #print sys.argv[2]
-    test_sim = open( sys.argv[2] )
+    test_sim = None
+    if len( sys.argv ) == 2:
+        test_sim = open( sys.argv[1] )
+    else:
+        test_sim = open( sys.argv[2] )
     test_data = json.loads( test_sim.read() )
 
     num_chans = ref_data["Header"]["Channels"]
@@ -83,6 +81,8 @@ def plotCompareFromDisk( label = "" ):
     n_figures_x = square_root
     n_figures_y = ceil(float(num_chans)/float(square_root)) #Explicitly perform a float division here as integer division floors in Python 2.x
 
+    if label == "unspecified":
+        label = sys.argv[1]
     figure = plt.figure(label.split('/')[-1])   # label includes the full (relative) path to the scenario, take just the final directory
 
     idx = 1
@@ -158,12 +158,19 @@ def plotBunch( all_data, plot_name, baseline_data=None ):
     # print( "Exiting from plotBunch.\n" )
 
 def main():
+    #print( str( len( sys.argv ) ) )
     #plotOneFromDisk()
-    if len( sys.argv ) < 3:
+    if len( sys.argv ) < 2:
         print( "Usage: plotAllCharts.py <ref_inset_chart_json_path> <test_inset_chart_json_path> <label>" )
         sys.exit(0)
 
-    plotCompareFromDisk( sys.argv[3] )
+    label = None
+    if len( sys.argv ) == 2:
+        label = "unspecified"
+    else:
+        label = sys.argv[3]
+
+    plotCompareFromDisk( label )
     #plotBunch()
 
 if __name__ == "__main__":
