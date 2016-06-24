@@ -111,11 +111,11 @@ ReportTyphoid::LogIndividualData(
         inf->GetInfectiousStrainID( &si );
         if( si.GetGeneticID() == 0 )
         {
-            Accumulate( "Number of Contact Infections", mc_weight );
+            Accumulate( "Number of Environmental Infections", mc_weight );
         }
         else if( si.GetGeneticID() == 1 )
         {
-            Accumulate( "Number of Environmental Infections", mc_weight );
+            Accumulate( "Number of Contact Infections", mc_weight );
         }
         //std::cout << "si.GetGeneticID() = " << si.GetGeneticID() << std::endl;
     }
