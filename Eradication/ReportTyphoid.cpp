@@ -30,6 +30,8 @@ namespace Kernel {
 static const std::string _num_chronic_carriers_label     = "Number of Chronic Carriers";
 static const std::string _num_subclinic_infections_label = "Number of New Sub-Clinical Infections";
 static const std::string _num_acute_infections_label     = "Number of New Acute Infections";
+static const std::string _num_enviro_infections_label    = "Number of Environmental Infections";
+static const std::string _num_contact_infections_label   = "Number of Contact Infections";
 
 
 GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
@@ -53,6 +55,8 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
     Accumulate( _num_chronic_carriers_label, 0 );
     Accumulate( _num_subclinic_infections_label, 0 );
     Accumulate( _num_acute_infections_label, 0 );
+    Accumulate( _num_enviro_infections_label, 0 );
+    Accumulate( _num_contact_infections_label, 0 );
 }
 
 void
@@ -111,11 +115,11 @@ ReportTyphoid::LogIndividualData(
         inf->GetInfectiousStrainID( &si );
         if( si.GetGeneticID() == 0 )
         {
-            Accumulate( "Number of Environmental Infections", mc_weight );
+            Accumulate( _num_enviro_infections_label, mc_weight );
         }
         else if( si.GetGeneticID() == 1 )
         {
-            Accumulate( "Number of Contact Infections", mc_weight );
+            Accumulate( _num_contact_infections_label, mc_weight );
         }
         //std::cout << "si.GetGeneticID() = " << si.GetGeneticID() << std::endl;
     }
