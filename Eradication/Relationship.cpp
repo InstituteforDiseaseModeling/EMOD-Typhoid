@@ -528,6 +528,31 @@ namespace Kernel {
         }
     }
 
+    void Relationship::UpdatePaused()
+    {
+        // ----------------------------------------------------------------------------------------------
+        // --- If the relationship is paused, we want to set the partner pointers to null 
+        // --- so that they are not accidentally used later when they are not valid.
+        // --- We don't set them to null in Pause() because we need the pointers to be
+        // --- valid for the Transmission report.  Setting the pointers to null at the end
+        // --- of Individual::Update() is needed for the situation where partner A updates, 
+        // --- infects partner B, and decides to pause the relationship.  Partner B won't update 
+        // --- the Transmission report until his update.  At this point, we need the pointers in
+        // --- relationship to be available for when partner B becomes infected and updates the report.
+        // ----------------------------------------------------------------------------------------------
+        if( state == RelationshipState::PAUSED )
+        {
+            if( absent_male_partner_id != suids::nil_suid() )
+            {
+                male_partner = nullptr;
+            }
+            if( absent_female_partner_id != suids::nil_suid() )
+            {
+                female_partner = nullptr;
+            }
+        }
+    }
+
     void Relationship::Resume( IRelationshipManager* pRelMan, 
                                ISociety* pSociety, 
                                IIndividualHumanSTI* returnee )
@@ -727,6 +752,24 @@ namespace Kernel {
         if (_head == _tail) {
             _tail++;
             _tail %= REL_LOG_COUNT;
+        }
+    }
+
+    suids::suid Relationship::GetPartnerId( const suids::suid& myID ) const
+    {
+        if( myID == GetMalePartnerId() )
+        {
+            return GetFemalePartnerId();
+        }
+        else if( myID == GetFemalePartnerId() )
+        {
+            return GetMalePartnerId();
+        }
+        else
+        {
+            std::stringstream ss;
+            ss << "Unknown partner: rel-id=" << _suid.data << " male-id=" << GetMalePartnerId().data << " female-id=" << GetFemalePartnerId().data << " unknown-id=" << myID.data;
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
     }
 

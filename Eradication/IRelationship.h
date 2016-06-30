@@ -64,6 +64,7 @@ namespace Kernel
         virtual void Terminate( RelationshipTerminationReason::Enum terminationReason ) = 0;
         virtual void Migrate() = 0;
         virtual void Resume( IRelationshipManager* pRelMan, ISociety* pSociety, IIndividualHumanSTI* returnee ) = 0;
+        virtual void UpdatePaused() = 0;
 
         virtual bool Update( float dt ) = 0;
         virtual void Consummate( float dt ) = 0;
@@ -82,6 +83,7 @@ namespace Kernel
         virtual float GetStartTime() const = 0;
         virtual float GetScheduledEndTime() const = 0;
         virtual bool GetUsingCondom() const = 0;
+        virtual suids::suid GetPartnerId( const suids::suid& myID ) const = 0;
         virtual suids::suid GetMalePartnerId() const = 0;
         virtual suids::suid GetFemalePartnerId() const = 0;
         virtual bool IsMalePartnerAbsent() const = 0;

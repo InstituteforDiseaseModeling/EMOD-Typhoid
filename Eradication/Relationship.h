@@ -35,6 +35,7 @@ namespace Kernel
             virtual void Terminate( RelationshipTerminationReason::Enum terminationReason ) override;
             virtual void Migrate() override;
             virtual void Resume( IRelationshipManager* pRelMan, ISociety* pSociety, IIndividualHumanSTI* returnee ) override;
+            virtual void UpdatePaused() override;
             virtual bool Update( float dt ) override;
             virtual void Consummate( float dt ) override;
 
@@ -58,6 +59,7 @@ namespace Kernel
             virtual float GetScheduledEndTime() const override;
             virtual bool GetUsingCondom() const override;
             virtual RelationshipType::Enum GetType() const override;
+            virtual suids::suid GetPartnerId( const suids::suid& myID ) const override;
             virtual suids::suid GetMalePartnerId() const override;
             virtual suids::suid GetFemalePartnerId() const override;
             virtual ExternalNodeId_t GetOriginalNodeId() const override;

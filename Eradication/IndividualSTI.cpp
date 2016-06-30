@@ -225,7 +225,7 @@ namespace Kernel
 
     void IndividualHumanSTI::NotifyPotentialExposure()
     {
-        potential_exposure_flag = true;;
+        potential_exposure_flag = true;
     }
 
     void IndividualHumanSTI::ExposeToInfectivity(float dt, const TransmissionGroupMembership_t* transmissionGroupMembership)
@@ -397,6 +397,15 @@ namespace Kernel
                                                "IIndividualHumanEventContext" );
             }
             broadcaster->TriggerNodeEventObservers( GetEventContext(), IndividualEventTriggerType::STIDebut );
+        }
+
+        // ---------------------------------------------------------------
+        // --- Update the individual pointers in the paused relationships.
+        // --- This is to help against using invalid pointers.
+        // ---------------------------------------------------------------
+        for( auto rel : relationships )
+        {
+            rel->UpdatePaused();
         }
     }
 

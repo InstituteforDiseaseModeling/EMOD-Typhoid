@@ -66,7 +66,7 @@ namespace Kernel
             // This person cleared their infection on this timestep already! Nothing to report.
             return true;
         }
-        //release_assert( infections.size() > 0 );
+        release_assert( infections.size() > 0 );
         auto infection = infections.front(); // Assuming no super-infections here obviously.
         StrainIdentity si;
         infection->GetInfectiousStrainID(&si);
@@ -106,8 +106,8 @@ namespace Kernel
             auto sti_partner = relationship->GetPartner(p_sti_dest);
             if (sti_partner)
             {
-                LOG_DEBUG_F( "found partner with id %d\n", sti_partner->GetSuid().data );
-                if (sti_partner->GetSuid().data == infector )
+                LOG_DEBUG_F( "infector=%d - checking partner with id %d\n", infector,relationship->GetPartnerId( p_sti_dest->GetSuid() ).data );
+                if( relationship->GetPartnerId( p_sti_dest->GetSuid() ).data == infector )
                 {
                     p_sti_source = sti_partner ;
 
@@ -150,7 +150,6 @@ namespace Kernel
         // --------------------------------------------------------
         // --- Assuming that the individuals in a relationship
         // --- must be in the same node.
-        //release_assert( false );
         // --------------------------------------------------------
         info.node_id = individual->GetParent()->GetExternalID();
 
