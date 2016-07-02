@@ -164,6 +164,51 @@ namespace Kernel
         typedef std::map< std::string, ConstrainedString * > tConStringConfigTypeMapType;
     }
 
+    bool check_condition( const json::QuickInterpreter * pJson, const char * condition_key, const char * condition_value = nullptr );
+#if 0
+    bool check_condition( const json::QuickInterpreter * pJson, const char * condition_key, const char * condition_value = nullptr )
+    {
+        if( condition_key != nullptr ) 
+        {
+            std::cout << "condition_key = " << condition_key << std::endl;
+            if( pJson &&
+                pJson->Exist(condition_key) == true &&
+                true ) // _useDefaults == false ) // TBD: code is right, but behavior is wrong!? TBD. Caught useDefaults being true in config.json (Node.cpp)
+            {
+                auto c_value = (*pJson)[condition_key];
+                std::cout << "condition_key value read from config." << std::endl;
+
+                if( condition_value == nullptr )
+                {
+                    std::cout << "condition_value is null, so it's a bool and 1." << std::endl;
+                    auto c_value2 = (int) c_value.As<json::Number>();
+                    if( c_value2 != condition_value )
+                    {
+                        std::cout << "Condition for using this param is false, so returning." << std::endl;
+                        return true;
+                    }
+                }
+                else
+                {
+                    std::cout << "condition_value is not null, so it's a string; let's read it." << std::endl;
+                    auto c_value2 = (std::string) c_value.As<json::String>();
+                    if( c_value2 != std::string( condition_value ) )
+                    {
+                        std::cout << "Condition for using this param is false, so returning." << std::endl;
+                        return true;
+                    }
+                }
+            } 
+            else
+            {
+                std::cout << "condition_key does not seem to exist in the json!?!?." << std::endl;
+                return true;
+            }
+        }
+        return false;
+    }
+#endif
+
     class IDMAPI JsonConfigurable : public IConfigurable
     {
         friend class InterventionFactory;
@@ -446,7 +491,7 @@ namespace Kernel
             myclass &thevar,
             const json::QuickInterpreter * pJson,
             const MetadataDescriptor::Enum &enum_md,
-            const char* condition_key = nullptr, const char* condition_value = nullptr
+            const char* condition_key = nullptr, const char * condition_value = nullptr
         )
         {
             if( JsonConfigurable::_dryrun )
@@ -455,14 +500,66 @@ namespace Kernel
                 json::Element *elem_copy = _new_ json::Element(pEnumMd->GetSchemaElement());
                 auto enumSchema = json::QuickBuilder( *elem_copy );
 
-                if( condition_key && condition_value )
+                if( condition_key )
                 {
                     json::Object condition;
-                    condition[ condition_key ] = json::String( condition_value );
+                    if( condition_value == nullptr )
+                    {
+                        condition[ condition_key ] = json::Number( 1 );
+                    }
+                    else
+                    {
+                        condition[ condition_key ] = json::String( condition_value );
+                    }
                     enumSchema["depends-on"] = condition;
                 }
                 jsonSchemaBase[key] = enumSchema;
             }
+
+            if( check_condition( pJson, condition_key, condition_value ) )
+            {
+                return true;
+            }
+#if 0
+            // check condition key first to see if we even need to look at this.
+            if( condition_key != nullptr ) 
+            {
+                std::cout << "condition_key = " << condition_key << std::endl;
+                if( pJson &&
+                    pJson->Exist(condition_key) == true &&
+                    true ) // _useDefaults == false ) // TBD: code is right, but behavior is wrong!? TBD. Caught useDefaults being true in config.json (Node.cpp)
+                {
+                    auto c_value = (*pJson)[condition_key];
+                    std::cout << "condition_key value read from config." << std::endl;
+                    
+                    if( condition_value == nullptr )
+                    {
+                        std::cout << "condition_value is null, so it's a bool and 1." << std::endl;
+                        auto c_value2 = (int) c_value.As<json::Number>();
+                        if( c_value2 != condition_value )
+                        {
+                            std::cout << "Condition for using this param is false, so returning." << std::endl;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "condition_value is not null, so it's a string; let's read it." << std::endl;
+                        auto c_value2 = (std::string) c_value.As<json::String>();
+                        if( c_value2 != std::string( condition_value ) )
+                        {
+                            std::cout << "Condition for using this param is false, so returning." << std::endl;
+                            return true;
+                        }
+                    }
+                } 
+                else
+                {
+                    std::cout << "condition_key does not seem to exist in the json!?!?." << std::endl;
+                    return true;
+                }
+            }
+#endif
 
             if (pJson && pJson->Exist(key) == false && _useDefaults )
             {

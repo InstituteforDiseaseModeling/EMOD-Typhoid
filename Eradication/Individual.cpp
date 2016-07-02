@@ -103,9 +103,9 @@ namespace Kernel
         initConfigTypeMap( "Enable_Aging", &aging, Enable_Aging_DESC_TEXT, true );
         initConfigTypeMap( "Infection_Updates_Per_Timestep", &infection_updates_per_tstep, Infection_Updates_Per_Timestep_DESC_TEXT, 0, 144, 1 );
         initConfigTypeMap( "Enable_Immunity", &immunity, Enable_Immunity_DESC_TEXT, true );
-        initConfigTypeMap( "Max_Individual_Infections", &max_ind_inf, Max_Individual_Infections_DESC_TEXT, 0, 1000, 1 );
         initConfigTypeMap( "Enable_Superinfection", &superinfection, Enable_Superinfection_DESC_TEXT, false );
-        initConfigTypeMap( "x_Other_Mortality", &x_othermortality, x_Other_Mortality_DESC_TEXT, 0.0f, FLT_MAX, 1.0f );
+        initConfigTypeMap( "Max_Individual_Infections", &max_ind_inf, Max_Individual_Infections_DESC_TEXT, 0, 1000, 1 );
+        initConfigTypeMap( "x_Other_Mortality", &x_othermortality, x_Other_Mortality_DESC_TEXT, 0.0f, FLT_MAX, 1.0f, "Enable_Vital_Dynamics" );
         initConfigTypeMap( "Minimum_Adult_Age_Years", &min_adult_age_years, Minimum_Adult_Age_Years_DESC_TEXT, 0.0f, FLT_MAX, 15.0f );
 
         MigrationStructure::Enum migration_structure; // TBD: Would be nice to get from SimulationConfig, but fakeHuman is configured first

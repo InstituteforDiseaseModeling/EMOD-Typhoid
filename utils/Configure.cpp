@@ -19,6 +19,49 @@ static const char * _module = "JsonConfigurable";
 
 namespace Kernel
 {
+#if 1
+    bool check_condition( const json::QuickInterpreter * pJson, const char * condition_key, const char * condition_value )
+    {
+        if( condition_key != nullptr ) 
+        {
+            std::cout << "condition_key = " << condition_key << std::endl;
+            if( pJson &&
+                pJson->Exist(condition_key) == true &&
+                true ) // _useDefaults == false ) // TBD: code is right, but behavior is wrong!? TBD. Caught useDefaults being true in config.json (Node.cpp)
+            {
+                auto c_value = (*pJson)[condition_key];
+                std::cout << "condition_key value read from config." << std::endl;
+
+                if( condition_value == nullptr )
+                {
+                    std::cout << "condition_value is null, so it's a bool and 1." << std::endl;
+                    auto c_value2 = (int) c_value.As<json::Number>();
+                    if( c_value2 != condition_value )
+                    {
+                        std::cout << "Condition for using this param is false, so returning." << std::endl;
+                        return true;
+                    }
+                }
+                else
+                {
+                    std::cout << "condition_value is not null, so it's a string; let's read it." << std::endl;
+                    auto c_value2 = (std::string) c_value.As<json::String>();
+                    if( c_value2 != std::string( condition_value ) )
+                    {
+                        std::cout << "Condition for using this param is false, so returning." << std::endl;
+                        return true;
+                    }
+                }
+            } 
+            else
+            {
+                std::cout << "condition_key does not seem to exist in the json!?!?." << std::endl;
+                return true;
+            }
+        }
+        return false;
+    }
+#endif
     /// NodeSetConfig
     NodeSetConfig::NodeSetConfig()
     {}
@@ -940,9 +983,16 @@ namespace Kernel
                     LOG_INFO_F( "Using the default value ( \"%s\" : %f ) for unspecified parameter.\n", key.c_str(), val );
                     *(entry.second) = val;
                 }
-                else 
+                else if( schema.Exist( "depends-on" ) )
                 {
-                    handleMissingParam( key );
+                    auto condition = json_cast<const json::Object&>(schema["depends-on"]);
+
+                    std::string condition_key = condition.Begin()->name;
+                    auto condition_value = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                    if( !check_condition( inputJson, condition_key.c_str(), condition_value.c_str() ) )
+                    {
+                        handleMissingParam( key );
+                    }
                 }
             }
 
