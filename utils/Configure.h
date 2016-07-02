@@ -312,7 +312,8 @@ namespace Kernel
             const char* paramName,
             bool * pVariable,
             const char* description = default_description,
-            bool defaultvalue = false
+            bool defaultvalue = false,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(

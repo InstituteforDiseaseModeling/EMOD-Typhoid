@@ -36,10 +36,14 @@ namespace Kernel
                 {
                     std::cout << "condition_value is null, so it's a bool and 1." << std::endl;
                     auto c_value2 = (int) c_value.As<json::Number>();
-                    if( c_value2 != condition_value )
+                    if( c_value2 != 1 )
                     {
                         std::cout << "Condition for using this param is false, so returning." << std::endl;
                         return true;
+                    }
+                    else
+                    {
+                        std::cout << "Conditions match." << std::endl;
                     }
                 }
                 else
@@ -333,7 +337,8 @@ namespace Kernel
         const char* paramName,
         bool * pVariable,
         const char* description,
-        bool defaultvalue
+        bool defaultvalue,
+        const char* condition_key = nullptr, const char* condition_value = nullptr
     )
     {
         LOG_DEBUG_F("initConfigTypeMap<bool>: %s\n", paramName);
@@ -346,7 +351,13 @@ namespace Kernel
         {
             newIntSchema["description"] = json::String(description);
             newIntSchema["type"] = json::String( "bool" );
-    }
+        }
+        if( condition_key && condition_value )
+        {
+            json::Object condition;
+            condition[ condition_key ] = json::String( condition_value );
+            newIntSchema["depends-on"] = condition;
+        }
         jsonSchemaBase[paramName] = newIntSchema;
     }
 
@@ -362,7 +373,7 @@ namespace Kernel
         LOG_DEBUG_F( "initConfigTypeMap<int>: %s\n", paramName);
         intConfigTypeMap[ paramName ] = pVariable;
         json::Object newIntSchema;
-            newIntSchema["min"] = json::Number(min);
+        newIntSchema["min"] = json::Number(min);
         newIntSchema["max"] = json::Number(max);
         newIntSchema["default"] = json::Number(defaultvalue);
         if ( _dryrun )
@@ -906,9 +917,15 @@ namespace Kernel
                     *(entry.second) = defaultValue;
                     LOG_DEBUG_F( "Using the default value ( \"%s\" : %d ) for unspecified parameter.\n", key.c_str(), defaultValue );
                 }
-                else
+                else if( schema.Exist( "depends-on" ) )
                 {
-                    handleMissingParam( key );
+                    auto condition = json_cast<const json::Object&>(schema["depends-on"]);
+                    std::string condition_key = condition.Begin()->name;
+                    auto condition_value = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                    if( !check_condition( inputJson, condition_key.c_str(), condition_value.c_str() ) )
+                    {
+                        handleMissingParam( key );
+                    }
                 }
             }
 
@@ -949,9 +966,15 @@ namespace Kernel
                     LOG_INFO_F( "Using the default value ( \"%s\" : %d ) for unspecified parameter.\n", key.c_str(), val );
                     *(entry.second) = val;
                 }
-                else 
+                else if( schema.Exist( "depends-on" ) )
                 {
-                    handleMissingParam( key );
+                    auto condition = json_cast<const json::Object&>(schema["depends-on"]);
+                    std::string condition_key = condition.Begin()->name;
+                    auto condition_value = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                    if( !check_condition( inputJson, condition_key.c_str(), condition_value.c_str() ) )
+                    {
+                        handleMissingParam( key );
+                    }
                 }
             }
 
@@ -986,7 +1009,6 @@ namespace Kernel
                 else if( schema.Exist( "depends-on" ) )
                 {
                     auto condition = json_cast<const json::Object&>(schema["depends-on"]);
-
                     std::string condition_key = condition.Begin()->name;
                     auto condition_value = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
                     if( !check_condition( inputJson, condition_key.c_str(), condition_value.c_str() ) )
