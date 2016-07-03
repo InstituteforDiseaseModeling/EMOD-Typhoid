@@ -113,7 +113,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     initConfig( "Migration_Model", migration_structure, inputJson, MetadataDescriptor::Enum(Migration_Model_DESC_TEXT, Migration_Model_DESC_TEXT, MDD_ENUM_ARGS(MigrationStructure)) ); // 'global'
     initConfig( "Population_Scale_Type", population_scaling, inputJson, MetadataDescriptor::Enum(Population_Scale_Type_DESC_TEXT, Population_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(PopulationScaling)) ); // node only (move)
     initConfig( "Simulation_Type", sim_type, inputJson, MetadataDescriptor::Enum(Simulation_Type_DESC_TEXT, Simulation_Type_DESC_TEXT, MDD_ENUM_ARGS(SimType)) ); // simulation only (???move)
-    initConfig( "Death_Rate_Dependence", vital_death_dependence, inputJson, MetadataDescriptor::Enum(Death_Rate_Dependence_DESC_TEXT, Death_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalDeathDependence)) ); // node only (move)
+    initConfig( "Death_Rate_Dependence", vital_death_dependence, inputJson, MetadataDescriptor::Enum(Death_Rate_Dependence_DESC_TEXT, Death_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalDeathDependence)), "Enable_Vital_Dynamics" ); // node only (move)
     initConfig( "Susceptibility_Scale_Type", susceptibility_scaling, inputJson, MetadataDescriptor::Enum("susceptibility_scaling", Susceptibility_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(SusceptibilityScaling)) ); // Can be node-level or individual susceptibility-level
 
     //vector enums
@@ -476,7 +476,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 #endif // DISABLE_HIV
 #endif // DISABLE_STI
 
-    LOG_DEBUG( "Calling main Configure...\n" );
+    LOG_DEBUG_F( "Calling main Configure..., use_defaults = %d\n", JsonConfigurable::_useDefaults );
     bool ret = JsonConfigurable::Configure( inputJson );
 
 #ifndef DISABLE_VECTOR

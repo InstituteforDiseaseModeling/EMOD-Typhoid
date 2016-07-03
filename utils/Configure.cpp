@@ -352,10 +352,17 @@ namespace Kernel
             newIntSchema["description"] = json::String(description);
             newIntSchema["type"] = json::String( "bool" );
         }
-        if( condition_key && condition_value )
+        if( condition_key )
         {
             json::Object condition;
-            condition[ condition_key ] = json::String( condition_value );
+            if( condition_value )
+            {
+                condition[ condition_key ] = json::String( condition_value );
+            }
+            else
+            { 
+                condition[ condition_key ] = json::Number( 1 );
+            }
             newIntSchema["depends-on"] = condition;
         }
         jsonSchemaBase[paramName] = newIntSchema;
@@ -380,13 +387,20 @@ namespace Kernel
         {
             newIntSchema["description"] = json::String(description);
             newIntSchema["type"] = json::String( "integer" );
-
-            if( condition_key && condition_value )
+        }
+            
+        if( condition_key )
+        {
+            json::Object condition;
+            if( condition_value )
             {
-                json::Object condition;
                 condition[ condition_key ] = json::String( condition_value );
-                newIntSchema["depends-on"] = condition;
             }
+            else
+            { 
+                condition[ condition_key ] = json::Number( 1 );
+            }
+            newIntSchema["depends-on"] = condition;
         }
         jsonSchemaBase[paramName] = newIntSchema;
     }
@@ -409,14 +423,20 @@ namespace Kernel
         if ( _dryrun )
         {
             newFloatSchema["description"] = json::String(description);
-            newFloatSchema["type"] = json::String( "float" );
-
-            if( condition_key && condition_value )
+            newFloatSchema["type"] = json::String( "float" ); 
+        }
+        if( condition_key )
+        {
+            json::Object condition;
+            if( condition_value )
             {
-                json::Object condition;
                 condition[ condition_key ] = json::String( condition_value );
-                newFloatSchema["depends-on"] = condition;
             }
+            else
+            { 
+                condition[ condition_key ] = json::Number( 1 );
+            }
+            newFloatSchema["depends-on"] = condition;
         }
         jsonSchemaBase[paramName] = newFloatSchema;
     }
@@ -917,12 +937,34 @@ namespace Kernel
                     *(entry.second) = defaultValue;
                     LOG_DEBUG_F( "Using the default value ( \"%s\" : %d ) for unspecified parameter.\n", key.c_str(), defaultValue );
                 }
-                else if( schema.Exist( "depends-on" ) )
+                else
                 {
-                    auto condition = json_cast<const json::Object&>(schema["depends-on"]);
-                    std::string condition_key = condition.Begin()->name;
-                    auto condition_value = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
-                    if( !check_condition( inputJson, condition_key.c_str(), condition_value.c_str() ) )
+                    if( schema.Exist( "depends-on" ) )
+                    {
+                        auto condition = json_cast<const json::Object&>(schema["depends-on"]);
+                        std::string condition_key = condition.Begin()->name;
+                        std::string condition_value_str = "";
+                        char * condition_value = nullptr;
+                        try {
+                            auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                            condition_value = condition_value_str.c_str();
+                        }
+                        catch(...)
+                        {
+                            //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
+                        }
+                        
+                        if( !check_condition( inputJson, condition_key.c_str(), condition_value ) )
+                        {
+                            std::cout << key << " param is missing and that's NOT ok." << std::endl;
+                            handleMissingParam( key );
+                        }
+                        else
+                        {
+                            std::cout << key << " param is missing and that's ok." << std::endl;
+                        }
+                    }
+                    else // not in config, not using defaults, no depends-on, just plain missing
                     {
                         handleMissingParam( key );
                     }
@@ -970,14 +1012,26 @@ namespace Kernel
                 {
                     auto condition = json_cast<const json::Object&>(schema["depends-on"]);
                     std::string condition_key = condition.Begin()->name;
-                    auto condition_value = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
-                    if( !check_condition( inputJson, condition_key.c_str(), condition_value.c_str() ) )
+                    std::string condition_value_str = "";
+                    char * condition_value = nullptr;
+                    try {
+                        condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                        condition_value = condition_value_str.c_str();
+                    }
+                    catch(...)
+                    {
+                        //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
+                    }
+                    if( !check_condition( inputJson, condition_key.c_str(), condition_value ) )
                     {
                         handleMissingParam( key );
                     }
                 }
+                else // not in config, not using defaults, no depends-on, just plain missing
+                {
+                    handleMissingParam( key );
+                }
             }
-
 
             LOG_DEBUG_F("the key %s = int %d\n", key.c_str(), *(entry.second));
         }
@@ -1010,11 +1064,24 @@ namespace Kernel
                 {
                     auto condition = json_cast<const json::Object&>(schema["depends-on"]);
                     std::string condition_key = condition.Begin()->name;
-                    auto condition_value = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
-                    if( !check_condition( inputJson, condition_key.c_str(), condition_value.c_str() ) )
+                    std::string condition_value_str = "";
+                    char * condition_value = nullptr;
+                    try {
+                        auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                        condition_value = condition_value_str.c_str();
+                    }
+                    catch(...)
+                    {
+                        //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
+                    }
+                    if( !check_condition( inputJson, condition_key.c_str(), condition_value ) )
                     {
                         handleMissingParam( key );
                     }
+                }
+                else // not in config, not using defaults, no depends-on, just plain missing
+                {
+                    handleMissingParam( key );
                 }
             }
 
