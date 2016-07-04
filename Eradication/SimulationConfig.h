@@ -159,7 +159,6 @@ namespace Kernel
 
         bool demographics_initial;
         int default_torus_size;
-        int default_node_population;
 
         float lloffset; // half the size of a grid edge in degrees, set by SetFlags()
 

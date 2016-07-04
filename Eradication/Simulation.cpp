@@ -127,7 +127,7 @@ namespace Kernel
         initConfigTypeMap( "Enable_Property_Output", &enable_property_output, Enable_Property_Output_DESC_TEXT, false );
         initConfigTypeMap( "Campaign_Filename", &campaign_filename, Campaign_Filename_DESC_TEXT );
         initConfigTypeMap( "Load_Balance_Filename", &loadbalance_filename, Load_Balance_Filename_DESC_TEXT );
-        initConfigTypeMap( "Base_Individual_Sample_Rate", &Ind_Sample_Rate, Base_Individual_Sample_Rate_DESC_TEXT, 0.0f, 1.0f, 1.0f ); 
+        initConfigTypeMap( "Base_Individual_Sample_Rate", &Ind_Sample_Rate, Base_Individual_Sample_Rate_DESC_TEXT, 0.0f, 1.0f, 1.0f, "Individual_Sampling_Type", "FIXED_SAMPLING" ); 
         initConfigTypeMap( "Run_Number", &Run_Number, Run_Number_DESC_TEXT, 0, INT_MAX, 1 );
     }
 
@@ -893,8 +893,9 @@ namespace Kernel
         demographics_factory = NodeDemographicsFactory::CreateNodeDemographicsFactory( &nodeid_suid_map, 
                                                                                        EnvPtr->Config,
                                                                                        m_simConfigObj->demographics_initial,
-                                                                                       m_simConfigObj->default_torus_size,
-                                                                                       m_simConfigObj->default_node_population );
+                                                                                       0, // m_simConfigObj->default_torus_size,
+                                                                                       0 // m_simConfigObj->default_node_population
+                                                                                       );
         if (demographics_factory == nullptr)
         {
             throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "Failed to create NodeDemographicsFactory" );
