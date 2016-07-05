@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -93,6 +93,9 @@ BEGIN_QUERY_INTERFACE_BODY(SimulationConfig)
      HANDLE_INTERFACE(IConfigurable)
 END_QUERY_INTERFACE_BODY(SimulationConfig)
 
+SimulationConfig::~SimulationConfig()
+{
+}
 
 bool SimulationConfig::Configure(const Configuration * inputJson)
 {
@@ -157,15 +160,14 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         }
     }
 #endif
-     // susceptibility scaling enum
-     if ((susceptibility_scaling == SusceptibilityScaling::LOG_LINEAR_FUNCTION_OF_TIME) ||  (susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE))
-     {
-         initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-     }
-     if (susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE)
-     {
-         initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-         initConfigTypeMap( "Susceptibility_Scaling_Age0_Intercept", &susceptibility_scaling_intercept, Susceptibility_Scaling_Intercept_DESC_TEXT, 0.0f, 1.0f, 0.0f ); 
+    // susceptibility scaling enum
+    if( ( susceptibility_scaling == SusceptibilityScaling::LOG_LINEAR_FUNCTION_OF_TIME ) || ( susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE) )
+    {
+        initConfigTypeMap( "Susceptibility_Scaling_Rate", &susceptibility_scaling_rate, Susceptibility_Scaling_Rate_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
+    }
+    if( susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE )
+    {
+        initConfigTypeMap( "Susceptibility_Scaling_Age0_Intercept", &susceptibility_scaling_intercept, Susceptibility_Scaling_Intercept_DESC_TEXT, 0.0f, 1.0f, 0.0f ); 
     }
 
     // Generic parameters
@@ -456,8 +458,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         sim_type == SimType::HIV_SIM 
       )
     {
-        initConfigTypeMap( "Probability_Person_Is_Behavioral_Super_Spreader", &prob_super_spreader, Probability_Person_Is_Behavioral_Super_Spreader_DESC_TEXT, 0.0, 1.0f, 0.001f );
-
         // DJK TODO: These parameters should be owned by Relationship
         initConfigTypeMap( "Enable_Coital_Dilution", &enable_coital_dilution, Enable_Coital_Dilution_DESC_TEXT, true );
         initConfigTypeMap( "Coital_Dilution_Factor_2_Partners", &coital_dilution_2_partners, Coital_Dilution_Factor_2_Partners_DESC_TEXT, FLT_EPSILON, 1.0f, 1.0f );
@@ -487,8 +487,6 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         }
 #endif
 
-
-//LOG_DEBUG_F( "base_year initialized to %d\n", base_year );
 
     if( JsonConfigurable::_dryrun == true )
     {
@@ -721,6 +719,8 @@ SimulationConfig::SimulationConfig()
     , larvalDensityMortalityScalar(10.0f)
     , larvalDensityMortalityOffset(0.1f)
     , demographics_initial(false)
+    , default_torus_size(10)
+    , default_node_population(1000)
     , lloffset(0)
     , coinfection_incidence(false)
     , enable_coinfection_mortality(false)
@@ -813,6 +813,8 @@ SimulationConfig::SimulationConfig()
 #ifdef ENABLE_TB
     , tb_drug_names_for_this_sim()
     , TBDrugMap()
+#endif
+#ifdef ENABLE_TBHIV
     , cd4_count_at_beginning_of_hiv_infection(0.0f)
     , cd4_count_at_end_of_hiv_infection(0.0f)
 #endif
@@ -845,13 +847,10 @@ SimulationConfig::SimulationConfig()
     , MalariaDrugMap()
     , m_jsonConfig(nullptr)
 #ifndef DISABLE_STI
-    //, shortTermRelationshipLength(10.0f)
-    , prob_super_spreader(0.0f)
     , enable_coital_dilution(true)
     , coital_dilution_2_partners(1)
     , coital_dilution_3_partners(1)
     , coital_dilution_4_plus_partners(1)
-    //, femaleToMaleRelativeInfectivity(1.0f)
 
 #ifndef DISABLE_HIV
     , prob_maternal_transmission(1.0f)
@@ -885,10 +884,6 @@ SimulationConfig::SimulationConfig()
     ZERO_ARRAY(vaccine_strains);
 #endif
 #endif
-}
-
-SimulationConfig::~SimulationConfig()
-{
 }
 
 }

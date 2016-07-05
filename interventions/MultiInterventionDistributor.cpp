@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -85,6 +85,9 @@ namespace Kernel
                 LOG_DEBUG_F( "Attempting to instantiate intervention of class %s\n", std::string((*tmpConfig)["class"].As<json::String>()).c_str() );
                 IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(tmpConfig);
                 assert(di);
+                delete tmpConfig;
+                tmpConfig = nullptr;
+
                 if (di)
                 {
                     if (!di->Distribute( context, pICCO ) )

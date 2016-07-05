@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -38,16 +38,12 @@ namespace Kernel
         {
             m_all_males.push_back(sti_person);
             AddToPopulation(m_male_population.at(agebin_index), sti_person, agebin_index);
-#ifdef _DEBUG
-            new_males[agebin_index]++;
-#endif
+            new_males[agebin_index]++; //DEBUG
         }
         else
         {
             AddToPopulation(m_female_population.at(agebin_index), sti_person, agebin_index);
-#ifdef _DEBUG
-            new_females[agebin_index]++;
-#endif
+            new_females[agebin_index]++; //DEBUG
         }
     }
 
@@ -363,7 +359,7 @@ namespace Kernel
         auto male_rels = person1->GetRelationships();
         for( auto rel: male_rels )
         {
-            if( rel->FemalePartner()->GetSuid().data == person2->GetSuid().data )
+            if( rel->GetFemalePartnerId().data == person2->GetSuid().data )
             {
                 LOG_WARN_F( "PFA attempted to create duplicate relationship between male individual %d and female individual %d\n", person1->GetSuid().data, person2->GetSuid().data );
                 existing_relationship = true;

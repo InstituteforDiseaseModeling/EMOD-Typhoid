@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -14,15 +14,15 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IndividualCoinfection.h"
 #endif
 #include "IIndividualHumanHIV.h"
-#include "IIndividualHuman.h"
+// clorton #include "IIndividualHuman.h"
 #include "InfectionHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 #include "Common.h"
 #include "Debug.h"
 #include "RANDOM.h"
-#include "MathFunctions.h"
+// clorton #include "MathFunctions.h"
 #include "math.h"
-#include "NodeEventContext.h"
+#include "NodeEventContext.h"   // Needed for parent->GetEventContext()->GetNodeEventContext()
 #include "SimulationConfig.h"
 
 static const char * _module = "SusceptibilityHIV";
@@ -125,6 +125,16 @@ namespace Kernel
         newsusceptibility->Initialize(age, immmod, riskmod);
 
         return newsusceptibility;
+    }
+
+    void SusceptibilityHIV::SetContextTo(IIndividualHumanContext* context)
+    {
+        SusceptibilitySTI::SetContextTo( context );
+
+        if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&hiv_parent) )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanHIV", "IndividualHuman" );
+        }
     }
 
     void SusceptibilityHIV::setCD4Rate(const IInfectionHIV * const pInf)
@@ -258,21 +268,21 @@ namespace Kernel
     void SusceptibilityHIV::Initialize(float _age, float _immmod, float _riskmod)
     {
         Susceptibility::Initialize(_age, _immmod, _riskmod);
-        // TBD: This pointer will need to be recreated in SetContextTo for migration to work!
+
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&hiv_parent) )
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent", "IIndividualHumanHIV", "IndividualHuman" );
         }
 
         // Calculate CD4 post-infection and at HIV-cause death
-        float CD4_PostInfection = Environment::getInstance()->RNG->Weibull2( post_infection_CD4_lambda, post_infection_CD4_inverse_kappa );
+        float CD4_PostInfection = Environment::getInstance()->RNG->Weibull2(SusceptibilityHIVConfig::post_infection_CD4_lambda, SusceptibilityHIVConfig::post_infection_CD4_inverse_kappa );
         CD4_PostInfection = (std::min)(CD4_PostInfection, MAX_CD4);
         sqrtCD4_PostInfection = sqrt(CD4_PostInfection);
 
-        float CD4_AtDiseaseDeath = disease_death_CD4_alpha;
-        if( disease_death_CD4_inverse_beta != 0.0f )
+        float CD4_AtDiseaseDeath = SusceptibilityHIVConfig::disease_death_CD4_alpha;
+        if( SusceptibilityHIVConfig::disease_death_CD4_inverse_beta != 0.0f )
         {
-            CD4_AtDiseaseDeath = Environment::getInstance()->RNG->LogLogistic( disease_death_CD4_alpha, 1.0f/disease_death_CD4_inverse_beta );
+            CD4_AtDiseaseDeath = Environment::getInstance()->RNG->LogLogistic( SusceptibilityHIVConfig::disease_death_CD4_alpha, 1.0f/SusceptibilityHIVConfig::disease_death_CD4_inverse_beta );
         }
         CD4_AtDiseaseDeath = (std::min)(CD4_AtDiseaseDeath, MAX_CD4);
         sqrtCD4_AtDiseaseDeath = sqrt( CD4_AtDiseaseDeath );
@@ -392,4 +402,20 @@ namespace Kernel
         , sqrtCD4_AtDiseaseDeath( 0 )
         , CD4count_at_ART_start( 0 )
         { }
+
+    REGISTER_SERIALIZABLE(SusceptibilityHIV);
+
+    void SusceptibilityHIV::serialize(IArchive& ar, SusceptibilityHIV* obj)
+    {
+        SusceptibilitySTI::serialize( ar, obj );
+        SusceptibilityHIV& suscep = *obj;
+        ar.labelElement("days_between_symptomatic_and_death") & suscep.days_between_symptomatic_and_death;
+        ar.labelElement("sqrtCD4_Current"                   ) & suscep.sqrtCD4_Current;
+        ar.labelElement("sqrtCD4_Rate"                      ) & suscep.sqrtCD4_Rate;
+        ar.labelElement("sqrtCD4_PostInfection"             ) & suscep.sqrtCD4_PostInfection;
+        ar.labelElement("sqrtCD4_AtDiseaseDeath"            ) & suscep.sqrtCD4_AtDiseaseDeath;
+        ar.labelElement("CD4count_at_ART_start"             ) & suscep.CD4count_at_ART_start;
+
+        // hiv_parent; - Updated in SetContextTo
+    }
 }

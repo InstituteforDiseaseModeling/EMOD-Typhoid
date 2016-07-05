@@ -17,7 +17,9 @@
                     "Air_Migration_Filename": ""
                },
                "Enable_Migration_Heterogeneity": 0, 
-               "Family_Migration_Type" : "NO_MIGRATION",
+               "Enable_Family_Migration": 0, 
+               "Family_Migration_Filename": "", 
+               "x_Family_Migration": 1,
                "LOCAL": {
                     "Enable_Local_Migration": 0,
                     "Local_Migration_Filename": ""

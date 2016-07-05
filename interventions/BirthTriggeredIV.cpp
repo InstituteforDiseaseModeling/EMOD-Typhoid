@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -132,7 +132,10 @@ namespace Kernel
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The pointer to IInterventionFactory object is not valid (could be DLL specific)" );
         }
 
-        IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement( actual_intervention_config._json ) ); 
+        auto tmp_config = Configuration::CopyFromElement( actual_intervention_config._json );
+        IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( tmp_config ); 
+        delete tmp_config;
+        tmp_config = nullptr;
         if( di )
         {
             di->Distribute( pIndiv->GetInterventionsContext(), iCCO );
@@ -149,7 +152,7 @@ namespace Kernel
     void BirthTriggeredIV::Update( float dt )
     {
         duration += dt;
-        LOG_INFO_F("[BirthTriggeredIV], Updating: duration = %f, max_duration = %f.\n", duration, max_duration);
+        LOG_DEBUG_F("[BirthTriggeredIV], Updating: duration = %f, max_duration = %f.\n", duration, max_duration);
         if( max_duration >= 0 && duration > max_duration )
         {
             // QI to register ourself as a birth observer

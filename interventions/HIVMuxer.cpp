@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -136,16 +136,14 @@ namespace Kernel
         }
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVMuxer);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVMuxer& obj, const unsigned int v)
+    void HIVMuxer::serialize(IArchive& ar, HIVMuxer* obj)
     {
-        ar & obj.max_entries;
-        ar & obj.muxer_name;
-        ar & boost::serialization::base_object<Kernel::DelayedIntervention>(obj);
+        HIVDelayedIntervention::serialize( ar, obj );
+        HIVMuxer& muxer = *obj;
+
+        ar.labelElement("max_entries") & muxer.max_entries;
+        ar.labelElement("muxer_name" ) & muxer.muxer_name;
     }
 }
-#endif

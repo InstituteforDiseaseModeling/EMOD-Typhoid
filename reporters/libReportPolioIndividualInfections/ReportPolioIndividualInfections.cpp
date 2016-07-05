@@ -1,108 +1,98 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 
 ***************************************************************************************************/
 
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include <fstream>
 
-#include "BoostLibWrapper.h"
 #include "ReportPolioIndividualInfections.h"
+#include "DllInterfaceHelper.h"
+#include "FactorySupport.h"
+
 #include "Environment.h"
 #include "INodeContext.h"
 #include "IndividualPolio.h"
 #include "InfectionPolio.h"
 #include "Log.h"
+#include "PolioContexts.h"
+#include "IdmMpi.h"
 
-#include "ProgVersion.h"
-#include "DllDefs.h"
-
-#pragma warning(disable : 4996)
 
 using namespace std;
 using namespace json;
 
-static const char * _module = "ReportPolioIndividualInfections";
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!! CREATING NEW REPORTS
+// !!! If you are creating a new report by copying this one, you will need to modify 
+// !!! the values below indicated by "<<<"
 
+// Module name for logging, CustomReport.json, and DLL GetType()
+static const char * _module = "ReportPolioIndividualInfections";// <<< Name of this file
 static const std::string _report_name = "Infections.bin";
 
-using namespace Kernel;
 
-// You can put 0 or more valid Sim types into _sim_types but has to end with nullptr
-// Refer to DllLoader.h for current SIMTYPES_MAXNUM
-// but we don't include DllLoader.h to avoid compiling redefinition errors.
-static const char * _sim_types[] = {"POLIO_SIM", nullptr};
+namespace Kernel
+{
+// You can put 0 or more valid Sim types into _sim_types but has to end with nullptr.
+// "*" can be used if it applies to all simulation types.
+static const char * _sim_types[] = { "POLIO_SIM", nullptr };// <<< Types of simulation the report is to be used with
+
+report_instantiator_function_t rif = []()
+{
+    return (Kernel::IReport*)(new ReportPolioIndividualInfections()); // <<< Report to create
+};
+
+DllInterfaceHelper DLL_HELPER( _module, _sim_types, rif );
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// ------------------------------
+// --- DLL Interface Methods
+// ---
+// --- The DTK will use these methods to establish communication with the DLL.
+// ------------------------------
 
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
 #endif
 
-//
-// This is the interface function from the DTK.
-//
-DTK_DLLEXPORT
-char* __cdecl
+DTK_DLLEXPORT char* __cdecl
 GetEModuleVersion(char* sVer, const Environment * pEnv)
 {
-    Environment::setInstance(const_cast<Environment*>(pEnv));
-    ProgDllVersion pv;
-    LOG_INFO_F("GetVersion called with ver=%s\n", pv.getVersion());
-    if (sVer) strcpy(sVer, pv.getVersion());
-    return sVer;
+    return DLL_HELPER.GetEModuleVersion( sVer, pEnv );
 }
-
 
 DTK_DLLEXPORT void __cdecl
 GetSupportedSimTypes(char* simTypes[])
 {
-    int i=0;
-    while (i < SIMTYPES_MAXNUM && _sim_types[i] != NULL)
-    {
-        // allocation will be freed by the caller
-        simTypes[i] = new char[strlen(_sim_types[i]) + 1];
-        strcpy(simTypes[i], _sim_types[i]);
-        i++;
-    }
-    simTypes[i] = NULL;
+    DLL_HELPER.GetSupportedSimTypes( simTypes );
 }
 
-DTK_DLLEXPORT IReport* __cdecl
-CreateReport()
-{
-    std::ostringstream oss;
-    oss << "CreateReport called for " << _module << std::endl;
-    LOG_INFO( oss.str().c_str() );
-    return new ReportPolioIndividualInfections();
-}
-
-DTK_DLLEXPORT
-const char *
-__cdecl
+DTK_DLLEXPORT const char * __cdecl
 GetType()
 {
-    std::ostringstream oss;
-    oss << "GetType called for " << _module << std::endl;
-    LOG_INFO( oss.str().c_str() );
-    return _module;
+    return DLL_HELPER.GetType();
 }
 
 DTK_DLLEXPORT void __cdecl
-InitReportEnvironment(
-    const Environment * pEnv
-)
+GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 {
-    Environment::setInstance(const_cast<Environment*>(pEnv));
+    DLL_HELPER.GetReportInstantiator( pif );
 }
 
 #ifdef __cplusplus
 }
 #endif
 
+// ----------------------------------------
+// --- ReportPolioIndividualInfections Methods
+// ----------------------------------------
 
 void
 ReportPolioIndividualInfections::Initialize( unsigned int nrmSize )
@@ -114,7 +104,6 @@ ReportPolioIndividualInfections::Initialize( unsigned int nrmSize )
         Infections.open(report_filename.c_str(), ios_base::out | ios_base::trunc | ios_base::binary);
     }
 }
-
 ReportPolioIndividualInfections::ReportPolioIndividualInfections()
 {
 }
@@ -137,9 +126,9 @@ ReportPolioIndividualInfections::LogNodeData( INodeContext * pNC )
     if( !node_stats )
         node_stats = node_to_stats_map[suid] = new stringstream (stringstream::in | stringstream::out | stringstream::binary);
 
-    float tmp_float = pNode->GetTime();     node_stats->write((char*)(&tmp_float), sizeof(float));
+    float tmp_float = pNC->GetTime().time;  node_stats->write((char*)(&tmp_float), sizeof(float));
     suids::suid_data_t tmp_suid = suid;     node_stats->write((char*)(&tmp_suid),  sizeof(suids::suid_data_t));
-    tmp_float = pNode->GetStatPop();        node_stats->write((char*)(&tmp_float), sizeof(float));
+    tmp_float = pNC->GetStatPop();          node_stats->write((char*)(&tmp_float), sizeof(float));
 }
 
 void 
@@ -154,18 +143,20 @@ ReportPolioIndividualInfections::LogIndividualData( IIndividualHuman* individual
         const infection_polio_reportable_list_t *iprl = individual_polio->GetNewInfectionReportables();
         for( infection_polio_reportable_list_t::const_iterator it = iprl->begin(); it != iprl->end(); it++)
         {
-            const InfectionPolioReportable *ipr = *it;
+            const IInfectionPolioReportable *ipr = *it;
 
             stringstream *infection = node_to_infections_map[suid];
             if( !infection )
+            {
                 infection = node_to_infections_map[suid] = new stringstream (stringstream::in | stringstream::out | stringstream::binary);
+            }
 
             float tmp_float;
             int32_t tmp_int;
             tmp_float = individual->GetMonteCarloWeight();  infection->write((char*)(&tmp_float), sizeof(float));
             tmp_float = individual->GetAge();               infection->write((char*)(&tmp_float), sizeof(float));
             
-            tmp_float = ipr->GetMusocalImmunity() ;         infection->write((char*)(&tmp_float), sizeof(float));
+            //tmp_float = ipr->GetMusocalImmunity() ;         infection->write((char*)(&tmp_float), sizeof(float));
 
             tmp_int   = ipr->GetAntigenID();                infection->write((char*)(&tmp_int),   sizeof(int32_t));
             tmp_int   = ipr->GetGeneticID();                infection->write((char*)(&tmp_int),   sizeof(int32_t));
@@ -212,31 +203,7 @@ void ReportPolioIndividualInfections::Reduce_Internal()
     
     LOG_DEBUG_F( "REDUCE:send_buffer (length %d): %s\n", tx_str.length(), tx_str.c_str() );
 
-    // clorton TODO - consolidate versions of this reduce code in one place.
-    int32_t length = (int32_t)tx_str.size();
-
-    if (EnvPtr->MPI.Rank > 0)
-    {
-        MPI_Gather((void*)&length, 1, MPI_INTEGER4, nullptr, EnvPtr->MPI.NumTasks, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-        MPI_Gatherv((void*)tx_str.c_str(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD);
-    }
-    else
-    {
-        std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
-        MPI_Gather((void*)&length, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-        int32_t total = 0;
-        std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
-        for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
-        {
-            displs[i] = total;
-            total += lengths[i];
-        }
-        std::vector<char> buffer(total + 1);
-        MPI_Gatherv((void*)tx_str.c_str(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
-        buffer[total] = '\0';
-
-        rx_str = buffer.data();
-    }
+    EnvPtr->MPI.p_idm_mpi->GatherToRoot( tx_str, rx_str );
 
     if( rx_str.length() > 0 && Infections.good())   // Should be true only for EnvPtr->MPI.Rank == 0
     {
@@ -247,10 +214,11 @@ void ReportPolioIndividualInfections::Reduce_Internal()
 
 void ReportPolioIndividualInfections::Reduce()
 {
-
+    Reduce_Internal();
 }
 
 std::string ReportPolioIndividualInfections::GetReportName() const
 {
     return _report_name;
+}
 }

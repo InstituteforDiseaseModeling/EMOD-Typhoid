@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -27,6 +27,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class Susceptibility;
+
         static bool  immune_decay;
 
         static float acqdecayrate;
@@ -44,7 +46,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
     };
 
-    class Susceptibility : public ISusceptibilityContext, protected SusceptibilityConfig
+    class Susceptibility : public ISusceptibilityContext
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

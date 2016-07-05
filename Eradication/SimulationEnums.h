@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -88,12 +88,13 @@ namespace Kernel
         ENUM_VALUE_SPEC(LEVY_FLIGHTS                                        , 3))
 
     ENUM_DEFINE(MigrationType,
-        ENUM_VALUE_SPEC(NO_MIGRATION           , 0)
-        ENUM_VALUE_SPEC(LOCAL_MIGRATION        , 1)
-        ENUM_VALUE_SPEC(AIR_MIGRATION          , 2)
-        ENUM_VALUE_SPEC(REGIONAL_MIGRATION     , 3)
-        ENUM_VALUE_SPEC(SEA_MIGRATION          , 4)
-        ENUM_VALUE_SPEC(INTERVENTION_MIGRATION , 5))
+        ENUM_VALUE_SPEC(NO_MIGRATION                                        , 0)
+        ENUM_VALUE_SPEC(LOCAL_MIGRATION                                     , 1)
+        ENUM_VALUE_SPEC(AIR_MIGRATION                                       , 2)
+        ENUM_VALUE_SPEC(REGIONAL_MIGRATION                                  , 3)
+        ENUM_VALUE_SPEC(SEA_MIGRATION                                       , 4)
+        ENUM_VALUE_SPEC(FAMILY_MIGRATION                                    , 5)
+        ENUM_VALUE_SPEC(INTERVENTION_MIGRATION                              , 6))
 
     // ENUM defs for MORTALITY_TIME_COURSE
     ENUM_DEFINE(MortalityTimeCourse, 
@@ -144,7 +145,8 @@ namespace Kernel
         ENUM_VALUE_SPEC(TB_SIM                                              , 6)
         ENUM_VALUE_SPEC(TBHIV_SIM                                           , 7)
         ENUM_VALUE_SPEC(STI_SIM                                             , 8)
-        ENUM_VALUE_SPEC(HIV_SIM                                             , 9))
+        ENUM_VALUE_SPEC(HIV_SIM                                             , 9)
+        ENUM_VALUE_SPEC(PY_SIM                                          , 10))
 
     // ENUM defs for VDPV_virulence_model_type
     ENUM_DEFINE(VDPVVirulenceModelType, 

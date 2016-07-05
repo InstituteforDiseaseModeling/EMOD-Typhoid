@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -17,7 +17,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "IIndividualHumanHIV.h"
 #include "SusceptibilityHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 #include "SimulationEnums.h"
 
 static const char * _module = "HIVPiecewiseByYearAndSexDiagnostic";
@@ -41,11 +41,7 @@ namespace Kernel
     , default_value(0)
     , period_between_trials(0)
     {
-        initConfigTypeMap("Interpolation_Order", &interpolation_order, HIV_PBYASD_Interpolation_Order_DESC_TEXT, 0, 1, 0);
-        initConfigTypeMap("Female_Multiplier", &female_multiplier, HIV_PBYASD_Female_Multiplier_DESC_TEXT, 0, FLT_MAX, 1);
-        initConfigTypeMap("Default_Value", &default_value, HIV_PBYASD_Default_Value_DESC_TEXT, 0, 1, 0);
-        initConfigComplexType("Time_Value_Map", &year2ValueMap, HIV_PBYASD_Time_Value_Map_DESC_TEXT);
-    };
+    }
 
     HIVPiecewiseByYearAndSexDiagnostic::HIVPiecewiseByYearAndSexDiagnostic( const HIVPiecewiseByYearAndSexDiagnostic& master )
     : HIVSimpleDiagnostic( master )
@@ -62,6 +58,11 @@ namespace Kernel
     bool
     HIVPiecewiseByYearAndSexDiagnostic::Configure(const Configuration* inputJson)
     {
+        initConfigTypeMap("Interpolation_Order", &interpolation_order, HIV_PBYASD_Interpolation_Order_DESC_TEXT, 0, 1, 0);
+        initConfigTypeMap("Female_Multiplier", &female_multiplier, HIV_PBYASD_Female_Multiplier_DESC_TEXT, 0, FLT_MAX, 1);
+        initConfigTypeMap("Default_Value", &default_value, HIV_PBYASD_Default_Value_DESC_TEXT, 0, 1, 0);
+        initConfigComplexType("Time_Value_Map", &year2ValueMap, HIV_PBYASD_Time_Value_Map_DESC_TEXT);
+
         bool ret = HIVSimpleDiagnostic::Configure(inputJson);
         value_multiplier = period_between_trials/DAYSPERYEAR;   // Will use first order approximation of exponential
         return ret;
@@ -97,18 +98,18 @@ namespace Kernel
         return testResult;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVPiecewiseByYearAndSexDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVPiecewiseByYearAndSexDiagnostic& obj, const unsigned int v)
+    void HIVPiecewiseByYearAndSexDiagnostic::serialize(IArchive& ar, HIVPiecewiseByYearAndSexDiagnostic* obj)
     {
-        ar & obj.interpolation_order;
-        ar & obj.female_multiplier;
-        ar & obj.default_value;
-        //ar & obj.year2ValueMap;     // todo: serialize this!
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVPiecewiseByYearAndSexDiagnostic& diag = *obj;
+
+        ar.labelElement("interpolation_order"  ) & diag.interpolation_order;
+        ar.labelElement("female_multiplier"    ) & diag.female_multiplier;
+        ar.labelElement("default_value"        ) & diag.default_value;
+        ar.labelElement("year2ValueMap"        ) & diag.year2ValueMap;
+        ar.labelElement("period_between_trials") & diag.period_between_trials;
+        ar.labelElement("value_multiplier"     ) & diag.value_multiplier;
     }
 }
-#endif

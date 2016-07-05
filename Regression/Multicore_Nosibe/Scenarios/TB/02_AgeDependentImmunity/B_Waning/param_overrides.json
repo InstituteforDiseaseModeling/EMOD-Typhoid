@@ -1,12 +1,12 @@
 {
-    "Default_Config_Path":"defaults\\tb_scenario_default_config.json",
+    "Default_Config_Path":"defaults/tb_scenario_default_config.json",
     "parameters":{
         "Acquisition_Blocking_Immunity_Decay_Rate":0.05,
         "Acquisition_Blocking_Immunity_Duration_Before_Decay":3650,
         "Age_Initialization_Distribution_Type":"DISTRIBUTION_COMPLEX",
         "Config_Name":"02_AgeDependent_Immunity_B_Waning -- multicore -- Madagascar_Nosibe",
-        "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;../TB_02_AgeDependentImmunity_demographics_overlay.json",
-        "Geography": "Test",
+        "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "../TB_02_AgeDependentImmunity_demographics_overlay.json" ],
+        "Geography": "Madagascar_Nosibe",
         "Simulation_Duration":7000,
         "Simulation_Timestep":5,
         "TB_Fast_Progressor_Fraction_Child":0,
@@ -22,7 +22,9 @@
             "Migration_Model": "FIXED_RATE_MIGRATION", 
             "Migration_Pattern": "WAYPOINTS_HOME", 
             "Enable_Migration_Heterogeneity" : 0,
-            "Family_Migration_Type" : "NO_MIGRATION",
+            "Enable_Family_Migration": 0, 
+            "Family_Migration_Filename": "", 
+            "x_Family_Migration": 1,
             "Roundtrip_Waypoints": 5,
                 "AIR" : {
                     "Enable_Air_Migration" : 0,

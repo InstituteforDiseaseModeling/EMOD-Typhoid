@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -37,9 +37,9 @@ namespace Kernel
         virtual void updateNodeStateCounters(IIndividualHuman *ih);
         virtual void finalizeNodeStateCounters(void) override;
 
-        float GetNewDiseaseSusceptibleInfections(void) const override {return newDiseaseSusceptibleInfections;}
-        float GetNewDiseaseSusceptibleInfectionsUnder5(void) const {return newDiseaseSusceptibleInfectionsUnder5;}
-        float GetNewDiseaseSusceptibleInfectionsOver5(void) const {return newDiseaseSusceptibleInfectionsOver5;}
+        virtual float GetNewDiseaseSusceptibleInfections(void)       const override {return newDiseaseSusceptibleInfections;}
+        virtual float GetNewDiseaseSusceptibleInfectionsUnder5(void) const override {return newDiseaseSusceptibleInfectionsUnder5;}
+        virtual float GetNewDiseaseSusceptibleInfectionsOver5(void)  const override {return newDiseaseSusceptibleInfectionsOver5;}
 
         virtual float GetMeanAgeInfection() const override;
 

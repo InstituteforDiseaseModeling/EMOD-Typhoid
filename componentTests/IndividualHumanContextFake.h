@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -125,6 +125,9 @@ public:
 
     virtual IIndividualHumanInterventionsContext* GetInterventionsContextbyInfection(Infection* infection)       override { throw std::exception("The method or operation is not implemented."); }
     virtual const NodeDemographicsDistribution*   GetDemographicsDistribution(std::string)                 const override { throw std::exception("The method or operation is not implemented."); }        
+
+    virtual const std::string& GetPropertyReportString() const     override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetPropertyReportString( const std::string& str ) override { throw std::exception("The method or operation is not implemented."); }
 
     // --------------------------------
     // --- IIndividualHuman Methods
@@ -302,7 +305,10 @@ public:
     //virtual bool IsInfected() const = 0; //  pass-through to base
     virtual bool IsBehavioralSuperSpreader()       const override { throw std::exception("The method or operation is not implemented."); }
     virtual unsigned int GetExtrarelationalFlags() const override { throw std::exception("The method or operation is not implemented."); }
-    virtual bool IsCircumcised()                   const override { throw std::exception("The method or operation is not implemented."); }
+    virtual bool IsCircumcised() const
+    {
+        return m_IsCircumcised;
+    }
     virtual float GetCoInfectiveFactor()           const override { throw std::exception("The method or operation is not implemented."); }
     
     virtual void UpdateSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) override {throw std::exception("The method or operation is not implemented.");}
@@ -389,6 +395,11 @@ public:
         release_assert( !(m_HasSTI && (m_HasCoSTI || m_HasHIV)) );
     }
 
+    void SetIsCircumcised( bool isCircumcised )
+    {
+        m_IsCircumcised = isCircumcised;
+    }
+
 private:
     int m_RefCount ;
     suids::suid m_Id ;
@@ -407,6 +418,7 @@ private:
     bool m_HasCoSTI ;
     RelationshipSet_t m_Relationships ;
     tProperties m_Properties ;
+    bool m_IsCircumcised;
 };
 
 

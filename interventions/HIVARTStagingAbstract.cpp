@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare and IHIVMedicalHistory
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare and IHIVMedicalHistory
 #include "Relationship.h"   // for discordant checking
 #include "Node.h"
 
@@ -144,17 +144,12 @@ namespace Kernel
         pMedHistory->OnStageForART(isPositiveTestResult);
     }
 
-}
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVARTStagingAbstract& obj, const unsigned int v)
+    void HIVARTStagingAbstract::serialize(IArchive& ar, HIVARTStagingAbstract* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVARTStagingAbstract& art = *obj;
+
+        ar.labelElement("ip_tb_key"           ) & art.ip_tb_key;
+        ar.labelElement("ip_tb_value_expected") & art.ip_tb_value_expected;
     }
 }
-#endif

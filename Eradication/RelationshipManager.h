@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -27,10 +27,9 @@ namespace Kernel
         virtual void Update( list<IIndividualHuman*>& individualHumans, ITransmissionGroups* groups, float dt ) override; 
         virtual IRelationship * GetRelationshipById( unsigned int relId ) override;
         virtual const tNodeRelationshipType& GetNodeRelationships() const override;
-        virtual void AddToPrimaryRelationships( const std::string& propertyKey, const std::string& propertyValue ) override;
         virtual INodeContext* GetNode() const override; // is this a good idea? Adding for RelationshipGroups to be node aware
-        virtual void AddRelationship(IRelationship*) override;
-        virtual void RemoveRelationship( IRelationship* ) override;
+        virtual void AddRelationship( IRelationship*, bool isNewRelationship ) override;
+        virtual void RemoveRelationship( IRelationship*, bool leavingNode ) override;
         virtual void ConsummateRelationship( IRelationship* relationship, unsigned int acts ) override;
 
         virtual IRelationship* Emigrate( IRelationship* ) override;
@@ -41,6 +40,9 @@ namespace Kernel
         virtual void RegisterRelationshipConsummationObserver(IRelationshipManager::callback_t observer) override;
 
     protected:
+        virtual void AddToPrimaryRelationships( IRelationship* relationship );
+        virtual void RemoveFromPrimaryRelationships( IRelationship* relationship );
+
         tNodeRelationshipType nodeRelationships;
         std::map< std::string, PropertyValueList_t > relationshipListsForMP;
         INodeContext* _node;
@@ -49,7 +51,6 @@ namespace Kernel
         std::list<IRelationshipManager::callback_t> relationship_termination_observers;
         std::list<IRelationshipManager::callback_t> relationship_consummation_observers;
         std::map< std::string, std::list<unsigned int> > dead_relationships_by_type;
-        std::map<suids::suid,IRelationship*> migrating_relationship_map;
 
         void notifyObservers(std::list<IRelationshipManager::callback_t>&, IRelationship*);
 

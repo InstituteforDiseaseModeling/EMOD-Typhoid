@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -22,7 +22,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Common.h"
 #include "Exceptions.h"
 #include "PolioVaccine.h"
-#include "PolioInterventionsContainer.h"
+// clorton #include "PolioInterventionsContainer.h"
 #include "RANDOM.h"
 #include "SimulationConfig.h"
 
@@ -305,13 +305,13 @@ namespace Kernel
         {
             maternalSerumNAb[i] -= maternalSerumNAb[i] * dt * GET_CONFIGURABLE(SimulationConfig)->decayRatePassiveImmunity;
             
-            delta_slow_Ab                   = (humoralNAb[i] - humoral_fastDecayCompartment[i]) * dt * waning_humoral_rate_slow;
-            delta_fast_Ab                   = humoral_fastDecayCompartment[i] * dt * waning_humoral_rate_fast;
+            delta_slow_Ab                   = (humoralNAb[i] - humoral_fastDecayCompartment[i]) * dt * SusceptibilityPolioConfig::waning_humoral_rate_slow;
+            delta_fast_Ab                   = humoral_fastDecayCompartment[i] * dt * SusceptibilityPolioConfig::waning_humoral_rate_fast;
             humoral_fastDecayCompartment[i]    -= delta_fast_Ab;
             humoralNAb[i]                      -= delta_slow_Ab + delta_fast_Ab;
 
-            delta_slow_Ab                   = (mucosalNAb[i] - mucosal_fastDecayCompartment[i]) * dt * waning_mucosal_rate_slow;
-            delta_fast_Ab                   = mucosal_fastDecayCompartment[i] * dt * waning_mucosal_rate_fast;
+            delta_slow_Ab                   = (mucosalNAb[i] - mucosal_fastDecayCompartment[i]) * dt * SusceptibilityPolioConfig::waning_mucosal_rate_slow;
+            delta_fast_Ab                   = mucosal_fastDecayCompartment[i] * dt * SusceptibilityPolioConfig::waning_mucosal_rate_fast;
             mucosal_fastDecayCompartment[i]    -= delta_fast_Ab;
             mucosalNAb[i]                      -= delta_slow_Ab + delta_fast_Ab;
             
@@ -344,8 +344,8 @@ namespace Kernel
     {
         NonNegativeFloat tmp_time;
         NonNegativeFloat tmp_slow_Ab;
-        NonNegativeFloat k_hum_fast = waning_humoral_fast_fraction;
-        NonNegativeFloat k_muc_fast = waning_mucosal_fast_fraction;
+        NonNegativeFloat k_hum_fast = SusceptibilityPolioConfig::waning_humoral_fast_fraction;
+        NonNegativeFloat k_muc_fast = SusceptibilityPolioConfig::waning_mucosal_fast_fraction;
 
         for(int i_serotype = 0; i_serotype < N_POLIO_SEROTYPES; i_serotype++)
         {
@@ -353,12 +353,12 @@ namespace Kernel
             humoral_fastDecayCompartment[i_serotype] = k_hum_fast * humoralMemoryNAb[i_serotype];
             mucosal_fastDecayCompartment[i_serotype] = k_muc_fast * mucosalMemoryNAb[i_serotype];
 
-            tmp_slow_Ab                                 = (humoralMemoryNAb[i_serotype] - humoral_fastDecayCompartment[i_serotype]) * exp(-tmp_time * waning_humoral_rate_slow);
-            humoral_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * waning_humoral_rate_fast);
+            tmp_slow_Ab                                 = (humoralMemoryNAb[i_serotype] - humoral_fastDecayCompartment[i_serotype]) * exp(-tmp_time * SusceptibilityPolioConfig::waning_humoral_rate_slow);
+            humoral_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * SusceptibilityPolioConfig::waning_humoral_rate_fast);
             humoralNAb[i_serotype]                      = tmp_slow_Ab + humoral_fastDecayCompartment[i_serotype];
 
-            tmp_slow_Ab                                 = (mucosalMemoryNAb[i_serotype] - mucosal_fastDecayCompartment[i_serotype]) * exp(-tmp_time * waning_mucosal_rate_slow);
-            mucosal_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * waning_mucosal_rate_fast);
+            tmp_slow_Ab                                 = (mucosalMemoryNAb[i_serotype] - mucosal_fastDecayCompartment[i_serotype]) * exp(-tmp_time * SusceptibilityPolioConfig::waning_mucosal_rate_slow);
+            mucosal_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * SusceptibilityPolioConfig::waning_mucosal_rate_fast);
             mucosalNAb[i_serotype]                      = tmp_slow_Ab + mucosal_fastDecayCompartment[i_serotype];
         }
     }
@@ -650,11 +650,11 @@ namespace Kernel
                 }
 
                 //    if the increase in NAb is greater than the NAb that would be assigned to fast compartment, then assign to fast compartment, else leave fast compartment as is
-                new_fast_Ab     = mucosalNAb[i_serotype] * waning_mucosal_fast_fraction;
+                new_fast_Ab     = mucosalNAb[i_serotype] * SusceptibilityPolioConfig::waning_mucosal_fast_fraction;
                 if( delta_mucosal > new_fast_Ab )
                     mucosal_fastDecayCompartment[i_serotype]  = new_fast_Ab;
 
-                 new_fast_Ab    = humoralNAb[i_serotype] * waning_humoral_fast_fraction;
+                 new_fast_Ab    = humoralNAb[i_serotype] * SusceptibilityPolioConfig::waning_humoral_fast_fraction;
                 if( delta_humoral > new_fast_Ab )
                     humoral_fastDecayCompartment[i_serotype]  = new_fast_Ab;
            }
@@ -705,8 +705,8 @@ namespace Kernel
             LOG_DEBUG_F("priming for type %d, final humoral titer is %f\n.", serotype, humoralNAb[serotype]);
         }
         
-        humoral_fastDecayCompartment[serotype]  = humoralNAb[serotype] * waning_humoral_fast_fraction; // reset fast decay compartment
-        mucosal_fastDecayCompartment[serotype]  = mucosalNAb[serotype] * waning_mucosal_fast_fraction; // reset fast decay compartment
+        humoral_fastDecayCompartment[serotype]  = humoralNAb[serotype] * SusceptibilityPolioConfig::waning_humoral_fast_fraction; // reset fast decay compartment
+        mucosal_fastDecayCompartment[serotype]  = mucosalNAb[serotype] * SusceptibilityPolioConfig::waning_mucosal_fast_fraction; // reset fast decay compartment
     }
 
     float SusceptibilityPolio::GetFecalInfectiousDuration(StrainIdentity* strain_id)
@@ -777,7 +777,7 @@ namespace Kernel
             seronegativeParalysisRate = revDegree * GET_CONFIGURABLE(SimulationConfig)->paralysis_base_rate[serotype]; // linear reversion-dependent paralysis rate
         }
 
-        float p_paralysis = seronegativeParalysisRate * float(GetHumoralImmunity(strain_id) < paralytic_immunity_titer);
+        float p_paralysis = seronegativeParalysisRate * float(GetHumoralImmunity(strain_id) < SusceptibilityPolioConfig::paralytic_immunity_titer);
         if(p_paralysis && randgen->e() < p_paralysis)
         {
             float t_paral = exp( GET_CONFIGURABLE(SimulationConfig)->Incubation_Disease_Mu + GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->Incubation_Disease_Sigma ); // lognormal distributed incubation period, from Casey 1942, mu=2.3893 sigma=0.4558
@@ -900,9 +900,9 @@ namespace Kernel
         LOG_DEBUG_F( "Individual has humoral immunity of %f for antigen %d compared to config param for paralytic immunity_titer of %f.\n",
                      GetHumoralImmunity(&strain_identity),
                      pvType,
-                     paralytic_immunity_titer );
+                     SusceptibilityPolioConfig::paralytic_immunity_titer );
 
-        bool is_susceptible_to_paralysis = GetHumoralImmunity(&strain_identity) < paralytic_immunity_titer;
+        bool is_susceptible_to_paralysis = GetHumoralImmunity(&strain_identity) < SusceptibilityPolioConfig::paralytic_immunity_titer;
 
         if ( is_susceptible_to_paralysis )
         {
@@ -943,7 +943,7 @@ namespace Kernel
 
     float SusceptibilityPolio::GetDefaultAcquireRate(void)
     {
-        return acquire_rate_default_polio * individual_acquire_risk;
+        return SusceptibilityPolioConfig::acquire_rate_default_polio * individual_acquire_risk;
     }
 
     void SusceptibilityPolio::ResetTimeSinceLastInfection(int serotype)
@@ -999,7 +999,7 @@ namespace Kernel
     {
         float receiveHumoralMemoryNAb[N_POLIO_SEROTYPES];
         GetHumoralMemoryNAb( receiveHumoralMemoryNAb );
-        auto pit = paralytic_immunity_titer;
+        auto pit = SusceptibilityPolioConfig::paralytic_immunity_titer;
         return( receiveHumoralMemoryNAb[ serotype ] > pit );
     }
 

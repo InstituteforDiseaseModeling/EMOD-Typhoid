@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 #include "IIndividualHumanHIV.h"  // for IndividualHIV access
 
 static const char * _module = "HIVSimpleDiagnostic";
@@ -42,7 +42,7 @@ namespace Kernel
 
         initConfigTypeMap("Abort_States", &abortStates, HIV_Abort_States_DESC_TEXT);
         initConfigTypeMap("Cascade_State", &cascadeState, HIV_Cascade_State_DESC_TEXT);
-        initConfigTypeMap("Days_To_Diagnosis", &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT, 0, FLT_MAX, 0);
+        initConfigTypeMap("Days_To_Diagnosis", &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT, FLT_MAX, 0);
     }
 
     HIVSimpleDiagnostic::HIVSimpleDiagnostic( const HIVSimpleDiagnostic& master )
@@ -64,7 +64,8 @@ namespace Kernel
         }
 
         ConfigurePositiveEventOrConfig( inputJson );
-        bool ret = JsonConfigurable::Configure(inputJson);
+        bool ret = JsonConfigurable::Configure(inputJson); // WE DON'T CALL INTO BASE CLASS!!! HENCE THE DUPE OF DTD 
+        LOG_DEBUG_F( "HIVSimpleDiagnostic configured with days_to_diagnosis = %f\n", float(days_to_diagnosis) );
         if( ret )
         {
             // error if the cascadeState is an abortState
@@ -114,6 +115,8 @@ namespace Kernel
 
         if( qualifiesToGetIntervention( parent ) )
         {
+            days_to_diagnosis.handle = std::bind( &HIVSimpleDiagnostic::Callback, this, std::placeholders::_1 );
+            LOG_DEBUG_F( "HIVSimpleDiagnostic distributed with days_to_diagnosis = %f\n", float(days_to_diagnosis) );
             return BaseIntervention::Distribute( context, pICCO );
         }
         else
@@ -123,31 +126,33 @@ namespace Kernel
         }
     }
 
+    void HIVSimpleDiagnostic::Callback( float dt )
+    {
+        ActOnResultsIfTime();
+    }
+
     void HIVSimpleDiagnostic::ActOnResultsIfTime()
     {
         // This can happen immediately if days_to_diagnosis is initialized to zero.
-        if ( days_to_diagnosis <= 0 )
+        if( result_of_positive_test )
         {
-            if( result_of_positive_test )
+            LOG_DEBUG_F( "Individual %d tested positive.\n", parent->GetSuid().data );
+            if( SMART_DRAW( treatment_fraction ) )
             {
-                LOG_DEBUG_F( "Individual %d tested positive.\n", parent->GetSuid().data );
-                if( SMART_DRAW( treatment_fraction ) )
-                {
-                    positiveTestDistribute();
-                }
-                else
-                {
-                    // this person doesn't get the positive test result
-                    // because they defaulted / don't want treatment
-                    onPatientDefault();
-                    expired = true;
-                }
+                positiveTestDistribute();
             }
             else
             {
-                LOG_DEBUG_F( "Individual %d tested negative.\n", parent->GetSuid().data );
-                onNegativeTestResult();
+                // this person doesn't get the positive test result
+                // because they defaulted / don't want treatment
+                onPatientDefault();
+                expired = true;
             }
+        }
+        else
+        {
+            LOG_DEBUG_F( "Individual %d tested negative.\n", parent->GetSuid().data );
+            onNegativeTestResult();
         }
     }
 
@@ -239,21 +244,19 @@ namespace Kernel
             return ;
         }
 
+        // Why is this different from base class behaviour? In which Distribute can call postiiveTestResult. 
         if( firstUpdate )
         {
             result_of_positive_test = positiveTestResult() ;
         }
-        else
-        {
-            // ------------------------------------------------------------------------------
-            // --- Count down the time until a positive test result comes back
-            // ---    Update() is called the same day as Distribute() so we don't want
-            // ---    to decrement the counter until the next day.
-            // ------------------------------------------------------------------------------
-            days_to_diagnosis -= dt;
-        }
 
-        ActOnResultsIfTime();
+        // ------------------------------------------------------------------------------
+        // --- Count down the time until a positive test result comes back
+        // ---    Update() is called the same day as Distribute() so we don't want
+        // ---    to decrement the counter until the next day. 
+        // Update: NOTE TRUE ANYMORE. CountdownTimer doesn't call callback same day as going <= 0
+        // ------------------------------------------------------------------------------ 
+        days_to_diagnosis.Decrement( dt );
 
         firstUpdate = false;
     }
@@ -268,17 +271,18 @@ namespace Kernel
         return abortStates;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVSimpleDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVSimpleDiagnostic& obj, const unsigned int v)
+    void HIVSimpleDiagnostic::serialize(IArchive& ar, HIVSimpleDiagnostic* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::SimpleDiagnostic>(obj);
+        SimpleDiagnostic::serialize( ar, obj );
+        HIVSimpleDiagnostic& hsd = *obj;
+        ar.labelElement("abortStates"               ) & hsd.abortStates;
+        ar.labelElement("cascadeState"              ) & hsd.cascadeState;
+        ar.labelElement("firstUpdate"               ) & hsd.firstUpdate;
+        ar.labelElement("result_of_positive_test"   ) & hsd.result_of_positive_test;
+        ar.labelElement("original_days_to_diagnosis") & hsd.original_days_to_diagnosis;
+        ar.labelElement("absoluteDuration"          ) & hsd.absoluteDuration;
+        ar.labelElement("negative_diagnosis_event"  ) & hsd.negative_diagnosis_event;
     }
 }
-#endif

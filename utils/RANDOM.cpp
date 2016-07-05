@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -423,6 +423,19 @@ uint64_t RANDOMBASE::binomial_approx2(uint64_t n, double p)
 
     return uint64_t(tempval);
 }
+
+// Finds an uniformally distributed number between 0 and N
+__ULONG RANDOMBASE::uniformZeroToN( __ULONG N )
+{
+    __ULONGLONG ulA = __ULONGLONG(ul());
+    __ULONGLONG ulB = __ULONGLONG(ul());
+    ulB <<= 32;
+    ulA += ulB;
+    __ULONGLONG ll = (ulA & 0xFFFFFFFFL) * N;
+    ll >>= 32;
+    return ll;
+}
+
 
 __ULONG RANDOM::ul()
 {

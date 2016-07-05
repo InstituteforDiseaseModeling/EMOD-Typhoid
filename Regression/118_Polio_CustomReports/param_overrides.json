@@ -1,0 +1,86 @@
+{
+    "Default_Config_Path": "defaults/polio_default_config.json", 
+    "parameters": {
+        "POLIO": {
+            "Acquire_Rate_Default_Polio": 0, 
+            "Paralytic_Case_Mortality": 0, 
+            "Specific_Infectivity_Sabin1": 0.171000000000001, 
+            "Waning_Humoral_Rate_Slow": 0.0035, 
+            "Waning_Humoral_Rate_Fast": 0.02, 
+            "Waning_Humoral_Fast_Fraction": 0.5, 
+            "Waning_Mucosal_Rate_Fast": 0.0111, 
+            "SABIN_EVOLUTION": {
+                "Sabin3_Site_Reversion_Rates": "0.11 0.042 0.285", 
+                "Evolution_Polio_Clock_Type": "POLIO_EVOCLOCK_NONE", 
+                "Sabin1_Site_Reversion_Rates": "0.0068 0.0038 0.0152 0.0038 0.0079 0.0114 0.0079 0.0038 0.0038", 
+                "Sabin2_Site_Reversion_Rates": "0.0279 0.155 0.0389"
+            }, 
+            "Specific_Infectivity_WPV3": 0.6, 
+            "VACCINES": {
+                "Vaccine_Titer_tOPV2": 10000000, 
+                "Vaccine_Titer_tOPV1": 10000000, 
+                "Vaccine_Titer_tOPV3": 63000000
+            }, 
+            "Specific_Infectivity_WPV1": 0.6, 
+            "Specific_Infectivity_WPV2": 0.6, 
+            "VDPV_Virulence_Model_Type": "POLIO_VDPV_NONVIRULENT", 
+            "Waning_Mucosal_Rate_Slow": 0.0027, 
+            "Waning_Mucosal_Fast_Fraction": 0.5
+        }, 
+        "DEMOGRAPHICS": {
+            "Enable_Demographics_Reporting": 0, 
+            "Demographics_Filenames": ["immune_decay_demographics.json"], 
+            "Enable_Vital_Dynamics": 0, 
+            "SAMPLING": {
+                "Sample_Rate_0_18mo": 1, 
+                "Sample_Rate_10_14": 1, 
+                "Sample_Rate_20_Plus": 1, 
+                "Sample_Rate_18mo_4yr": 1, 
+                "Sample_Rate_Birth": 1, 
+                "Max_Node_Population_Samples": 500, 
+                "Sample_Rate_5_9": 1, 
+                "Sample_Rate_15_19": 1, 
+                "Base_Individual_Sample_Rate": 1
+            }, 
+            "Base_Population_Scale_Factor": 500
+        }, 
+        "DISEASE": {
+            "INCUBATION": {
+                "Base_Incubation_Period": 1
+            }
+        }, 
+        "PRIMARY": {
+            "Run_Number": 1, 
+            "Simulation_Duration": 100, 
+            "Config_Name": "118_Polio_CustomReports", 
+            "Custom_Reports_Filename" : "custom_reports.json",
+            "Geography": "Nigeria-1-Node"
+        }, 
+        "MIGRATION": {
+            "Roundtrip_Waypoints": 1, 
+            "Enable_Migration_Heterogeneity": 1, 
+            "Enable_Family_Migration": 0, 
+            "Family_Migration_Filename": "", 
+            "x_Family_Migration": 1,
+            "REGIONAL": {
+                "Regional_Migration_Roundtrip_Duration": 2, 
+                "Regional_Migration_Roundtrip_Probability": 1
+            }, 
+            "LOCAL": {
+                "Local_Migration_Roundtrip_Duration": 10, 
+                "Local_Migration_Roundtrip_Probability": 1
+            }, 
+            "Migration_Pattern": "SINGLE_ROUND_TRIPS"
+        }, 
+        "OUTPUT": {
+            "Enable_Timestep_Channel_In_Report": 1
+        }, 
+        "HPC": {
+            "Job_Priority": "NORMAL" 
+        }, 
+        "FUDGE_FACTORS": {
+            "x_Local_Migration": 1, 
+            "x_Population_Immunity": 0
+        }
+    }
+}

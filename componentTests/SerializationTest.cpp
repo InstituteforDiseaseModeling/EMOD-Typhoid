@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -74,6 +74,9 @@ SUITE(SerializationTest)
 
             for( int i = 0 ; i < json["Objects"].size() ; i++ )
             {
+                string class_name = json["Objects"][i]["Test"]["__class__"].AsString();
+                printf("testing  %s\n",class_name.c_str());
+
                 string expected_json_str = json["Objects"][i].ToString();
 
                 ISerializable* p_read_obj = nullptr;

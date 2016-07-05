@@ -9,7 +9,6 @@
                     "class": "OutbreakIndividual",
                     "outbreak_source": "PrevalenceIncrease"
                 },
-                "Number_Distributions": -1,
                 "Target_Demographic": "Everyone",
                 "class": "StandardInterventionDistributionEventCoordinator"
             },

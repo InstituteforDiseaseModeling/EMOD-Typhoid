@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -52,8 +52,8 @@ namespace Kernel
     , tsteps_between_reps(-1)
     , intervention_activated(false)
     , tsteps_since_last(0)
-    , include_emigrants(false)
-    , include_immigrants(false)
+    //, include_emigrants(false)
+    //, include_immigrants(false)
     , _di( nullptr ) 
     , demographic_restrictions()
     {
@@ -65,8 +65,6 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
-
         initializeInterventionConfig( inputJson );
 
         //initConfigTypeMap("Number_Distributions", &num_distributions, Number_Distributions_DESC_TEXT, -1, 1e6, -1 ); // by convention, -1 means no limit
@@ -76,8 +74,8 @@ namespace Kernel
         {
             initConfigTypeMap("Timesteps_Between_Repetitions", &tsteps_between_reps, Timesteps_Between_Repetitions_DESC_TEXT, -1, 10000 /*undefined*/, -1 /*off*/, "Number_Repetitions", "<>0" );
         }
-        initConfigTypeMap("Include_Departures", &include_emigrants, Include_Departures_DESC_TEXT, false );
-        initConfigTypeMap("Include_Arrivals", &include_immigrants, Include_Arrivals_DESC_TEXT, false );
+        //initConfigTypeMap("Include_Departures", &include_emigrants, Include_Departures_DESC_TEXT, false );
+        //initConfigTypeMap("Include_Arrivals", &include_immigrants, Include_Arrivals_DESC_TEXT, false );
 
         demographic_restrictions.ConfigureRestrictions( this, inputJson );
 
@@ -100,7 +98,7 @@ namespace Kernel
                 {
                     std::ostringstream msg ;
                     msg << "In StandardInterventionDistributionEventCoordinator, demographic restrictions such as 'Demographic_Coverage'\n";
-                    msg << "and 'Target_Gender' do not apply when distributing nodel level interventions such as ";
+                    msg << "and 'Target_Gender' do not apply when distributing node level interventions such as ";
                     msg << std::string( json::QuickInterpreter(intervention_config._json)["class"].As<json::String>() );
                     msg << ".\nThe node level intervention must handle the demographic restrictions.";
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
@@ -108,7 +106,6 @@ namespace Kernel
             }
         }
 
-        JsonConfigurable::_useDefaults = false;
         return retValue;
     }
 
@@ -123,6 +120,7 @@ namespace Kernel
             ndi->Release();
         }
         delete qi_as_config;
+        qi_as_config = nullptr;
         return has_node_level_intervention;
     }
 
@@ -167,6 +165,7 @@ namespace Kernel
         INodeEventContext * pNec = parent->GetNodeEventContext(node_suid);
         // Register unconditionally to be notified when individuals arrive at our node so we can zap them!
         // TODO: Make this param driven
+        /*
         if( include_immigrants )
         {
             pNec->RegisterTravelDistributionSource( this, INodeEventContext::Arrival );
@@ -175,6 +174,7 @@ namespace Kernel
         {
             pNec->RegisterTravelDistributionSource( this, INodeEventContext::Departure );
         }
+        */
     }
 
     void StandardInterventionDistributionEventCoordinator::Update( float dt )
@@ -252,6 +252,7 @@ namespace Kernel
             }
         }
         delete qi_as_config;
+        qi_as_config = nullptr;
         if(ndi)
         {
             ndi->Release();
@@ -288,17 +289,12 @@ namespace Kernel
     )
     {
         {
-            // Add some arbitrary check on individual to determine if they get a bednet.
-            // TODO: Demographic targeting goes here.
             // Add real checks on demographics based on intervention demographic targetting. 
             // Return immediately if we hit a non-distribute condition
-            if( !demographic_restrictions.HasDefaultRestrictions() ) // don't waste any more time with checks if we're giving to everyone
+            if( qualifiesDemographically( ihec ) == false )
             {
-                if( qualifiesDemographically( ihec ) == false )
-                {
-                    LOG_DEBUG("Individual not given intervention because not in target demographic\n");
-                    return false;
-                }
+                LOG_DEBUG("Individual not given intervention because not in target demographic\n");
+                return false;
             }
             LOG_DEBUG("Individual meets demographic targeting criteria\n"); 
 

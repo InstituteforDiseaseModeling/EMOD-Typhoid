@@ -17,10 +17,13 @@
         "Campaign_Filename": "campaign.json", 
         "Climate_Model": "CLIMATE_OFF", 
         "Config_Name": "02_AgeDependentImmunity_A_Lifelong", 
+        "Custom_Reports_Filename": "custom_reports.json", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "TB_02_AgeDependentImmunity_demographics.json", 
+        "Demographics_Filenames": [
+            "TB_02_AgeDependentImmunity_demographics.json"
+        ], 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
         "Enable_Continuous_Log_Flushing": 1, 

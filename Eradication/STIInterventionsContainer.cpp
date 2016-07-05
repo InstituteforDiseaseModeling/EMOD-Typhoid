@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -32,9 +32,11 @@ namespace Kernel
         HANDLE_INTERFACE(ISTICoInfectionStatusChangeApply)
     END_QUERY_INTERFACE_DERIVED(STIInterventionsContainer, InterventionsContainer)
 
-    STIInterventionsContainer::STIInterventionsContainer() :
-        InterventionsContainer(),
-        is_circumcised(false)
+    STIInterventionsContainer::STIInterventionsContainer() 
+    : InterventionsContainer()
+    , is_circumcised(false)
+    , circumcision_reduced_require(0.0)
+    , STI_blocking_overrides()
     {
     }
 
@@ -47,24 +49,11 @@ namespace Kernel
         InterventionsContainer::Update(dt);
     }
 
-    // For now, before refactoring Drugs to work in new way, just check if the intervention is a
-    // Drug, and if so, add to drugs list. In future, there will be no drugs list, just interventions.
     bool STIInterventionsContainer::GiveIntervention(
         IDistributableIntervention * pIV
     )
     {
-        bool ret = true;
-
-        // NOTE: Calling this AFTER the QI/GiveDrug crashes!!! Both win and linux. Says SetContextTo suddenly became a pure virtual.
-
-        ICircumcision * pCirc = nullptr;
-        if( s_OK == pIV->QueryInterface(GET_IID(ICircumcision), (void**) &pCirc) )
-        {
-            LOG_DEBUG("Getting circumcised\n");
-            ret = ret && ApplyCircumcision(pCirc);
-        }
-
-        return ret && InterventionsContainer::GiveIntervention( pIV );
+        return InterventionsContainer::GiveIntervention( pIV );
     }
 
     void
@@ -108,11 +97,18 @@ namespace Kernel
         return drugVaccineReducedTransmit;
     }
 
-    bool STIInterventionsContainer::IsCircumcised( void ) const {
+    bool STIInterventionsContainer::IsCircumcised( void ) const 
+    {
         return is_circumcised;
     }
 
-    bool STIInterventionsContainer::ApplyCircumcision( ICircumcision *pCirc ) {
+    float STIInterventionsContainer::GetCircumcisedReducedAcquire() const
+    {
+        return circumcision_reduced_require;
+    }
+
+    void STIInterventionsContainer::ApplyCircumcision( float reduceAcquire ) 
+    {
         // Need to get gender
         IIndividualHuman *ih = nullptr;
         if( s_OK != parent->QueryInterface(GET_IID(IIndividualHuman), (void**) &ih) )
@@ -122,16 +118,11 @@ namespace Kernel
 
         if( ih->GetGender() == Gender::FEMALE )
         {
-            return false;
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "Females cannot be circumcised." );
         }
 
-        if( IsCircumcised() )
-        {
-            return false;
-        }
-
+        circumcision_reduced_require = reduceAcquire;
         is_circumcised = true;
-        return true;
     }
 
     void STIInterventionsContainer::ChangeProperty( const char *prop, const char* new_value)
@@ -207,19 +198,9 @@ namespace Kernel
     {
         InterventionsContainer::serialize( ar, obj );
         STIInterventionsContainer& container = *obj;
-        ar.labelElement("is_circumcised") & container.is_circumcised;
-        ar.labelElement("STI_blocking_overrides"); serialize_overrides( ar, container.STI_blocking_overrides );
+        ar.labelElement("is_circumcised"              ) & container.is_circumcised;
+        ar.labelElement("circumcision_reduced_require") & container.circumcision_reduced_require;
+        ar.labelElement("STI_blocking_overrides"      ); serialize_overrides( ar, container.STI_blocking_overrides );
     }
 }
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, STIInterventionsContainer& container, const unsigned int v)
-    {
-        ar & container.is_circumcised;
-
-        ar & boost::serialization::base_object<InterventionsContainer>(container);
-    }
-}
-#endif

@@ -1,7 +1,7 @@
 """
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -27,20 +27,34 @@ PROGRESS = 25
 globals = {}
 # the entries in 'directory_whitelist' should all be lower case (regardless of the directory name casing on disk)
 globals['directory_whitelist'] = [ 'basereportlib', 'cajun', 'campaign', 'componenttests', 'dependencies', 'eradication', 'interventions', 'jsonspirit', 'quickstart', 'rapidjson', 'regression', 'reporters', 'scripts', 'snappy', 'unittest++', 'utils' ]
-globals['directory_blacklist'] = [ '.svn', 'cajun/test', 'Regression/reports', 'Regression/Polio', 'Regression/NotreDame' ]
-# the entries in 'reporter_whitelist' should be tuples of solution files, the associated directory, and the project file
-globals['reporter_whitelist'] = [ ('TBCustomReporterRelease.sln', 'lib_custom_tb_reporter_Scenarios', 'lib_custom_tb_reporter_Scenarios.vcxproj'), ('BasicReportPlugin.sln', 'libreportpluginbasic', 'BaseReportLib.vcxproj'), ('BasicReportPlugin.sln', 'libreportpluginbasic', 'libreportpluginbasic.vcxproj'), ('BasicReportPlugin.sln', 'libreporteventcounter', 'libreporteventcounter.vcxproj') ]
+globals['directory_blacklist'] = [ '.svn', 'cajun/test', 'quickstart', 'Regression/reports', 'Regression/Polio', 'Regression/NotreDame', 'Regression/Serious_Gaming' ]
+# the entries in 'reporter_whitelist' should be tuples of solution files, the associated directory, the project file, and the SConscript file
+globals['reporter_whitelist'] = [
+    ('TBCustomReporterRelease.sln', 'lib_custom_tb_reporter_Scenarios',     'lib_custom_tb_reporter_Scenarios.vcxproj',     'SConscript_TB_ReportScenarios'),
+    ('BasicReportPlugin.sln',       'libreportpluginbasic',                 'BaseReportLib.vcxproj',                        'SConscript_Generic_Basic'),
+    ('BasicReportPlugin.sln',       'libreportpluginbasic',                 'libreportpluginbasic.vcxproj',                 'SConscript_Generic_Basic'),
+    ('BasicReportPlugin.sln',       'libreporteventcounter',                'libreporteventcounter.vcxproj',                'SConscript_Generic_EventCounter'),
+    ('AllCustomReporters.sln',      'libReportMalariaFiltered',             'libReportMalariaFiltered.vcxproj',             'SConscript_Malaria_Filtered'),
+    ('AllCustomReporters.sln',      'libReportNodeDemographics',            'libReportNodeDemographics.vcxproj',            'SConscript_Generic_NodeDemographics'),
+    ('AllCustomReporters.sln',      'libvectorstats',                       'libvectorstats.vcxproj',                       'SConscript_Vector_VectorStats'),
+    ('MalariaCustomReporters.sln',  'libmalariaimmunity_report_plugin',     'libmalariaimmunity_report_plugin.vcxproj',     'SConscript_Malaria_Immunity'),     # AllCustomReporters.sln
+    ('MalariaCustomReporters.sln',  'libmalariapatientJSON_report_plugin',  'libmalariapatientJSON_report_plugin.vcxproj',  'SConscript_Malaria_Patient'),      # AllCustomReporters.sln
+    ('MalariaCustomReporters.sln',  'libmalariasummary_report_plugin',      'libmalariasummary_report_plugin.vcxproj',      'SConscript_Malaria_Summary'),      # AllCustomReporters.sln
+    ('MalariaCustomReporters.sln',  'libmalariasurveyJSON_analyzer_plugin', 'libmalariasurveyJSON_analyzer_plugin.vcxproj', 'SConscript_Malaria_Survey'),       # AllCustomReporters.sln
+    ('AllCustomReporters.sln',      'libhumanmigrationtracking',            'libhumanmigrationtracking.vcxproj',            'SConscript_Generic_HumanMigrationTracking'),
+    ('VectorCustomReporters.sln',   'libvectorhabitat_report_plugin',       'libvectorhabitat_report_plugin.vcxproj',       'SConscript_Vector_VectorHabitat'), # AllCustomReporters.sln
+    ('AllCustomReporters.sln',      'libvectormigration',                   'libvectormigration.vcxproj',                   'SConscript_Vector_VectorMigration')]
 # the entries in 'file_whitelist' and 'file_blacklist' should all be lower case (regardless of the file name casing on disk)
-globals['file_whitelist'] = [ 'eradicationkernel.sln', 'license.txt', 'notices.txt' ]
-globals['file_blacklist'] = [ 'sconscript', 'status.txt', 'time.txt', 'transitions.json' ]
+globals['file_whitelist'] = [ '.git', '.gitattributes', '.gitignore', 'eradicationkernel.sln', 'license.txt', 'notices.txt', 'readme.md', 'sconscript', 'sconstruct' ]
+globals['file_blacklist'] = [ '.git', 'status.txt', 'time.txt', 'transitions.json' ]    # Sometimes .git is a file instead of a directory
 globals['project_filter_exclude'] = set(['environmental', 'polio', 'tbhiv', 'hivtb'])
-globals['excluded_preprocessor_defines'] = set(['ENABLE_POLIO', 'ENABLE_TBHIV', 'ENABLE_PYTHON'])
-globals['regression_directory_file_whitelist'] = [ 'hiv.json', 'malaria.json', 'multicore.json', 'param_sweep.json', 'plotallcharts.py',
+globals['excluded_preprocessor_defines'] = set(['ENABLE_POLIO', 'ENABLE_TBHIV'])
+globals['regression_directory_file_whitelist'] = [ 'generic.json', 'hiv.json', 'households.json', 'linux_release.json', 'malaria.json', 'multicore.json', 'multicore_nosibe_all.json', 'param_sweep.json', 'plotallcharts.py',
    'plotnewinfectionsbypool.py', 'plotsirchannels.py', 'prettyprintjson.py',
-   'primaryscenarios.json', 'regression_test.cfg', 'regression_test.py',
-   'regression_utils.py', 'samples.json', 'sanity.json', 'sti.json', 'sti_hiv_samples.json', 'tb_samples.json', 'update_baselines.py',
-   'vector.json', 'warning.txt', 'win_v2_0.json' ]
-globals['allowed_sim_types'] = [ 'GENERIC_SIM', 'VECTOR_SIM', 'MALARIA_SIM', 'AIRBORNE_SIM', 'TB_SIM', 'STI_SIM', 'HIV_SIM' ]
+   'primaryscenarios.json', 'py.json', 'regression_test.cfg', 'regression_test.py',
+   'regression_utils.py', 'samples.json', 'sanity.json', 'sti.json', 'sti_hiv_samples.json', 'tb_all.json', 'tb_samples.json', 'update_baselines.py',
+   'vector.json', 'warning.txt', 'win_release.json' ]
+globals['allowed_sim_types'] = [ 'GENERIC_SIM', 'VECTOR_SIM', 'MALARIA_SIM', 'AIRBORNE_SIM', 'TB_SIM', 'STI_SIM', 'HIV_SIM', 'PY_SIM' ]
 
 
 def process_directory_entries(predicate, path, whitelist, action):
@@ -69,6 +83,7 @@ def filter_files(path, whitelist):
 def filter_reporters(root_directory):
     reporter_directory = os.path.join(root_directory, 'reporters')
     file_whitelist = [ entry[0].lower() for entry in globals['reporter_whitelist'] ]
+    file_whitelist.extend([ entry[3].lower() for entry in globals['reporter_whitelist'] ])
     filter_files(reporter_directory, file_whitelist)
     directory_whitelist = [ entry[1].lower() for entry in globals['reporter_whitelist'] ]
     filter_directories(reporter_directory, directory_whitelist)
@@ -101,7 +116,7 @@ def clean_directories(root_directory):
     for root, directories, files in os.walk(root_directory):
         for directory in directories:
             full_path = os.path.join(root, directory)
-            if directory.lower() == 'x64':
+            if directory.lower() in ('x64', 'debug', 'release'):
                 logging.getLogger(__name__).info("Cleaning build directory '{0}'".format(full_path))
                 shutil.rmtree(full_path)
             else:
@@ -182,35 +197,47 @@ def update_project_files(project_files):
     for project_file in project_files:
         logging.getLogger(__name__).debug("Updating project file '{0}'".format(project_file))
         update = False
-        filters_file = project_file + '.filters'
-        project = et.parse(project_file)
-        filters = et.parse(filters_file)
-        
-        # map each element to its parent which we need if we want to remove the element
-        project_map = {c:p for p in project.iter() for c in p}
-        filters_map = {c:p for p in filters.iter() for c in p}
-        
-        project_root = project.getroot()
-        filters_root = filters.getroot()
-        namespace = get_namespace(project_root)
 
-        # look for elements of these types with an 'Include' attribute
-        for type in [ 'ClCompile', 'ClInclude', 'None', 'ResourceCompile' ]:
-            for element in project_root.findall('.//{0}{1}[@Include]'.format(namespace, type)):
-                file = element.attrib['Include']
-                filter_parent = filters_root.find('.//{0}{1}[@Include="{2}"]'.format(namespace, type, file))
-                filter = filter_parent.find('{0}Filter'.format(namespace)) if filter_parent is not None else None
-                if filter is not None:
-                    folders = set(filter.text.lower().split("\\"))
-                    if folders & exclude:
-                        logging.getLogger(__name__).info("Removing element '{0}' ({1})".format(et.tostring(element), filter.text))
-                        project_map[element].remove(element)
-                        filters_map[filter_parent].remove(filter_parent)
-                        update = True
+        project = et.parse(project_file)
+
+        filters_file = None
+        # Try appending .filters to project filename (this is the common case)
+        if os.path.isfile(project_file + '.filters'):
+            filters_file = project_file + '.filters'
+        else:
+            # Try replacing the .vcxproj extension with .filters (this is seen in the reporters)
+            _root, _ext = os.path.splitext(project_file)
+            if os.path.isfile(_root + '.filters'):
+                filters_file = _root + '.filters'
+
+        if filters_file is not None:
+            filters = et.parse(filters_file)
+            
+            # map each element to its parent which we need if we want to remove the element
+            project_map = {c:p for p in project.iter() for c in p}
+            filters_map = {c:p for p in filters.iter() for c in p}
+            
+            project_root = project.getroot()
+            filters_root = filters.getroot()
+            namespace = get_namespace(project_root)
+
+            # look for elements of these types with an 'Include' attribute
+            for type in [ 'ClCompile', 'ClInclude', 'None', 'ResourceCompile' ]:
+                for element in project_root.findall('.//{0}{1}[@Include]'.format(namespace, type)):
+                    file = element.attrib['Include']
+                    filter_parent = filters_root.find('.//{0}{1}[@Include="{2}"]'.format(namespace, type, file))
+                    filter = filter_parent.find('{0}Filter'.format(namespace)) if filter_parent is not None else None
+                    if filter is not None:
+                        folders = set(filter.text.lower().split("\\"))
+                        if folders & exclude:
+                            logging.getLogger(__name__).info("Removing element '{0}' ({1})".format(et.tostring(element), filter.text))
+                            project_map[element].remove(element)
+                            filters_map[filter_parent].remove(filter_parent)
+                            update = True
+                        else:
+                            logging.getLogger(__name__).debug("Skipping element '{0}' ('{1}') as its folder wasn't in the exclude list".format(et.tostring(element), filter.text))
                     else:
-                        logging.getLogger(__name__).debug("Skipping element '{0}' ('{1}') as its folder wasn't in the exclude list".format(et.tostring(element), filter.text))
-                else:
-                    logging.getLogger(__name__).debug("Skipping element '{0}' as no entry was found in the filters file".format(et.tostring(element)))
+                        logging.getLogger(__name__).debug("Skipping element '{0}' as no entry was found in the filters file".format(et.tostring(element)))
 
         logging.getLogger(__name__).info('Checking PreprocessorDefinitions:')
         for element in project_root.findall('.//{0}PreprocessorDefinitions'.format(namespace)):
@@ -228,8 +255,11 @@ def update_project_files(project_files):
         if update:
             logging.getLogger(__name__).info("Writing new project file '{0}'".format(project_file))
             project.write(project_file, xml_declaration=True, encoding='utf-8')
-            logging.getLogger(__name__).info("Writing new project filters file '{0}'".format(filters_file))
-            filters.write(filters_file, xml_declaration=True, encoding='utf-8')
+            if filters_file is not None:
+                logging.getLogger(__name__).info("Writing new project filters file '{0}'".format(filters_file))
+                filters.write(filters_file, xml_declaration=True, encoding='utf-8')
+            else:
+                logging.getLogger(__name__).info("Skipping filters file update - filters file wasn't found.")
         else:
             logging.getLogger(__name__).debug("Skipping write of project '{0}' and filters '{1}' files as there were no updates.".format(project_file, filters_file))
 

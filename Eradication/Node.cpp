@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -36,6 +36,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IMigrationInfo.h"
 #include "Individual.h"
 #include "Serialization.h"
+#include "IdmMpi.h"
 
 static const char* _module = "Node";
 
@@ -804,7 +805,8 @@ namespace Kernel
     // Distrib["QoC"][0.2] = "Bad";
     // Distrib["QoC"][0.7] = "Ok";
     // Distrib["QoC"][1.0] = "Good";
-    Node::tDistrib Node::base_distribs;
+    tPropertiesDistrib Node::base_distribs;
+
     void Node::SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory)
     {
         // Parameters set from an input filestream
@@ -1049,7 +1051,7 @@ namespace Kernel
                 }
 
                 // Everybody stops here for a sync-up after rank 0 writes transitions.json
-                MPI_Barrier( MPI_COMM_WORLD );
+                EnvPtr->MPI.p_idm_mpi->Barrier();
 
                 doOnce = true;
             }
@@ -1261,7 +1263,7 @@ namespace Kernel
         transmissionGroups->Build(decayMap, 1, 1);
     }
 
-    void Node::GetGroupMembershipForIndividual(RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* transmissionGroupMembership)
+    void Node::GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* transmissionGroupMembership)
     {
         LOG_DEBUG_F( "Calling GetGroupMembershipForProperties\n" );
         transmissionGroups->GetGroupMembershipForProperties( route, properties, transmissionGroupMembership );
@@ -1272,7 +1274,7 @@ namespace Kernel
         return transmissionGroups->GetTotalContagion(membership);
     }
 
-    RouteList_t& Node::GetTransmissionRoutes()
+    const RouteList_t& Node::GetTransmissionRoutes() const
     {
         return routes;
     }
@@ -1380,7 +1382,6 @@ namespace Kernel
             // -------------------------------------------------------------------------
             for( auto event_name : events_from_other_nodes )
             {
-                //printf("%d-broadcasting event from other node: %s\n",GetSuid().data,event_name.c_str());
                 for (auto individual : individualHumans)
                 {
                     event_context_host->TriggerNodeEventObserversByString( individual->GetEventContext(), event_name );
@@ -1472,8 +1473,6 @@ namespace Kernel
                 }
                 else
                 {
-                    //printf("Rank=%2d: ++++++++Individual %d is dead but needs to go home\n",EnvPtr->MPI.Rank,individual->GetSuid().data); fflush(stdout);
-
                     // individual must go home to officially die
                     individual->GoHome();
                     processEmigratingIndividual(individual);
@@ -1564,7 +1563,7 @@ namespace Kernel
 
             // The per-individual infection rate will be later normalized by weighted population in transmissionGroups
             // The "zoonosis_rate" parameter is per individual, so scale by "statPop" before depositing contagion.
-            // N.B. the "Probability of New Infection" reporting channel does not include this effect or the InfectivityScaling above
+            // N.B. the "Daily (Human) Infection Rate" reporting channel does not include this effect or the InfectivityScaling above
 
             // Assume no heterogeneous transmission
             TransmissionGroupMembership_t defaultGroupMembership;
@@ -2715,6 +2714,7 @@ namespace Kernel
         demog_enabled.push_back( demographics["NodeAttributes"]["Airport"].AsUint64() != 0 );
         demog_enabled.push_back( demographics["NodeAttributes"]["Region" ].AsUint64() != 0 );
         demog_enabled.push_back( demographics["NodeAttributes"]["Seaport"].AsUint64() != 0 );
+        demog_enabled.push_back( true ) ; // family
 
         return demog_enabled ;
     }
@@ -2839,12 +2839,17 @@ namespace Kernel
 
     INodeContext *Node::getContextPointer()    { return this; }
 
+    float Node::GetBasePopulationScaleFactor() const
+    {
+        return population_scaling_factor;
+    }
+
     const SimulationConfig* Node::params() const
     {
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    const INodeContext::tDistrib&
+    const tPropertiesDistrib&
     Node::GetIndividualPropertyDistributions() const
     {
         return distribs;

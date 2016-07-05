@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -25,8 +25,8 @@ namespace Kernel
     struct IVectorSimulationContext : public ISupports
     {
         virtual void  PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind ) = 0;
-        virtual float GetNodePopulation( const suids::suid& nodeSuid ) const = 0;
-        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const = 0 ;
+        virtual float GetNodePopulation( const suids::suid& nodeSuid ) = 0;
+        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) = 0 ;
     };
 
     struct IVectorNodeContext : public ISupports

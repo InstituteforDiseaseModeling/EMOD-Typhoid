@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -20,7 +20,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    class SusceptibilityPolioConfig: public JsonConfigurable
+    class SusceptibilityPolioConfig: public SusceptibilityEnvironmentalConfig
     {
         GET_SCHEMA_STATIC_WRAPPER(SusceptibilityPolioConfig)
 
@@ -30,6 +30,10 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
+
+    protected:
+        friend class SusceptibilityPolio;
+        
         static float x_population_immunity;
         static float mucosalImmIPV;
         static float mucosalImmIPVOPVExposed;
@@ -50,7 +54,6 @@ namespace Kernel
 
     class SusceptibilityPolio :
         public SusceptibilityEnvironmental,
-        public SusceptibilityPolioConfig,
         public ISusceptibilityPolio,
         public ISusceptibilityPolioReportable
     {

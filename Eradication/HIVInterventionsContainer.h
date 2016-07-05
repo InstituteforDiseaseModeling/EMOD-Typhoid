@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -159,18 +159,7 @@ namespace Kernel
         float last_recorded_CD4;        // replaces cd4_at_last_ART_monitoring_visit
         unsigned int num_times_started_ART ;
         ReceivedTestResultsType::Enum received_HIV_test_results ;
+
+        DECLARE_SERIALIZABLE(HIVInterventionsContainer);
     };
 }
-
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVInterventionsContainer& container, const unsigned int v)
-    {
-        ar & container.HIV_drug_inactivation_rate;
-        ar & container.HIV_drug_clearance_rate;
-
-        ar & boost::serialization::base_object<InterventionsContainer>(container);
-    }
-}
-#endif

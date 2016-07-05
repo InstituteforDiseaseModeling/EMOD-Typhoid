@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -27,7 +27,9 @@ namespace Kernel
     struct INodePolio : ISupports
     {
         virtual float GetMeanAgeInfection() const = 0;
-        virtual float GetNewDiseaseSusceptibleInfections() const = 0;
+        virtual float GetNewDiseaseSusceptibleInfections()           const = 0;
+        virtual float GetNewDiseaseSusceptibleInfectionsUnder5(void) const = 0;
+        virtual float GetNewDiseaseSusceptibleInfectionsOver5(void)  const = 0;
     };
 
     class ISusceptibilityPolioReportable : public ISupports

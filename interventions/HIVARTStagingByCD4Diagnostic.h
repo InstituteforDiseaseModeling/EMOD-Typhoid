@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -22,21 +22,25 @@ namespace Kernel
         HIVARTStagingByCD4Diagnostic();
         HIVARTStagingByCD4Diagnostic( const HIVARTStagingByCD4Diagnostic& );
 
+        virtual bool Configure( const Configuration * inputJson ) override;
+
         // IDistributingDistributableIntervention
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
     protected:
         virtual bool positiveTestResult( IIndividualHumanHIV *pHIV, 
                                          float year, 
                                          float CD4count, 
                                          bool hasActiveTB, 
-                                         bool isPregnant );
+                                         bool isPregnant ) override;
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         InterpolatedValueMap threshold;
         InterpolatedValueMap ifActiveTB;
         InterpolatedValueMap ifPregnant;
+
+        DECLARE_SERIALIZABLE(HIVARTStagingByCD4Diagnostic);
 #pragma warning( pop )
     };
 }

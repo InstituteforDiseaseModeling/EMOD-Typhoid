@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -16,6 +16,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "RANDOM.h"
 #ifdef ENABLE_TBHIV
 #include "IndividualCoinfection.h"
+#else
+#include "Individual.h"
 #endif
 
 static const char* _module = "SusceptibilityTB";
@@ -90,7 +92,7 @@ namespace Kernel
         {
             LOG_DEBUG_F("Acqdecayoffset = %f \n", acqdecayoffset);
             if (mod_acquire < 1) { acqdecayoffset -= dt; }
-            if (immune_decay && acqdecayoffset < 0 && randgen->e() < acqdecayrate * dt)
+            if (SusceptibilityConfig::immune_decay && acqdecayoffset < 0 && randgen->e() < SusceptibilityConfig::acqdecayrate * dt)
             {
                 m_is_immune = false; // the TB immune flag (used for reporting only) represents acquisition immunity since this is basically what BCG gives you
                 mod_acquire = 1.0;            
@@ -104,7 +106,7 @@ namespace Kernel
         {
             m_current_infections--;
         }
-        acqdecayoffset = baseacqoffset;
+        acqdecayoffset = SusceptibilityConfig::baseacqoffset;
     }
 
     float SusceptibilityTB::GetFastProgressorFraction() 
@@ -113,9 +115,9 @@ namespace Kernel
 
         float age_years = age / DAYSPERYEAR ;
         if( !IndividualHumanConfig::IsAdultAge( age_years ) )
-            fast_fraction = TB_fast_progressor_fraction_child;
+            fast_fraction = SusceptibilityTBConfig::TB_fast_progressor_fraction_child;
         else
-            fast_fraction = TB_fast_progressor_fraction_adult;
+            fast_fraction = SusceptibilityTBConfig::TB_fast_progressor_fraction_adult;
 
         return fast_fraction;
     }
@@ -126,9 +128,9 @@ namespace Kernel
 
         float age_years = age / DAYSPERYEAR ;
         if( !IndividualHumanConfig::IsAdultAge( age_years ) )
-            smear_positive_fraction = TB_smear_positive_fraction_child;
+            smear_positive_fraction = SusceptibilityTBConfig::TB_smear_positive_fraction_child;
         else
-            smear_positive_fraction = TB_smear_positive_fraction_adult;
+            smear_positive_fraction = SusceptibilityTBConfig::TB_smear_positive_fraction_adult;
 
         return smear_positive_fraction;
     }
@@ -139,9 +141,9 @@ namespace Kernel
 
         float age_years = age / DAYSPERYEAR ;
         if( !IndividualHumanConfig::IsAdultAge( age_years ) )
-            extrapulmonary_fraction = TB_extrapulmonary_fraction_child;
+            extrapulmonary_fraction = SusceptibilityTBConfig::TB_extrapulmonary_fraction_child;
         else
-            extrapulmonary_fraction = TB_extrapulmonary_fraction_adult;
+            extrapulmonary_fraction = SusceptibilityTBConfig::TB_extrapulmonary_fraction_adult;
 
         return extrapulmonary_fraction;
     }
@@ -156,7 +158,7 @@ namespace Kernel
         // Individuals are given some protective immunity upon infection
         // TODO: do we want to ignore this if the flag IMMUNITY is set to 0?  The individual will not be updating it in that case.
         m_is_immune = true;
-        mod_acquire = baseacqupdate;
+        mod_acquire = SusceptibilityConfig::baseacqupdate;
         m_current_infections++;
     }
 
@@ -167,7 +169,7 @@ namespace Kernel
         // and node-based risk factors based on _riskmod argument
         m_is_immune = false; 
         m_current_infections = 0;
-        m_is_immune_competent = randgen->e() > TB_immune_loss_fraction;
+        m_is_immune_competent = randgen->e() > SusceptibilityTBConfig::TB_immune_loss_fraction;
         Flag_use_CD4_for_act = false;
         //GHH note the above does nothing with riskmod! 
         //blatant misuse of riskmod here, use as a modulator of infectiousness

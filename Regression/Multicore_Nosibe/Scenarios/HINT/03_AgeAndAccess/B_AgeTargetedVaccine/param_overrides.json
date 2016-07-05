@@ -3,7 +3,7 @@
     "parameters": {
         "DEMOGRAPHICS": {
             "Birth_Rate_Dependence": "POPULATION_DEP_RATE",
-            "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;Madagascar_Nosibe_2.5arcmin_demographics_overlay.json",
+            "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "Madagascar_Nosibe_2.5arcmin_demographics_overlay.json" ],
             "Enable_Vital_Dynamics": 0,
             "IMMUNITY": {
                 "Acquisition_Blocking_Immunity_Decay_Rate": 0.01,
@@ -45,7 +45,9 @@
             "Migration_Model": "FIXED_RATE_MIGRATION", 
             "Migration_Pattern": "WAYPOINTS_HOME", 
             "Enable_Migration_Heterogeneity" : 0,
-            "Family_Migration_Type" : "NO_MIGRATION",
+            "Enable_Family_Migration": 0, 
+            "Family_Migration_Filename": "", 
+            "x_Family_Migration": 1,
             "Roundtrip_Waypoints": 5,
                 "AIR" : {
                     "Enable_Air_Migration" : 0,
@@ -66,11 +68,11 @@
         },         
         "Larval_Density_Dependence": "UNIFORM_WHEN_OVERPOPULATION",
         "OUTPUT": {
-            "Enable_Property_Output": 1
+            "Enable_Property_Output": 0
         },
         "PRIMARY": {
             "Config_Name": "HINT_AgeAndAccess_AgeTargetedVaccine -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Run_Number": 13
         },
         "Rainfall_In_mm_To_Fill_Swamp": 1000.0,

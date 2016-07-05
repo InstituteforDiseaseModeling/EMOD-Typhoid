@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -26,6 +26,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IInfectable.h"
 #include "MathFunctions.h"
 #include "Serialization.h"
+#include "Properties.h"
 
 class RANDOMBASE;
 
@@ -71,7 +72,7 @@ namespace Kernel
         virtual suids::suid   GetSuid() const override;
         virtual suids::suid   GetNextInfectionSuid() override;
         virtual ::RANDOMBASE* GetRng() override;
-        virtual const INodeContext::tDistrib& GetIndividualPropertyDistributions() const override;
+        virtual const tPropertiesDistrib& GetIndividualPropertyDistributions() const override;
         virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override;
 
 
@@ -116,6 +117,7 @@ namespace Kernel
         virtual float GetMeanAgeInfection()      const override;
         virtual void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer) override;
         virtual void UnregisterNewInfectionObserver(void* id) override;
+        virtual float GetBasePopulationScaleFactor() const override;
 
         // This method will ONLY be used for spatial reporting by input node ID, don't use it elsewhere!
         virtual ExternalNodeId_t GetExternalID() const;
@@ -123,7 +125,7 @@ namespace Kernel
         // Heterogeneous intra-node transmission
         virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) override;
         virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual) override;
-        virtual void GetGroupMembershipForIndividual(RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut) override;
+        virtual void GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut) override;
         virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight) override;
         virtual void SetupIntranodeTransmission();
 
@@ -133,7 +135,7 @@ namespace Kernel
         virtual bool IsValidTransmissionRoute( string& transmissionRoute );
 
         virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership) override;
-        virtual RouteList_t& GetTransmissionRoutes() override;
+        virtual const RouteList_t& GetTransmissionRoutes() const override;
         //Methods for implementing time dependence in various quantities; infectivity, birth rate, migration rate
         virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const override;
         virtual float getBoxcarCorrection(float boxcar_amplitude, float boxcar_start_time, float boxcar_end_time) const override;
@@ -157,7 +159,7 @@ namespace Kernel
     private:
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
-        static INodeContext::tDistrib base_distribs;
+        static tPropertiesDistrib base_distribs;
 
         SerializationFlags serializationMask;
 
@@ -166,7 +168,7 @@ namespace Kernel
         float _longitude;
 
     protected:
-        INodeContext::tDistrib distribs;
+        ::tPropertiesDistrib distribs;
 
         // moved from SimulationConfig
         IndSamplingType::Enum                        ind_sampling_type;                         // Individual_Sampling_Type

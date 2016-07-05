@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -53,6 +53,7 @@ namespace Kernel
                 ndi->Release();
             }
             delete qi_as_config;
+            qi_as_config = nullptr;
         }
 
         return has_node_level_intervention;
@@ -108,13 +109,10 @@ namespace Kernel
     {
         // Less of this would need to be copied from the base class with a more thoughtful encapsulation of functions
         // In particular, only the give-intervention(s)-to-individual stuff inside the try statement is different.
-        if( !demographic_restrictions.HasDefaultRestrictions() ) // don't waste any more time with checks if we're giving to everyone
+        if( qualifiesDemographically( ihec ) == false )
         {
-            if( qualifiesDemographically( ihec ) == false )
-            {
-                LOG_DEBUG("Individual not given intervention because not in target demographic\n");
-                return false;
-            }
+            LOG_DEBUG("Individual not given intervention because not in target demographic\n");
+            return false;
         }
         LOG_DEBUG("Individual meets demographic targeting criteria\n");
 
@@ -141,6 +139,8 @@ namespace Kernel
                     LOG_DEBUG_F( "Attempting to instantiate intervention of class %s\n", std::string((*tmpConfig)["class"].As<json::String>()).c_str() );
                     IDistributableIntervention *di = InterventionFactory::getInstance()->CreateIntervention(tmpConfig);
                     assert(di);
+                    delete tmpConfig;
+                    tmpConfig = nullptr;
                     if (di)
                     {
                         if (!di->Distribute( ihec->GetInterventionsContext(), pICCO ) )

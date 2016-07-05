@@ -1,0 +1,18 @@
+{
+    "tests": [
+	{ "path": "19_Vector_Namawala_Indoor_4Interventions" },
+	{ "path": "21_Vector_Namawala_4Interventions" },
+	{ "path": "44_Custom_Reporter_Demo" },
+	{ "path": "46_Vector_An_arabiensis_MultipleHabitats" },
+	{ "path": "52_Vector_Namawala_Cohort_WeatherDependentFeed" },
+	{ "path": "47_Vector_An_arabiensis_MultipleHabitats_Oviposition" },
+	{ "path": "74_Vector_ArtificialDiet" },
+	{ "path": "87_Vector_SpatialRepellent" },
+	{ "path": "Scenarios/VectorAndMalaria/11_MultipleLarvalHabitats" },
+	{ "path": "Scenarios/VectorAndMalaria/07_Namawala_Vector_SSV" },
+	{ "path": "Scenarios/VectorAndMalaria/06_Namawala_Vector_ITNsPEV" },
+	{ "path": "43_Vector_Garki_MultiCore_VectorMigration" },
+	{ "path": "26_Vector_Garki" },
+	{ "path": "25_Vector_Madagascar" }
+    ]
+}

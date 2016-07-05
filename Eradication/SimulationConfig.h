@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -33,10 +33,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifdef ENABLE_TB
 #include "TBDrugTypeParameters.h"
-#endif
-
-#ifndef DISABLE_HIV
-#include "IRelationship.h"
 #endif
 
 // This macro, GET_CONFIGURABLE(Category), is the convenient and fast way to access the SimulationConfig parameters
@@ -285,9 +281,6 @@ namespace Kernel
 #endif
 #ifndef DISABLE_STI
         // STI: these will all move to IndividualHumanSTIConfig soon.
-        float shortTermRelationshipLength;
-        float concurrentRelationshipLength;
-        float prob_super_spreader;
         bool  enable_coital_dilution;
 
         float coital_dilution_2_partners;

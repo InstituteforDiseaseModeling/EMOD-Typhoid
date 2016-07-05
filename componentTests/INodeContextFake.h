@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -71,7 +71,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual void GetGroupMembershipForIndividual( RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) override
+    virtual void GetGroupMembershipForIndividual( const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) override
     {
         throw std::exception("The method or operation is not implemented.");
     }
@@ -86,7 +86,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual RouteList_t& GetTransmissionRoutes() override
+    virtual RouteList_t& GetTransmissionRoutes() const override
     {
         throw std::exception("The method or operation is not implemented.");
     }
@@ -167,7 +167,7 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual const tDistrib& GetIndividualPropertyDistributions() const override
+    virtual const tPropertiesDistrib& GetIndividualPropertyDistributions() const override
     {
         throw std::exception("The method or operation is not implemented.");
     }
@@ -245,6 +245,7 @@ public:
         enabled_list.push_back( true );
         enabled_list.push_back( true );
         enabled_list.push_back( true );
+        enabled_list.push_back( true );
 
         return enabled_list;
     }
@@ -277,4 +278,9 @@ public:
     virtual void PopulateFromDemographics()                                                                    override { throw std::exception("The method is not implemented."); }
     virtual void Update(float)                                                                                 override { throw std::exception("The method is not implemented."); }
     virtual IIndividualHuman* processImmigratingIndividual(IIndividualHuman*)                                  override { throw std::exception("The method is not implemented."); }
+
+    virtual float GetBasePopulationScaleFactor() const
+    {
+        return 1.0;
+    }
 };

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -21,19 +21,19 @@ namespace Kernel
         virtual ~ReportHumanMigrationTracking();
 
         // BaseEventReport
-        virtual bool Configure( const Configuration* );
+        virtual bool Configure( const Configuration* ) override;
 
         virtual void UpdateEventRegistration( float currentTime, 
                                               float dt, 
-                                              std::vector<INodeEventContext*>& rNodeEventContextList );
+                                              std::vector<INodeEventContext*>& rNodeEventContextList ) override;
 
-        virtual std::string GetHeader() const;
+        virtual std::string GetHeader() const override;
         virtual bool notifyOnEvent( IIndividualHumanEventContext *context, 
-                                    const std::string& StateChange );
-        virtual void LogIndividualData( IIndividualHuman* individual ) ;
-        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const ;
-        virtual void EndTimestep( float currentTime, float dt );
-        virtual void Reduce();
+                                    const std::string& StateChange ) override;
+        virtual void LogIndividualData( IIndividualHuman* individual ) override;
+        virtual bool IsCollectingIndividualData( float currentTime, float dt ) const override;
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual void Reduce() override;
     private:
         struct MigrationData
         {

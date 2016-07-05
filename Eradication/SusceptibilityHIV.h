@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -28,7 +28,7 @@ namespace Kernel
         virtual void         TerminateSuppression(float days_till_death) = 0;
     };
 
-    class SusceptibilityHIVConfig : public JsonConfigurable
+    class SusceptibilityHIVConfig : public SusceptibilitySTIConfig
     {
         friend class IndividualHumanCoinfection;
         GET_SCHEMA_STATIC_WRAPPER(SusceptibilityHIVConfig)
@@ -39,7 +39,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
-        //these are the config params
+        friend class SusceptibilityHIV;
+
         static float post_infection_CD4_lambda;
         static float post_infection_CD4_inverse_kappa;
         static float disease_death_CD4_alpha;
@@ -47,18 +48,18 @@ namespace Kernel
     };
 
     //---------------------------- SusceptibilityHIV ----------------------------------------
-    class SusceptibilityHIV : public SusceptibilitySTI, virtual public ISusceptibilityHIV, public SusceptibilityHIVConfig
+    class SusceptibilityHIV : public SusceptibilitySTI, virtual public ISusceptibilityHIV
     {
     public:
         friend class IndividualHumanCoinfection;
          friend class IndividualHumanHIV;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
-        //virtual bool Configure( const Configuration* config );
 
         virtual ~SusceptibilityHIV(void);
         static Susceptibility *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);
 
+        void SetContextTo(IIndividualHumanContext* context) override;
         virtual void Update(float dt = 0.0) override;
         virtual void UpdateInfectionCleared() override;
 
@@ -90,5 +91,7 @@ namespace Kernel
         float sqrtCD4_AtDiseaseDeath;   // sqrt of CD4 count at HIV-cause death
 
         float CD4count_at_ART_start;    // CD4 count at start of ART, if any
+
+        DECLARE_SERIALIZABLE(SusceptibilityHIV);
     };
 }

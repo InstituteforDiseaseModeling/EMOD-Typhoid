@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -12,8 +12,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IRelationship.h"
 #include "MathFunctions.h"
 #include "Sigmoid.h"
-
-class ICircumcision;
 
 namespace Kernel
 {
@@ -31,12 +29,12 @@ namespace Kernel
     struct ISTICircumcisionConsumer : public ISupports
     {
         virtual bool IsCircumcised( void ) const = 0;
-        virtual bool ApplyCircumcision( ICircumcision *) = 0;
+        virtual float GetCircumcisedReducedAcquire() const = 0;
+        virtual void ApplyCircumcision( float reduceAcquire ) = 0;
     };
 
-    class ISTICoInfectionStatusChangeApply : public ISupports
+    struct ISTICoInfectionStatusChangeApply : public ISupports
     {
-        public:
         virtual void SpreadStiCoInfection() = 0;
         virtual void CureStiCoInfection() = 0;
     };

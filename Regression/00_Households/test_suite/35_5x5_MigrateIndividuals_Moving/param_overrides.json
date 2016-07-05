@@ -1,5 +1,5 @@
 {
-     "Default_Config_Path": "defaults\\malaria_default_config.json", 
+     "Default_Config_Path": "defaults/malaria_default_config.json", 
      "parameters": {
           "CLIMATE": {
                "AIR_TEMPERATURE": {
@@ -33,9 +33,11 @@
                "Regional_Migration_Roundtrip_Probability" : 0.0,
                "Sea_Migration_Roundtrip_Duration"         : 0.0,
                "Sea_Migration_Roundtrip_Probability"      : 0.0,
-               "Family_Migration_Type"                    : "NO_MIGRATION",
+               "Family_Migration_Roundtrip_Duration"      : 100.0,
 
-
+               "Enable_Family_Migration": 0, 
+               "Family_Migration_Filename": "", 
+               "x_Family_Migration": 1,
 
                "REGIONAL": {
                     "Enable_Regional_Migration": 0,
@@ -48,10 +50,10 @@
           }, 
           "PRIMARY": {
                "Config_Name": "35_5x5_MigrateIndividuals_Moving", 
-               "Custom_Reports_Filename" : "custom_reports.json",
                "Geography": "Household_5x5", 
                "Listed_Events": [], 
                "Node_Grid_Size": 0.005, 
+               "Custom_Reports_Filename" : "custom_reports.json",
                "Report_Event_Recorder": 0, 
                "Run_Number": 33, 
                "Simulation_Timestep": 1, 

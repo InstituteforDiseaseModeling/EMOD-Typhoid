@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -72,6 +72,7 @@ namespace Kernel
 
         // migration
         virtual void PostMigratingIndividualHuman(IIndividualHuman *i) = 0;
+        virtual bool CanSupportFamilyTrips() const = 0;
 
         // events
         virtual void DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier ) = 0;
@@ -107,6 +108,9 @@ namespace Kernel
         
         virtual void UpdateGroupMembership() = 0;
         virtual void UpdateGroupPopulation(float size_changes) = 0;
+
+        virtual const std::string& GetPropertyReportString() const = 0;
+        virtual void SetPropertyReportString( const std::string& str ) = 0;
     };
 
 // helper macro for readability

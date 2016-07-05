@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -160,6 +160,7 @@ namespace Kernel
         /*const*/ IIndividualHumanContext * pDistributeeIndividual
     )
     {
+        if( Environment::getInstance()->Log->CheckLogLevel(Logger::DEBUG, "EEL") )
         {
             // intervention recipient
             std::stringstream msg;

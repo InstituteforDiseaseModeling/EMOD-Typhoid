@@ -15,7 +15,6 @@
                     "Trigger_Condition": "TBActivation", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -38,7 +37,7 @@
                         "Base_Sensitivity": 1, 
                         "Base_Specificity": 1, 
                         "Cost_To_Consumer": 10, 
-                        "Days_To_Diagnosis": 50, 
+                        "Days_To_Diagnosis": 45, 
 						"Event_Or_Config": "Event",
                         "Defaulters_Event": "TBTestDefault", 
                         "Negative_Diagnosis_Event": "TBTestNegative", 
@@ -52,7 +51,6 @@
                     "Trigger_Condition": "ProviderOrdersTBTest", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -84,7 +82,6 @@
                     "Trigger_Condition": "TBTestDefault", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -121,7 +118,6 @@
                     "Trigger_Condition": "TBTestPositive", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -162,7 +158,6 @@
                     "Trigger_Condition": "TBTestNegative", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -193,7 +188,6 @@
                     "Trigger_Condition": "TBFailedDrugRegimen", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 
@@ -224,7 +218,6 @@
                     "Trigger_Condition": "TBActivationPostRelapse", 
                     "class": "NodeLevelHealthTriggeredIV"
                 }, 
-                "Number_Distributions": -1, 
                 "Number_Repetitions": 1, 
                 "Property_Restrictions": [], 
                 "Target_Demographic": "Everyone", 

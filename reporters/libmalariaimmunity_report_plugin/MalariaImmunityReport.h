@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -26,13 +26,13 @@ namespace Kernel
         virtual ~MalariaImmunityReport();
 
         //BaseEventReportIntervalOutput
-        virtual bool Configure( const Configuration * inputJson );
-        virtual void EndTimestep( float currentTime, float dt );
-        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
+        virtual bool Configure( const Configuration * inputJson ) override;
+        virtual void EndTimestep( float currentTime, float dt ) override;
+        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
 
     protected:
         // BaseEventReportIntervalOutput
-        virtual void WriteOutput( float currentTime );
+        virtual void WriteOutput( float currentTime ) override;
 
     private:
         void AccumulateOutput();

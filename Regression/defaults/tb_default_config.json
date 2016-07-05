@@ -14,7 +14,7 @@
                "Base_Population_Scale_Factor": 1, 
                "Birth_Rate_Dependence": "DEMOGRAPHIC_DEP_RATE", 
                "Birth_Rate_Time_Dependence": "NONE",
-               "Demographics_Filename": "", 
+               "Demographics_Filenames": ["NO_DEFAULT_DEMOGRAPHICS"], 
                "Default_Geography_Initial_Node_Population":1000,
                "Default_Geography_Torus_Size":10,
                "Enable_Aging": 1, 
@@ -23,7 +23,7 @@
                "Enable_Demographics_Gender": 1, 
                "Enable_Demographics_Initial": 1, 
                "Enable_Demographics_Other": 0, 
-               "Enable_Demographics_Reporting": 1, 
+               "Enable_Demographics_Reporting": 0, 
                "Enable_Vital_Dynamics": 1, 
                "Minimum_Adult_Age_Years" : 15,
                "IMMUNITY": {
@@ -108,8 +108,7 @@
                "Job_Priority": "BELOWNORMAL", 
                "Load_Balance_Filename": "", 
                "Local_Simulation": 0, 
-               "Num_Cores": 1,
-               "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\"
+               "Num_Cores": 1
           }, 
           "MIGRATION": {
                "Migration_Model": "NO_MIGRATION"
@@ -124,6 +123,7 @@
           }, 
           "NEEDED_BUT_NOT_USEFUL": {}, 
           "OUTPUT": {
+               "Custom_Reports_Filename" : "NoCustomReports",
                "Report_Event_Recorder" : 0,
                "Enable_Default_Reporting" : 1,
                "Enable_Spatial_Output": 0,

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -21,6 +21,8 @@ namespace Kernel
             Event2ProbabilityMapType() {}
             virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
             virtual json::QuickBuilder GetSchema();
+
+            static void serialize(IArchive& ar, Event2ProbabilityMapType& obj);
     };
 
     class HIVRandomChoice : public HIVSimpleDiagnostic
@@ -32,15 +34,18 @@ namespace Kernel
         HIVRandomChoice();
         HIVRandomChoice( const HIVRandomChoice& );
 
+        virtual bool Configure( const Configuration * inputJson ) override;
+
         // IDistributingDistributableIntervention
-        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);
+        virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
         // HIVSimpleDiagnostic
-        virtual bool positiveTestResult();
-        virtual void positiveTestDistribute();
+        virtual bool positiveTestResult() override;
+        virtual void positiveTestDistribute() override;
 
     protected:
-
         Event2ProbabilityMapType event2ProbabilityMap;
+
+        DECLARE_SERIALIZABLE(HIVRandomChoice);
     };
 }

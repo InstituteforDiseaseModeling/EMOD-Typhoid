@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "BaseTextReport.h"
 #include "Sugar.h"
+#include "IdmMpi.h"
 
 static const char* _module = "BaseTextReport";
 
@@ -95,30 +96,12 @@ namespace Kernel {
     void BaseTextReport::GetDataFromOtherCores()
     {
         std::string to_send = output_stream.str();
-        // clorton TODO - consolidate versions of this reduce code in one place.
-        int32_t length = (int32_t)to_send.size();
+        std::string received;
 
-        if (EnvPtr->MPI.Rank > 0)
+        EnvPtr->MPI.p_idm_mpi->GatherToRoot( to_send, received );
+        if (EnvPtr->MPI.Rank == 0)
         {
-            MPI_Gather((void*)&length, 1, MPI_INTEGER4, nullptr, EnvPtr->MPI.NumTasks, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-            MPI_Gatherv((void*)to_send.c_str(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD);
-        }
-        else
-        {
-            std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
-            MPI_Gather((void*)&length, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-            int32_t total = 0;
-            std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
-            for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
-            {
-                displs[i] = total;
-                total += lengths[i];
-            }
-            std::vector<char> buffer(total + 1);
-            MPI_Gatherv((void*)to_send.c_str(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
-            buffer[total] = '\0';
-
-            reduced_stream << std::string(buffer.data());
+            reduced_stream << received;
         }
 
         output_stream.str(std::string());   // Clear the output stream.

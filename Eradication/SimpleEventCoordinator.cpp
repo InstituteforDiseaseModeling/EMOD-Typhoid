@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -116,6 +116,9 @@ namespace Kernel
         distribution_complete = true; // we're done, signal disposal ok
         // this signals each process individually that its ok to clean up, in general if the completion times might be different on different nodes 
         // we'd want to coordinate the cleanup signal in Update()
+
+        delete qi_as_config;
+        qi_as_config = nullptr;
     }
 
     void SimpleInterventionDistributionEventCoordinator::regenerateCachedNodeContextPointers()

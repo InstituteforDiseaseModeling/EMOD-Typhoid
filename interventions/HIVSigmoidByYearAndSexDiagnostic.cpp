@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -37,7 +37,7 @@ namespace Kernel
     {
         initConfigTypeMap("Ramp_Min", &rampMin, HIV_Ramp_Min_DESC_TEXT , -1, 1, 0);
         initConfigTypeMap("Ramp_Max", &rampMax, HIV_Ramp_Max_DESC_TEXT , -1, 1, 1);
-        initConfigTypeMap("Ramp_MidYear", &rampMidYear, HIV_Ramp_MidYear_DESC_TEXT , 1900, 2100, 2000);
+        initConfigTypeMap("Ramp_MidYear", &rampMidYear, HIV_Ramp_MidYear_DESC_TEXT , MIN_YEAR, MAX_YEAR, 2000);
         initConfigTypeMap("Ramp_Rate", &rampRate, HIV_Ramp_Rate_DESC_TEXT , -100, 100, 1);
         initConfigTypeMap("Female_Multiplier", &femaleMultiplier, HIV_Female_Multiplier_DESC_TEXT , 0, FLT_MAX, 1);
     }
@@ -73,19 +73,17 @@ namespace Kernel
         return testResult;
     }
 
-}
+    REGISTER_SERIALIZABLE(HIVSigmoidByYearAndSexDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVSigmoidByYearAndSexDiagnostic& obj, const unsigned int v)
+    void HIVSigmoidByYearAndSexDiagnostic::serialize(IArchive& ar, HIVSigmoidByYearAndSexDiagnostic* obj)
     {
-        ar & obj.rampMin;
-        ar & obj.rampMax;
-        ar & obj.rampMidYear;
-        ar & obj.rampRate;
-        ar & obj.femaleMultiplier;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVSigmoidByYearAndSexDiagnostic& cascade = *obj;
+
+        ar.labelElement("rampMin"         ) & cascade.rampMin;
+        ar.labelElement("rampMax"         ) & cascade.rampMax;
+        ar.labelElement("rampMidYear"     ) & cascade.rampMidYear;
+        ar.labelElement("rampRate"        ) & cascade.rampRate;
+        ar.labelElement("femaleMultiplier") & cascade.femaleMultiplier;
     }
 }
-#endif

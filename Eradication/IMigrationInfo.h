@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -43,7 +43,6 @@ namespace Kernel
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const = 0;
 
         virtual bool IsHeterogeneityEnabled() const = 0;
-        virtual MigrationType::Enum GetFamilyMigrationType() const = 0;
     };
 
     // IMigrationInfoFactory is used to create IMirationInfo objects for a node.
@@ -58,6 +57,7 @@ namespace Kernel
                                                      const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) = 0;
 
         virtual bool IsAtLeastOneTypeConfiguredForIndividuals() const = 0;
+        virtual bool IsEnabled( MigrationType::Enum mt ) const = 0;
     };
 
     namespace MigrationFactory

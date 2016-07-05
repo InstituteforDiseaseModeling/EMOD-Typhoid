@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IdmDateTime.h"
 #include "Sugar.h"
 #include "Log.h"
-#include "mpi.h"
+#include  "IdmMpi.h"
 #include "NoCrtWarnings.h"
 
 static const char * _module = "MpiDataExchanger";
@@ -42,7 +42,7 @@ namespace Kernel
     void MpiDataExchanger::ExchangeData( IdmDateTime& currentTime )
     {
         std::vector< uint32_t > message_size_by_rank( EnvPtr->MPI.NumTasks );   // "buffers" for size of buffer messages
-        std::vector< MPI_Request > outbound_requests;     // requests for each outbound message
+        IdmMpi::RequestList outbound_requests;     // requests for each outbound message
         std::vector< BinaryArchiveWriter* > outbound_messages;  // buffers for outbound messages
 
         for (int destination_rank = 0; destination_rank < EnvPtr->MPI.NumTasks; ++destination_rank)
@@ -64,15 +64,18 @@ namespace Kernel
                 }
 
                 uint32_t buffer_size = message_size_by_rank[destination_rank] = writer->GetBufferSize();
-                MPI_Request size_request;
-                MPI_Isend( &message_size_by_rank[destination_rank], 1, MPI_UNSIGNED, destination_rank, 0, MPI_COMM_WORLD, &size_request );
+                IdmMpi::Request size_request;
+                EnvPtr->MPI.p_idm_mpi->SendIntegers( &message_size_by_rank[destination_rank], 1, destination_rank, &size_request );
+                outbound_requests.Add( size_request );
 
                 if (buffer_size > 0)
                 {
                     const char* buffer = writer->GetBuffer();
-                    MPI_Request buffer_request;
-                    MPI_Isend( const_cast<char*>(buffer), buffer_size, MPI_BYTE, destination_rank, 0, MPI_COMM_WORLD, &buffer_request );
-                    outbound_requests.push_back( buffer_request );
+
+                    IdmMpi::Request buffer_request;
+                    EnvPtr->MPI.p_idm_mpi->SendChars( const_cast<char*>(buffer), buffer_size, destination_rank, &buffer_request );
+                    outbound_requests.Add( buffer_request );
+
                     outbound_messages.push_back( binary_writer );
                 }
             }
@@ -84,15 +87,13 @@ namespace Kernel
         {
             if (source_rank == EnvPtr->MPI.Rank) continue;  // We don't use MPI to send data to ourselves.
 
-            uint32_t size;
-            MPI_Status status;
-            MPI_Recv(&size, 1, MPI_UNSIGNED, source_rank, 0, MPI_COMM_WORLD, &status);
+            int size = 0;
+            EnvPtr->MPI.p_idm_mpi->ReceiveIntegers( &size, 1, source_rank );
 
             if (size > 0)
             {
                 unique_ptr<char[]> buffer(new char[size]);
-                MPI_Status buffer_status;
-                MPI_Recv(buffer.get(), size, MPI_BYTE, source_rank, 0, MPI_COMM_WORLD, &buffer_status);
+                EnvPtr->MPI.p_idm_mpi->ReceiveChars( buffer.get(), size, source_rank );
 
                 if( EnvPtr->Log->CheckLogLevel(Logger::VALIDATION, _module) ) 
                 {
@@ -113,9 +114,8 @@ namespace Kernel
             }
         }
 
-        // Clean up from Isend(s)
-        std::vector<MPI_Status> status( outbound_requests.size() );
-        MPI_Waitall( outbound_requests.size(), (MPI_Request*)outbound_requests.data(), (MPI_Status*)status.data() );
+        // Clean up from Sends
+        EnvPtr->MPI.p_idm_mpi->WaitAll( outbound_requests );
 
         for (auto writer : outbound_messages)
         {

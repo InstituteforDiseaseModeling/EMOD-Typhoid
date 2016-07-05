@@ -14,7 +14,7 @@
             "Base_Population_Scale_Factor": 1,
             "Birth_Rate_Dependence": "DEMOGRAPHIC_DEP_RATE",
             "Birth_Rate_Time_Dependence": "NONE",
-            "Demographics_Filename": "",
+            "Demographics_Filenames": ["NO_DEFAULT_DEMOGRAPHICS"],
             "Default_Geography_Initial_Node_Population":1000,
             "Default_Geography_Torus_Size":10,
             "Enable_Aging": 1,
@@ -108,6 +108,7 @@
             "Migration_Model": "NO_MIGRATION"
         },
         "OUTPUT": {
+            "Custom_Reports_Filename" : "NoCustomReports",
             "Report_Event_Recorder" : 0,
             "Enable_Default_Reporting" : 1,
             "Enable_Property_Output": 0,

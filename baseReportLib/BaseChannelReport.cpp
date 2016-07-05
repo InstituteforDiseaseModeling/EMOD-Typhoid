@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -56,30 +56,7 @@ void BaseChannelReport::LogNodeData(
 
 void BaseChannelReport::EndTimestep( float currentTime, float dt )
 {
-#if 1
-    // This is experimental for sending data via stdout. Don't check in without config option.
-    auto * jsonSerializer = Kernel::CreateJsonObjAdapter();
-    jsonSerializer->CreateNewWriter();
-    jsonSerializer->BeginObject();
-    for (auto& entry : channelDataMap.channel_data_map)
-    {
-        //auto last = GetLastValue( entry.first );
-        auto vector_of_data = entry.second;
-        auto last = vector_of_data[ vector_of_data.size() - 1 ];
-        //JBJsonTool( entry.first , last );
-        jsonSerializer->Insert( entry.first.c_str(), last );
-    }
-    jsonSerializer->EndObject();
 
-    //std::cout << "timestep_report_json = " << jsonSerializer->ToString() << std::endl;
-
-#ifdef WIN32
-    _putenv_s( "JSON_SER_REPORT1", jsonSerializer->ToString() );
-#else
-    setenv( "JSON_SER_REPORT1", jsonSerializer->ToString(), 1 );
-#endif
-    delete jsonSerializer;
-#endif
 }
 
 void BaseChannelReport::Reduce()

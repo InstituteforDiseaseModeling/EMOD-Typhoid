@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -30,7 +30,7 @@ namespace Kernel
         virtual void    reset_FemaleGametocytes(int stage) = 0;
     };
 
-    class InfectionMalariaConfig : public JsonConfigurable
+    class InfectionMalariaConfig : public InfectionVectorConfig
     {
         GET_SCHEMA_STATIC_WRAPPER(InfectionMalariaConfig)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -41,6 +41,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class InfectionMalaria;
+        
         static ParasiteSwitchType::Enum parasite_switch_type;
         static MalariaStrains::Enum     malaria_strains;
 
@@ -57,7 +59,7 @@ namespace Kernel
         static int    n_asexual_cycles_wo_gametocytes;
     };
 
-    class InfectionMalaria : public InfectionVector, public IInfectionMalaria, protected InfectionMalariaConfig
+    class InfectionMalaria : public InfectionVector, public IInfectionMalaria
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

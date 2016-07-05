@@ -1,8 +1,8 @@
 {
-     "Default_Config_Path": "defaults\\polio_default_config.json", 
+     "Default_Config_Path": "defaults/polio_default_config.json", 
      "parameters": {
           "DEMOGRAPHICS": {
-               "Demographics_Filename": "Bihar_2x2_sandbox_demographics.compiled.json;Bihar_2x2_sandbox_pool_overlay1.compiled.json", 
+               "Demographics_Filenames": [ "Bihar_2x2_sandbox_demographics.compiled.json", "Bihar_2x2_sandbox_pool_overlay1.compiled.json" ], 
                "SAMPLING": {
                     "Base_Individual_Sample_Rate": 0.01
                }
@@ -15,7 +15,9 @@
                "Migration_Model": "FIXED_RATE_MIGRATION",
                "Migration_Pattern": "WAYPOINTS_HOME", 
                "Roundtrip_Waypoints": 5, 
-               "Family_Migration_Type" : "NO_MIGRATION",
+               "Enable_Family_Migration": 0, 
+               "Family_Migration_Filename": "", 
+               "x_Family_Migration": 1,
                "Enable_Migration_Heterogeneity": 0, 
                "Enable_Air_Migration": 0,
                "Enable_Regional_Migration": 0, 

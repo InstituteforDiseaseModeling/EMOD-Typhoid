@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -72,10 +72,10 @@ namespace Kernel
         // heterogeneous intra-node transmission
         virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) = 0;
         virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual) = 0;
-        virtual void GetGroupMembershipForIndividual(RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) = 0;
+        virtual void GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) = 0;
         virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight) = 0;
         virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership) = 0;
-        virtual RouteList_t& GetTransmissionRoutes( ) = 0;
+        virtual const RouteList_t& GetTransmissionRoutes( ) const = 0;
         
         virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const = 0;
         virtual float getBoxcarCorrection(float boxcar_amplitude, float boxcar_start_time, float boxcar_end_time) const = 0;
@@ -115,8 +115,7 @@ namespace Kernel
 
         // for interventions
         virtual INodeEventContext* GetEventContext() = 0;
-        typedef std::map< std::string, std::multimap< float, std::string > > tDistrib;
-        virtual const tDistrib& GetIndividualPropertyDistributions() const = 0;
+        virtual const tPropertiesDistrib& GetIndividualPropertyDistributions() const = 0;
         virtual void checkValidIPValue( const std::string& key, const std::string& to_value ) = 0;
         virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) = 0;
 
@@ -129,6 +128,8 @@ namespace Kernel
                                               float timeUntilTrip, 
                                               float timeAtDestination,
                                               bool isDestinationNewHome ) = 0;
+
+        virtual float GetBasePopulationScaleFactor() const = 0;
     };
 }
 

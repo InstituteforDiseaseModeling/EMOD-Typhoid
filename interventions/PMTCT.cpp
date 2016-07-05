@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -9,7 +9,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "PMTCT.h"
-#include "HIVInterventionsContainer.h"
+#include "Common.h"
+#include "IHIVInterventionsContainer.h"
+#include "Contexts.h"
 
 static const char * _module = "PMTCT";
 
@@ -66,6 +68,15 @@ namespace Kernel
         return success;
     }
 
+    void PMTCT::SetContextTo(IIndividualHumanContext *context)
+    {
+        if (s_OK != context->GetInterventionsContext()->QueryInterface(GET_IID(IHIVMTCTEffects), (void**)&ivc) )
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IHIVMTCTEffects", "IIndividualHumanInterventionsContext" );
+        }
+        release_assert( ivc );
+    }
+
     void
     PMTCT::Update( float dt )
     {
@@ -83,14 +94,17 @@ namespace Kernel
             expired = true;
         }
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, PMTCT& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(PMTCT);
+
+    void PMTCT::serialize(IArchive& ar, PMTCT* obj)
     {
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        PMTCT& pmtct = *obj;
+
+        ar.labelElement("timer"   ) & pmtct.timer;
+        ar.labelElement("efficacy") & pmtct.efficacy;
+
+        // ivc gets set in SetContextTo
     }
 }
-#endif

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -20,6 +20,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SocietyFactory.h"
 #include "IIdGeneratorSTI.h"
 #include "NodeEventContextHost.h"
+#include "ISTISimulationContext.h"
 
 static const char * _module = "NodeSTI";
 
@@ -121,7 +122,7 @@ namespace Kernel
         }
         std::istringstream iss( demographics[SOCIETY_KEY].ToString() );
         Configuration* p_config = Configuration::Load( iss, "demographics" );
-        society->SetParameters( dynamic_cast<IIdGeneratorSTI*>(parent), p_config );
+        society->SetParameters( dynamic_cast<IIdGeneratorSTI*>(parent), GetIndividualPropertyDistributions(), p_config );
         delete p_config ;
     }
 
@@ -211,7 +212,7 @@ namespace Kernel
     {
         event_context_host->TriggerNodeEventObservers( individual->GetEventContext(), IndividualEventTriggerType::STIPreEmigrating );
 
-        IIndividualHumanSTI* sti_individual;
+        IIndividualHumanSTI* sti_individual=nullptr;
         if (individual->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "individual", "IIndividualSTI", "IndividualHuman" );
@@ -227,14 +228,21 @@ namespace Kernel
         IIndividualHuman* movedind
     )
     {
-        auto retVal = Node::processImmigratingIndividual( movedind );
+        // -------------------------------------------------------------------------------
+        // --- SetContextTo() is called in Node::processImmigratingIndividual() but
+        // --- we need need to set context before onImmigrating().  onImmigrating() needs
+        // --- the RelationshipManager which is part of the node.
+        // -------------------------------------------------------------------------------
+        movedind->SetContextTo(getContextPointer());
 
         IIndividualHumanSTI* sti_individual = nullptr;
-        if (retVal->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
+        if (movedind->QueryInterface(GET_IID(IIndividualHumanSTI), (void**)&sti_individual) != s_OK)
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "retVal", "IIndividualSTI", "IndividualHuman" );
         }
         sti_individual->onImmigrating();
+
+        auto retVal = Node::processImmigratingIndividual( movedind );
 
         event_context_host->TriggerNodeEventObservers( retVal->GetEventContext(), IndividualEventTriggerType::STIPostImmigrating );
 

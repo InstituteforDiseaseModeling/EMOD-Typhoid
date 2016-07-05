@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -95,7 +95,6 @@ namespace Kernel
         virtual const std::vector<suids::suid>& GetReachableNodes() const override;
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const override;
         virtual bool IsHeterogeneityEnabled() const override;
-        virtual MigrationType::Enum GetFamilyMigrationType() const override;
 
     protected:
         friend class MigrationInfoFactoryFile;
@@ -133,15 +132,13 @@ namespace Kernel
         virtual const std::vector<suids::suid>& GetReachableNodes() const override;
         virtual const std::vector<MigrationType::Enum>& GetMigrationTypes() const override;
         virtual bool IsHeterogeneityEnabled() const override;
-        virtual MigrationType::Enum GetFamilyMigrationType() const override;
 
     protected:
         friend class MigrationInfoFactoryFile;
         friend class MigrationInfoFactoryDefault;
 
         MigrationInfoFixedRate( INodeContext* _parent,
-                                bool isHeterogeneityEnabled,
-                                MigrationType::Enum familyType );
+                                bool isHeterogeneityEnabled );
 
         virtual void Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData );
         virtual void CalculateRates( Gender::Enum gender, float ageYears );
@@ -157,7 +154,6 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         INodeContext * m_Parent;
         bool m_IsHeterogeneityEnabled;
-        MigrationType::Enum m_FamilyMigrationType;
         std::vector<suids::suid>         m_ReachableNodes;
         std::vector<MigrationType::Enum> m_MigrationTypes;
         std::vector<float>               m_RateCDF;
@@ -183,8 +179,7 @@ namespace Kernel
         friend class MigrationInfoFactoryFile;
 
         MigrationInfoAgeAndGender( INodeContext* _parent,
-                                   bool isHeterogeneityEnabled,
-                                   MigrationType::Enum familyType );
+                                   bool isHeterogeneityEnabled );
 
         virtual void Initialize( const std::vector<std::vector<MigrationRateData>>& rRateData );
         virtual void CalculateRates( Gender::Enum gender, float ageYears );
@@ -234,6 +229,8 @@ namespace Kernel
                                const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeidSuidMap,
                                std::vector<std::vector<MigrationRateData>>& rRateData );
 
+        MigrationType::Enum GetMigrationType() const { return m_MigrationType; }
+
     protected:
         // Returns the expected size of the binary file
         virtual uint32_t ParseMetadataForFile( const std::string& data_filepath, const std::string& idreference );
@@ -282,6 +279,7 @@ namespace Kernel
         // IMigrationInfoFactory methods
         virtual void Initialize( const ::Configuration *config, const std::string& idreference ) override;
         virtual bool IsAtLeastOneTypeConfiguredForIndividuals() const override;
+        virtual bool IsEnabled( MigrationType::Enum mt ) const override;
 
         virtual IMigrationInfo* CreateMigrationInfo( INodeContext *parent_node, 
                                                      const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override;
@@ -298,7 +296,6 @@ namespace Kernel
         std::vector<MigrationInfoFile*> m_InfoFileList ;
         bool m_IsHeterogeneityEnabled;
         bool m_EnableHumanMigration;
-        MigrationType::Enum m_FamilyMigrationType;
 #pragma warning( pop )
     private:
     };
@@ -329,6 +326,7 @@ namespace Kernel
         virtual IMigrationInfo* CreateMigrationInfo( INodeContext *parent_node, 
                                                      const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override;
         virtual bool IsAtLeastOneTypeConfiguredForIndividuals() const override;
+        virtual bool IsEnabled( MigrationType::Enum mt ) const override;
     protected:
         std::vector<std::vector<MigrationRateData>> GetRateData( INodeContext *parent_node, 
                                                                  const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap,

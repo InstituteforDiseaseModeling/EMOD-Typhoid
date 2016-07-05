@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -17,14 +17,15 @@ namespace Kernel
 {
     class SimulationConfig;
 
-    class SusceptibilityVectorConfig : public JsonConfigurable 
+    class SusceptibilityVectorConfig : public SusceptibilityConfig
     {
         friend class IndividualHumanVector;
     public:
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
-        // configurable mode of biting-risk age-dependence
+        friend class SusceptibilityVector;
+
         static AgeDependentBitingRisk::Enum age_dependent_biting_risk_type;
         static float m_newborn_biting_risk;
 
@@ -33,7 +34,7 @@ namespace Kernel
         DECLARE_QUERY_INTERFACE()
     };
 
-    class SusceptibilityVector : public Susceptibility, public IVectorSusceptibilityContext, protected SusceptibilityVectorConfig
+    class SusceptibilityVector : public Susceptibility, public IVectorSusceptibilityContext
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

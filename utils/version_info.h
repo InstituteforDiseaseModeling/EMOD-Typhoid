@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -11,20 +11,28 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #define XSTRINGIFY(ver)       STRINGIFY(ver)
 
 #ifdef WIN32
-static const char *BUILD_DATE   = "2015/09/23 14:04:15";
-static const char *SVN_URL      = "https://idm-repo/svn/Eradication/trunk";
+static const char* BUILD_DATE = __DATE__ " " __TIME__;
 #else
-static const char *SVN_URL      = XSTRINGIFY(SVN_BRANCH_FROM_SCONS);
 #define BUILD_DATE __DATE__
 #endif
 
+#ifndef SCCS_BRANCH
+#define    SCCS_BRANCH      "unknown-branch (unknown)"
+#endif
+#ifndef SCCS_DATE
+#define    SCCS_DATE        "date time unknown"
+#endif
+
 #define    MAJOR_VERSION    2
-#define    MINOR_VERSION    0
+#define    MINOR_VERSION    7
 #ifndef REVISION_NUMBER
-#define    REVISION_NUMBER  5633
+#define    REVISION_NUMBER  0
 #endif
 #define    BUILD_NUMBER     0
 
+#ifndef BUILDER_NAME
+#define    BUILDER_NAME     "$BUILDER$"
+#endif
 
-#define FULL_VERSION_WITH_SVN      XSTRINGIFY(MAJOR_VERSION) "." XSTRINGIFY(MINOR_VERSION) "." XSTRINGIFY(REVISION_NUMBER)
-#define FULL_VERSION_WITH_SVN_NQ   MAJOR_VERSION,MINOR_VERSION,REVISION_NUMBER,BUILD_NUMBER
+#define FULL_VERSION_WITH_SVN       XSTRINGIFY(MAJOR_VERSION) "." XSTRINGIFY(MINOR_VERSION) "." XSTRINGIFY(REVISION_NUMBER)
+#define FULL_VERSION_WITH_SVN_NQ    MAJOR_VERSION,MINOR_VERSION,REVISION_NUMBER,BUILD_NUMBER

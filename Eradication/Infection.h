@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -36,6 +36,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class Infection;
+
         static DurationDistribution incubation_distribution;
         static DurationDistribution infectious_distribution;
         static float base_infectivity;
@@ -49,7 +51,7 @@ namespace Kernel
 
     // generic infection base class
     // may not necessary want to derive from this for real infections
-    class Infection : public IInfection, protected InfectionConfig
+    class Infection : public IInfection
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

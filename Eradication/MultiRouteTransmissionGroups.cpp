@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -178,7 +178,7 @@ namespace Kernel
     }
 
     void
-    MultiRouteTransmissionGroups::GetGroupMembershipForProperties( RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut ) const
+    MultiRouteTransmissionGroups::GetGroupMembershipForProperties( const RouteList_t& route, const tProperties* properties, TransmissionGroupMembership_t* membershipOut ) const
     {
         //only initialize routes which are in specified routes
 

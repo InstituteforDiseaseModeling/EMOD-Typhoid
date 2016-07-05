@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -11,9 +11,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Simulation.h"
 
 #include <iomanip>      // std::setprecision
-
-#ifdef WIN32
-#endif
 
 #include "FileSystem.h"
 #include "Debug.h"
@@ -43,6 +40,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "JsonRawWriter.h"
 #include "JsonRawReader.h"
 #include "MpiDataExchanger.h"
+#include "IdmMpi.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -107,6 +105,7 @@ namespace Kernel
         , campaign_filename()
         , loadbalance_filename()
         , Run_Number(0)
+        , can_support_family_trips( false )
         , demographics_factory(nullptr)
         , new_node_observers()
     {
@@ -213,10 +212,7 @@ namespace Kernel
     void Simulation::Initialize(const ::Configuration *config)
     {
         Configure( config );
-        // Let's try generalizing this somehow!!!
-        IndividualHumanConfig fakeHuman;
-        LOG_INFO( "Calling Configure on fakeHuman\n" );
-        fakeHuman.Configure( config );
+        IndividualHuman::InitializeStatics( config );
 
         Kernel::SimulationConfig* SimConfig = Kernel::SimulationConfigFactory::CreateInstance(EnvPtr->Config);
         if (SimConfig)
@@ -526,7 +522,7 @@ namespace Kernel
                                 !p_cr_config->Exist( "Use_Explicit_Dlls" ) ||
                                 (int(p_cr_config->operator[]( "Use_Explicit_Dlls" ).As<json::Number>()) != 1) ;
 
-        LOG_INFO_F("Found %d Custom Report DLL's to consider loading\n", rReportInstantiatorMap.size() );
+        LOG_INFO_F("Found %d Custom Report DLL's to consider loading, load_all_reports=%d\n", rReportInstantiatorMap.size(), load_all_reports );
         for( auto ri_entry : rReportInstantiatorMap )
         {
             std::string class_name = ri_entry.first ;
@@ -547,6 +543,7 @@ namespace Kernel
                             p_cr->Configure( p_cfg );
                             reports.push_back( p_cr );
                             delete p_cfg ;
+                            p_cfg = nullptr;
                         }
                     }
                 }
@@ -561,6 +558,7 @@ namespace Kernel
                     p_cr->Configure( p_cfg );
                     reports.push_back( p_cr );
                     delete p_cfg ;
+                    p_cfg = nullptr;
                 }
             }
             catch( json::Exception& e )
@@ -570,6 +568,8 @@ namespace Kernel
                 throw InitializationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
             }
         }
+        delete p_cr_config;
+        p_cr_config = nullptr;
     }
 
     void Simulation::Reports_UpdateEventRegistration( float _currentTime, float dt )
@@ -774,7 +774,6 @@ namespace Kernel
 
     void Simulation::MergeNodeIdSuidBimaps(nodeid_suid_map_t& local_map, nodeid_suid_map_t& merged_map)
     {
-#if defined(WIN32)
         merged_map = local_map;
 
         if (EnvPtr->MPI.NumTasks > 1)
@@ -786,11 +785,13 @@ namespace Kernel
             LOG_VALID_F( "Serializing %d id-suid bimap entries.\n", count );
             for (auto& entry : local_map)
             {
+#if defined(WIN32)
                 writer_archive.startObject();
                     writer_archive.labelElement( "id" ) & uint32_t(entry.left);
                     uint32_t suid = entry.right.data;
                     writer_archive.labelElement( "suid") & suid;
                 writer_archive.endObject();
+#endif
             }
             writer_archive.endArray();
 
@@ -801,17 +802,13 @@ namespace Kernel
                     const char* buffer = writer_archive.GetBuffer();
                     uint32_t byte_count = writer_archive.GetBufferSize();
                     LOG_VALID_F( "Broadcasting serialized bimap (%d bytes)\n", byte_count );
-                    MPI_Bcast( static_cast<void*>(&byte_count), 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
-                    MPI_Bcast( static_cast<void*>(const_cast<char*>(buffer)), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
+                    EnvPtr->MPI.p_idm_mpi->PostChars( const_cast<char*>(buffer), byte_count, rank );
                 }
                 else
                 {
-                    uint32_t byte_count;
-                    MPI_Bcast( static_cast<void*>(&byte_count), 1, MPI_INTEGER4, rank, MPI_COMM_WORLD );
-                    char* buffer = new char[byte_count];
-                    LOG_VALID_F( "Receiving bimap (%d bytes) from rank %d\n", byte_count, rank );
-                    MPI_Bcast( static_cast<void*>(buffer), byte_count, MPI_BYTE, rank, MPI_COMM_WORLD );
-                    auto json_reader = new JsonRawReader( buffer );
+                    std::vector<char> received;
+                    EnvPtr->MPI.p_idm_mpi->GetChars( received, rank );
+                    auto json_reader = new JsonRawReader( received.data() );
                     IArchive& reader_archive = *static_cast<IArchive*>(json_reader);
                     size_t entry_count;
                     reader_archive.startArray( entry_count );
@@ -828,13 +825,12 @@ namespace Kernel
                         }
                     reader_archive.endArray();
                     delete json_reader;
-                    delete [] buffer;
+                    //delete [] buffer;
                 }
             }
 
             delete json_writer;
         }
-#endif
     }
 
     IMigrationInfoFactory* Simulation::CreateMigrationInfoFactory ( const std::string& idreference,
@@ -933,7 +929,7 @@ namespace Kernel
             LOG_DEBUG_F( "Deleting any existing %s file.\n", transitions_file_path.c_str() );
             FileSystem::RemoveFile( transitions_file_path );
         }
-        MPI_Barrier( MPI_COMM_WORLD );
+        EnvPtr->MPI.p_idm_mpi->Barrier();
 
         // Add nodes according to demographics-and climate file specifications
         for (auto node_id : nodeIDs)
@@ -967,12 +963,14 @@ namespace Kernel
             throw InitializationException( __FILE__, __LINE__, __FUNCTION__, "IMigrationInfoFactory" );
         }
 
+        can_support_family_trips = IndividualHumanConfig::CanSupportFamilyTrips( migration_factory );
+
         release_assert( m_simConfigObj );
         if( (m_simConfigObj->migration_structure != MigrationStructure::NO_MIGRATION) &&
             m_simConfigObj->demographics_initial &&
             !migration_factory->IsAtLeastOneTypeConfiguredForIndividuals() )
         {
-            LOG_WARN("Enable_Demographics_Initial is set to true,  Migration_Model != NO_MIGRATION, and no migration file names have been defined and enabled.  No file-based migration will occur.");
+            LOG_WARN("Enable_Demographics_Initial is set to true,  Migration_Model != NO_MIGRATION, and no migration file names have been defined and enabled.  No file-based migration will occur.\n");
         }
 
         for (auto& entry : nodes)
@@ -1128,6 +1126,11 @@ namespace Kernel
     void Simulation::PostMigratingIndividualHuman(IIndividualHuman *i)
     {
         migratingIndividualQueues[nodeRankMap.GetRankFromNodeSuid(i->GetMigrationDestination())].push_back(i);
+    }
+
+    bool Simulation::CanSupportFamilyTrips() const
+    {
+        return can_support_family_trips;
     }
 
     //------------------------------------------------------------------

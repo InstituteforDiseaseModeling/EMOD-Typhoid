@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -29,9 +29,7 @@ namespace Kernel
         bool is_circumcised;
         bool has_sti;
         bool is_superspreader;
-        unsigned int transitory_relationship_count;
-        unsigned int informal_relationship_count;
-        unsigned int marital_relationship_count;
+        unsigned int relationship_count[RelationshipType::COUNT];
         std::string props ;
 
         ParticipantInfo();
@@ -61,6 +59,7 @@ namespace Kernel
         unsigned int female_id;
         float male_age;
         float female_age;
+        unsigned int termination_reason;
     };
 
     struct CoitalActInfo

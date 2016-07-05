@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -113,47 +113,52 @@ PropertyReport::LogIndividualData(
     Kernel::IIndividualHuman* individual
 )
 {
-    auto permKeys = getKeys( individual->GetParent()->GetIndividualPropertyDistributions() );
-    if( permutationsSet.size() == 0 )
+    std::string reportingBucket = individual->GetPropertyReportString();
+    if( reportingBucket.empty() )
     {
-        // put all keys in set
-        tKeyValuePair actualPerm;
-        GenerateAllPermutationsOnce( individual, permKeys, actualPerm ); // call this just first time.
-    }
-    float monte_carlo_weight = float(individual->GetMonteCarloWeight());
-    NewInfectionState::_enum nis = individual->GetNewInfectionState();
-
-    const auto * pProp = individual->GetProperties();
-    if( pProp->size() == 0 )
-    {
-        LOG_WARN_F( "Individual %lu aged %f (years) had no properties in %s.\n", individual->GetSuid().data, individual->GetAge()/DAYSPERYEAR, __FUNCTION__ );
-        // This seems to be people reaching "old age" (i.e., over 125)
-        return;
-    }
-
-    // Copy all property keys from src to dest but only if present in permKeys
-    auto src = getKeys( *pProp );
-    // copy-if setup
-    std::vector<std::string> dest( src.size() );
-    auto it = std::copy_if (src.begin(), src.end(), dest.begin(), [&](std::string test)
+        auto permKeys = getKeys( individual->GetParent()->GetIndividualPropertyDistributions() );
+        if( permutationsSet.size() == 0 )
         {
-            return ( std::find( permKeys.begin(), permKeys.end(), test ) != permKeys.end() );
+            // put all keys in set
+            tKeyValuePair actualPerm;
+            GenerateAllPermutationsOnce( individual, permKeys, actualPerm ); // call this just first time.
         }
-    );
-    dest.resize(std::distance(dest.begin(),it));
 
-    // new map from those keys that make it through filter
-    tProperties permProps;
-    for( auto &entry : dest )
-    {
-        permProps.insert( std::make_pair( entry, pProp->at(entry) ) );
+        const auto * pProp = individual->GetProperties();
+        if( pProp->size() == 0 )
+        {
+            LOG_WARN_F( "Individual %lu aged %f (years) had no properties in %s.\n", individual->GetSuid().data, individual->GetAge()/DAYSPERYEAR, __FUNCTION__ );
+            // This seems to be people reaching "old age" (i.e., over 125)
+            return;
+        }
+
+        // Copy all property keys from src to dest but only if present in permKeys
+        auto src = getKeys( *pProp );
+
+        // copy-if setup
+        std::vector<std::string> dest( src.size() );
+        auto it = std::copy_if (src.begin(), src.end(), dest.begin(), [&](std::string test)
+            {
+                return ( std::find( permKeys.begin(), permKeys.end(), test ) != permKeys.end() );
+            }
+        );
+        dest.resize(std::distance(dest.begin(),it));
+
+        // new map from those keys that make it through filter
+        tProperties permProps;
+        for( auto &entry : dest )
+        {
+            permProps.insert( std::make_pair( entry, pProp->at(entry) ) );
+        }
+        // Try an optimized solution that constructs a reporting bucket string based entirely
+        // on the properties of the individual. But we need some rules. Let's start with simple
+        // alphabetical ordering of category names
+        reportingBucket = PropertiesToString( permProps );
+        individual->SetPropertyReportString( reportingBucket );
     }
-  
-    // Try an optimized solution that constructs a reporting bucket string based entirely
-    // on the properties of the individual. But we need some rules. Let's start with simple
-    // alphabetical ordering of category names
-    std::string reportingBucket = PropertiesToString( permProps );
-    //std::cout << reportingBucket << std::endl;
+
+    float monte_carlo_weight = (float)individual->GetMonteCarloWeight();
+    NewInfectionState::_enum nis = individual->GetNewInfectionState();
 
     if(nis == NewInfectionState::NewAndDetected || nis == NewInfectionState::NewInfection)
         new_infections[ reportingBucket ] += monte_carlo_weight;

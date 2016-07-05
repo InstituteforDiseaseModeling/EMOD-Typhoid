@@ -2,7 +2,7 @@
     "Default_Config_Path": "defaults/generic_scenario_default_config.json",
     "parameters": {
         "DEMOGRAPHICS": {
-            "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json;Madagascar_Nosibe_2.5arcmin_demographics_overlay.json",
+            "Demographics_Filenames": [ "Madagascar_Nosibe_2.5arcmin_demographics.json", "Madagascar_Nosibe_2.5arcmin_demographics_overlay.json" ],
             "IMMUNITY": {
                 "Acquisition_Blocking_Immunity_Duration_Before_Decay": 270,
                 "Transmission_Blocking_Immunity_Duration_Before_Decay": 270
@@ -37,7 +37,9 @@
             "Migration_Model": "FIXED_RATE_MIGRATION", 
             "Migration_Pattern": "WAYPOINTS_HOME", 
             "Enable_Migration_Heterogeneity" : 0,
-            "Family_Migration_Type" : "NO_MIGRATION",
+            "Enable_Family_Migration": 0, 
+            "Family_Migration_Filename": "", 
+            "x_Family_Migration": 1,
             "Roundtrip_Waypoints": 5,
                 "AIR" : {
                     "Enable_Air_Migration" : 0,
@@ -57,11 +59,11 @@
                }
         },         
         "OUTPUT": {
-            "Enable_Property_Output": 1
+            "Enable_Property_Output": 0
         },
         "PRIMARY": {
             "Config_Name": "HINT_SeattleCommuting -- multicore -- Madagascar_Nosibe",
-            "Geography": "Test",
+            "Geography": "Madagascar_Nosibe",
             "Node_Grid_Size": 0.009,
             "Run_Number": 42
         }

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -20,6 +20,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ProgVersion.h"
 #include "Configuration.h"
 #include "BoostLibWrapper.h"
+#include "IdmMpi.h"
 
 
 using namespace std;
@@ -198,7 +199,7 @@ void ChannelDataMap::Reduce()
             LOG_DEBUG( data.str().c_str() );
         }
 
-        MPI_Reduce((void*)&((*channel_data)[timesteps_reduced]), (void*)&((receive_buffer)[0]), (int)timesteps_to_reduce, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
+        EnvPtr->MPI.p_idm_mpi->Reduce( &((*channel_data)[timesteps_reduced]), &((receive_buffer)[0]), (int)timesteps_to_reduce );
 
         for (int k = timesteps_reduced; k < total_timesteps_recorded; k++)
         {
@@ -238,7 +239,7 @@ void ChannelDataMap::WriteOutput(
 
     ProgDllVersion pv;
     ostringstream dtk_ver;
-    dtk_ver << pv.getRevisionNumber() << " " << pv.getBranch() << " " << pv.getBuildDate();
+    dtk_ver << pv.getRevisionNumber() << " " << pv.getSccsBranch() << " " << pv.getBuildDate();
 
     Kernel::JSerializer js;
     Kernel::IJsonObjectAdapter* pIJsonObj = Kernel::CreateJsonObjAdapter();

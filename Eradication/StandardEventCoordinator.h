@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -68,8 +68,8 @@ namespace Kernel
         bool distribution_complete;
         int num_repetitions;
         int tsteps_between_reps;
-        bool include_emigrants;
-        bool include_immigrants;
+        //bool include_emigrants;
+        //bool include_immigrants;
         int tsteps_since_last;
         int intervention_activated;
         InterventionConfig intervention_config;

@@ -19,6 +19,10 @@
 
         "Enable_Sea_Migration": 1, 
         "Sea_Migration_Filename": "5x5_Households_Work_Migration.bin", 
-        "x_Sea_Migration": 1
+        "x_Sea_Migration": 1,
+
+        "Enable_Family_Migration": 0, 
+        "Family_Migration_Filename": "", 
+        "x_Family_Migration": 1
     }
 }

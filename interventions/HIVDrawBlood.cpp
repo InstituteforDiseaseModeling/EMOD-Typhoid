@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
 #include "SusceptibilityHIV.h" // for time-date util function and access into IHIVCascadeOfCare
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 #include "IIndividualHumanHIV.h"
 
 static const char * _module = "HIVDrawBlood";
@@ -54,6 +54,7 @@ namespace Kernel
 
     void HIVDrawBlood::positiveTestDistribute()
     {
+        LOG_DEBUG_F( "HIVDrawBlood: %s\n", __FUNCTION__ );
         IIndividualHumanHIV * hiv_parent = nullptr;
         if (parent->QueryInterface(GET_IID(IIndividualHumanHIV), (void**)&hiv_parent) != s_OK)
         {
@@ -72,15 +73,14 @@ namespace Kernel
 
         HIVSimpleDiagnostic::positiveTestDistribute();
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVDrawBlood& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(HIVDrawBlood);
+
+    void HIVDrawBlood::serialize(IArchive& ar, HIVDrawBlood* obj)
     {
-        //ar & obj.event2ProbabilityMap;     // todo: serialize this!
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVDrawBlood& blood = *obj;
+
+        //ar.labelElement("xxx") & delayed.xxx;
     }
 }
-#endif

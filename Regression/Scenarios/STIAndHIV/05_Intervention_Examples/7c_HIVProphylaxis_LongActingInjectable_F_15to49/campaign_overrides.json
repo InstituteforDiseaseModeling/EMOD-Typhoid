@@ -26,11 +26,13 @@
                     "Actual_IndividualIntervention_Config":
                     {
                       "class":"SimpleVaccine",
-                      "Durability_Time_Profile":"BOXDECAYDURABILITY",
-                      "Primary_Decay_Time_Constant":183,
-                      "Secondary_Decay_Time_Constant":0.001899,
                       "Vaccine_Type":"AcquisitionBlocking",
-                      "Reduced_Acquire":0.6
+                      "Waning_Config": {
+                          "class": "WaningEffectBoxExponential",
+                          "Initial_Effect": 0.6,
+                          "Box_Duration": 183,
+                          "Decay_Time_Constant": 0.001899
+                      }
                     }
                 }
             }

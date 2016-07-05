@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -35,9 +35,10 @@ namespace Kernel
     {
         LOG_DEBUG_F( "STIBarrier\n" );
         initSimTypes( 2, "STI_SIM", "HIV_SIM" );
+        initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, STI_Barrier_Cost_DESC_TEXT, 0, 999999, 10.0);
         initConfigTypeMap( "Early", &early, STI_Barrier_Early_DESC_TEXT, 0.0, 1.0, 1.0 );
         initConfigTypeMap( "Late", &late, STI_Barrier_Late_DESC_TEXT, 0.0, 1.0, 1.0 );
-        initConfigTypeMap( "MidYear", &midyear, STI_Barrier_MidYear_DESC_TEXT, 1900, 2100, 2000 );
+        initConfigTypeMap( "MidYear", &midyear, STI_Barrier_MidYear_DESC_TEXT, MIN_YEAR, MAX_YEAR, 2000 );
         initConfigTypeMap( "Rate", &rate, STI_Barrier_Rate_DESC_TEXT, -100.0, 100.0, 1.0 );
     }
 
@@ -47,7 +48,6 @@ namespace Kernel
     )
     {
         LOG_DEBUG_F( "%s\n", __FUNCTION__ );
-        //initConfig( "Durability_Time_Profile", durability_time_profile, inputJson, MetadataDescriptor::Enum("Durability_Time_Profile", SB_Durability_Time_Profile_DESC_TEXT, MDD_ENUM_ARGS(InterventionDurabilityProfile)) );
         initConfig( "Relationship_Type", rel_type, inputJson, MetadataDescriptor::Enum("Relationship_Type", STI_Barrier_Relationship_Type_DESC_TEXT, MDD_ENUM_ARGS(RelationshipType)) );
         return JsonConfigurable::Configure( inputJson );
     }

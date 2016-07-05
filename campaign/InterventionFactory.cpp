@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -49,17 +49,19 @@ namespace Kernel
     {
         // Keeping this simple. But bear in mind CreateInstanceFromSpecs can throw exception
         // and JC::_useDefaults will not be restored. But we won't keep running in that case.
+        bool reset = JsonConfigurable::_useDefaults;
         JsonConfigurable::_useDefaults = useDefaults;
         IDistributableIntervention* ret = CreateInstanceFromSpecs<IDistributableIntervention>(config, getRegisteredClasses(), true);
-        JsonConfigurable::_useDefaults = false;
+        JsonConfigurable::_useDefaults = reset;
         return ret;
     }
 
     INodeDistributableIntervention* InterventionFactory::CreateNDIIntervention( const Configuration *config )
     {
+        bool reset = JsonConfigurable::_useDefaults;
         JsonConfigurable::_useDefaults = useDefaults;
         INodeDistributableIntervention* ret = CreateInstanceFromSpecs<INodeDistributableIntervention>(config, getRegisteredClasses(), true);
-        JsonConfigurable::_useDefaults = false;
+        JsonConfigurable::_useDefaults = reset;
         return ret;
     }
 
@@ -113,7 +115,7 @@ namespace Kernel
                     << std::endl;
                 LOG_INFO( msg.str().c_str() );
             }
-            catch( json::Exception &e )
+            catch( const json::Exception &e )
             {
                 std::ostringstream msg;
                 msg << "json Exception creating intervention for GetSchema: "
@@ -122,6 +124,8 @@ namespace Kernel
                 LOG_INFO( msg.str().c_str() );
             }
             LOG_DEBUG( "Done with that class....\n" );
+            delete fakeConfig;
+            fakeConfig = nullptr;
         }
         LOG_DEBUG( "Returning from GetSchema.\n" );
         json::QuickBuilder retSchema = json::QuickBuilder(campaignSchema);

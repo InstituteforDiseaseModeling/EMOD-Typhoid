@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -15,6 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeDemographics.h"
 #include "SimulationConfig.h"
 #include "INodeContextFake.h"
+#include "IdmMpi.h"
 
 #include <string>
 #include <climits>
@@ -76,6 +77,7 @@ SUITE(NodeDemographicsTest)
 
     struct NodeDemographicsFactoryFixture
     {
+        IdmMpi::MessageInterface* m_pMpi;
         SimulationConfig* pSimConfig ;
 
         suids::suid next_suid;
@@ -87,6 +89,8 @@ SUITE(NodeDemographicsTest)
 
             next_suid.data = 1;
 
+            m_pMpi = IdmMpi::MessageInterface::CreateNull();
+
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
             int argc      = 1;
@@ -97,7 +101,7 @@ SUITE(NodeDemographicsTest)
             string outputPath("testdata/NodeDemographicsTest/output");
             string statePath("testdata/NodeDemographicsTest");
             string dllPath("testdata/NodeDemographicsTest");
-            Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
+            Environment::Initialize( m_pMpi, nullptr, configFilename, inputPath, outputPath, /*statePath, */dllPath, false);
 
             pSimConfig = SimulationConfigFactory::CreateInstance(Environment::getInstance()->Config);
             if (pSimConfig)
@@ -108,6 +112,7 @@ SUITE(NodeDemographicsTest)
 
         ~NodeDemographicsFactoryFixture()
         {
+            delete m_pMpi;
             delete pSimConfig;
             Environment::Finalize();
         }
@@ -236,6 +241,7 @@ SUITE(NodeDemographicsTest)
 
     TEST(LegacyDemographicsFilename)
     {
+        IdmMpi::MessageInterface* pMpi = IdmMpi::MessageInterface::CreateNull();
         Environment::Finalize();
         Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
         int argc      = 1;
@@ -243,7 +249,7 @@ SUITE(NodeDemographicsTest)
         char** argv   = &exeName;
         string configFilename("testdata/NodeDemographicsTest/config_legacy.json");
         string p("testdata/NodeDemographicsTest");
-        Environment::Initialize(configFilename, p, p, /*p, */p, false);
+        Environment::Initialize(pMpi,nullptr,configFilename, p, p, /*p, */p, false);
         SimulationConfig* pSimConfig = SimulationConfigFactory::CreateInstance(Environment::getInstance()->Config);
         CHECK(pSimConfig);
         Environment::setSimulationConfig(pSimConfig);
@@ -251,6 +257,7 @@ SUITE(NodeDemographicsTest)
         NodeDemographicsFactory::CreateNodeDemographicsFactory(&node_id_suid_map, Environment::getInstance()->Config, true, 10, 1000 );
         CHECK_EQUAL(NodeDemographicsFactory::GetDemographicsFileList().front(),"demographics.compiled.json");
         Environment::Finalize();
+        delete pMpi;
     }
 
     TEST_FIXTURE(NodeDemographicsFactoryFixture, Create)

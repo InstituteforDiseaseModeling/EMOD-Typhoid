@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -41,6 +41,7 @@ SUITE(StiIsPostDebutTest)
             , m_pSimulationConfig( new SimulationConfig() )
             //, m_Diag()
         {
+            JsonConfigurable::ClearMissingParameters();
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
             Environment::setSimulationConfig( m_pSimulationConfig );

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -85,6 +85,19 @@ namespace Kernel
         , duration_at_node( master.duration_at_node )
         , is_moving( master.is_moving )
     {
+    }
+
+    bool MigrateFamily::Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC )
+    {
+        ISimulationContext* p_sim = pNodeEventContext->GetNodeContext()->GetParent();
+        if( !p_sim->CanSupportFamilyTrips() )
+        {
+            std::stringstream msg;
+            msg << "Invalid Configuration for Family Trips.  MigrateFamily cannot be used." << std::endl;
+            msg << "Migration_Pattern must be SINGLE_ROUND_TRIPS and the 'XXX_Migration_Roundtrip_Probability' must equal 1.0 if that Migration Type is enabled." << std::endl;
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        }
+        return BaseNodeIntervention::Distribute( pNodeEventContext, pEC );
     }
 
     void MigrateFamily::Update( float dt )

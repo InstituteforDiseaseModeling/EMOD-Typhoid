@@ -6,7 +6,7 @@
             "Demographics_Filenames": [
                 "SSA_Demographics_3G.json", 
                 "pfa_simple.json",
-                "PFA_Overlay_rates_04.json"
+                "PFA_overlay_rates_04.json"
             ], 
             "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE", 
             "x_Other_Mortality": 0.0,

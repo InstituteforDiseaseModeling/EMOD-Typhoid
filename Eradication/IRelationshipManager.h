@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -27,10 +27,9 @@ namespace Kernel
         virtual void Update( list<IIndividualHuman*>& humans, ITransmissionGroups* groups, float dt ) = 0;
         virtual IRelationship* GetRelationshipById( unsigned int id ) = 0;
         virtual const tNodeRelationshipType& GetNodeRelationships() const = 0;
-        virtual void AddToPrimaryRelationships( const string& propertyKey, const string& propertyValue ) = 0;
         virtual INodeContext* GetNode() const = 0;
-        virtual void AddRelationship( IRelationship* ) = 0;
-        virtual void RemoveRelationship( IRelationship* ) = 0;
+        virtual void AddRelationship( IRelationship*, bool isNewRelationship ) = 0;
+        virtual void RemoveRelationship( IRelationship*, bool leavingNode ) = 0;
         virtual void ConsummateRelationship( IRelationship*, unsigned int acts ) = 0;
 
         virtual IRelationship* Emigrate( IRelationship* ) = 0;

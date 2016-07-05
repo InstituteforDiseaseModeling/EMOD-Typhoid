@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -51,8 +51,8 @@ namespace Kernel
 
         // IVectorSimulationContext methods
         virtual void  PostMigratingVector( const suids::suid& nodeSuid, VectorCohort* ind ) override;
-        virtual float GetNodePopulation( const suids::suid& nodeSuid ) const override;
-        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) const override;
+        virtual float GetNodePopulation( const suids::suid& nodeSuid ) override;
+        virtual float GetAvailableLarvalHabitat( const suids::suid& nodeSuid, const std::string& rSpeciesID ) override;
 
         // Allows correct type of community to be added by derived class Simulations
         virtual void addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory) override;

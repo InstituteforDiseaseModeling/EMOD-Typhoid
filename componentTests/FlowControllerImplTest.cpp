@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -49,7 +49,7 @@ SUITE(FlowControllerImplTest)
 
         unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/FlowControllerImplTest.json" ) );
 
-        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get(), 1.0f, 1.0f ) );
+        unique_ptr<IPairFormationParameters> from_data( PairFormationParametersImpl::CreateParameters( RelationshipType::TRANSITORY, p_config.get() ) );
 
         unique_ptr<IPairFormationRateTable> rate_table( RateTableImpl::CreateRateTable( from_data.get() ) );
         unique_ptr<IPairFormationStats> stats( PairFormationStatsImpl::CreateStats( from_data.get() ) );

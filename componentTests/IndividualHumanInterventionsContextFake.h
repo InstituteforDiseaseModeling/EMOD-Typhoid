@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -54,6 +54,16 @@ public:
     virtual std::list<IDistributableIntervention*> GetInterventionsByType(const std::string &type_name)
     {
         throw std::exception("The method or operation is not implemented.");
+    }
+
+    virtual std::list<IDistributableIntervention*> GetInterventionsByName(const std::string &intervention_name)
+    { 
+        throw std::exception("The method or operation is not implemented.");
+    }
+
+    virtual std::list<void*> GetInterventionsByInterface( iid_t iid )
+    { 
+        throw std::exception("The method or operation is not implemented."); 
     }
 
     virtual void PurgeExisting( const std::string &iv_name )

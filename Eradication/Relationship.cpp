@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -19,12 +19,17 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "STIInterventionsContainer.h" // for ISTIBarrierConsumer (which should be in ISTIBarrierConsumer.h) TODO
 #include "IndividualSTI.h"
 #include "ISociety.h"
+#include "IdmString.h"
 
 #include <map>
 #include <ctime>
 #include <algorithm>
 
 static const char * _module = "Relationship";
+
+#define PROPERTY_KEY_PREFIX "Relationship:"
+#define PROPERTY_KEY_PREFIX_LENGTH (13)
+#define SLOT_SEPARATOR ('-')
 
 void 
 howlong(
@@ -73,7 +78,9 @@ namespace Kernel {
         : IRelationship()
         , _suid(suids::nil_suid())
         , state( RelationshipState::NORMAL )
+        , previous_state( RelationshipState::NORMAL )
         , relationship_type( RelationshipType::TRANSITORY )
+        , termination_reason( RelationshipTerminationReason::NOT_TERMINATING )
         , p_rel_params( nullptr )
         , male_partner(nullptr)
         , female_partner(nullptr)
@@ -102,7 +109,9 @@ namespace Kernel {
         : IRelationship()
         , _suid(rRelId)
         , state( RelationshipState::NORMAL )
+        , previous_state( RelationshipState::NORMAL )
         , relationship_type( pParams->GetType() )
+        , termination_reason( RelationshipTerminationReason::NOT_TERMINATING )
         , p_rel_params( pParams )
         , male_partner(male_partnerIn)
         , female_partner(female_partnerIn)
@@ -175,6 +184,11 @@ namespace Kernel {
         return state;
     }
 
+    RelationshipState::Enum Relationship::GetPreviousState() const
+    {
+        return previous_state;
+    }
+
     RelationshipMigrationAction::Enum Relationship::GetMigrationAction( RANDOMBASE* prng ) const
     {
         if( state == RelationshipState::PAUSED )
@@ -219,6 +233,11 @@ namespace Kernel {
                 throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
             }
         }
+    }
+
+    RelationshipTerminationReason::Enum Relationship::GetTerminationReason() const
+    {
+        return termination_reason;
     }
 
     void Relationship::SetManager( IRelationshipManager* pRelManager, ISociety* pSociety )
@@ -404,11 +423,28 @@ namespace Kernel {
     {
         if( propertyKey == "" )
         {
-            propertyKey = "Relationship";
+            propertyKey = PROPERTY_KEY_PREFIX;
             propertyKey += std::to_string( male_partner->GetOpenRelationshipSlot() );
+            propertyKey += SLOT_SEPARATOR;
             propertyKey += std::to_string( female_partner->GetOpenRelationshipSlot() ); // does this work? TBD
         }
         return propertyKey;
+    }
+
+    unsigned int Relationship::GetSlotNumberForPartner( bool forPartnerB ) const
+    {
+        // Note: this solution assumes max of MAX_SLOT relationships
+        unsigned int slot_index = 0;
+        if( forPartnerB ) // B=Female
+        {
+            slot_index = 1;
+        }
+        IdmString key( propertyKey.substr( PROPERTY_KEY_PREFIX_LENGTH ) );
+        auto slot_strs = key.split( SLOT_SEPARATOR );
+
+        auto slot_number = atoi( slot_strs[ slot_index ].c_str() );
+        release_assert( slot_number <= MAX_SLOTS );
+        return slot_number;
     }
 
     const tRelationshipMembers
@@ -424,35 +460,68 @@ namespace Kernel {
     {
         LOG_INFO_F( "%s: individual %d vacating relationship %d leaving individual %d alone.\n", __FUNCTION__, departee->GetSuid().data, GetSuid().data, PARTNERID( departee ).data );
 
+        previous_state = state;
         state = RelationshipState::PAUSED;
 
         if( relMan != nullptr )
         {
-            relMan->RemoveRelationship( this );
+            relMan->RemoveRelationship( this, (previous_state == RelationshipState::PAUSED) );
         }
-        SetManager( nullptr, nullptr );
+
+        // -------------------------------------------------------------------------------
+        // --- When Pausing, we need to create two instances of the relationship: 
+        // --- one for the current node and one for the node the person is going to.
+        // --- One reason for this is that Relationship::Update() is called by RelationshipManager::Update()
+        // --- so that it is called once for the relationship.  Since we need two instances
+        // --- for multi-core, it makes sense to use this solution for single core as well.
+        // -------------------------------------------------------------------------------
+        Relationship* p_staying_rel = this;
+        Relationship* p_leaving_rel = nullptr;
+        if( previous_state == RelationshipState::NORMAL )
+        {
+            p_leaving_rel = this->Clone();
+            departee->GetRelationships().erase( p_staying_rel );
+            departee->GetRelationships().insert( p_leaving_rel );
+        }
 
         // -------------------------------------------------------------------------
-        // --- We check the absent id incase the partner is moving to another node.
-        // --- A paused relationship is still paused.
+        // --- When Pausing a relationship, each partner will have their own instance
+        // --- of the relationship object.  This implies that we need these objects setup
+        // --- so that the relationship object for Partner A (male) has himself still in
+        // --- the relationship and his partner absent.  Partner B needs the opposite.
+        // ---
         // --- We don't set both partners to absent since we want the actions of one
         // --- partner to reset the relationship.  For example, if one partner pauses
         // --- relationship due to migration, and then returns.  That individual's call
         // --- to Resume() should get the relationship back to normal.
         // -------------------------------------------------------------------------
-        if( (male_partner == departee) || (absent_male_partner_id == departee->GetSuid()) )
+        if( p_staying_rel->male_partner == departee )
         {
-            LOG_DEBUG_F( "%s: departee was male_partner, clearing male_partner from relationship %d\n", __FUNCTION__, GetSuid().data );
-            // MULTI-CORE: We need to support nullptr for the partners - relationships_at_death is an issue
-            //male_partner = nullptr;
-            absent_male_partner_id = departee->GetSuid();
+            LOG_DEBUG_F( "%s: departee was male_partner, clearing male_partner from relationship %d\n", __FUNCTION__, p_staying_rel->GetSuid().data );
+
+            p_staying_rel->male_partner = nullptr;
+            p_staying_rel->absent_male_partner_id = departee->GetSuid();
+
+            if( p_leaving_rel != nullptr )
+            {
+                release_assert( p_staying_rel->female_partner );
+                p_leaving_rel->absent_female_partner_id = p_staying_rel->female_partner->GetSuid();
+                p_leaving_rel->female_partner = nullptr;
+            }
         }
-        else if( (female_partner == departee) || (absent_female_partner_id == departee->GetSuid()) )
+        else if( p_staying_rel->female_partner == departee )
         {
             LOG_DEBUG_F( "%s: departee was female_partner, clearing female_partner from relationship %d\n", __FUNCTION__, GetSuid().data );
-            // MULTI-CORE: We need to support nullptr for the partners - relationships_at_death is an issue
-            //female_partner = nullptr;
-            absent_female_partner_id = departee->GetSuid();
+
+            p_staying_rel->female_partner = nullptr;
+            p_staying_rel->absent_female_partner_id = departee->GetSuid();
+
+            if( p_leaving_rel != nullptr )
+            {
+                release_assert( p_staying_rel->male_partner );
+                p_leaving_rel->absent_male_partner_id = p_staying_rel->male_partner->GetSuid();
+                p_leaving_rel->male_partner = nullptr;
+            }
         }
         else
         {
@@ -466,7 +535,7 @@ namespace Kernel {
                                ISociety* pSociety, 
                                IIndividualHumanSTI* returnee )
     {
-        release_assert( pRelMan != nullptr );
+        release_assert( pRelMan  != nullptr );
         release_assert( pSociety != nullptr );
         release_assert( returnee != nullptr );
 
@@ -475,7 +544,6 @@ namespace Kernel {
             std::ostringstream msg;
             msg << "RelationshipId=" << GetSuid().data << " has already been terminated.  It cannot be resumed." ;
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
-
         }
 
         auto returneeId = returnee->GetSuid();
@@ -496,7 +564,7 @@ namespace Kernel {
         else
         {
             std::ostringstream msg;
-            msg << "Unknown partner:  male_id=" << absent_male_partner_id.data << "  female_id=" << absent_female_partner_id.data << " returnee_id=" << returneeId.data ;
+            msg << "Unknown partner:  rel_id=" << GetSuid().data << " male_id=" << absent_male_partner_id.data << "  female_id=" << absent_female_partner_id.data << " returnee_id=" << returneeId.data ;
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
         }
 
@@ -506,26 +574,46 @@ namespace Kernel {
             release_assert( female_partner );
             if( male_partner->GetNodeSuid() == female_partner->GetNodeSuid() )
             {
+                previous_state = state;
                 state = RelationshipState::NORMAL;
-                SetManager( pRelMan, pSociety );
-                relMan->AddRelationship( this );
             }
         }
+        SetManager( pRelMan, pSociety );
+        relMan->AddRelationship( this, false );
     }
 
-    void Relationship::Terminate()
+    void Relationship::Terminate( RelationshipTerminationReason::Enum reason )
     {
-        LOG_INFO_F( "%s: terminating relationship %d between individual %d and individual %d.\n", __FUNCTION__, GetSuid().data, MALE_PARTNER_ID().data, FEMALE_PARTNER_ID().data );
+        LOG_DEBUG_F( "%s: terminating relationship %d:%x with state=%s between individual %d and individual %d because %s.\n",
+            __FUNCTION__,
+            GetSuid().data,
+            this, 
+            RelationshipState::pairs::lookup_key( state ),
+            MALE_PARTNER_ID().data, 
+            FEMALE_PARTNER_ID().data,
+            RelationshipTerminationReason::pairs::lookup_key( reason ));
 
+        // -----------------------------------------------------------------------
+        // --- Migrating would have set these values so we want to clear them to
+        // --- make sure it is clear that the relationship has been terminated.
+        // -----------------------------------------------------------------------
+        if( state == RelationshipState::MIGRATING )
+        {
+            absent_male_partner_id   = suids::nil_suid();
+            absent_female_partner_id = suids::nil_suid();
+        }
+
+        previous_state = state;
         state = RelationshipState::TERMINATED;
+        termination_reason = reason;
 
         if( relMan != nullptr )
         {
-            relMan->RemoveRelationship( this );
+            relMan->RemoveRelationship( this, true );
         }
         SetManager( nullptr, nullptr );
 
-        if( male_partner )
+        if( (male_partner != nullptr) && (absent_male_partner_id == suids::nil_suid()) )
         { 
             male_partner->RemoveRelationship( this );
             // ----------------------------------------------------------
@@ -535,7 +623,7 @@ namespace Kernel {
             //male_partner = nullptr;
         }
 
-        if( female_partner )
+        if( (female_partner != nullptr) && (absent_female_partner_id == suids::nil_suid()) )
         {
             female_partner->RemoveRelationship( this );
             // ----------------------------------------------------------
@@ -550,8 +638,22 @@ namespace Kernel {
     {
         if( state == RelationshipState::NORMAL )
         {
+            previous_state = state;
             state = RelationshipState::MIGRATING;
-            relMan->RemoveRelationship( this );
+            relMan->RemoveRelationship( this, true );
+
+            absent_male_partner_id   = male_partner->GetSuid();
+            absent_female_partner_id = female_partner->GetSuid();
+
+            // -------------------------------------------------------------------
+            // --- Don't set these to nullptr because if one of the partners dies
+            // --- before they migrate, then we need the pointers so we can remove
+            // --- the relationship.
+            // -------------------------------------------------------------------
+            //male_partner = nullptr;
+            //female_partner = nullptr;
+            // -------------------------------------------------------------------
+
             SetManager( nullptr, nullptr );
         }
         else if( state != RelationshipState::MIGRATING )
@@ -675,14 +777,27 @@ namespace Kernel {
         return has_migrated;
     }
 
-    REGISTER_SERIALIZABLE(Relationship);
-
     void Relationship::serialize(IArchive& ar, Relationship* obj)
     {
         Relationship& rel = *obj;
+
+        if( ar.IsWriter() )
+        {
+            if( rel.male_partner != nullptr )
+            {
+                rel.absent_male_partner_id = rel.male_partner->GetSuid();
+            }
+            if( rel.female_partner != nullptr )
+            {
+                rel.absent_female_partner_id = rel.female_partner->GetSuid();
+            }
+        }
+
         ar.labelElement("_suid"                   ) & rel._suid.data;
         ar.labelElement("state"                   ) & (uint32_t&)rel.state;
+        ar.labelElement("previous_state"          ) & (uint32_t&)rel.previous_state;
         ar.labelElement("relationship_type"       ) & (uint32_t&)rel.relationship_type;
+        ar.labelElement("termination_reason"      ) & (uint32_t&)rel.termination_reason;
         //p_rel_params don't serialize this
         //male_partner don't serialize this
         //female_partner don't serialize this
@@ -727,6 +842,10 @@ namespace Kernel {
                 p_rel = new MarriageRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
                 break;
 
+            case RelationshipType::COMMERCIAL:
+                p_rel = new CommercialRelationship( rRelId, pRelMan, pParams, male_partner, female_partner );
+                break;
+
             default:
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, 
                                                          "pParams->GetType()", 
@@ -763,6 +882,11 @@ namespace Kernel {
                 );
     }
 
+    Relationship* TransitoryRelationship::Clone()
+    {
+        return new TransitoryRelationship( *this );
+    }
+
     REGISTER_SERIALIZABLE(TransitoryRelationship);
 
     void TransitoryRelationship::serialize(IArchive& ar, TransitoryRelationship* obj)
@@ -795,6 +919,11 @@ namespace Kernel {
                     female_partnerIn->toString().c_str(),
                     rel_timer
                   );
+    }
+
+    Relationship* InformalRelationship::Clone()
+    {
+        return new InformalRelationship( *this );
     }
 
     REGISTER_SERIALIZABLE(InformalRelationship);
@@ -831,12 +960,56 @@ namespace Kernel {
                   );
     }
 
+    Relationship* MarriageRelationship::Clone()
+    {
+        return new MarriageRelationship( *this );
+    }
+
     REGISTER_SERIALIZABLE(MarriageRelationship);
 
     void MarriageRelationship::serialize(IArchive& ar, MarriageRelationship* obj)
     {
         Relationship::serialize( ar, obj );
         MarriageRelationship& rel = *obj;
+    }
+
+    // ------------------------------------------------------------------------
+    // --- CommercialRelationship
+    // ------------------------------------------------------------------------
+    BEGIN_QUERY_INTERFACE_DERIVED(CommercialRelationship, Relationship)
+    END_QUERY_INTERFACE_DERIVED(CommercialRelationship, Relationship)
+
+    CommercialRelationship::CommercialRelationship()
+    : Relationship()
+    {
+    }
+
+    CommercialRelationship::CommercialRelationship( const suids::suid& rRelId,
+                                                          IRelationshipManager* pRelMan,
+                                                          IRelationshipParameters* pParams,
+                                                          IIndividualHumanSTI * male_partnerIn, 
+                                                          IIndividualHumanSTI * female_partnerIn )
+        : Relationship( rRelId, pRelMan, pParams, male_partnerIn, female_partnerIn )
+    {
+        LOG_INFO_F( "(EEL) Creating CommercialRelationship %d between %s and %s of length %f.\n",
+                    GetSuid().data,
+                    male_partnerIn->toString().c_str(),
+                    female_partnerIn->toString().c_str(),
+                    rel_timer
+                  );
+    }
+
+    Relationship* CommercialRelationship::Clone()
+    {
+        return new CommercialRelationship( *this );
+    }
+
+    REGISTER_SERIALIZABLE(CommercialRelationship);
+
+    void CommercialRelationship::serialize(IArchive& ar, CommercialRelationship* obj)
+    {
+        Relationship::serialize( ar, obj );
+        CommercialRelationship& rel = *obj;
     }
 }
 

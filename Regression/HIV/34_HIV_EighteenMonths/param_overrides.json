@@ -28,7 +28,6 @@
         "Maternal_Transmission_ART_Multiplier": 0.03,
 
         "alpha_____________REPORTING___________": "",
-        "Enable_Demographics_Reporting": 1,
       	"Report_HIV_Event_Channels_List": [ "Births", "TwelveWeeksPregnant", "FourteenWeeksPregnant", "SixWeeksOld", "EighteenMonthsOld" ], 
 
         "alpha_____________REPLICATION_AND_DRUGS___________": "",

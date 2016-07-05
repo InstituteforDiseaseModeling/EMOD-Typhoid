@@ -46,6 +46,7 @@ libgenericdllIncFiles = [  "Report.h" ]
 libgenericdllLocalInc = [  "stdafx.h" ]
 
 # Testing
+env.Append( CPPDEFINES=["BOOST_ALL_NO_LIB"] )
 env.Append( CPPDEFINES=["DISABLE_VECTOR" ] )
 env.Append( CPPDEFINES=["DISABLE_MALARIA" ] )
 #env.Append( CPPDEFINES=["DISABLE_CLIMATE" ] )

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -55,12 +55,12 @@ namespace Kernel
         virtual ~PolioSurveyJSONAnalyzer();
 
         // BaseEventReportIntervalOutput
-        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange );
+        virtual bool notifyOnEvent( IIndividualHumanEventContext *context, const std::string& StateChange ) override;
 
     protected:
         // BaseEventReportIntervalOutput
-        virtual void WriteOutput( float currentTime );
-        virtual void ClearOutputData();
+        virtual void WriteOutput( float currentTime ) override;
+        virtual void ClearOutputData() override;
 
     private:
 

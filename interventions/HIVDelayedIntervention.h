@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -39,6 +39,8 @@ namespace Kernel
         virtual const std::string& GetCascadeState();
         virtual const jsonConfigurable::tDynamicStringSet& GetAbortStates();
 
+        virtual void Callback( float dt );
+
     protected:
         virtual void CalculateDelay();
 
@@ -58,5 +60,7 @@ namespace Kernel
 
         EventTrigger broadcast_event;
         EventTrigger broadcast_on_expiration_event;
+
+        DECLARE_SERIALIZABLE(HIVDelayedIntervention);
     };
 }

@@ -56,7 +56,8 @@ SConscript( [ 'baseReportLib/SConscript',
 # to be used by other dlls
 
 # not sure yet exactly right set of conditions for this
-if env['AllDlls'] or env['AllInterventions'] or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or env[ 'Report' ] != "" or env[ 'Campaign' ] != "":
+#if env['AllDlls'] or ( 'AllInterventions' in env and env['AllInterventions'] ) or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or ( 'Report' in env and env[ 'Report' ] != "" ) or ( 'Campaign' in env and env[ 'Campaign' ] != "" ):
+if env['AllDlls'] or ( 'DiseaseDll' in env and env[ 'DiseaseDll' ] != "" ) or ( 'Report' in env and env[ 'Report' ] != "" ):
     print "Build libgeneric_static.lib for dll...."
     SConscript( 'libgeneric_static/SConscript' )
 
@@ -107,7 +108,7 @@ elif env[ 'DiseaseDll' ] != "":
         print "Unspecified or unknown disease type: " + dtype
 
 # intervention dlls
-if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env[ 'Report' ]:
+if env['AllDlls'] or env[ 'DiseaseDll' ] != "":
     print( "Building dlls." )
 
     # this vector and malaria static is needed for MalariaDrugTypeParameters 
@@ -152,11 +153,11 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/StiispostdebutSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/ModifysticoinfectionstatusSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/SticoinfectiondiagnosticSConscript', variant_dir=dll_op_path )
+        SConscript( 'libgeneric/MalecircumcisionSConscript', variant_dir=dll_op_path )
 
     if env['DiseaseDll'] == "HIV":
         SConscript( 'libgeneric/ArtbasicSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/ArtdropoutSConscript', variant_dir=dll_op_path ) 
-        SConscript( 'libgeneric/BroadcasteventSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/Cd4diagnosticSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/AgediagnosticSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/Hivartstagingbycd4diagnosticSConscript', variant_dir=dll_op_path )
@@ -171,20 +172,18 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
         SConscript( 'libgeneric/HivsigmoidbyyearandsexdiagnosticSConscript', variant_dir=dll_op_path ) 
         SConscript( 'libgeneric/HivsimplediagnosticSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/HivmuxerSConscript', variant_dir=dll_op_path )
-        SConscript( 'libgeneric/MalecircumcisionSConscript', variant_dir=dll_op_path )
         SConscript( 'libgeneric/PmtctSConscript', variant_dir=dll_op_path )
 
     # Polio
     # NOT YET SConscript( 'libgeneric/PoliovaccineSConscript' )
     SConscript( 'libgeneric/BirthtriggeredSConscript', variant_dir=dll_op_path )
+    SConscript( 'libgeneric/BroadcasteventSConscript', variant_dir=dll_op_path ) 
     SConscript( 'libgeneric/CalendarSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/DelayedInterventionSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/DiagnosticsSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/HealthseekingbehaviorSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/MultiinterventiondistributorSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/NodeLevelHealthtriggeredSConscript', variant_dir=dll_op_path )
-    SConscript( 'libgeneric/ImmunoglobulinSConscript', variant_dir=dll_op_path )
-    SConscript( 'libgeneric/ImportPressureSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/OutbreakSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/OutbreakIndividualSConscript', variant_dir=dll_op_path )
     SConscript( 'libgeneric/PropertyvaluechangerSConscript', variant_dir=dll_op_path )
@@ -197,6 +196,48 @@ if env['AllDlls'] or env['AllInterventions'] or env[ 'DiseaseDll' ] != "" or env
 # Finally executable
 SConscript('Eradication/SConscript')
 if os.sys.platform == 'win32':
-    SConscript('reporters/STI_Reports_SConscript')
-    #SConscript('reporters/TB_Reports_SConscript')
+
+    dict = env.Dictionary()
+    dict['LIBS'].remove( "delayimp.lib" )
+    dict['LINKFLAGS'].remove( "/DELAYLOAD:\"python27.dll\"" )
+
+    SConscript('reporters/SConscript_Generic_AgeAtInfection')
+    SConscript('reporters/SConscript_Generic_AgeAtInfectionHistogram')
+    SConscript('reporters/SConscript_Generic_Basic')
+    SConscript('reporters/SConscript_Generic_EventCounter')
+    SConscript('reporters/SConscript_Generic_HumanMigrationTracking')
+    SConscript('reporters/SConscript_Generic_KmlDemo')
+    SConscript('reporters/SConscript_Generic_NodeDemographics')
+
+    disease = "ALL"
+    if 'Disease' in env and len(env['Disease']) > 0:
+        disease = env["Disease"]
+
+    if( (disease == "ALL") or (disease == "HIV") ):
+        SConscript('reporters/SConscript_HIV_WHO2015')
+
+    if( (disease == "ALL") or (disease == "Malaria") ):
+        SConscript('reporters/SConscript_Malaria_Filtered')
+        SConscript('reporters/SConscript_Malaria_Immunity')
+        SConscript('reporters/SConscript_Malaria_Patient')
+        SConscript('reporters/SConscript_Malaria_Summary')
+        SConscript('reporters/SConscript_Malaria_Survey')
+
+    if( (disease == "ALL") or (disease == "Polio") ):
+        SConscript('reporters/SConscript_Polio_IndividualInfections')
+        SConscript('reporters/SConscript_Polio_Survey')
+        SConscript('reporters/SConscript_Polio_VirusPopulation')
+
+    if( (disease == "ALL") or (disease == "TB") ):
+        SConscript('reporters/SConscript_TB_Patient')
+        SConscript('reporters/SConscript_TB_ReportScenarios')
+
+    if( (disease == "ALL") or (disease == "STI") or (disease == "HIV") ):
+        SConscript('reporters/SConscript_STI_RelationshipMigrationTracking')
+        SConscript('reporters/SConscript_STI_RelationshipQueue')
+
+    if( (disease == "ALL") or (disease == "Vector") or (disease == "Malaria") ):
+        SConscript('reporters/SConscript_Vector_VectorHabitat')
+        SConscript('reporters/SConscript_Vector_VectorMigration')
+        SConscript('reporters/SConscript_Vector_VectorStats')
 

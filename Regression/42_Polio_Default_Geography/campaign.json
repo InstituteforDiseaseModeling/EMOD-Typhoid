@@ -30,7 +30,6 @@
                          "Vaccine_Type": "mOPV_1", 
                          "class": "PolioVaccine"
                     }, 
-                    "Number_Distributions": 1000000, 
                     "Target_Age_Max": 5, 
                     "Target_Age_Min": 0, 
                     "Target_Demographic": "ExplicitAgeRanges", 

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -20,9 +20,10 @@ namespace Kernel
     IMPL_QUERY_INTERFACE2(ReferenceTrackingEventCoordinator, IEventCoordinator, IConfigurable)
 
     ReferenceTrackingEventCoordinator::ReferenceTrackingEventCoordinator()
-    : target_coverage( 0.0 ) // no great reason for this value
+    : year2ValueMap()
+    , target_coverage( 0.0 ) // no great reason for this value
+    , end_year(0.0)
     {
-        avoid_duplicates = true;
     }
 
     QuickBuilder
@@ -36,10 +37,17 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
+        if( !JsonConfigurable::_dryrun &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::STI_SIM) &&
+            (GET_CONFIGURABLE( SimulationConfig )->sim_type != SimType::HIV_SIM) )
+        {
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "ReferenceTrackingEventCoordinator can only be used in STI and HIV simulations." );
+        }
+
         float update_period = DAYSPERYEAR;
         initConfigComplexType("Time_Value_Map", &year2ValueMap, "Map of times (years) to coverages." );
         initConfigTypeMap("Update_Period", &update_period, "Gap between distribution updates.", 1.0, 10*DAYSPERYEAR, DAYSPERYEAR );
-        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", 0.0, 2200.0, 0.0 ); // min, max, default years
+        initConfigTypeMap("End_Year", &end_year, "Final date at which this set of targeted coverages should be applied (expiration)", MIN_YEAR, MAX_YEAR, MAX_YEAR );
 
         auto ret = StandardInterventionDistributionEventCoordinator::Configure( inputJson );
         num_repetitions = -1; // unlimited
@@ -47,6 +55,11 @@ namespace Kernel
         {
             float dt = GET_CONFIGURABLE(SimulationConfig)->Sim_Tstep;
             tsteps_between_reps = update_period/dt; // this won't be precise, depending on math.
+            if( tsteps_between_reps <= 0.0 )
+            {
+                // don't let this be zero or it will only update one time
+                tsteps_between_reps = 1;
+            }
         }
         return ret;
     }
@@ -81,8 +94,9 @@ namespace Kernel
                 auto mcw = ihec->GetMonteCarloWeight();
                 totalQualifyingPop += mcw;
                 auto better_ptr = ihec->GetInterventionsContext();
-                // Check whether this individual has a non-zero quantity of this intervention, based on C++ mangled typename.
-                totalWithIntervention += ( better_ptr->GetInterventionsByType( typeid( *_di ).name() ).size() > 0 ? mcw : 0 );
+                // Check whether this individual has a non-zero quantity of this intervention
+                std::string intervention_name = _di->GetName();
+                totalWithIntervention += ( (better_ptr->GetInterventionsByName( intervention_name ).size() > 0) ? mcw : 0 );
             }
         };
 
@@ -91,54 +105,38 @@ namespace Kernel
         {
             event_context->VisitIndividuals( fn ); // does not return value, updates total existing coverage by capture
         }
-        release_assert( totalQualifyingPop > 0 );
-        Fraction currentCoverageForIntervention = totalWithIntervention/totalQualifyingPop;
-        NonNegativeFloat totalWithoutIntervention = totalQualifyingPop - totalWithIntervention;
-        float default_value = 0.0f;
-        float year = parent->GetSimulationTime().Year();
-        target_coverage  = year2ValueMap.getValueLinearInterpolation(year, default_value);
 
-        float totalToIntervene = ( target_coverage * totalQualifyingPop ) - totalWithIntervention;
-        NO_LESS_THAN( totalToIntervene, 0 );
-
-        if( totalWithoutIntervention > 0 )
+        float dc = 0.0f;
+        if( totalQualifyingPop > 0 )
         {
-            demographic_coverage = totalToIntervene / totalWithoutIntervention;
+            Fraction currentCoverageForIntervention = totalWithIntervention/totalQualifyingPop;
+            NonNegativeFloat totalWithoutIntervention = totalQualifyingPop - totalWithIntervention;
+            float default_value = 0.0f;
+            float year = parent->GetSimulationTime().Year();
+            target_coverage  = year2ValueMap.getValueLinearInterpolation(year, default_value);
+
+            float totalToIntervene = ( target_coverage * totalQualifyingPop ) - totalWithIntervention;
+            NO_LESS_THAN( totalToIntervene, 0 );
+
+            if( totalWithoutIntervention > 0 )
+            {
+                dc = totalToIntervene / totalWithoutIntervention;
+            }
+            LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
+                            dc,
+                            float(target_coverage),
+                            float(currentCoverageForIntervention),
+                            float(totalWithoutIntervention),
+                            float(totalWithIntervention)
+                        );
         }
         else
         {
-            demographic_coverage = 0.0f;
+            LOG_INFO( "Setting demographic_coverage to 0 since 0 qualifying population.\n");
         }
-        LOG_INFO_F( "Setting demographic_coverage to %f based on target_coverage = %f, currentCoverageForIntervention = %f, total without intervention  = %f, total with intervention = %f.\n",
-                    demographic_coverage,
-                    (float) target_coverage,
-                    (float) currentCoverageForIntervention,
-                    (float) totalWithoutIntervention,
-                    (float) totalWithIntervention
-                );
+        demographic_restrictions.SetDemographicCoverage( dc );
+
     }
 
-#if USE_JSON_SERIALIZATION
-    // IJsonSerializable Interfaces
-    void ReferenceTrackingEventCoordinator::JSerialize( IJsonObjectAdapter* root, JSerializer* helper ) const
-    {
-        root->BeginObject();
-        root->EndObject();
-    }
-
-    void ReferenceTrackingEventCoordinator::JDeserialize( IJsonObjectAdapter* root, JSerializer* helper )
-    {
-    }
-#endif
-
-
-#if USE_BOOST_SERIALIZATION
-// TODO: Consolidate with serialization code in header.
-#include <boost/serialization/export.hpp>
-    template<class Archive>
-    void serialize(Archive &ar, ReferenceTrackingEventCoordinator &ec, const unsigned int v)
-    {
-    }
-#endif
 }
 

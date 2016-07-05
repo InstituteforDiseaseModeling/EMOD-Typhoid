@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -15,7 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Contexts.h"                  // for IIndividualHumanContext, IIndividualHumanInterventionsContext
 #include "Debug.h"                  // for IIndividualHumanContext, IIndividualHumanInterventionsContext
-#include "HIVInterventionsContainer.h"  // for IHIVDrugEffectsApply methods
+#include "IHIVInterventionsContainer.h"  // for IHIVDrugEffectsApply methods
 
 static const char* _module = "ARTBasic";
 
@@ -94,6 +94,18 @@ namespace Kernel
         //itbda->ApplyDrugVaccineReducedTransmitEffect(GetDrugReducedTransmit());
         //itbda->ApplyDrugInactivationRateEffect( GetDrugInactivationRate() );
         //itbda->ApplyDrugClearanceRateEffect( GetDrugClearanceRate() );
+    }
+
+    REGISTER_SERIALIZABLE(ARTBasic);
+
+    void ARTBasic::serialize(IArchive& ar, ARTBasic* obj)
+    {
+        GenericDrug::serialize( ar, obj );
+        ARTBasic& art = *obj;
+        ar.labelElement("viral_suppression"          ) & art.viral_suppression;
+        ar.labelElement("days_to_achieve_suppression") & art.days_to_achieve_suppression;
+
+        // itbda set in SetContextTo
     }
 }
 

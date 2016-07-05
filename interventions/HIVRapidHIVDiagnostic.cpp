@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -13,7 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "InterventionFactory.h"
 #include "NodeEventContext.h"  // for INodeEventContext (ICampaignCostObserver)
-#include "HIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
+#include "IHIVInterventionsContainer.h" // for time-date util function and access into IHIVCascadeOfCare
 
 static const char * _module = "HIVRapidHIVDiagnostic";
 
@@ -95,18 +95,15 @@ namespace Kernel
             broadcaster->TriggerNodeEventObservers( parent->GetEventContext(), IndividualEventTriggerType::HIVTestedNegative );
         }
     }
-}
 
+    REGISTER_SERIALIZABLE(HIVRapidHIVDiagnostic);
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, HIVRapidHIVDiagnostic& obj, const unsigned int v)
+    void HIVRapidHIVDiagnostic::serialize(IArchive& ar, HIVRapidHIVDiagnostic* obj)
     {
-        //ar & obj.abortStates;     // todo: serialize this!
-        ar & obj.cascadeState;
-        ar & obj.firstUpdate;
-        ar & boost::serialization::base_object<Kernel::HIVSimpleDiagnostic>(obj);
+        HIVSimpleDiagnostic::serialize( ar, obj );
+        HIVRapidHIVDiagnostic& diag = *obj;
+
+        ar.labelElement("m_ProbReceivedResults") & diag.m_ProbReceivedResults;
     }
 }
-#endif
+

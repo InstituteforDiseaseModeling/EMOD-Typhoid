@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -27,6 +27,11 @@ class ValidationLog;
 class RANDOMBASE;
 class StatusReporter;
 
+namespace IdmMpi
+{
+    class MessageInterface;
+}
+
 
 class IDMAPI Environment
 {
@@ -35,11 +40,13 @@ public:
     {
         int NumTasks;
         int Rank;
+        IdmMpi::MessageInterface* p_idm_mpi;
     } MPI;
 
     SimpleLogger *Log;
     Configuration *Config;
     void* SimConfig;
+    void* pPythonSupport;
     StatusReporter * Status_Reporter;
     
 #pragma warning( push )
@@ -58,6 +65,8 @@ public:
 
     // Sets up the environment for this process. Returns false if something went wrong
     static bool Initialize(
+        IdmMpi::MessageInterface* pMpi,
+        void* p_python_support,
         std::string configFileName,
         std::string inputPath,
         std::string outputPath,

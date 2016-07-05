@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -25,9 +25,6 @@ namespace Kernel
         // -------------------------
         // --- Assortivity Methods
         // -------------------------
-        // Update assortivity parameters/controls.  For example, one might want the
-        // assortivity to change based on the year.
-        virtual void Update( const IdmDateTime& rCurrentTime, float dt ) override;
 
     protected:
         virtual IIndividualHumanSTI* SelectPartnerForExtendedGroups( AssortivityGroup::Enum group,
@@ -39,12 +36,7 @@ namespace Kernel
 
         virtual void CheckDerivedValues() override;
         virtual void CheckAxesForReceivedResults();
-
-        virtual AssortivityGroup::Enum GetGroupToUse() const override;
     private:
-        float m_StartYear ;  // if current year is < start year, default to NO_GROUP
-        bool  m_StartUsing ; // value is based on start year versus current year
-
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         DECLARE_SERIALIZABLE(AssortivityHIV);

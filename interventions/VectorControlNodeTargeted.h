@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "VectorEnums.h"
 #include "Configure.h"
+#include "IWaningEffect.h"
 
 namespace Kernel
 {
@@ -39,6 +40,7 @@ namespace Kernel
 
     public:        
         SimpleVectorControlNode();
+        SimpleVectorControlNode( const SimpleVectorControlNode& );
         virtual ~SimpleVectorControlNode();
 
         // INodeDistributableIntervention
@@ -58,9 +60,10 @@ namespace Kernel
         float killing;
         float reduction;
         VectorHabitatType::Enum habitat_target;
-        InterventionDurabilityProfile::Enum durability_time_profile;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   blocking_config;
+        IWaningEffect* blocking_effect;
          
         INodeVectorInterventionEffectsApply *invic;
     };

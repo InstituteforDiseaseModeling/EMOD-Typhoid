@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -13,7 +13,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Debug.h" // for release_assert
 #include "RANDOM.h"
 #include "Common.h"             // for INFINITE_TIME
-#include "InterventionEnums.h"  // for InterventionDurabilityProfile, ImmunoglobulinType, etc.
 #include "IIndividualHuman.h"
 #include "InterventionsContainer.h"  // for IPropertyValueChangerEffects
 #include "MathFunctions.h"  // for IPropertyValueChangerEffects
@@ -183,20 +182,17 @@ namespace Kernel
         BaseIntervention::serialize( ar, obj );
         PropertyValueChanger& changer = *obj;
 
-// clorton        jsonConfigurable::ConstrainedString target_property_key;
-// clorton        jsonConfigurable::ConstrainedString target_property_value;
-
-        ar.labelElement("target_property_key") & (std::string&)(changer.target_property_key);
-        ar.labelElement("target_property_value") & (std::string&)(changer.target_property_value);
-        ar.labelElement("probability") & changer.probability;
-        ar.labelElement("revert") & changer.revert;
-        ar.labelElement("max_duration") & changer.max_duration;
-        ar.labelElement("action_timer") & changer.action_timer;
-        ar.labelElement("reversion_timer") & changer.reversion_timer;
+        ar.labelElement("target_property_key"  ) & changer.target_property_key;
+        ar.labelElement("target_property_value") & changer.target_property_value;
+        ar.labelElement("probability"          ) & changer.probability;
+        ar.labelElement("revert"               ) & changer.revert;
+        ar.labelElement("max_duration"         ) & changer.max_duration;
+        ar.labelElement("action_timer"         ) & changer.action_timer;
+        ar.labelElement("reversion_timer"      ) & changer.reversion_timer;
 
         if( !ar.IsWriter() )
         {
-            changer.target_property_key.constraints = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>";
+            changer.target_property_key.constraints   = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>";
             changer.target_property_value.constraints = "<demographics>::Defaults.Individual_Properties.*.Value.<keys>";
 
             //TODO - Need to actual use the constrained string

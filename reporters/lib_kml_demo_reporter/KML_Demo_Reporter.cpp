@@ -1,13 +1,14 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 
 ***************************************************************************************************/
 
-#include "StdAfx.h"
+#include "stdafx.h"
+#include <stdio.h> // for sscanf
 
 // zlib:
 //#include "zlib.h"
@@ -29,105 +30,105 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "tarball.h"
 
 #include "KML_Demo_Reporter.h"
-//#include <functional>
-#include <map>
-#include "BoostLibWrapper.h"
-// not in boost wrapper???
-#include <boost/math/special_functions/fpclassify.hpp>
-#include <boost/filesystem.hpp>
-#include "Report.h"
+#include "DllInterfaceHelper.h"
+#include "FactorySupport.h"
 #include "Sugar.h"
 #include "Environment.h"
 #include "INodeContext.h"
 #include "IIndividualHuman.h"
 #include "suids.hpp"
-#include <stdio.h> // for sscanf
+#include "IdmMpi.h"
+#include "NoCrtWarnings.h"
+#include "FileSystem.h"
 
-#include "DllDefs.h"
-#include "ProgVersion.h"
+//#define TARBALL 1
+#define KML 1
+//#define COLLECT_POLIO_DATA 1
 
-#pragma warning(disable : 4996)
+#ifdef COLLECT_POLIO_DATA
+#include "PolioContexts.h"
+static const char * _susceptibleinfectedunder5_label = "New Disease Susceptible Infections Under 5";
+static const char * _susceptibleinfectedover5_label  = "New Disease Susceptible Infections Over 5";
+#else
+static const char * _stat_pop_label = "Statistical Population";
+static const char * _infected_label = "Infected";
+#endif
+
+#define MASTER_FILE "//bayesianfil01/IDM/home/dbridenbecker/regression_test_files/tajik_master.kml"
+
 
 using namespace std;
 using namespace json;
 
-static const char * _module = "KML_Demo_Reporter";
 
-#define KML 1
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!! CREATING NEW REPORTS
+// !!! If you are creating a new report by copying this one, you will need to modify 
+// !!! the values below indicated by "<<<"
 
-// You can put 0 or more valid Sim types into _sim_types but has to end with nullptr
-// Refer to DllLoader.h for current SIMTYPES_MAXNUM
-// but we don't include DllLoader.h to avoid compiling redefinition errors.
-static const char * _sim_types[] = {"GENERIC_SIM", nullptr};
+// Module name for logging, CustomReport.json, and DLL GetType()
+static const char * _module = "KML_Demo_Reporter";// <<< Name of this file
 
-static const char * _stat_pop_label = "Statistical Population";
-static const char * _infected_label = "Infected";
-//static const char * _susceptibleinfected_label = "New Disease Susceptible Infections";
-//static const char * _susceptibleinfectedunder5_label = "New Disease Susceptible Infections Under 5";
-//static const char * _susceptibleinfectedover5_label = "New Disease Susceptible Infections Over 5";
+namespace Kernel
+{
+// You can put 0 or more valid Sim types into _sim_types but has to end with nullptr.
+// "*" can be used if it applies to all simulation types.
+#ifdef COLLECT_POLIO_DATA
+static const char * _sim_types[] = { "POLIO_SIM", nullptr };// <<< Types of simulation the report is to be used with
+#else
+static const char * _sim_types[] = { "*", nullptr };// <<< Types of simulation the report is to be used with
+#endif
+
+report_instantiator_function_t rif = []()
+{
+    return (Kernel::IReport*)(new KML_Demo_Reporter()); // <<< Report to create
+};
+
+DllInterfaceHelper DLL_HELPER( _module, _sim_types, rif );
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// ------------------------------
+// --- DLL Interface Methods
+// ---
+// --- The DTK will use these methods to establish communication with the DLL.
+// ------------------------------
 
 #ifdef __cplusplus    // If used by C++ code, 
 extern "C" {          // we need to export the C interface
 #endif
 
-//
-// This is the interface function from the DTK.
-// This one has to be the first one to be called to set the right
-// EnvPtr for all the LOG_INFO(F) to work
-//
-DTK_DLLEXPORT
-char* __cdecl
+DTK_DLLEXPORT char* __cdecl
 GetEModuleVersion(char* sVer, const Environment * pEnv)
 {
-    Environment::setInstance(const_cast<Environment*>(pEnv));
-    ProgDllVersion pv;
-    LOG_INFO_F("GetVersion called with ver=%s\n", pv.getVersion());
-    if (sVer) strcpy(sVer, pv.getVersion());
-    return sVer;
+    return DLL_HELPER.GetEModuleVersion( sVer, pEnv );
 }
-
 
 DTK_DLLEXPORT void __cdecl
 GetSupportedSimTypes(char* simTypes[])
 {
-    int i=0;
-    while (i < SIMTYPES_MAXNUM && _sim_types[i] != NULL)
-    {
-        // allocation will be freed by the caller
-        simTypes[i] = new char[strlen(_sim_types[i]) + 1];
-        strcpy(simTypes[i], _sim_types[i]);
-        i++;
-    }
-    simTypes[i] = NULL;
+    DLL_HELPER.GetSupportedSimTypes( simTypes );
 }
 
-DTK_DLLEXPORT IReport* __cdecl
-CreateReport()
-{
-    std::ostringstream oss;
-    oss << "CreateReport called for " << _module << std::endl;
-    LOG_INFO( oss.str().c_str() );
-    return new KML_Demo_Reporter();
-}
-
-DTK_DLLEXPORT
-const char *
-__cdecl
+DTK_DLLEXPORT const char * __cdecl
 GetType()
 {
-    std::ostringstream oss;
-    oss << "GetType called for " << _module << std::endl;
-    LOG_INFO( oss.str().c_str() );
-    return _module;
+    return DLL_HELPER.GetType();
+}
+
+DTK_DLLEXPORT void __cdecl
+GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
+{
+    DLL_HELPER.GetReportInstantiator( pif );
 }
 
 #ifdef __cplusplus
 }
 #endif
 
-/////////////////////////
-// Initialization methods
-/////////////////////////
+// ----------------------------------------
+// --- KML_Demo_Reporter Methods
+// ----------------------------------------
 
 
 void
@@ -162,13 +163,17 @@ KML_Demo_Reporter::LogNodeData(
     Kernel::INodeContext * pNC
 )
 {
-    uint32_t input_nodeId = pNC->GetExternalID();
-    uint32_t       nodeId = pNC->GetExternalID();
+    uint32_t nodeId = pNC->GetExternalID();
 
+#ifdef COLLECT_POLIO_DATA
+    const Kernel::INodePolio* pNC_polio = dynamic_cast<const Kernel::INodePolio*>(pNC);
+    nodeChannelMapVec[ _susceptibleinfectedunder5_label ][ nodeId ].push_back( pNC_polio->GetNewDiseaseSusceptibleInfectionsUnder5() );
+    nodeChannelMapVec[ _susceptibleinfectedover5_label  ][ nodeId ].push_back( pNC_polio->GetNewDiseaseSusceptibleInfectionsOver5()  );
+#else
     // The following three channels are not currently being used:
-    nodeChannelMapVec   [ _stat_pop_label ][ nodeId ].push_back(                  pNode->GetStatPop() );
-    nodeChannelMapVec[ _infected_label ][ nodeId ].push_back(                     pNode->GetInfected() );
-    //nodeChannelMap[ _susceptibleinfected_label ][ nodeId ]          = pNode_polio->GetNewDiseaseSusceptibleInfections();
+    nodeChannelMapVec[ _stat_pop_label ][ nodeId ].push_back( pNC->GetStatPop() );
+    nodeChannelMapVec[ _infected_label ][ nodeId ].push_back( pNC->GetInfected() );
+#endif
 }
 
 void 
@@ -212,31 +217,7 @@ KML_Demo_Reporter::Reduce()
 
 //LOG_INFO_F( "REDUCESPATIAL:send_buffer: %s\n", node_data_pair_send_buffer.c_str() );
 
-        // clorton TODO - consolidate versions of this reduce code in one place.
-        int32_t length = (int32_t)node_data_pair_send_buffer.size();
-
-        if (EnvPtr->MPI.Rank > 0)
-        {
-            MPI_Gather((void*)&length, 1, MPI_INTEGER4, nullptr, EnvPtr->MPI.NumTasks, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-            MPI_Gatherv((void*)node_data_pair_send_buffer.c_str(), length, MPI_BYTE, nullptr, nullptr, nullptr, MPI_BYTE, 0, MPI_COMM_WORLD);
-        }
-        else
-        {
-            std::vector<int32_t> lengths(EnvPtr->MPI.NumTasks);
-            MPI_Gather((void*)&length, 1, MPI_INTEGER4, lengths.data(), 1, MPI_INTEGER4, 0, MPI_COMM_WORLD);
-            int32_t total = 0;
-            std::vector<int32_t> displs(EnvPtr->MPI.NumTasks);
-            for (size_t i = 0; i < EnvPtr->MPI.NumTasks; ++i)
-            {
-                displs[i] = total;
-                total += lengths[i];
-            }
-            std::vector<char> buffer(total + 1);
-            MPI_Gatherv((void*)node_data_pair_send_buffer.c_str(), length, MPI_BYTE, (void*)buffer.data(), lengths.data(), displs.data(), MPI_BYTE, 0, MPI_COMM_WORLD);
-            buffer[total] = '\0';
-
-            node_data_pair_receive_buffer = buffer.data();
-        }
+        EnvPtr->MPI.p_idm_mpi->GatherToRoot( node_data_pair_send_buffer, node_data_pair_receive_buffer );
 
 //LOG_INFO_F( "REDUCESPATIAL:receive_buffer: %s\n", node_data_pair_receive_buffer.c_str());
 
@@ -254,7 +235,7 @@ KML_Demo_Reporter::Reduce()
                 cnt = 0;
                 std::istringstream i_timeseries( string_token );
                 getline(i_timeseries, token, ':');
-                sscanf(token.c_str(), "%u",&nodeId);
+                sscanf_s(token.c_str(), "%u",&nodeId);
 
                 if (nodeChannelMapVec[ channelName ].find( nodeId ) != nodeChannelMapVec[ channelName ].end()) //data already exists
                 {
@@ -264,7 +245,7 @@ KML_Demo_Reporter::Reduce()
                 {
                     while (getline(i_timeseries, token, ','))   // Missing last value?
                     {
-                        sscanf(token.c_str(), "%f",&value);
+                        sscanf_s(token.c_str(), "%f",&value);
                         nodeChannelMapVec[ channelName ][ nodeId ].push_back (value);
                     }
                 }
@@ -293,7 +274,6 @@ void KML_Demo_Reporter::Finalize()
          ++it )
     {
         const std::string &channelName = it->first;
-        std::string output_dir = "output\\";
         std::string fileName = "ReportByNode_"+channelName + ".csv";
 
         //space to underscore
@@ -307,7 +287,7 @@ void KML_Demo_Reporter::Finalize()
 
         // Write nodeID in column 1, and data in subsequent columns
         std::ofstream channelDataFile;
-        channelDataFile.open( output_dir+fileName);
+        channelDataFile.open( FileSystem::Concat( EnvPtr->OutputPath, fileName ) );
 
         std::stringstream channelStringStream;
         for( tNode2DataMapVec::const_iterator it2 = node2DataMapVec.begin();
@@ -361,8 +341,8 @@ void KML_Demo_Reporter::Finalize()
 // like Google Earth or NASA WorldWinds.
 void KML_Demo_Reporter::WriteKmlData()
 {
-    std::cout << __FUNCTION__ << std::endl;
-    std::string output_dir = "output/";
+    LOG_INFO( __FUNCTION__ );
+
     // Iterate over nodeChannelMapVec, channel by channel
     for( tChannel2Node2DataMapVec::iterator it = nodeChannelMapVec.begin();
          it != nodeChannelMapVec.end();
@@ -379,21 +359,21 @@ void KML_Demo_Reporter::WriteKmlData()
         // Note that even though this example has a KML suffix, it's not a valid KML file because
         // it is missing proper closing tags (to save us from having to find the right insertion point).
         // This way we can just append and provide the necessary closure tags ourself.
-        std::ofstream masterXmlFile;
-        const char * master_filename = "\\\\rivendell.emod.int\\emod\\home\\jbloedow\\tajik_master.kml";
-        masterXmlFile.open( master_filename, std::fstream::in );
-        if( masterXmlFile.fail() )
+        const char * master_filename = MASTER_FILE;
+        if( !FileSystem::FileExists( master_filename ) )
         {
             throw Kernel::FileNotFoundException( __FILE__, __LINE__, __FUNCTION__, master_filename );
         }
 
         // Copy the file
-        FILE * fp_master = fopen( master_filename, "r" );
-        FILE * fp_clone = fopen( ( std::string( output_dir ) + kml_file ).c_str(), "w" );
-#define BUFSIZ 1024
-        unsigned char buf[ BUFSIZ ];
+        FILE * fp_master=nullptr;
+        FILE * fp_clone=nullptr;
+        fopen_s( &fp_master, master_filename, "r" );
+        fopen_s( &fp_clone, FileSystem::Concat( EnvPtr->OutputPath, kml_file ).c_str(), "w" );
+
+        unsigned char buf[ 1024 ];
         size_t read_size;
-        while (read_size = fread(buf, 1, BUFSIZ, fp_master))
+        while (read_size = fread(buf, 1, 1024, fp_master))
         {
             fwrite(buf, 1, read_size, fp_clone);
         }
@@ -403,7 +383,7 @@ void KML_Demo_Reporter::WriteKmlData()
 
         // Write the one-time animation xml
         std::ofstream channelXmlFile;
-        channelXmlFile.open( ( std::string( output_dir ) + kml_file ).c_str(), std::fstream::app );
+        channelXmlFile.open(  FileSystem::Concat( EnvPtr->OutputPath, kml_file ).c_str(), std::fstream::app );
         channelXmlFile << "    <gx:Tour>" << std::endl
                        << "      <name>Play me!</name>" << std::endl
                        << "      <gx:Playlist>" << std::endl
@@ -450,8 +430,8 @@ void KML_Demo_Reporter::WriteKmlData()
                 // Use the node id as the taretId.
                 channelXmlFile << "              <PolyStyle targetId='ps" << node_id << "'>" << std::endl;
                 // convert color to hex RGB somehow
-                char colorString[6];
-                sprintf( &colorString[0], "%02x%02x%02x", normValue, normValue, normValue);
+                char colorString[7];
+                sprintf_s( &colorString[0], 7, "%02x%02x%02x", normValue, normValue, normValue);
                 channelXmlFile << "                <color>7d" << colorString << "</color>" << std::endl;
                 channelXmlFile << "              </PolyStyle>" << std::endl;
             }
@@ -477,4 +457,6 @@ void KML_Demo_Reporter::WriteKmlData()
 std::string KML_Demo_Reporter::GetReportName() const
 {
     return std::string("KML_Demo_Reporter.csv");
+}
+
 }

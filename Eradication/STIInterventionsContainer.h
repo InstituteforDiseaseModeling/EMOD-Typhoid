@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -47,7 +47,8 @@ namespace Kernel
 
         // ISTICircumcisionConsumer 
         virtual bool IsCircumcised( void ) const override;
-        virtual bool ApplyCircumcision( ICircumcision *) override;
+        virtual float GetCircumcisedReducedAcquire() const override;
+        virtual void ApplyCircumcision( float reduceAcquire ) override;
 
         // IPropertyValueChangerEffects
         virtual void ChangeProperty( const char *property, const char* new_value) override;
@@ -63,6 +64,7 @@ namespace Kernel
 
     protected:
         bool is_circumcised;
+        float circumcision_reduced_require;
 
         std::map< RelationshipType::Enum, Sigmoid > STI_blocking_overrides;
 

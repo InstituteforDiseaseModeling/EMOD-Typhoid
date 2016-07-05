@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -28,6 +28,7 @@ extern const char* TRANSMISSION_DATA_KEY;
 
 // property bag of key:value pairs
 typedef std::map< std::string, std::string > tProperties;
+typedef std::map< std::string, std::multimap< float, std::string > > tPropertiesDistrib;
 
 std::string PropertiesToString( const tProperties& properties );
 std::string PropertiesToStringCsvFriendly( const tProperties& properties );

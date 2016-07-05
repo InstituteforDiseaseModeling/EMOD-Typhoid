@@ -17,9 +17,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Eradication\BaseChannelReport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ReportPluginAgeAtInfection.h">
       <Filter>Header Files</Filter>
     </ClInclude>

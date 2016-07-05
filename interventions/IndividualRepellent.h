@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configuration.h"
 #include "InterventionEnums.h"
 #include "Configure.h"
+#include "IWaningEffect.h"
 
 namespace Kernel
 {
@@ -31,9 +32,9 @@ namespace Kernel
     public:
         bool Configure( const Configuration * config );
 
-
         SimpleIndividualRepellent();
-        virtual ~SimpleIndividualRepellent() { }
+        SimpleIndividualRepellent( const SimpleIndividualRepellent& );
+        virtual ~SimpleIndividualRepellent();
 
         // IDistributableIntervention
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver  * const pCCO );
@@ -46,11 +47,12 @@ namespace Kernel
         virtual float GetKillingRate() const { return current_killingrate; }
 
     protected:
-        InterventionDurabilityProfile::Enum durability_time_profile;
-        float current_blockingrate;
         float current_killingrate;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
+        float current_blockingrate;
+//        WaningConfig   killing_config;
+//        IWaningEffect* killing_effect;
+        WaningConfig   blocking_config;
+        IWaningEffect* blocking_effect;
         IIndividualRepellentConsumer *ihmc; // aka individual or individual vector interventions container
 
         DECLARE_SERIALIZABLE(SimpleIndividualRepellent);

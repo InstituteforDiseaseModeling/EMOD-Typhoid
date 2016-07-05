@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -88,7 +88,7 @@ namespace Kernel
         virtual void Update(float dt); // hook to update interventions if they need it
 
         //functions in the ITBInterventionsContainer
-        virtual int GetNumTBDrugsActive(); //this function needs to be non-const so it can call GetInterventionsByType
+        virtual int GetNumTBDrugsActive(); //this function needs to be non-const so it can call GetInterventionsByInterface
         virtual bool GetTxNaiveStatus() const;
         virtual bool GetTxFailedStatus() const;
         virtual bool GetTxEverRelapsedStatus() const; 

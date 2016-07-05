@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -34,6 +34,7 @@ namespace Kernel
         // IDistributingDistributableIntervention
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
         virtual void SetContextTo(INodeEventContext *context) override { parent = context; }
+        virtual bool Distribute( INodeEventContext *pNodeEventContext, IEventCoordinator2 *pEC ) override;
         virtual void Update(float dt) override;
 
     protected:

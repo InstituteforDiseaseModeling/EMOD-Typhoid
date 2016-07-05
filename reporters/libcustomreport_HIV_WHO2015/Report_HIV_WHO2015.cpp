@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -131,8 +131,8 @@ GetReportInstantiator( Kernel::report_instantiator_function_t* pif )
 
     bool Report_HIV_WHO2015::Configure( const Configuration * inputJson )
     {
-        initConfigTypeMap( "Start_Year", &startYear, "Year to start collecting data for Report_HIV_WHO2015.csv", 0.0f, FLT_MAX, 0.0f    );
-        initConfigTypeMap( "Stop_Year",  &stopYear,  "Year to stop collecting data for Report_HIV_WHO2015.csv",  0.0f, FLT_MAX, FLT_MAX );
+        initConfigTypeMap( "Start_Year", &startYear, "Year to start collecting data for Report_HIV_WHO2015.csv", MIN_YEAR, MAX_YEAR, MIN_YEAR );
+        initConfigTypeMap( "Stop_Year",  &stopYear,  "Year to stop collecting data for Report_HIV_WHO2015.csv",  MIN_YEAR, MAX_YEAR, MAX_YEAR );
 
         bool ret = BaseTextReportEvents::Configure( inputJson );
 

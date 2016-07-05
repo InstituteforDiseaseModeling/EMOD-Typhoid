@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -13,23 +13,11 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 #include "Exceptions.h"
 
-// These includes are only used for serialization
-#include "InfectionTB.h"
-#include "SusceptibilityTB.h"
-#include "TBInterventionsContainer.h"
-
-// GHH added: These includes are only used for serialization
-#include "InfectionHIV.h"
-#include "SusceptibilityHIV.h"
-#include "HIVInterventionsContainer.h"
-
 #ifdef ENABLE_TB
 #include "IndividualTB.h"
 
 namespace Kernel
 {
-    //typedef std::list<Susceptibility*> susceptibility_list_t;
-
     // This class has no need yet for flags beyond those in the base class
     class IIndividualHumanCoinfection : public ISupports
     {
@@ -68,6 +56,23 @@ namespace Kernel
         virtual int   GetNumCD4TimeSteps() const = 0;
     };
 
+    class IndividualHumanCoinfectionConfig : public IndividualHumanAirborneConfig
+    {
+        GET_SCHEMA_STATIC_WRAPPER( IndividualHumanCoinfectionConfig )
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
+        DECLARE_QUERY_INTERFACE()
+
+    public:
+        virtual bool Configure( const Configuration* config ) override;
+
+    protected:
+        friend class IndividualHumanCoinfection;
+
+        static map <float,float> CD4_act_map;
+        static float HIV_coinfection_probability;
+        static float Coinfected_mortality_rate;
+    };
+
     class IndividualHumanCoinfection : public IIndividualHumanCoinfection, public IIndividualHumanTB, public IndividualHumanAirborne
     {
         friend class SimulationTBHIV;
@@ -79,7 +84,6 @@ namespace Kernel
         virtual ~IndividualHumanCoinfection(void) { }
         static   IndividualHumanCoinfection *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
         virtual void InitializeHuman();
-        virtual bool Configure( const Configuration* config );
 
         // Infections and Susceptibility
         virtual void AcquireNewInfection(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1);
@@ -106,7 +110,7 @@ namespace Kernel
         virtual void Set_forward_CD4(vector <float> vin)  {CD4_forward_vector = vin; };
         virtual void Set_forward_TB_act( std::vector<float> vin);
         virtual vector <float> Get_forward_CD4_act(){return CD4_forward_vector;};
-        virtual map <float,float> Get_CD4_Map(){return CD4_act_map;};
+        virtual map <float,float> Get_CD4_Map(){return IndividualHumanCoinfectionConfig::CD4_act_map;};
         virtual void LifeCourseLatencyTimerUpdate( Susceptibility*);
         virtual void Coinf_Generate_forward_CD4();
         virtual bool HasActivePresymptomaticInfection() const;
@@ -136,7 +140,6 @@ namespace Kernel
         virtual float GetNextLatentActivation(float time) const;
 
         // Coinfection reactivation
-        static map <float,float> CD4_act_map;
         std::vector <float> CD4_forward_vector;
         std::vector<float> TB_activation_vector;
 
@@ -189,11 +192,11 @@ namespace Kernel
         int infectioncount_tb;
         int infectioncount_hiv;
 
-        static float HIV_coinfection_probability;
-        static float Coinfected_mortality_rate;
         bool m_is_on_ART;
         bool m_has_ever_been_onART;
         bool m_has_ever_tested_positive_for_HIV;
+
+        static void InitializeStaticsCoinfection( const Configuration* config );
     };
 }
 

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "FactorySupport.h"
 #include "Configure.h"
+#include "IWaningEffect.h"
 
 namespace Kernel
 {
@@ -36,7 +37,8 @@ namespace Kernel
     public:
         bool Configure( const Configuration * config );
         HumanHostSeekingTrap();
-        virtual ~HumanHostSeekingTrap() { }
+        HumanHostSeekingTrap( const HumanHostSeekingTrap& );
+        virtual ~HumanHostSeekingTrap();
 
         // IDistributableIntervention
         virtual bool Distribute(IIndividualHumanInterventionsContext *context, ICampaignCostObserver * const pCCO );
@@ -47,9 +49,10 @@ namespace Kernel
     protected:
         float current_attractrate;
         float current_killingrate;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
-        InterventionDurabilityProfile::Enum durability_time_profile;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   attract_config;
+        IWaningEffect* attract_effect;
         IVectorInterventionEffectsSetter *ivies;
 
         DECLARE_SERIALIZABLE(HumanHostSeekingTrap);

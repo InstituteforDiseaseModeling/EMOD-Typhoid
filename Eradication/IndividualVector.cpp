@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -71,14 +71,10 @@ namespace Kernel
         // deletion of susceptibility handled by parent destructor
     }
 
-    bool IndividualHumanVector::Configure( const Configuration * config )
+    void IndividualHumanVector::InitializeStaticsVector( const Configuration * config )
     {
-        LOG_DEBUG( "Configure\n" );
-
-        SusceptibilityVectorConfig fakeImmunity;
-        fakeImmunity.Configure( config );
-
-        return JsonConfigurable::Configure( config );
+        SusceptibilityVectorConfig immunity_config;
+        immunity_config.Configure( config );
     }
 
     void IndividualHumanVector::PropagateContextToDependents()

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -47,11 +47,6 @@ namespace Kernel
     , actual_intervention_config()
     , _di(nullptr)
     {
-        initConfigComplexType("Actual_IndividualIntervention_Config", &actual_intervention_config, BT_Actual_Intervention_Config_DESC_TEXT);
-        initConfigTypeMap("Duration", &max_duration, BT_Duration_DESC_TEXT, -1.0f, FLT_MAX, -1.0f ); // -1 is a convention for indefinite duration
-
-        initConfigTypeMap( "Blackout_Period", &blackout_period, Blackout_Period_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-        initConfigTypeMap( "Blackout_Event_Trigger", &blackout_event_trigger, Blackout_Event_Trigger_DESC_TEXT );
     }
 
     NodeLevelHealthTriggeredIV::~NodeLevelHealthTriggeredIV() { }
@@ -162,6 +157,12 @@ namespace Kernel
     )
     {
         JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
+
+        initConfigComplexType("Actual_IndividualIntervention_Config", &actual_intervention_config, BT_Actual_Intervention_Config_DESC_TEXT);
+        initConfigTypeMap("Duration", &max_duration, BT_Duration_DESC_TEXT, -1.0f, FLT_MAX, -1.0f ); // -1 is a convention for indefinite duration
+
+        initConfigTypeMap( "Blackout_Period", &blackout_period, Blackout_Period_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
+        initConfigTypeMap( "Blackout_Event_Trigger", &blackout_event_trigger, Blackout_Event_Trigger_DESC_TEXT );
 
         demographic_restrictions.ConfigureRestrictions( this, inputJson );
 
@@ -332,6 +333,7 @@ namespace Kernel
             _di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config );
             release_assert( _di );
             delete config;
+            config = nullptr;
         }
         // Huge performance win by cloning instead of configuring.
         release_assert( _di );

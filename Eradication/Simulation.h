@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -75,6 +75,7 @@ namespace Kernel
 
         // Migration
         virtual void PostMigratingIndividualHuman(IIndividualHuman *i) override;
+        virtual bool CanSupportFamilyTrips() const override;
 
         virtual void DistributeEventToOtherNodes( const std::string& rEventName, INodeQualifier* pQualifier ) override;
         virtual void UpdateNodeEvents() override;
@@ -213,6 +214,7 @@ namespace Kernel
         std::string campaign_filename;
         std::string loadbalance_filename;
         int Run_Number;
+        bool can_support_family_trips;
 
         NodeDemographicsFactory* demographics_factory;
 #pragma warning( pop )

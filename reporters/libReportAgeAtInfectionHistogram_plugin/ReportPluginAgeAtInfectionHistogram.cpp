@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -104,6 +104,7 @@ ReportPluginAgeAtInfectionHistogram::ReportPluginAgeAtInfectionHistogram()
     LOG_INFO( "ReportPluginAgeAtInfectionHistogram ctor\n" );
     report_name = _report_name;
     time_since_last_report = 0;
+    reporting_interval_in_years = 1;
 }
 
 /////////////////////////
@@ -224,7 +225,7 @@ ReportPluginAgeAtInfectionHistogram::Finalize()
 
     ProgDllVersion pv;
     ostringstream dtk_ver;
-    dtk_ver << pv.getRevisionNumber() << " " << pv.getBranch() << " " << pv.getBuildDate();
+    dtk_ver << pv.getRevisionNumber() << " " << pv.getSccsBranch() << " " << pv.getBuildDate();
     qb["Header"]["DTK_Version"] = String( dtk_ver.str() );
     qb["Header"]["Report_Version"] = String( "3" );
     qb["Channels"]["ReportingInterval"]["Units"] = String( "Years" );
@@ -251,6 +252,7 @@ ReportPluginAgeAtInfectionHistogram::Finalize()
         }
         curr_interval++;
     }
+    qb["Header"]["Timesteps"] = Number(curr_bin);
 
     // write to an internal buffer first... if we write directly to the network share, performance is slow
     // (presumably because it's doing a bunch of really small writes of all the JSON elements instead of one

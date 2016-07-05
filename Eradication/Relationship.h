@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -32,7 +32,7 @@ namespace Kernel
 
             // public non-const
             virtual void Pause( IIndividualHumanSTI* departee ) override;
-            virtual void Terminate() override;
+            virtual void Terminate( RelationshipTerminationReason::Enum terminationReason ) override;
             virtual void Migrate() override;
             virtual void Resume( IRelationshipManager* pRelMan, ISociety* pSociety, IIndividualHumanSTI* returnee ) override;
             virtual bool Update( float dt ) override;
@@ -40,13 +40,16 @@ namespace Kernel
 
             // public const
             virtual RelationshipState::Enum GetState() const override;
+            virtual RelationshipState::Enum GetPreviousState() const override;
             virtual RelationshipMigrationAction::Enum GetMigrationAction( RANDOMBASE* prng ) const override;
+            virtual RelationshipTerminationReason::Enum GetTerminationReason() const override;
             virtual IIndividualHumanSTI* MalePartner() const override;
             virtual IIndividualHumanSTI* FemalePartner() const override;
             virtual IIndividualHumanSTI* GetPartner( IIndividualHumanSTI* pIndiv ) const override;
             virtual const suids::suid& GetSuid() const override;
             virtual const std::string& GetPropertyKey() override;
             virtual const std::string& GetPropertyName() const override;
+            virtual unsigned int GetSlotNumberForPartner( bool forPartnerB ) const override;
             virtual const tRelationshipMembers GetMembers() const override;
             virtual bool IsDiscordant() const override;
             virtual float GetTimer() const override;
@@ -74,9 +77,15 @@ namespace Kernel
 
             void SetManager( IRelationshipManager* pRelMan, ISociety* pSociety );
 
+            virtual Relationship* Clone() = 0;
+
+            static void serialize( IArchive& ar, Relationship* obj );
+
             suids::suid _suid;
             RelationshipState::Enum state;
+            RelationshipState::Enum previous_state;
             RelationshipType::Enum relationship_type;
+            RelationshipTerminationReason::Enum termination_reason;
             IRelationshipParameters* p_rel_params ;
             IIndividualHumanSTI* male_partner; // change to male_partner and female_partner at some point, but sounds so sterile...
             IIndividualHumanSTI* female_partner;
@@ -96,8 +105,6 @@ namespace Kernel
             IRelationshipManager * relMan;
             unsigned int total_coital_acts;
             bool has_migrated;
-
-            DECLARE_SERIALIZABLE(Relationship);
 #pragma warning( pop )
 
     private:
@@ -129,6 +136,7 @@ namespace Kernel
         public:
             friend class RelationshipFactory;
             DECLARE_QUERY_INTERFACE()
+
         protected:
             TransitoryRelationship();
             TransitoryRelationship( const suids::suid& rRelId,
@@ -136,6 +144,8 @@ namespace Kernel
                                     IRelationshipParameters* pParams,
                                     IIndividualHumanSTI* male_partner, 
                                     IIndividualHumanSTI* female_partner );
+
+            virtual Relationship* Clone() override;
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -148,6 +158,7 @@ namespace Kernel
         public:
             friend class RelationshipFactory;
             DECLARE_QUERY_INTERFACE()
+
         protected:
             InformalRelationship();
             InformalRelationship( const suids::suid& rRelId,
@@ -155,6 +166,8 @@ namespace Kernel
                                   IRelationshipParameters* pParams, 
                                   IIndividualHumanSTI* male_partner, 
                                   IIndividualHumanSTI* female_partner );
+
+            virtual Relationship* Clone() override;
 
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
@@ -167,6 +180,7 @@ namespace Kernel
         public:
             friend class RelationshipFactory;
             DECLARE_QUERY_INTERFACE()
+
         protected:
             MarriageRelationship();
             MarriageRelationship( const suids::suid& rRelId,
@@ -175,9 +189,33 @@ namespace Kernel
                                   IIndividualHumanSTI* male_partner, 
                                   IIndividualHumanSTI* female_partner );
 
+            virtual Relationship* Clone() override;
+
 #pragma warning( push )
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
             DECLARE_SERIALIZABLE(MarriageRelationship);
+#pragma warning( pop )
+    };
+
+    class CommercialRelationship : public Relationship
+    {
+        public:
+            friend class RelationshipFactory;
+            DECLARE_QUERY_INTERFACE()
+
+        protected:
+            CommercialRelationship();
+            CommercialRelationship( const suids::suid& rRelId,
+                                       IRelationshipManager* pRelMan,
+                                       IRelationshipParameters* pParams, 
+                                       IIndividualHumanSTI* male_partner, 
+                                       IIndividualHumanSTI* female_partner );
+
+            virtual Relationship* Clone() override;
+
+#pragma warning( push )
+#pragma warning( disable: 4251 ) // See IdmApi.h for details
+            DECLARE_SERIALIZABLE(CommercialRelationship);
 #pragma warning( pop )
     };
 }

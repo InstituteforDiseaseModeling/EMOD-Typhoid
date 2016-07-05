@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -60,10 +60,12 @@ namespace Kernel
             auto ns_config = Configuration::CopyFromElement( ce->nodeset_config._json );
             ce->nodeset = NodeSetFactory::CreateInstance( ns_config );
             delete ns_config;
+            ns_config = nullptr;
 
             auto ec_config = Configuration::CopyFromElement((ce->event_coordinator_config._json));
             ce->event_coordinator = EventCoordinatorFactory::CreateInstance( ec_config );
             delete ec_config;
+            ec_config = nullptr;
 
             if (!ce->nodeset)
             {
@@ -120,7 +122,7 @@ namespace Kernel
                     << std::endl;
                 LOG_INFO( msg.str().c_str() );
             }
-            catch( json::Exception &e )
+            catch( const json::Exception &e )
             {
                 std::ostringstream msg;
                 msg << "json Exception creating intervention for GetSchema: "
@@ -128,6 +130,8 @@ namespace Kernel
                     << std::endl;
                 LOG_INFO( msg.str().c_str() );
             }
+            delete fakeConfig;
+            fakeConfig = nullptr;
         }
         LOG_DEBUG( "Returning from GetSchema.\n" );
         json::QuickBuilder retSchema = json::QuickBuilder(ceSchema);

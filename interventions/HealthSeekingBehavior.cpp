@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -122,15 +122,19 @@ namespace Kernel
                 auto config = Configuration::CopyFromElement( (actual_intervention_config._json) );
                 IDistributableIntervention *di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config );
                 delete config;
+                config = nullptr;
 /*
                 // In theory this is a good addition, but I can't get it to trigger when I add other upstream
                 // error checking and handling. And if we add it here, we should add it to the other places we do CreateIntervention's.
                 IDistributableIntervention *di = nullptr;
                 try
                 {
-                    di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention(Configuration::CopyFromElement( (actual_intervention_config._json) ));
+                    auto tmp_config = Configuration::CopyFromElement( (actual_intervention_config._json) );
+                    di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( tmp_config );
+                    delete tmp_config;
+                    tmp_config = nullptr;
                 }
-                catch( json::Exception &except )
+                catch( json::Exception xcept )
                 {
                     std::ostringstream msg;
                     msg << "Nested json for actual_intervention_config was empty or corrupted: ";

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -13,6 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "FileSystem.h"
 #include "SimulationConfig.h"
+#include "IdmMpi.h"
 
 #include <string>
 #include <climits>
@@ -35,9 +36,13 @@ SUITE(SchemaTest)
 {
     struct SchemaFixture
     {
+        IdmMpi::MessageInterface* m_pMpi;
+
         SchemaFixture()
         {
             JsonConfigurable::ClearMissingParameters();
+
+            m_pMpi = IdmMpi::MessageInterface::CreateNull();
 
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
@@ -49,7 +54,7 @@ SUITE(SchemaTest)
             string outputPath(".");
             string statePath(".");
             string dllPath(".");
-            Environment::Initialize(configFilename, inputPath, outputPath, /*statePath, */dllPath, true);
+            Environment::Initialize( m_pMpi, nullptr, configFilename, inputPath, outputPath, /*statePath, */dllPath, true);
         }
 
         ~SchemaFixture()

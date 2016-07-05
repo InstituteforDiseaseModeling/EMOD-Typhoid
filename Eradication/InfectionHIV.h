@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -21,10 +21,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-
-    class InfectionHIVConfig : public JsonConfigurable
+    class InfectionHIVConfig : public InfectionSTIConfig
     {
-        friend class IndividualHumanCoinfection;
         friend class HIVInterventionsContainer;
 
         GET_SCHEMA_STATIC_WRAPPER(InfectionHIVConfig)
@@ -35,6 +33,8 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class InfectionHIV;
+        friend class IndividualHumanCoinfection;
 
         //these are the config params
         static float HIV_drug_inactivation_rate;
@@ -51,7 +51,7 @@ namespace Kernel
     };
 
     //---------------------------- InfectionHIV ----------------------------------------
-    class InfectionHIV : public InfectionSTI, public IInfectionHIV, protected InfectionHIVConfig
+    class InfectionHIV : public InfectionSTI, public IInfectionHIV
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -61,6 +61,7 @@ namespace Kernel
 
         virtual void SetParameters(StrainIdentity* infstrain=nullptr, int incubation_period_override = -1) override;
         virtual void Update(float dt, ISusceptibilityContext* immunity = nullptr) override;
+        virtual void SetContextTo(IIndividualHumanContext* context) override;
 
         virtual NaturalNumber GetViralLoad() const override;
         virtual float GetPrognosis() const override;
@@ -107,18 +108,7 @@ namespace Kernel
         float m_hetero_infectivity_multiplier;
 
         IIndividualHumanHIV * hiv_parent;
+
+        DECLARE_SERIALIZABLE(InfectionHIV);
     };
 }
-
-#if 0
-namespace Kernel
-{
-    template<class Archive>
-    void serialize(Archive & ar, InfectionHIV& inf, const unsigned int file_version )
-    {
-        //serialize the params here 
-        //ar & inf.m_is_active;
-        ar & boost::serialization::base_object<Kernel::Infection>(inf);
-    }
-}
-#endif

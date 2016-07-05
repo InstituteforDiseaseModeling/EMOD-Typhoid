@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -49,8 +49,11 @@ namespace Kernel
 
     public:
         static bool IsAdultAge( float years );
+        static bool CanSupportFamilyTrips( IMigrationInfoFactory* pmi );
 
     protected:
+        friend class IndividualHuman;
+
         static bool aging;
         static float min_adult_age_years ;
 
@@ -61,12 +64,14 @@ namespace Kernel
         static float air_roundtrip_prob;
         static float region_roundtrip_prob;
         static float sea_roundtrip_prob;
+        static float family_roundtrip_prob;
 
         // duration rates
         static float local_roundtrip_duration_rate;
         static float air_roundtrip_duration_rate;
         static float region_roundtrip_duration_rate;
         static float sea_roundtrip_duration_rate;
+        static float family_roundtrip_duration_rate;
 
         static int infection_updates_per_tstep;
         static bool immunity;
@@ -89,8 +94,7 @@ namespace Kernel
                             public IIndividualHumanEventContext,
                             public IInfectable,
                             public IInfectionAcquirable,
-                            public IMigrate,
-                            protected IndividualHumanConfig
+                            public IMigrate
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -130,6 +134,8 @@ namespace Kernel
         virtual void Die( HumanStateChange ) override;
         virtual INodeEventContext   * GetNodeEventContext() override; // for campaign cost reporting in e.g. HealthSeekingBehavior
         virtual tProperties* GetProperties() override;
+        virtual const std::string& GetPropertyReportString() const override { return m_PropertyReportString; }
+        virtual void SetPropertyReportString( const std::string& str ) override { m_PropertyReportString = str; }
         virtual bool AtHome() const override;
 
         virtual bool IsAdult() const override;
@@ -198,6 +204,8 @@ namespace Kernel
         virtual void SetWaitingToGoOnFamilyTrip() override;
         virtual void GoHome() override;
 
+        static void InitializeStatics( const Configuration* config );
+
     protected:
 
         // Core properties
@@ -251,6 +259,7 @@ namespace Kernel
         suids::suid home_node_id ;
 
         tProperties Properties;
+        std::string m_PropertyReportString;
 
         INodeContext* parent;   // Access back to node/simulation methods
 

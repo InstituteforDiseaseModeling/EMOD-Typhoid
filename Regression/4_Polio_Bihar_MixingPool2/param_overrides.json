@@ -1,8 +1,8 @@
 {
-     "Default_Config_Path": "defaults\\polio_default_config.json", 
+     "Default_Config_Path": "defaults/polio_default_config.json", 
      "parameters": {
           "DEMOGRAPHICS": {
-               "Demographics_Filename": "Bihar_single_node_demographics.compiled.json;Bihar_single_node_pool_overlay2.compiled.json"
+               "Demographics_Filenames": [ "Bihar_single_node_demographics.compiled.json", "Bihar_single_node_pool_overlay2.compiled.json" ]
           }, 
           "INTRANODE_TRANSMISSION": {
                "Enable_Heterogeneous_Intranode_Transmission": 1

@@ -120,8 +120,8 @@ def get_build_var():
     else:
         bv = "Release"
 
-    if has_option( "Dlls" ):
-        bv = bv + "Dll"
+    #if has_option( "Dlls" ):
+        #bv = bv + "Dll"
 
     return bv
 
@@ -133,12 +133,12 @@ add_option( "Release" , "release build" , 0 , True)
 add_option( "Debug" , "debug build" , 0 , True )
 
 # module/linking options
-add_option( "Dlls" , "build all dlls" , 0 , True )
-add_option( "Interventions" , "build all intervention dlls" , 0 , True )
+#add_option( "Dlls" , "build all dlls" , 0 , True )
+#add_option( "Interventions" , "build all intervention dlls" , 0 , True )
 add_option( "DllDisease" , "build disease target dll" , 1 , True) #, Disease="Generic" )
 add_option( "Disease" , "build only files for disease target " , 1 , True) #, Disease="Generic" )
 add_option( "Report" , "build report target dll" , 1 , True) #, Report="Spatial" )
-add_option( "Campaign" , "build all campaign target dll" , 1 , True) #, Campaign=Bednet
+#add_option( "Campaign" , "build all campaign target dll" , 1 , True) #, Campaign=Bednet
  
 # installation options
 add_option( "Install" , "install target dll into given directory" , 1 , True) #, Install="install dir" )
@@ -170,7 +170,8 @@ printLocalInfo()
 pa = platform.architecture()
 pi = os.sys.platform
 if pa[0].find("64") != -1:
-    pi = 'x64'     
+    pi = 'x64'
+path = os.environ['PATH']
 env = Environment( BUILD_DIR=buildDir,
                    DIST_ARCHIVE_SUFFIX='.tgz',
                    MSVS_ARCH=msarch ,
@@ -214,19 +215,16 @@ if os.sys.platform == 'win32':
                           "#/snappy",
                           "#/unittest/UnitTest++/src"])
 else:
-    SVN_BRANCH = os.popen("svn info|grep URL|awk '{ print $2 }'|awk -F/ '{ printf( \"/%s\", $NF) }'" ).read()
-    print( SVN_BRANCH )
-    env['SVN_BRANCH'] = SVN_BRANCH
+    env['ENV']['PATH'] = path
     env['OS_FAMILY'] = 'posix'
     env['CC'] = "mpicxx"
-    env['CXX'] = "/usr/lib64/mpich/bin/mpicxx"
-    #env['CXX'] = "/usr/lib64/mpi/gcc/openmpi/bin/mpicxx"
+    env['CXX'] = "mpicxx"
     env.Append( CCFLAGS=["-fpermissive"] )
     env.Append( CCFLAGS=["--std=c++0x"] )
     env.Append( CCFLAGS=["-w"] )
     env.Append( CCFLAGS=["-ffloat-store"] )
     env.Append( CCFLAGS=["-Wno-unknown-pragmas"] )
-    env.Append( CCFLAGS=["-save-temps"] )
+    #env.Append( CCFLAGS=["-save-temps"] )
     env.Append( EXTRACPPPATH=[
                           "#/Eradication",
                           "#/interventions",
@@ -286,8 +284,6 @@ def findVersion( root , choices ):
 #env.Append( CPPDEFINES=["ENABLE_TB" ] )
 #env.Append( CPPDEFINES=["ENABLE_POLIO" ] )
 
-boostLibs = ["system", "filesystem" , "program_options"]
-
 if os.sys.platform.startswith("linux"):
     linux = True
     static = True
@@ -300,7 +296,7 @@ if os.sys.platform.startswith("linux"):
         nixLibPrefix = "lib64"
         env.Append( EXTRALIBPATH=["/usr/lib64" , "/lib64" ] )
 
-    env.Append( LIBS=["pthread", "boost_program_options", "boost_filesystem", "boost_system", "python2.7", "dl" ] ) 
+    env.Append( LIBS=["pthread", "python2.7", "dl" ] ) 
     env.Append( EXTRALIBPATH=[ "/usr/local/lib", "/usr/lib64/mpich/lib" ] )
 
     if static:
@@ -321,6 +317,7 @@ elif "win32" == os.sys.platform:
     env.Append( CPPDEFINES=[ "WIN32" ] )
     env.Append( CPPDEFINES=[ "_UNICODE" ] )
     env.Append( CPPDEFINES=[ "UNICODE" ] )
+    env.Append( CPPDEFINES=[ "BOOST_ALL_NO_LIB" ] )
 
     # this is for MSVC <= 10.0
     #winSDKHome = findVersion( [ "C:/Program Files/Microsoft SDKs/Windows/", "C:/Program Files (x86)/Microsoft SDKs/Windows/" ] , [ "v7.0A", "v7.0"] )
@@ -332,7 +329,6 @@ elif "win32" == os.sys.platform:
     env.Append( EXTRACPPPATH=[ winSDKHome + "/Include/um" ] )
     env.Append( EXTRALIBPATH=[ winSDKHome + "Lib/win8/um/x64" ] )
     env.Append( EXTRALIBPATH=[ "C:/Python27/libs" ] )
-    env.Append( EXTRALIBPATH=[ "C:/boost/boost_1_51_0/lib/x64" ] )
     env.Append( EXTRALIBPATH=[ "#/Dependencies/ComputeClusterPack/Lib/amd64" ] )
 
     print( "Windows SDK Root '" + winSDKHome + "'" )
@@ -346,7 +342,8 @@ elif "win32" == os.sys.platform:
     env.Append(CCFLAGS=["/EHsc","/W3"])
 
     # /bigobj for an object file bigger than 64K
-    env.Append(CCFLAGS=["/bigobj"])
+    # DMB It is in the VS build parameters but it doesn't show up in the Command Line view
+    #env.Append(CCFLAGS=["/bigobj"])
 
     # some warnings we don't like:
     # c4355
@@ -373,16 +370,22 @@ elif "win32" == os.sys.platform:
     # /Z7 debug info goes into each individual .obj file -- no .pdb created 
     env.Append( CCFLAGS= ["/errorReport:none"] )
 
-    #env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Zi"])
-    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
+    # Switching from /Z7 to /Zi in order to be more like VS
+    #env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
+    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Zi"])
 
     env.Append( CCFLAGS=["/DIDM_EXPORT"] )
+    env.Append( LIBS=["python27.lib"] )
 
     if Rel:
-        # /MD: Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
-        # /MT: use static lib
-        # /O2: optimize for speed (as opposed to size)
-        env.Append( CCFLAGS= ["/O2", "/MD"] )
+        # /MD  : Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
+        # /MT  : use static lib
+        # /O2  : optimize for speed (as opposed to size)
+        # /MP  : build with multiple processes
+        # /Gm- : No minimal build
+        # /WX- : Do NOT treat warnings as errors
+        # /Gd  : the default setting, specifies the __cdecl calling convention for all functions
+        env.Append( CCFLAGS= ["/O2", "/MD", "/MP", "/Gm-", "/WX-", "/Gd" ] )
         env.Append( CPPDEFINES= ["NDEBUG"] )
 
         # Disable these two for faster generation of codes
@@ -396,15 +399,19 @@ elif "win32" == os.sys.platform:
         # NOTE: /DEBUG and Dbghelp.lib go together with changes in Exception.cpp which adds
         #       the ability to print a stack trace.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["libboost_program_options-vc110-mt-1_51.lib",
-                          "libboost_filesystem-vc110-mt-1_51.lib",
-                          "libboost_system-vc110-mt-1_51.lib"] )
-        env.Append( LIBS=["python27.lib"] )
         # For MSVC <= 10.0
         #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
         
         # For MSVC >= 11.0
-        env.Append( LINKFLAGS=[ "/MACHINE:X64"] )
+        # /OPT:REF : eliminates functions and data that are never referenced
+        # /OPT:ICF : to perform identical COMDAT folding
+        # /DYNAMICBASE:NO : Don't Use address space layout randomization
+        # /SUBSYSTEM:CONSOLE : Win32 character-mode application.
+        env.Append( LINKFLAGS=[ "/MACHINE:X64", "/MANIFEST", "/HEAP:\"100000000\"\",100000000\" ", "/OPT:REF", "/OPT:ICF ", "/DYNAMICBASE:NO", "/SUBSYSTEM:CONSOLE"] )
+
+        # This causes problems with the report DLLs.  Don't have time right now to figure out
+        # how to remove flags from the DLL build.
+        #env.Append( LINKFLAGS=[ "/STACK:\"100000000\"\",100000000\"" ] )
 
     else: 
         # /RTC1: - Enable Stack Frame Run-Time Error Checking; Reports when a variable is used without having been initialized
@@ -416,9 +423,6 @@ elif "win32" == os.sys.platform:
         # If you build without --d, no debug PDB will be generated, and 
         # linking will be faster. However, you won't be able to debug your code with the debugger.
         env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LIBS=["libboost_program_options-vc110-mt-gd-1_51.lib",
-                          "libboost_filesystem-vc110-mt-gd-1_51.lib",
-                          "libboost_system-vc110-mt-gd-1_51.lib"] )
         env.Append( LINKFLAGS=["/MACHINE:X64"] )
 
 
@@ -442,50 +446,42 @@ env.Append( LIBPATH=['$EXTRALIBPATH'] )
 #print env['EXTRACPPPATH']
 
 # --- check system ---
-boostCompiler = "-vc110"
-boostVersion = "-1_51"
 
 def doConfigure(myenv):
     conf = Configure(myenv)
 
     if 'CheckCXX' in dir( conf ):
         if  not conf.CheckCXX():
-            print( "c++ compiler not installed!" )
+            print( "c++ compiler test failed!" )
+            print( "This sometimes happens even though the compiler is fine and can be resolved by performing a 'scons -c' followed by manually removing the .sconf_temp folder and .sconsign.dblite. It can also be because mpich_devel is not installed." )
             Exit(1)
             
-    """
-    for b in boostLibs:
-        l = "boost_" + b
-
-        if not conf.CheckLib([ l + boostCompiler + "-mt" + boostVersion,
-                               l + boostCompiler + boostVersion ], language='C++' ):
-            Exit(1)
-    """
     return conf.Finish()
 
 
 def setEnvAttrs(myenv):
 
     diseasedlls = ['Generic', 'Vector', 'Malaria', 'Environmental', 'TB', "STI", "HIV" ]
-    #diseases = ['Generic', 'Vector', 'Malaria', 'Waterborne', 'Polio', 'Airborne', 'TB', 'STI', 'HIV']
+    diseases = ['Generic', 'Vector', 'Malaria', 'Polio', 'TB', 'STI', 'HIV', 'Py' ]
     reportdlls = ['Spatial', 'Binned']
     campaigndlls = ['Bednet', 'IRSHousing']
 
     myenv['AllDlls'] = False
     dlldisease = has_option('DllDisease')
     dllreport = has_option('Report')
-    dllcampaign = has_option('Campaign')
+    #dllcampaign = has_option('Campaign')
     monodisease = has_option('Disease')
 
-    if has_option('Dlls'):
-        myenv['AllDlls'] = True
+    #if has_option('Dlls'):
+        #myenv['AllDlls'] = True
 
     myenv['AllInterventions'] = False
-    if has_option('Interventions'):
-        myenv['AllInterventions'] = True
+    #if has_option('Interventions'):
+    #    myenv['AllInterventions'] = True
 
-#    if has_option('Dlls') or dlldisease or dllreport or dllcampaign:
-#        myenv.Append( CPPDEFINES=["_DLLS_" ] )
+    #if has_option('Dlls') or dlldisease or dllreport or dllcampaign:
+    if dlldisease or dllreport:
+        myenv.Append( CPPDEFINES=["_DLLS_" ] )
 
     if dlldisease:
         myenv['DiseaseDll'] = get_option( 'DllDisease' ) # careful, tricky
@@ -514,14 +510,14 @@ def setEnvAttrs(myenv):
     else:
         myenv['Report'] = ""
 
-    if dllcampaign:
-        myenv['Campaign'] = get_option( 'Campaign' )
-        print "Campaign=" + myenv['Campaign']
-        if myenv['Campaign'] not in campaigndlls:
-            print "Unknown campaign type: " + myenv['Campaign']
-            exit(1)
-    else:
-        myenv['Campaign'] = ""
+    #if dllcampaign:
+    #    myenv['Campaign'] = get_option( 'Campaign' )
+    #    print "Campaign=" + myenv['Campaign']
+    #    if myenv['Campaign'] not in campaigndlls:
+    #        print "Unknown campaign type: " + myenv['Campaign']
+    #        exit(1)
+    #else:
+    #    myenv['Campaign'] = ""
     
     if has_option('Install'):
         myenv['Install'] = get_option( 'Install' )

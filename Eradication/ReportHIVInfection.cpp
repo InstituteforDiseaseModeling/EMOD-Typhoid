@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -37,8 +37,8 @@ namespace Kernel
 
     bool ReportHIVInfection::Configure( const Configuration* inputJson )
     {
-        initConfigTypeMap( "Report_HIV_Infection_Start_Year", &startYear, Report_HIV_Infection_Start_Year_DESC_TEXT, 0.0f, FLT_MAX, 0.0f    );
-        initConfigTypeMap( "Report_HIV_Infection_Stop_Year",  &stopYear,  Report_HIV_Infection_Stop_Year_DESC_TEXT,  0.0f, FLT_MAX, FLT_MAX );
+        initConfigTypeMap( "Report_HIV_Infection_Start_Year", &startYear, Report_HIV_Infection_Start_Year_DESC_TEXT, MIN_YEAR, MAX_YEAR, MIN_YEAR );
+        initConfigTypeMap( "Report_HIV_Infection_Stop_Year",  &stopYear,  Report_HIV_Infection_Stop_Year_DESC_TEXT,  MIN_YEAR, MAX_YEAR, MAX_YEAR );
 
         bool ret = JsonConfigurable::Configure( inputJson );
 

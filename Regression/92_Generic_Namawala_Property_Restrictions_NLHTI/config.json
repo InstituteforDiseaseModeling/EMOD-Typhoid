@@ -18,10 +18,14 @@
         "Campaign_Filename": "campaign.json", 
         "Climate_Model": "CLIMATE_OFF", 
         "Config_Name": "92_Generic_Namawala_Property_Restrictions_NLHTI", 
+        "Custom_Reports_Filename": "NoCustomReports", 
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_AGE_AND_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filename": "Namawala_single_node_demographics.compiled.json;Namawala_regression_property_overlay.json", 
+        "Demographics_Filenames": [
+            "Namawala_single_node_demographics.json", 
+            "Namawala_regression_property_overlay.json"
+        ], 
         "Disable_IP_Whitelist": 1, 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
@@ -74,7 +78,6 @@
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Python_Script_Path": "\\\\10.210.40.98\\IDM\\public\\python\\", 
         "Report_Event_Recorder": 0, 
         "Run_Number": 1, 
         "Sample_Rate_0_18mo": 1, 

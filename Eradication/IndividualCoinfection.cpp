@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -29,15 +29,37 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "Log.h"
 
+// These includes are only used for serialization
+// clorton #include "InfectionTB.h"
+// clorton #include "SusceptibilityTB.h"
+// clorton #include "TBInterventionsContainer.h"
+
+// GHH added: These includes are only used for serialization
+// clorton #include "InfectionHIV.h"
+// clorton #include "SusceptibilityHIV.h"
+// clorton #include "HIVInterventionsContainer.h"
+
 static const char* _module = "IndividualHumanCoinfection";
 
 namespace Kernel
 {
+    float IndividualHumanCoinfectionConfig::HIV_coinfection_probability = 0.0f;
+    float IndividualHumanCoinfectionConfig::Coinfected_mortality_rate = 0.0f;
+    map <float,float> IndividualHumanCoinfectionConfig::CD4_act_map;
 
-    float IndividualHumanCoinfection::HIV_coinfection_probability = 0.0f;
-    float IndividualHumanCoinfection::Coinfected_mortality_rate = 0.0f;
-    map <float,float> IndividualHumanCoinfection::CD4_act_map;
-    //CD4_act_map.insert(std::pair<float,float>(0.0f,0.0f));
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(TBHIV.Individual,IndividualHumanCoinfectionConfig)
+    BEGIN_QUERY_INTERFACE_BODY(IndividualHumanCoinfectionConfig)
+    END_QUERY_INTERFACE_BODY(IndividualHumanCoinfectionConfig)
+
+    bool IndividualHumanCoinfectionConfig::Configure( const Configuration * config )
+    {
+        LOG_DEBUG( "Configure()\n");
+
+        initConfigTypeMap( "HIV_coinfection_probability", &HIV_coinfection_probability, HIV_Coinfection_Probability_DESC_TEXT, 0.0f, 1.0f, 0.5f );
+        initConfigTypeMap( "Coinfected_mortality_rate",   &Coinfected_mortality_rate, Coinfected_Mortality_Rate_DESC_TEXT, 0.0f, 1.0f, 0.1f );
+
+        return JsonConfigurable::Configure( config );
+    }
 
     BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanCoinfection, IndividualHumanAirborne)
         HANDLE_INTERFACE(IIndividualHumanCoinfection)
@@ -56,27 +78,23 @@ namespace Kernel
 
     }
 
-    bool IndividualHumanCoinfection::Configure( const Configuration* config ) // just called once!
+    void IndividualHumanCoinfection::InitializeStaticsCoinfection( const Configuration* config )
     {
-        initConfigTypeMap( "HIV_coinfection_probability",    &HIV_coinfection_probability, HIV_Coinfection_Probability_DESC_TEXT, 0.0f, 1.0f, 0.5f );
-        initConfigTypeMap( "Coinfected_mortality_rate",    &Coinfected_mortality_rate, Coinfected_Mortality_Rate_DESC_TEXT, 0.0f, 1.0f, 0.1f );
+        SusceptibilityTBConfig tb_immunity_config;
+        tb_immunity_config.Configure( config );
+        InfectionTBConfig tb_infection_config;
+        tb_infection_config.Configure( config );
 
-        LOG_DEBUG( "Configure\n" );
-        SusceptibilityTBConfig fakeTBImmunity;
-        fakeTBImmunity.Configure( config );
-        InfectionTBConfig fakeTBInfection;
-        fakeTBInfection.Configure( config );
-
-        //Now create static, constant map between CD4 and factor for increased reactivation rate, this is only done once
-
-        CD4_act_map = fakeTBInfection.GetCD4Map();
+        // Now create static, constant map between CD4 and factor for increased reactivation rate. This is only done once.
+        IndividualHumanCoinfectionConfig::CD4_act_map = tb_infection_config.GetCD4Map();
         
-        SusceptibilityHIVConfig fakeHIVImmunity;
-        fakeHIVImmunity.Configure( config );
-        InfectionHIVConfig fakeHIVInfection;
-        fakeHIVInfection.Configure( config );
-        //return true;
-        return JsonConfigurable::Configure( config );
+        SusceptibilityHIVConfig hiv_immunity_config;
+        hiv_immunity_config.Configure( config );
+        InfectionHIVConfig hiv_infection_config;
+        hiv_infection_config.Configure( config );
+
+        IndividualHumanCoinfectionConfig individual_config;
+        individual_config.Configure( config );
     }
 
     IndividualHumanCoinfection *IndividualHumanCoinfection::CreateHuman(INodeContext *context, suids::suid id, float MCweight, float init_age, int gender, float init_poverty)
@@ -117,7 +135,7 @@ namespace Kernel
 
         //int numInfs = (int)infectionslist.size(); // note here we use max_ind_inf for the total number of tb + HIV infections
         int numInfs = infectioncount_tb;
-        if ((superinfection && (numInfs < max_ind_inf)) || numInfs == 0)
+        if ((IndividualHumanConfig::superinfection && (numInfs < IndividualHumanConfig::max_ind_inf)) || numInfs == 0)
         {
             cumulativeInfs++;
             m_is_infected = true;
@@ -236,15 +254,15 @@ namespace Kernel
         StateChange = HumanStateChange::None;
 
         //  Aging
-        if (aging) { m_age += dt; }
+        if (IndividualHumanConfig::aging) { m_age += dt; }
 
         // Adjust time step for infections as specified by infection_updates_per_tstep.  A value of 0 reverts to a single update per timestep for backward compatibility.
         // There is no special meaning of 1 being hourly.  For hourly infection updates with a tstep of one day, one must now specify 24.
-        if ( infection_updates_per_tstep > 1 )
+        if (IndividualHumanConfig::infection_updates_per_tstep > 1 )
         {
             // infection_updates_per_tstep is now an integer > 1, so set numsteps equal to it,
             // allowing the subdivision dt into smaller infection_timestep
-            numsteps = infection_updates_per_tstep;
+            numsteps = IndividualHumanConfig::infection_updates_per_tstep;
             infection_timestep = dt / numsteps;
         }
 
@@ -314,7 +332,7 @@ namespace Kernel
                         // Notify susceptibility of cleared infection and remove from list
                         if ( inf_state_change == InfectionStateChange::Cleared ) 
                         {
-                            if (immunity) { static_cast<Susceptibility*>(infection2susceptibilitymap[infection])->UpdateInfectionCleared(); } //Immunity update: survived infection, note the notification of Susceptibility HIV contains only a placeholder now
+                            if (IndividualHumanConfig::immunity) { static_cast<Susceptibility*>(infection2susceptibilitymap[infection])->UpdateInfectionCleared(); } //Immunity update: survived infection, note the notification of Susceptibility HIV contains only a placeholder now
 
                             IInfectionTB* pinfTB = nullptr;
                             if (s_OK == infection->QueryInterface(GET_IID( IInfectionTB ), (void**)&pinfTB) )
@@ -345,7 +363,7 @@ namespace Kernel
                     ++it;
                 }
 
-                if (immunity) { 
+                if (IndividualHumanConfig::immunity) { 
                     for (auto susceptibility : susceptibilitylist)
                     {
                         susceptibility->Update(infection_timestep); 
@@ -367,7 +385,7 @@ namespace Kernel
 
         if ( HasActiveInfection() && HasHIV() ) 
         {
-            if ( randgen->e() < Coinfected_mortality_rate)
+            if ( randgen->e() < IndividualHumanCoinfectionConfig::Coinfected_mortality_rate)
             {
                 LOG_DEBUG("I have TB and HIV and now I have another chance to die from my infection, using the probability of death when coinfected\n" );
                 StateChange = HumanStateChange::KilledByInfection;
@@ -729,7 +747,7 @@ namespace Kernel
 
     void IndividualHumanCoinfection::InitiateART()
     {
-        float current_CD4 = GetCD4();
+        /* clorton float current_CD4 = */ GetCD4();
         for (auto susceptibility : susceptibilitylist)
         {
             ISusceptibilityHIV* pointer_to_HIV_susceptibility = nullptr;
@@ -777,7 +795,7 @@ namespace Kernel
         InfectionTB* new_inf = InfectionTB::CreateInfection(this, _suid);
         newInfections.push_back( new_inf );
         //30% chance of  getting HIV
-        if ( randgen->e() < HIV_coinfection_probability)
+        if ( randgen->e() < IndividualHumanCoinfectionConfig::HIV_coinfection_probability)
         {
             InfectionHIV* new_inf2 = InfectionHIV::CreateInfection(this, _suid);
             newInfections.push_back( new_inf2 );
@@ -813,7 +831,7 @@ namespace Kernel
 
                 if (this->HasHIV() )
                 {
-                    float temp_CD4 = this->GetCD4();
+                    /* clorton float temp_CD4 = */ this->GetCD4();
                     vector <float> CD4_future = CD4_forward_vector;
 
                     std::vector <float> v_act(CD4_future.size(), 0.0f);
@@ -823,7 +841,7 @@ namespace Kernel
 
                     for (vin = CD4_future.begin(), vout = v_act.begin() ; vin != CD4_future.end(); ++vin, ++vout)  //could have  vout! v_act.end() but redundant due to definition above
                     {
-                        auto temp =  CD4_act_map.lower_bound(*vin);
+                        auto temp = IndividualHumanCoinfectionConfig::CD4_act_map.lower_bound(*vin);
                         *vout = temp->second;
                     }
 

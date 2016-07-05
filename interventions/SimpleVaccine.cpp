@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -39,54 +39,58 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
-        initConfigTypeMap("Vaccine_Take", &vaccine_take, SV_Vaccine_Take_DESC_TEXT, 0.0, 1.0, 1.0 );
-        initConfig( "Durability_Time_Profile", durability_time_profile, inputJson, MetadataDescriptor::Enum("Durability_Time_Profile", SV_Durability_Time_Profile_DESC_TEXT, MDD_ENUM_ARGS(InterventionDurabilityProfile) ) );
-        if ( durability_time_profile == InterventionDurabilityProfile::BOXDECAYDURABILITY || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap("Secondary_Decay_Time_Constant", &secondary_decay_time_constant, SV_Secondary_Decay_Time_Constant_DESC_TEXT, 0, INFINITE_TIME);
-        }
+        initConfigTypeMap("Vaccine_Take", &vaccine_take, SV_Vaccine_Take_DESC_TEXT, 0.0, 1.0, 1.0 ); 
 
         initConfig( "Vaccine_Type", vaccine_type, inputJson, MetadataDescriptor::Enum("Vaccine_Type", SV_Vaccine_Type_DESC_TEXT, MDD_ENUM_ARGS(SimpleVaccineType)));
 
-        if ( vaccine_type == SimpleVaccineType::AcquisitionBlocking )
+        initConfigComplexType("Waning_Config",  &waning_config, IVM_Killing_Config_DESC_TEXT );
+
+        bool configured = JsonConfigurable::Configure( inputJson );
+        if( !JsonConfigurable::_dryrun )
         {
-            initConfigTypeMap("Reduced_Acquire", &current_reducedacquire, SV_Reduced_Acquire_DESC_TEXT, 0.0, 1.0, 1.0 );
+            auto tmp_waning = Configuration::CopyFromElement( waning_config._json );
+            waning_effect = WaningEffectFactory::CreateInstance( tmp_waning );
+            delete tmp_waning;
+            tmp_waning = nullptr;
         }
-        else if (vaccine_type == SimpleVaccineType::TransmissionBlocking )
-        {
-            initConfigTypeMap("Reduced_Transmit", &current_reducedtransmit, SV_Reduced_Transmit_DESC_TEXT, 0.0, 1.0, 1.0 );
-        }
-        else if (vaccine_type == SimpleVaccineType::MortalityBlocking )
-        {
-            initConfigTypeMap("Reduced_Mortality", &current_reducedmortality, SV_Reduced_Mortality_DESC_TEXT, 0.0, 1.0, 1.0 );
-        }
-        else // SimpleVaccineType::Generic
-        {
-            initConfigTypeMap("Reduced_Acquire", &current_reducedacquire, SV_Reduced_Acquire_DESC_TEXT, 0.0, 1.0, 1.0 );
-            initConfigTypeMap("Reduced_Transmit", &current_reducedtransmit, SV_Reduced_Transmit_DESC_TEXT, 0.0, 1.0, 1.0 );
-            initConfigTypeMap("Reduced_Mortality", &current_reducedmortality, SV_Reduced_Mortality_DESC_TEXT, 0.0, 1.0, 1.0 );
-        }
-        return JsonConfigurable::Configure( inputJson );
+        //release_assert( vaccine_type );
+        LOG_DEBUG_F( "Vaccine configured with type %d and take %f.\n", vaccine_type, vaccine_take );
+        return configured;
     }
 
-    SimpleVaccine::SimpleVaccine()
+    SimpleVaccine::SimpleVaccine() 
     : BaseIntervention()
-    , parent(nullptr)
+    , parent(nullptr) 
     , vaccine_type(SimpleVaccineType::Generic)
     , vaccine_take(0.0)
-    , current_reducedacquire(0.0)
-    , current_reducedtransmit(0.0)
-    , current_reducedmortality(0.0)
-    , durability_time_profile(InterventionDurabilityProfile::BOXDURABILITY)
-    , primary_decay_time_constant(0.0)
-    , secondary_decay_time_constant(0.0)
-    , ivc(nullptr)
+    , vaccine_took(false)
+    , waning_effect( nullptr )
+    , ivc( nullptr )
     {
         initConfigTypeMap("Cost_To_Consumer", &cost_per_unit, SV_Cost_To_Consumer_DESC_TEXT, 0, 999999, 10.0);
-        initConfigTypeMap("Primary_Decay_Time_Constant", &primary_decay_time_constant, SV_Primary_Decay_Time_Constant_DESC_TEXT, 0, INFINITE_TIME);
     }
 
-    SimpleVaccine::~SimpleVaccine() { }
+    SimpleVaccine::SimpleVaccine( const SimpleVaccine& master )
+    : BaseIntervention( master )
+    , parent(nullptr) 
+    , vaccine_type(master.vaccine_type)
+    , vaccine_take(master.vaccine_take)
+    , vaccine_took(master.vaccine_took)
+    , waning_config(master.waning_config)
+    , waning_effect( nullptr )
+    , ivc( nullptr )
+    {
+        auto tmp_waning = Configuration::CopyFromElement( waning_config._json );
+        waning_effect = WaningEffectFactory::CreateInstance( tmp_waning );
+        delete tmp_waning;
+        tmp_waning = nullptr;
+    }
+
+    SimpleVaccine::~SimpleVaccine()
+    {
+        delete waning_effect;
+        waning_effect = nullptr;
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////
 
@@ -106,112 +110,80 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IVaccineConsumer", "IIndividualHumanInterventionsContext" );
         }
-        bool success = BaseIntervention::Distribute( context, pCCO );
-        ApplyVaccineTake();
-        return success;
-    }
 
+        // ---------------------------------------------------------------------------------------------
+        // --- One does not know if a vaccine 'took' or not unless they go through a specific test
+        // --- to see if they have developed the correct antibodies.  Normally, once they have received
+        // --- a vaccine, they are considered vaccinated and are counted in the vaccinated group.
+        // --- However, if the vaccine did not take, we need to have the vaccine be ineffective.
+        // ---------------------------------------------------------------------------------------------
+        vaccine_took = ApplyVaccineTake( context->GetParent() );
+
+        bool distribute =  BaseIntervention::Distribute( context, pCCO );
+        return distribute;
+    }
 
     void SimpleVaccine::Update( float dt )
     {
-        if(durability_time_profile == InterventionDurabilityProfile::BOXDECAYDURABILITY)
+        // -----------------------------------------------------------------
+        // --- Still update waning_effect even if the vaccine did not take.
+        // --- This allows it to expire on schedule.
+        // -----------------------------------------------------------------
+        waning_effect->Update(dt);
+
+        // ----------------------------------------------------------------------
+        // --- If the vaccine did not take, do not attempt to update the vaccine
+        // --- behavior within the individual.  
+        // ----------------------------------------------------------------------
+        if( vaccine_took )
         {
-            if(primary_decay_time_constant > 0)
+            release_assert(ivc);
+            switch( vaccine_type )
             {
-                primary_decay_time_constant -= dt;
-            }
-            else
-            {
-                if(secondary_decay_time_constant > dt)
-                {
-                    current_reducedacquire   *= (1-dt/secondary_decay_time_constant);
-                    current_reducedtransmit  *= (1-dt/secondary_decay_time_constant);
-                    current_reducedmortality *= (1-dt/secondary_decay_time_constant);
-                }
-                else
-                {
-                    current_reducedacquire   = 0;
-                    current_reducedtransmit  = 0;
-                    current_reducedmortality = 0;
-                }
+                case SimpleVaccineType::AcquisitionBlocking:
+                    ivc->UpdateVaccineAcquireRate( waning_effect->Current() );
+                    break;
+
+                case SimpleVaccineType::TransmissionBlocking:
+                    ivc->UpdateVaccineTransmitRate( waning_effect->Current() );
+                    break;
+
+                case SimpleVaccineType::MortalityBlocking:
+                    ivc->UpdateVaccineMortalityRate( waning_effect->Current() );
+                    break;
+
+                case SimpleVaccineType::Generic:
+                    ivc->UpdateVaccineAcquireRate(   waning_effect->Current() );
+                    ivc->UpdateVaccineTransmitRate(  waning_effect->Current() );
+                    ivc->UpdateVaccineMortalityRate( waning_effect->Current() );
+                    break;
+
+                default:
+                    throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "vaccine_type", vaccine_type, SimpleVaccineType::pairs::lookup_key( vaccine_type ) );
+                    break;
             }
         }
-        else if(durability_time_profile == InterventionDurabilityProfile::DECAYDURABILITY)
+
+        if( !expired )
         {
-            if(primary_decay_time_constant > dt)
-            {
-                current_reducedacquire   *= (1-dt/primary_decay_time_constant);
-                current_reducedtransmit  *= (1-dt/primary_decay_time_constant);
-                current_reducedmortality *= (1-dt/primary_decay_time_constant);
-            }
-            else
-            {
-                current_reducedacquire   = 0;
-                current_reducedtransmit  = 0;
-                current_reducedmortality = 0;
-            }
+            expired = waning_effect->Expired();
         }
-        else if(durability_time_profile == InterventionDurabilityProfile::BOXDURABILITY)
-        {
-            primary_decay_time_constant -= dt;
-            if(primary_decay_time_constant < 0)
-            {
-                current_reducedacquire   = 0;
-                current_reducedtransmit  = 0;
-                current_reducedmortality = 0;
-            }
-        }
-        assert(ivc);
-        ivc->UpdateVaccineAcquireRate( current_reducedacquire );
-        ivc->UpdateVaccineTransmitRate( current_reducedtransmit );
-        ivc->UpdateVaccineMortalityRate( current_reducedmortality );
     }
 
-/*
-    Kernel::QueryResult SimpleVaccine::QueryInterface( iid_t iid, void **ppinstance )
+    bool SimpleVaccine::ApplyVaccineTake( IIndividualHumanContext* pihc )
     {
-        assert(ppinstance);
+        release_assert( pihc );
 
-        if ( !ppinstance )
-            return e_NULL_POINTER;
-
-        ISupports* foundInterface;
-
-        if ( iid == GET_IID(IVaccine))
-            foundInterface = static_cast<IVaccine*>(this);
-        else if ( iid == GET_IID(ISupports))
-            foundInterface = static_cast<ISupports*>(static_cast<IVaccine*>(this));
-        else
-            foundInterface = 0;
-
-        QueryResult status;
-        if ( !foundInterface )
-            status = e_NOINTERFACE;
-        else
+        bool did_vaccine_take = true;
+        if(vaccine_take<1.0)
         {
-            //foundInterface->AddRef();           // not implementing this yet!
-            status = s_OK;
-        }
-
-        *ppinstance = foundInterface;
-        return status;
-    }*/
-
-    void SimpleVaccine::ApplyVaccineTake()
-    {
-        if(parent)
-        {
-            if(vaccine_take<1.0)
+            if(pihc->GetRng()->e()>vaccine_take)
             {
-                if(parent->GetRng()->e()>vaccine_take)
-                {
-                    LOG_DEBUG("Vaccine did not take.\n");
-                    current_reducedacquire = 0.0;
-                    current_reducedtransmit = 0.0;
-                    current_reducedmortality = 0.0;
-                }
+                LOG_DEBUG("Vaccine did not take.\n");
+                did_vaccine_take = false;
             }
         }
+        return did_vaccine_take;
     }
 
     void SimpleVaccine::SetContextTo(
@@ -223,6 +195,7 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "IVaccineConsumer", "IIndividualHumanInterventionsContext" );
         }
+        LOG_DEBUG_F( "Vaccine configured with type %d and take %f for individual %d\n", vaccine_type, vaccine_take, parent->GetSuid().data );
     } // needed for VaccineTake
 
     REGISTER_SERIALIZABLE(SimpleVaccine);
@@ -231,13 +204,9 @@ namespace Kernel
     {
         BaseIntervention::serialize( ar, obj );
         SimpleVaccine& vaccine = *obj;
-        ar.labelElement("vaccine_type")                  & vaccine.vaccine_type;
-        ar.labelElement("vaccine_take")                  & vaccine.vaccine_take;
-        ar.labelElement("current_reducedacquire")        & vaccine.current_reducedacquire;
-        ar.labelElement("current_reducedtransmit")       & vaccine.current_reducedtransmit;
-        ar.labelElement("current_reducedmortality")      & vaccine.current_reducedmortality;
-        ar.labelElement("durability_time_profile")       & (uint32_t&)vaccine.durability_time_profile;
-        ar.labelElement("primary_decay_time_constant")   & vaccine.primary_decay_time_constant;
-        ar.labelElement("secondary_decay_time_constant") & vaccine.secondary_decay_time_constant;
+        ar.labelElement("vaccine_type")  & vaccine.vaccine_type;
+        ar.labelElement("vaccine_take")  & vaccine.vaccine_take;
+        ar.labelElement("vaccine_took")  & vaccine.vaccine_took;
+        ar.labelElement("waning_effect") & vaccine.waning_effect;
     }
 }

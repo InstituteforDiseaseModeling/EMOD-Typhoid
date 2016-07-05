@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -27,27 +27,34 @@ static const char * _module = "IndividualPolio";
 
 namespace Kernel
 {
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(Polio.Individual,IndividualHumanPolioConfig)
+    BEGIN_QUERY_INTERFACE_BODY(IndividualHumanPolioConfig)
+    END_QUERY_INTERFACE_BODY(IndividualHumanPolioConfig)
 
-    GET_SCHEMA_STATIC_WRAPPER_IMPL(Polio.Individual,IndividualHumanPolio)
     BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanPolio, IndividualHumanEnvironmental)
         HANDLE_INTERFACE(IIndividualHumanPolio)
     END_QUERY_INTERFACE_DERIVED(IndividualHumanPolio, IndividualHumanEnvironmental)
 
-    bool IndividualHumanPolio::ReportSabinWildPhenotypeAsWild = false;
+    bool IndividualHumanPolioConfig::ReportSabinWildPhenotypeAsWild = false;
 
     bool
-    IndividualHumanPolio::Configure( const Configuration* config ) // just called once!
+    IndividualHumanPolioConfig::Configure( const Configuration* config ) // just called once!
     {
         LOG_DEBUG( "Configure\n" );
-        // polio
+
         initConfigTypeMap( "Report_Sabin_Wild_Phenotype_As_Wild", &ReportSabinWildPhenotypeAsWild, Report_Sabin_Wild_Phenotype_As_Wild_DESC_TEXT, false );
 
-        SusceptibilityPolioConfig fakeImmunity;
-        fakeImmunity.Configure( config );
-        InfectionPolioConfig fakeInfection;
-        fakeInfection.Configure( config );
-        //return IndividualHuman::Configure( config );
         return JsonConfigurable::Configure( config );
+    }
+
+    void IndividualHumanPolio::InitializeStaticsPolio( const Configuration* config ) // just called once!
+    {
+        SusceptibilityPolioConfig immunity_config;
+        immunity_config.Configure( config );
+        InfectionPolioConfig infection_config;
+        infection_config.Configure( config );
+        IndividualHumanPolioConfig individual_config;
+        individual_config.Configure( config );
     }
 
     IndividualHumanPolio::IndividualHumanPolio(suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
@@ -233,10 +240,11 @@ void Kernel::IndividualHumanPolio::Expose( const IContagionPopulation* cp, float
 
         if(infection_prob>0 && randgen->e() < infection_prob)
         {
-            if(ReportSabinWildPhenotypeAsWild && (polio_susceptibility->GetReversionDegree(&strain_id) >= 1.0f))
+            if ( IndividualHumanPolioConfig::ReportSabinWildPhenotypeAsWild && (polio_susceptibility->GetReversionDegree(&strain_id) >= 1.0f) )
             {
                 strain_id.SetAntigenID( polio_susceptibility->GetSerotype(&strain_id) );
             }
+            
             AcquireNewInfection(&strain_id);
         }
     }

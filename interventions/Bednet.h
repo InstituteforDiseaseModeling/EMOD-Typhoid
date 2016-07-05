@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "FactorySupport.h"
 #include "Configure.h"
+#include "IWaningEffect.h"
 #include "EventTrigger.h"
 
 namespace Kernel
@@ -41,7 +42,8 @@ namespace Kernel
 
     public:
         SimpleBednet();
-        virtual ~SimpleBednet() { }
+        SimpleBednet( const SimpleBednet& );
+        virtual ~SimpleBednet();
 
         virtual bool Configure( const Configuration * config ) override;
 
@@ -53,11 +55,10 @@ namespace Kernel
 
     protected:
 
-        float current_blockingrate;
-        float current_killingrate;
-        float primary_decay_time_constant;
-        float secondary_decay_time_constant;
-        InterventionDurabilityProfile::Enum durability_time_profile;
+        WaningConfig   killing_config;
+        IWaningEffect* killing_effect;
+        WaningConfig   blocking_config;
+        IWaningEffect* blocking_effect;
         BednetType::Enum bednet_type;
         EventTrigger on_distributed_event ;
         IBednetConsumer *ibc;

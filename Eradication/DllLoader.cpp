@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -102,7 +102,7 @@ DllLoader::ReadEmodulesJson(
         }
         LOG_INFO( "Stored all dll_paths.\n" );
     }
-    catch( json::Exception &e )
+    catch( const json::Exception &e )
     {
         throw Kernel::InitializationException( __FILE__, __LINE__, __FUNCTION__, e.what() );
     }
@@ -423,7 +423,7 @@ bool DllLoader::GetType( const TCHAR* pFilename,
         if( p_class_name != nullptr )
         {
             rClassName = std::string( p_class_name );
-            LOG_INFO_F( "Found Report DLL = %s", p_class_name );
+            LOG_INFO_F( "Found Report DLL = %s\n", p_class_name );
         }
         else
         {

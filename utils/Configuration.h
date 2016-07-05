@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -69,6 +69,12 @@ std::vector< std::string> GET_CONFIG_VECTOR_STRING(const json::QuickInterpreter*
 inline std::vector< std::string > GET_CONFIG_VECTOR_STRING(const json::QuickInterpreter* parameter_source, const std::string& name)
 {
     return GET_CONFIG_VECTOR_STRING(parameter_source, name.c_str());
+}
+
+std::vector< std::vector< std::string > > GET_CONFIG_VECTOR2D_STRING(const json::QuickInterpreter* parameter_source, const char *name);
+inline std::vector< std::vector< std::string > > GET_CONFIG_VECTOR2D_STRING(const json::QuickInterpreter* parameter_source, const std::string& name)
+{
+    return GET_CONFIG_VECTOR2D_STRING(parameter_source, name.c_str());
 }
 
 std::vector< float > GET_CONFIG_VECTOR_FLOAT(const json::QuickInterpreter* parameter_source, const char *name);

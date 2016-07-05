@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -107,6 +107,36 @@ namespace Kernel
         }
 
         return interventions_of_type;
+    }
+
+    std::list<IDistributableIntervention*> InterventionsContainer::GetInterventionsByName(const std::string &intervention_name)
+    {
+        std::list<IDistributableIntervention*> interventions_list;
+        LOG_DEBUG_F( "Looking for interventions with name %s\n", intervention_name.c_str() );
+        for (auto intervention : interventions)
+        {
+            if( intervention->GetName() == intervention_name )
+            {
+                interventions_list.push_back( intervention );
+            }
+        }
+
+        return interventions_list;
+    }
+
+    std::list<void*> InterventionsContainer::GetInterventionsByInterface( iid_t iid )
+    {
+        std::list<void*> interface_list;
+        for (auto intervention : interventions)
+        {
+            void* p_interface = nullptr;
+            if ( s_OK == intervention->QueryInterface( iid, (void**)&p_interface) )
+            {
+                interface_list.push_back( p_interface );
+            }
+        }
+
+        return interface_list;
     }
 
     IDistributableIntervention* InterventionsContainer::GetIntervention( const std::string& iv_name )
@@ -261,6 +291,7 @@ namespace Kernel
             (*pProps)[ property ] = new_value;
             parent->UpdateGroupMembership();
             parent->UpdateGroupPopulation(1.0f);
+            parent->SetPropertyReportString("");
         }
         else
         {

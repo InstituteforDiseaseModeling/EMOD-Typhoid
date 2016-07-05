@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -38,6 +38,7 @@ namespace Kernel
         virtual const jsonConfigurable::tDynamicStringSet& GetAbortStates();
 
     protected:
+        virtual void Callback( float dt );
         virtual bool qualifiesToGetIntervention( IIndividualHumanContext* pIndivid );
         virtual bool AbortDueToCurrentCascadeState();
         virtual bool UpdateCascade();
@@ -48,16 +49,13 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         jsonConfigurable::tDynamicStringSet abortStates;
         std::string cascadeState;
-#pragma warning( pop )
-
         bool firstUpdate;
         bool result_of_positive_test;
         float original_days_to_diagnosis;
         float absoluteDuration;
-
-#pragma warning( push )
-#pragma warning( disable: 4251 ) // See IdmApi.h for details
         EventTrigger negative_diagnosis_event;
+
+        DECLARE_SERIALIZABLE(HIVSimpleDiagnostic);
 #pragma warning( pop )
     };
 }

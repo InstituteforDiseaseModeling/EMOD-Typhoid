@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -14,7 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IIndividualHumanSTI.h"
 #include "IIndividualHumanHIV.h"
 #include "InfectionHIV.h"
-#include "HIVInterventionsContainer.h"
+#include "IHIVInterventionsContainer.h"
 
 static const char* _module = "RelationshipReporting";
 
@@ -32,9 +32,6 @@ namespace Kernel
         , is_circumcised( false )
         , has_sti( false )
         , is_superspreader( false )
-        , transitory_relationship_count(0)
-        , informal_relationship_count(0)
-        , marital_relationship_count(0)
         , props()
     {}
 

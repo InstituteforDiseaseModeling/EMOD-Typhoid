@@ -140,7 +140,7 @@ void LOCALNS::Tar::put(const char* filename,const char* content,std::size_t len)
     _init((void*)&header);
     _filename((void*)&header,filename);
     header.typeflag[0]=0;
-    _size((void*)&header,len);
+    _size((void*)&header,(unsigned long)len);
     _checksum((void*)&header);
     out.write((const char*)&header,sizeof(PosixTarHeader));
     out.write(content,len);

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -13,6 +13,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IdmDateTime.h"
 #include "Configure.h"
 #include "IRelationship.h"
+#include "Properties.h"
+
 
 namespace Kernel {
 
@@ -21,6 +23,7 @@ namespace Kernel {
     struct IPairFormationAgent;
     struct IPairFormationStats;
     struct IRelationshipParameters;
+    struct IConcurrency;
 
     struct IDMAPI ISociety : public JsonConfigurable
     {
@@ -32,8 +35,10 @@ namespace Kernel {
         virtual IPairFormationAgent* GetPFA(RelationshipType::Enum) = 0;
         virtual IPairFormationStats* GetStats(RelationshipType::Enum) = 0;
 
-        virtual void SetParameters( IIdGeneratorSTI* pIdGen, const Configuration* config ) = 0;
+        virtual void SetParameters( IIdGeneratorSTI* pIdGen, const tPropertiesDistrib& rPropertiesDist, const Configuration* config ) = 0;
         virtual IRelationshipParameters* GetRelationshipParameters( RelationshipType::Enum type ) = 0;
+
+        virtual IConcurrency* GetConcurrency() = 0;
 
         // JsonConfigurable - making public
         virtual bool Configure(const Configuration *config) = 0;

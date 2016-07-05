@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -35,9 +35,9 @@ namespace Kernel
 
         bool ret = JsonConfigurable::Configure( inputJson );
 
-        if( (broadcast_event == NO_TRIGGER_STR) || broadcast_event.IsUninitialized() )
+        if( !JsonConfigurable::_dryrun && (broadcast_event == NO_TRIGGER_STR) || broadcast_event.IsUninitialized() )
         {
-            LOG_WARN_F("BroadcastEvent was configured with NoTrigger (or uninitialized) as the Broadcast_Event.  This special event will not be broadcast.");
+            LOG_WARN_F("BroadcastEvent was configured with NoTrigger (or uninitialized) as the Broadcast_Event.  This special event will not be broadcast.\n");
         }
         return ret;
     }
@@ -69,15 +69,13 @@ namespace Kernel
         // expire the intervention
         expired = true;
     }
-}
 
-#if 0
-namespace Kernel {
-    template<class Archive>
-    void serialize(Archive &ar, BroadcastEvent& obj, const unsigned int v)
+    REGISTER_SERIALIZABLE(BroadcastEvent);
+
+    void BroadcastEvent::serialize(IArchive& ar, BroadcastEvent* obj)
     {
-        ar & /*(std::string)*/ obj.broadcast_event;
-        ar & boost::serialization::base_object<Kernel::BaseIntervention>(obj);
+        BaseIntervention::serialize( ar, obj );
+        BroadcastEvent& be = *obj;
+        ar.labelElement("broadcast_event") & be.broadcast_event;
     }
 }
-#endif

@@ -16,7 +16,7 @@
                }
           }, 
           "DEMOGRAPHICS": {
-               "Demographics_Filename": "Madagascar_Nosibe_2.5arcmin_demographics.json"
+               "Demographics_Filenames": ["Madagascar_Nosibe_2.5arcmin_demographics.json"]
           }, 
           "HPC": {
               "Load_Balance_Filename": "Madagascar_Nosibe_2.5arcmin_load_balancing_8procs.bin",
@@ -26,7 +26,9 @@
               "Migration_Model": "FIXED_RATE_MIGRATION", 
               "Migration_Pattern": "WAYPOINTS_HOME", 
               "Enable_Migration_Heterogeneity" : 0,
-              "Family_Migration_Type" : "NO_MIGRATION",
+              "Enable_Family_Migration": 0, 
+              "Family_Migration_Filename": "", 
+              "x_Family_Migration": 1,
               "Roundtrip_Waypoints": 5,
               "AIR" : {
                   "Enable_Air_Migration" : 0,
@@ -47,7 +49,7 @@
           },              
           "PRIMARY": {
                "Config_Name": "69_Vector_IRS_Ivermectin -- multicore -- Madagascar_Nosibe", 
-               "Geography": "Test", 
+               "Geography": "Madagascar_Nosibe", 
                "Run_Number": 27
           }, 
           "x_Temporary_Larval_Habitat" : 0.02

@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -24,6 +24,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #include "iv_params.rc"
 
+#include <stdarg.h>
 #include <stdexcept>
 #include <sstream>
 #include <fstream>
@@ -112,6 +113,35 @@ namespace Kernel
                     return std::string( DYNAMIC_STRING_SET_LABEL );
                 }
                 std::string value_source;
+
+                static void serialize( IArchive& ar, tDynamicStringSet& dyn )
+                {
+                    ar.startObject();
+                    ar.labelElement("values");
+                    size_t count = ar.IsWriter() ? dyn.size() : -1;
+
+                    ar.startArray(count);
+                    if( ar.IsWriter() )
+                    {
+                        for (auto& entry : dyn)
+                        {
+                            std::string str = entry;
+                            ar & str;
+                        }
+                    }
+                    else
+                    {
+                        for (size_t i = 0; i < count; ++i)
+                        {
+                            std::string entry;
+                            ar & entry;
+                            dyn.insert( entry );
+                        }
+                    }
+                    ar.endArray();
+                    ar.labelElement("value_source") & dyn.value_source;
+                    ar.endObject();
+                }
         };
 
         class ConstrainedString : public std::string
@@ -153,6 +183,7 @@ namespace Kernel
         typedef std::map< std::string, void * > tEnumConfigTypeMapType;
         typedef std::map< std::string, std::set< std::string > * > tStringSetConfigTypeMapType;
         typedef std::map< std::string, std::vector< std::string > * > tVectorStringConfigTypeMapType;
+        typedef std::map< std::string, std::vector< std::vector< std::string > > * > tVector2dStringConfigTypeMapType;
         typedef std::map< std::string, const std::set< std::string > * > tVectorStringConstraintsTypeMapType;
         typedef std::map< std::string, std::vector< float > * > tVectorFloatConfigTypeMapType;
         typedef std::map< std::string, std::vector< int > * > tVectorIntConfigTypeMapType;
@@ -198,7 +229,9 @@ namespace Kernel
         tStringSetConfigTypeMapType stringSetConfigTypeMap;
         jsonConfigurable::tConStringConfigTypeMapType conStringConfigTypeMap;
         tVectorStringConfigTypeMapType vectorStringConfigTypeMap;
+        tVector2dStringConfigTypeMapType vector2dStringConfigTypeMap;
         tVectorStringConstraintsTypeMapType vectorStringConstraintsTypeMap;
+        tVectorStringConstraintsTypeMapType vector2dStringConstraintsTypeMap;
         tVectorFloatConfigTypeMapType vectorFloatConfigTypeMap;
         tVectorIntConfigTypeMapType vectorIntConfigTypeMap;
         tVector2dFloatConfigTypeMapType vector2dFloatConfigTypeMap;
@@ -284,6 +317,14 @@ namespace Kernel
         void initConfigTypeMap(
             const char* paramName,
             std::vector< std::string > * pVariable,
+            const char* description = default_description,
+            const char* constraint_schema = nullptr,
+            const std::set< std::string > &constraint_variable = empty_set
+        );
+
+        void initConfigTypeMap(
+            const char* paramName,
+            std::vector< std::vector< std::string > > * pVariable,
             const char* description = default_description,
             const char* constraint_schema = nullptr,
             const std::set< std::string > &constraint_variable = empty_set
@@ -494,7 +535,10 @@ namespace Kernel
         )
         {
             MetadataDescriptor::Enum * pEnumMd = const_cast<MetadataDescriptor::Enum *>(&enum_md);
-            jsonSchemaBase[key] = pEnumMd->GetSchemaElement();
+            if ( _dryrun )
+            {
+                jsonSchemaBase[key] = pEnumMd->GetSchemaElement();
+            }
 
             // parsing: unspecified case
             if (pJson && pJson->Exist(key) == false && _useDefaults )
@@ -612,21 +656,31 @@ namespace Kernel
             const char* condition_key = nullptr, const char* condition_value = nullptr
         )
         {
-            json::QuickBuilder custom_schema = pVariable->GetSchema();
+            if( JsonConfigurable::_dryrun )
+            {
+                json::QuickBuilder custom_schema = pVariable->GetSchema();
 
-            // going to get something back like : {
-            //  "type_name" : "idmType:VectorAlleleEnumPair",
-            //  "type_schema" : {
-            //      "first" : ...,
-            //      "second" : ...
-            //      }
-            //  }
-            std::string custom_type_label = (std::string) custom_schema[ _typename_label() ].As<json::String>();
-            json::String custom_type_label_as_json_string = json::String( custom_type_label );
-            jsonSchemaBase[ custom_type_label ] = custom_schema[ _typeschema_label() ];
-            json::Object newComplexTypeSchemaEntry;
-            newComplexTypeSchemaEntry["description"] = json::String( description );
-            newComplexTypeSchemaEntry["type"] = json::String( custom_type_label_as_json_string );
+                // going to get something back like : {
+                //  "type_name" : "idmType:VectorAlleleEnumPair",
+                //  "type_schema" : {
+                //      "first" : ...,
+                //      "second" : ...
+                //      }
+                //  }
+                std::string custom_type_label = (std::string) custom_schema[ _typename_label() ].As<json::String>();
+                json::String custom_type_label_as_json_string = json::String( custom_type_label );
+                jsonSchemaBase[ custom_type_label ] = custom_schema[ _typeschema_label() ];
+                json::Object newComplexTypeSchemaEntry;
+                newComplexTypeSchemaEntry["description"] = json::String( description );
+                newComplexTypeSchemaEntry["type"] = json::String( custom_type_label_as_json_string );
+                if( condition_key && condition_value )
+                {
+                    json::Object condition;
+                    condition[ condition_key ] = json::String( condition_value );
+                    newComplexTypeSchemaEntry["depends-on"] = condition;
+                }
+                jsonSchemaBase[ paramName ] = newComplexTypeSchemaEntry;
+            }
 
             //std::cout << "type = " << typeid( *pVariable ).name() << std::endl;
             //std::cout << "Storing param name to variable mapping in templated static map." << std::endl;
@@ -640,19 +694,13 @@ namespace Kernel
             release_assert( wrapper );
             wrapper->_labelToVariableMap[ std::string( paramName ) ] = pVariable;
 
-            if( condition_key && condition_value )
-            {
-                json::Object condition;
-                condition[ condition_key ] = json::String( condition_value );
-                newComplexTypeSchemaEntry["depends-on"] = condition;
-            }
-            jsonSchemaBase[ paramName ] = newComplexTypeSchemaEntry;
         }
 
         virtual bool Configure( const Configuration* inputJson );
 
         static const char * _typename_label() { return "type_name"; }
         static const char * _typeschema_label()  { return "type_schema"; }
+        void handleMissingParam( const std::string& key );
     };
 
     // No, we don't need everything from JsonConfigurable. No, this is not the final solution.

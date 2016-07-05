@@ -11,6 +11,7 @@ libstiSrcFiles = [
                           "../Eradication/IndividualSTI.cpp",
                           "../Eradication/InfectionSTI.cpp",
                           "../Eradication/NodeSTI.cpp",
+                          "../Eradication/NodeInfoSTI.cpp",
                           "../Eradication/ReportSTI.cpp",
                           "../Eradication/SimulationSTI.cpp",
                           "../Eradication/SusceptibilitySTI.cpp",
@@ -33,17 +34,18 @@ libstiSrcFiles = [
                            "../Eradication/RelationshipGroups.cpp",
                            "../Eradication/RelationshipManager.cpp",
                            "../Eradication/RelationshipManagerFactory.cpp",
+                           "../Eradication/RelationshipParameters.cpp",
                            "../Eradication/RelationshipReporting.cpp",
                            "../Eradication/SocietyFactory.cpp",
                            "../Eradication/SocietyImpl.cpp",
                            "../Eradication/StiObjectFactory.cpp",
                            "../Eradication/StiTransmissionReporter.cpp",
-                           "../Eradication/STINetworkParameters.cpp",
                            "../Eradication/StiRelationshipEndReporter.cpp",
                            "../Eradication/StiRelationshipStartReporter.cpp",
                            "../Eradication/StiRelationshipConsummatedReporter.cpp",
                            "../Eradication/FlowControllerFactory.cpp",
-                           "../Eradication/FlowControllerImpl.cpp"
+                           "../Eradication/FlowControllerImpl.cpp",
+                           "../Eradication/ConcurrencyParameters.cpp"
                     ]
 
 libstiIncFiles = [  "NodeSTI.h" ]

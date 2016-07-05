@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -15,7 +15,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "IndividualMalaria.h"
 #include "../interventions/IDrug.h"
-#include "ReportUtilities.h"
 
 #include "DllInterfaceHelper.h"
 #include "DllDefs.h"
@@ -193,6 +192,11 @@ void MalariaPatientJSONReport::LogNodeData( INodeContext * pNC )
     simtime = pNC->GetTime().time;
 }
 
+bool MalariaPatientJSONReport::IsCollectingIndividualData( float currentTime, float dt ) const
+{
+    return true;
+}
+
 void MalariaPatientJSONReport::LogIndividualData( IIndividualHuman* individual )
 {
     LOG_DEBUG( "LogIndividualData\n" );
@@ -236,12 +240,12 @@ void MalariaPatientJSONReport::LogIndividualData( IIndividualHuman* individual )
     // Positive fields of view (out of 200 views in Garki-like setup)
     int pos_fields = 0;
     int gam_pos_fields = 0;
-    individual_malaria->CountPositiveSlideFields( DLL_HELPER.RNG, 200, 1.0f/400, pos_fields, gam_pos_fields);
+    individual_malaria->CountPositiveSlideFields( DLL_HELPER.GetRandomNumberGenerator(), 200, 1.0f/400, pos_fields, gam_pos_fields);
     patient->pos_fields_of_view.push_back(float(pos_fields));
     patient->gametocyte_pos_fields_of_view.push_back(float(gam_pos_fields));
 
     // New drugs
-    std::list<IDrug*> drug_list = ReportUtilities::GetDrugList( individual, std::string("class Kernel::AntimalarialDrug") );
+    std::list<void*> drug_list = individual->GetInterventionsContext()->GetInterventionsByInterface( GET_IID(IDrug) );
     LOG_DEBUG_F( "Drug doses distributed = %d\n", drug_list.size() );
 
     int new_drugs = drug_list.size() - patient->n_drug_treatments;
@@ -250,7 +254,8 @@ void MalariaPatientJSONReport::LogIndividualData( IIndividualHuman* individual )
 
     while(new_drugs > 0)
     {
-        new_drug_names += drug_list.back()->GetDrugName();
+        IDrug* p_drug = static_cast<IDrug*>(drug_list.back());
+        new_drug_names += p_drug->GetDrugName();
         drug_list.pop_back();
         new_drugs--;
         if (new_drugs == 0) break;

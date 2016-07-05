@@ -1,21 +1,16 @@
-/*****************************************************************************
+/***************************************************************************************************
 
-Copyright (c) 2014 by Global Good Fund I, LLC. All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
-Except for any rights expressly granted to you in a separate license with the
-Global Good Fund (GGF), GGF reserves all rights, title and interest in the
-software and documentation.  GGF grants recipients of this software and
-documentation no other rights either expressly, impliedly or by estoppel.
+EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 
-THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" AND GGF HEREBY DISCLAIMS
-ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
-
-*****************************************************************************/
+***************************************************************************************************/
 
 #pragma once
 
 #include "BaseChannelReport.h"
+#include "IIndividualHuman.h"
 
 namespace json {
     class Element;
@@ -23,7 +18,6 @@ namespace json {
 
 namespace Kernel {
     struct IJsonObjectAdapter;
-}
 
 class BinnedReport : public BaseChannelReport
 {
@@ -36,7 +30,7 @@ public:
     virtual void BeginTimestep();
     virtual void LogNodeData( Kernel::INodeContext * pNC );
     virtual bool IsCollectingIndividualData( float currentTime, float dt ) const { return true ; } ;
-    virtual void LogIndividualData( Kernel::IIndividualHuman* individual );
+    virtual void LogIndividualData( IIndividualHuman* individual );
     virtual void EndTimestep( float currentTime, float dt );
 
     virtual void Finalize();
@@ -51,7 +45,7 @@ protected:
 
     virtual void initChannelBins();
     void clearChannelsBins();
-    virtual int calcBinIndex(Kernel::IIndividualHuman* individual);
+    virtual int calcBinIndex( IIndividualHuman* individual);
 
     // TODO: should return-type be something generic (void* ?) so e.g. MATLAB plugin can follow this pattern?
     virtual json::Element formatChannelDataBins(const float data[], std::vector<int>& dims, int start_axis, int num_remaining_bins);
@@ -67,7 +61,7 @@ protected:
     std::vector<int> num_bins_per_axis;
     int num_total_bins;
     std::vector<std::vector<float> > values_per_axis;
-    std::vector<std::vector<std::string> > friendly_names_per_axis;
+//    std::vector<std::vector<std::string> > friendly_names_per_axis;
 
     //labels (these are in the header instead of the cpp file so they can be inherited by disease specific binned report
     static const char * _pop_label;
@@ -82,9 +76,9 @@ protected:
     IChannelDataMapOutputAugmentor* p_output_augmentor ;
     int _num_age_bins;
     int _num_bins_per_axis[1];
-    //float _age_bin_upper_values[5];
     float * _age_bin_upper_values;
-    //std::string _age_bin_friendly_names[100];
     std::vector<std::string> _age_bin_friendly_names;
                                   
 };
+
+}

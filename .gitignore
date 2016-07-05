@@ -7,6 +7,14 @@
 *.userosscache
 *.sln.docstates
 
+# Embedded Data_Files directory (DtkInput repository)
+Data_Files/
+DtkInput/
+
+# Regression
+*.py[ocd]
+report*.xml
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -243,9 +251,19 @@ status.txt
 Transitions.json
 
 .hg
-/Regression/reports/
+Regression/reports/
 componentTests/testdata/NodeDemographicsTest/output/DefaultDemographics.json
 componentTests/invalid.json
 componentTests/testdata/NodeDemographicsTest/DefaultDemographics.json
 .sconsign.dblite
 .sconf_temp/conftest_0.cpp
+Regression/Scenarios/InputFiles
+testing
+.config_from_excel.json
+.campaign_from_excel.json
+
+# compiled Python
+*.pyc
+*.s
+*.ii
+config_new.xlsx

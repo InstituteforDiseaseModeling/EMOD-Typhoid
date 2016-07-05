@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -146,11 +146,9 @@ namespace Kernel
     }
 
     IPairFormationParameters* PairFormationParametersImpl::CreateParameters( RelationshipType::Enum relType,
-                                                                             const Configuration* pConfig,
-                                                                             float rate_ratio_male, 
-                                                                             float rate_ratio_female )
+                                                                             const Configuration* pConfig )
     {
-        PairFormationParametersImpl* newParameters = _new_ PairFormationParametersImpl( relType, rate_ratio_male, rate_ratio_female );
+        PairFormationParametersImpl* newParameters = _new_ PairFormationParametersImpl( relType );
 
         newParameters->Configure(pConfig);
 
@@ -177,9 +175,7 @@ namespace Kernel
     {
     }
 
-    PairFormationParametersImpl::PairFormationParametersImpl( RelationshipType::Enum relType,
-                                                              float rate_ratio_male, 
-                                                              float rate_ratio_female )
+    PairFormationParametersImpl::PairFormationParametersImpl( RelationshipType::Enum relType )
         : rel_type( relType )
         , male_age_bin_count(0)
         , initial_male_age(0.0f)
@@ -197,9 +193,6 @@ namespace Kernel
         , formation_rate_sigmoid()
         , formation_rate_value_map()
     {
-        rate_ratio[Gender::MALE] = rate_ratio_male;
-        rate_ratio[Gender::FEMALE] = rate_ratio_female;
-
         marginal_values[ Gender::MALE   ] = std::vector<float>() ;
         marginal_values[ Gender::FEMALE ] = std::vector<float>() ;
         // Real work done in Initialize()
@@ -234,6 +227,9 @@ namespace Kernel
             throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "Formation_Rate_Type", formation_rate_type );
         }
 
+        initConfigTypeMap( "Extra_Relational_Rate_Ratio_Male",   &rate_ratio[Gender::MALE  ], PFA_Extra_Relational_Rate_Ratio_Male_DESC_TEXT,   1.0, FLT_MAX, 1.0f );
+        initConfigTypeMap( "Extra_Relational_Rate_Ratio_Female", &rate_ratio[Gender::FEMALE], PFA_Extra_Relational_Rate_Ratio_Female_DESC_TEXT, 1.0, FLT_MAX, 1.0f );
+
         initConfigTypeMap( "Update_Period",                  &update_period,            "TBD"/*Update_Period_DESC_TEXT*/,         0,    FLT_MAX,    0      );
         initConfigTypeMap( "Number_Age_Bins_Male",           &male_age_bin_count,       Number_Age_Bins_Male_DESC_TEXT,           1,       1000,    1      );
         initConfigTypeMap( "Number_Age_Bins_Female",         &female_age_bin_count,     Number_Age_Bins_Female_DESC_TEXT,         1,       1000,    1      );
@@ -244,24 +240,33 @@ namespace Kernel
         initConfigTypeMap( "Joint_Probabilities",            &joint_probabilities,      Joint_Probabilities_DESC_TEXT,            0.0,  FLT_MAX,    0.0f   ); 
 
         bool ret = false;
+        bool prev_use_defaults = JsonConfigurable::_useDefaults ;
+        bool reset_track_missing = JsonConfigurable::_track_missing;
+        JsonConfigurable::_track_missing = false;
+        JsonConfigurable::_useDefaults = false ;
         
         try
         {
-            bool prev_use_defaults = JsonConfigurable::_useDefaults ;
-            JsonConfigurable::_useDefaults = false ;
 
             ret = JsonConfigurable::Configure( inputJson );
 
             JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = reset_track_missing;
         }
         catch( DetailedException& e )
         {
+            JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = reset_track_missing;
+
             std::stringstream ss ;
             ss << e.GetMsg() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( rel_type ) << "." ;
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
         catch( json::Exception& e )
         {
+            JsonConfigurable::_useDefaults = prev_use_defaults ;
+            JsonConfigurable::_track_missing = reset_track_missing;
+
             std::stringstream ss ;
             ss << e.what() << "\n" << "Was reading values for " << RelationshipType::pairs::lookup_key( rel_type ) << "." ;
             throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );

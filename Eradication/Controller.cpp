@@ -1,6 +1,6 @@
 /***************************************************************************************************
 
-Copyright (c) 2015 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
+Copyright (c) 2016 Intellectual Ventures Property Holdings, LLC (IVPH) All rights reserved.
 
 EMOD is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License.
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
@@ -21,6 +21,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "SimulationFactory.h"
 #include "Simulation.h"
+#include "IdmMpi.h"
 
 #ifndef _DLLS_
 #include "SimulationMalaria.h"
@@ -859,7 +860,9 @@ std::function<bool(SimulationT&,float)>
                 }
             }
 
-            MPI_Bcast( (void*)&terminate, 1, MPI_INTEGER4, 0, MPI_COMM_WORLD );
+            int tmp_terminate = (terminate ? 1:0);
+            EnvPtr->MPI.p_idm_mpi->BroadcastInteger( &tmp_terminate, 1, 0 );
+
             return terminate;
         };
     }
@@ -895,7 +898,9 @@ std::function<bool(SimulationT&,float)>
                 }
             }
 
-            MPI_Bcast( (void*)&terminate, 1, MPI_INTEGER4, 0, MPI_COMM_WORLD );
+            int tmp_terminate = (terminate ? 1:0);
+            EnvPtr->MPI.p_idm_mpi->BroadcastInteger( &tmp_terminate, 1, 0 );
+
             return terminate;
         };
     }
