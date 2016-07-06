@@ -174,7 +174,7 @@ class MyRegressionRunner():
         for dll_subdir in dll_dirs:
             dlls = glob.glob( os.path.join( os.path.join( emodule_dir, dll_subdir ), "*.dll" ) )
             for dll in dlls:
-                dll_hash = md5_hash_of_file( dll )
+                dll_hash = ru.md5_hash_of_file( dll )
                 #print( dll_hash )
                 # 1) calc md5 of dll
                 # 2) check for existence of rivendell (or whatever) for <root>/emodules/<subdir>/<md5>
