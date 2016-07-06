@@ -844,17 +844,17 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
             initConfigTypeMap( "Enable_Sea_Migration",        &(m_InfoFileList[3]->m_IsEnabled), Enable_Sea_Migration_DESC_TEXT,      false );
             initConfigTypeMap( "Enable_Family_Migration",     &(m_InfoFileList[4]->m_IsEnabled), Enable_Family_Migration_DESC_TEXT,   false );
 
-            initConfigTypeMap( "Local_Migration_Filename",    &(m_InfoFileList[0]->m_Filename),  Local_Migration_Filename_DESC_TEXT    );
-            initConfigTypeMap( "Air_Migration_Filename",      &(m_InfoFileList[1]->m_Filename),  Air_Migration_Filename_DESC_TEXT      );
-            initConfigTypeMap( "Regional_Migration_Filename", &(m_InfoFileList[2]->m_Filename),  Regional_Migration_Filename_DESC_TEXT );
-            initConfigTypeMap( "Sea_Migration_Filename",      &(m_InfoFileList[3]->m_Filename),  Sea_Migration_Filename_DESC_TEXT      );
-            initConfigTypeMap( "Family_Migration_Filename",   &(m_InfoFileList[4]->m_Filename),  Family_Migration_Filename_DESC_TEXT   );
+            initConfigTypeMap( "Local_Migration_Filename",    &(m_InfoFileList[0]->m_Filename),  Local_Migration_Filename_DESC_TEXT,    "Enable_Local_Migration" );
+            initConfigTypeMap( "Air_Migration_Filename",      &(m_InfoFileList[1]->m_Filename),  Air_Migration_Filename_DESC_TEXT       "Enable_Air_Migration" );
+            initConfigTypeMap( "Regional_Migration_Filename", &(m_InfoFileList[2]->m_Filename),  Regional_Migration_Filename_DESC_TEXT, "Enable_Regional_Migration" );
+            initConfigTypeMap( "Sea_Migration_Filename",      &(m_InfoFileList[3]->m_Filename),  Sea_Migration_Filename_DESC_TEXT,      "Enable_Sea_Migration" );
+            initConfigTypeMap( "Family_Migration_Filename",   &(m_InfoFileList[4]->m_Filename),  Family_Migration_Filename_DESC_TEXT,   "Enable_Family_Migration" );
 
-            initConfigTypeMap( "x_Local_Migration",           &(m_InfoFileList[0]->m_xModifier), x_Local_Migration_DESC_TEXT,    0.0f, FLT_MAX, 1.0f );
-            initConfigTypeMap( "x_Air_Migration",             &(m_InfoFileList[1]->m_xModifier), x_Air_Migration_DESC_TEXT,      0.0f, FLT_MAX, 1.0f );
-            initConfigTypeMap( "x_Regional_Migration",        &(m_InfoFileList[2]->m_xModifier), x_Regional_Migration_DESC_TEXT, 0.0f, FLT_MAX, 1.0f );
-            initConfigTypeMap( "x_Sea_Migration",             &(m_InfoFileList[3]->m_xModifier), x_Sea_Migration_DESC_TEXT,      0.0f, FLT_MAX, 1.0f );
-            initConfigTypeMap( "x_Family_Migration",          &(m_InfoFileList[4]->m_xModifier), x_Family_Migration_DESC_TEXT,   0.0f, FLT_MAX, 1.0f );
+            initConfigTypeMap( "x_Local_Migration",           &(m_InfoFileList[0]->m_xModifier), x_Local_Migration_DESC_TEXT,    0.0f, FLT_MAX, 1.0f, "Enable_Local_Migration" );
+            initConfigTypeMap( "x_Air_Migration",             &(m_InfoFileList[1]->m_xModifier), x_Air_Migration_DESC_TEXT,      0.0f, FLT_MAX, 1.0f, "Enable_Air_Migration" );
+            initConfigTypeMap( "x_Regional_Migration",        &(m_InfoFileList[2]->m_xModifier), x_Regional_Migration_DESC_TEXT, 0.0f, FLT_MAX, 1.0f, "Enable_Regional_Migration" );
+            initConfigTypeMap( "x_Sea_Migration",             &(m_InfoFileList[3]->m_xModifier), x_Sea_Migration_DESC_TEXT,      0.0f, FLT_MAX, 1.0f, "Enable_Sea_Migration" );
+            initConfigTypeMap( "x_Family_Migration",          &(m_InfoFileList[4]->m_xModifier), x_Family_Migration_DESC_TEXT,   0.0f, FLT_MAX, 1.0f, "Enable_Family_Migration" );
         }
 
         m_InfoFileList[0]->SetEnableParameterName( "Enable_Local_Migration"    );
