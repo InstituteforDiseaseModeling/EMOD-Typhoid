@@ -5,6 +5,7 @@ import json
 import threading
 import subprocess
 import shutil # copyfile
+import glob
 import regression_local_monitor
 import regression_hpc_monitor
 import regression_utils as ru
@@ -141,7 +142,7 @@ class MyRegressionRunner():
     # - The default is to use all of the DLLs found in the location the DLL projects
     #   place the DLLs (<trunk>\x64\Release).
     # - --dll-path allows the user to override this default path
-    def copyEModulesOver( params ):
+    def copyEModulesOver( self, params ):
 
         print "src_root = " + params.src_root
 
