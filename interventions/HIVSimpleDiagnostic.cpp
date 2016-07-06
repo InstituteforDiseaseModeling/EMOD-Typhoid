@@ -43,6 +43,8 @@ namespace Kernel
         initConfigTypeMap("Abort_States", &abortStates, HIV_Abort_States_DESC_TEXT);
         initConfigTypeMap("Cascade_State", &cascadeState, HIV_Cascade_State_DESC_TEXT);
         initConfigTypeMap("Days_To_Diagnosis", &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT, FLT_MAX, 0);
+
+        days_to_diagnosis.handle = std::bind( &HIVSimpleDiagnostic::Callback, this, std::placeholders::_1 );
     }
 
     HIVSimpleDiagnostic::HIVSimpleDiagnostic( const HIVSimpleDiagnostic& master )
@@ -54,6 +56,8 @@ namespace Kernel
         result_of_positive_test = master.result_of_positive_test;
         original_days_to_diagnosis = master.original_days_to_diagnosis;
         negative_diagnosis_event = master.negative_diagnosis_event;
+
+        days_to_diagnosis.handle = std::bind( &HIVSimpleDiagnostic::Callback, this, std::placeholders::_1 );
     }
 
     bool HIVSimpleDiagnostic::Configure(const Configuration * inputJson)
@@ -115,7 +119,6 @@ namespace Kernel
 
         if( qualifiesToGetIntervention( parent ) )
         {
-            days_to_diagnosis.handle = std::bind( &HIVSimpleDiagnostic::Callback, this, std::placeholders::_1 );
             LOG_DEBUG_F( "HIVSimpleDiagnostic distributed with days_to_diagnosis = %f\n", float(days_to_diagnosis) );
             return BaseIntervention::Distribute( context, pICCO );
         }

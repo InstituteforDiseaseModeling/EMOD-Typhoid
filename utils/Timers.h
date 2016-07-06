@@ -23,6 +23,8 @@ namespace Kernel {
             CountdownTimer();
             CountdownTimer( float initValue );
             void Decrement( float dt ); 
+            CountdownTimer& operator=( float val );
+
             std::function< void(float) > handle;
             static void serialize(IArchive& ar, CountdownTimer & ct);
         protected:
