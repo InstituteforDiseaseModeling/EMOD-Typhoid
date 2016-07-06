@@ -338,7 +338,7 @@ namespace Kernel
         bool * pVariable,
         const char* description,
         bool defaultvalue,
-        const char* condition_key = nullptr, const char* condition_value = nullptr
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F("initConfigTypeMap<bool>: %s\n", paramName);
@@ -944,7 +944,7 @@ namespace Kernel
                         auto condition = json_cast<const json::Object&>(schema["depends-on"]);
                         std::string condition_key = condition.Begin()->name;
                         std::string condition_value_str = "";
-                        char * condition_value = nullptr;
+                        const char * condition_value = nullptr;
                         try {
                             auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
                             condition_value = condition_value_str.c_str();
@@ -1013,7 +1013,7 @@ namespace Kernel
                     auto condition = json_cast<const json::Object&>(schema["depends-on"]);
                     std::string condition_key = condition.Begin()->name;
                     std::string condition_value_str = "";
-                    char * condition_value = nullptr;
+                    const char * condition_value = nullptr;
                     try {
                         condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
                         condition_value = condition_value_str.c_str();
@@ -1065,7 +1065,7 @@ namespace Kernel
                     auto condition = json_cast<const json::Object&>(schema["depends-on"]);
                     std::string condition_key = condition.Begin()->name;
                     std::string condition_value_str = "";
-                    char * condition_value = nullptr;
+                    const char * condition_value = nullptr;
                     try {
                         auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
                         condition_value = condition_value_str.c_str();
