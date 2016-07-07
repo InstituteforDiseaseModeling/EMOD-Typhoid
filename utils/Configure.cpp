@@ -48,9 +48,20 @@ namespace Kernel
                 {
                     // condition_value is not null, so it's a string (enum); let's read it.
                     auto c_value2 = (std::string) c_value.As<json::String>();
-                    if( c_value2 != std::string( condition_value ) )
+                    // see if this is multiples...
+                    auto c_values = IdmString( c_value2 ).split( ',' );
+                    //if( c_value2 != std::string( condition_value ) )
+                    bool bFound = false;
+                    for( std::string valid_condition_value : c_values )
                     {
+                        if( valid_condition_value == std::string( condition_value ) )
                         // (enum) Condition for using this param is false, so returning.
+                        {
+                            bFound = true;
+                        }
+                    }
+                    if( !bFound )
+                    {
                         return true;
                     }
                 }
@@ -60,6 +71,32 @@ namespace Kernel
                 // condition_key does not seem to exist in the json. That makes this fail.
                 return true;
             }
+        }
+        return false;
+    }
+
+    bool check_condition( const json::QuickInterpreter& schema, const json::QuickInterpreter * pJson )
+    {
+        if( schema.Exist( "depends-on" ) )
+        {
+            auto condition = json_cast<const json::Object&>(schema["depends-on"]);
+            std::string condition_key = condition.Begin()->name;
+            std::string condition_value_str = "";
+            const char * condition_value = nullptr;
+            try {
+                auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                condition_value = condition_value_str.c_str();
+            }
+            catch(...)
+            {
+                //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
+            }
+
+            if( check_condition( pJson, condition_key.c_str(), condition_value ) )
+            {
+                return true;
+            }
+
         }
         return false;
     }
@@ -869,6 +906,7 @@ namespace Kernel
             return true;
         }
 
+        LOG_DEBUG_F( "In %s, _useDefaults = %d\n", __FUNCTION__, _useDefaults );
         // Desired logic
         //
         //  | SPECIFIED | USE_DEFAULTS | BEHAVIOUR |
@@ -894,6 +932,12 @@ namespace Kernel
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
 
+            if( check_condition( schema, inputJson ) )
+            {
+                std::cout << key << " param is missing and that's ok." << std::endl;
+                continue;
+            }
+
             // check if parameter was specified in input json (TODO: improve performance by getting the iterator here with Find() and reusing instead of GET_CONFIG_BOOLEAN below)
             if( inputJson->Exist(key) )
             {
@@ -910,35 +954,7 @@ namespace Kernel
                 }
                 else
                 {
-                    if( schema.Exist( "depends-on" ) )
-                    {
-                        auto condition = json_cast<const json::Object&>(schema["depends-on"]);
-                        std::string condition_key = condition.Begin()->name;
-                        std::string condition_value_str = "";
-                        const char * condition_value = nullptr;
-                        try {
-                            auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
-                            condition_value = condition_value_str.c_str();
-                        }
-                        catch(...)
-                        {
-                            //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
-                        }
-                        
-                        if( !check_condition( inputJson, condition_key.c_str(), condition_value ) )
-                        {
-                            std::cout << key << " param is missing and that's NOT ok." << std::endl;
-                            handleMissingParam( key );
-                        }
-                        else
-                        {
-                            std::cout << key << " param is missing and that's ok." << std::endl;
-                        }
-                    }
-                    else // not in config, not using defaults, no depends-on, just plain missing
-                    {
-                        handleMissingParam( key );
-                    }
+                    handleMissingParam( key );
                 }
             }
 
@@ -1014,6 +1030,12 @@ namespace Kernel
             json::QuickInterpreter schema = jsonSchemaBase[key];
             float val = -1.0f;
 
+            if( check_condition( schema, inputJson ) )
+            {
+                std::cout << key << " param is missing and that's ok." << std::endl;
+                continue;
+            }
+
             // Check if parameter was specified in input json (TODO: improve performance by getting the iterator here with Find() and reusing instead of GET_CONFIG_DOUBLE below)
             if( inputJson->Exist(key) )
             {
@@ -1030,25 +1052,6 @@ namespace Kernel
                     val = (float)schema["default"].As<json::Number>();
                     LOG_INFO_F( "Using the default value ( \"%s\" : %f ) for unspecified parameter.\n", key.c_str(), val );
                     *(entry.second) = val;
-                }
-                else if( schema.Exist( "depends-on" ) )
-                {
-                    auto condition = json_cast<const json::Object&>(schema["depends-on"]);
-                    std::string condition_key = condition.Begin()->name;
-                    std::string condition_value_str = "";
-                    const char * condition_value = nullptr;
-                    try {
-                        auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
-                        condition_value = condition_value_str.c_str();
-                    }
-                    catch(...)
-                    {
-                        //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
-                    }
-                    if( !check_condition( inputJson, condition_key.c_str(), condition_value ) )
-                    {
-                        handleMissingParam( key );
-                    }
                 }
                 else // not in config, not using defaults, no depends-on, just plain missing
                 {
