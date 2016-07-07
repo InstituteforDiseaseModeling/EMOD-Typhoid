@@ -25,7 +25,7 @@
             "Enable_Aging":1,
             "Age_Initialization_Distribution_Type":"DISTRIBUTION_SIMPLE",
             "Enable_Demographics_Gender":1,
-            "Enable_Demographics_Initial":1,
+            "Enable_Demographics_Builtin":0,
             "Enable_Demographics_Other":0,
             "Base_Population_Scale_Factor":1,
             "Minimum_Adult_Age_Years" : 15,
