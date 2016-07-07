@@ -336,21 +336,24 @@ namespace Kernel
             const char* paramName,
             double * pVariable,
             const char* description = default_description,
-            double min = -DBL_MAX, double max = DBL_MAX, double defaultvalue = 1.0
+            double min = -DBL_MAX, double max = DBL_MAX, double defaultvalue = 1.0,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
             const char* paramName,
             std::string * pVariable,
             const char* description = default_description,
-            const std::string& default_str = default_string
+            const std::string& default_str = default_string,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
             const char* paramName,
             jsonConfigurable::ConstrainedString * pVariable,
             const char* description = default_description,
-            const std::string& default_str = default_string
+            const std::string& default_str = default_string,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
@@ -365,7 +368,8 @@ namespace Kernel
             std::vector< std::string > * pVariable,
             const char* description = default_description,
             const char* constraint_schema = nullptr,
-            const std::set< std::string > &constraint_variable = empty_set
+            const std::set< std::string > &constraint_variable = empty_set,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
@@ -373,35 +377,40 @@ namespace Kernel
             std::vector< std::vector< std::string > > * pVariable,
             const char* description = default_description,
             const char* constraint_schema = nullptr,
-            const std::set< std::string > &constraint_variable = empty_set
+            const std::set< std::string > &constraint_variable = empty_set,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
             const char* paramName,
             std::vector< float > * pVariable,
             const char* description = default_description,
-            float min = -FLT_MAX, float max = FLT_MAX, float defaultvalue = 1.0
+            float min = -FLT_MAX, float max = FLT_MAX, float defaultvalue = 1.0,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
             const char* paramName,
             std::vector< int > * pVariable,
             const char* description = default_description,
-            int min = -INT_MAX, int max = INT_MAX, int defaultvalue = 1.0
+            int min = -INT_MAX, int max = INT_MAX, int defaultvalue = 1.0,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
             const char* paramName,
             std::vector< std::vector< float > > * pVariable,
             const char* description = default_description,
-            float min = -FLT_MAX, float max = FLT_MAX, float defaultvalue = 1.0
+            float min = -FLT_MAX, float max = FLT_MAX, float defaultvalue = 1.0,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void initConfigTypeMap(
             const char* paramName,
             std::vector< std::vector< int > > * pVariable,
             const char* description = default_description,
-            int min = -INT_MAX, int max = INT_MAX, int defaultvalue = 1
+            int min = -INT_MAX, int max = INT_MAX, int defaultvalue = 1,
+            const char* condition_key = nullptr, const char* condition_value = nullptr
         );
 
         void

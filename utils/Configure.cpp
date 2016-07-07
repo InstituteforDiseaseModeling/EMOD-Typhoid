@@ -446,7 +446,8 @@ namespace Kernel
         const char* paramName,
         double * pVariable,
         const char * description,
-        double min, double max, double defaultvalue
+        double min, double max, double defaultvalue,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<double>: %s\n", paramName);
@@ -468,7 +469,8 @@ namespace Kernel
         const char* paramName,
         std::string * pVariable,
         const char * description,
-        const std::string& default_str
+        const std::string& default_str,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<string>: %s\n", paramName);
@@ -488,7 +490,8 @@ namespace Kernel
         const char* paramName,
         jsonConfigurable::ConstrainedString * pVariable,
         const char * description,
-        const std::string& default_str
+        const std::string& default_str,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<ConstrainedString>: %s\n", paramName);
@@ -558,7 +561,8 @@ namespace Kernel
         std::vector< std::string > * pVariable,
         const char* description,
         const char* constraint_schema,
-        const std::set< std::string > &constraint_variable
+        const std::set< std::string > &constraint_variable,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<vector<string>>: %s\n", paramName);
@@ -584,7 +588,8 @@ namespace Kernel
         std::vector< std::vector< std::string > > * pVariable,
         const char* description,
         const char* constraint_schema,
-        const std::set< std::string > &constraint_variable
+        const std::set< std::string > &constraint_variable,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<vector<vector<string>>>: %s\n", paramName);
@@ -605,7 +610,8 @@ namespace Kernel
         const char* paramName,
         std::vector< float > * pVariable,
         const char* description,
-        float min, float max, float defaultvalue
+        float min, float max, float defaultvalue,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<vector<float>>: %s\n", paramName);
@@ -627,7 +633,8 @@ namespace Kernel
         const char* paramName,
         std::vector< int > * pVariable,
         const char* description,
-        int min, int max, int defaultvalue
+        int min, int max, int defaultvalue,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<vector<int>>: %s\n", paramName);
@@ -649,7 +656,8 @@ namespace Kernel
         const char* paramName,
         std::vector< std::vector< float > > * pVariable,
         const char* description,
-        float min, float max, float defaultvalue
+        float min, float max, float defaultvalue,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<vector,vector<float>>>: %s\n", paramName);
@@ -671,7 +679,8 @@ namespace Kernel
         const char* paramName,
         std::vector< std::vector< int > > * pVariable,
         const char* description,
-        int min, int max, int defaultvalue
+        int min, int max, int defaultvalue,
+        const char* condition_key, const char* condition_value
     )
     {
         LOG_DEBUG_F( "initConfigTypeMap<vector,vector<int>>>: %s\n", paramName);
