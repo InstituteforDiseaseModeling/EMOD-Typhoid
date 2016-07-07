@@ -55,9 +55,9 @@ namespace Kernel
                                     Demographic_Coverage_DESC_TEXT,
                                     0.0, 
                                     1.0, 
-                                    DEFAULT_DEMOGRAPHIC_COVERAGE, 
+                                    DEFAULT_DEMOGRAPHIC_COVERAGE/*, 
                                     "Intervention_Config.*.iv_type", 
-                                    "IndividualTargeted" );
+                                    "IndividualTargeted"*/ );
 
         if( JsonConfigurable::_dryrun ||
             (default_target_demographic == TargetDemographicType::Everyone) || 
@@ -68,9 +68,9 @@ namespace Kernel
                                  inputJson,
                                  MetadataDescriptor::Enum( "target_demographic", 
                                                            Target_Demographic_DESC_TEXT, 
-                                                           MDD_ENUM_ARGS(TargetDemographicType)),
+                                                           MDD_ENUM_ARGS(TargetDemographicType))/*,
                                  "Intervention_Config.*.iv_type", 
-                                 "IndividualTargeted");
+                                 "IndividualTargeted"*/);
         }
         
         if( (target_demographic == TargetDemographicType::ExplicitAgeRanges         ) || 
@@ -98,9 +98,9 @@ namespace Kernel
 
         // xpath-y way of saying that the possible values for prop restrictions comes from demographics file IP's.
         property_restrictions_set.value_source = "<demographics>::Defaults.Individual_Properties.*.Property.<keys>:<demographics>::Defaults.Individual_Properties.*.Value.<keys>"; 
-        pParent->initConfigTypeMap("Property_Restrictions", &property_restrictions_set, Property_Restriction_DESC_TEXT, "Intervention_Config.*.iv_type", "IndividualTargeted" );
+        pParent->initConfigTypeMap("Property_Restrictions", &property_restrictions_set, Property_Restriction_DESC_TEXT /*, "Intervention_Config.*.iv_type", "IndividualTargeted"*/ );
 
-        pParent->initConfigComplexType("Property_Restrictions_Within_Node", &property_restrictions, Property_Restriction_DESC_TEXT, "Intervention_Config.*.iv_type", "IndividualTargeted" );
+        pParent->initConfigComplexType("Property_Restrictions_Within_Node", &property_restrictions, Property_Restriction_DESC_TEXT /*, "Intervention_Config.*.iv_type", "IndividualTargeted"*/ );
 
         pParent->initConfigTypeMap( "Target_Residents_Only", &target_residents_only, Target_Residents_Only_DESC_TEXT, false );
     }
