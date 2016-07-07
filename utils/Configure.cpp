@@ -934,7 +934,7 @@ namespace Kernel
 
             if( check_condition( schema, inputJson ) )
             {
-                std::cout << key << " param is missing and that's ok." << std::endl;
+                // param is missing and that's ok." << std::endl;
                 continue;
             }
 
@@ -968,6 +968,11 @@ namespace Kernel
             json::QuickInterpreter schema = jsonSchemaBase[key];
             int val = -1;
 
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok." << std::endl;
+            }
+
             // check if parameter was specified in input json (TODO: improve performance by getting the iterator here with Find() and reusing instead of GET_CONFIG_INTEGER below)
             if( inputJson->Exist(key) )
             {
@@ -995,25 +1000,6 @@ namespace Kernel
                     LOG_INFO_F( "Using the default value ( \"%s\" : %d ) for unspecified parameter.\n", key.c_str(), val );
                     *(entry.second) = val;
                 }
-                else if( schema.Exist( "depends-on" ) )
-                {
-                    auto condition = json_cast<const json::Object&>(schema["depends-on"]);
-                    std::string condition_key = condition.Begin()->name;
-                    std::string condition_value_str = "";
-                    const char * condition_value = nullptr;
-                    try {
-                        condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
-                        condition_value = condition_value_str.c_str();
-                    }
-                    catch(...)
-                    {
-                        //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
-                    }
-                    if( !check_condition( inputJson, condition_key.c_str(), condition_value ) )
-                    {
-                        handleMissingParam( key );
-                    }
-                }
                 else // not in config, not using defaults, no depends-on, just plain missing
                 {
                     handleMissingParam( key );
@@ -1032,8 +1018,7 @@ namespace Kernel
 
             if( check_condition( schema, inputJson ) )
             {
-                std::cout << key << " param is missing and that's ok." << std::endl;
-                continue;
+                continue; // param is missing and that's ok.
             }
 
             // Check if parameter was specified in input json (TODO: improve performance by getting the iterator here with Find() and reusing instead of GET_CONFIG_DOUBLE below)
@@ -1069,6 +1054,11 @@ namespace Kernel
             json::QuickInterpreter schema = jsonSchemaBase[key];
             double val = -1.0;
 
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             // Check if parameter was specified in input json (TODO: improve performance by getting the iterator here with Find() and reusing instead of GET_CONFIG_DOUBLE below)
             if( inputJson->Exist(key) )
             {
@@ -1100,6 +1090,11 @@ namespace Kernel
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
             float val = -1.0f;
+
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
 
             // Check if parameter was specified in input json
             LOG_DEBUG_F( "useDefaults = %d\n", _useDefaults );
@@ -1136,6 +1131,11 @@ namespace Kernel
             json::QuickInterpreter schema = jsonSchemaBase[key];
             int val = 0;
 
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             // Check if parameter was specified in input json
             LOG_DEBUG_F( "useDefaults = %d\n", _useDefaults );
             if( inputJson->Exist(key) )
@@ -1168,6 +1168,12 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             std::string val = schema["default"].As<json::String>();
             if( inputJson->Exist(key) )
             {
@@ -1193,6 +1199,11 @@ namespace Kernel
             const std::string& key = entry.first;
             entry.second->parameter_name = key ;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             std::string val = schema["default"].As<json::String>();
             if( inputJson->Exist(key) )
             {
@@ -1218,6 +1229,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             if ( inputJson->Exist(key) )
             {
                 *(entry.second) = GET_CONFIG_STRING_SET( inputJson, (entry.first).c_str() );
@@ -1242,6 +1258,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             if ( inputJson->Exist(key) )
             {
                 *(entry.second) = GET_CONFIG_VECTOR_STRING( inputJson, (entry.first).c_str() );
@@ -1283,6 +1304,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             if ( inputJson->Exist(key) )
             {
                 *(entry.second) = GET_CONFIG_VECTOR2D_STRING( inputJson, (entry.first).c_str() );
@@ -1326,6 +1352,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             if( inputJson->Exist(key) )
             {
                 std::vector<float> configValues = GET_CONFIG_VECTOR_FLOAT( inputJson, (entry.first).c_str() );
@@ -1344,6 +1375,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             if( inputJson->Exist(key) )
             {
                 std::vector<int> configValues = GET_CONFIG_VECTOR_INT( inputJson, (entry.first).c_str() );
@@ -1362,6 +1398,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             if( inputJson->Exist(key) )
             {
                 std::vector<std::vector<float>> configValues = GET_CONFIG_VECTOR2D_FLOAT( inputJson, (entry.first).c_str() );
@@ -1383,6 +1424,11 @@ namespace Kernel
         {
             const std::string& key = entry.first;
             json::QuickInterpreter schema = jsonSchemaBase[key];
+            if( check_condition( schema, inputJson ) )
+            {
+                continue; // param is missing and that's ok.
+            }
+
             if( inputJson->Exist(key) )
             {
                 std::vector<std::vector<int>> configValues = GET_CONFIG_VECTOR2D_INT( inputJson, (entry.first).c_str() );
