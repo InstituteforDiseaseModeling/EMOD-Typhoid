@@ -332,6 +332,23 @@ namespace Kernel
     bool JsonConfigurable::_possibleNonflatConfig = false;
     std::set< std::string > JsonConfigurable::empty_set;
 
+    void updateSchemaWithCondition( json::Object& schema, const char* condition_key, const char* condition_value )
+    {
+        if( condition_key )
+        {
+            json::Object condition;
+            if( condition_value )
+            {
+                condition[ condition_key ] = json::String( condition_value );
+            }
+            else
+            { 
+                condition[ condition_key ] = json::Number( 1 );
+            }
+            schema["depends-on"] = condition;
+        }
+    }
+
     void
     JsonConfigurable::initConfigTypeMap(
         const char* paramName,
@@ -352,19 +369,7 @@ namespace Kernel
             newIntSchema["description"] = json::String(description);
             newIntSchema["type"] = json::String( "bool" );
         }
-        if( condition_key )
-        {
-            json::Object condition;
-            if( condition_value )
-            {
-                condition[ condition_key ] = json::String( condition_value );
-            }
-            else
-            { 
-                condition[ condition_key ] = json::Number( 1 );
-            }
-            newIntSchema["depends-on"] = condition;
-        }
+        updateSchemaWithCondition( newIntSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newIntSchema;
     }
 
@@ -389,19 +394,7 @@ namespace Kernel
             newIntSchema["type"] = json::String( "integer" );
         }
             
-        if( condition_key )
-        {
-            json::Object condition;
-            if( condition_value )
-            {
-                condition[ condition_key ] = json::String( condition_value );
-            }
-            else
-            { 
-                condition[ condition_key ] = json::Number( 1 );
-            }
-            newIntSchema["depends-on"] = condition;
-        }
+        updateSchemaWithCondition( newIntSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newIntSchema;
     }
 
@@ -425,19 +418,7 @@ namespace Kernel
             newFloatSchema["description"] = json::String(description);
             newFloatSchema["type"] = json::String( "float" ); 
         }
-        if( condition_key )
-        {
-            json::Object condition;
-            if( condition_value )
-            {
-                condition[ condition_key ] = json::String( condition_value );
-            }
-            else
-            { 
-                condition[ condition_key ] = json::Number( 1 );
-            }
-            newFloatSchema["depends-on"] = condition;
-        }
+        updateSchemaWithCondition( newFloatSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newFloatSchema;
     }
 
@@ -461,6 +442,7 @@ namespace Kernel
         newDoubleSchema["min"] = json::Number(min);
         newDoubleSchema["max"] = json::Number(max);
         newDoubleSchema["default"] = json::Number(defaultvalue);
+        updateSchemaWithCondition( newDoubleSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newDoubleSchema;
     }
 
@@ -482,6 +464,7 @@ namespace Kernel
             newStringSchema["description"] = json::String(description);
             newStringSchema["type"] = json::String("string");
         }
+        updateSchemaWithCondition( newStringSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newStringSchema;
     }
 
@@ -504,6 +487,7 @@ namespace Kernel
             newConStringSchema["type"] = json::String("Constrained String");
             newConStringSchema["value_source"] = json::String( pVariable->constraints );
         }
+        updateSchemaWithCondition( newConStringSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newConStringSchema;
     }
 
@@ -544,14 +528,8 @@ namespace Kernel
             {
                 // just a regular old string set, no problem.
             }
-
-            if( condition_key && condition_value )
-            {
-                json::Object condition;
-                condition[ condition_key ] = json::String( condition_value );
-                newStringSetSchema["depends-on"] = condition;
-            }
         }
+        //updateSchemaWithCondition( newStringSetSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newStringSetSchema.As<json::Object>();
     }
 
@@ -579,6 +557,7 @@ namespace Kernel
                 newVectorStringSchema["value_source"] = json::String( constraint_schema );
             }
         }
+        updateSchemaWithCondition( newVectorStringSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newVectorStringSchema;
     }
 
@@ -602,6 +581,7 @@ namespace Kernel
         {
             newVectorStringSchema["value_source"] = json::String( constraint_schema );
         }
+        updateSchemaWithCondition( newVectorStringSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newVectorStringSchema;
     }
 
@@ -625,6 +605,7 @@ namespace Kernel
         newVectorFloatSchema["min"] = json::Number(min);
         newVectorFloatSchema["max"] = json::Number(max);
         newVectorFloatSchema["default"] = json::Number(defaultvalue);
+        updateSchemaWithCondition( newVectorFloatSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newVectorFloatSchema;
     }
 
@@ -648,6 +629,7 @@ namespace Kernel
         newVectorIntSchema["min"] = json::Number(min);
         newVectorIntSchema["max"] = json::Number(max);
         newVectorIntSchema["default"] = json::Number(defaultvalue);
+        updateSchemaWithCondition( newVectorIntSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newVectorIntSchema;
     }
 
@@ -671,6 +653,7 @@ namespace Kernel
         newVector2dFloatSchema["min"] = json::Number(min);
         newVector2dFloatSchema["max"] = json::Number(max);
         newVector2dFloatSchema["default"] = json::Number(defaultvalue);
+        updateSchemaWithCondition( newVector2dFloatSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newVector2dFloatSchema;
     }
 
@@ -694,6 +677,7 @@ namespace Kernel
         newVector2dIntSchema["min"] = json::Number(min);
         newVector2dIntSchema["max"] = json::Number(max);
         newVector2dIntSchema["default"] = json::Number(defaultvalue);
+        updateSchemaWithCondition( newVector2dIntSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newVector2dIntSchema;
     }
 
@@ -733,13 +717,8 @@ namespace Kernel
         {
             newNestedSchema["description"] = json::String(description);
             newNestedSchema["type"] = json::String("nested json object (of key-value pairs)");
-            if( condition_key && condition_value )
-            {
-                json::Object condition;
-                condition[ condition_key ] = json::String( condition_value );
-                newNestedSchema["depends-on"] = condition;
-            }
         }
+        updateSchemaWithCondition( newNestedSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newNestedSchema;
     }
 
@@ -780,13 +759,8 @@ namespace Kernel
         {
             newFloatSchema["description"] = json::String(description);
             newFloatSchema["type"] = json::String( "float" );
-            if( condition_key && condition_value )
-            {
-                json::Object condition;
-                condition[ condition_key ] = json::String( condition_value );
-                newFloatSchema["depends-on"] = condition;
-            }
         }
+        updateSchemaWithCondition( newFloatSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newFloatSchema;
     }
 
@@ -825,13 +799,8 @@ namespace Kernel
         {
             newNNSchema["description"] = json::String(description);
             newNNSchema["type"] = json::String( "NaturalNumber" );
-            if( condition_key && condition_value )
-            {
-                json::Object condition;
-                condition[ condition_key ] = json::String( condition_value );
-                newNNSchema["depends-on"] = condition;
-            }
         }
+        updateSchemaWithCondition( newNNSchema, condition_key, condition_value );
         jsonSchemaBase[paramName] = newNNSchema;
     }
 
@@ -876,12 +845,7 @@ namespace Kernel
             json::Object newNestedSchema;
             newNestedSchema["description"] = json::String(defaultDesc);
             newNestedSchema["type"] = json::String(variable_type);
-            if( condition_key && condition_value )
-            {
-                json::Object condition;
-                condition[ condition_key ] = json::String( condition_value );
-                newNestedSchema["depends-on"] = condition;
-            }
+            updateSchemaWithCondition( newNestedSchema, condition_key, condition_value );
             jsonSchemaBase[paramName] = newNestedSchema;
         }
     }

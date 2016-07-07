@@ -692,7 +692,7 @@ namespace Kernel
             initConfigTypeMap( "Sample_Rate_20_Plus",  &sample_rate_20_plus, Sample_Rate_20_Plus_DESC_TEXT,   0.0f, 1000.0f, 1.0f, "Individual_Sampling_Type", "ADAPTED_SAMPLING_BY_AGE_GROUP || ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE" );
         }
 
-        initConfigTypeMap( "Base_Population_Scale_Factor",      &population_scaling_factor,  Base_Population_Scale_Factor_DESC_TEXT,      0.0f, FLT_MAX, 1.0f  );
+        initConfigTypeMap( "Base_Population_Scale_Factor",      &population_scaling_factor,  Base_Population_Scale_Factor_DESC_TEXT,      0.0f, FLT_MAX, 1.0f, "Population_Scale_Type", "FIXED_SCALING" );
         initConfigTypeMap( "Max_Node_Population_Samples",       &max_sampling_cell_pop,      Max_Node_Population_Samples_DESC_TEXT,       1.0f, FLT_MAX, 30.0f );
 
         initConfig( "Population_Density_Infectivity_Correction", population_density_infectivity_correction, config, MetadataDescriptor::Enum("population_density_infectivity_correction", Population_Density_Infectivity_Correction_DESC_TEXT, MDD_ENUM_ARGS(PopulationDensityInfectivityCorrection)) ); // node only (move)
