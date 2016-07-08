@@ -201,10 +201,11 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
     initConfig( "Immunity_Initialization_Distribution_Type", immunity_initialization_distribution_type, inputJson, MetadataDescriptor::Enum("immunity_initialization_distribution_type", Immunity_Initialization_Distribution_Type_DESC_TEXT, MDD_ENUM_ARGS(DistributionType)) ); // polio and malaria
 
+    initConfigTypeMap( "Node_Grid_Size", &node_grid_size, Node_Grid_Size_DESC_TEXT, 0.004167f, 90.0f, 0.004167f );
+
     // Vector parameters
     if (sim_type == SimType::VECTOR_SIM || sim_type == SimType::MALARIA_SIM)
     {
-        initConfigTypeMap( "Node_Grid_Size", &node_grid_size, Node_Grid_Size_DESC_TEXT, 0.004167f, 90.0f, 0.004167f );
 
         initConfigTypeMap( "Enable_Vector_Aging", &vector_aging, VECTOR_Enable_Aging_DESC_TEXT, false );
         //initConfigTypeMap( "Enable_Vector_Species_Habitat_Competition", &enable_vector_species_habitat_competition, VECTOR_Enable_Vector_Species_Habitat_Competition, false );
