@@ -49,15 +49,14 @@ namespace Kernel
                 else
                 {
                     // condition_value is not null, so it's a string (enum); let's read it.
-                    auto c_value2 = (std::string) c_value.As<json::String>();
-                    LOG_DEBUG_F( "string/enum condition_value = %s.\n", c_value2.c_str() );
-                    // see if this is multiples...
-                    auto c_values = IdmString( c_value2 ).split( ',' );
-                    //if( c_value2 != std::string( condition_value ) )
+                    auto c_value_from_config = (std::string) c_value.As<json::String>();
+                    LOG_DEBUG_F( "string/enum condition_value = %s.\n", c_value_from_config.c_str() );
+                    // see if schema condition value is multiples...
+                    auto c_values = IdmString( condition_value ).split( ',' );
                     bool bFound = false;
                     for( std::string valid_condition_value : c_values )
                     {
-                        if( valid_condition_value == std::string( condition_value ) )
+                        if( valid_condition_value == c_value_from_config )
                         // (enum) Condition for using this param is false, so returning.
                         {
                             bFound = true;
@@ -65,7 +64,7 @@ namespace Kernel
                     }
                     if( !bFound )
                     {
-                        LOG_DEBUG_F( "string/enum condition_value not found. That makes this check fail.\n" );
+                        LOG_DEBUG_F( "string/enum condition_value (from config.json) not found in list (?) of valid values per schema. That makes this check fail.\n" );
                         return true;
                     }
                 }
@@ -82,6 +81,8 @@ namespace Kernel
 
     bool check_condition( const json::QuickInterpreter& schema, const json::QuickInterpreter * pJson )
     {
+        //return false;// hack for testing
+
         if( schema.Exist( "depends-on" ) )
         {
             auto condition = json_cast<const json::Object&>(schema["depends-on"]);
