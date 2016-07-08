@@ -381,6 +381,7 @@ namespace Kernel
 
     void updateSchemaWithCondition( json::Object& schema, const char* condition_key, const char* condition_value )
     {
+        LOG_DEBUG_F( "Setting condition in schema for key %s (value=%s).\n", condition_key, ( condition_value ? condition_value : "1") );
         if( condition_key )
         {
             json::Object condition;

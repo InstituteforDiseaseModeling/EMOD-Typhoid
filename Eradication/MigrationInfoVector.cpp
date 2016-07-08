@@ -317,13 +317,13 @@ namespace Kernel
             initConfig( MODIFIER_EQUATION_NAME, 
                         m_ModifierEquation, 
                         config, 
-                        MetadataDescriptor::Enum(MODIFIER_EQUATION_NAME, Vector_Migration_Modifier_Equation_DESC_TEXT, MDD_ENUM_ARGS(ModiferEquationType)) ); 
+                        MetadataDescriptor::Enum(MODIFIER_EQUATION_NAME, Vector_Migration_Modifier_Equation_DESC_TEXT, MDD_ENUM_ARGS(ModiferEquationType)), "Enable_Vector_Migration" ); 
 
             initConfigTypeMap( "Enable_Vector_Migration_Local",      &(m_InfoFileListVector[0]->m_IsEnabled), Enable_Vector_Migration_Local_DESC_TEXT,    false, "Enable_Vector_Migration" );
             initConfigTypeMap( "Enable_Vector_Migration_Regional",   &(m_InfoFileListVector[2]->m_IsEnabled), Enable_Vector_Migration_Regional_DESC_TEXT, false, "Enable_Vector_Migration" ); 
 
-            initConfigTypeMap( "Vector_Migration_Filename_Local",    &(m_InfoFileListVector[0]->m_Filename),  Vector_Migration_Filename_Local_DESC_TEXT, "Enable_Vector_Migration"    );
-            initConfigTypeMap( "Vector_Migration_Filename_Regional", &(m_InfoFileListVector[2]->m_Filename),  Vector_Migration_Filename_Regional_DESC_TEXT, "Enable_Vector_Migration" );
+            initConfigTypeMap( "Vector_Migration_Filename_Local",    &(m_InfoFileListVector[0]->m_Filename),  Vector_Migration_Filename_Local_DESC_TEXT, "UNSPECIFIED_FILE", "Enable_Vector_Migration"    );
+            initConfigTypeMap( "Vector_Migration_Filename_Regional", &(m_InfoFileListVector[2]->m_Filename),  Vector_Migration_Filename_Regional_DESC_TEXT, "UNSPECIFIED_FILE", "Enable_Vector_Migration" );
 
             initConfigTypeMap( "x_Vector_Migration_Local",           &(m_InfoFileListVector[0]->m_xModifier), x_Vector_Migration_Local_DESC_TEXT,    0.0f, FLT_MAX, 1.0f, "Enable_Vector_Migration" );
             initConfigTypeMap( "x_Vector_Migration_Regional",        &(m_InfoFileListVector[2]->m_xModifier), x_Vector_Migration_Regional_DESC_TEXT, 0.0f, FLT_MAX, 1.0f, "Enable_Vector_Migration" );
