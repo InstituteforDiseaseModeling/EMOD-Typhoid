@@ -19,13 +19,13 @@ static const char * _module = "JsonConfigurable";
 
 namespace Kernel
 {
+    // two functions. second is wrapper around this. Can consolidate into single.
     bool check_condition( const json::QuickInterpreter * pJson, const char * condition_key, const char * condition_value )
     {
         if( condition_key != nullptr ) 
         {
             if( pJson &&
-                pJson->Exist(condition_key) == true &&
-                true ) // _useDefaults == false ) // TBD: code is right, but behavior is wrong!? TBD. Caught useDefaults being true in config.json (Node.cpp)
+                pJson->Exist(condition_key) == true )
             {
                 auto c_value = (*pJson)[condition_key];
                 // condition_key is in config. Read value 
@@ -37,10 +37,12 @@ namespace Kernel
                     if( c_value2 != 1 )
                     {
                         // Condition for using this param is false (mismatch), so returning
+                        LOG_DEBUG_F( "bool condition_value found but is false/0. That makes this check fail.\n" );
                         return true;
                     }
                     else
                     {
+                        LOG_DEBUG_F( "bool condition_value found and is true/1. That makes this check pass.\n" );
                         // Conditions match. Continue and return false at end.
                     }
                 }
@@ -48,6 +50,7 @@ namespace Kernel
                 {
                     // condition_value is not null, so it's a string (enum); let's read it.
                     auto c_value2 = (std::string) c_value.As<json::String>();
+                    LOG_DEBUG_F( "string/enum condition_value = %s.\n", c_value2.c_str() );
                     // see if this is multiples...
                     auto c_values = IdmString( c_value2 ).split( ',' );
                     //if( c_value2 != std::string( condition_value ) )
@@ -62,6 +65,7 @@ namespace Kernel
                     }
                     if( !bFound )
                     {
+                        LOG_DEBUG_F( "string/enum condition_value not found. That makes this check fail.\n" );
                         return true;
                     }
                 }
@@ -69,6 +73,7 @@ namespace Kernel
             else
             {
                 // condition_key does not seem to exist in the json. That makes this fail.
+                LOG_DEBUG_F( "condition_key does not seem to exist in the json. That makes this check fail.\n" );
                 return true;
             }
         }
@@ -86,10 +91,12 @@ namespace Kernel
             try {
                 auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
                 condition_value = condition_value_str.c_str();
+                LOG_DEBUG_F( "schema condition value appears to be string/enum: %s.\n", condition_value );
             }
             catch(...)
             {
                 //condition_value = std::to_string( (int) (json::QuickInterpreter( condition )[ condition_key ]).As<json::Number>() );
+                LOG_DEBUG_F( "schema condition value appears to be bool, not string.\n" );
             }
 
             if( check_condition( pJson, condition_key.c_str(), condition_value ) )
@@ -97,6 +104,10 @@ namespace Kernel
                 return true;
             }
 
+        }
+        else
+        {
+            LOG_DEBUG_F( "There is no dependency for this param.\n" );
         }
         return false;
     }
@@ -1018,6 +1029,7 @@ namespace Kernel
 
             if( check_condition( schema, inputJson ) )
             {
+                LOG_DEBUG_F( "(float) param %s failed condition check. Ignoring.\n", key.c_str() );
                 continue; // param is missing and that's ok.
             }
 
