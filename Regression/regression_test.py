@@ -67,14 +67,20 @@ def main():
 
     reglistjson = None
     if(str.isdigit(params.suite)):
+        # Special shortcut if you just want to run a single regression with a number prefix
         dirs = glob.glob(params.suite + "_*")
         for dir in dirs:
             if os.path.isdir(dir):
                 print("Executing single test: " + dir)
                 reglistjson = { "tests" : [ { "path" : dir } ] }
+    elif os.path.isdir( params.suite ):
+        print( "You specified a directory." )
+        reglistjson = { "tests" : [ { "path" : params.suite } ] }
     else:
         if params.suite.endswith(".json"):
+            # regular case
             params.suite = params.suite.replace(".json", "")
+        # handle comma-separated list of suites
         reglistjson = json.loads( open( params.suite.split(',')[0] + ".json" ).read() )
         if "tests" in reglistjson and len( params.suite.split(',') ) > 1:
             for suite in params.suite.split(',')[1:]:
