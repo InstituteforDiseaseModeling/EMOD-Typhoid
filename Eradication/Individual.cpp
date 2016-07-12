@@ -52,7 +52,7 @@ namespace Kernel
     MigrationPattern::Enum IndividualHumanConfig::migration_pattern = MigrationPattern::RANDOM_WALK_DIFFUSION;
     bool IndividualHumanConfig::immunity = false;
     int IndividualHumanConfig::roundtrip_waypoints = 0;
-    int IndividualHumanConfig::max_ind_inf = 0;
+    int IndividualHumanConfig::max_ind_inf = 1;
     bool IndividualHumanConfig::superinfection = 0;
     float IndividualHumanConfig::x_othermortality = 0.0f;
     float IndividualHumanConfig::min_adult_age_years = 15.0f;
