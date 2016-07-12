@@ -86,7 +86,7 @@ namespace Kernel
         {
             ParameterInfo& info = m_SupportedParameterInfoMap[ DistributionFunction::UNIFORM_DURATION ];
             pParent->initConfigTypeMap( info.m_ParamName_1.c_str(), &m_Param1, info.m_ParamDesc_1.c_str(), 0.0f, FLT_MAX, 0.0f, m_TypeName.c_str(), "UNIFORM_DURATION" ); // min
-            pParent->initConfigTypeMap( info.m_ParamName_2.c_str(), &m_Param2, info.m_ParamDesc_2.c_str(), 0.0f, FLT_MAX, 0.0f, m_TypeName.c_str(), "UNIFORM_DURATION" ); // min
+            pParent->initConfigTypeMap( info.m_ParamName_2.c_str(), &m_Param2, info.m_ParamDesc_2.c_str(), 0.6f, FLT_MAX, 0.0f, m_TypeName.c_str(), "UNIFORM_DURATION" ); // max
         }
 
         if( IncludeParameters( DistributionFunction::EXPONENTIAL_DURATION ) )
