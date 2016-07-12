@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "IdmString.h"
 #include "Log.h"
+#include "Debug.h"
 
 static const char * _module = "JsonConfigurable";
 
@@ -48,14 +49,18 @@ namespace Kernel
                 }
                 else
                 {
+                    release_assert( condition_value );
                     // condition_value is not null, so it's a string (enum); let's read it.
                     auto c_value_from_config = (std::string) c_value.As<json::String>();
-                    LOG_DEBUG_F( "string/enum condition_value = %s.\n", c_value_from_config.c_str() );
+                    LOG_DEBUG_F( "string/enum condition_value (from config.json) = %s. Will check if matches schema condition_value (raw) = %s\n", c_value_from_config.c_str(), condition_value );
                     // see if schema condition value is multiples...
                     auto c_values = IdmString( condition_value ).split( ',' );
+                    release_assert( c_values.size() > 0 );
+                    LOG_DEBUG_F( "Found %d values in comma-separated list.\n", c_values.size() );
                     bool bFound = false;
                     for( std::string valid_condition_value : c_values )
                     {
+                        LOG_DEBUG_F( "Comparing %s and %s.\n", valid_condition_value.c_str(), c_value_from_config.c_str() );
                         if( valid_condition_value == c_value_from_config )
                         // (enum) Condition for using this param is false, so returning.
                         {
@@ -90,7 +95,7 @@ namespace Kernel
             std::string condition_value_str = "";
             const char * condition_value = nullptr;
             try {
-                auto condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
+                condition_value_str = (std::string) (json::QuickInterpreter( condition )[ condition_key ]).As<json::String>();
                 condition_value = condition_value_str.c_str();
                 LOG_DEBUG_F( "schema condition value appears to be string/enum: %s.\n", condition_value );
             }
