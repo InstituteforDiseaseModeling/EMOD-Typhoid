@@ -59,6 +59,7 @@ namespace Kernel
                                     "Intervention_Config.*.iv_type", 
                                     "IndividualTargeted"*/ );
 
+        release_assert( default_target_demographic == TargetDemographicType::Everyone );
         if( JsonConfigurable::_dryrun ||
             (default_target_demographic == TargetDemographicType::Everyone) || 
             inputJson->Exist("Target_Demographic") )
@@ -72,6 +73,7 @@ namespace Kernel
                                  "Intervention_Config.*.iv_type", 
                                  "IndividualTargeted"*/);
         }
+        LOG_DEBUG_F( "Target_Demographic configured as = %s\n", TargetDemographicType::pairs::lookup_key( target_demographic ) );
         
         if( (target_demographic == TargetDemographicType::ExplicitAgeRanges         ) || 
             (target_demographic == TargetDemographicType::ExplicitAgeRangesAndGender) ||
@@ -84,8 +86,8 @@ namespace Kernel
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
             }
 
-            pParent->initConfigTypeMap( "Target_Age_Min", &target_age_min, Target_Age_Min_DESC_TEXT, 0.0f, FLT_MAX,    0.0f, "Target_Demographic", "ExplicitAgeRanges" );
-            pParent->initConfigTypeMap( "Target_Age_Max", &target_age_max, Target_Age_Max_DESC_TEXT, 0.0f, FLT_MAX, FLT_MAX, "Target_Demographic", "ExplicitAgeRanges" );
+            pParent->initConfigTypeMap( "Target_Age_Min", &target_age_min, Target_Age_Min_DESC_TEXT, 0.0f, FLT_MAX,    0.0f, "Target_Demographic", "ExplicitAgeRanges,ExplicitAgeRangesAndGender" );
+            pParent->initConfigTypeMap( "Target_Age_Max", &target_age_max, Target_Age_Max_DESC_TEXT, 0.0f, FLT_MAX, FLT_MAX, "Target_Demographic", "ExplicitAgeRanges,ExplicitAgeRangesAndGender" );
             if( (target_demographic == TargetDemographicType::ExplicitAgeRangesAndGender) || JsonConfigurable::_dryrun)
             {
                 pParent->initConfig( "Target_Gender", target_gender, inputJson, MetadataDescriptor::Enum("target_gender", Target_Gender_DESC_TEXT, MDD_ENUM_ARGS(TargetGender)) ); 
