@@ -77,7 +77,7 @@ namespace Kernel
             else
             {
                 // condition_key does not seem to exist in the json. That makes this fail.
-                LOG_DEBUG_F( "condition_key does not seem to exist in the json. That makes this check fail.\n" );
+                LOG_DEBUG_F( "condition_key %s does not seem to exist in the json. That makes this check fail.\n", condition_key );
                 return true;
             }
         }
