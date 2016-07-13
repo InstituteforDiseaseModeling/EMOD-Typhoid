@@ -670,9 +670,9 @@ namespace Kernel
         initConfigTypeMap( "Enable_Demographics_Other",       &demographics_other,      Enable_Demographics_Other_DESC_TEXT,      false );  // DJK*: Should be "Enable_Risk_Factor_Heterogeneity_At_Birth"
         initConfigTypeMap( "Enable_Demographics_Gender",      &demographics_gender,     Enable_Demographics_Gender_DESC_TEXT,     true  );  // DJK*: This needs to be configurable!
 
-        initConfigTypeMap( "Enable_Maternal_Transmission",    &maternal_transmission,   Enable_Maternal_Transmission_DESC_TEXT,   false ); //, "Enable_Birth" );
-        initConfigTypeMap( "Enable_Demographics_Birth",       &demographics_birth,      Enable_Demographics_Birth_DESC_TEXT,      false ); //, "Enable_Birth" );  // DJK*: Should be "Enable_Disease_Heterogeneity_At_Birth"
-        initConfig( "Birth_Rate_Dependence", vital_birth_dependence, config, MetadataDescriptor::Enum(Birth_Rate_Dependence_DESC_TEXT, Birth_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthDependence)) ); // , "Enable_Birth" );
+        initConfigTypeMap( "Enable_Maternal_Transmission",    &maternal_transmission,   Enable_Maternal_Transmission_DESC_TEXT,   false, "Enable_Birth" );
+        initConfigTypeMap( "Enable_Demographics_Birth",       &demographics_birth,      Enable_Demographics_Birth_DESC_TEXT,      false, "Enable_Birth" );  // DJK*: Should be "Enable_Disease_Heterogeneity_At_Birth"
+        initConfig( "Birth_Rate_Dependence", vital_birth_dependence, config, MetadataDescriptor::Enum(Birth_Rate_Dependence_DESC_TEXT, Birth_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthDependence)), "Enable_Birth" );
 
         initConfig( "Individual_Sampling_Type", ind_sampling_type, config, MetadataDescriptor::Enum("ind_sampling_type", Individual_Sampling_Type_DESC_TEXT, MDD_ENUM_ARGS(IndSamplingType)) );
         if( ind_sampling_type == IndSamplingType::ADAPTED_SAMPLING_BY_IMMUNE_STATE )
@@ -702,9 +702,9 @@ namespace Kernel
             initConfigTypeMap( "Population_Density_C50",        &population_density_c50,     Population_Density_C50_DESC_TEXT,            0.0f, FLT_MAX, 10.0f, "Population_Density_Infectivity_Correction", PopulationDensityInfectivityCorrection::pairs::lookup_key(PopulationDensityInfectivityCorrection::SATURATING_FUNCTION_OF_DENSITY) );
         }
         
-        initConfigTypeMap( "x_Birth",                           &x_birth,                    x_Birth_DESC_TEXT,                           0.0f, FLT_MAX, 1.0f ); // , "Enable_Birth" );
+        initConfigTypeMap( "x_Birth",                           &x_birth,                    x_Birth_DESC_TEXT,                           0.0f, FLT_MAX, 1.0f, "Enable_Birth" );
         
-        initConfig( "Birth_Rate_Time_Dependence", vital_birth_time_dependence, config, MetadataDescriptor::Enum("vital_birth_time_dependence", Birth_Rate_Time_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthTimeDependence))); // , "Enable_Birth" ); // node only (move)
+        initConfig( "Birth_Rate_Time_Dependence", vital_birth_time_dependence, config, MetadataDescriptor::Enum("vital_birth_time_dependence", Birth_Rate_Time_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthTimeDependence)), "Enable_Birth" ); // node only (move)
         if ((vital_birth_time_dependence == VitalBirthTimeDependence::SINUSOIDAL_FUNCTION_OF_TIME) || JsonConfigurable::_dryrun )
         {
             initConfigTypeMap( "Birth_Rate_Sinusoidal_Forcing_Amplitude", &birth_rate_sinusoidal_forcing_amplitude, Sinusoidal_Birth_Rate_Forcing_Amplitude_DESC_TEXT, 0.0f, 1.0f, 0.0f, "Birth_Rate_Time_Dependence", "SINUSOIDAL_FUNCTION_OF_TIME" );
