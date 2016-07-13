@@ -73,7 +73,7 @@ def main():
             if os.path.isdir(dir):
                 print("Executing single test: " + dir)
                 reglistjson = { "tests" : [ { "path" : dir } ] }
-    elif os.path.isdir( params.suite ):
+    elif os.path.isdir( params.suite ) and os.path.exists( os.path.join( params.suite, "param_overrides.json" ) ):
         print( "You specified a directory." )
         reglistjson = { "tests" : [ { "path" : params.suite } ] }
     else:
