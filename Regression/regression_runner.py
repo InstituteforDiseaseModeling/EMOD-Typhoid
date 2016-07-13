@@ -5,6 +5,7 @@ import json
 import threading
 import subprocess
 import shutil # copyfile
+import glob
 import regression_local_monitor
 import regression_hpc_monitor
 import regression_utils as ru
@@ -141,7 +142,7 @@ class MyRegressionRunner():
     # - The default is to use all of the DLLs found in the location the DLL projects
     #   place the DLLs (<trunk>\x64\Release).
     # - --dll-path allows the user to override this default path
-    def copyEModulesOver( params ):
+    def copyEModulesOver( self, params ):
 
         print "src_root = " + params.src_root
 
@@ -173,7 +174,7 @@ class MyRegressionRunner():
         for dll_subdir in dll_dirs:
             dlls = glob.glob( os.path.join( os.path.join( emodule_dir, dll_subdir ), "*.dll" ) )
             for dll in dlls:
-                dll_hash = md5_hash_of_file( dll )
+                dll_hash = ru.md5_hash_of_file( dll )
                 #print( dll_hash )
                 # 1) calc md5 of dll
                 # 2) check for existence of rivendell (or whatever) for <root>/emodules/<subdir>/<md5>

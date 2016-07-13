@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.7.1148.0",
-		"DTK_Branch" : "GitHub-520 (54b7990)",
-		"DTK_Build_Date" : "Jun 14 2016 01:29:09"
+		"DTK_Version" : "2.7.1179.0",
+		"DTK_Branch" : "2.7-merge-to-master (b03bfaf)",
+		"DTK_Build_Date" : "Jul  4 2016 13:46:53"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -8339,7 +8339,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -8416,7 +8416,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -9304,7 +9304,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -9341,6 +9341,74 @@
 					},
 					"iv_type" : "IndividualTargeted",
 					"class" : "CD4Diagnostic"
+				},
+				"ControlledVaccine" : {
+					"Sim_Types" : [
+						"*"
+					],
+					"Dont_Allow_Duplicates" : {
+						"default" : 0,
+						"description" : "TBD",
+						"type" : "bool"
+					},
+					"Intervention_Name" : {
+						"default" : "struct Kernel::BaseIntervention",
+						"description" : "TBD",
+						"type" : "string"
+					},
+					"Cost_To_Consumer" : {
+						"min" : 0,
+						"max" : 999999,
+						"default" : 10,
+						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
+						"type" : "float"
+					},
+					"Distributed_Event_Trigger" : {
+						"default" : "NoTrigger",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
+					"Expired_Event_Trigger" : {
+						"default" : "NoTrigger",
+						"description" : "TBD",
+						"type" : "Constrained String",
+						"value_source" : "<configuration>:Listed_Events.*"
+					},
+					"Duration_To_Wait_Before_Revaccination" : {
+						"min" : 0,
+						"max" : 3.40282e+038,
+						"default" : 3.40282e+038,
+						"description" : "TBD",
+						"type" : "float"
+					},
+					"Vaccine_Take" : {
+						"min" : 0,
+						"max" : 1,
+						"default" : 1,
+						"description" : "This specifies the rate at which delivered vaccines will successfully stimulate an immune response and achieve the desired efficacy. If vaccine_take is set to 0.9, then with a 90 percent chance, the vaccine will start with the specified efficacy, and with a 10 percent chance it will have no efficacy at all.",
+						"type" : "float"
+					},
+					"Vaccine_Type" : {
+						"type" : "enum",
+						"enum" : [
+							"Generic",
+							"TransmissionBlocking",
+							"AcquisitionBlocking",
+							"MortalityBlocking"
+						],
+						"description" : "Type of vaccine to distribute in a vaccine intervention. Possible values are: - Generic - The vaccine can have all of \"reduced_transmit\", \"reduced_acquire\", and \"reduced_mortality\" fields and the vaccine will have both effects. - TransmissionBlocking - Specifies the fraction by which the infectivity of the infected and vaccinated Individual is reduced (\"reduced_transmit\"). - AcquisitionBlocking - Specifies the fraction by which the force of infection experienced by the vaccinated Individual is reduced (\"reduced_acquire\"). - MortalityBlocking - Specifies the fraction by which the disease-mortality rate of a vaccinated Individual is reduced (\"reduced_mortality\").  ",
+						"default" : "Generic"
+					},
+					"idmType:WaningEffect" : {
+						"base" : "interventions.idmType.WaningEffect"
+					},
+					"Waning_Config" : {
+						"description" : "Configuration of drug-killing efficacy and waning",
+						"type" : "idmType:WaningEffect"
+					},
+					"iv_type" : "IndividualTargeted",
+					"class" : "ControlledVaccine"
 				},
 				"DelayedIntervention" : {
 					"Sim_Types" : [
@@ -9470,7 +9538,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -11221,7 +11289,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -11373,7 +11441,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -12661,74 +12729,6 @@
 					"iv_type" : "IndividualTargeted",
 					"class" : "RTSSVaccine"
 				},
-				"RevaccinatableVaccine" : {
-					"Sim_Types" : [
-						"*"
-					],
-					"Dont_Allow_Duplicates" : {
-						"default" : 0,
-						"description" : "TBD",
-						"type" : "bool"
-					},
-					"Intervention_Name" : {
-						"default" : "struct Kernel::BaseIntervention",
-						"description" : "TBD",
-						"type" : "string"
-					},
-					"Cost_To_Consumer" : {
-						"min" : 0,
-						"max" : 999999,
-						"default" : 10,
-						"description" : "Unit cost per vaccine (unamortized). The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
-						"type" : "float"
-					},
-					"Distributed_Event_Trigger" : {
-						"default" : "NoTrigger",
-						"description" : "TBD",
-						"type" : "Constrained String",
-						"value_source" : "<configuration>:Listed_Events.*"
-					},
-					"Expired_Event_Trigger" : {
-						"default" : "NoTrigger",
-						"description" : "TBD",
-						"type" : "Constrained String",
-						"value_source" : "<configuration>:Listed_Events.*"
-					},
-					"Duration_To_Wait_Before_Revaccination" : {
-						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
-						"description" : "TBD",
-						"type" : "float"
-					},
-					"Vaccine_Take" : {
-						"min" : 0,
-						"max" : 1,
-						"default" : 1,
-						"description" : "This specifies the rate at which delivered vaccines will successfully stimulate an immune response and achieve the desired efficacy. If vaccine_take is set to 0.9, then with a 90 percent chance, the vaccine will start with the specified efficacy, and with a 10 percent chance it will have no efficacy at all.",
-						"type" : "float"
-					},
-					"Vaccine_Type" : {
-						"type" : "enum",
-						"enum" : [
-							"Generic",
-							"TransmissionBlocking",
-							"AcquisitionBlocking",
-							"MortalityBlocking"
-						],
-						"description" : "Type of vaccine to distribute in a vaccine intervention. Possible values are: - Generic - The vaccine can have all of \"reduced_transmit\", \"reduced_acquire\", and \"reduced_mortality\" fields and the vaccine will have both effects. - TransmissionBlocking - Specifies the fraction by which the infectivity of the infected and vaccinated Individual is reduced (\"reduced_transmit\"). - AcquisitionBlocking - Specifies the fraction by which the force of infection experienced by the vaccinated Individual is reduced (\"reduced_acquire\"). - MortalityBlocking - Specifies the fraction by which the disease-mortality rate of a vaccinated Individual is reduced (\"reduced_mortality\").  ",
-						"default" : "Generic"
-					},
-					"idmType:WaningEffect" : {
-						"base" : "interventions.idmType.WaningEffect"
-					},
-					"Waning_Config" : {
-						"description" : "Configuration of drug-killing efficacy and waning",
-						"type" : "idmType:WaningEffect"
-					},
-					"iv_type" : "IndividualTargeted",
-					"class" : "RevaccinatableVaccine"
-				},
 				"STIBarrier" : {
 					"Sim_Types" : [
 						"STI_SIM",
@@ -13032,7 +13032,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -13280,7 +13280,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
@@ -13475,7 +13475,7 @@
 					"Days_To_Diagnosis" : {
 						"min" : 0,
 						"max" : 3.40282e+038,
-						"default" : 1,
+						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},

@@ -159,6 +159,7 @@ namespace Kernel
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "person", "IIndividualHumanSTI", "IIndividualHuman" );
             }
             sti_person->UpdateEligibility();        // DJK: Could be slow to do this on every update.  Could check for relationship status changes. <ERAD-1869>
+            sti_person->UpdateHistory( GetTime(), dt );
         }
 
         if (pfa_burnin_duration > 0)

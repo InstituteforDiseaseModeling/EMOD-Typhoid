@@ -202,16 +202,6 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer) override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
-    void UnregisterNewInfectionObserver(void* id) override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
     virtual void VerifyPropertyDefined( const std::string& rKey, const std::string& rVal ) const override
     {
         throw std::exception("The method or operation is not implemented.");

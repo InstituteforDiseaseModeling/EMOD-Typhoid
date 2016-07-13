@@ -35,7 +35,7 @@
         }
     ],
     "Intervention_Config": {
-        "class": "RevaccinatableVaccine",
+        "class": "ControlledVaccine",
         "Intervention_Name" : "TheVaccine",
         "Vaccine_Type": "AcquisitionBlocking",
         "Vaccine_Take": 0.75,

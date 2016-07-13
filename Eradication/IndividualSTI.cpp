@@ -38,7 +38,7 @@ static const char* _module = "IndividualSTI";
 #define IS_SUPER_SPREADER()   ((promiscuity_flags & SUPER_SPREADER) != 0)
 #define IS_EXTRA_ALLOWED(rel) ((promiscuity_flags & EXTRA_RELATIONAL_ALLOWED((Kernel::RelationshipType::Enum)rel)) != 0)
 
-#define SIX_MONTHS (6*IDEALDAYSPERMONTH)
+#define SIX_MONTHS (6*IDEALDAYSPERMONTH)  // 60*30 is my 6 months
 #define MAX_RELATIONSHIPS_PER_INDIVIDUAL_ALL_TYPES (MAX_SLOTS)
 
 namespace Kernel
@@ -226,7 +226,7 @@ namespace Kernel
 
     void IndividualHumanSTI::NotifyPotentialExposure()
     {
-        potential_exposure_flag = true;;
+        potential_exposure_flag = true;
     }
 
     void IndividualHumanSTI::ExposeToInfectivity(float dt, const TransmissionGroupMembership_t* transmissionGroupMembership)
@@ -400,12 +400,23 @@ namespace Kernel
             broadcaster->TriggerNodeEventObservers( GetEventContext(), IndividualEventTriggerType::STIDebut );
         }
 
-        auto now = parent->GetTime().time;
-        while( last_6_month_relationships.size() && ( now - last_6_month_relationships.back() ) > SIX_MONTHS ) // 60*30 is my 6 months
+        // ---------------------------------------------------------------
+        // --- Update the individual pointers in the paused relationships.
+        // --- This is to help against using invalid pointers.
+        // ---------------------------------------------------------------
+        for( auto rel : relationships )
         {
-            last_6_month_relationships.pop_back();
+            rel->UpdatePaused();
         }
     }
+
+   void IndividualHumanSTI::UpdateHistory( const IdmDateTime& rCurrentTime, float dt )
+   {
+        while( last_6_month_relationships.size() && ( rCurrentTime.time - last_6_month_relationships.front() ) > SIX_MONTHS )
+        {
+            last_6_month_relationships.pop_front();
+        }
+   }
 
     void IndividualHumanSTI::Die(
         HumanStateChange newState
@@ -562,8 +573,17 @@ namespace Kernel
             }
         }
 
-        //release_assert( good == true );
-        return IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
+        IndividualHuman::AcquireNewInfection( infstrain, incubation_period_override );
+
+        INodeTriggeredInterventionConsumer* broadcaster = nullptr;
+        if (parent->GetEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster) != s_OK)
+        {
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
+                                            "parent->GetEventContext()",
+                                            "INodeTriggeredInterventionConsumer",
+                                            "IIndividualHumanEventContext" );
+        }
+        broadcaster->TriggerNodeEventObservers( GetEventContext(), IndividualEventTriggerType::STINewInfection );
     }
 
     void

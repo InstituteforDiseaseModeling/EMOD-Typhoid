@@ -52,7 +52,6 @@ namespace Kernel {
     )
     {
         LOG_DEBUG_F( "%s: propertyName = %s\n", __FUNCTION__, propertyName.c_str() );
-        clock_t apv = clock();
 
         ValueToIndexMap_t &valueToIndexMap = propertyValueToIndexMap[propertyName] ;
 
@@ -70,14 +69,23 @@ namespace Kernel {
             LOG_DEBUG_F( "Setting (relationship) %s to (pool index) %d\n", property.c_str(), valueIndex /** currentMatrixSize*/ );
             unsigned int poolIndex = valueIndex; // * currentMatrixSize; // skip multiplier if our values are unique across relationship keys (e.g., Relationship0 => 0, Relationship1 => 1, Relationship0 => 2, etc...
             const std::string relationshipId = property;
-            valueToIndexMap.insert( make_pair( relationshipId, poolIndex ) );
-            poolIndexToRelationshipReverseMap[ poolIndex ] = relationshipId;
-            LOG_VALID_F( "%s: valueToindexMap.insert( '%s', %d )\n", __FUNCTION__, relationshipId.c_str(), poolIndex );
-            LOG_VALID_F( "%s: poolIndexToRelationshipReverMap[ %d ] = '%s'\n", __FUNCTION__, poolIndex, relationshipId.c_str() );
-            valueIndex++;
+
+            // -------------------------------------------------------------------------------------------------------------
+            // --- DMB 6-17-2016 The relationship could be in the maps already due to the MAX_DEAD_REL_QUEUE_SIZE
+            // --- performance optimization - relationship moved to another node but was not removed from these maps.
+            // --- Hence, we need to check if the relationship is already in the map.  Otherwise, adding the relationship
+            // --- doesn't increase the size of the map and valueIndex and max_index get off.
+            // -------------------------------------------------------------------------------------------------------------
+            if( valueToIndexMap.count( relationshipId ) == 0 )
+            {
+                valueToIndexMap.insert( make_pair( relationshipId, poolIndex ) );
+                poolIndexToRelationshipReverseMap[ poolIndex ] = relationshipId;
+                LOG_VALID_F( "%s: valueToindexMap.insert( '%s', %d )\n", __FUNCTION__, relationshipId.c_str(), poolIndex );
+                LOG_VALID_F( "%s: poolIndexToRelationshipReverMap[ %d ] = '%s'\n", __FUNCTION__, poolIndex, relationshipId.c_str() );
+                valueIndex++;
+            }
         }
         max_index = valueIndex-1;
-        //howlong( apv, "APV" );
     }
 
     void
@@ -191,18 +199,28 @@ namespace Kernel {
                     {
                         (*membershipOut)[ atoi( propertyValue.c_str() ) ] = propertyValueToIndexMap.at(propertyName).at(propertyValue);
                     }
+                    else
+                    {
+                        // ----------------------------------------------------------------------------------
+                        // --- DMB 6-17-2016 - I think the fix in AddPropertyValuesToValueToIndexMap() that 
+                        // --- only does the insert if it is not already in the map gets us around this issue.
+                        // ----------------------------------------------------------------------------------
+                        std::stringstream ss;
+                        ss << "The TransmissionGroup map is out of wack.  propertyName=" << propertyName
+                           << "  propertyValue=" << propertyValue << "  index=" << propertyValueToIndexMap.at(propertyName).at(propertyValue)
+                           << "  max_index=" << max_index;
+                        throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                    }
                 }
                 else
                 {
                     // --------------------------------------------------------------------------------------
-                    // --- DMB 6-6-2016 One can get here when people are migrating.  You can get here
-                    // --- from UpdateGroupMembership() that happens during immigration.  Relationship does
-                    // --- an AddProperty(), but we don't do the Build() until after all the pair forming
-                    // --- in NodeSTI::Update().  It seems like we need to do a Build after each AddProperty()
-                    // --- or something so that this method adds the relationship to membershipOut.
-                    // --- Basically, I'm still confused but I'm moving on because tests pass.
+                    // --- DMB 6-17-2016 One can get here when UpdateGroupMembership() is called.  It can be 
+                    // --- called when people are migrating or at other times.  One problem is that a Paused
+                    // --- relationship is not in the group but the individual still has the relationship.
+                    // --- Hence, this is ok.
                     // --------------------------------------------------------------------------------------
-                    LOG_INFO_F( "Couldn't find property (name=%s,value=%s) at this node (%d).\n",
+                    LOG_DEBUG_F( "Couldn't find property (name=%s,value=%s) at this node (%d).\n",
                                propertyName.c_str(),
                                propertyValue.c_str(),
                                m_parent->GetRelationshipManager()->GetNode()->GetSuid().data );

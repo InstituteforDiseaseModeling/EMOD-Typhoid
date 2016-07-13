@@ -1,4 +1,4 @@
-Rel_ID,Node_ID,Rel_start_time,Rel_scheduled_end_time,Rel_actual_end_time,Rel_type (0 = transitory 1 = informal 2 = marital),male_ID,female_ID,male_age,female_age,Termination_Reason
+Rel_ID,Node_ID,Rel_start_time,Rel_scheduled_end_time,Rel_actual_end_time,Rel_type (0 = TRANSITORY; 1 = INFORMAL; 2 = MARITAL; 3 = COMMERCIAL),male_ID,female_ID,male_age,female_age,Termination_Reason
 2,1,7,71.0112,77,0,85,51,52.6401,26.2193,BROKEUP
 5,1,84,135.444,140,0,24,95,23.2515,30.0371,BROKEUP
 6,1,91,169.758,175,0,34,41,35.6064,30.461,BROKEUP

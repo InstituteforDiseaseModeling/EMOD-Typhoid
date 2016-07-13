@@ -14,21 +14,22 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-    struct IRevaccinatableVaccine : ISupports
+    struct IControlledVaccine : ISupports
     {
-        virtual bool AllowRevaccination() const = 0;
+        virtual const std::string& GetInterventionName() const = 0;
+        virtual bool AllowRevaccination( const IControlledVaccine& rNewVaccine ) const = 0;
     };
 
-    class RevaccinatableVaccine : public SimpleVaccine, public IRevaccinatableVaccine
+    class ControlledVaccine : public SimpleVaccine, public IControlledVaccine
     {
-        DECLARE_FACTORY_REGISTERED(InterventionFactory, RevaccinatableVaccine, IDistributableIntervention)
+        DECLARE_FACTORY_REGISTERED(InterventionFactory, ControlledVaccine, IDistributableIntervention)
         DECLARE_QUERY_INTERFACE()
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     public:
-        RevaccinatableVaccine();
-        RevaccinatableVaccine( const RevaccinatableVaccine& );
-        virtual ~RevaccinatableVaccine();
+        ControlledVaccine();
+        ControlledVaccine( const ControlledVaccine& );
+        virtual ~ControlledVaccine();
 
 
         // SimpleVaccine
@@ -37,13 +38,14 @@ namespace Kernel
         virtual void Update(float dt) override;
 
     protected:
-        virtual bool AllowRevaccination() const override;
+        virtual const std::string& GetInterventionName() const override;
+        virtual bool AllowRevaccination( const IControlledVaccine& rNewVaccine ) const override;
 
         float        m_DurationToWaitBeforeRevaccination;
         float        m_TimeSinceVaccination;
         EventTrigger m_DistributedEventTrigger;
         EventTrigger m_ExpiredEventTrigger;
 
-        DECLARE_SERIALIZABLE(RevaccinatableVaccine);
+        DECLARE_SERIALIZABLE(ControlledVaccine);
     };
 }

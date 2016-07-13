@@ -317,6 +317,7 @@ public:
 
 
 
+    virtual void UpdateHistory( const IdmDateTime& rCurrentTime, float dt ) override { throw std::exception("The method or operation is not implemented."); }
     virtual bool AvailableForRelationship(RelationshipType::Enum) const override { throw std::exception("The method or operation is not implemented."); }
     virtual void UpdateEligibility()                                    override { throw std::exception("The method or operation is not implemented."); }
     virtual void ConsiderRelationships(float dt)                        override { throw std::exception("The method or operation is not implemented."); }

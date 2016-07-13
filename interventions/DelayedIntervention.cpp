@@ -87,7 +87,6 @@ namespace Kernel
 
         CalculateDelay();
 
-        remaining_delay_days.handle = std::bind( &DelayedIntervention::Callback, this, std::placeholders::_1 );
         LOG_DEBUG_F("Drew %0.2f remaining delay days in %s.\n", float(remaining_delay_days), DistributionFunction::pairs::lookup_key(delay_distribution.GetType()));
         return true;
     }
@@ -113,15 +112,19 @@ namespace Kernel
         delay_distribution.AddSupportedType( DistributionFunction::GAUSSIAN_DURATION,    "Delay_Period_Mean", DI_Delay_Period_Mean_DESC_TEXT, "Delay_Period_Std_Dev", DI_Delay_Period_Std_Dev_DESC_TEXT );
         delay_distribution.AddSupportedType( DistributionFunction::EXPONENTIAL_DURATION, "Delay_Period",      DI_Delay_Period_DESC_TEXT,      "", "" );
 
+        remaining_delay_days.handle = std::bind( &DelayedIntervention::Callback, this, std::placeholders::_1 );
     }
 
     DelayedIntervention::DelayedIntervention( const DelayedIntervention& master )
         : BaseIntervention( master )
+        , parent(nullptr)
         , remaining_delay_days( master.remaining_delay_days )
         , coverage( master.coverage )
         , delay_distribution( master.delay_distribution )
-        , actual_intervention_config( master.actual_intervention_config )
+        //, actual_intervention_config( master.actual_intervention_config )
     { 
+        actual_intervention_config = master.actual_intervention_config;
+        remaining_delay_days.handle = std::bind( &DelayedIntervention::Callback, this, std::placeholders::_1 );
     }
 
     void DelayedIntervention::SetContextTo(IIndividualHumanContext *context)

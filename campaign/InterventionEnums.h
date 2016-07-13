@@ -95,6 +95,7 @@ namespace Kernel
         ENUM_VALUE_SPEC(EighteenMonthsOld         , 47)
         ENUM_VALUE_SPEC(STIPreEmigrating          , 48)
         ENUM_VALUE_SPEC(STIPostImmigrating        , 49)
+        ENUM_VALUE_SPEC(STINewInfection           , 50)
         
         ENUM_VALUE_SPEC(TriggerString          ,  999)
         ENUM_VALUE_SPEC(TriggerList            , 1000)

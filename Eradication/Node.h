@@ -115,8 +115,6 @@ namespace Kernel
         virtual long int GetPossibleMothers()    const override;
 
         virtual float GetMeanAgeInfection()      const override;
-        virtual void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer) override;
-        virtual void UnregisterNewInfectionObserver(void* id) override;
         virtual float GetBasePopulationScaleFactor() const override;
 
         // This method will ONLY be used for spatial reporting by input node ID, don't use it elsewhere!
@@ -274,7 +272,6 @@ namespace Kernel
         float migration_dist1 ;
         float migration_dist2 ;
 
-        map<void*, INodeContext::callback_t> new_infection_observers;
         AnimalReservoir::Enum      animal_reservoir_type;
         InfectivityScaling::Enum                             infectivity_scaling;                              // Infectivity_Scale_Type
         float                      zoonosis_rate;

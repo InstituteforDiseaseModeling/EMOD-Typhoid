@@ -191,13 +191,20 @@ else:
 
 print "Rel=" + str(Rel) + " Dbg=" + str(Dbg)
 
-print "BUILD_DIR=" + env['BUILD_DIR'] + " pi=" + pi
+#print "BUILD_DIR=" + env['BUILD_DIR'] + " pi=" + pi
 env['BUILD_VARIANT'] = bvar
 
 #libdeps.setup_environment( env )
 
 env['EXTRACPPPATH'] = []
 if os.sys.platform == 'win32':
+    if Dbg:
+        print( "----------------------------------------------------" )
+        print( "Visual Studio debug build not supported using SCONS." )
+        print( "Please use the IDE for debugging." )
+        print( "----------------------------------------------------" )
+        Exit(-1)
+
     env['OS_FAMILY'] = 'win'
     env.Append( EXTRACPPPATH=[
                           "#/Eradication",
@@ -368,64 +375,49 @@ elif "win32" == os.sys.platform:
     # docs say don't use /FD from command line (minimal rebuild)
     # /Gy function level linking (implicit when using /Z7)
     # /Z7 debug info goes into each individual .obj file -- no .pdb created 
+    # /Zi debug info goes into a PDB file
     env.Append( CCFLAGS= ["/errorReport:none"] )
 
-    # Switching from /Z7 to /Zi in order to be more like VS
-    #env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Z7"])
-    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t", "/Zi"])
+    # Not including debug information for SCONS builds
+    env.Append( CCFLAGS=["/fp:strict", "/GS-", "/Oi", "/Ot", "/Zc:forScope", "/Zc:wchar_t" ])
 
     env.Append( CCFLAGS=["/DIDM_EXPORT"] )
     env.Append( LIBS=["python27.lib"] )
 
-    if Rel:
-        # /MD  : Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
-        # /MT  : use static lib
-        # /O2  : optimize for speed (as opposed to size)
-        # /MP  : build with multiple processes
-        # /Gm- : No minimal build
-        # /WX- : Do NOT treat warnings as errors
-        # /Gd  : the default setting, specifies the __cdecl calling convention for all functions
-        env.Append( CCFLAGS= ["/O2", "/MD", "/MP", "/Gm-", "/WX-", "/Gd" ] )
-        env.Append( CPPDEFINES= ["NDEBUG"] )
+    # /MD  : Causes your application to use the multithread, dll version of the run-time library (LIBCMT.lib)
+    # /MT  : use static lib
+    # /O2  : optimize for speed (as opposed to size)
+    # /MP  : build with multiple processes
+    # /Gm- : No minimal build
+    # /WX- : Do NOT treat warnings as errors
+    # /Gd  : the default setting, specifies the __cdecl calling convention for all functions
+    env.Append( CCFLAGS= ["/O2", "/MD", "/MP", "/Gm-", "/WX-", "/Gd" ] )
+    env.Append( CPPDEFINES= ["NDEBUG"] )
 
-        # Disable these two for faster generation of codes
-        #env.Append( CCFLAGS= ["/GL"] ) # /GL whole program optimization
-        #env.Append( LINKFLAGS=" /LTCG " )         # /LTCG link time code generation
-        #env.Append( ARFLAGS=" /LTCG " ) # for the Library Manager
-        # /DEBUG will tell the linker to create a .pdb file
-        # which WinDbg and Visual Studio will use to resolve
-        # symbols if you want to debug a release-mode image.
-        # Note that this means we can't do parallel links in the build.
-        # NOTE: /DEBUG and Dbghelp.lib go together with changes in Exception.cpp which adds
-        #       the ability to print a stack trace.
-        env.Append( LINKFLAGS=" /DEBUG " )
-        # For MSVC <= 10.0
-        #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
+    # Disable these two for faster generation of codes
+    #env.Append( CCFLAGS= ["/GL"] ) # /GL whole program optimization
+    #env.Append( LINKFLAGS=" /LTCG " )         # /LTCG link time code generation
+    #env.Append( ARFLAGS=" /LTCG " ) # for the Library Manager
+    # /DEBUG will tell the linker to create a .pdb file
+    # which WinDbg and Visual Studio will use to resolve
+    # symbols if you want to debug a release-mode image.
+    # Note that this means we can't do parallel links in the build.
+    # NOTE: /DEBUG and Dbghelp.lib go together with changes in Exception.cpp which adds
+    #       the ability to print a stack trace.
+    env.Append( LINKFLAGS=" /DEBUG " )
+    # For MSVC <= 10.0
+    #env.Append( LINKFLAGS=[ "/NODEFAULTLIB:LIBCPMT", "/NODEFAULTLIB:LIBCMT", "/MACHINE:X64"] )
         
-        # For MSVC >= 11.0
-        # /OPT:REF : eliminates functions and data that are never referenced
-        # /OPT:ICF : to perform identical COMDAT folding
-        # /DYNAMICBASE:NO : Don't Use address space layout randomization
-        # /SUBSYSTEM:CONSOLE : Win32 character-mode application.
-        env.Append( LINKFLAGS=[ "/MACHINE:X64", "/MANIFEST", "/HEAP:\"100000000\"\",100000000\" ", "/OPT:REF", "/OPT:ICF ", "/DYNAMICBASE:NO", "/SUBSYSTEM:CONSOLE"] )
+    # For MSVC >= 11.0
+    # /OPT:REF : eliminates functions and data that are never referenced
+    # /OPT:ICF : to perform identical COMDAT folding
+    # /DYNAMICBASE:NO : Don't Use address space layout randomization
+    # /SUBSYSTEM:CONSOLE : Win32 character-mode application.
+    env.Append( LINKFLAGS=[ "/MACHINE:X64", "/MANIFEST", "/HEAP:\"100000000\"\",100000000\" ", "/OPT:REF", "/OPT:ICF ", "/DYNAMICBASE:NO", "/SUBSYSTEM:CONSOLE"] )
 
-        # This causes problems with the report DLLs.  Don't have time right now to figure out
-        # how to remove flags from the DLL build.
-        #env.Append( LINKFLAGS=[ "/STACK:\"100000000\"\",100000000\"" ] )
-
-    else: 
-        # /RTC1: - Enable Stack Frame Run-Time Error Checking; Reports when a variable is used without having been initialized
-        #        (implies /Od: no optimizations)
-        # /MTd: Defines _DEBUG, _MT, and causes your application to use the
-        #       debug multithread version of the run-time library (LIBCMTD.lib)
-        env.Append( CCFLAGS=["/RTC1", "/Od", "/MDd", "/Zc:forScope"] )  # use [M]ultithreaded [D]ebug [d]ll
-
-        # If you build without --d, no debug PDB will be generated, and 
-        # linking will be faster. However, you won't be able to debug your code with the debugger.
-        env.Append( LINKFLAGS=" /DEBUG " )
-        env.Append( LINKFLAGS=["/MACHINE:X64"] )
-
-
+    # This causes problems with the report DLLs.  Don't have time right now to figure out
+    # how to remove flags from the DLL build.
+    #env.Append( LINKFLAGS=[ "/STACK:\"100000000\"\",100000000\"" ] )
 
     winLibString = "Dbghelp.lib psapi.lib ws2_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"
 
@@ -536,8 +528,6 @@ setEnvAttrs( env )
 # Export the following symbols for them to be used in subordinate SConscript files.
 Export("env")
 
-# pre-processing to generate some header files like version files
-env.SConscript( 'utils/PRESConscript', duplicate=False )
 
 # pass the build_dir as the variant directory
 env.SConscript( 'SConscript', variant_dir='$BUILD_DIR', duplicate=False )

@@ -67,6 +67,7 @@ namespace Kernel
                                                   float initial_poverty = 0.5f );
         virtual void InitializeHuman() override;
         virtual void Update(float currenttime, float dt) override;
+        virtual void UpdateHistory( const IdmDateTime& rCurrentTime, float dt ) override;
 
         virtual void UpdateSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) override;
 
