@@ -114,6 +114,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
     initConfig( "Population_Scale_Type", population_scaling, inputJson, MetadataDescriptor::Enum(Population_Scale_Type_DESC_TEXT, Population_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(PopulationScaling)) ); // node only (move)
     initConfig( "Simulation_Type", sim_type, inputJson, MetadataDescriptor::Enum(Simulation_Type_DESC_TEXT, Simulation_Type_DESC_TEXT, MDD_ENUM_ARGS(SimType)) ); // simulation only (???move)
     initConfig( "Death_Rate_Dependence", vital_death_dependence, inputJson, MetadataDescriptor::Enum(Death_Rate_Dependence_DESC_TEXT, Death_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalDeathDependence)), "Enable_Vital_Dynamics" ); // node only (move)
+    LOG_DEBUG_F( "Death_Rate_Dependence configured as %s\n", VitalDeathDependence::pairs::lookup_key( vital_death_dependence ) );
     initConfig( "Susceptibility_Scale_Type", susceptibility_scaling, inputJson, MetadataDescriptor::Enum("susceptibility_scaling", Susceptibility_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(SusceptibilityScaling)) ); // Can be node-level or individual susceptibility-level
 
     //vector enums
@@ -184,7 +185,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
     bool demographics_builtin = false;
     initConfigTypeMap( "Enable_Demographics_Builtin", &demographics_builtin, Enable_Demographics_Initial_DESC_TEXT, false ); // 'global' (3 files)
-    demographics_initial = !demographics_builtin;
+    initConfigTypeMap( "Default_Geography_Initial_Node_Population", &default_node_population, Default_Geography_Initial_Node_Population_DESC_TEXT, 0, INT_MAX, 1000, "Enable_Demographics_Builtin");
     initConfigTypeMap( "Default_Geography_Torus_Size", &default_torus_size, Default_Geography_Torus_Size_DESC_TEXT, 3, 100, 10, "Enable_Demographics_Builtin");
 
     initConfigTypeMap( "Enable_Vital_Dynamics", &vital_dynamics, Enable_Vital_Dynamics_DESC_TEXT, true );
@@ -479,6 +480,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
     LOG_DEBUG_F( "Calling main Configure..., use_defaults = %d\n", JsonConfigurable::_useDefaults );
     bool ret = JsonConfigurable::Configure( inputJson );
+    demographics_initial = !demographics_builtin;
 
 #ifndef DISABLE_VECTOR
         for (const auto& vector_species_name : vector_species_names)
@@ -721,6 +723,7 @@ SimulationConfig::SimulationConfig()
     , larvalDensityMortalityOffset(0.1f)
     , demographics_initial(false)
     , default_torus_size( 10 )
+    , default_node_population( 1000 )
     , lloffset(0)
     , coinfection_incidence(false)
     , enable_coinfection_mortality(false)
