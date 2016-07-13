@@ -420,7 +420,7 @@ namespace Kernel
         , immune_threshold_for_downsampling(0.0f)
         , prob_maternal_transmission(0.0f)
         , population_density_c50(0.0f)
-        , population_scaling_factor(0.0f)
+        , population_scaling_factor(1.0f)
         , maternal_transmission(false)
         , vital_birth(false)
         , vital_birth_dependence(VitalBirthDependence::FIXED_BIRTH_RATE)
