@@ -893,8 +893,8 @@ namespace Kernel
         demographics_factory = NodeDemographicsFactory::CreateNodeDemographicsFactory( &nodeid_suid_map, 
                                                                                        EnvPtr->Config,
                                                                                        m_simConfigObj->demographics_initial,
-                                                                                       0, // m_simConfigObj->default_torus_size,
-                                                                                       0 // m_simConfigObj->default_node_population
+                                                                                       m_simConfigObj->default_torus_size,
+                                                                                       m_simConfigObj->default_node_population
                                                                                        );
         if (demographics_factory == nullptr)
         {
