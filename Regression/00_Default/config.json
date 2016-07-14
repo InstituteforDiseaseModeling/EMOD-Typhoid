@@ -1,5 +1,7 @@
 {
     "parameters": {
+        ".Default_Geography_Initial_Node_Population": 10000, 
+        ".Population_Scale_Type": "FIXED_SCALING", 
         "Acquisition_Blocking_Immunity_Decay_Rate": 0.1, 
         "Acquisition_Blocking_Immunity_Duration_Before_Decay": 60, 
         "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE", 
@@ -31,7 +33,7 @@
         "Enable_Default_Reporting": 1, 
         "Enable_Default_Shedding_Function": 1, 
         "Enable_Demographics_Birth": 0, 
-        "Enable_Demographics_Builtin": 1, 
+        "Enable_Demographics_Builtin": 0, 
         "Enable_Demographics_Gender": 1, 
         "Enable_Demographics_Other": 0, 
         "Enable_Demographics_Reporting": 1, 
