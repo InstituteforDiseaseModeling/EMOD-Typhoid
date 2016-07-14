@@ -259,18 +259,6 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_DERIVED(MigrationInfoFactoryVector,MigrationInfoFactoryFile)
     END_QUERY_INTERFACE_DERIVED(MigrationInfoFactoryVector,MigrationInfoFactoryFile)
 
-    MigrationInfoFactoryVector::MigrationInfoFactoryVector( bool enableHumanMigration )
-    : MigrationInfoFactoryFile( enableHumanMigration )
-    , m_InfoFileListVector()
-    , m_IsVectorMigrationEnabled( false )
-    , m_IsFileBased( false )
-    , m_ModifierEquation( ModiferEquationType::EXPONENTIAL )
-    , m_ModifierHabitat(0.0)
-    , m_ModifierFood(0.0)
-    , m_ModifierStayPut(0.0)
-    {
-    }
-
     MigrationInfoFactoryVector::MigrationInfoFactoryVector()
     : MigrationInfoFactoryFile()
     , m_InfoFileListVector()
@@ -303,9 +291,9 @@ namespace Kernel
         m_InfoFileListVector.push_back( nullptr );
     }
 
-    void MigrationInfoFactoryVector::InitializeInfoFileList( bool enableHumanMigration, const Configuration* config )
+    void MigrationInfoFactoryVector::InitializeInfoFileList( const Configuration* config )
     {
-        MigrationInfoFactoryFile::InitializeInfoFileList( enableHumanMigration, config );
+        MigrationInfoFactoryFile::InitializeInfoFileList( config );
 
         initConfigTypeMap( ENABLE_VECTOR_MIGRATION_NAME, &m_IsVectorMigrationEnabled, Enable_Vector_Migration_DESC_TEXT, false );
 
@@ -397,16 +385,15 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_DERIVED(MigrationInfoFactoryVectorDefault,MigrationInfoFactoryDefault)
     END_QUERY_INTERFACE_DERIVED(MigrationInfoFactoryVectorDefault,MigrationInfoFactoryDefault)
 
-    MigrationInfoFactoryVectorDefault::MigrationInfoFactoryVectorDefault( bool enableHumanMigration,
-                                                                          int torusSize )
-    : MigrationInfoFactoryDefault( enableHumanMigration, torusSize )
+    MigrationInfoFactoryVectorDefault::MigrationInfoFactoryVectorDefault( int torusSize )
+    : MigrationInfoFactoryDefault( torusSize )
     , m_IsVectorMigrationEnabled( false )
     , m_xLocalModifierVector(1.0)
     {
     }
 
     MigrationInfoFactoryVectorDefault::MigrationInfoFactoryVectorDefault()
-    : MigrationInfoFactoryDefault( false, 10 )
+    : MigrationInfoFactoryDefault( 10 )
     , m_IsVectorMigrationEnabled( false )
     , m_xLocalModifierVector(1.0)
     {
