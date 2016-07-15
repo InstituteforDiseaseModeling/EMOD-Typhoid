@@ -1,13 +1,13 @@
 {
     "Header": {
-        "DateTime": "Wed Jun 22 16:19:25 2016",
-        "DTK_Version": "1084 Typhoid-Ongoing (adde964) Jun 22 2016 11:55:41",
+        "DateTime": "Fri Jun 24 19:35:08 2016",
+        "DTK_Version": "1088 Typhoid-Ongoing (5995010) Jun 24 2016 15:18:54",
         "Report_Type": "InsetChart",
         "Report_Version": "3.2",
         "Start_Time": 0,
         "Simulation_Timestep": 1,
         "Timesteps": 30,
-        "Channels": 17
+        "Channels": 20
     },
     "Channels": {
         "Births": {
@@ -395,6 +395,41 @@
                 -0.3457661271095
             ]
         },
+        "Mean Age Of Infection": {
+            "Units": "",
+            "Data": [
+                0,
+                25.99747467041,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                22.50134086609,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                21.16049385071,
+                0,
+                51.81018829346,
+                0,
+                29.10814666748,
+                0,
+                0,
+                41.60691833496,
+                0,
+                40.05274581909,
+                8.567272186279,
+                0,
+                0
+            ]
+        },
         "New Infections": {
             "Units": "",
             "Data": [
@@ -498,6 +533,76 @@
                 2,
                 3,
                 3
+            ]
+        },
+        "Number of Contact Infections": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                3,
+                3,
+                4,
+                4,
+                6,
+                6,
+                6,
+                8,
+                8,
+                9,
+                10,
+                10,
+                10
+            ]
+        },
+        "Number of Environmental Infections": {
+            "Units": "",
+            "Data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                2
             ]
         },
         "Number of New Acute Infections": {

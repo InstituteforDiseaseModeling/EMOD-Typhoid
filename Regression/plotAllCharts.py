@@ -4,6 +4,7 @@
 import matplotlib.pyplot as plt
 import json
 import sys
+import os
 import pylab
 from math import sqrt, ceil
 
@@ -68,7 +69,7 @@ def plotCompareFromDisk( label = "" ):
     ref_sim = open( sys.argv[1] )
     ref_data = json.loads( ref_sim.read() )
     test_sim = None
-    if len( sys.argv ) == 2:
+    if len( sys.argv ) in [ 2, 3 ]:
         test_sim = open( sys.argv[1] )
     else:
         test_sim = open( sys.argv[2] )
@@ -84,6 +85,11 @@ def plotCompareFromDisk( label = "" ):
     if label == "unspecified":
         label = sys.argv[1]
     figure = plt.figure(label.split('/')[-1])   # label includes the full (relative) path to the scenario, take just the final directory
+    #figure = plt.figure(label.split('/')[-1],figsize=(80,60))   # label includes the full (relative) path to the scenario, take just the final directory
+    F = pylab.gcf()
+    DefaultSize = F.get_size_inches()
+    F.set_size_inches( (DefaultSize[0]*3, DefaultSize[1]*2 ) )
+    #Figure.set_figsize_inches( ( 120,80) )
 
     idx = 1
     for chan_title in sorted(ref_data["Channels"]):
@@ -103,6 +109,12 @@ def plotCompareFromDisk( label = "" ):
 
     plt.suptitle( label + " (red=reference, blue=test)")
     plt.subplots_adjust( bottom=0.05 )
+    mng = plt.get_current_fig_manager()
+    mng.frame.Maximize(True)
+    if "savefig" in sys.argv:
+        path_dir = label.split( os.path.sep )[0]
+        plotname = label.split( os.path.sep )[1]
+        pylab.savefig( os.path.join( path_dir, plotname ) + ".png", bbox_inches='tight', orientation='landscape' ) #, dpi=200 )
     plt.show()
 
 def plotBunchFromMongo():
@@ -165,7 +177,7 @@ def main():
         sys.exit(0)
 
     label = None
-    if len( sys.argv ) == 2:
+    if len( sys.argv ) in [ 2, 3 ]:
         label = "unspecified"
     else:
         label = sys.argv[3]

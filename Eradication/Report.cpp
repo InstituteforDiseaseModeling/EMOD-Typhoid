@@ -40,7 +40,7 @@ const string Report::_cum_reported_infections_label( "Cumulative Reported Infect
 const string Report::_hum_infectious_res_label( "Human Infectious Reservoir" );
 const string Report::_log_prev_label( "Log Prevalence" );
 const string Report::_infection_rate_label( "Daily (Human) Infection Rate" );
-const string Report::_aoi_label( "Age Of Infection" );
+const string Report::_aoi_label( "Mean Age Of Infection" );
 
 /////////////////////////
 // Initialization methods
@@ -134,7 +134,7 @@ Report::LogNodeData(
     Accumulate(_stat_pop_label, pNC->GetStatPop());
     Accumulate("Births", pNC->GetBirths());
     Accumulate("Infected", pNC->GetInfected());
-    //Accumulate(_aoi_label, pNC->GetMeanAgeInfection() * pNC->GetInfected());
+    Accumulate(_aoi_label, pNC->GetMeanAgeInfection() ); // * pNC->GetInfected());
 
     if (pNC->GetLocalWeather())
     {

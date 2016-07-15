@@ -310,20 +310,43 @@ namespace Kernel
 
             float slope = peak_amplification / ramp_days;
             float amplification = 0;
-            float HarvestDayOfYear = nDayOfYear - GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period;
-            if( HarvestDayOfYear < 1){
-                HarvestDayOfYear = 365 - HarvestDayOfYear;
+            //float HarvestDayOfYear = nDayOfYear - GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period;
+            //if( HarvestDayOfYear < 1){
+            //    HarvestDayOfYear = 365 - HarvestDayOfYear;
+	    //}
+			if (peak_start_day - ramp_days > 0){
+            if ((nDayOfYear >= peak_start_day-ramp_days) && ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
+                amplification=((nDayOfYear- (peak_start_day-ramp_days))+0.5)*(slope);
 	    }
-
-            if((HarvestDayOfYear >= peak_start_day-ramp_days) && ( HarvestDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
-                amplification=((HarvestDayOfYear- (peak_start_day-ramp_days))+0.5)*(slope);
-	    }
-            if ((HarvestDayOfYear >= peak_start_day) || (HarvestDayOfYear<peak_end_day)) { // peak of wastewater irrigation
+            if ((nDayOfYear >= peak_start_day) || (nDayOfYear<=peak_end_day)) { // peak of wastewater irrigation
                 amplification= peak_amplification;
 	    }
-            if ((HarvestDayOfYear >= peak_end_day) && (HarvestDayOfYear < (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
-                amplification= peak_amplification-(((HarvestDayOfYear-peak_end_day)+0.5)*slope);
-            }
+            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope);
+		}
+			}
+
+			else if (peak_start_day - ramp_days < 1){
+			if ((nDayOfYear >= peak_start_day-ramp_days+365) || ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
+                if (nDayOfYear >= peak_start_day-ramp_days+365){
+					amplification= (nDayOfYear - (peak_start_day-ramp_days+365)+0.5)*(slope);
+				}
+				else if (nDayOfYear < peak_start_day) {
+				amplification= ((ramp_days-peak_start_day) + nDayOfYear + 0.5)*(slope);
+				}
+			}
+
+            if ((nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
+                amplification= peak_amplification;
+	    }
+            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope);
+		}
+			
+			}
+
+			LOG_INFO_F("Environmental Amp %f\n", amplification);
+
 
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
