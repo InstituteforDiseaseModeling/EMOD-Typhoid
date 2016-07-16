@@ -5,6 +5,7 @@
         "Base_Incubation_Period": 3, 
         "Base_Infectious_Period": 7, 
         "Base_Infectivity": 0.3, 
+        "Campaign_Filename": "campaign.json", 
         "Climate_Model": "CLIMATE_OFF", 
         "Config_Name": "120_Generic_Minimal_Config", 
         "Default_Geography_Initial_Node_Population": 100, 
