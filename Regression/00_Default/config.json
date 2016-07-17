@@ -1,7 +1,5 @@
 {
     "parameters": {
-        ".Default_Geography_Initial_Node_Population": 10000, 
-        ".Population_Scale_Type": "FIXED_SCALING", 
         "Acquisition_Blocking_Immunity_Decay_Rate": 0.1, 
         "Acquisition_Blocking_Immunity_Duration_Before_Decay": 60, 
         "Age_Initialization_Distribution_Type": "DISTRIBUTION_SIMPLE", 

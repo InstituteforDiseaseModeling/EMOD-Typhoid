@@ -185,7 +185,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
     bool demographics_builtin = false;
     initConfigTypeMap( "Enable_Demographics_Builtin", &demographics_builtin, Enable_Demographics_Initial_DESC_TEXT, false ); // 'global' (3 files)
-    initConfigTypeMap( "Default_Geography_Initial_Node_Population", &default_node_population, Default_Geography_Initial_Node_Population_DESC_TEXT, 0, INT_MAX, 1000, "Enable_Demographics_Builtin");
+    initConfigTypeMap( "Default_Geography_Initial_Node_Population", &default_node_population, Default_Geography_Initial_Node_Population_DESC_TEXT, 0, 1e6, 1000, "Enable_Demographics_Builtin");
     initConfigTypeMap( "Default_Geography_Torus_Size", &default_torus_size, Default_Geography_Torus_Size_DESC_TEXT, 3, 100, 10, "Enable_Demographics_Builtin");
 
     initConfigTypeMap( "Enable_Vital_Dynamics", &vital_dynamics, Enable_Vital_Dynamics_DESC_TEXT, true );
