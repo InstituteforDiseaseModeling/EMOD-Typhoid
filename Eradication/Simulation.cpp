@@ -286,15 +286,17 @@ namespace Kernel
     void Simulation::setParams(const ::Configuration *config)
     {
         // Seems to me that if enable_interventions is 0, we shouldn't have this exception here.
-        if( campaign_filename.empty() )
+        if( m_simConfigObj->interventions )
         {
-            throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, "'Campaign_Filename' is empty.  You must have a file." );
+            if( campaign_filename.empty() )
+            {
+                throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, "'Campaign_Filename' is empty.  You must have a file." );
+            }
+            campaignFilename = campaign_filename ;
         }
 
-        loadBalanceFilename         = FileSystem::Concat( EnvPtr->InputPath, loadbalance_filename );
-        campaignFilename            = campaign_filename ;
-
-        currentTime.time      =  m_simConfigObj->starttime;
+        loadBalanceFilename = FileSystem::Concat( EnvPtr->InputPath, loadbalance_filename );
+        currentTime.time    =  m_simConfigObj->starttime;
     }
 
     void Simulation::initSimulationState()
