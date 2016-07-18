@@ -151,13 +151,10 @@ namespace Kernel {
         if(climate_structure != ClimateStructure::CLIMATE_OFF || JsonConfigurable::_dryrun)
             initConfig( "Climate_Update_Resolution", climate_update_resolution, config, MetadataDescriptor::Enum("climate_update_resolution", Climate_Update_Resolution_DESC_TEXT, MDD_ENUM_ARGS(ClimateUpdateResolution)) );
 
-        if(climate_structure == ClimateStructure::CLIMATE_BY_DATA || JsonConfigurable::_dryrun)
-        {
-            initConfigTypeMap( "Air_Temperature_Filename", &climate_airtemperature_filename, Air_Temperature_Filename_DESC_TEXT );
-            initConfigTypeMap( "Land_Temperature_Filename", &climate_landtemperature_filename, Land_Temperature_Filename_DESC_TEXT );
-            initConfigTypeMap( "Rainfall_Filename", &climate_rainfall_filename, Rainfall_Filename_DESC_TEXT );
-            initConfigTypeMap( "Relative_Humidity_Filename", &climate_relativehumidity_filename, Relative_Humidity_Filename_DESC_TEXT );
-        }
+        initConfigTypeMap( "Air_Temperature_Filename", &climate_airtemperature_filename, Air_Temperature_Filename_DESC_TEXT, "air_temp.json", "Climate_Model", "CLIMATE_BY_DATA" );
+        initConfigTypeMap( "Land_Temperature_Filename", &climate_landtemperature_filename, Land_Temperature_Filename_DESC_TEXT, "land_temp.json", "Climate_Model", "CLIMATE_BY_DATA" );
+        initConfigTypeMap( "Rainfall_Filename", &climate_rainfall_filename, Rainfall_Filename_DESC_TEXT, "rainfall.json", "Climate_Model", "CLIMATE_BY_DATA" );
+        initConfigTypeMap( "Relative_Humidity_Filename", &climate_relativehumidity_filename, Relative_Humidity_Filename_DESC_TEXT, "rel_hum.json", "Climate_Model", "CLIMATE_BY_DATA" );
 
         if(climate_structure == ClimateStructure::CLIMATE_KOPPEN || JsonConfigurable::_dryrun)
         {
