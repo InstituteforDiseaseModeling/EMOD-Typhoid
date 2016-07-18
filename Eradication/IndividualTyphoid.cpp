@@ -304,9 +304,16 @@ namespace Kernel
             }
 
             float ramp_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_duration;
+			float cutoff_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_cutoff_days;
             float peak_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_multiplier;
-            float peak_start_day = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_start); //we assume ramp up must happen before day 365.. given.
-            float peak_end_day = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_end); // last possible day to end infections is... august??
+            float peak_start_day = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_start); 
+			if (peak_start_day > 365){
+				peak_start_day = peak_start_day - 365;}
+		//this is mostly for calibtool purposes
+			float peak_days = (365 - cutoff_days) - (2 * ramp_days);
+            float peak_end_day = peak_start_day + peak_days;
+			if (peak_end_day > 365){
+				peak_end_day = peak_end_day - 365;}
 
             float slope = peak_amplification / ramp_days;
             float amplification = 0;
@@ -318,7 +325,7 @@ namespace Kernel
             if ((nDayOfYear >= peak_start_day-ramp_days) && ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
                 amplification=((nDayOfYear- (peak_start_day-ramp_days))+0.5)*(slope);
 	    }
-            if ((nDayOfYear >= peak_start_day) || (nDayOfYear<=peak_end_day)) { // peak of wastewater irrigation
+            if ((nDayOfYear >= peak_start_day) && (nDayOfYear<=peak_end_day)) { // peak of wastewater irrigation
                 amplification= peak_amplification;
 	    }
             if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
@@ -345,7 +352,7 @@ namespace Kernel
 			
 			}
 
-			LOG_INFO_F("Environmental Amp %f\n", amplification);
+			//LOG_INFO_F("Environmental Amp %f\n", amplification);
 
 
             float fExposure = fEnvironment * amplification;
