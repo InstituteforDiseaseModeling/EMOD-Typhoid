@@ -185,7 +185,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
     bool demographics_builtin = false;
     initConfigTypeMap( "Enable_Demographics_Builtin", &demographics_builtin, Enable_Demographics_Initial_DESC_TEXT, false ); // 'global' (3 files)
-    initConfigTypeMap( "Default_Geography_Initial_Node_Population", &default_node_population, Default_Geography_Initial_Node_Population_DESC_TEXT, 0, INT_MAX, 1000, "Enable_Demographics_Builtin");
+    initConfigTypeMap( "Default_Geography_Initial_Node_Population", &default_node_population, Default_Geography_Initial_Node_Population_DESC_TEXT, 0, 1e6, 1000, "Enable_Demographics_Builtin");
     initConfigTypeMap( "Default_Geography_Torus_Size", &default_torus_size, Default_Geography_Torus_Size_DESC_TEXT, 3, 100, 10, "Enable_Demographics_Builtin");
 
     initConfigTypeMap( "Enable_Vital_Dynamics", &vital_dynamics, Enable_Vital_Dynamics_DESC_TEXT, true );
@@ -193,14 +193,14 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 
     initConfigTypeMap( "Enable_Heterogeneous_Intranode_Transmission", &heterogeneous_intranode_transmission_enabled, Enable_Heterogeneous_Intranode_Transmission_DESC_TEXT, false ); // generic
 
-    initConfigTypeMap( "Enable_Interventions", &interventions, Enable_Interventions_DESC_TEXT, true );
+    initConfigTypeMap( "Enable_Interventions", &interventions, Enable_Interventions_DESC_TEXT, false );
 
     initConfigTypeMap( "Number_Basestrains", &number_basestrains, Number_Basestrains_DESC_TEXT, 1, 10, 1);
     initConfigTypeMap( "Number_Substrains", &number_substrains, Number_Substrains_DESC_TEXT, 1, 16777216, 256 );
 
     initConfigTypeMap( "Maternal_Transmission_Probability", &prob_maternal_transmission, Maternal_Transmission_Probability_DESC_TEXT, 0.0f, 1.0f,    0.0f, "Enable_Maternal_Transmission"  );
 
-    initConfig( "Immunity_Initialization_Distribution_Type", immunity_initialization_distribution_type, inputJson, MetadataDescriptor::Enum("immunity_initialization_distribution_type", Immunity_Initialization_Distribution_Type_DESC_TEXT, MDD_ENUM_ARGS(DistributionType)) ); // polio and malaria
+    initConfig( "Immunity_Initialization_Distribution_Type", immunity_initialization_distribution_type, inputJson, MetadataDescriptor::Enum("immunity_initialization_distribution_type", Immunity_Initialization_Distribution_Type_DESC_TEXT, MDD_ENUM_ARGS(DistributionType)), "Enable_Immunity" ); // polio and malaria
 
     initConfigTypeMap( "Node_Grid_Size", &node_grid_size, Node_Grid_Size_DESC_TEXT, 0.004167f, 90.0f, 0.004167f );
 
@@ -729,7 +729,7 @@ SimulationConfig::SimulationConfig()
     , enable_coinfection_mortality(false)
     , vital_dynamics(false)
     , vital_disease_mortality(false)
-    , interventions(true)
+    , interventions(false)
     , feverDetectionThreshold(-42.0f)
     , airtemperature(-42.0f)
     , landtemperature(-42.0f)

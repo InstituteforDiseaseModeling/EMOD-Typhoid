@@ -161,8 +161,8 @@ class Monitor(threading.Thread):
 
         # print( "CSV files failed MD5 comparison test." )
         # First (md5) test failed. Do line length, then line-by-line
-        ref_length = file_len( ref_path )
-        test_length = file_len( test_path )
+        ref_length = ru.file_len( ref_path )
+        test_length = ru.file_len( test_path )
         if ref_length != test_length:
             fail_validation = True
             err_msg = "Reference output {0} has {1} lines but test output {2} has {3} lines".format( ref_path, ref_length, test_path, test_length )
