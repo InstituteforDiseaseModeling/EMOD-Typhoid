@@ -30,9 +30,9 @@ namespace Kernel {
 static const std::string _num_chronic_carriers_label     = "Number of Chronic Carriers";
 static const std::string _num_subclinic_infections_label = "Number of New Sub-Clinical Infections";
 static const std::string _num_acute_infections_label     = "Number of New Acute Infections";
-static const std::string _num_enviro_infections_label    = "Number of Environmental Infections";
-static const std::string _num_contact_infections_label   = "Number of Contact Infections";
-
+static const std::string _num_enviro_infections_label    = "New Infections By Route (ENVIRONMENT)";
+static const std::string _num_contact_infections_label   = "New Infections By Route (CONTACT)";
+    
 
 GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 
@@ -110,16 +110,25 @@ ReportTyphoid::LogIndividualData(
         {
             Accumulate( _num_acute_infections_label, mc_weight );
         }
-        auto inf = individual->GetInfections().back();
-        StrainIdentity si;
-        inf->GetInfectiousStrainID( &si );
-        if( si.GetGeneticID() == 0 )
+
+        // Get infection incidence by route
+        NewInfectionState::_enum nis = individual->GetNewInfectionState(); 
+        LOG_DEBUG_F( "nis = %d\n", ( nis ) );
+        if( nis == NewInfectionState::NewAndDetected ||
+            nis == NewInfectionState::NewInfection /*||
+            nis == NewInfectionState::NewlyDetected*/ )
         {
-            Accumulate( _num_enviro_infections_label, mc_weight );
-        }
-        else if( si.GetGeneticID() == 1 )
-        {
-            Accumulate( _num_contact_infections_label, mc_weight );
+            auto inf = individual->GetInfections().back();
+            StrainIdentity si;
+            inf->GetInfectiousStrainID( &si );
+            if( si.GetGeneticID() == 0 )
+            {
+                Accumulate( _num_enviro_infections_label, mc_weight );
+            }
+            else if( si.GetGeneticID() == 1 )
+            {
+                Accumulate( _num_contact_infections_label, mc_weight );
+            }
         }
         //std::cout << "si.GetGeneticID() = " << si.GetGeneticID() << std::endl;
     }
