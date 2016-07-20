@@ -1001,7 +1001,7 @@ static const char* NODE_OFFSETS          = "NodeOffsets";            // required
 
     void MigrationInfoFactoryDefault::InitializeParameters()
     {
-        initConfigTypeMap( "Enable_Migration_Heterogeneity",  &m_IsHeterogeneityEnabled, Enable_Migration_Heterogeneity_DESC_TEXT, "Migration_Model", "FIXED_RATE_MIGRATION,VARIABLE_RATE_MIGRATION,LEVY_FLIGHTS" );
+        initConfigTypeMap( "Enable_Migration_Heterogeneity",  &m_IsHeterogeneityEnabled, Enable_Migration_Heterogeneity_DESC_TEXT, false, "Migration_Model", "FIXED_RATE_MIGRATION,VARIABLE_RATE_MIGRATION,LEVY_FLIGHTS" );
         initConfigTypeMap( "x_Local_Migration", &m_xLocalModifier, x_Local_Migration_DESC_TEXT, 0.0f, FLT_MAX, 1.0f, "Enable_Local_Migration" );
     }
 
