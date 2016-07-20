@@ -345,8 +345,7 @@ namespace Kernel
 			
 			}
 
-			LOG_INFO_F("Environmental Amp %f\n", amplification);
-
+			LOG_DEBUG_F("Environmental Amp %f\n", amplification);
 
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
