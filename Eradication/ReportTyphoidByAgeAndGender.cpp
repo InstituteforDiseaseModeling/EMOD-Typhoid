@@ -105,7 +105,7 @@ namespace Kernel
             //       nrt = 365 * ( 1943.0 - 1940.0 ) +365 - 1
             //           = 365 * 4 - 0.5
             //           = 1459.0 aka "Dec 31 of this year"
-            LOG_INFO_F( "Starting to collect data now, next_report_time = %f\n", next_report_time );
+            LOG_INFO_F( "Starting to collect data now, next_report_time = %f\n", (float) next_report_time );
         }
         else if( is_collecting_data && (_parent->GetSimulationTime().Year() > stopYear) )
         {
