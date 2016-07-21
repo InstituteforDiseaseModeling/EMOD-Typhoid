@@ -684,6 +684,7 @@ QuickBuilder SimulationConfig::GetSchema()
 
 SimulationConfig::SimulationConfig()
     : age_initialization_distribution_type(DistributionType::DISTRIBUTION_OFF)
+    , vital_death_dependence(VitalDeathDependence::NONDISEASE_MORTALITY_OFF)
     , egg_hatch_delay_dist(EggHatchDelayDist::NO_DELAY)
     , egg_saturation(EggSaturation::NO_SATURATION)
     , evolution_polio_clock_type(EvolutionPolioClockType::POLIO_EVOCLOCK_NONE)
