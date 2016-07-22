@@ -117,7 +117,7 @@ namespace Kernel
     const int IndividualHumanTyphoid::acute_treatment_day = 5; // how many days after infection will people receive treatment
     const float IndividualHumanTyphoid::CFRU = 0.08f;   // case fatality rate?
     const float IndividualHumanTyphoid::CFRH = 0.08f; // hospitalized case fatality rate?
-    const float IndividualHumanTyphoid::treatmentprobability = 0.90f;  // probability of treatment
+    const float IndividualHumanTyphoid::treatmentprobability = 1.0f;  // probability of treatment seeking for an acute case. we are in santiago so assume 100%
 
     // environmental exposure constants
     const int IndividualHumanTyphoid::N50 = 1110000;
@@ -325,7 +325,10 @@ namespace Kernel
             if ((nDayOfYear >= peak_start_day-ramp_days) && ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
                 amplification=((nDayOfYear- (peak_start_day-ramp_days))+0.5)*(slope);
 	    }
-            if ((nDayOfYear >= peak_start_day) && (nDayOfYear<=peak_end_day)) { // peak of wastewater irrigation
+			if ((peak_start_day - peak_end_day > 0) && ((nDayOfYear >= peak_start_day)  || (nDayOfYear<=peak_end_day))) { // peak of wastewater irrigation
+                amplification= peak_amplification;
+	    }
+			if ((peak_start_day - peak_end_day < 0) && (nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
                 amplification= peak_amplification;
 	    }
             if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
@@ -339,11 +342,13 @@ namespace Kernel
 					amplification= (nDayOfYear - (peak_start_day-ramp_days+365)+0.5)*(slope);
 				}
 				else if (nDayOfYear < peak_start_day) {
-				amplification= ((ramp_days-peak_start_day) + nDayOfYear + 0.5)*(slope);
+				amplification= (((ramp_days-peak_start_day) + nDayOfYear)  + 0.5)*(slope);
 				}
 			}
-
-            if ((nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
+			if ((peak_start_day - peak_end_day > 0) && ((nDayOfYear >= peak_start_day)  || (nDayOfYear<=peak_end_day))) { // peak of wastewater irrigation
+                amplification= peak_amplification;
+	    }
+			if ((peak_start_day - peak_end_day < 0) && (nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
                 amplification= peak_amplification;
 	    }
             if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
@@ -682,12 +687,9 @@ namespace Kernel
                     state_to_report = "A";
                     acute_timer -= dt;
                     if( ( _acute_duration - acute_timer ) >= acute_treatment_day &&
-                            ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day )
-                      )
-                    {
-                        if (randgen->e() < treatmentprobability)
-                        {
-                            //if they don't die and seek treatment, we are assuming they recover
+                            ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day ) && 
+							(randgen->e() < treatmentprobability)
+                      ){       //if they seek treatment and don't die, we are assuming they have a probability of becoming a carrier (chloramphenicol treatment does not prevent carriage)
                             if (randgen->e() < CFRH)
                             {
                                 isDead = true;
@@ -696,6 +698,25 @@ namespace Kernel
                             } else 
                             {
                                 acute_timer = UNINIT_TIMER;
+								float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
+                                float carrier_prob = 0;
+                                int agebin = int(floor(getAgeInYears()/10));
+                                if (agebin>=GallstoneDataLength)
+                                    agebin=GallstoneDataLength-1;
+                                if (GetGender()==1)
+                                {
+                                    p3=FemaleGallstones[agebin];
+                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male * 1.3793;
+                                } 
+                                else if (GetGender()==0)
+                                {
+                                    p3=MaleGallstones[agebin];
+                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
+                                }
+                                if (randgen->e()< p3*carrier_prob)
+                                {
+                                    chronic_timer = _chronic_duration;
+                                }
                             }
                         }
 
@@ -714,8 +735,8 @@ namespace Kernel
                                 isDead = true;
                                 state_to_report = "D";
                             }
-                            else
-                            {  //if they survived, calculate probability of being a carrier
+                            else{
+                              //if they survived, calculate probability of being a carrier
                                 float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
                                 float carrier_prob = 0;
                                 int agebin = int(floor(getAgeInYears()/10));
@@ -735,19 +756,9 @@ namespace Kernel
                                 {
                                     chronic_timer = _chronic_duration;
                                 }
-                                else
-                                {
-                                    // for other recovereds, calculate probability of becoming immune
-                                    if (P7>0.0 && randgen->e() < P7)
-                                    {
-                                        hasClinicalImmunity = true;
-                                        clinical_immunity_timer = _clinical_immunity_duration;
-                                    }
-                                }
-                            }
+							}   
                         }
-                    }
-                }
+               }
 
 
                 if (chronic_timer > UNINIT_TIMER) {

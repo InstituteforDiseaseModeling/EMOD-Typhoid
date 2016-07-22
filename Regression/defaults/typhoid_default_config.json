@@ -127,7 +127,7 @@
 		"Typhoid_Contact_Exposure_Rate": 0.35,
 		"Typhoid_Environmental_Exposure_Rate": 0.5,
 		"Typhoid_Environmental_Ramp_Duration": 80,
-        "Typhoid_Environmental_Peak_End": 40, 
+        "Typhoid_Environmental_Cutoff_Days": 160, 
         "Typhoid_Environmental_Peak_Start": 360, 
         "Typhoid_Environmental_Peak_Multiplier": 0.1, 
 		"Typhoid_Symptomatic_Fraction": 0.1,
