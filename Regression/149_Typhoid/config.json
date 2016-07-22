@@ -117,7 +117,7 @@
         "Typhoid_Acute_Infectiousness": 40000,
         "Typhoid_Prepatent_Relative_Infectiousness": 0.5,
         "Typhoid_Subclinical_Relative_Infectiousness": 1,
-        "Typhoid_Chronic_Relative_Infectiousness": 0.1,
+        "Typhoid_Chronic_Relative_Infectiousness": 0.10,
         "Typhoid_Protection_Per_Infection": 0.95,
 		"Typhoid_Carrier_Probability_Male":0.03,
 		"Typhoid_6month_Susceptible_Fraction": 0.1219,
