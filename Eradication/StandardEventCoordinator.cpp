@@ -194,7 +194,7 @@ namespace Kernel
     void StandardInterventionDistributionEventCoordinator::UpdateNodes( float dt )
     {
         // Only call VisitNodes on first call and if countdown == 0
-        if( tsteps_since_last != tsteps_between_reps )
+        if( (tsteps_since_last != tsteps_between_reps) || distribution_complete )
         {
             return;
         }
