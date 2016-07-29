@@ -15,7 +15,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 namespace Kernel
 {
 
-    class IDMAPI InterpolatedValueMap : public JsonConfigurable, public JsonConfigurable::tFloatFloatMapConfigType /* really just a map */
+    class IDMAPI InterpolatedValueMap : public JsonConfigurable, 
+                                        public IComplexJsonConfigurable, 
+                                        public JsonConfigurable::tFloatFloatMapConfigType /* really just a map */
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
@@ -24,8 +26,8 @@ namespace Kernel
             float getValuePiecewiseConstant( float year, float default_value = 0) const;
             float getValueLinearInterpolation( float year, float default_value = 0) const;
             bool isAtEnd( float currentYear ) const;
-            virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
-            virtual json::QuickBuilder GetSchema();
+            virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key ) override;
+            virtual json::QuickBuilder GetSchema() override;
 
             static void serialize( IArchive& ar, InterpolatedValueMap& map );
     };

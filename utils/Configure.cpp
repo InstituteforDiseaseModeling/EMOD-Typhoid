@@ -334,8 +334,6 @@ namespace Kernel
 
     /// END WaningConfig
 
-    std::map< std::string, IJsonConfigurable* > IJsonConfigurable::generic_container;
-
     namespace jsonConfigurable
     {
         ConstrainedString::ConstrainedString( std::string &init_str )
@@ -903,6 +901,42 @@ namespace Kernel
         }
     }
 
+    void JsonConfigurable::initConfigComplexType(
+        const char* paramName,
+        IComplexJsonConfigurable * pVariable,
+        const char* description,
+        const char* condition_key, 
+        const char* condition_value
+    )
+    {
+        if( JsonConfigurable::_dryrun )
+        {
+            json::QuickBuilder custom_schema = pVariable->GetSchema();
+
+            // going to get something back like : {
+            //  "type_name" : "idmType:VectorAlleleEnumPair",
+            //  "type_schema" : {
+            //      "first" : ...,
+            //      "second" : ...
+            //      }
+            //  }
+            std::string custom_type_label = (std::string) custom_schema[ _typename_label() ].As<json::String>();
+            json::String custom_type_label_as_json_string = json::String( custom_type_label );
+            jsonSchemaBase[ custom_type_label ] = custom_schema[ _typeschema_label() ];
+            json::Object newComplexTypeSchemaEntry;
+            newComplexTypeSchemaEntry["description"] = json::String( description );
+            newComplexTypeSchemaEntry["type"] = json::String( custom_type_label_as_json_string );
+            if( condition_key && condition_value )
+            {
+                json::Object condition;
+                condition[ condition_key ] = json::String( condition_value );
+                newComplexTypeSchemaEntry["depends-on"] = condition;
+            }
+            jsonSchemaBase[ paramName ] = newComplexTypeSchemaEntry;
+        }
+        complexTypeMap[ paramName ] = pVariable;
+    }
+
     void
     JsonConfigurable::handleMissingParam( const std::string& key )
     {
@@ -1459,15 +1493,20 @@ namespace Kernel
         }
 /////////////////// END FIX BOUNDARY
 
-        // Let's see if we can iterate over our template base class generic container!
-        //std::cout << "IJsonConfigurable::generic_container.size() = " << IJsonConfigurable::generic_container.size() << std::endl;
-        for( auto iter = IJsonConfigurable::generic_container.begin();
-             IJsonConfigurable::generic_container.size() > 0;
-             )
+        // ---------------------------------- COMPLEX MAP ------------------------------------
+        for (auto& entry : complexTypeMap)
         {
-            auto temp_cont = *iter;
-            IJsonConfigurable::generic_container.erase( iter++ );
-            temp_cont.second->Configure( inputJson );
+            const auto & key = entry.first;
+            IComplexJsonConfigurable * pJc = entry.second;
+
+            if( inputJson->Exist( key ) )
+            {
+                pJc->ConfigureFromJsonAndKey( inputJson, key );
+            }
+            else if( !_useDefaults )
+            {
+                handleMissingParam( key );
+            }
         }
 
         // ---------------------------------- FLOAT-FLOAT MAP ------------------------------------
