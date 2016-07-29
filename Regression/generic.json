@@ -20,6 +20,7 @@
         { "path": "108_Generic_MigrationByAgeAndGender" },
         { "path": "112_Generic_NChooser" },
         { "path": "113_Generic_ControlledVaccine" },
+        { "path": "114_Generic_NChooser_Properties" },
         { "path": "116_Generic_SimpleVaccine_LinearInterpolation" },
         { "path": "117_Generic_SimpleVaccine_Piecewise" },
         { "path": "120_Generic_MigrationHeterogeneity" },

@@ -723,7 +723,8 @@ namespace Kernel
         // ----------------------------------------------------
         // --- Update where we are in the list of distributions
         // ----------------------------------------------------
-        while( m_TargetedDistributions[ m_CurrentIndex ]->IsPastEnd( rDateTime ) )
+        while( (m_CurrentIndex < m_TargetedDistributions.size()) &&
+               m_TargetedDistributions[ m_CurrentIndex ]->IsPastEnd( rDateTime ) )
         {
             ++m_CurrentIndex;
         }
