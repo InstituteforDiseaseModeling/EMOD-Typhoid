@@ -58,6 +58,8 @@ SUITE(NChooserEventCoordinatorTest)
 
             const_cast<Environment*>(Environment::getInstance())->RNG = new PSEUDO_DES(0);
 
+            m_pSimulationConfig->sim_type = SimType::HIV_SIM;
+
             m_pSimulationConfig->listed_events.insert( "Vaccinated" );
             m_pSimulationConfig->listed_events.insert( "VaccineExpired" );
 
@@ -67,17 +69,6 @@ SUITE(NChooserEventCoordinatorTest)
 
         ~NChooserEventCoordinatorFixture()
         {
-            //for( auto hic : m_hic_list )
-            //{
-            //    delete hic ;
-            //}
-            //m_hic_list.clear();
-
-            //for( auto human : m_human_list )
-            //{
-            //    delete human ;
-            //}
-            //m_human_list.clear();
             Node::TestOnly_ClearProperties();
             Environment::Finalize();
         }
@@ -184,8 +175,11 @@ SUITE(NChooserEventCoordinatorTest)
         nec.Add( CreateHuman( &nc, &nec, Gender::FEMALE, 20*DAYSPERYEAR, true,  false, false, "Location", "RURAL" ) );
         nec.Add( CreateHuman( &nc, &nec, Gender::MALE,   20*DAYSPERYEAR, false, false, true,  "Location", "URBAN" ) );
 
-        DiseaseQualifications disease_qual;
+        unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/NChooserEventCoordinatorTest/TestTargetedByAgeAndGender.json" ) );
         PropertyRestrictions pr;
+        pr.ConfigureFromJsonAndKey( p_config.get(), "Property_Restrictions_Within_Node" );
+
+        DiseaseQualifications disease_qual;
 
         TargetedByAgeAndGender ag1( AgeRange( 15.0, 30.0 ), Gender::COUNT, 10, 3, 0 );
 
@@ -193,10 +187,10 @@ SUITE(NChooserEventCoordinatorTest)
 
         std::vector<IIndividualHumanEventContext*> selected_list_1 = ag1.SelectIndividuals();
         CHECK_EQUAL(  4, selected_list_1.size() );
-        CHECK_EQUAL(  4, selected_list_1[0]->GetSuid().data );
-        CHECK_EQUAL(  8, selected_list_1[1]->GetSuid().data );
-        CHECK_EQUAL( 12, selected_list_1[2]->GetSuid().data );
-        CHECK_EQUAL( 14, selected_list_1[3]->GetSuid().data );
+        CHECK_EQUAL(  1, selected_list_1[0]->GetSuid().data );
+        CHECK_EQUAL(  7, selected_list_1[1]->GetSuid().data );
+        CHECK_EQUAL( 13, selected_list_1[2]->GetSuid().data );
+        CHECK_EQUAL( 15, selected_list_1[3]->GetSuid().data );
 
         ag1.IncrementNextNumTargets();
 
@@ -204,9 +198,9 @@ SUITE(NChooserEventCoordinatorTest)
 
         std::vector<IIndividualHumanEventContext*> selected_list_2 = ag1.SelectIndividuals();
         CHECK_EQUAL(  3, selected_list_2.size() );
-        CHECK_EQUAL( 12, selected_list_2[0]->GetSuid().data );
-        CHECK_EQUAL( 16, selected_list_2[1]->GetSuid().data );
-        CHECK_EQUAL( 19, selected_list_2[2]->GetSuid().data );
+        CHECK_EQUAL( 13, selected_list_2[0]->GetSuid().data );
+        CHECK_EQUAL( 15, selected_list_2[1]->GetSuid().data );
+        CHECK_EQUAL( 16, selected_list_2[2]->GetSuid().data );
 
         ag1.IncrementNextNumTargets();
 
@@ -214,10 +208,9 @@ SUITE(NChooserEventCoordinatorTest)
 
         std::vector<IIndividualHumanEventContext*> selected_list_3 = ag1.SelectIndividuals();
         CHECK_EQUAL(  3, selected_list_3.size() );
-        CHECK_EQUAL( 11, selected_list_3[0]->GetSuid().data );
+        CHECK_EQUAL( 10, selected_list_3[0]->GetSuid().data );
         CHECK_EQUAL( 13, selected_list_3[1]->GetSuid().data );
         CHECK_EQUAL( 16, selected_list_3[2]->GetSuid().data );
-
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestSample)
@@ -238,6 +231,178 @@ SUITE(NChooserEventCoordinatorTest)
         {
             PrintDebug( de.GetMsg() );
             CHECK( false );
+        }
+    }
+
+    TEST_FIXTURE(NChooserEventCoordinatorFixture, TestValidSimTypeGeneric)
+    {
+        // --------------------
+        // --- Initialize test
+        // --------------------
+        unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/NChooserEventCoordinatorTest/TestValidSimTypeGeneric.json" ) );
+
+        // -----------------------------------------------------------------
+        // --- Test that generic version works with non-STI & HIV sim types
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::TB_SIM;
+
+        try
+        {
+            NChooserEventCoordinator generic_nchooser;
+            bool ret = generic_nchooser.Configure( p_config.get() );
+            CHECK( ret );
+        }
+        catch( DetailedException& de )
+        {
+            PrintDebug( de.GetMsg() );
+            CHECK( false );
+        }
+    }
+
+    TEST_FIXTURE(NChooserEventCoordinatorFixture, TestValidSimTypeSTI)
+    {
+        // --------------------
+        // --- Initialize test
+        // --------------------
+        unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/NChooserEventCoordinatorTest/TestValidSimTypeSTI.json" ) );
+
+        // -----------------------------------------------------------------
+        // --- Test that STI version works with STI sim
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::STI_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorSTI sti_nchooser;
+            bool ret = sti_nchooser.Configure( p_config.get() );
+            CHECK( ret );
+        }
+        catch( DetailedException& de )
+        {
+            PrintDebug( de.GetMsg() );
+            CHECK( false );
+        }
+
+        // -----------------------------------------------------------------
+        // --- Test that STI version works with HIV sim
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::HIV_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorSTI sti_nchooser;
+            bool ret = sti_nchooser.Configure( p_config.get() );
+            CHECK( ret );
+        }
+        catch( DetailedException& de )
+        {
+            PrintDebug( de.GetMsg() );
+            CHECK( false );
+        }
+
+        // -----------------------------------------------------------------
+        // --- Test that STI version does not work with GENERIC
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::GENERIC_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorSTI sti_nchooser;
+            bool ret = sti_nchooser.Configure( p_config.get() );
+            CHECK( false );
+        }
+        catch( DetailedException&  )
+        {
+            CHECK( true );
+        }
+
+        // -----------------------------------------------------------------
+        // --- Test that STI version does not work with other sim type
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::TB_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorSTI sti_nchooser;
+            bool ret = sti_nchooser.Configure( p_config.get() );
+            CHECK( false );
+        }
+        catch( DetailedException& )
+        {
+            CHECK( true );
+        }
+    }
+
+    TEST_FIXTURE(NChooserEventCoordinatorFixture, TestValidSimTypeHIV)
+    {
+        // --------------------
+        // --- Initialize test
+        // --------------------
+        unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( "testdata/NChooserEventCoordinatorTest/TestValidSimTypeHIV.json" ) );
+
+        // -----------------------------------------------------------------
+        // --- Test that HIV version works with HIV sim
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::HIV_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorHIV hiv_nchooser;
+            bool ret = hiv_nchooser.Configure( p_config.get() );
+            CHECK( ret );
+        }
+        catch( DetailedException& de )
+        {
+            PrintDebug( de.GetMsg() );
+            CHECK( false );
+        }
+
+        // -----------------------------------------------------------------
+        // --- Test that HIV version does not work with STI sim
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::STI_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorHIV hiv_nchooser;
+            bool ret = hiv_nchooser.Configure( p_config.get() );
+            CHECK( false );
+        }
+        catch( DetailedException& )
+        {
+            CHECK( true );
+        }
+
+        // -----------------------------------------------------------------
+        // --- Test that HIV version does not work with GENERIC
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::GENERIC_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorHIV hiv_nchooser;
+            bool ret = hiv_nchooser.Configure( p_config.get() );
+            CHECK( false );
+        }
+        catch( DetailedException& )
+        {
+            CHECK( true );
+        }
+
+        // -----------------------------------------------------------------
+        // --- Test that HIV version does not work with other sim type
+        // -----------------------------------------------------------------
+        m_pSimulationConfig->sim_type = SimType::TB_SIM;
+
+        try
+        {
+            NChooserEventCoordinatorHIV hiv_nchooser;
+            bool ret = hiv_nchooser.Configure( p_config.get() );
+            CHECK( false );
+        }
+        catch( DetailedException& )
+        {
+            CHECK( true );
         }
     }
 
@@ -281,13 +446,13 @@ SUITE(NChooserEventCoordinatorTest)
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestNoNumTargeted)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/NChooserEventCoordinatorTest/TestNoNumTargeted.json",
-            "Variable or parameter 'Num_Targeted_Males' with value 0 is incompatible with variable or parameter 'Age_Ranges_Years' with value 0. Num_Targeted_Males, Num_Targeted_Females, and Age_Range_Years must have the same number of elements, but not zero.  There should be one age range for each number targeted." );
+            "The arrays 'Age_Range_Years', 'Num_Targeted_Males', and 'Num_Targeted_Females' have zero elements.\nNum_Targeted_Males, Num_Targeted_Females, and Age_Range_Years must have the same number of elements, but not zero.  There must be one age range for each number targeted." );
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidNumTargeted)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/NChooserEventCoordinatorTest/TestInvalidNumTargeted.json",
-            "Variable or parameter 'Num_Targeted' with value 4 is incompatible with variable or parameter 'Age_Ranges_Years' with value 1. Num_Targeted and Age_Range_Years must have the same number of elements, but not zero.  There should be one age range for each number targeted." );
+            "The number of elements in 'Num_Targeted'(=4) is not the same as 'Age_Ranges_Years'(=1).\n'Num_Targeted' and 'Age_Range_Years' must have the same number of elements, but not zero.  There must be one age range for each number targeted." );
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidNumTargetedZeroValues)
@@ -305,19 +470,19 @@ SUITE(NChooserEventCoordinatorTest)
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidNumTargetedMales)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/NChooserEventCoordinatorTest/TestInvalidNumTargetedMales.json",
-            "Variable or parameter 'Num_Targeted_Males' with value 1 is incompatible with variable or parameter 'Age_Ranges_Years' with value 2. Num_Targeted_Males, Num_Targeted_Females, and Age_Range_Years must have the same number of elements, but not zero.  There should be one age range for each number targeted." );
+            "The number of elements in 'Num_Targeted_Males' is 1.\nThe number of elements in 'Num_Targeted_Females' is 2.\nThe number of elements in 'Age_Range_Years' is 2.\n'Num_Targeted_Males', 'Num_Targeted_Females', and 'Age_Range_Years' must have the same number of elements, but not zero.  There must be one age range for each number targeted." );
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidNumTargetedFemales)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/NChooserEventCoordinatorTest/TestInvalidNumTargetedFemales.json",
-            "Variable or parameter 'Num_Targeted_Males' with value 2 is incompatible with variable or parameter 'Age_Ranges_Years' with value 2. Num_Targeted_Males, Num_Targeted_Females, and Age_Range_Years must have the same number of elements, but not zero.  There should be one age range for each number targeted." );
+            "The number of elements in 'Num_Targeted_Males' is 2.\nThe number of elements in 'Num_Targeted_Females' is 6.\nThe number of elements in 'Age_Range_Years' is 2.\n'Num_Targeted_Males', 'Num_Targeted_Females', and 'Age_Range_Years' must have the same number of elements, but not zero.  There must be one age range for each number targeted." );
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidNumAgeRanges)
     {
         TestHelper_ConfigureException( __LINE__, "testdata/NChooserEventCoordinatorTest/TestInvalidNumAgeRanges.json",
-            "Variable or parameter 'Num_Targeted_Males' with value 2 is incompatible with variable or parameter 'Age_Ranges_Years' with value 1. Num_Targeted_Males, Num_Targeted_Females, and Age_Range_Years must have the same number of elements, but not zero.  There should be one age range for each number targeted." );
+            "The number of elements in 'Num_Targeted_Males' is 2.\nThe number of elements in 'Num_Targeted_Females' is 2.\nThe number of elements in 'Age_Range_Years' is 1.\n'Num_Targeted_Males', 'Num_Targeted_Females', and 'Age_Range_Years' must have the same number of elements, but not zero.  There must be one age range for each number targeted." );
     }
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestInvalidAgeRange)
