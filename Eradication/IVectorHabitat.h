@@ -13,6 +13,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ISerializable.h"
 #include "VectorEnums.h"
 
+class Configuration;
+
 namespace Kernel
 {
     // Current timestep and immediately previous for total larva counts
@@ -26,6 +28,8 @@ namespace Kernel
 
     struct IVectorHabitat : ISerializable
     {
+        virtual bool Configure( const Configuration* inputJson ) = 0;
+
         virtual void Update(float dt, INodeContext* node) = 0;
 
         virtual VectorHabitatType::Enum  GetVectorHabitatType()                   const = 0;
@@ -35,7 +39,7 @@ namespace Kernel
 
         virtual void                     AddLarva(int32_t larva, float progress) = 0;
         virtual void                     AddEggs(int32_t eggs) = 0;
-        virtual void                     IncrementMaxLarvalCapacity(float) = 0;
+        virtual void                     SetMaximumLarvalCapacity(float) = 0;
 
         virtual float                    GetOvipositionTrapKilling()     const = 0;
         virtual float                    GetArtificialLarvalMortality()  const = 0;

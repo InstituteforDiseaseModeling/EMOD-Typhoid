@@ -11558,7 +11558,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
-							"PIECEWISE_MONTHLY",
+							"LINEAR_SPLINE",
 							"ALL_HABITATS"
 						],
 						"description" : "The larval habitat type targeted for larvicide. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
@@ -12849,7 +12849,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
-							"PIECEWISE_MONTHLY",
+							"LINEAR_SPLINE",
 							"ALL_HABITATS"
 						],
 						"description" : "The oviposition habitat type targeted by oviposition traps. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
@@ -13219,7 +13219,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
-							"PIECEWISE_MONTHLY",
+							"LINEAR_SPLINE",
 							"ALL_HABITATS"
 						],
 						"description" : "The habitat type for which the larval habitat is scaled. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
@@ -13661,7 +13661,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
-							"PIECEWISE_MONTHLY",
+							"LINEAR_SPLINE",
 							"ALL_HABITATS"
 						],
 						"description" : "The larval habitat type targeted for habitat reduction. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",

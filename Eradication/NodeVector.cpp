@@ -680,7 +680,7 @@ namespace Kernel
         return m_vector_lifecycle_probabilities;
     }
 
-    IVectorHabitat* NodeVector::GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type )
+    IVectorHabitat* NodeVector::GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type, const Configuration* inputJson )
     {
         IVectorHabitat* habitat;
 
@@ -693,8 +693,11 @@ namespace Kernel
         }
         else
         {
+            release_assert( inputJson != nullptr );
+
             LOG_DEBUG_F( "%s: Creating new larval habitat with type %s for species %s.\n", __FUNCTION__, VectorHabitatType::pairs::lookup_key( type ), species.c_str() );
-            habitat = VectorHabitat::CreateHabitat( type, 0.0f );
+
+            habitat = VectorHabitat::CreateHabitat( type, inputJson );
             habitats.push_front( habitat );
         }
 

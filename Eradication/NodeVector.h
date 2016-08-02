@@ -40,7 +40,7 @@ namespace Kernel
         // INodeContext methods
         // IVectorNodeContext methods
         virtual VectorProbabilities* GetVectorLifecycleProbabilities() override;
-        virtual IVectorHabitat*      GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type) override;
+        virtual IVectorHabitat*      GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type, const Configuration* inputJson) override;
         virtual VectorHabitatList_t* GetVectorHabitatsBySpecies( std::string& species ) override;
         virtual float                GetLarvalHabitatMultiplier(VectorHabitatType::Enum type) const override;
 

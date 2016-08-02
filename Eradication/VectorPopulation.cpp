@@ -124,10 +124,10 @@ namespace Kernel
         for( auto habitat_param : species()->habitat_params.habitat_map )
         {
             VectorHabitatType::Enum type = habitat_param.first;
-            IVectorHabitat* habitat = ivnc->GetVectorHabitatBySpeciesAndType( species_ID, type );
-            float max_larval_capacity = habitat_param.second * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type);
+            IVectorHabitat* habitat = ivnc->GetVectorHabitatBySpeciesAndType( species_ID, type, habitat_param.second );
+            float max_larval_capacity = habitat->GetMaximumLarvalCapacity() * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type);
 
-            habitat->IncrementMaxLarvalCapacity(max_larval_capacity);
+            habitat->SetMaximumLarvalCapacity( max_larval_capacity );
 
             // TODO: probably it would be preferable to store the "Required_Habitat_Parameter" values
             //       as a map-by-Habitat_Type already in VectorSpeciesParameters.
@@ -1318,14 +1318,14 @@ namespace Kernel
         for ( auto cohort : EggQueues )
         {
             auto with_habitat = dynamic_cast<IVectorCohortWithHabitat*>(cohort);
-            with_habitat->SetHabitat( ivnc->GetVectorHabitatBySpeciesAndType( species_ID, with_habitat->GetHabitatType() ) );
+            with_habitat->SetHabitat( ivnc->GetVectorHabitatBySpeciesAndType( species_ID, with_habitat->GetHabitatType(), nullptr ) );
         }
 
         // For each cohort in LarvaQueues, look at it's habitat type and (re)wire it to the correct habitat instance.
         for ( auto cohort : LarvaQueues )
         {
             auto with_habitat = dynamic_cast<IVectorCohortWithHabitat*>(cohort);
-            with_habitat->SetHabitat( ivnc->GetVectorHabitatBySpeciesAndType( species_ID, with_habitat->GetHabitatType() ) );
+            with_habitat->SetHabitat( ivnc->GetVectorHabitatBySpeciesAndType( species_ID, with_habitat->GetHabitatType(), nullptr ) );
         }
     }
 

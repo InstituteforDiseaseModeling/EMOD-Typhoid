@@ -43,24 +43,8 @@ namespace Kernel
                         << " is not a valid VectorHabitatType.";
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
                 }
-                try
-                {
-                    NonNegativeFloat habitat_param = 0.0f;
-                    try {
-                        habitat_param = (NonNegativeFloat) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
-                    }
-                    catch( const json::Exception & )
-                    {
-                        throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, data->name.c_str(), json::QuickInterpreter( tvcs ), "Expected NUMBER" );
-                    }
-                    habitat_map.insert( std::make_pair( habitat_type, habitat_param ) );
-                }
-                catch( OutOfRangeException &except )
-                {
-                    LOG_WARN_F( "Out of range exception: %s(Rethrowing in more useful form.)\n", except.what() );
-                    throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
-                            habitat_type_string.c_str(), ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>()), 0 );
-                }
+                Configuration* json_copy = Configuration::CopyFromElement( tvcs );
+                habitat_map.insert( std::make_pair( habitat_type, json_copy ) );
             }
             LOG_DEBUG_F( "Found %d larval habitats\n", habitat_map.size() );
         }

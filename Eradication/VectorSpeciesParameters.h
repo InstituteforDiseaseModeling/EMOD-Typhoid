@@ -27,7 +27,7 @@ namespace Kernel
             LarvalHabitatParams() {}
             virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key ) override;
             virtual json::QuickBuilder GetSchema() override;
-            std::map< VectorHabitatType::Enum, float > habitat_map; 
+            std::map< VectorHabitatType::Enum, const Configuration* > habitat_map; 
     };
 
     class VectorSpeciesParameters : public JsonConfigurable

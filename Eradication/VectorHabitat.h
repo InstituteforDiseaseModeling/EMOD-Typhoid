@@ -15,18 +15,22 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "IVectorHabitat.h"
 #include "IArchive.h"
+#include "Configure.h"
+#include "InterpolatedValueMap.h"
 
 namespace Kernel
 {
     struct INodeContext;
     class  SimulationConfig;
 
-    class VectorHabitat : public IVectorHabitat
+    class VectorHabitat : public JsonConfigurable, public IVectorHabitat
     {
     public:
-        static IVectorHabitat* CreateHabitat( VectorHabitatType::Enum type, float max_capacity );
+        static IVectorHabitat* CreateHabitat( VectorHabitatType::Enum type, const Configuration* inputJson );
         virtual ~VectorHabitat();
         virtual void Update(float dt, INodeContext* node) override;
+
+        virtual bool Configure( const Configuration* inputJson );
 
         virtual VectorHabitatType::Enum  GetVectorHabitatType()                   const override;
         virtual float                    GetMaximumLarvalCapacity()               const override;
@@ -35,7 +39,7 @@ namespace Kernel
 
         virtual void                     AddLarva(int32_t larva, float progress) override;
         virtual void                     AddEggs(int32_t eggs) override;
-        virtual void                     IncrementMaxLarvalCapacity(float) override;
+        virtual void                     SetMaximumLarvalCapacity(float) override;
 
         virtual float                    GetOvipositionTrapKilling()     const override;
         virtual float                    GetArtificialLarvalMortality()  const override;
@@ -47,8 +51,7 @@ namespace Kernel
         virtual float GetLocalLarvalMortality(float species_aquatic_mortality, float progress) const override;
 
     protected:
-        explicit VectorHabitat();
-        VectorHabitat( VectorHabitatType::Enum type, float max_capacity );
+        VectorHabitat( VectorHabitatType::Enum type );
 
         virtual QueryResult QueryInterface( iid_t, void** ) override { return e_NOINTERFACE; }
         virtual int32_t AddRef() override { return 1; }
@@ -62,7 +65,7 @@ namespace Kernel
 
         const SimulationConfig* params() const;
 
-        DECLARE_SERIALIZABLE(VectorHabitat);
+        static void serialize(IArchive& ar, VectorHabitat* obj);
 
         VectorHabitatType::Enum  m_habitat_type;
         float                    m_max_larval_capacity;
@@ -86,9 +89,8 @@ namespace Kernel
     {
     public:
         virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
-        ConstantHabitat( VectorHabitatType::Enum type, float max_capacity );  //boring... inherit
+        ConstantHabitat();  //boring... inherit
     protected:
-        ConstantHabitat() {}
         DECLARE_SERIALIZABLE(ConstantHabitat);
     };
 
@@ -96,9 +98,8 @@ namespace Kernel
     {
     public:
         virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
-        TemporaryRainfallHabitat( VectorHabitatType::Enum type, float max_capacity );
+        TemporaryRainfallHabitat();
     protected:
-        TemporaryRainfallHabitat() {}
         DECLARE_SERIALIZABLE(TemporaryRainfallHabitat);
     };
 
@@ -106,9 +107,8 @@ namespace Kernel
     {
     public:
         virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
-        WaterVegetationHabitat( VectorHabitatType::Enum type, float max_capacity );
+        WaterVegetationHabitat();
     protected:
-        WaterVegetationHabitat() {}
         DECLARE_SERIALIZABLE(WaterVegetationHabitat);
     };
 
@@ -116,9 +116,8 @@ namespace Kernel
     {
     public:
         virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
-        HumanPopulationHabitat( VectorHabitatType::Enum type, float max_capacity );
+        HumanPopulationHabitat();
     protected:
-        HumanPopulationHabitat() {}
         DECLARE_SERIALIZABLE(HumanPopulationHabitat);
     };
 
@@ -126,25 +125,23 @@ namespace Kernel
     {
     public:
         virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
-        BrackishSwampHabitat( VectorHabitatType::Enum type, float max_capacity );
+        BrackishSwampHabitat();
     protected:
-        BrackishSwampHabitat() {}
         DECLARE_SERIALIZABLE(BrackishSwampHabitat);
     };
 
-    class PiecewiseMonthlyHabitat : public VectorHabitat
+    class LinearSplineHabitat : public VectorHabitat
     {
     public:
         virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
-        PiecewiseMonthlyHabitat( VectorHabitatType::Enum type, float max_capacity );
+        LinearSplineHabitat();
+
+        virtual bool Configure( const Configuration* inputJson );
 
     protected:
-        PiecewiseMonthlyHabitat();
-        
-        static std::vector<float> monthly_scales;
-
         float day_of_year;
+        InterpolatedValueMap capacity_distribution;
 
-        DECLARE_SERIALIZABLE(PiecewiseMonthlyHabitat);
+        DECLARE_SERIALIZABLE(LinearSplineHabitat);
     };
 }

@@ -23,25 +23,11 @@ static const char * _module = "VectorHabitat";
 
 namespace Kernel
 {
-    VectorHabitat::VectorHabitat( VectorHabitatType::Enum type, float max_capacity )
+    VectorHabitat::VectorHabitat( VectorHabitatType::Enum type )
         : m_habitat_type(type)
-        , m_max_larval_capacity(max_capacity)
+        , m_max_larval_capacity(0.0f)
         , m_current_larval_capacity(0.0f)
         , m_total_larva_count(2) // current timestep and previous.
-        , m_new_egg_count(0)
-        , m_oviposition_trap_killing(0.0f)
-        , m_artificial_larval_mortality(0.0f)
-        , m_larvicide_habitat_scaling(1.0f)
-        , m_rainfall_mortality(0.0f)
-        , m_egg_crowding_correction(0.0f)
-    {
-    }
-
-    VectorHabitat::VectorHabitat()
-        : m_habitat_type(VectorHabitatType::Enum(0))
-        , m_max_larval_capacity(0)
-        , m_current_larval_capacity(0.0f)
-        , m_total_larva_count(0)
         , m_new_egg_count(0)
         , m_oviposition_trap_killing(0.0f)
         , m_artificial_larval_mortality(0.0f)
@@ -55,31 +41,79 @@ namespace Kernel
     {
     }
 
-    IVectorHabitat* VectorHabitat::CreateHabitat( VectorHabitatType::Enum type, float max_capacity )
+    bool VectorHabitat::Configure( const Configuration* inputJson )
     {
+        if( m_habitat_type != VectorHabitatType::LINEAR_SPLINE )
+        {
+            const char* type_str = VectorHabitatType::pairs::lookup_key( m_habitat_type );
+            initConfigTypeMap( type_str, &m_max_larval_capacity, "TBD", 0.0f, FLT_MAX, 1E10 );
+
+        }
+        return JsonConfigurable::Configure( inputJson );
+    }
+
+    bool LinearSplineHabitat::Configure( const Configuration* inputJson )
+    {
+        initConfigTypeMap( "Max_Larval_Capacity", &m_max_larval_capacity, "TBD", 0.0f, FLT_MAX, 1E10 );
+        initConfigComplexType( "Capacity_Distribution_Per_Year", &capacity_distribution, "TBD" );
+
+        // -----------------------------------------------------------------------------------------------
+        // --- This is a little different.  It is assumed that the inputJson element is the entire element
+        // --- with the LINEAR_SPLINE as the name of the element.  Hence, we need to get the sub-elements
+        // --- for JsonConfigurable.
+        // -----------------------------------------------------------------------------------------------
+        Configuration* sub_element = nullptr;
+        if( inputJson != nullptr )
+        {
+            const char* type_str = VectorHabitatType::pairs::lookup_key( VectorHabitatType::LINEAR_SPLINE );
+            sub_element = Configuration::CopyFromElement( (*inputJson)[type_str] );
+        }
+        bool ret = VectorHabitat::Configure( sub_element );
+        if( ret && !JsonConfigurable::_dryrun )
+        {
+            if( capacity_distribution.size() < 1 )
+            {
+                throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, "Capacity_Distribution_Per_Year has zero values and must have at least one." );
+            }
+            if( capacity_distribution.begin()->first != 0.0 )
+            {
+                throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, "The first entry in the Capacity_Distribution_Per_Year.Times array must be zero." );
+            }
+        }
+        delete sub_element;
+        sub_element = nullptr;
+        return ret;
+    }
+
+    IVectorHabitat* VectorHabitat::CreateHabitat( VectorHabitatType::Enum type, const Configuration* inputJson )
+    {
+        IVectorHabitat* p_habitat = nullptr;
         switch ( type )
         {
             case VectorHabitatType::CONSTANT:
-                return new ConstantHabitat(type, max_capacity);
-
+                p_habitat = new ConstantHabitat();
+                break;
             case VectorHabitatType::TEMPORARY_RAINFALL:
-                return new TemporaryRainfallHabitat(type, max_capacity);
-
+                p_habitat = new TemporaryRainfallHabitat();
+                break;
             case VectorHabitatType::WATER_VEGETATION:
-                return new WaterVegetationHabitat(type, max_capacity);
-
+                p_habitat = new WaterVegetationHabitat();
+                break;
             case VectorHabitatType::HUMAN_POPULATION:
-                return new HumanPopulationHabitat(type, max_capacity);
-
+                p_habitat = new HumanPopulationHabitat();
+                break;
             case VectorHabitatType::BRACKISH_SWAMP: 
-                return new BrackishSwampHabitat(type, max_capacity);
-
-            case VectorHabitatType::PIECEWISE_MONTHLY:
-                return new PiecewiseMonthlyHabitat(type, max_capacity);
-
+                p_habitat = new BrackishSwampHabitat();
+                break;
+            case VectorHabitatType::LINEAR_SPLINE:
+                p_habitat = new LinearSplineHabitat();
+                break;
             default:
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "type", type, VectorHabitatType::pairs::lookup_key(type) );
         }
+        p_habitat->Configure( inputJson );
+
+        return p_habitat;
     }
 
     void VectorHabitat::Update(float dt, INodeContext* node)
@@ -197,28 +231,24 @@ namespace Kernel
         }
     }
 
-    PiecewiseMonthlyHabitat::PiecewiseMonthlyHabitat()
-        : VectorHabitat()
-        , day_of_year(0.0f)
+    void LinearSplineHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
     {
-        // no-op
-    }
+        float scale = capacity_distribution.getValueLinearInterpolation( day_of_year );
+        float area = params()->lloffset * params()->lloffset;
+        float new_capacity = m_max_larval_capacity * scale * area;
 
-    void PiecewiseMonthlyHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
-    {
-        LOG_DEBUG_F("Habitat type = PIECEWISE_MONTHLY, Max larval capacity = %f\n", m_max_larval_capacity);
-        float days_per_month = DAYSPERYEAR / float(MONTHSPERYEAR);
-        float f_month = day_of_year / days_per_month;
-        int month = int(f_month);
-        float date = f_month - month;
-        month = month % MONTHSPERYEAR;
-        LOG_INFO_F("Month=%d, Date=%0.2f, t=%0.2f\n", month, date, day_of_year);
-
-        float scale = (1-date) * monthly_scales.at(month) + date * monthly_scales.at((month+1) % MONTHSPERYEAR);
-        m_current_larval_capacity = m_max_larval_capacity * scale * params()->lloffset * params()->lloffset;
-        LOG_INFO_F("Scale=%0.2f, habitat=%0.2f\n", scale, m_current_larval_capacity);
+        if( m_current_larval_capacity != new_capacity )
+        {
+            LOG_INFO_F("LinearSplineHabitat: Habitat_Changed - day_of_year=%f  area = %f  scale=%f  max_capacity=%f  current_capacity=%f  new_capacity=%f\n", 
+                day_of_year, area, scale, m_max_larval_capacity, m_current_larval_capacity,new_capacity);
+            m_current_larval_capacity = new_capacity;
+        }
 
         day_of_year += dt;
+        if( day_of_year >= DAYSPERYEAR )
+        {
+            day_of_year = 0.0;
+        }
     }
 
     void VectorHabitat::UpdateLarvalProbabilities(float dt, INodeContext* node)
@@ -334,10 +364,10 @@ namespace Kernel
         LOG_DEBUG_F("Adding %d newly laid eggs.  Total now equals %d.\n", eggs,  m_new_egg_count);
     }
 
-    void VectorHabitat::IncrementMaxLarvalCapacity(float capacity)
+    void VectorHabitat::SetMaximumLarvalCapacity(float capacity)
     {
-        m_max_larval_capacity += capacity;
-        LOG_DEBUG_F("Adding %f to maximum larval capacity.  Total now equals %f.\n", capacity,  m_max_larval_capacity);
+        m_max_larval_capacity = capacity;
+        LOG_DEBUG_F("Setting %f to maximum larval capacity.  Total now equals %f.\n", capacity,  m_max_larval_capacity);
     }
 
     float VectorHabitat::GetOvipositionTrapKilling() const
@@ -430,7 +460,6 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
-    REGISTER_SERIALIZABLE(VectorHabitat);
 
     void VectorHabitat::serialize(IArchive& ar, VectorHabitat* obj)
     {
@@ -478,45 +507,39 @@ namespace Kernel
         ar.endArray();
     }
 
-    ConstantHabitat::ConstantHabitat( VectorHabitatType::Enum type, float max_capacity )
-        : VectorHabitat(type, max_capacity)
+    ConstantHabitat::ConstantHabitat()
+        : VectorHabitat(VectorHabitatType::CONSTANT)
     {
     }
 
-    TemporaryRainfallHabitat::TemporaryRainfallHabitat( VectorHabitatType::Enum type, float max_capacity )
-        : VectorHabitat(type, max_capacity)
-    {
-        /* TODO: configuration of habitat decay parameters etc. */
-    }
-
-    WaterVegetationHabitat::WaterVegetationHabitat( VectorHabitatType::Enum type, float max_capacity )
-        : VectorHabitat(type, max_capacity)
+    TemporaryRainfallHabitat::TemporaryRainfallHabitat()
+        : VectorHabitat(VectorHabitatType::TEMPORARY_RAINFALL)
     {
         /* TODO: configuration of habitat decay parameters etc. */
     }
 
-    HumanPopulationHabitat::HumanPopulationHabitat( VectorHabitatType::Enum type, float max_capacity )
-        : VectorHabitat(type, max_capacity)
+    WaterVegetationHabitat::WaterVegetationHabitat()
+        : VectorHabitat(VectorHabitatType::WATER_VEGETATION)
+    {
+        /* TODO: configuration of habitat decay parameters etc. */
+    }
+
+    HumanPopulationHabitat::HumanPopulationHabitat()
+        : VectorHabitat(VectorHabitatType::HUMAN_POPULATION)
     {
     }
 
-    BrackishSwampHabitat::BrackishSwampHabitat( VectorHabitatType::Enum type, float max_capacity )
-        : VectorHabitat(type, max_capacity)
+    BrackishSwampHabitat::BrackishSwampHabitat()
+        : VectorHabitat(VectorHabitatType::BRACKISH_SWAMP)
     {
         /* TODO: configuration of habitat decay parameters, threshold, rainfall mortality, etc. */
     }
 
-    static const float s[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.2f, 1.0f, 1.0f, 1.0f, 0.5f, 0.2f, 0.0f, 0.0f };
-    std::vector<float> PiecewiseMonthlyHabitat::monthly_scales(s, s + MONTHSPERYEAR);
-
-    PiecewiseMonthlyHabitat::PiecewiseMonthlyHabitat( VectorHabitatType::Enum type, float max_capacity )
-        : VectorHabitat(type, max_capacity)
+    LinearSplineHabitat::LinearSplineHabitat()
+        : VectorHabitat(VectorHabitatType::LINEAR_SPLINE)
         , day_of_year(0)
+        , capacity_distribution(0.0f,365.0f,0.0f,FLT_MAX)
     {
-        for (auto h : monthly_scales)
-        {
-            LOG_DEBUG_F("PiecewiseMonthlyHabitat: monthly capacity = %0.2f\n", h);
-        }
     }
 
     REGISTER_SERIALIZABLE(ConstantHabitat);
@@ -559,12 +582,13 @@ namespace Kernel
         // no-op
     }
 
-    REGISTER_SERIALIZABLE(PiecewiseMonthlyHabitat);
+    REGISTER_SERIALIZABLE(LinearSplineHabitat);
 
-    void PiecewiseMonthlyHabitat::serialize(IArchive& ar, PiecewiseMonthlyHabitat* obj)
+    void LinearSplineHabitat::serialize(IArchive& ar, LinearSplineHabitat* obj)
     {
         VectorHabitat::serialize(ar, obj);
-        PiecewiseMonthlyHabitat& habitat = *obj;
+        LinearSplineHabitat& habitat = *obj;
         ar.labelElement("day_of_year") & habitat.day_of_year;
+        ar.labelElement("capacity_distribution") & habitat.capacity_distribution;
     }
 }
