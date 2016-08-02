@@ -485,7 +485,7 @@ namespace Kernel
 
     float TargetedDistribution::GetCurrentInDays( const IdmDateTime& rDateTime ) const
     {
-        return rDateTime.Year() * DAYSPERYEAR;
+        return rDateTime.time;
     }
 
     void TargetedDistribution::CreateAgeAndGenderList( const IdmDateTime& rDateTime, float dt )
