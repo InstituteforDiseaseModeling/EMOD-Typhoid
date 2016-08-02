@@ -242,6 +242,7 @@
     <ClInclude Include="Sugar.h" />
     <ClInclude Include="suids.hpp" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Timers.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="ValidationLog.h" />
     <ClInclude Include="version_info.h" />

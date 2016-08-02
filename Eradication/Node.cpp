@@ -710,12 +710,11 @@ namespace Kernel
             initConfigTypeMap( "Birth_Rate_Sinusoidal_Forcing_Amplitude", &birth_rate_sinusoidal_forcing_amplitude, Sinusoidal_Birth_Rate_Forcing_Amplitude_DESC_TEXT, 0.0f, 1.0f, 0.0f, "Birth_Rate_Time_Dependence", "SINUSOIDAL_FUNCTION_OF_TIME" );
             initConfigTypeMap( "Birth_Rate_Sinusoidal_Forcing_Phase", &birth_rate_sinusoidal_forcing_phase, Sinusoidal_Birth_Rate_Forcing_Phase_DESC_TEXT, 0.0f, 365.0f, 0.0f, "Birth_Rate_Time_Dependence", "SINUSOIDAL_FUNCTION_OF_TIME" );
         }
-        if ((vital_birth_time_dependence == VitalBirthTimeDependence::ANNUAL_BOXCAR_FUNCTION) || JsonConfigurable::_dryrun )
-        {
-            initConfigTypeMap( "Birth_Rate_Boxcar_Forcing_Amplitude", &birth_rate_boxcar_forcing_amplitude, Boxcar_Birth_Rate_Forcing_Amplitude_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
-            initConfigTypeMap( "Birth_Rate_Boxcar_Forcing_Start_Time", &birth_rate_boxcar_start_time, Boxcar_Birth_Rate_Forcing_Start_Time_DESC_TEXT, 0.0f, 365.0f, 0.0f );
-            initConfigTypeMap( "Birth_Rate_Boxcar_Forcing_End_Time", &birth_rate_boxcar_end_time, Boxcar_Birth_Rate_Forcing_End_Time_DESC_TEXT, 0.0f, 365.0f, 0.0f );
-        }
+
+        
+        initConfigTypeMap( "Birth_Rate_Boxcar_Forcing_Amplitude", &birth_rate_boxcar_forcing_amplitude, Boxcar_Birth_Rate_Forcing_Amplitude_DESC_TEXT, 0.0f, FLT_MAX, 0.0f, "Birth_Rate_Time_Dependence", "ANNUAL_BOXCAR_FUNCTION" );
+        initConfigTypeMap( "Birth_Rate_Boxcar_Forcing_Start_Time", &birth_rate_boxcar_start_time, Boxcar_Birth_Rate_Forcing_Start_Time_DESC_TEXT, 0.0f, 365.0f, 0.0f, "Birth_Rate_Time_Dependence", "ANNUAL_BOXCAR_FUNCTION" );
+        initConfigTypeMap( "Birth_Rate_Boxcar_Forcing_End_Time", &birth_rate_boxcar_end_time, Boxcar_Birth_Rate_Forcing_End_Time_DESC_TEXT, 0.0f, 365.0f, 0.0f, "Birth_Rate_Time_Dependence", "ANNUAL_BOXCAR_FUNCTION" );
 
         if( config && (*config).Exist( "Disable_IP_Whitelist" ) && (*config)["Disable_IP_Whitelist"].As<json::Number>() == 1 )
         {

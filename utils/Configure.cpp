@@ -1294,10 +1294,7 @@ namespace Kernel
                     LOG_INFO_F( "Using the default value ( \"%s\" : <empty string vector> ) for unspecified string vector parameter.\n", key.c_str() );
                 }
 
-                if( _track_missing )
-                {
-                    missing_parameters_set.insert(key);
-                }
+                handleMissingParam( key );
             }
 
             auto allowed_values = vectorStringConstraintsTypeMap[ key ];
@@ -1340,10 +1337,7 @@ namespace Kernel
                     LOG_INFO_F( "Using the default value ( \"%s\" : <empty string Vector2D> ) for unspecified string Vector2D parameter.\n", key.c_str() );
                 }
 
-                if( _track_missing )
-                {
-                    missing_parameters_set.insert(key);
-                }
+                handleMissingParam( key );
             }
             auto allowed_values = vector2dStringConstraintsTypeMap[ key ];
             for( auto &candidate_vector : *(entry.second) )

@@ -38,7 +38,7 @@ namespace Kernel
         initSimTypes(1, "HIV_SIM");
 
         // in a refactor, these might be lifted to a common HIVIntervention class
-        abortStates.value_source = "Valid_Cascade_States.*";
+        abortStates.value_source = "<configuration>::Valid_Cascade_States.*";
 
         initConfigTypeMap("Abort_States", &abortStates, HIV_Abort_States_DESC_TEXT);
         initConfigTypeMap("Cascade_State", &cascadeState, HIV_Cascade_State_DESC_TEXT);
