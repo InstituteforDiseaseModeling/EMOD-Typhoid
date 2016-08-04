@@ -499,6 +499,17 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
         initConfigTypeMap( "Typhoid_Environmental_Peak_Multiplier", &typhoid_environmental_peak_multiplier, "Typhoid_Environmental_Peak_Multiplier.", 0, 10000, 3 );
 		initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
 		initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1983", &typhoid_exposure_1983, "Typhoid_Exposure_1983.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1984", &typhoid_exposure_1984, "Typhoid_Exposure_1984.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1985", &typhoid_exposure_1985, "Typhoid_Exposure_1985.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1986", &typhoid_exposure_1986, "Typhoid_Exposure_1986.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1987", &typhoid_exposure_1987, "Typhoid_Exposure_1987.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1988", &typhoid_exposure_1988, "Typhoid_Exposure_1988.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1989", &typhoid_exposure_1989, "Typhoid_Exposure_1989.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1990", &typhoid_exposure_1990, "Typhoid_Exposure_1990.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1991", &typhoid_exposure_1991, "Typhoid_Exposure_1991.", 0, 1, 0.5);	
+
+	
 	}
 #endif 
     LOG_DEBUG( "Calling main Configure...\n" );

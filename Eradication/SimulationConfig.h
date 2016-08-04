@@ -367,6 +367,18 @@ namespace Kernel
         //float typhoid_environmental_amplification;
         float typhoid_environmental_peak_multiplier;
 
+		float typhoid_exposure_1983;
+		float typhoid_exposure_1984;
+		float typhoid_exposure_1985;
+		float typhoid_exposure_1986;
+		float typhoid_exposure_1987;
+		float typhoid_exposure_1988;
+		float typhoid_exposure_1989;
+		float typhoid_exposure_1990;
+		float typhoid_exposure_1991;
+
+
+
         ///////////////////////////////////////////
         SimulationConfig();
         virtual ~SimulationConfig();

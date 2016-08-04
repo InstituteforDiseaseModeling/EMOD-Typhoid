@@ -1145,7 +1145,7 @@ namespace Kernel
         return demographicsContext;
     }
 
-    IdmDateTime Simulation::GetSimulationTime() const
+    IdmDateTime Simulation:: GetSimulationTime() const
     {
         return currentTime;
     }
