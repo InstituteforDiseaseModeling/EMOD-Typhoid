@@ -46,7 +46,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);..\cajun\include;..\jsonspirit;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;$(BOOST_PATH)%(AdditionalIncludeDirectories);..\cajun\include;..\jsonspirit;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -61,7 +61,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;..\cajun\include;..\jsonspirit;..\campaign\;..\utils\;..\interventions\;..\rapidjson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;$(BOOST_PATH);..\cajun\include;..\jsonspirit;..\campaign\;..\utils\;..\interventions\;..\rapidjson\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>

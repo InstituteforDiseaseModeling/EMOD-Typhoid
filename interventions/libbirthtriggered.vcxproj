@@ -51,14 +51,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBAIRBORNE_EXPORTS;INTERVENTIONS_AS_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;$(BOOST_PATH)%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;..\x64\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;..\x64\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>campaign.lib cajun.lib utils.lib %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;msmpi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcpmt.lib</IgnoreSpecificDefaultLibraries>
@@ -72,7 +72,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBAIRBORNE_EXPORTS;INTERVENTIONS_AS_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;..\campaign;C:\boost\boost_1_51_0;..\cajun\Include;..\jsonspirit;..\utils;..\Eradication;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;..\campaign;$(BOOST_PATH);..\cajun\Include;..\jsonspirit;..\utils;..\Eradication;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -80,7 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;%(AdditionalLibraryDirectories);..\x64\Release\;..\x64\ReleaseTB</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Dependencies\ComputeClusterPack\Lib\amd64;%(AdditionalLibraryDirectories);..\x64\Release\;..\x64\ReleaseTB</AdditionalLibraryDirectories>
       <AdditionalOptions>cajun.lib utils.lib campaign.lib msmpi.lib libgeneric_static.lib jsonspirit.lib libvector_static.lib libmalaria_static.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>

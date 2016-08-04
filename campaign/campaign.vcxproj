@@ -68,7 +68,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_TB;ENABLE_TBHIV;IDM_EXPORT;WIN32;_SCL_SECURE_NO_WARNINGS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\boost\boost_1_51_0;..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_PATH);..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>/D_NEW_CAMPAIGNS_ONLY %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -85,7 +85,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_TB;ENABLE_TBHIV;IDM_EXPORT;WIN32;_SCL_SECURE_NO_WARNINGS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\boost\boost_1_51_0;..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_PATH);..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -108,7 +108,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_TB;ENABLE_TBHIV;IDM_EXPORT;WIN32;_SCL_SECURE_NO_WARNINGS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\boost\boost_1_51_0;..\cajun\Include;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_PATH);..\cajun\Include;..\Eradication\;..\utils\;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
