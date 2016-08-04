@@ -24,6 +24,16 @@ namespace Kernel {
     : NonNegativeFloat( initValue )
     {
     }
+
+    CountdownTimer& CountdownTimer::operator=( float val )
+    {
+        // ----------------------------------------------------------------
+        // --- We override this operator to ensure that a copy constructor
+        // --- isn't called and wipe out the "handle" / callback
+        // ----------------------------------------------------------------
+        NonNegativeFloat::operator=( val );
+        return *this;
+    }
             
     void CountdownTimer::Decrement( float dt )
     {
@@ -45,10 +55,10 @@ namespace Kernel {
     //REGISTER_SERIALIZABLE(CountdownTimer);
     void CountdownTimer::serialize(IArchive& ar, CountdownTimer& obj)
     {
-        ar.startObject();
-        CountdownTimer& ct = obj;
-        //ar.labelElement("timer_value") & ct._timer_value;
-        ar.endObject();
+        NonNegativeFloat::serialize( ar, obj );
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // !!! Owner of this class is responsible for updating "handle"
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 }
 

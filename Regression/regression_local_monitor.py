@@ -150,8 +150,8 @@ class Monitor(threading.Thread):
     def compareCsvOutputs( self, ref_path, test_path, failures ):
         # print( "Comparing CSV files: ref = " + ref_path + ", test = " + test_path )
         # Do Md5 comp first.
-        ref_md5 = md5_hash_of_file( ref_path )
-        test_md5 = md5_hash_of_file( test_path )
+        ref_md5 = ru.md5_hash_of_file( ref_path )
+        test_md5 = ru.md5_hash_of_file( test_path )
         if ref_md5 == test_md5:
             # print( "CSV files passed MD5 comparison test." )
             return False, ""
@@ -161,8 +161,8 @@ class Monitor(threading.Thread):
 
         # print( "CSV files failed MD5 comparison test." )
         # First (md5) test failed. Do line length, then line-by-line
-        ref_length = file_len( ref_path )
-        test_length = file_len( test_path )
+        ref_length = ru.file_len( ref_path )
+        test_length = ru.file_len( test_path )
         if ref_length != test_length:
             fail_validation = True
             err_msg = "Reference output {0} has {1} lines but test output {2} has {3} lines".format( ref_path, ref_length, test_path, test_length )
@@ -192,8 +192,8 @@ class Monitor(threading.Thread):
         return fail_validation, failure_txt
 
     def compareOtherOutputs( self, report_name, ref_path, test_path, failures ):
-        ref_md5 = md5_hash_of_file( ref_path )
-        test_md5 = md5_hash_of_file( test_path )
+        ref_md5 = ru.md5_hash_of_file( ref_path )
+        test_md5 = ru.md5_hash_of_file( test_path )
         if ref_md5 == test_md5:
             # print( "CSV files passed MD5 comparison test." )
             return False, ""

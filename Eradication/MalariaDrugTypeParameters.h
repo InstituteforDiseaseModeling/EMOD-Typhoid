@@ -25,7 +25,7 @@ namespace Kernel
         ENUM_VALUE_SPEC(Tafenoquine             , 9))
 
     class SimulationConfig;
-    class DoseMap : public JsonConfigurable
+    class DoseMap : public JsonConfigurable, public IComplexJsonConfigurable
     {
         // We need the following two lines because we inherit from JsonConfigurable
         // which provides a little more functionality than is needed by these little
@@ -37,8 +37,8 @@ namespace Kernel
             DoseMap() {}
             typedef std::map<float,float> dose_map_t;
             dose_map_t fractional_dose_by_upper_age;
-            virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key );
-            virtual json::QuickBuilder GetSchema();
+            virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key ) override;
+            virtual json::QuickBuilder GetSchema() override;
     };
 
     class MalariaDrugTypeParameters : public JsonConfigurable

@@ -1029,9 +1029,6 @@
     <ClCompile Include="ReferenceTrackingEventCoordinatorHIV.cpp">
       <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
     </ClCompile>
-    <ClCompile Include="..\interventions\RevaccinatableVaccine.cpp">
-      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
-    </ClCompile>
     <ClCompile Include="..\interventions\WaningEffectMap.cpp">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
     </ClCompile>
@@ -1046,6 +1043,9 @@
     </ClCompile>
     <ClCompile Include="NChooserEventCoordinatorSTI.cpp">
       <Filter>Source Files\Campaign\EventCoordinator\STI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\interventions\ControlledVaccine.cpp">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2247,9 +2247,6 @@
     <ClInclude Include="ReferenceTrackingEventCoordinatorHIV.h">
       <Filter>Source Files\Campaign\EventCoordinator\STI\HIV</Filter>
     </ClInclude>
-    <ClInclude Include="..\interventions\RevaccinatableVaccine.h">
-      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
-    </ClInclude>
     <ClInclude Include="..\interventions\WaningEffectMap.h">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
     </ClInclude>
@@ -2303,6 +2300,9 @@
     </ClInclude>
     <ClInclude Include="..\utils\Serialization.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\interventions\ControlledVaccine.h">
+      <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

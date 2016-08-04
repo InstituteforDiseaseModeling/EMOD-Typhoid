@@ -20,14 +20,14 @@ namespace Kernel
 {
     struct IIndividualHumanEventContext;
 
-    class IDMAPI PropertyRestrictions : public JsonConfigurable
+    class IDMAPI PropertyRestrictions : public JsonConfigurable, public IComplexJsonConfigurable
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
     public:
         PropertyRestrictions();
-        virtual void ConfigureFromJsonAndKey( const Configuration *, const std::string &key );
-        virtual json::QuickBuilder GetSchema();
+        virtual void ConfigureFromJsonAndKey( const Configuration *, const std::string &key ) override;
+        virtual json::QuickBuilder GetSchema() override;
 
         int Size() const;
         void Add( std::map< std::string, std::string >& rMap );

@@ -137,5 +137,8 @@
     <ClCompile Include="ConcurrencyParametersTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WaningEffectMapTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

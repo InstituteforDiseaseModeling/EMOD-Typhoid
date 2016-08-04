@@ -108,19 +108,22 @@ namespace Kernel
         initConfigTypeMap("Treatment_Fraction", &treatment_fraction, SD_Treatment_Fraction_DESC_TEXT, 1.0f );
         initConfigTypeMap("Days_To_Diagnosis",  &days_to_diagnosis, SD_Days_To_Diagnosis_DESC_TEXT,   FLT_MAX, 0  );
         initConfigTypeMap("Cost_To_Consumer",   &cost_per_unit, SD_Cost_To_Consumer_DESC_TEXT,        0);
+
+        days_to_diagnosis.handle = std::bind( &SimpleDiagnostic::Callback, this, std::placeholders::_1 );
     }
 
     SimpleDiagnostic::SimpleDiagnostic( const SimpleDiagnostic& master )
         :BaseIntervention( master )
+        , parent(nullptr)
+        , diagnostic_type(master.diagnostic_type)
+        , base_specificity(master.base_specificity)
+        , base_sensitivity(master.base_sensitivity)
+        , treatment_fraction(master.treatment_fraction)
+        , days_to_diagnosis(master.days_to_diagnosis)
+        , positive_diagnosis_config(master.positive_diagnosis_config)
+        , positive_diagnosis_event(master.positive_diagnosis_event)
     {
-        diagnostic_type = master.diagnostic_type;
-        base_specificity = master.base_specificity;
-        base_sensitivity = master.base_sensitivity;
-        treatment_fraction = master.treatment_fraction;
-        days_to_diagnosis = master.days_to_diagnosis;
-        //LOG_DEBUG_F( "Days_To_Diagnosis = %f\n", (float) days_to_diagnosis );
-        positive_diagnosis_event = master.positive_diagnosis_event;
-        positive_diagnosis_config = master.positive_diagnosis_config;
+        days_to_diagnosis.handle = std::bind( &SimpleDiagnostic::Callback, this, std::placeholders::_1 );
     }
 
     bool SimpleDiagnostic::Distribute(
@@ -128,8 +131,6 @@ namespace Kernel
         ICampaignCostObserver * const pICCO
     )
     {
-        days_to_diagnosis.handle = std::bind( &SimpleDiagnostic::Callback, this, std::placeholders::_1 );
-
         parent = context->GetParent();
         LOG_DEBUG_F( "Individual %d is getting tested and positive_diagnosis_event = %s.\n", parent->GetSuid().data, positive_diagnosis_event.c_str() );
 

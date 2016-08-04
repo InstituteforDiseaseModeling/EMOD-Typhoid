@@ -55,7 +55,7 @@ namespace Kernel
     bool HIVDelayedIntervention::Configure( const Configuration * inputJson )
     {
         // should be lifted to HIVIntervention class later
-        abortStates.value_source = "Valid_Cascade_States.*";
+        abortStates.value_source = "<configuration>::Valid_Cascade_States.*";
         initConfigTypeMap("Abort_States", &abortStates, HIV_Delayed_Intervention_Abort_States_DESC_TEXT);
         initConfigTypeMap("Cascade_State", &cascadeState, HIV_Delayed_Intervention_Cascade_States_DESC_TEXT);
         initConfigTypeMap("Expiration_Period", &days_remaining, HIV_Delayed_Intervention_Expiration_Period_DESC_TEXT, 0, FLT_MAX, FLT_MAX);
