@@ -42,7 +42,7 @@ namespace Kernel
         virtual VectorProbabilities* GetVectorLifecycleProbabilities() override;
         virtual IVectorHabitat*      GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type, const Configuration* inputJson) override;
         virtual VectorHabitatList_t* GetVectorHabitatsBySpecies( std::string& species ) override;
-        virtual float                GetLarvalHabitatMultiplier(VectorHabitatType::Enum type) const override;
+        virtual float                GetLarvalHabitatMultiplier(VectorHabitatType::Enum type, const std::string& species ) const override;
 
         virtual IIndividualHuman* processImmigratingIndividual(IIndividualHuman*) override;
         virtual IIndividualHuman* addNewIndividual(float = 1.0f, float = 0.0f, int = 0, int = 0, float = 1.0f, float = 1.0f, float = 1.0f, float = 0.0f) override;
@@ -84,7 +84,7 @@ namespace Kernel
 
         VectorProbabilities* m_vector_lifecycle_probabilities;
 
-        std::map<VectorHabitatType::Enum,float> larval_habitat_multiplier;
+        std::map<VectorHabitatType::Enum,std::map<std::string,float>> larval_habitat_multiplier;
 
         bool vector_mortality;
         int32_t mosquito_weight;
@@ -96,7 +96,7 @@ namespace Kernel
 
         virtual void setupEventContextHost() override;
         virtual void InitializeVectorPopulation(VectorPopulation* vp);
-        float HabitatMultiplierByType(VectorHabitatType::Enum type) const;
+        float HabitatMultiplierByType(VectorHabitatType::Enum type, const std::string& species) const;
         void VectorMigrationBasedOnFiles();
         void VectorMigrationToAdjacentNodes();
             

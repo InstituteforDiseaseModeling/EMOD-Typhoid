@@ -36,7 +36,7 @@ namespace Kernel
         virtual VectorProbabilities* GetVectorLifecycleProbabilities() = 0;
         virtual IVectorHabitat*      GetVectorHabitatBySpeciesAndType( std::string& species, VectorHabitatType::Enum type, const Configuration* inputJson ) = 0;
         virtual VectorHabitatList_t* GetVectorHabitatsBySpecies( std::string& species ) = 0;
-        virtual float                GetLarvalHabitatMultiplier( VectorHabitatType::Enum type ) const = 0;
+        virtual float                GetLarvalHabitatMultiplier( VectorHabitatType::Enum type, const std::string& species ) const = 0;
     };
 
     // TODO: merge the two NodeVector interfaces?  or split functionally?

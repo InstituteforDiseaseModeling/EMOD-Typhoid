@@ -125,7 +125,7 @@ namespace Kernel
         {
             VectorHabitatType::Enum type = habitat_param.first;
             IVectorHabitat* habitat = ivnc->GetVectorHabitatBySpeciesAndType( species_ID, type, habitat_param.second );
-            float max_larval_capacity = habitat->GetMaximumLarvalCapacity() * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type);
+            float max_larval_capacity = habitat->GetMaximumLarvalCapacity() * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type,species_ID);
 
             habitat->SetMaximumLarvalCapacity( max_larval_capacity );
 

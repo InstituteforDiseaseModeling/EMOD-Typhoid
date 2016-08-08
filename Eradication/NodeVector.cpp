@@ -129,8 +129,28 @@ namespace Kernel
                     if (demographics["NodeAttributes"]["LarvalHabitatMultiplier"].Contains(habitat_name))
                     {
                         VectorHabitatType::Enum habitat = VectorHabitatType::Enum(VectorHabitatType::pairs::lookup_value(habitat_name.c_str()));
-                        larval_habitat_multiplier[habitat] = float(demographics["NodeAttributes"]["LarvalHabitatMultiplier"][habitat_name].AsDouble());
-                        LOG_INFO_F("Node ID=%d with LarvalHabitatMultiplier(%s)=%0.2f\n", externalId, habitat_name.c_str(), larval_habitat_multiplier[habitat]);
+                        if( demographics["NodeAttributes"]["LarvalHabitatMultiplier"][habitat_name].IsObject() )
+                        {
+                            for( auto& species : params()->vector_species_names )
+                            {
+                                float multiplier = 1.0;
+                                if( demographics["NodeAttributes"]["LarvalHabitatMultiplier"][habitat_name].Contains( species ) )
+                                {
+                                    multiplier = float(demographics["NodeAttributes"]["LarvalHabitatMultiplier"][habitat_name][species].AsDouble());
+                                }
+                                larval_habitat_multiplier[habitat][ species ] = multiplier;
+                                LOG_INFO_F("Node ID=%d with LarvalHabitatMultiplier(%s)(%s)=%0.2f\n", externalId, habitat_name.c_str(), species.c_str(), multiplier);
+                            }
+                        }
+                        else
+                        {
+                            float multiplier = float(demographics["NodeAttributes"]["LarvalHabitatMultiplier"][habitat_name].AsDouble());
+                            for( auto& species : params()->vector_species_names )
+                            {
+                                larval_habitat_multiplier[habitat][ species ] = multiplier;
+                                LOG_INFO_F("Node ID=%d with LarvalHabitatMultiplier(%s)(%s)=%0.2f\n", externalId, habitat_name.c_str(), species.c_str(), multiplier);
+                            }
+                        }
                     }
                     else
                     {
@@ -141,7 +161,10 @@ namespace Kernel
             else
             {
                 float multiplier = float(demographics["NodeAttributes"]["LarvalHabitatMultiplier"].AsDouble());
-                larval_habitat_multiplier[VectorHabitatType::ALL_HABITATS] = multiplier;
+                for( auto& species : params()->vector_species_names )
+                {
+                    larval_habitat_multiplier[VectorHabitatType::ALL_HABITATS][ species ] = multiplier;
+                }
                 LOG_INFO_F("Node ID=%d with LarvalHabitatMultiplier(ALL_HABITATS)=%0.2f\n", externalId, multiplier);
                 LOG_WARN("DeprecationWarning: Specification of \"LarvalHabitatMultiplier\" as a floating-point value in the \"NodeAttributes\" block will soon be deprecated. Specify as an object with habitat-type keys, e.g. \"LarvalHabitatMultiplier\" : {\"TEMPORARY_RAINFALL\" : 0.3}\n");
             }
@@ -710,12 +733,12 @@ namespace Kernel
         return &(m_larval_habitats[ species ]);
     }
 
-    float NodeVector::GetLarvalHabitatMultiplier(VectorHabitatType::Enum type) const
+    float NodeVector::GetLarvalHabitatMultiplier(VectorHabitatType::Enum type, const std::string& species) const
     {
-        return HabitatMultiplierByType(type)*HabitatMultiplierByType(VectorHabitatType::ALL_HABITATS);
+        return HabitatMultiplierByType(type,species)*HabitatMultiplierByType(VectorHabitatType::ALL_HABITATS,species);
     }
 
-    float NodeVector::HabitatMultiplierByType(VectorHabitatType::Enum type) const
+    float NodeVector::HabitatMultiplierByType(VectorHabitatType::Enum type, const std::string& species ) const
     {
         auto it=larval_habitat_multiplier.find(type);
         if (it==larval_habitat_multiplier.end())
@@ -725,9 +748,20 @@ namespace Kernel
         }
         else
         {
-            float scale=it->second;
-            LOG_DEBUG_F("Habitat scale modified by %0.2f for type %s\n",scale,VectorHabitatType::pairs::lookup_key(type));
-            return scale;
+            std::map<std::string,float> species_map = it->second;
+
+            auto it_species=species_map.find(species);
+            if( it_species == species_map.end() )
+            {
+                LOG_DEBUG_F("No modifiers for habitat type %s  and species %s\n",VectorHabitatType::pairs::lookup_key(type),species.c_str());
+                return 1.0f;
+            }
+            else
+            {
+                float scale=it_species->second;
+                LOG_DEBUG_F("Habitat scale modified by %0.2f for type %s and species %s\n",scale,VectorHabitatType::pairs::lookup_key(type),species.c_str());
+                return scale;
+            }
         }
     }
 
