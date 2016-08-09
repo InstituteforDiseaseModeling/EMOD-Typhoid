@@ -81,7 +81,7 @@ namespace Kernel
     struct INodeVectorInterventionEffects : ISupports
     {
         virtual float GetLarvalKilling(VectorHabitatType::Enum) = 0;
-        virtual float GetLarvalHabitatReduction(VectorHabitatType::Enum) = 0;
+        virtual float GetLarvalHabitatReduction(VectorHabitatType::Enum, const std::string& species) = 0;
         virtual float GetVillageSpatialRepellent() = 0;
         virtual float GetADIVAttraction() = 0;
         virtual float GetADOVAttraction() = 0;

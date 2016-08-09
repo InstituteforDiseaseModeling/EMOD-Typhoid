@@ -30,7 +30,7 @@ namespace Kernel
     {
         virtual bool Configure( const Configuration* inputJson ) = 0;
 
-        virtual void Update(float dt, INodeContext* node) = 0;
+        virtual void Update( float dt, INodeContext* node, const std::string& species ) = 0;
 
         virtual VectorHabitatType::Enum  GetVectorHabitatType()                   const = 0;
         virtual float                    GetMaximumLarvalCapacity()               const = 0;

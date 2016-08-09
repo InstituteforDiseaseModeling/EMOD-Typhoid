@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1293.0",
-		"DTK_Branch" : "MergeFor210 (bcb2009)",
-		"DTK_Build_Date" : "Sep  2 2016 12:16:40"
+		"DTK_Version" : "2.8.1296.0",
+		"DTK_Branch" : "MergeFor210 (2fb57ab)",
+		"DTK_Build_Date" : "Sep  2 2016 14:44:38"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -13234,6 +13234,24 @@
 					},
 					"iv_type" : "NodeTargeted",
 					"class" : "ScaleLarvalHabitat"
+				},
+				"ScaleLarvalHabitatLHM" : {
+					"Sim_Types" : [
+						"VECTOR_SIM",
+						"MALARIA_SIM"
+					],
+					"Intervention_Name" : {
+						"default" : "struct Kernel::BaseNodeIntervention",
+						"description" : "TBD",
+						"type" : "string"
+					},
+					"idmType:LarvalHabitatMultiplier" : null,
+					"Larval_Habitat_Multiplier" : {
+						"description" : "TBD",
+						"type" : "idmType:LarvalHabitatMultiplier"
+					},
+					"iv_type" : "NodeTargeted",
+					"class" : "ScaleLarvalHabitatLHM"
 				},
 				"ScreeningHousingModification" : {
 					"Sim_Types" : [

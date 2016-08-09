@@ -3,9 +3,9 @@
         {
             "Event_Coordinator_Config": {
                 "Intervention_Config": {
-                    "Habitat_Scale": 0.05, 
+                    "class": "ScaleLarvalHabitat",
                     "Habitat_Target": "TEMPORARY_RAINFALL", 
-                    "class": "ScaleLarvalHabitat"
+                    "Habitat_Scale": 0.05
                 }, 
                 "class": "NodeEventCoordinator"
             }, 
@@ -13,6 +13,31 @@
                 "class": "NodeSetAll"
             }, 
             "Start_Day": 730, 
+            "class": "CampaignEvent"
+        },
+        {
+            "Event_Coordinator_Config": {
+                "Intervention_Config": {
+
+                    "COMMENT1" : "We use the LHM version so we can target a specific species without changing the others in that habitat type.",
+                    "COMMENT2" : "If we dont set the other species (i.e. gambiae) to the previous value, their habitats wont be reduced anymore.",
+
+                    "class": "ScaleLarvalHabitatLHM",
+                    "Larval_Habitat_Multiplier" :
+                    {
+                        "TEMPORARY_RAINFALL" :
+                        {
+                            "arabiensis" : 3.0,
+                            "gambiae"    : 0.05
+                        }
+                    }
+                }, 
+                "class": "NodeEventCoordinator"
+            }, 
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            }, 
+            "Start_Day": 1460, 
             "class": "CampaignEvent"
         }
     ], 

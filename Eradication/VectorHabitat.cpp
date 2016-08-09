@@ -116,7 +116,7 @@ namespace Kernel
         return p_habitat;
     }
 
-    void VectorHabitat::Update(float dt, INodeContext* node)
+    void VectorHabitat::Update( float dt, INodeContext* node, const std::string& species )
     {
         // (1) Calculate the egg-crowding correction based on eggs, larva, and habitat from previous step
         CalculateEggCrowdingCorrection();
@@ -125,7 +125,7 @@ namespace Kernel
         UpdateCurrentLarvalCapacity(dt, node);
 
         // (3) Update the larval-habitat-specific probabilities related to node-targeted interventions
-        UpdateLarvalProbabilities(dt, node);
+        UpdateLarvalProbabilities( dt, node, species );
 
         // (4) Calculate rainfall mortality
         float rainfall = node->GetLocalWeather()->accumulated_rainfall();
@@ -251,7 +251,7 @@ namespace Kernel
         }
     }
 
-    void VectorHabitat::UpdateLarvalProbabilities(float dt, INodeContext* node)
+    void VectorHabitat::UpdateLarvalProbabilities( float dt, INodeContext* node, const std::string& species )
     {
         // TODO: if this querying gets tedious, we can pass it in as an argument from NodeVector?
         INodeVectorInterventionEffects* invie = nullptr;
@@ -262,7 +262,7 @@ namespace Kernel
 
         m_oviposition_trap_killing    = invie->GetOviTrapKilling(m_habitat_type);
         m_artificial_larval_mortality = EXPCDF( -dt * ( invie->GetLarvalKilling(m_habitat_type) ) );
-        m_larvicide_habitat_scaling   = 1.0f - invie->GetLarvalHabitatReduction(m_habitat_type);
+        m_larvicide_habitat_scaling   = 1.0f - invie->GetLarvalHabitatReduction( m_habitat_type, species );
 
         LOG_DEBUG_F("Updated larval probabilites: oviposition-trap killing = %f, artificial larval mortality = %f, larvicide habitat reduction = %f\n", m_oviposition_trap_killing, m_artificial_larval_mortality, m_larvicide_habitat_scaling);
     }

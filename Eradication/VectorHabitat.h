@@ -28,9 +28,9 @@ namespace Kernel
     public:
         static IVectorHabitat* CreateHabitat( VectorHabitatType::Enum type, const Configuration* inputJson );
         virtual ~VectorHabitat();
-        virtual void Update(float dt, INodeContext* node) override;
+        virtual void Update( float dt, INodeContext* node, const std::string& species ) override;
 
-        virtual bool Configure( const Configuration* inputJson );
+        virtual bool Configure( const Configuration* inputJson ) override;
 
         virtual VectorHabitatType::Enum  GetVectorHabitatType()                   const override;
         virtual float                    GetMaximumLarvalCapacity()               const override;
@@ -59,7 +59,7 @@ namespace Kernel
 
         void CalculateEggCrowdingCorrection();
         virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node);
-        void UpdateLarvalProbabilities(float dt, INodeContext* node);
+        void UpdateLarvalProbabilities( float dt, INodeContext* node, const std::string& species );
         void UpdateRainfallMortality(float dt, float rainfall);
         void AdvanceTotalLarvaCounts();
 

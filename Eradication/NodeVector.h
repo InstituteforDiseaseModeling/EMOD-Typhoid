@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Node.h"
 #include "VectorHabitat.h"
 #include "VectorPopulation.h"
+#include "LarvalHabitatMultiplier.h"
 
 class ReportVector;
 class VectorSpeciesReport;
@@ -84,7 +85,8 @@ namespace Kernel
 
         VectorProbabilities* m_vector_lifecycle_probabilities;
 
-        std::map<VectorHabitatType::Enum,std::map<std::string,float>> larval_habitat_multiplier;
+
+        LarvalHabitatMultiplier larval_habitat_multiplier;
 
         bool vector_mortality;
         int32_t mosquito_weight;
@@ -96,7 +98,6 @@ namespace Kernel
 
         virtual void setupEventContextHost() override;
         virtual void InitializeVectorPopulation(VectorPopulation* vp);
-        float HabitatMultiplierByType(VectorHabitatType::Enum type, const std::string& species) const;
         void VectorMigrationBasedOnFiles();
         void VectorMigrationToAdjacentNodes();
             
