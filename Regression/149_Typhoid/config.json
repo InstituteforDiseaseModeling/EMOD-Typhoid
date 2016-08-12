@@ -1,5 +1,6 @@
 {
     "parameters": {
+        "logLevel_ReportTyphoid": "DEBUG", 
         ".logLevel_IndividualTyphoid": "DEBUG", 
         ".logLevel_Node": "DEBUG", 
         ".logLevel_ReportTyphoidByAgeAndGender": "DEBUG", 
@@ -144,6 +145,13 @@
         "x_Population_Immunity": 1, 
         "x_Regional_Migration": 1, 
         "x_Sea_Migration": 1, 
-        "x_Temporary_Larval_Habitat": 1
+        "x_Temporary_Larval_Habitat": 1,
+        "Start_Year": 1950,
+        "Stop_Year": 1951,
+        "Typhoid_Acute_Infectiousness": 1.0,
+        "Typhoid_Chronic_Relative_Infectiousness": 1.0,
+        "Typhoid_Prepatent_Relative_Infectiousness": 1.0,
+        "Typhoid_Subclinical_Relative_Infectiousness": 1.0,
+        "Typhoid_Symptomatic_Fraction": 0.1
     }
 }

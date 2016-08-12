@@ -36,23 +36,42 @@ GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 
 
 ReportTyphoid::ReportTyphoid()
+: recording( false )
 {
 }
 
 bool ReportTyphoid::Configure( const Configuration * inputJson )
 {
+    initConfigTypeMap( "Start_Year", &startYear, "Start Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
+    initConfigTypeMap( "Stop_Year", &stopYear, "Stop Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
     bool ret = JsonConfigurable::Configure( inputJson );
+    LOG_DEBUG_F( "Read in Start_Year (%f) and Stop_Year(%f).\n", startYear, stopYear );
     return ret ;
 }
 
 void ReportTyphoid::EndTimestep( float currentTime, float dt )
 {
-    ReportEnvironmental::EndTimestep( currentTime, dt );
-    
-    // Make sure we push at least one zero per timestep
-    Accumulate( _num_chronic_carriers_label, 0 );
-    Accumulate( _num_subclinic_infections_label, 0 );
-    Accumulate( _num_acute_infections_label, 0 );
+    if( recording )
+    {
+
+        ReportEnvironmental::EndTimestep( currentTime, dt );
+
+        // Make sure we push at least one zero per timestep
+        Accumulate( _num_chronic_carriers_label, 0 );
+        Accumulate( _num_subclinic_infections_label, 0 );
+        Accumulate( _num_acute_infections_label, 0 );
+    }
+
+    float currentYear = parent->GetSimulationTime().Year();
+    if( currentYear > startYear && currentYear <= stopYear )
+    {
+        recording = true;
+    }
+    else
+    {
+        recording = false;
+    }
+    LOG_DEBUG_F( "recording = %d\n", recording );
 }
 
 void
@@ -83,6 +102,11 @@ ReportTyphoid::LogIndividualData(
     IIndividualHuman * individual
 )
 {
+    if( recording == false ) 
+    {
+        return;
+    }
+
     ReportEnvironmental::LogIndividualData( individual );
     IIndividualHumanTyphoid* typhoid_individual = NULL;
     if( individual->QueryInterface( GET_IID( IIndividualHumanTyphoid ), (void**)&typhoid_individual ) != s_OK )
@@ -114,6 +138,11 @@ ReportTyphoid::LogNodeData(
     INodeContext * pNC
 )
 {
+    if( recording == false ) 
+    {
+        return;
+    }
+
     ReportEnvironmental::LogNodeData( pNC );
     const INodeTyphoid * pTyphoidNode = NULL; // TBD: Use limited read-only interface, not full NodeTyphoid
     if( pNC->QueryInterface( GET_IID( INodeTyphoid), (void**) &pTyphoidNode ) != s_OK )
