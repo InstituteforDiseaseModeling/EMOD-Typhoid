@@ -30,7 +30,9 @@ namespace Kernel {
 static const std::string _num_chronic_carriers_label     = "Number of Chronic Carriers";
 static const std::string _num_subclinic_infections_label = "Number of New Sub-Clinical Infections";
 static const std::string _num_acute_infections_label     = "Number of New Acute Infections";
-
+static const std::string _num_enviro_infections_label    = "New Infections By Route (ENVIRONMENT)";
+static const std::string _num_contact_infections_label   = "New Infections By Route (CONTACT)";
+    
 
 GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 
@@ -38,6 +40,7 @@ GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 ReportTyphoid::ReportTyphoid()
 : recording( false )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
 }
 
 bool ReportTyphoid::Configure( const Configuration * inputJson )
@@ -51,6 +54,7 @@ bool ReportTyphoid::Configure( const Configuration * inputJson )
 
 void ReportTyphoid::EndTimestep( float currentTime, float dt )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     if( recording )
     {
 
@@ -60,9 +64,18 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
         Accumulate( _num_chronic_carriers_label, 0 );
         Accumulate( _num_subclinic_infections_label, 0 );
         Accumulate( _num_acute_infections_label, 0 );
+        Accumulate( _num_enviro_infections_label, 0 );
+        Accumulate( _num_contact_infections_label, 0 );
     }
 
+    release_assert( parent );
+    /*if( parent == nullptr )
+    {
+        return;
+    }*/
+
     float currentYear = parent->GetSimulationTime().Year();
+    LOG_DEBUG_F( "currentYear = %f.\n", currentYear );
     if( currentYear > startYear && currentYear <= stopYear )
     {
         recording = true;
@@ -77,7 +90,7 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
 void
 ReportTyphoid::postProcessAccumulatedData()
 {
-    LOG_DEBUG( "postProcessAccumulatedData\n" );
+    //LOG_DEBUG( "postProcessAccumulatedData\n" );
     ReportEnvironmental::postProcessAccumulatedData();
 
     // pass through normalization
@@ -91,6 +104,7 @@ ReportTyphoid::populateSummaryDataUnitsMap(
     std::map<std::string, std::string> &units_map
 )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     ReportEnvironmental::populateSummaryDataUnitsMap(units_map);
     
     // Additional malaria channels
@@ -102,8 +116,10 @@ ReportTyphoid::LogIndividualData(
     IIndividualHuman * individual
 )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     if( recording == false ) 
     {
+        //LOG_DEBUG_F( "recording is false. Not doing anything in LID\n" );
         return;
     }
 
@@ -130,6 +146,27 @@ ReportTyphoid::LogIndividualData(
         {
             Accumulate( _num_acute_infections_label, mc_weight );
         }
+
+        // Get infection incidence by route
+        NewInfectionState::_enum nis = individual->GetNewInfectionState(); 
+        LOG_DEBUG_F( "nis = %d\n", ( nis ) );
+        if( nis == NewInfectionState::NewAndDetected ||
+            nis == NewInfectionState::NewInfection /*||
+            nis == NewInfectionState::NewlyDetected*/ )
+        {
+            auto inf = individual->GetInfections().back();
+            StrainIdentity si;
+            inf->GetInfectiousStrainID( &si );
+            if( si.GetGeneticID() == 0 )
+            {
+                Accumulate( _num_enviro_infections_label, mc_weight );
+            }
+            else if( si.GetGeneticID() == 1 )
+            {
+                Accumulate( _num_contact_infections_label, mc_weight );
+            }
+        }
+        //std::cout << "si.GetGeneticID() = " << si.GetGeneticID() << std::endl;
     }
 }
 
@@ -138,8 +175,16 @@ ReportTyphoid::LogNodeData(
     INodeContext * pNC
 )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
+    if( parent == nullptr )
+    {
+        parent = (ISimulation*)pNC->GetParent();
+        LOG_DEBUG_F( "Set parent to %x\n", parent );
+    }
+
     if( recording == false ) 
     {
+        LOG_DEBUG_F( "recording is false. Not doing anything in LND\n" );
         return;
     }
 

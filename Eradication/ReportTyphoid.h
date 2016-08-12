@@ -19,6 +19,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "TyphoidDefs.h" // for N_TYPHOID_SEROTYPES
 #include "SimulationEnums.h" // for TyphoidVirusTypes
 #include "TransmissionGroupMembership.h"
+#include "ISimulation.h"
 #include <map>
 
 namespace Kernel {
@@ -45,6 +46,10 @@ protected:
 private:
 
     TransmissionGroupMembership_t memberships;
+    ISimulation * parent;
+    float startYear;
+    float stopYear;
+    bool recording;
 
 #if USE_BOOST_SERIALIZATION
     friend class ::boost::serialization::access;

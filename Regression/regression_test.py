@@ -13,7 +13,6 @@ import glob
 import httplib
 import json
 import os # e.g., mkdir
-import plotAllCharts
 import re
 import shutil # copyfile
 import subprocess
@@ -133,7 +132,7 @@ class RuntimeParameters:
         
     @property
     def input_path(self):
-        return self.config.get(self.os_type, 'local_input_root')
+        return self.config.get(self.os_type, 'home_input')
         
     @property
     def local_bin_root(self):
@@ -141,11 +140,17 @@ class RuntimeParameters:
 
     @property
     def sim_root(self):
-        return self.config.get('ENVIRONMENT', 'sim_root')
+        if params.local_execution or os.name=="posix":
+            return self.config.get(self.os_type, 'local_sim_root')
+        else:
+            return self.config.get('ENVIRONMENT', 'sim_root')
         
     @property
     def shared_input(self):
-        return self.config.get('ENVIRONMENT', 'input_root')
+        if params.local_execution or os.name=="posix":
+            return self.config.get(self.os_type, 'local_input_root')
+        else:
+            return self.config.get('ENVIRONMENT', 'input_root')
         
     @property
     def bin_root(self):
@@ -153,7 +158,10 @@ class RuntimeParameters:
         
     @property
     def user_input(self):
-        return self.config.get('ENVIRONMENT', 'home_input')
+        if params.local_execution or os.name=="posix":
+            return self.config.get(self.os_type, 'home_input')
+        else:
+            return self.config.get('ENVIRONMENT', 'home_input')
         
     @property
     def py_input(self):
@@ -883,7 +891,7 @@ class MyRegressionRunner():
                 do_copy = False # do my own copy here, since
                 remote_path = os.path.join(sim_dir,os.path.basename(filename))
                 if os.path.exists(remote_path):
-                    raise Exception('Overlay of same basename has already been copied to remote simulation directory.')
+                    raise Exception('Overlay with same basename has already been copied to remote simulation directory.')
                 shutil.copy(local_source, remote_path)
 
             # Cases:
@@ -1371,6 +1379,7 @@ def main():
                 all_data_prop.append( prj_json )
         plot_title = "Sweep over " + reglistjson["sweep"]["param_name"] + " (" + str(len(reglistjson["sweep"]["param_values"])) + " values)"
         os.chdir( cache_cwd )
+        import plotAllCharts
         plotAllCharts.plotBunch( all_data, plot_title, ref_json )
         if os.path.exists( ref_path_prop ) == True:
             plotAllCharts.plotBunch( all_data_prop, plot_title, ref_json_prop )

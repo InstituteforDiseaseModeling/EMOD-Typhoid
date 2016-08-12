@@ -302,78 +302,64 @@ namespace Kernel
             {
                 return;
             }
-            //if (nDayOfYear <=151 || nDayOfYear>=305) // irrigation from November 1-May 31
-            // {
-            //fEnvironment *= GET_CONFIGURABLE(SimulationConfig)->typhoid_seasonal_amplification;// amplification during the irrigation season
-            //   }
 
+            float ramp_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_duration;
+			float cutoff_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_cutoff_days;
+            float peak_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_multiplier;
+            float peak_start_day = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_start); 
+			if (peak_start_day > 365){
+				peak_start_day = peak_start_day - 365;}
+		//this is mostly for calibtool purposes
+			float peak_days = (365 - cutoff_days) - (2 * ramp_days);
+            float peak_end_day = peak_start_day + peak_days;
+			if (peak_end_day > 365){
+				peak_end_day = peak_end_day - 365;}
 
-            /*
-               float irrigation_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_irrigation_duration;
-               float max_exposure = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate_seasonal_max;
-               float total_area = (irrigation_days*(irrigation_days+1))/2;
-               float total_triangle_area = 1/2 * max_exposure * irrigation_days;
-               float exposure_rate = 0;
-
-            //if (irrigation_days<=60){
-            if( (nDayOfYear >= 305-irrigation_days )&( nDayOfYear < (305 ))){ // irrigation from November 1-May 31
-            exposure_rate=((nDayOfYear- (304-irrigation_days))/total_area)*total_triangle_area;}
-            if (nDayOfYear >= (305) || nDayOfYear<=(151-irrigation_days)){
-            exposure_rate= max_exposure;}
-            if ((nDayOfYear > 151-irrigation_days) & (nDayOfYear < (151)) ){
-            exposure_rate= ((151-nDayOfYear)/total_area)*total_triangle_area;}
-
-            float irrigation_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_irrigation_duration;
-            float max_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_seasonal_amplification;
-            float max_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_irrigation_max_day;
-
-            float total_area = (irrigation_days*(irrigation_days+1))/2;
-            float total_triangle_area = 1/2 * max_amplification * irrigation_days;
+            float slope = peak_amplification / ramp_days;
             float amplification = 0;
-            float HarvestDayOfYear = nDayOfYear - GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period;
-            if( HarvestDayOfYear < 1){
-            HarvestDayOfYear = 365 - HarvestDayOfYear;}
+            //float HarvestDayOfYear = nDayOfYear - GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period;
+            //if( HarvestDayOfYear < 1){
+            //    HarvestDayOfYear = 365 - HarvestDayOfYear;
+	    //}
+			if (peak_start_day - ramp_days > 0){
+            if ((nDayOfYear >= peak_start_day-ramp_days) && ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
+                amplification=((nDayOfYear- (peak_start_day-ramp_days))+0.5)*(slope);
+	    }
+            if ((nDayOfYear >= peak_start_day) && (nDayOfYear<=peak_end_day)) { // peak of wastewater irrigation
+                amplification= peak_amplification;
+	    }
+            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope);
+		}
+			}
 
-            //if (irrigation_days<=60){
-            if( (HarvestDayOfYear >= 305-irrigation_days )&( HarvestDayOfYear < (305 ))){ // irrigation from November 1-May 31
-            amplification=((HarvestDayOfYear- (304-irrigation_days))/total_area)*total_triangle_area;}
-            if (HarvestDayOfYear >= (305) || HarvestDayOfYear<=(151-irrigation_days)){
-            amplification= max_amplification;}
-            if ((HarvestDayOfYear > 151-irrigation_days) & (HarvestDayOfYear < (151)) ){
-            amplification= ((151-HarvestDayOfYear)/total_area)*total_triangle_area;
-            }
+			else if (peak_start_day - ramp_days < 1){
+			if ((nDayOfYear >= peak_start_day-ramp_days+365) || ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
+                if (nDayOfYear >= peak_start_day-ramp_days+365){
+					amplification= (nDayOfYear - (peak_start_day-ramp_days+365)+0.5)*(slope);
+				}
+				else if (nDayOfYear < peak_start_day) {
+				amplification= ((ramp_days-peak_start_day) + nDayOfYear + 0.5)*(slope);
+				}
+			}
 
-*/
-            float irrigation_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_duration;
-            float max_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_multiplier;
-            float t1 = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_start); //we assume ramp up must happen before day 365.. given.
-            float t2 = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_end); // last possible day to end infections is... august??
+            if ((nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
+                amplification= peak_amplification;
+	    }
+            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope);
+		}
+			
+			}
 
-            float slope = max_amplification / irrigation_days;
-            float amplification = 0;
-            float HarvestDayOfYear = nDayOfYear - GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period;
-            if( HarvestDayOfYear < 1){
-                HarvestDayOfYear = 365 - HarvestDayOfYear;}
-
-            //if (irrigation_days<=60){
-            if( (HarvestDayOfYear >= t1-irrigation_days )&( HarvestDayOfYear < (t1 ))){ // irrigation from November 1-May 31
-                amplification=((HarvestDayOfYear- (t1-irrigation_days))+0.5)*(slope);}
-            if (HarvestDayOfYear >= (t1) || HarvestDayOfYear<(t2)){
-                amplification= max_amplification;}
-            if ((HarvestDayOfYear >= t2) & (HarvestDayOfYear < (t2+irrigation_days)) ){
-                amplification= max_amplification-(((HarvestDayOfYear-t2)+0.5)*slope);
-            }
+			//LOG_INFO_F("Environmental Amp %f\n", amplification);
 
 
-
-
-
-            //float fExposure = fEnvironment * GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_amplification;
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
                 float infects = 1.0f-pow(1.0f + fExposure * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha); // Dose-response for prob of infection
-                float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count); // change this later to distribution
+                float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count);
                 //float prob = 1.0f- pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt);
                 int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate * dt);
                 //int number_of_exposures = randgen->Poisson(exposure_rate * dt);
@@ -387,7 +373,6 @@ namespace Kernel
                 //LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
                 if (prob>0.0f && randgen->e() < prob)
                 {
-                    //LOG_DEBUG("Expose::INDIVIDUAL INFECTED BY ENVIRONMENT.\n");
                     _routeOfInfection = transmission_route;
                     StrainIdentity strainId;
                     //LOG_DEBUG("INDIVIDUAL INFECTED BY ENVIRONMENT.\n"); // This is for reporting DON'T DELETE :)
@@ -420,7 +405,6 @@ namespace Kernel
                     prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
                 }
                 if (prob>0.0f && randgen->e() < prob) {
-                    //LOG_DEBUG("Expose::INDIVIDUAL INFECTED BY CONTACT.\n");
                     LOG_DEBUG("INDIVIDUAL INFECTED BY CONTACT.\n"); // FOR REPORTING
                     _routeOfInfection = transmission_route;
                     StrainIdentity strainId;
@@ -516,7 +500,6 @@ namespace Kernel
                         {
                             LOG_DEBUG_F("Depositing %f to route %s: (antigen=%d, substain=%d)\n", tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());
                             parent->DepositFromIndividual(&tmp_strainID, tmp_infectiousnessOral, &entry.second);
-                            //infectiousness += infection->GetInfectiousnessByRoute(string("contact"));
                         } 
                     }
                     else if (entry.first==string("environmental"))
@@ -622,12 +605,7 @@ namespace Kernel
                                 _subclinical_duration = int(generateRandFromLogNormal(msu30, ssu30)*7);
                             else
                                 _subclinical_duration = int(generateRandFromLogNormal(mso30, sso30)*7);
-                            // DLC - Do we need to truncate the duration to 365?
                             subclinical_timer = _subclinical_duration;
-                            //if (_subclinical_duration > 365){
-                            //isChronic = true; // will be a chronic carrier
-                            //} else {
-                            //    isChronic = false;}
                         } else if (!hasClinicalImmunity) {
                             if (randgen->e()<(GET_CONFIGURABLE(SimulationConfig)->typhoid_symptomatic_fraction*interventions->GetInterventionReducedMortality())) { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
                                 if (getAgeInYears() < 30.0)
@@ -822,6 +800,19 @@ namespace Kernel
         void IndividualHumanTyphoid::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
         {
             LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
+            if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL)
+            {
+                infstrain->SetGeneticID( 0 );
+            }
+            else if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_CONTACT)
+            {
+                infstrain->SetGeneticID( 1 );
+            }
+            else
+            {
+                infstrain->SetGeneticID( 2 );
+            }
+                // neither environmental nor contact source. probably from initial seeding
             IndividualHumanEnvironmental::AcquireNewInfection( infstrain, incubation_period_override );
 #ifdef ENABLE_PYTHOID
             volatile Stopwatch * check = new Stopwatch( __FUNCTION__ );
@@ -837,7 +828,6 @@ namespace Kernel
             }
             delete check;
 #else
-            //        infectious_timer = 30; // Do we need this variable?
             if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL) {
                 _prepatent_duration = (int)(generateRandFromLogNormal(mpe, spe));
 
