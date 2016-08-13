@@ -38,31 +38,59 @@ GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 
 
 ReportTyphoid::ReportTyphoid()
+: recording( false )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
 }
 
 bool ReportTyphoid::Configure( const Configuration * inputJson )
 {
+    initConfigTypeMap( "Start_Year", &startYear, "Start Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
+    initConfigTypeMap( "Stop_Year", &stopYear, "Stop Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
     bool ret = JsonConfigurable::Configure( inputJson );
+    LOG_DEBUG_F( "Read in Start_Year (%f) and Stop_Year(%f).\n", startYear, stopYear );
     return ret ;
 }
 
 void ReportTyphoid::EndTimestep( float currentTime, float dt )
 {
-    ReportEnvironmental::EndTimestep( currentTime, dt );
-    
-    // Make sure we push at least one zero per timestep
-    Accumulate( _num_chronic_carriers_label, 0 );
-    Accumulate( _num_subclinic_infections_label, 0 );
-    Accumulate( _num_acute_infections_label, 0 );
-    Accumulate( _num_enviro_infections_label, 0 );
-    Accumulate( _num_contact_infections_label, 0 );
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
+    if( recording )
+    {
+
+        ReportEnvironmental::EndTimestep( currentTime, dt );
+
+        // Make sure we push at least one zero per timestep
+        Accumulate( _num_chronic_carriers_label, 0 );
+        Accumulate( _num_subclinic_infections_label, 0 );
+        Accumulate( _num_acute_infections_label, 0 );
+        Accumulate( _num_enviro_infections_label, 0 );
+        Accumulate( _num_contact_infections_label, 0 );
+    }
+
+    release_assert( parent );
+    /*if( parent == nullptr )
+    {
+        return;
+    }*/
+
+    float currentYear = parent->GetSimulationTime().Year();
+    LOG_DEBUG_F( "currentYear = %f.\n", currentYear );
+    if( currentYear > startYear && currentYear <= stopYear )
+    {
+        recording = true;
+    }
+    else
+    {
+        recording = false;
+    }
+    LOG_DEBUG_F( "recording = %d\n", recording );
 }
 
 void
 ReportTyphoid::postProcessAccumulatedData()
 {
-    LOG_DEBUG( "postProcessAccumulatedData\n" );
+    //LOG_DEBUG( "postProcessAccumulatedData\n" );
     ReportEnvironmental::postProcessAccumulatedData();
 
     // pass through normalization
@@ -76,6 +104,7 @@ ReportTyphoid::populateSummaryDataUnitsMap(
     std::map<std::string, std::string> &units_map
 )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     ReportEnvironmental::populateSummaryDataUnitsMap(units_map);
     
     // Additional malaria channels
@@ -87,6 +116,13 @@ ReportTyphoid::LogIndividualData(
     IIndividualHuman * individual
 )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
+    if( recording == false ) 
+    {
+        //LOG_DEBUG_F( "recording is false. Not doing anything in LID\n" );
+        return;
+    }
+
     ReportEnvironmental::LogIndividualData( individual );
     IIndividualHumanTyphoid* typhoid_individual = NULL;
     if( individual->QueryInterface( GET_IID( IIndividualHumanTyphoid ), (void**)&typhoid_individual ) != s_OK )
@@ -139,6 +175,19 @@ ReportTyphoid::LogNodeData(
     INodeContext * pNC
 )
 {
+    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
+    if( parent == nullptr )
+    {
+        parent = (ISimulation*)pNC->GetParent();
+        LOG_DEBUG_F( "Set parent to %x\n", parent );
+    }
+
+    if( recording == false ) 
+    {
+        LOG_DEBUG_F( "recording is false. Not doing anything in LND\n" );
+        return;
+    }
+
     ReportEnvironmental::LogNodeData( pNC );
     const INodeTyphoid * pTyphoidNode = NULL; // TBD: Use limited read-only interface, not full NodeTyphoid
     if( pNC->QueryInterface( GET_IID( INodeTyphoid), (void**) &pTyphoidNode ) != s_OK )
