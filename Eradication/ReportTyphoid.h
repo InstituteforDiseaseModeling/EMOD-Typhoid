@@ -19,7 +19,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "TyphoidDefs.h" // for N_TYPHOID_SEROTYPES
 #include "SimulationEnums.h" // for TyphoidVirusTypes
 #include "TransmissionGroupMembership.h"
-#include "ISimulation.h"
+#include "Contexts.h" // ISimulationContext
 #include <map>
 
 namespace Kernel {
@@ -34,6 +34,7 @@ public:
     static IReport* ReportTyphoid::CreateReport() { return new ReportTyphoid(); }
 
     virtual bool Configure( const Configuration * inputJson );
+    virtual void BeginTimestep() override;
     virtual void EndTimestep( float currentTime, float dt );
 
     virtual void LogIndividualData( IIndividualHuman * individual);
@@ -46,7 +47,7 @@ protected:
 private:
 
     TransmissionGroupMembership_t memberships;
-    ISimulation * parent;
+    ISimulationContext * parent;
     float startYear;
     float stopYear;
     bool recording;

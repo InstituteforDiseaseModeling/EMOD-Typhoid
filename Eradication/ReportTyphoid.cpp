@@ -40,21 +40,31 @@ GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 ReportTyphoid::ReportTyphoid()
 : recording( false )
 {
-    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
 }
 
 bool ReportTyphoid::Configure( const Configuration * inputJson )
 {
-    initConfigTypeMap( "Start_Year", &startYear, "Start Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
-    initConfigTypeMap( "Stop_Year", &stopYear, "Stop Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
+    initConfigTypeMap( "Inset_Chart_Reporting_Start_Year", &startYear, "Start Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
+    initConfigTypeMap( "Inset_Chart_Reporting_Stop_Year", &stopYear, "Stop Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
     bool ret = JsonConfigurable::Configure( inputJson );
     LOG_DEBUG_F( "Read in Start_Year (%f) and Stop_Year(%f).\n", startYear, stopYear );
+    if( startYear >= stopYear )
+    {
+        throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Inset_Chart_Reporting_Start_Year", startYear, "Inset_Chart_Reporting_Stop_Year", stopYear );
+    }
     return ret ;
+}
+
+void ReportTyphoid::BeginTimestep()
+{
+    if( recording )
+    {
+        return ReportEnvironmental::BeginTimestep();
+    }
 }
 
 void ReportTyphoid::EndTimestep( float currentTime, float dt )
 {
-    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     if( recording )
     {
 
@@ -69,14 +79,10 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
     }
 
     release_assert( parent );
-    /*if( parent == nullptr )
-    {
-        return;
-    }*/
-
+    
     float currentYear = parent->GetSimulationTime().Year();
     LOG_DEBUG_F( "currentYear = %f.\n", currentYear );
-    if( currentYear > startYear && currentYear <= stopYear )
+    if( currentYear >= startYear && currentYear < stopYear )
     {
         recording = true;
     }
@@ -90,7 +96,6 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
 void
 ReportTyphoid::postProcessAccumulatedData()
 {
-    //LOG_DEBUG( "postProcessAccumulatedData\n" );
     ReportEnvironmental::postProcessAccumulatedData();
 
     // pass through normalization
@@ -104,7 +109,6 @@ ReportTyphoid::populateSummaryDataUnitsMap(
     std::map<std::string, std::string> &units_map
 )
 {
-    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     ReportEnvironmental::populateSummaryDataUnitsMap(units_map);
     
     // Additional malaria channels
@@ -116,10 +120,8 @@ ReportTyphoid::LogIndividualData(
     IIndividualHuman * individual
 )
 {
-    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     if( recording == false ) 
     {
-        //LOG_DEBUG_F( "recording is false. Not doing anything in LID\n" );
         return;
     }
 
@@ -166,7 +168,6 @@ ReportTyphoid::LogIndividualData(
                 Accumulate( _num_contact_infections_label, mc_weight );
             }
         }
-        //std::cout << "si.GetGeneticID() = " << si.GetGeneticID() << std::endl;
     }
 }
 
@@ -175,16 +176,14 @@ ReportTyphoid::LogNodeData(
     INodeContext * pNC
 )
 {
-    //LOG_DEBUG_F( "%s\n", __FUNCTION__ );
     if( parent == nullptr )
     {
-        parent = (ISimulation*)pNC->GetParent();
+        parent = pNC->GetParent();
         LOG_DEBUG_F( "Set parent to %x\n", parent );
     }
 
     if( recording == false ) 
     {
-        LOG_DEBUG_F( "recording is false. Not doing anything in LND\n" );
         return;
     }
 
