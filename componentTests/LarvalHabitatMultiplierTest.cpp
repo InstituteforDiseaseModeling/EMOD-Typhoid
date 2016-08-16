@@ -62,11 +62,8 @@ SUITE(LarvalHabitatMultiplierTest)
         json.ParseFile( "testdata/LarvalHabitatMultiplierTest/TestReadOneValue.json" );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         lhm.Read( json["LarvalHabitatMultiplier"], 789 );
-
-        CHECK( lhm.WasInitializedFromJson() );
 
         for( int i = 0 ; i < VectorHabitatType::pairs::count() ; ++i )
         {
@@ -93,7 +90,6 @@ SUITE(LarvalHabitatMultiplierTest)
         std::unique_ptr<Configuration> p_config( Configuration_Load( "testdata/LarvalHabitatMultiplierTest/TestReadOneValue.json" ) );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         try
         {
@@ -110,8 +106,6 @@ SUITE(LarvalHabitatMultiplierTest)
 
     void CheckReadHabitatValue( LarvalHabitatMultiplier& lhm )
     {
-        CHECK( lhm.WasInitializedFromJson() );
-
         for( int i = 0 ; i < VectorHabitatType::pairs::count() ; ++i )
         {
             VectorHabitatType::Enum vht = VectorHabitatType::Enum( VectorHabitatType::pairs::get_values()[i] );
@@ -143,7 +137,6 @@ SUITE(LarvalHabitatMultiplierTest)
         json.ParseFile( "testdata/LarvalHabitatMultiplierTest/TestReadHabitatValue.json" );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         lhm.Read( json["LarvalHabitatMultiplier"], 789 );
 
@@ -155,7 +148,6 @@ SUITE(LarvalHabitatMultiplierTest)
         std::unique_ptr<Configuration> p_config( Configuration_Load( "testdata/LarvalHabitatMultiplierTest/TestReadHabitatValue.json" ) );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         lhm.ConfigureFromJsonAndKey( p_config.get(), "LarvalHabitatMultiplier" );
 
@@ -165,8 +157,6 @@ SUITE(LarvalHabitatMultiplierTest)
 
     void CheckReadHabitatSpeciesValue( LarvalHabitatMultiplier& lhm )
     {
-        CHECK( lhm.WasInitializedFromJson() );
-
         for( int i = 0 ; i < VectorHabitatType::pairs::count() ; ++i )
         {
             VectorHabitatType::Enum vht = VectorHabitatType::Enum( VectorHabitatType::pairs::get_values()[i] );
@@ -199,7 +189,6 @@ SUITE(LarvalHabitatMultiplierTest)
         json.ParseFile( "testdata/LarvalHabitatMultiplierTest/TestReadHabitatSpeciesValue.json" );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         lhm.Read( json["LarvalHabitatMultiplier"], 789 );
 
@@ -211,7 +200,6 @@ SUITE(LarvalHabitatMultiplierTest)
         std::unique_ptr<Configuration> p_config( Configuration_Load( "testdata/LarvalHabitatMultiplierTest/TestReadHabitatSpeciesValue.json" ) );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         lhm.ConfigureFromJsonAndKey( p_config.get(), "LarvalHabitatMultiplier" );
 
@@ -222,8 +210,6 @@ SUITE(LarvalHabitatMultiplierTest)
 
     void CheckReadMix( LarvalHabitatMultiplier& lhm )
     {
-        CHECK( lhm.WasInitializedFromJson() );
-
         for( int i = 0 ; i < VectorHabitatType::pairs::count() ; ++i )
         {
             VectorHabitatType::Enum vht = VectorHabitatType::Enum( VectorHabitatType::pairs::get_values()[i] );
@@ -257,7 +243,6 @@ SUITE(LarvalHabitatMultiplierTest)
         json.ParseFile( "testdata/LarvalHabitatMultiplierTest/TestReadMix.json" );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         lhm.Read( json["LarvalHabitatMultiplier"], 789 );
 
@@ -269,7 +254,6 @@ SUITE(LarvalHabitatMultiplierTest)
         std::unique_ptr<Configuration> p_config( Configuration_Load( "testdata/LarvalHabitatMultiplierTest/TestReadMix.json" ) );
 
         LarvalHabitatMultiplier lhm;
-        CHECK( !lhm.WasInitializedFromJson() );
 
         lhm.ConfigureFromJsonAndKey( p_config.get(), "LarvalHabitatMultiplier" );
 

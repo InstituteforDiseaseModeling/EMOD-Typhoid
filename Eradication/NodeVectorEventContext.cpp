@@ -36,7 +36,6 @@ namespace Kernel
     , pAnimalFeedKilling(0)
     , pOutdoorRestKilling(0)
     { 
-        larval_reduction.Initialize();
     }
 
     NodeVectorEventContextHost::~NodeVectorEventContextHost()
@@ -219,13 +218,12 @@ namespace Kernel
         {
             vht = VectorHabitatType::ALL_HABITATS;
         }
+        if( !larval_reduction.WasInitialized() )
+        {
+            larval_reduction.Initialize();
+        }
         float ret = larval_reduction.GetMultiplier( vht, species );
 
-        //printf("NodeVectorEventContextHost::GetLarvalHabitatReduction: larval_reduction_target=%s  habitat_query=%s  species=%s ret=%f\n",
-        //                VectorHabitatType::pairs::lookup_key( larval_reduction_target ),
-        //                VectorHabitatType::pairs::lookup_key( habitat_query ),
-        //                species.c_str(),
-        //                ret);
         LOG_DEBUG_F( "%s returning %f (habitat_query = %s)\n", __FUNCTION__, ret, VectorHabitatType::pairs::lookup_key( habitat_query ) );
         return ret;
     }

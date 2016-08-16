@@ -38,7 +38,7 @@ namespace Kernel
         virtual json::QuickBuilder GetSchema() override;
 
         void Read( const JsonObjectDemog& rJsonData, uint32_t externalNodeId );
-        bool WasInitializedFromJson() const;
+        bool WasInitialized() const;
         float GetMultiplier( VectorHabitatType::Enum, const std::string& species ) const;
         void SetMultiplier( VectorHabitatType::Enum, float multiplier );
         void SetAsReduction( const LarvalHabitatMultiplier& rRegularLHM );
@@ -54,7 +54,7 @@ namespace Kernel
         float m_MinValue;
         float m_MaxValue;
         float m_DefaultValue;
-        bool m_InitializedFromJson;
+        bool m_Initialized;
         std::map<VectorHabitatType::Enum,std::map<std::string,float>> m_Multiplier;
 #pragma warning( pop )
     };

@@ -23,7 +23,7 @@ namespace Kernel
     , m_MinValue( minValue )
     , m_MaxValue( maxValue )
     , m_DefaultValue( defaultValue )
-    , m_InitializedFromJson(false)
+    , m_Initialized(false)
     , m_Multiplier()
     {
     }
@@ -50,11 +50,12 @@ namespace Kernel
 
             m_Multiplier.insert( std::make_pair( vht, species_map ) );
         }
+        m_Initialized = true;
     }
 
-    bool LarvalHabitatMultiplier::WasInitializedFromJson() const
+    bool LarvalHabitatMultiplier::WasInitialized() const
     {
-        return m_InitializedFromJson;
+        return m_Initialized;
     }
 
     float LarvalHabitatMultiplier::GetMultiplier( VectorHabitatType::Enum vht, const std::string& species ) const
@@ -149,7 +150,6 @@ namespace Kernel
             LOG_INFO_F("Node ID=%d with LarvalHabitatMultiplier(ALL_HABITATS)=%0.2f\n", externalNodeId, multiplier);
             LOG_WARN("DeprecationWarning: Specification of \"LarvalHabitatMultiplier\" as a floating-point value in the \"NodeAttributes\" block will soon be deprecated. Specify as an object with habitat-type keys, e.g. \"LarvalHabitatMultiplier\" : {\"TEMPORARY_RAINFALL\" : 0.3}\n");
         }
-        m_InitializedFromJson = true;
     }
 
     void LarvalHabitatMultiplier::CheckRange( float multiplier, 
