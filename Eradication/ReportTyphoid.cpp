@@ -34,36 +34,68 @@ static const std::string _num_enviro_infections_label    = "New Infections By Ro
 static const std::string _num_contact_infections_label   = "New Infections By Route (CONTACT)";
     
 
-
 GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 
 
 ReportTyphoid::ReportTyphoid()
+: recording( false )
 {
 }
 
 bool ReportTyphoid::Configure( const Configuration * inputJson )
 {
+    initConfigTypeMap( "Inset_Chart_Reporting_Start_Year", &startYear, "Start Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
+    initConfigTypeMap( "Inset_Chart_Reporting_Stop_Year", &stopYear, "Stop Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
     bool ret = JsonConfigurable::Configure( inputJson );
+    LOG_DEBUG_F( "Read in Start_Year (%f) and Stop_Year(%f).\n", startYear, stopYear );
+    if( startYear >= stopYear )
+    {
+        throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Inset_Chart_Reporting_Start_Year", startYear, "Inset_Chart_Reporting_Stop_Year", stopYear );
+    }
     return ret ;
+}
+
+void ReportTyphoid::BeginTimestep()
+{
+    if( recording )
+    {
+        return ReportEnvironmental::BeginTimestep();
+    }
 }
 
 void ReportTyphoid::EndTimestep( float currentTime, float dt )
 {
-    ReportEnvironmental::EndTimestep( currentTime, dt );
+    if( recording )
+    {
+
+        ReportEnvironmental::EndTimestep( currentTime, dt );
+
+        // Make sure we push at least one zero per timestep
+        Accumulate( _num_chronic_carriers_label, 0 );
+        Accumulate( _num_subclinic_infections_label, 0 );
+        Accumulate( _num_acute_infections_label, 0 );
+        Accumulate( _num_enviro_infections_label, 0 );
+        Accumulate( _num_contact_infections_label, 0 );
+    }
+
+    release_assert( parent );
     
-    // Make sure we push at least one zero per timestep
-    Accumulate( _num_chronic_carriers_label, 0 );
-    Accumulate( _num_subclinic_infections_label, 0 );
-    Accumulate( _num_acute_infections_label, 0 );
-    Accumulate( _num_enviro_infections_label, 0 );
-    Accumulate( _num_contact_infections_label, 0 );
+    float currentYear = parent->GetSimulationTime().Year();
+    LOG_DEBUG_F( "currentYear = %f.\n", currentYear );
+    if( currentYear >= startYear && currentYear < stopYear )
+    {
+        recording = true;
+    }
+    else
+    {
+        recording = false;
+    }
+    LOG_DEBUG_F( "recording = %d\n", recording );
 }
 
 void
 ReportTyphoid::postProcessAccumulatedData()
 {
-    LOG_DEBUG( "postProcessAccumulatedData\n" );
     ReportEnvironmental::postProcessAccumulatedData();
 
     // pass through normalization
@@ -88,6 +120,11 @@ ReportTyphoid::LogIndividualData(
     IIndividualHuman * individual
 )
 {
+    if( recording == false ) 
+    {
+        return;
+    }
+
     ReportEnvironmental::LogIndividualData( individual );
     IIndividualHumanTyphoid* typhoid_individual = NULL;
     if( individual->QueryInterface( GET_IID( IIndividualHumanTyphoid ), (void**)&typhoid_individual ) != s_OK )
@@ -111,6 +148,7 @@ ReportTyphoid::LogIndividualData(
         {
             Accumulate( _num_acute_infections_label, mc_weight );
         }
+
         // Get infection incidence by route
         NewInfectionState::_enum nis = individual->GetNewInfectionState(); 
         LOG_DEBUG_F( "nis = %d\n", ( nis ) );
@@ -118,7 +156,7 @@ ReportTyphoid::LogIndividualData(
             nis == NewInfectionState::NewInfection /*||
             nis == NewInfectionState::NewlyDetected*/ )
         {
-			auto inf = individual->GetInfections().back();
+            auto inf = individual->GetInfections().back();
             StrainIdentity si;
             inf->GetInfectiousStrainID( &si );
             if( si.GetGeneticID() == 0 )
@@ -129,9 +167,7 @@ ReportTyphoid::LogIndividualData(
             {
                 Accumulate( _num_contact_infections_label, mc_weight );
             }
-		
         }
-        //std::cout << "si.GetGeneticID() = " << si.GetGeneticID() << std::endl;
     }
 }
 
@@ -140,6 +176,17 @@ ReportTyphoid::LogNodeData(
     INodeContext * pNC
 )
 {
+    if( parent == nullptr )
+    {
+        parent = pNC->GetParent();
+        LOG_DEBUG_F( "Set parent to %x\n", parent );
+    }
+
+    if( recording == false ) 
+    {
+        return;
+    }
+
     ReportEnvironmental::LogNodeData( pNC );
     const INodeTyphoid * pTyphoidNode = NULL; // TBD: Use limited read-only interface, not full NodeTyphoid
     if( pNC->QueryInterface( GET_IID( INodeTyphoid), (void**) &pTyphoidNode ) != s_OK )

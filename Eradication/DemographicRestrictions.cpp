@@ -329,10 +329,24 @@ namespace Kernel
 
                     LOG_DEBUG_F( "Applying property restrictions in event coordinator: %s/%s.\n", szKey.c_str(), szVal.c_str() );
                     // Every individual has to have a property value for each property key
-                    if( pProp->find( szKey ) == pProp->end() )
+
+
+					if( pProp->find( szKey ) == pProp->end() )
                     {
-                        throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "properties", szKey.c_str() );
+                        ostringstream msg;
+                        msg << "Trying to apply property restrictions (key=" << szKey << ", value=" << szVal << ") for individual " << pIndividual->GetSuid().data << ".";
+                        msg << "Couldn't find " << szKey << " in list of " << pProp->size() << " individual properties: ";
+                        for( auto entry : *pProp )
+                        {
+                            auto key = entry.first;
+                            auto val = entry.second;
+                            msg << "key=" << key << ", val=" << val;
+                        }
+                        msg << std::endl;
+                        LOG_ERR_F( msg.str().c_str() );
+                        //throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "properties", szKey.c_str() );
                     }
+
                     else if( pProp->at( szKey ) == szVal )
                     {
                         LOG_DEBUG_F( "Person satisfies (partial) property restriction: constraint is %s/%s and the person is %s.\n", szKey.c_str(), szVal.c_str(), pProp->at( szKey ).c_str() );

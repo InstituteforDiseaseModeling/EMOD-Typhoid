@@ -12,13 +12,13 @@ ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 *****************************************************************************/
-
 #pragma once
 
 #include "ReportEnvironmental.h"
 #include "TyphoidDefs.h" // for N_TYPHOID_SEROTYPES
 #include "SimulationEnums.h" // for TyphoidVirusTypes
 #include "TransmissionGroupMembership.h"
+#include "Contexts.h" // ISimulationContext
 #include <map>
 
 namespace Kernel {
@@ -33,6 +33,7 @@ public:
     static IReport* ReportTyphoid::CreateReport() { return new ReportTyphoid(); }
 
     virtual bool Configure( const Configuration * inputJson );
+    virtual void BeginTimestep() override;
     virtual void EndTimestep( float currentTime, float dt );
 
     virtual void LogIndividualData( IIndividualHuman * individual);
@@ -45,6 +46,10 @@ protected:
 private:
 
     TransmissionGroupMembership_t memberships;
+    ISimulationContext * parent;
+    float startYear;
+    float stopYear;
+    bool recording;
 
 #if USE_BOOST_SERIALIZATION
     friend class ::boost::serialization::access;
