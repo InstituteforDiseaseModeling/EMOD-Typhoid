@@ -143,6 +143,8 @@ add_option( "Report" , "build report target dll" , 1 , True) #, Report="Spatial"
 # installation options
 add_option( "Install" , "install target dll into given directory" , 1 , True) #, Install="install dir" )
 
+add_option( "TestEnhancements" , "Build in additional logging for scientific or other validation, might slow performance" , 0, True)
+
 # current default is Release
 Dbg = has_option( "Debug" )
 Rel = has_option( "Release" )
@@ -515,6 +517,12 @@ def setEnvAttrs(myenv):
 
     print "DLL=" + str(myenv['AllDlls'])
     print "Install=" + myenv['Install']
+
+    if has_option( "TestEnhancements" ):
+        print( "TestEnhancements ON, LOG_VALID enabled." )
+        env.Append( CPPDEFINES= ["ENABLE_LOG_VALID"] )
+    else:
+        print( "TestEnhancements off, no LOG_VALID." )
 
 # Main starting  point
 env = doConfigure( env )
