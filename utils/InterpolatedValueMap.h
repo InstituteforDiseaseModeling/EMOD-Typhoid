@@ -14,8 +14,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-
-    class IDMAPI InterpolatedValueMap : public JsonConfigurable, 
+#pragma warning(push)
+#pragma warning(disable: 4251)
+    class IDMAPI InterpolatedValueMap : public JsonConfigurable,
                                         public IComplexJsonConfigurable, 
                                         public JsonConfigurable::tFloatFloatMapConfigType /* really just a map */
     {
@@ -40,4 +41,5 @@ namespace Kernel
             float m_MinValue;
             float m_MaxValue;
     };
+#pragma warning( pop )
 }
