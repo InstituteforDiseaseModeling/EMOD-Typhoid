@@ -92,7 +92,7 @@ void Report::EndTimestep( float currentTime, float dt )
 //        //std::cout << "now = " << now << ", last = " << last_time << std::endl;
 //        diff = now - last_time;
 //    }
-    Accumulate("Disease Deaths", disease_deaths);
+    //Accumulate("Disease Deaths", disease_deaths);
     //Accumulate("Timestep Wallclock Duration", diff);
     BaseChannelReport::EndTimestep( currentTime, dt );
     //last_time = clock();
@@ -129,12 +129,13 @@ Report::LogNodeData(
     Kernel::INodeContext * pNC
 )
 {
+
     LOG_DEBUG( "LogNodeData\n" );
 
     Accumulate(_stat_pop_label, pNC->GetStatPop());
-    Accumulate("Births", pNC->GetBirths());
+    //Accumulate("Births", pNC->GetBirths());
     Accumulate("Infected", pNC->GetInfected());
-    Accumulate(_aoi_label, pNC->GetMeanAgeInfection() ); // * pNC->GetInfected());
+    //Accumulate(_aoi_label, pNC->GetMeanAgeInfection() ); // * pNC->GetInfected());
 
     if (pNC->GetLocalWeather())
     {
@@ -144,16 +145,16 @@ Report::LogNodeData(
         Accumulate("Relative Humidity", pNC->GetLocalWeather()->humidity());
     }
 
-    Accumulate(_new_infections_label,                 new_infections);
-    new_infections = 0.0f;
-    Accumulate(_new_reported_infections_label,        new_reported_infections);
-    new_reported_infections = 0.0f;
+    //Accumulate(_new_infections_label,                 new_infections);
+    //new_infections = 0.0f;
+    //Accumulate(_new_reported_infections_label,        new_reported_infections);
+    //new_reported_infections = 0.0f;
 
-    Accumulate("Campaign Cost",                  pNC->GetCampaignCost());
-    Accumulate("Human Infectious Reservoir",     pNC->GetInfectivity());
-    Accumulate(_infection_rate_label,   pNC->GetInfectionRate());
+    //Accumulate("Campaign Cost",                  pNC->GetCampaignCost());
+    //Accumulate("Human Infectious Reservoir",     pNC->GetInfectivity());
+    //Accumulate(_infection_rate_label,   pNC->GetInfectionRate());
 
-    AccumulateSEIRW();
+    //AccumulateSEIRW();
 }
 
 void 
