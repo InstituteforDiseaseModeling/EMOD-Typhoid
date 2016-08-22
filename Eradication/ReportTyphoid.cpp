@@ -39,6 +39,7 @@ GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 
 ReportTyphoid::ReportTyphoid()
 : recording( false )
+, parent(nullptr)
 {
 }
 
