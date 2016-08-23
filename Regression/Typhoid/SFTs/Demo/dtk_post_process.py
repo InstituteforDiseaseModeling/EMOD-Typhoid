@@ -14,7 +14,7 @@ def inf_calc( dur, c1, c2, c3 ):
     return math.exp(-1*x) /c3
 
 def get_val( key, line ):    
-    regex = key + " = (\d*\.*\d*)"
+    regex = key + "=(\d*\.*\d*)"
     match = re.search(regex, line)
     if match != None:   
         return match.group(1)
@@ -22,37 +22,32 @@ def get_val( key, line ):
         raise LookupError
     
 def application( report_file ):
+    #pdb.set_trace()
     #print( "Post-processing: " + report_file ) 
     lines = []
     with open( "test.txt" ) as logfile:
         for line in logfile:
-            if re.search( "\[InfectionDengue\]", line ) and re.search( "individual_id = 10, symptomatic = 0,", line ):
+            if re.search( "Initializing Typhoid immunity object", line ) and re.search( "age=0.000000", line ):
                 lines.append( line )
 
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
-    c1 = cdj["Infectiousness_Asymptomatic_Naive_1"]
-    c2 = cdj["Infectiousness_Asymptomatic_Naive_2"]
-    c3 = cdj["Infectiousness_Asymptomatic_Naive_3"]
+    #c1 = cdj["Infectiousness_Asymptomatic_Naive_1"]
     success = True
     with open( "scientific_feature_report.txt", "w" ) as report_file:
         if len( lines ) == 0:
             success = False
             report_file.write( "Found no data matching test case.\n" )
         else:
-            actual_infectiousness = []        
             for line in lines:
-                duration = float( get_val( "duration", line ) )                
-                theory = inf_calc( duration, c1, c2, c3 )
-                actual = float( get_val( "infectiousness \(raw\)", line ) )                
-                actual_infectiousness.append(actual)
-                if abs(theory-actual) > 1e-3:
+                immunity = float( get_val( " immunity modifier", line ) )
+                if immunity != 1.000:
                     success = False
-                    report_file.write( "BAD: duration={0}: theory={1}, actual={2}\n".format( duration, theory, actual ) )
+                    report_file.write( "BAD: immunity for newborn={0} instead of 1.0\n".format( immunity ) )
                     
         if success:
             report_file.write( "SUMMARY: Success={0}\n".format( success ) )
 
-    dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
+    #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 
 if __name__ == "__main__":
     # execute only if run as a script

@@ -140,7 +140,10 @@ class RuntimeParameters:
         
     @property
     def py_input(self):
-        return self.config.get('ENVIRONMENT', 'py_input')
+        if self.local_execution or os.name=="posix":
+            return self.config.get(self.os_type, 'py_input')
+        else:
+            return self.config.get('ENVIRONMENT', 'py_input')
         
     @property
     def use_user_input_root(self):
