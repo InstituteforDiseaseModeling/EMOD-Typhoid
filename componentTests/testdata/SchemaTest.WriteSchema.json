@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.7.1236.0",
-		"DTK_Branch" : "GH-621 (734aa38)",
-		"DTK_Build_Date" : "Jul 29 2016 12:56:53"
+		"DTK_Version" : "2.8.1284.0",
+		"DTK_Branch" : "GH-YYY (37cb20b)",
+		"DTK_Build_Date" : "Aug  3 2016 14:51:00"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -110,7 +110,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -144,7 +144,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -180,7 +180,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -404,7 +407,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -438,7 +441,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -474,7 +477,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -900,7 +906,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -934,7 +940,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -970,7 +976,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -1441,7 +1450,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -1475,7 +1484,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -1511,7 +1520,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -1663,7 +1675,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -1697,7 +1709,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -1733,7 +1745,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -2542,7 +2557,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -2576,7 +2591,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -2612,7 +2627,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -2785,7 +2803,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -2819,7 +2837,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -2855,7 +2873,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -2986,7 +3007,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -3020,7 +3041,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -3056,7 +3077,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -3203,7 +3227,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -3237,7 +3261,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -3273,7 +3297,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -3441,7 +3468,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 1e+006,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -3475,7 +3502,7 @@
 				"type" : "bool"
 			},
 			"Enable_Interventions" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
 				"type" : "bool"
 			},
@@ -3511,7 +3538,10 @@
 					"DISTRIBUTION_COMPLEX"
 				],
 				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
 			},
 			"Node_Grid_Size" : {
 				"min" : 0.004167,
@@ -3704,24 +3734,36 @@
 				"default" : "CLIMATE_UPDATE_YEAR"
 			},
 			"Air_Temperature_Filename" : {
-				"default" : "UNINITIALIZED STRING",
+				"default" : "air_temp.json",
 				"description" : "Path of input file defining air temperature data measured 2 meters above ground. Relevant only if Climate_Model is set to CLIMATE_BY_DATA.",
-				"type" : "string"
+				"type" : "string",
+				"depends-on" : {
+					"Climate_Model" : "CLIMATE_BY_DATA"
+				}
 			},
 			"Land_Temperature_Filename" : {
-				"default" : "UNINITIALIZED STRING",
+				"default" : "land_temp.json",
 				"description" : "Path of input file defining temperature data measured at land surface. Relevant only if Climate_Model is set to CLIMATE_BY_DATA.",
-				"type" : "string"
+				"type" : "string",
+				"depends-on" : {
+					"Climate_Model" : "CLIMATE_BY_DATA"
+				}
 			},
 			"Rainfall_Filename" : {
-				"default" : "UNINITIALIZED STRING",
+				"default" : "rainfall.json",
 				"description" : "Path of input file defining rainfall data. Relevant only if Climate_Model is set to CLIMATE_BY_DATA.",
-				"type" : "string"
+				"type" : "string",
+				"depends-on" : {
+					"Climate_Model" : "CLIMATE_BY_DATA"
+				}
 			},
 			"Relative_Humidity_Filename" : {
-				"default" : "UNINITIALIZED STRING",
+				"default" : "rel_hum.json",
 				"description" : "Path of input file defining relative humidity data measured 2 meters above ground. Relevant only if Climate_Model is set to CLIMATE_BY_DATA.",
-				"type" : "string"
+				"type" : "string",
+				"depends-on" : {
+					"Climate_Model" : "CLIMATE_BY_DATA"
+				}
 			},
 			"Koppen_Filename" : {
 				"default" : "UNINITIALIZED STRING",
@@ -4010,17 +4052,6 @@
 					"Individual_Sampling_Type" : "ADAPTED_SAMPLING_BY_AGE_GROUP"
 				}
 			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
 			"Migration_Pattern" : {
 				"type" : "enum",
 				"enum" : [
@@ -4243,7 +4274,10 @@
 				"max" : 3.40282e+038,
 				"default" : 6,
 				"description" : "Average duration, in days, of the incubation period before infected individuals becomes infectious.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Incubation_Period_Distribution" : "EXPONENTIAL_DURATION"
+				}
 			},
 			"Incubation_Period_Min" : {
 				"min" : 0,
@@ -4302,7 +4336,10 @@
 				"max" : 3.40282e+038,
 				"default" : 6,
 				"description" : "Average duration, in days, of the infectious period before the infection is cleared.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Infectious_Period_Distribution" : "EXPONENTIAL_DURATION"
+				}
 			},
 			"Infectious_Period_Min" : {
 				"min" : 0,
@@ -4730,11 +4767,11 @@
 		},
 		"Migration.Default" : {
 			"Enable_Migration_Heterogeneity" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to use migration rate distribution in the demographics file. Set to 0 to assume by default that the same migration rate applies for all individuals.",
 				"type" : "bool",
 				"depends-on" : {
-					"FIXED_RATE_MIGRATION,VARIABLE_RATE_MIGRATION,LEVY_FLIGHTS" : 1
+					"Migration_Model" : "FIXED_RATE_MIGRATION,VARIABLE_RATE_MIGRATION,LEVY_FLIGHTS"
 				}
 			},
 			"x_Local_Migration" : {
@@ -5129,11 +5166,11 @@
 		},
 		"Migration.VectorDefault" : {
 			"Enable_Migration_Heterogeneity" : {
-				"default" : 1,
+				"default" : 0,
 				"description" : "Set to 1 to use migration rate distribution in the demographics file. Set to 0 to assume by default that the same migration rate applies for all individuals.",
 				"type" : "bool",
 				"depends-on" : {
-					"FIXED_RATE_MIGRATION,VARIABLE_RATE_MIGRATION,LEVY_FLIGHTS" : 1
+					"Migration_Model" : "FIXED_RATE_MIGRATION,VARIABLE_RATE_MIGRATION,LEVY_FLIGHTS"
 				}
 			},
 			"x_Local_Migration" : {
@@ -5364,21 +5401,30 @@
 				"max" : 3.40282e+038,
 				"default" : 0,
 				"description" : "Fractional increase in birth rate during high birth season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			},
 			"Birth_Rate_Boxcar_Forcing_Start_Time" : {
 				"min" : 0,
 				"max" : 365,
 				"default" : 0,
 				"description" : "Beginning of high birth rate season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			},
 			"Birth_Rate_Boxcar_Forcing_End_Time" : {
 				"min" : 0,
 				"max" : 365,
 				"default" : 0,
 				"description" : "End of high birth rate season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			}
 		},
 		"NodeDemographics" : {
@@ -5604,21 +5650,30 @@
 				"max" : 3.40282e+038,
 				"default" : 0,
 				"description" : "Fractional increase in birth rate during high birth season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			},
 			"Birth_Rate_Boxcar_Forcing_Start_Time" : {
 				"min" : 0,
 				"max" : 365,
 				"default" : 0,
 				"description" : "Beginning of high birth rate season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			},
 			"Birth_Rate_Boxcar_Forcing_End_Time" : {
 				"min" : 0,
 				"max" : 365,
 				"default" : 0,
 				"description" : "End of high birth rate season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			}
 		},
 		"NodeVector" : {
@@ -5838,21 +5893,30 @@
 				"max" : 3.40282e+038,
 				"default" : 0,
 				"description" : "Fractional increase in birth rate during high birth season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			},
 			"Birth_Rate_Boxcar_Forcing_Start_Time" : {
 				"min" : 0,
 				"max" : 365,
 				"default" : 0,
 				"description" : "Beginning of high birth rate season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			},
 			"Birth_Rate_Boxcar_Forcing_End_Time" : {
 				"min" : 0,
 				"max" : 365,
 				"default" : 0,
 				"description" : "End of high birth rate season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
-				"type" : "float"
+				"type" : "float",
+				"depends-on" : {
+					"Birth_Rate_Time_Dependence" : "ANNUAL_BOXCAR_FUNCTION"
+				}
 			}
 		},
 		"Polio.Individual" : {
@@ -6192,9 +6256,12 @@
 				"type" : "bool"
 			},
 			"Campaign_Filename" : {
-				"default" : "UNINITIALIZED STRING",
+				"default" : "",
 				"description" : "Path of the simulation campaign file.  This configuration file defines campaign related settings and thus, is an optional file, only required when interventions are part of the simulation.",
-				"type" : "string"
+				"type" : "string",
+				"depends-on" : {
+					"Enable_Interventions" : 1
+				}
 			},
 			"Load_Balance_Filename" : {
 				"default" : "UNINITIALIZED STRING",
@@ -6264,9 +6331,12 @@
 				"type" : "bool"
 			},
 			"Campaign_Filename" : {
-				"default" : "UNINITIALIZED STRING",
+				"default" : "",
 				"description" : "Path of the simulation campaign file.  This configuration file defines campaign related settings and thus, is an optional file, only required when interventions are part of the simulation.",
-				"type" : "string"
+				"type" : "string",
+				"depends-on" : {
+					"Enable_Interventions" : 1
+				}
 			},
 			"Load_Balance_Filename" : {
 				"default" : "UNINITIALIZED STRING",
@@ -6396,9 +6466,12 @@
 				"type" : "bool"
 			},
 			"Campaign_Filename" : {
-				"default" : "UNINITIALIZED STRING",
+				"default" : "",
 				"description" : "Path of the simulation campaign file.  This configuration file defines campaign related settings and thus, is an optional file, only required when interventions are part of the simulation.",
-				"type" : "string"
+				"type" : "string",
+				"depends-on" : {
+					"Enable_Interventions" : 1
+				}
 			},
 			"Load_Balance_Filename" : {
 				"default" : "UNINITIALIZED STRING",
@@ -9705,7 +9778,10 @@
 						"max" : 3.40282e+038,
 						"default" : 6,
 						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
-						"type" : "float"
+						"type" : "float",
+						"depends-on" : {
+							"Delay_Distribution" : "EXPONENTIAL_DURATION"
+						}
 					},
 					"Delay_Period_Min" : {
 						"min" : 0,
@@ -9907,21 +9983,11 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "A marker associated with an intervention to indicate what the broad category of health care cascade to which an intervention belongs. This allows for additional control of the flow of health care, e.g., the use of Abort_States to prevent simultaneous use of multiple pathways to care.",
-						"type" : "string"
-					},
-					"Individual_Property_Active_TB_Key" : {
-						"default" : "UNINITIALIZED",
-						"description" : "The Individual Property key ('HasActiveTB') to determine whether the individual has TB.",
-						"type" : "string"
-					},
-					"Individual_Property_Active_TB_Value" : {
-						"default" : "UNINITIALIZED",
-						"description" : "The Individual Property value ('Yes') to determine whether the individual has TB.",
 						"type" : "string"
 					},
 					"idmType:InterpolatedValueMap" : {
@@ -9953,6 +10019,16 @@
 					"If_Pregnant" : {
 						"description" : "Time-varying CD4 threshold for pregnant individuals.  Applies to pregnant individuals whose last recorded CD4 is above the current general population threshold.",
 						"type" : "idmType:InterpolatedValueMap"
+					},
+					"Individual_Property_Active_TB_Key" : {
+						"default" : "UNINITIALIZED",
+						"description" : "The Individual Property key ('HasActiveTB') to determine whether the individual has TB.",
+						"type" : "string"
+					},
+					"Individual_Property_Active_TB_Value" : {
+						"default" : "UNINITIALIZED",
+						"description" : "The Individual Property value ('Yes') to determine whether the individual has TB.",
+						"type" : "string"
 					},
 					"Negative_Diagnosis_Event" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10032,21 +10108,11 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "A marker associated with an intervention to indicate what the broad category of health care cascade to which an intervention belongs. This allows for additional control of the flow of health care, e.g., the use of Abort_States to prevent simultaneous use of multiple pathways to care.",
-						"type" : "string"
-					},
-					"Individual_Property_Active_TB_Key" : {
-						"default" : "UNINITIALIZED",
-						"description" : "The Individual Property key ('HasActiveTB') to determine whether the individual has TB.",
-						"type" : "string"
-					},
-					"Individual_Property_Active_TB_Value" : {
-						"default" : "UNINITIALIZED",
-						"description" : "The Individual Property value ('Yes') to determine whether the individual has TB.",
 						"type" : "string"
 					},
 					"Adult_Treatment_Age" : {
@@ -10098,6 +10164,16 @@
 						"description" : "Determines the WHO stage at or above which children having active TB (via individual property Has_Active_TB) are eligible for ART.",
 						"type" : "idmType:InterpolatedValueMap"
 					},
+					"Individual_Property_Active_TB_Key" : {
+						"default" : "UNINITIALIZED",
+						"description" : "The Individual Property key ('HasActiveTB') to determine whether the individual has TB.",
+						"type" : "string"
+					},
+					"Individual_Property_Active_TB_Value" : {
+						"default" : "UNINITIALIZED",
+						"description" : "The Individual Property value ('Yes') to determine whether the individual has TB.",
+						"type" : "string"
+					},
 					"Negative_Diagnosis_Event" : {
 						"default" : "UNINITIALIZED STRING",
 						"description" : "The next health care event that occurs for individuals who test negative. This is only valid if Event_Or_Config is set to 'Event'.",
@@ -10141,7 +10217,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10185,7 +10261,10 @@
 						"max" : 3.40282e+038,
 						"default" : 6,
 						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
-						"type" : "float"
+						"type" : "float",
+						"depends-on" : {
+							"Delay_Distribution" : "EXPONENTIAL_DURATION"
+						}
 					},
 					"Delay_Period_Min" : {
 						"min" : 0,
@@ -10314,7 +10393,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10376,7 +10455,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10420,7 +10499,10 @@
 						"max" : 3.40282e+038,
 						"default" : 6,
 						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
-						"type" : "float"
+						"type" : "float",
+						"depends-on" : {
+							"Delay_Distribution" : "EXPONENTIAL_DURATION"
+						}
 					},
 					"Delay_Period_Min" : {
 						"min" : 0,
@@ -10549,7 +10631,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10699,7 +10781,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10710,7 +10792,7 @@
 						"Event" : {
 							"type" : "Constrained String",
 							"description" : "Name of event to be broadcasted if randomly selected.",
-							"value_source" : "<configuration>:Listed_Events.*"
+							"value_source" : "<configuration>::Listed_Events.*"
 						},
 						"Probability" : {
 							"type" : "float",
@@ -10801,7 +10883,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10893,7 +10975,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -10978,7 +11060,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -11098,7 +11180,7 @@
 						"default" : [],
 						"description" : "A list of Cascade States that cause an intervention to be aborted. Used to control the flow of health care access, e.g., to prevent the same individual from accessing health care via two different routes at the same time. The possible states that can be listed are defined in Valid_Cascade_States.*",
 						"type" : "Dynamic String Set",
-						"value_source" : "Valid_Cascade_States.*"
+						"value_source" : "<configuration>::Valid_Cascade_States.*"
 					},
 					"Cascade_State" : {
 						"default" : "UNINITIALIZED STRING",
@@ -11858,7 +11940,10 @@
 						"max" : 3.40282e+038,
 						"default" : 6,
 						"description" : "TBD",
-						"type" : "float"
+						"type" : "float",
+						"depends-on" : {
+							"Duration_Before_Leaving_Distribution_Type" : "EXPONENTIAL_DURATION"
+						}
 					},
 					"Duration_Before_Leaving_Gausian_Mean" : {
 						"min" : 0,
@@ -11931,7 +12016,10 @@
 						"max" : 3.40282e+038,
 						"default" : 6,
 						"description" : "TBD",
-						"type" : "float"
+						"type" : "float",
+						"depends-on" : {
+							"Duration_At_Node_Distribution_Type" : "EXPONENTIAL_DURATION"
+						}
 					},
 					"Duration_At_Node_Gausian_Mean" : {
 						"min" : 0,
@@ -12033,7 +12121,10 @@
 						"max" : 3.40282e+038,
 						"default" : 6,
 						"description" : "TBD",
-						"type" : "float"
+						"type" : "float",
+						"depends-on" : {
+							"Duration_Before_Leaving_Distribution_Type" : "EXPONENTIAL_DURATION"
+						}
 					},
 					"Duration_Before_Leaving_Gausian_Mean" : {
 						"min" : 0,
@@ -12106,7 +12197,10 @@
 						"max" : 3.40282e+038,
 						"default" : 6,
 						"description" : "TBD",
-						"type" : "float"
+						"type" : "float",
+						"depends-on" : {
+							"Duration_At_Node_Distribution_Type" : "EXPONENTIAL_DURATION"
+						}
 					},
 					"Duration_At_Node_Gausian_Mean" : {
 						"min" : 0,
@@ -13776,7 +13870,7 @@
 				"NodeSetNodeList" : {
 					"idmType:NodeListConfig" : [
 						{
-							"Type" : "Integer",
+							"Type" : "integer",
 							"Min" : 0,
 							"Description" : "Id of Node"
 						}

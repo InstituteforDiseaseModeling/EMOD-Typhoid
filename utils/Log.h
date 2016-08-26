@@ -33,8 +33,8 @@ namespace Logger
 // EVIL MACROS COMING UP! Idea here is that folks can log with 1 parameter (the string).
 // Except for debug builds, LOG_VALID will compile to noop
 
-#define LOG_LVL(lvl, x)          do { if((EnvPtr !=nullptr) && EnvPtr->Log->CheckLogLevel(Logger::lvl, _module))  EnvPtr->Log->Log(Logger::lvl, _module, x); } while(0)
-#define LOG_LVL_F(lvl, x, ...)   do { if((EnvPtr !=nullptr) && EnvPtr->Log->CheckLogLevel(Logger::lvl, _module))  EnvPtr->Log->LogF(Logger::lvl, _module, x, ##__VA_ARGS__); } while(0)
+#define LOG_LVL(lvl, x)          do { if((EnvPtr !=nullptr) && (EnvPtr->Log != nullptr) && EnvPtr->Log->CheckLogLevel(Logger::lvl, _module))  EnvPtr->Log->Log(Logger::lvl, _module, x); } while(0)
+#define LOG_LVL_F(lvl, x, ...)   do { if((EnvPtr !=nullptr) && (EnvPtr->Log != nullptr) && EnvPtr->Log->CheckLogLevel(Logger::lvl, _module))  EnvPtr->Log->LogF(Logger::lvl, _module, x, ##__VA_ARGS__); } while(0)
 
 #define LOG_LEVEL(lvl)          ((EnvPtr != nullptr) ? EnvPtr->Log->CheckLogLevel(Logger::lvl, _module) : false)
 

@@ -647,6 +647,11 @@ namespace Kernel {
         assert(rValue.m_pValue);
         rapidjson::Value& r_that_value = *((rapidjson::Value*)rValue.m_pValue);
 
+        if( r_this_value.HasMember( pKey ) )
+        {
+            r_this_value.RemoveMember( pKey );
+        }
+
         rapidjson::Value value_to_add ;
         DeepCopy( r_that_value, value_to_add, r_this_doc );
 
@@ -667,6 +672,11 @@ namespace Kernel {
         rapidjson::Value& r_value = *((rapidjson::Value*)m_pValue);
         assert( r_value.IsObject() );
 
+        if( r_value.HasMember( pKey ) )
+        {
+            r_value.RemoveMember( pKey );
+        }
+
         rapidjson::Value new_val( pStrValue, r_doc.GetAllocator() );
 
         r_value.AddMember( pKey, r_doc.GetAllocator(), new_val, r_doc.GetAllocator() );
@@ -686,6 +696,11 @@ namespace Kernel {
         rapidjson::Value& r_value = *((rapidjson::Value*)m_pValue);
         assert( r_value.IsObject() );
 
+        if( r_value.HasMember( pKey ) )
+        {
+            r_value.RemoveMember( pKey );
+        }
+
         rapidjson::Value new_val( val );
 
         r_value.AddMember( pKey, r_doc.GetAllocator(), new_val, r_doc.GetAllocator() );
@@ -704,6 +719,11 @@ namespace Kernel {
         assert(m_pValue);
         rapidjson::Value& r_value = *((rapidjson::Value*)m_pValue);
         assert( r_value.IsObject() );
+
+        if( r_value.HasMember( pKey ) )
+        {
+            r_value.RemoveMember( pKey );
+        }
 
         rapidjson::Value new_val( val );
 
@@ -773,6 +793,21 @@ namespace Kernel {
 
         rapidjson::Value value_to_add ;
         DeepCopy( r_new_value, value_to_add, r_doc );
+
+        r_value.PushBack( value_to_add, r_doc.GetAllocator() );
+    }
+
+    void JsonObjectDemog::PushBack( const std::string& rStr )
+    {
+        assert(m_pDocument.get());
+        rapidjson::Document& r_doc = *((rapidjson::Document*)m_pDocument.get());
+
+        assert(m_pValue);
+        rapidjson::Value& r_value = *((rapidjson::Value*)m_pValue);
+        assert( r_value.IsArray() );
+
+        rapidjson::Value value_to_add;
+        value_to_add.SetString( rStr.c_str(), rStr.length(), r_doc.GetAllocator() );
 
         r_value.PushBack( value_to_add, r_doc.GetAllocator() );
     }

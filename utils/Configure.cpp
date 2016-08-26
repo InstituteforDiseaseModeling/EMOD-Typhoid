@@ -15,6 +15,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IdmString.h"
 #include "Log.h"
 #include "Debug.h"
+#include "Properties.h"
 
 static const char * _module = "JsonConfigurable";
 
@@ -950,6 +951,46 @@ namespace Kernel
         }
     }
 
+    void
+    JsonConfigurable::initConfigTypeMap(
+        const char* paramName,
+        IPKey * pVariable,
+        const char * description
+    )
+    {
+        LOG_DEBUG_F( "initConfigTypeMap<IPKey>: %s\n", paramName);
+        json::Object newIPKeySchema;
+        newIPKeySchema["description"] = json::String(description);
+        newIPKeySchema["type"] = json::String("IPKey");
+        ipKeyTypeMap[ paramName ] = pVariable;
+        jsonSchemaBase[paramName] = newIPKeySchema;
+
+        if( pVariable->GetParameterName().empty() )
+        {
+            pVariable->SetParameterName( paramName );
+        }
+    }
+
+    void
+    JsonConfigurable::initConfigTypeMap(
+        const char* paramName,
+        IPKeyValue * pVariable,
+        const char * description
+    )
+    {
+        LOG_DEBUG_F( "initConfigTypeMap<IPKey>: %s\n", paramName);
+        json::Object newIPKeyValueSchema;
+        newIPKeyValueSchema["description"] = json::String(description);
+        newIPKeyValueSchema["type"] = json::String("IPKeyValue");
+        ipKeyValueTypeMap[ paramName ] = pVariable;
+        jsonSchemaBase[paramName] = newIPKeyValueSchema;
+
+        if( pVariable->GetParameterName().empty() )
+        {
+            pVariable->SetParameterName( paramName );
+        }
+    }
+
     bool JsonConfigurable::Configure( const Configuration* inputJson )
     {
         if( _dryrun )
@@ -1567,6 +1608,46 @@ namespace Kernel
             }
         }
 
+
+        // ---------------------------------- IPKey ------------------------------------
+        for (auto& entry : ipKeyTypeMap)
+        {
+            const std::string& param_key = entry.first;
+            json::QuickInterpreter schema = jsonSchemaBase[param_key];
+            if ( !inputJson->Exist(param_key) && _useDefaults )
+            {
+                LOG_INFO_F( "Using the default value ( \"%s\" : \"\" ) for unspecified parameter.\n", param_key.c_str() );
+                if( _track_missing )
+                {
+                    missing_parameters_set.insert(param_key);
+                }
+            }
+            else
+            {
+                *(entry.second) = (std::string) GET_CONFIG_STRING( inputJson, (entry.first).c_str() );
+            }
+        }
+
+        // ---------------------------------- IPKeyValue ------------------------------------
+        for (auto& entry : ipKeyValueTypeMap)
+        {
+            const std::string& param_key = entry.first;
+            json::QuickInterpreter schema = jsonSchemaBase[param_key];
+            IPKeyValue val ;
+            if ( !inputJson->Exist(param_key) && _useDefaults )
+            {
+                LOG_INFO_F( "Using the default value ( \"%s\" : \"\" ) for unspecified parameter.\n", param_key.c_str() );
+                if( _track_missing )
+                {
+                    missing_parameters_set.insert(param_key);
+                }
+            }
+            else
+            {
+                val = (std::string) GET_CONFIG_STRING( inputJson, (entry.first).c_str() );
+            }
+            *(entry.second) = val;
+        }
         return true;
     }
 

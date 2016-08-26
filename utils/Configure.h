@@ -42,6 +42,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class IPKey;
+    class IPKeyValue;
+
     struct IDMAPI IComplexJsonConfigurable
     {
         virtual void ConfigureFromJsonAndKey( const Configuration* inputJson, const std::string& key ) = 0;
@@ -164,6 +167,8 @@ namespace Kernel
         typedef std::map< std::string, NaturalNumber * > tNNConfigTypeMapType;
         typedef std::map< std::string, JsonConfigurable * > tJsonConfigurableMapType;
         typedef std::map< std::string, IComplexJsonConfigurable * > tComplexJsonConfigurableMapType;
+        typedef std::map< std::string, IPKey * > tIPKeyMapType;
+        typedef std::map< std::string, IPKeyValue * > tIPKeyValueMapType;
 
     public:
 
@@ -212,6 +217,8 @@ namespace Kernel
         tNNConfigTypeMapType naturalNumberConfigTypeMap;
         tJsonConfigurableMapType jcTypeMap;
         tComplexJsonConfigurableMapType complexTypeMap;
+        tIPKeyMapType ipKeyTypeMap ;
+        tIPKeyValueMapType ipKeyValueTypeMap;
 
         json::Object jsonSchemaBase;
         static std::set< std::string > empty_set;
@@ -393,6 +400,20 @@ namespace Kernel
             JsonConfigurable * pVariable,
             const char* defaultDesc,
             const char* condition_key=nullptr, const char* condition_value=nullptr
+       );
+
+       void
+       initConfigTypeMap(
+            const char* paramName,
+            IPKey * pVariable,
+            const char* defaultDesc
+       );
+
+       void
+       initConfigTypeMap(
+            const char* paramName,
+            IPKeyValue * pVariable,
+            const char* defaultDesc
        );
 
         template< typename T >

@@ -438,9 +438,6 @@
     <ClCompile Include="..\interventions\HealthSeekingBehavior.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
     </ClCompile>
-    <ClCompile Include="Properties.cpp">
-      <Filter>Source Files\Kernel</Filter>
-    </ClCompile>
     <ClCompile Include="MultiRouteTransmissionGroups.cpp">
       <Filter>Source Files\HINT</Filter>
     </ClCompile>
@@ -695,9 +692,6 @@
     </ClCompile>
     <ClCompile Include="..\interventions\WaningEffectFactory.cpp">
       <Filter>Source Files\Campaign\WaningEffects</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonObjectDemog.cpp">
-      <Filter>Source Files\Kernel</Filter>
     </ClCompile>
     <ClCompile Include="BehaviorPfa.cpp">
       <Filter>Source Files\STI</Filter>
@@ -1343,9 +1337,6 @@
     <ClInclude Include="PolioDefs.h">
       <Filter>Source Files\Environmental\Polio</Filter>
     </ClInclude>
-    <ClInclude Include="Properties.h">
-      <Filter>Source Files\Kernel</Filter>
-    </ClInclude>
     <ClInclude Include="IContagionPopulation.h">
       <Filter>Source Files\HINT</Filter>
     </ClInclude>
@@ -1961,9 +1952,6 @@
     </ClInclude>
     <ClInclude Include="..\interventions\VectorControlNodeTargeted.h">
       <Filter>Source Files\Campaign\NodeTargeted\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="JsonObjectDemog.h">
-      <Filter>Source Files\Kernel</Filter>
     </ClInclude>
     <ClInclude Include="ReportTBHIV.h">
       <Filter>Source Files\Reporting\TBHIV</Filter>

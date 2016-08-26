@@ -64,12 +64,25 @@ SUITE(NChooserEventCoordinatorTest)
             m_pSimulationConfig->listed_events.insert( "VaccineExpired" );
 
             Environment::setSimulationConfig( m_pSimulationConfig );
-            Node::TestOnly_ClearProperties();
+            IPFactory::DeleteFactory();
+            IPFactory::CreateFactory();
+
+            std::map<std::string,float> location_ip_values ;
+            location_ip_values.insert( std::make_pair( "URBAN", 0.8f ) );
+            location_ip_values.insert( std::make_pair( "RURAL", 0.2f ) );
+
+            IPFactory::GetInstance()->AddIP( "Location", location_ip_values );
+
+            std::map<std::string,float> income_ip_values ;
+            income_ip_values.insert( std::make_pair( "LOW",  0.9f ) );
+            income_ip_values.insert( std::make_pair( "HIGH", 0.1f ) );
+
+            IPFactory::GetInstance()->AddIP( "Income", income_ip_values );
         }
 
         ~NChooserEventCoordinatorFixture()
         {
-            Node::TestOnly_ClearProperties();
+            IPFactory::DeleteFactory();
             Environment::Finalize();
         }
     };
@@ -148,9 +161,6 @@ SUITE(NChooserEventCoordinatorTest)
 
     TEST_FIXTURE(NChooserEventCoordinatorFixture, TestTargetedByAgeAndGender)
     {
-        Node::TestOnly_AddPropertyKeyValue( "Location", "URBAN" );
-        Node::TestOnly_AddPropertyKeyValue( "Location", "RURAL" );
-
         INodeContextFake nc;
         INodeEventContextFake nec;
 
@@ -410,11 +420,14 @@ SUITE(NChooserEventCoordinatorTest)
     {
         try
         {
-            Node::TestOnly_AddPropertyKeyValue( "Location", "URBAN" );
-            Node::TestOnly_AddPropertyKeyValue( "Location", "RURAL" );
-            Node::TestOnly_AddPropertyKeyValue( "Income",   "LOW"   );
-            Node::TestOnly_AddPropertyKeyValue( "Income",   "MED"   );
-            Node::TestOnly_AddPropertyKeyValue( "Income",   "HIGH"  );
+            std::map<std::string,float> ip_values ;
+            ip_values.insert( std::make_pair( "HUMAN",    0.2f ) );
+            ip_values.insert( std::make_pair( "VULCAN",   0.2f ) );
+            ip_values.insert( std::make_pair( "KLINGON",  0.2f ) );
+            ip_values.insert( std::make_pair( "ANDORIAN", 0.2f ) );
+            ip_values.insert( std::make_pair( "ROMULAN",  0.2f ) );
+
+            IPFactory::GetInstance()->AddIP( "Race", ip_values );
 
             unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( rFilename ) );
 

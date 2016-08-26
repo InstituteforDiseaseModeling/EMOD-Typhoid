@@ -29,6 +29,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "suids.hpp"
 #include "Susceptibility.h"
+#include "Properties.h"
 
 #include "RapidJsonImpl.h" // Once JSON lib wrapper is completely done, this underlying JSON library specific include can be taken out
 #include <IArchive.h>
@@ -256,6 +257,7 @@ namespace Kernel
         , family_migration_is_destination_new_home(false)
         , home_node_id(suids::nil_suid())
         , Properties()
+        //, pProperties(nullptr)
         , m_PropertyReportString()
         , parent(nullptr)
         , broadcaster(nullptr)
@@ -303,6 +305,7 @@ namespace Kernel
         , family_migration_is_destination_new_home(false)
         , home_node_id(suids::nil_suid())
         , Properties()
+        //, pProperties(nullptr)
         , m_PropertyReportString()
         , parent(nullptr)
         , broadcaster(nullptr)
@@ -500,30 +503,13 @@ namespace Kernel
 
         CreateSusceptibility(immunity_modifier, risk_modifier);
 
-        // iterate over all IndividualProperty categories in Node, and get one for each
-        auto& distribs = parent->GetIndividualPropertyDistributions();
-        for (const auto& distribution : distribs)
+        // Populate the individuals set of Individual Properties with one value for each property
+        IPKeyValueContainer init_values = IPFactory::GetInstance()->GetInitialValues( EnvPtr->RNG );
+
+        Properties.clear();
+        for( IPKeyValue kv : init_values )
         {
-            const std::string& propertyKey = distribution.first;
-            //std::cout << "propertyKey = " << propertyKey << std::endl;
-            float rand = randgen->e();
-            //auto prop = distribs.find( propertyKey )->second;
-            auto& prop = distribution.second;
-            for (auto& entry : prop)
-            {
-                float maxedge = entry.first;
-                if( rand < maxedge )
-                {
-                    Properties[ propertyKey ] = entry.second;
-                    if(Environment::getInstance()->Log->CheckLogLevel(Logger::DEBUG, "Individual"))
-                    {
-                        std::ostringstream msg;
-                        msg << "Selected property value " << entry.second << " for key " << propertyKey << " for individual " << GetSuid().data << std::endl;
-                        LOG_DEBUG_F( msg.str().c_str() );
-                    }
-                    break;
-                }
-            }
+            Properties[ kv.GetKey().ToString() ] = kv.GetValueAsString();
         }
     }
 
@@ -1281,6 +1267,11 @@ namespace Kernel
     {
         return parent;
     }
+
+    //IPKeyValueContainer* IndividualHuman::GetProperties()
+    //{
+    //    return pProperties;
+    //}
 
     tProperties* IndividualHuman::GetProperties()
     {

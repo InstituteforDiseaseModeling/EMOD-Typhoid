@@ -120,6 +120,7 @@ namespace Kernel
         size_t size() const;
         JsonObjectDemog operator[]( IndexType index ) const;
         void PushBack( const JsonObjectDemog& rValue );
+        void PushBack( const std::string& rStr );
         //void PopBack() ;
 
         // -------------------------------------------------------------

@@ -23,7 +23,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 #include "TBContexts.h"
 #include "IndividualCoinfection.h"
-#include "Properties.h"
+#include "PropertiesString.h"
 
 static const char * _module = "GroupEventCoordinatorHIV";
 

@@ -41,6 +41,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "JsonRawReader.h"
 #include "MpiDataExchanger.h"
 #include "IdmMpi.h"
+#include "Properties.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -213,6 +214,8 @@ namespace Kernel
     {
         Configure( config );
         IndividualHuman::InitializeStatics( config );
+
+        IPFactory::CreateFactory();
 
         Kernel::SimulationConfig* SimConfig = Kernel::SimulationConfigFactory::CreateInstance(EnvPtr->Config);
         if (SimConfig)
@@ -851,7 +854,6 @@ namespace Kernel
 
     void Simulation::LoadInterventions( const char* campaignfilename )
     {
-        JsonConfigurable::_track_missing = false;
         // Set up campaign interventions from file
         release_assert( event_context_host );
         event_context_host->campaign_filename = campaignfilename;
@@ -869,25 +871,54 @@ namespace Kernel
                 LOG_INFO("Found campaign file successfully.\n");
             }
 
-            SimType::Enum st_enum = m_simConfigObj->sim_type;
 #ifdef WIN32
             DllLoader dllLoader;
             if (!dllLoader.LoadInterventionDlls())
             {
+                SimType::Enum st_enum = m_simConfigObj->sim_type;
                 LOG_WARN_F("Failed to load intervention emodules for SimType: %s from path: %s\n", SimType::pairs::lookup_key(st_enum), dllLoader.GetEModulePath(INTERVENTION_EMODULES).c_str());
             }
 #endif
 
-            loadCampaignFromFile(campaignfilename);
+            JsonConfigurable::_track_missing = false;
 
-            std::string transitions_file_path = FileSystem::Concat( Environment::getInstance()->OutputPath, std::string(Node::transitions_dot_json_filename) );
-            if( FileSystem::FileExists( transitions_file_path ) )
+            loadCampaignFromFile( campaignfilename );
+
+            JsonConfigurable::_track_missing = true;
+
+            // ------------------------------------------
+            // --- Setup Individual Property Transitions
+            // ------------------------------------------
+            if( IPFactory::GetInstance()->GetIPList().size() > 0 )
             {
-                loadCampaignFromFile(transitions_file_path);
+                std::string transitions_file_path = FileSystem::Concat( Environment::getInstance()->OutputPath, std::string( IPFactory::transitions_dot_json_filename ) );
+
+                if (EnvPtr->MPI.Rank == 0)
+                {
+                    // Delete any existing transitions.json file
+                    LOG_DEBUG_F( "Deleting any existing %s file.\n", transitions_file_path.c_str() );
+                    FileSystem::RemoveFile( transitions_file_path );
+
+                    // Write the new transitions.json file
+                    IPFactory::GetInstance()->WriteTransitionsFile();
+                }
+
+                // Everyone waits until the Rank=0 process is done deleting and creating the transitions file
+                EnvPtr->MPI.p_idm_mpi->Barrier();
+
+                if ( !FileSystem::FileExists( transitions_file_path ) )
+                {
+                    throw FileNotFoundException( __FILE__, __LINE__, __FUNCTION__, transitions_file_path.c_str() );
+                }
+
+                // Load the Individual Property Transitions
+                JsonConfigurable::_track_missing = false;
+
+                loadCampaignFromFile( transitions_file_path.c_str() );
+
+                JsonConfigurable::_track_missing = true;
             }
         }
-
-        JsonConfigurable::_track_missing = true;
     }
 
     int Simulation::populateFromDemographics(const char* campaignfilename, const char* loadbalancefilename)
@@ -923,13 +954,10 @@ namespace Kernel
         nodeRankMap.SetInitialLoadBalanceScheme( p_lbs );
 
         // Delete any existing transitions.json file
-        // TODO: only remove the transitions.json file if running on a single computer and single node 
-        // If running on multiple computers/spatial multinode sims, there will be a problem where one computer deletes the transitions.json file when the other computers still need it
-
         // Anyone could delete the file, but we’ll delegate to rank 0
         if (EnvPtr->MPI.Rank == 0)
         {
-            std::string transitions_file_path = FileSystem::Concat( Environment::getInstance()->OutputPath, std::string( Node::transitions_dot_json_filename ) );
+            std::string transitions_file_path = FileSystem::Concat( Environment::getInstance()->OutputPath, std::string( IPFactory::transitions_dot_json_filename ) );
             LOG_DEBUG_F( "Deleting any existing %s file.\n", transitions_file_path.c_str() );
             FileSystem::RemoveFile( transitions_file_path );
         }
@@ -948,7 +976,7 @@ namespace Kernel
             }
         }
 
-        if( enable_property_output && Node::base_distribs.size() == 0 )
+        if( enable_property_output && (IPFactory::GetInstance()->GetIPList().size() == 0) )
         {
             throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "<Number of Individual Properties>", "0", "Enable_Property_Output", "1" );
         }

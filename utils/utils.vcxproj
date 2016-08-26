@@ -155,12 +155,14 @@
     <ClCompile Include="JsonFullReader.cpp" />
     <ClCompile Include="JsonFullWriter.cpp" />
     <ClCompile Include="JsonObject.cpp" />
+    <ClCompile Include="JsonObjectDemog.cpp" />
     <ClCompile Include="JsonRawReader.cpp" />
     <ClCompile Include="JsonRawWriter.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="MathFunctions.cpp" />
     <ClCompile Include="ProgramOptions.cpp" />
     <ClCompile Include="ProgVersion.cpp" />
+    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="RANDOM.cpp" />
     <ClCompile Include="RapidJsonImpl.cpp" />
     <ClCompile Include="Serialization.cpp" />
@@ -225,6 +227,7 @@
     <ClInclude Include="JsonFullReader.h" />
     <ClInclude Include="JsonFullWriter.h" />
     <ClInclude Include="JsonObject.h" />
+    <ClInclude Include="JsonObjectDemog.h" />
     <ClInclude Include="JsonRawReader.h" />
     <ClInclude Include="JsonRawWriter.h" />
     <ClInclude Include="Log.h" />
@@ -232,6 +235,8 @@
     <ClInclude Include="Profile.h" />
     <ClInclude Include="ProgramOptions.h" />
     <ClInclude Include="ProgVersion.h" />
+    <ClInclude Include="Properties.h" />
+    <ClInclude Include="PropertiesString.h" />
     <ClInclude Include="RANDOM.h" />
     <ClInclude Include="RapidJsonImpl.h" />
     <ClInclude Include="Serialization.h" />
