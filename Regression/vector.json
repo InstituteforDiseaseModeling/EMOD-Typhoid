@@ -46,7 +46,7 @@
         { "path" : "88_Vector_SpatialRepellentHousingModification" },
         { "path" : "104_Vector_DrivingYHEGs" },
         { "path" : "115_Vector_LinearSplineHabitat" },
-        { "path" : "121_Vector_ScaleLarvalHabitat_Species" },
+        { "path" : "125_Vector_ScaleLarvalHabitat_Species" },
         { "path": "Scenarios/VectorAndMalaria/01_A_Namawala3Vectors_lowEIR" },
         { "path": "Scenarios/VectorAndMalaria/01_B_Namawala3Vectors_highEIR" },
         { "path": "Scenarios/VectorAndMalaria/03_A_Namawala_Vector" },
