@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1284.0",
-		"DTK_Branch" : "GH-YYY (37cb20b)",
-		"DTK_Build_Date" : "Aug  3 2016 14:51:00"
+		"DTK_Version" : "2.8.1293.0",
+		"DTK_Branch" : "MergeFor210 (bcb2009)",
+		"DTK_Build_Date" : "Sep  2 2016 12:16:40"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -11558,6 +11558,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
+							"PIECEWISE_MONTHLY",
 							"ALL_HABITATS"
 						],
 						"description" : "The larval habitat type targeted for larvicide. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
@@ -12848,6 +12849,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
+							"PIECEWISE_MONTHLY",
 							"ALL_HABITATS"
 						],
 						"description" : "The oviposition habitat type targeted by oviposition traps. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
@@ -13217,6 +13219,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
+							"PIECEWISE_MONTHLY",
 							"ALL_HABITATS"
 						],
 						"description" : "The habitat type for which the larval habitat is scaled. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
@@ -13658,6 +13661,7 @@
 							"HUMAN_POPULATION",
 							"CONSTANT",
 							"BRACKISH_SWAMP",
+							"PIECEWISE_MONTHLY",
 							"ALL_HABITATS"
 						],
 						"description" : "The larval habitat type targeted for habitat reduction. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",

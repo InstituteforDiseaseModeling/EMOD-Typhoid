@@ -74,9 +74,6 @@ namespace Kernel
             case VectorHabitatType::BRACKISH_SWAMP: 
                 return new BrackishSwampHabitat(type, max_capacity);
 
-            case VectorHabitatType::MARSHY_STREAM:
-                return new MarshyStreamHabitat(type, max_capacity);
-
             case VectorHabitatType::PIECEWISE_MONTHLY:
                 return new PiecewiseMonthlyHabitat(type, max_capacity);
 
@@ -198,57 +195,6 @@ namespace Kernel
         {
             m_current_larval_capacity = m_max_larval_capacity * params()->lloffset * params()->lloffset;
         }
-    }
-
-    MarshyStreamHabitat::MarshyStreamHabitat()
-        : VectorHabitat()
-        , water_table(0.0f)
-        , stream_level(0.0f)
-    {
-        // no-op
-    }
-
-    void MarshyStreamHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
-    {
-        const Climate* localWeather = node->GetLocalWeather();
-        LOG_DEBUG_F("Habitat type = MARSHY_STREAM, Max larval capacity = %f\n", m_max_larval_capacity);
-        float rain = localWeather->accumulated_rainfall() * float(MM_PER_METER);
-        water_table += permeability * rain;
-        stream_level += (1-permeability) * rain;
-
-        float surface_flow = max(0, water_table - rainfall_to_fill);
-        if (surface_flow > 0)
-        {
-            water_table -= surface_flow;
-            stream_level += surface_flow;
-        }
-
-        float water_table_outflow = water_table * dt / water_table_outflow_days;
-        water_table -= water_table_outflow;
-        stream_level += water_table_outflow;
-
-        if (stream_level > stream_outflow_threshold)
-        {
-            float stream_flow = (stream_level - stream_outflow_threshold) * dt / stream_outflow_days;
-            stream_level -= stream_flow;
-        }
-
-        float evaporation = stream_outflow_threshold * dt / evaporation_days;
-        stream_level -= evaporation;
-        stream_level = max(0, stream_level);
-
-        float scale; // = 0;
-        if (stream_level < stream_outflow_threshold)
-        {
-            scale = stream_level / stream_outflow_threshold;
-        }
-        else
-        {
-            scale = exp((stream_outflow_threshold - stream_level) / stream_outflow_threshold);
-        }
-        m_current_larval_capacity = m_max_larval_capacity * scale * params()->lloffset * params()->lloffset;
-
-        LOG_DEBUG_F("stream_level = %0.2f, habitat = %0.2f\n", stream_level, m_current_larval_capacity);
     }
 
     PiecewiseMonthlyHabitat::PiecewiseMonthlyHabitat()
@@ -560,20 +506,6 @@ namespace Kernel
         /* TODO: configuration of habitat decay parameters, threshold, rainfall mortality, etc. */
     }
 
-    const float MarshyStreamHabitat::rainfall_to_fill = 80.0f;
-    const float MarshyStreamHabitat::water_table_outflow_days = 100.0f;
-    const float MarshyStreamHabitat::stream_outflow_days = 2.5f;
-    const float MarshyStreamHabitat::stream_outflow_threshold = 3.0f;
-    const float MarshyStreamHabitat::evaporation_days = 15.0f;
-    const float MarshyStreamHabitat::permeability = 0.1f;
-
-    MarshyStreamHabitat::MarshyStreamHabitat( VectorHabitatType::Enum type, float max_capacity )
-        : VectorHabitat(type, max_capacity)
-        , water_table(0.0f)
-        , stream_level(0.0f)
-    {
-    }
-
     static const float s[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.2f, 1.0f, 1.0f, 1.0f, 0.5f, 0.2f, 0.0f, 0.0f };
     std::vector<float> PiecewiseMonthlyHabitat::monthly_scales(s, s + MONTHSPERYEAR);
 
@@ -625,16 +557,6 @@ namespace Kernel
     {
         VectorHabitat::serialize(ar, obj);
         // no-op
-    }
-
-    REGISTER_SERIALIZABLE(MarshyStreamHabitat);
-
-    void MarshyStreamHabitat::serialize(IArchive& ar, MarshyStreamHabitat* obj)
-    {
-        VectorHabitat::serialize(ar, obj);
-        MarshyStreamHabitat& habitat = *obj;
-        ar.labelElement("water_table") & habitat.water_table;
-        ar.labelElement("stream_level") & habitat.stream_level;
     }
 
     REGISTER_SERIALIZABLE(PiecewiseMonthlyHabitat);

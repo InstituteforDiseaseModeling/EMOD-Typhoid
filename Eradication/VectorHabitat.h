@@ -132,28 +132,6 @@ namespace Kernel
         DECLARE_SERIALIZABLE(BrackishSwampHabitat);
     };
 
-    class MarshyStreamHabitat : public VectorHabitat
-    {
-    public:
-        virtual void UpdateCurrentLarvalCapacity(float dt, INodeContext* node) override;
-        MarshyStreamHabitat( VectorHabitatType::Enum type, float max_capacity );
-
-    protected:
-        MarshyStreamHabitat();
-
-        static const float rainfall_to_fill;
-        static const float water_table_outflow_days;
-        static const float stream_outflow_days;
-        static const float stream_outflow_threshold;
-        static const float evaporation_days;
-        static const float permeability;
-
-        float water_table;
-        float stream_level;
-
-        DECLARE_SERIALIZABLE(MarshyStreamHabitat);
-    };
-
     class PiecewiseMonthlyHabitat : public VectorHabitat
     {
     public:
