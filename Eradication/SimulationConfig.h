@@ -62,11 +62,11 @@ namespace Kernel
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SimulationConfig Class Layout Special Notes
 // Note 1:
-// All non-primitive objects on the stack (like STL or user-defined type) have to be at the very last
+// All non-primitive objects on the stack (like STL or user-defined type) have to be declared at the end
 // for the primitive objects in the SimulationConfig object crossing the DLL/EModule boundary
 // without affecting the memory image and therefore its member values
 // Note 2:
-// All the non-primitive static objects will not be able to cross DLL/EModule boundary
+// All the non-primitive _static_ objects will not be able to cross DLL/EModule boundary
 // so their values will be different on two sides of memory space even for the same SimulationConfig object
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
