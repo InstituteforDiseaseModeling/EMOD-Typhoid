@@ -258,4 +258,10 @@ public:
     {
         return 1.0;
     }
+
+    virtual ProbabilityNumber GetProbMaternalTransmission() const
+    {
+        return 1.0;
+    }
+
 };

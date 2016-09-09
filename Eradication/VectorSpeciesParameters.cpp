@@ -140,14 +140,14 @@ namespace Kernel
     {
     }
 
-    VectorSpeciesParameters* VectorSpeciesParameters::CreateVectorSpeciesParameters(const std::string& vector_species_name)
+    VectorSpeciesParameters* VectorSpeciesParameters::CreateVectorSpeciesParameters( const Configuration* inputJson, const std::string& vector_species_name)
     {
         LOG_DEBUG( "CreateVectorSpeciesParameters\n" );
         VectorSpeciesParameters* params = _new_ VectorSpeciesParameters();
         params->Initialize(vector_species_name);
         if( !JsonConfigurable::_dryrun )
         {
-            auto tmp_config = Configuration::CopyFromElement( (*EnvPtr->Config)["Vector_Species_Params"][vector_species_name.c_str()] );
+            auto tmp_config = Configuration::CopyFromElement( (*inputJson)["Vector_Species_Params"][vector_species_name.c_str()] );
             params->Configure( tmp_config );
             delete tmp_config;
             tmp_config = nullptr;

@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorCohortIndividual.h"
 #include "VectorPopulationIndividual.h"
 #include "VectorPopulationAging.h"
+#include "VectorParameters.h"
 #include "Log.h"
 #include "SimulationConfig.h"
 #include "TransmissionGroupsFactory.h"
@@ -91,7 +92,7 @@ namespace Kernel
 
         if( !JsonConfigurable::_dryrun )
         {
-            VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_sampling_type;
+            VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_sampling_type;
             if (vector_sampling_type == VectorSamplingType::TRACK_ALL_VECTORS && mosquito_weight != 1)
             {
                 LOG_WARN_F("A \"Mosquito_Weight\" parameter (%d != 1) is only valid for the \"SAMPLE_IND_VECTORS\" value of \"Vector_Sampling_Type\".  For \"TRACK_ALL_VECTORS\", all individual mosquitoes will be simulated with weight=1.\n", mosquito_weight);
@@ -195,7 +196,7 @@ namespace Kernel
 
         vector_migration_info = p_mf_vector->CreateMigrationInfoVector( this, rNodeIdSuidMap );
 
-        VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_sampling_type;
+        VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_sampling_type;
         if( vector_migration_info->IsVectorMigrationFileBased() )
         {
             if( (vector_sampling_type != VectorSamplingType::TRACK_ALL_VECTORS) &&
@@ -243,7 +244,7 @@ namespace Kernel
 
         LOG_DEBUG("groups added.\n");
 
-        VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_sampling_type;
+        VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_sampling_type;
         if ( (vector_sampling_type == VectorSamplingType::VECTOR_COMPARTMENTS_NUMBER || vector_sampling_type == VectorSamplingType::VECTOR_COMPARTMENTS_PERCENT) &&
               params()->number_basestrains > 1 &&
               params()->number_substrains  > 1 )
@@ -426,13 +427,13 @@ namespace Kernel
         }
 
         // Individual mosquito model
-        VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_sampling_type;
+        VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_sampling_type;
         if (vector_sampling_type == VectorSamplingType::TRACK_ALL_VECTORS || 
             vector_sampling_type == VectorSamplingType::SAMPLE_IND_VECTORS)
         {
             LOG_DEBUG( "Creating VectorPopulationIndividual instance(s).\n" );
 
-            for (auto& vector_species_name : params()->vector_species_names)
+            for (auto& vector_species_name : params()->vector_params->vector_species_names)
             {
                 int32_t population_per_species = DEFAULT_VECTOR_POPULATION_SIZE;
                 if( demographics["NodeAttributes"].Contains( "InitialVectorsPerSpecies" ) )
@@ -455,10 +456,10 @@ namespace Kernel
 
         }
         // Aging cohort model
-        else if (params()->vector_aging)
+        else if (params()->vector_params->vector_aging)
         {
             LOG_DEBUG( "Creating VectorPopulationAging instance(s).\n" );
-            for (auto& vector_species_name : params()->vector_species_names)
+            for (auto& vector_species_name : params()->vector_params->vector_species_names)
             {
                 VectorPopulation *vectorpopulation = VectorPopulationAging::CreatePopulation(getContextPointer(), vector_species_name);
                 release_assert( vectorpopulation );
@@ -469,7 +470,7 @@ namespace Kernel
         else
         {
             LOG_DEBUG( "Creating VectorPopulation (regular) instance(s).\n" );
-            for (auto& vector_species_name : params()->vector_species_names)
+            for (auto& vector_species_name : params()->vector_params->vector_species_names)
             {
                 VectorPopulation *vectorpopulation = VectorPopulation::CreatePopulation(getContextPointer(), vector_species_name);
                 release_assert( vectorpopulation );

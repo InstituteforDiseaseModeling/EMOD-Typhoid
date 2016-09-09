@@ -683,6 +683,7 @@
     <ClInclude Include="LarvalHabitatMultiplier.h" />
     <ClInclude Include="LoadBalanceScheme.h" />
     <ClInclude Include="MalariaBarcode.h" />
+    <ClInclude Include="MalariaParameters.h" />
     <ClInclude Include="MigrationInfoVector.h" />
     <ClInclude Include="MpiDataExchanger.h" />
     <ClInclude Include="NChooserEventCoordinator.h" />
@@ -695,6 +696,7 @@
     <ClInclude Include="NodeInfoVector.h" />
     <ClInclude Include="NodeTBHIV.h" />
     <ClInclude Include="PolioContexts.h" />
+    <ClInclude Include="PolioParameters.h" />
     <ClInclude Include="PropertyReportTB.h" />
     <ClInclude Include="PropertyRestrictions.h" />
     <ClInclude Include="PythonSupport.h" />
@@ -871,7 +873,9 @@
     <ClInclude Include="SusceptibilityEnvironmental.h" />
     <ClInclude Include="TBContexts.h" />
     <ClInclude Include="TBDrugTypeParameters.h" />
+    <ClInclude Include="TBHIVParameters.h" />
     <ClInclude Include="TBInterventionsContainer.h" />
+    <ClInclude Include="TBParameters.h" />
     <ClInclude Include="TransmissionGroupMembership.h" />
     <ClInclude Include="TransmissionGroupsBase.h" />
     <ClInclude Include="TransmissionGroupsFactory.h" />
@@ -886,6 +890,7 @@
     <ClInclude Include="VectorHabitat.h" />
     <ClInclude Include="VectorInterventionsContainer.h" />
     <ClInclude Include="VectorMatingStructure.h" />
+    <ClInclude Include="VectorParameters.h" />
     <ClInclude Include="VectorPopulation.h" />
     <ClInclude Include="VectorPopulationAging.h" />
     <ClInclude Include="VectorPopulationIndividual.h" />

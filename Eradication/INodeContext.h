@@ -121,6 +121,7 @@ namespace Kernel
                                               bool isDestinationNewHome ) = 0;
 
         virtual float GetBasePopulationScaleFactor() const = 0;
+        virtual ProbabilityNumber GetProbMaternalTransmission() const = 0;
     };
 }
 

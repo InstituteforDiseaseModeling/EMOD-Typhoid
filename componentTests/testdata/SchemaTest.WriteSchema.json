@@ -1,41 +1,11 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1296.0",
-		"DTK_Branch" : "MergeFor210 (2fb57ab)",
-		"DTK_Build_Date" : "Sep  2 2016 14:44:38"
+		"DTK_Version" : "2.8.1299.0",
+		"DTK_Branch" : "MergeFor210 (197d786)",
+		"DTK_Build_Date" : "Sep  8 2016 10:06:12"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -53,29 +23,6 @@
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
-			},
-			"Death_Rate_Dependence" : {
-				"type" : "enum",
-				"enum" : [
-					"NONDISEASE_MORTALITY_OFF",
-					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
-					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
-				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
-				"default" : "NONDISEASE_MORTALITY_OFF",
-				"depends-on" : {
-					"Enable_Vital_Dynamics" : 1
-				}
-			},
-			"Susceptibility_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"CONSTANT_SUSCEPTIBILITY",
-					"LOG_LINEAR_FUNCTION_OF_TIME",
-					"LINEAR_FUNCTION_OF_AGE"
-				],
-				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
-				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
@@ -128,6 +75,13 @@
 					"Enable_Demographics_Builtin" : 1
 				}
 			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
 			"Enable_Vital_Dynamics" : {
 				"default" : 1,
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -138,14 +92,38 @@
 				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
 				"type" : "bool"
 			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
+			"Death_Rate_Dependence" : {
+				"type" : "enum",
+				"enum" : [
+					"NONDISEASE_MORTALITY_OFF",
+					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
+					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
+				],
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"default" : "NONDISEASE_MORTALITY_OFF",
+				"depends-on" : {
+					"Enable_Vital_Dynamics" : 1
+				}
+			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
 			},
 			"Enable_Interventions" : {
 				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
 				"type" : "bool"
 			},
 			"Number_Basestrains" : {
@@ -162,16 +140,6 @@
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
 			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
 			"Immunity_Initialization_Distribution_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -185,12 +153,15 @@
 					"Enable_Immunity" : 1
 				}
 			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
+			"Susceptibility_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"CONSTANT_SUSCEPTIBILITY",
+					"LOG_LINEAR_FUNCTION_OF_TIME",
+					"LINEAR_FUNCTION_OF_AGE"
+				],
+				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
+				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Listed_Events" : {
 				"default" : [],
@@ -200,36 +171,6 @@
 			}
 		},
 		"VECTOR_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -248,6 +189,74 @@
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
+			"Simulation_Duration" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
+				"type" : "float"
+			},
+			"Simulation_Timestep" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Value indicating simulation time step in days.",
+				"type" : "float"
+			},
+			"Start_Time" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
+				"type" : "float"
+			},
+			"Config_Name" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "User-supplied title naming a configuration.",
+				"type" : "string"
+			},
+			"Enable_Demographics_Builtin" : {
+				"default" : 0,
+				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
+				"type" : "bool"
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1000,
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"depends-on" : {
+					"Enable_Demographics_Builtin" : 1
+				}
+			},
+			"Default_Geography_Torus_Size" : {
+				"min" : 3,
+				"max" : 100,
+				"default" : 10,
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"depends-on" : {
+					"Enable_Demographics_Builtin" : 1
+				}
+			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
+			"Enable_Vital_Dynamics" : {
+				"default" : 1,
+				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
+				"type" : "bool"
+			},
+			"Enable_Disease_Mortality" : {
+				"default" : 1,
+				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
+				"type" : "bool"
+			},
 			"Death_Rate_Dependence" : {
 				"type" : "enum",
 				"enum" : [
@@ -261,6 +270,54 @@
 					"Enable_Vital_Dynamics" : 1
 				}
 			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
+			},
+			"Enable_Interventions" : {
+				"default" : 0,
+				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
+				"type" : "bool"
+			},
+			"Number_Basestrains" : {
+				"min" : 1,
+				"max" : 10,
+				"default" : 1,
+				"description" : "The number of base strains in the simulation, such as antigenic variants.",
+				"type" : "integer"
+			},
+			"Number_Substrains" : {
+				"min" : 1,
+				"max" : 1.67772e+007,
+				"default" : 256,
+				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
+				"type" : "integer"
+			},
+			"Immunity_Initialization_Distribution_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"DISTRIBUTION_OFF",
+					"DISTRIBUTION_SIMPLE",
+					"DISTRIBUTION_COMPLEX"
+				],
+				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
+			},
 			"Susceptibility_Scale_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -270,6 +327,12 @@
 				],
 				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
 				"default" : "CONSTANT_SUSCEPTIBILITY"
+			},
+			"Listed_Events" : {
+				"default" : [],
+				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
+				"type" : "Dynamic String Set",
+				"value_source" : ""
 			},
 			"Vector_Sampling_Type" : {
 				"type" : "enum",
@@ -374,121 +437,6 @@
 				"description" : "The fractional reduction in the number of eggs laid by a female mosquito who is homozygous in the homing endonuclease gene (HEG).",
 				"type" : "float"
 			},
-			"Simulation_Duration" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
-				"type" : "float"
-			},
-			"Simulation_Timestep" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Value indicating simulation time step in days.",
-				"type" : "float"
-			},
-			"Start_Time" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
-				"type" : "float"
-			},
-			"Config_Name" : {
-				"default" : "UNINITIALIZED STRING",
-				"description" : "User-supplied title naming a configuration.",
-				"type" : "string"
-			},
-			"Enable_Demographics_Builtin" : {
-				"default" : 0,
-				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
-				"type" : "bool"
-			},
-			"Default_Geography_Initial_Node_Population" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
-				"type" : "integer",
-				"depends-on" : {
-					"Enable_Demographics_Builtin" : 1
-				}
-			},
-			"Default_Geography_Torus_Size" : {
-				"min" : 3,
-				"max" : 100,
-				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
-				"type" : "integer",
-				"depends-on" : {
-					"Enable_Demographics_Builtin" : 1
-				}
-			},
-			"Enable_Vital_Dynamics" : {
-				"default" : 1,
-				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
-				"type" : "bool"
-			},
-			"Enable_Disease_Mortality" : {
-				"default" : 1,
-				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
-				"type" : "bool"
-			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
-			},
-			"Enable_Interventions" : {
-				"default" : 0,
-				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
-				"type" : "bool"
-			},
-			"Number_Basestrains" : {
-				"min" : 1,
-				"max" : 10,
-				"default" : 1,
-				"description" : "The number of base strains in the simulation, such as antigenic variants.",
-				"type" : "integer"
-			},
-			"Number_Substrains" : {
-				"min" : 1,
-				"max" : 1.67772e+007,
-				"default" : 256,
-				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
-				"type" : "integer"
-			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
-			"Immunity_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF",
-				"depends-on" : {
-					"Enable_Immunity" : 1
-				}
-			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
-			},
 			"Enable_Vector_Aging" : {
 				"default" : 0,
 				"description" : "Set to 1 to simulate vector senescence. Set to 0 to assume that vector behavior does not change with age.",
@@ -567,12 +515,6 @@
 				"description" : "An array of vector species names for all species that are present in the simulation. For example, ['arabiensis', 'funestus', 'gambiae']",
 				"type" : "Dynamic String Set",
 				"value_source" : "Vector_Species_Params.*"
-			},
-			"Listed_Events" : {
-				"default" : [],
-				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
-				"type" : "Dynamic String Set",
-				"value_source" : ""
 			},
 			"Vector_Species_Params" : {
 				"vector_species_name_goes_here" : {
@@ -690,36 +632,6 @@
 			}
 		},
 		"MALARIA_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -738,6 +650,74 @@
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
+			"Simulation_Duration" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
+				"type" : "float"
+			},
+			"Simulation_Timestep" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Value indicating simulation time step in days.",
+				"type" : "float"
+			},
+			"Start_Time" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
+				"type" : "float"
+			},
+			"Config_Name" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "User-supplied title naming a configuration.",
+				"type" : "string"
+			},
+			"Enable_Demographics_Builtin" : {
+				"default" : 0,
+				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
+				"type" : "bool"
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1000,
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"depends-on" : {
+					"Enable_Demographics_Builtin" : 1
+				}
+			},
+			"Default_Geography_Torus_Size" : {
+				"min" : 3,
+				"max" : 100,
+				"default" : 10,
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"depends-on" : {
+					"Enable_Demographics_Builtin" : 1
+				}
+			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
+			"Enable_Vital_Dynamics" : {
+				"default" : 1,
+				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
+				"type" : "bool"
+			},
+			"Enable_Disease_Mortality" : {
+				"default" : 1,
+				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
+				"type" : "bool"
+			},
 			"Death_Rate_Dependence" : {
 				"type" : "enum",
 				"enum" : [
@@ -751,6 +731,54 @@
 					"Enable_Vital_Dynamics" : 1
 				}
 			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
+			},
+			"Enable_Interventions" : {
+				"default" : 0,
+				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
+				"type" : "bool"
+			},
+			"Number_Basestrains" : {
+				"min" : 1,
+				"max" : 10,
+				"default" : 1,
+				"description" : "The number of base strains in the simulation, such as antigenic variants.",
+				"type" : "integer"
+			},
+			"Number_Substrains" : {
+				"min" : 1,
+				"max" : 1.67772e+007,
+				"default" : 256,
+				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
+				"type" : "integer"
+			},
+			"Immunity_Initialization_Distribution_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"DISTRIBUTION_OFF",
+					"DISTRIBUTION_SIMPLE",
+					"DISTRIBUTION_COMPLEX"
+				],
+				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
+			},
 			"Susceptibility_Scale_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -760,6 +788,12 @@
 				],
 				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
 				"default" : "CONSTANT_SUSCEPTIBILITY"
+			},
+			"Listed_Events" : {
+				"default" : [],
+				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
+				"type" : "Dynamic String Set",
+				"value_source" : ""
 			},
 			"Vector_Sampling_Type" : {
 				"type" : "enum",
@@ -864,130 +898,6 @@
 				"description" : "The fractional reduction in the number of eggs laid by a female mosquito who is homozygous in the homing endonuclease gene (HEG).",
 				"type" : "float"
 			},
-			"PKPD_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"FIXED_DURATION_CONSTANT_EFFECT",
-					"CONCENTRATION_VERSUS_TIME"
-				],
-				"description" : "Determines which pharmacokinetic pharmacodynamic module to use. Possible values are: FIXED_DURATION_CONSTANT_EFFECT and CONCENTRATION_VERSUS_TIME.",
-				"default" : "FIXED_DURATION_CONSTANT_EFFECT"
-			},
-			"Simulation_Duration" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
-				"type" : "float"
-			},
-			"Simulation_Timestep" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Value indicating simulation time step in days.",
-				"type" : "float"
-			},
-			"Start_Time" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
-				"type" : "float"
-			},
-			"Config_Name" : {
-				"default" : "UNINITIALIZED STRING",
-				"description" : "User-supplied title naming a configuration.",
-				"type" : "string"
-			},
-			"Enable_Demographics_Builtin" : {
-				"default" : 0,
-				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
-				"type" : "bool"
-			},
-			"Default_Geography_Initial_Node_Population" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
-				"type" : "integer",
-				"depends-on" : {
-					"Enable_Demographics_Builtin" : 1
-				}
-			},
-			"Default_Geography_Torus_Size" : {
-				"min" : 3,
-				"max" : 100,
-				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
-				"type" : "integer",
-				"depends-on" : {
-					"Enable_Demographics_Builtin" : 1
-				}
-			},
-			"Enable_Vital_Dynamics" : {
-				"default" : 1,
-				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
-				"type" : "bool"
-			},
-			"Enable_Disease_Mortality" : {
-				"default" : 1,
-				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
-				"type" : "bool"
-			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
-			},
-			"Enable_Interventions" : {
-				"default" : 0,
-				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
-				"type" : "bool"
-			},
-			"Number_Basestrains" : {
-				"min" : 1,
-				"max" : 10,
-				"default" : 1,
-				"description" : "The number of base strains in the simulation, such as antigenic variants.",
-				"type" : "integer"
-			},
-			"Number_Substrains" : {
-				"min" : 1,
-				"max" : 1.67772e+007,
-				"default" : 256,
-				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
-				"type" : "integer"
-			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
-			"Immunity_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF",
-				"depends-on" : {
-					"Enable_Immunity" : 1
-				}
-			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
-			},
 			"Enable_Vector_Aging" : {
 				"default" : 0,
 				"description" : "Set to 1 to simulate vector senescence. Set to 0 to assume that vector behavior does not change with age.",
@@ -1033,6 +943,49 @@
 				"description" : "Fraction (dimensionless) of mosquitoes that die while feeding on a human. As of version 1.5, this is now a one-value-per-simulation quantity.",
 				"type" : "float"
 			},
+			"Temporary_Habitat_Decay_Factor" : {
+				"min" : 0.001,
+				"max" : 100,
+				"default" : 0.05,
+				"description" : "Factor to convert raw evaporation rate (ignoring boundary layer effects) to the daily rate of larval habitat loss for temporary habitats with Habitat_Type parameter of TEMPORARY_RAINFALL.  Units are (larval carrying capacity per day) / (kg per square meter per second).",
+				"type" : "float"
+			},
+			"Semipermanent_Habitat_Decay_Rate" : {
+				"min" : 0.0001,
+				"max" : 100,
+				"default" : 0.01,
+				"description" : "Daily rate of larval habitat loss for semi-permanent habitats with Habitat_Type parameter of WATER_VEGETATION or BRACKISH_SWAMP.",
+				"type" : "float"
+			},
+			"Rainfall_In_mm_To_Fill_Swamp" : {
+				"min" : 1,
+				"max" : 10000,
+				"default" : 1000,
+				"description" : "Millimeters of rain to fill larval habitat to capacity. Only used for vector species with Habitat_Type set to BRACKISH_SWAMP.",
+				"type" : "float"
+			},
+			"x_Temporary_Larval_Habitat" : {
+				"description" : "Scales the habitat size for all mosquito populations.",
+				"type" : "double",
+				"min" : 0,
+				"max" : 10000,
+				"default" : 1
+			},
+			"Vector_Species_Names" : {
+				"default" : [],
+				"description" : "An array of vector species names for all species that are present in the simulation. For example, ['arabiensis', 'funestus', 'gambiae']",
+				"type" : "Dynamic String Set",
+				"value_source" : "Vector_Species_Params.*"
+			},
+			"PKPD_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"FIXED_DURATION_CONSTANT_EFFECT",
+					"CONCENTRATION_VERSUS_TIME"
+				],
+				"description" : "Determines which pharmacokinetic pharmacodynamic module to use. Possible values are: FIXED_DURATION_CONSTANT_EFFECT and CONCENTRATION_VERSUS_TIME.",
+				"default" : "FIXED_DURATION_CONSTANT_EFFECT"
+			},
 			"Falciparum_MSP_Variants" : {
 				"min" : 0,
 				"max" : 1000,
@@ -1074,46 +1027,6 @@
 				"default" : 0.01,
 				"description" : "The number of microliters of blood tested to find single parasites in a new diagnostic (corresponds to inverse parasites/microliters sensitivity).",
 				"type" : "float"
-			},
-			"Temporary_Habitat_Decay_Factor" : {
-				"min" : 0.001,
-				"max" : 100,
-				"default" : 0.05,
-				"description" : "Factor to convert raw evaporation rate (ignoring boundary layer effects) to the daily rate of larval habitat loss for temporary habitats with Habitat_Type parameter of TEMPORARY_RAINFALL.  Units are (larval carrying capacity per day) / (kg per square meter per second).",
-				"type" : "float"
-			},
-			"Semipermanent_Habitat_Decay_Rate" : {
-				"min" : 0.0001,
-				"max" : 100,
-				"default" : 0.01,
-				"description" : "Daily rate of larval habitat loss for semi-permanent habitats with Habitat_Type parameter of WATER_VEGETATION or BRACKISH_SWAMP.",
-				"type" : "float"
-			},
-			"Rainfall_In_mm_To_Fill_Swamp" : {
-				"min" : 1,
-				"max" : 10000,
-				"default" : 1000,
-				"description" : "Millimeters of rain to fill larval habitat to capacity. Only used for vector species with Habitat_Type set to BRACKISH_SWAMP.",
-				"type" : "float"
-			},
-			"x_Temporary_Larval_Habitat" : {
-				"description" : "Scales the habitat size for all mosquito populations.",
-				"type" : "double",
-				"min" : 0,
-				"max" : 10000,
-				"default" : 1
-			},
-			"Vector_Species_Names" : {
-				"default" : [],
-				"description" : "An array of vector species names for all species that are present in the simulation. For example, ['arabiensis', 'funestus', 'gambiae']",
-				"type" : "Dynamic String Set",
-				"value_source" : "Vector_Species_Params.*"
-			},
-			"Listed_Events" : {
-				"default" : [],
-				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
-				"type" : "Dynamic String Set",
-				"value_source" : ""
 			},
 			"Vector_Species_Params" : {
 				"vector_species_name_goes_here" : {
@@ -1346,36 +1259,6 @@
 			}
 		},
 		"AIRBORNE_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -1393,29 +1276,6 @@
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
-			},
-			"Death_Rate_Dependence" : {
-				"type" : "enum",
-				"enum" : [
-					"NONDISEASE_MORTALITY_OFF",
-					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
-					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
-				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
-				"default" : "NONDISEASE_MORTALITY_OFF",
-				"depends-on" : {
-					"Enable_Vital_Dynamics" : 1
-				}
-			},
-			"Susceptibility_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"CONSTANT_SUSCEPTIBILITY",
-					"LOG_LINEAR_FUNCTION_OF_TIME",
-					"LINEAR_FUNCTION_OF_AGE"
-				],
-				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
-				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
@@ -1468,6 +1328,13 @@
 					"Enable_Demographics_Builtin" : 1
 				}
 			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
 			"Enable_Vital_Dynamics" : {
 				"default" : 1,
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -1478,14 +1345,38 @@
 				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
 				"type" : "bool"
 			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
+			"Death_Rate_Dependence" : {
+				"type" : "enum",
+				"enum" : [
+					"NONDISEASE_MORTALITY_OFF",
+					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
+					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
+				],
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"default" : "NONDISEASE_MORTALITY_OFF",
+				"depends-on" : {
+					"Enable_Vital_Dynamics" : 1
+				}
+			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
 			},
 			"Enable_Interventions" : {
 				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
 				"type" : "bool"
 			},
 			"Number_Basestrains" : {
@@ -1502,16 +1393,6 @@
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
 			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
 			"Immunity_Initialization_Distribution_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -1525,12 +1406,15 @@
 					"Enable_Immunity" : 1
 				}
 			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
+			"Susceptibility_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"CONSTANT_SUSCEPTIBILITY",
+					"LOG_LINEAR_FUNCTION_OF_TIME",
+					"LINEAR_FUNCTION_OF_AGE"
+				],
+				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
+				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Listed_Events" : {
 				"default" : [],
@@ -1540,36 +1424,6 @@
 			}
 		},
 		"POLIO_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -1588,6 +1442,74 @@
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
 			},
+			"Simulation_Duration" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
+				"type" : "float"
+			},
+			"Simulation_Timestep" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Value indicating simulation time step in days.",
+				"type" : "float"
+			},
+			"Start_Time" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1,
+				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
+				"type" : "float"
+			},
+			"Config_Name" : {
+				"default" : "UNINITIALIZED STRING",
+				"description" : "User-supplied title naming a configuration.",
+				"type" : "string"
+			},
+			"Enable_Demographics_Builtin" : {
+				"default" : 0,
+				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
+				"type" : "bool"
+			},
+			"Default_Geography_Initial_Node_Population" : {
+				"min" : 0,
+				"max" : 1e+006,
+				"default" : 1000,
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"type" : "integer",
+				"depends-on" : {
+					"Enable_Demographics_Builtin" : 1
+				}
+			},
+			"Default_Geography_Torus_Size" : {
+				"min" : 3,
+				"max" : 100,
+				"default" : 10,
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"type" : "integer",
+				"depends-on" : {
+					"Enable_Demographics_Builtin" : 1
+				}
+			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
+			"Enable_Vital_Dynamics" : {
+				"default" : 1,
+				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
+				"type" : "bool"
+			},
+			"Enable_Disease_Mortality" : {
+				"default" : 1,
+				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
+				"type" : "bool"
+			},
 			"Death_Rate_Dependence" : {
 				"type" : "enum",
 				"enum" : [
@@ -1601,6 +1523,54 @@
 					"Enable_Vital_Dynamics" : 1
 				}
 			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
+			},
+			"Enable_Interventions" : {
+				"default" : 0,
+				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
+				"type" : "bool"
+			},
+			"Number_Basestrains" : {
+				"min" : 1,
+				"max" : 10,
+				"default" : 1,
+				"description" : "The number of base strains in the simulation, such as antigenic variants.",
+				"type" : "integer"
+			},
+			"Number_Substrains" : {
+				"min" : 1,
+				"max" : 1.67772e+007,
+				"default" : 256,
+				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
+				"type" : "integer"
+			},
+			"Immunity_Initialization_Distribution_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"DISTRIBUTION_OFF",
+					"DISTRIBUTION_SIMPLE",
+					"DISTRIBUTION_COMPLEX"
+				],
+				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
+				"default" : "DISTRIBUTION_OFF",
+				"depends-on" : {
+					"Enable_Immunity" : 1
+				}
+			},
 			"Susceptibility_Scale_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -1610,6 +1580,12 @@
 				],
 				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
 				"default" : "CONSTANT_SUSCEPTIBILITY"
+			},
+			"Listed_Events" : {
+				"default" : [],
+				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
+				"type" : "Dynamic String Set",
+				"value_source" : ""
 			},
 			"Evolution_Polio_Clock_Type" : {
 				"type" : "enum",
@@ -1640,121 +1616,6 @@
 				"max" : 3.40282e+038,
 				"default" : 0,
 				"description" : "For Susceptibility_Scale_Type of any_FUNCTION_OF_TIME, Susceptbility_Scaling_Rate determines the variation in time of the susceptibility to exposed contagion",
-				"type" : "float"
-			},
-			"Simulation_Duration" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
-				"type" : "float"
-			},
-			"Simulation_Timestep" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Value indicating simulation time step in days.",
-				"type" : "float"
-			},
-			"Start_Time" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1,
-				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
-				"type" : "float"
-			},
-			"Config_Name" : {
-				"default" : "UNINITIALIZED STRING",
-				"description" : "User-supplied title naming a configuration.",
-				"type" : "string"
-			},
-			"Enable_Demographics_Builtin" : {
-				"default" : 0,
-				"description" : "Uses demographics input files to configure the initial population. Enter 0 to use a standard testing sandbox which is useful for testing and validating code pathways.",
-				"type" : "bool"
-			},
-			"Default_Geography_Initial_Node_Population" : {
-				"min" : 0,
-				"max" : 1e+006,
-				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
-				"type" : "integer",
-				"depends-on" : {
-					"Enable_Demographics_Builtin" : 1
-				}
-			},
-			"Default_Geography_Torus_Size" : {
-				"min" : 3,
-				"max" : 100,
-				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
-				"type" : "integer",
-				"depends-on" : {
-					"Enable_Demographics_Builtin" : 1
-				}
-			},
-			"Enable_Vital_Dynamics" : {
-				"default" : 1,
-				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
-				"type" : "bool"
-			},
-			"Enable_Disease_Mortality" : {
-				"default" : 1,
-				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
-				"type" : "bool"
-			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
-			},
-			"Enable_Interventions" : {
-				"default" : 0,
-				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
-				"type" : "bool"
-			},
-			"Number_Basestrains" : {
-				"min" : 1,
-				"max" : 10,
-				"default" : 1,
-				"description" : "The number of base strains in the simulation, such as antigenic variants.",
-				"type" : "integer"
-			},
-			"Number_Substrains" : {
-				"min" : 1,
-				"max" : 1.67772e+007,
-				"default" : 256,
-				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
-				"type" : "integer"
-			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
-			"Immunity_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the immunity distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to no immunity. DISTRIBUTION_SIMPLE - Individual immunities are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'ImmunityDistributionFlag', 'ImmunityDistribution1', and 'ImmunityDistribution2'. DISTRIBUTION_COMPLEX - Individual immnunities are drawn from an age-dependent piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'ImmunityDistribution'.",
-				"default" : "DISTRIBUTION_OFF",
-				"depends-on" : {
-					"Enable_Immunity" : 1
-				}
-			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
 				"type" : "float"
 			},
 			"Max_Rand_Standard_Deviations" : {
@@ -2394,12 +2255,6 @@
 				"description" : "Feces grams per day.",
 				"type" : "float"
 			},
-			"Listed_Events" : {
-				"default" : [],
-				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
-				"type" : "Dynamic String Set",
-				"value_source" : ""
-			},
 			"Substrain_Relative_Infectivity_String_VDPV1" : {
 				"default" : "UNINITIALIZED STRING",
 				"description" : "Substrain_Relative_Infectivity_String_VDPV1",
@@ -2453,36 +2308,6 @@
 			}
 		},
 		"TB_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -2500,29 +2325,6 @@
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
-			},
-			"Death_Rate_Dependence" : {
-				"type" : "enum",
-				"enum" : [
-					"NONDISEASE_MORTALITY_OFF",
-					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
-					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
-				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
-				"default" : "NONDISEASE_MORTALITY_OFF",
-				"depends-on" : {
-					"Enable_Vital_Dynamics" : 1
-				}
-			},
-			"Susceptibility_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"CONSTANT_SUSCEPTIBILITY",
-					"LOG_LINEAR_FUNCTION_OF_TIME",
-					"LINEAR_FUNCTION_OF_AGE"
-				],
-				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
-				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
@@ -2575,6 +2377,13 @@
 					"Enable_Demographics_Builtin" : 1
 				}
 			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
 			"Enable_Vital_Dynamics" : {
 				"default" : 1,
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -2585,14 +2394,38 @@
 				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
 				"type" : "bool"
 			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
+			"Death_Rate_Dependence" : {
+				"type" : "enum",
+				"enum" : [
+					"NONDISEASE_MORTALITY_OFF",
+					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
+					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
+				],
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"default" : "NONDISEASE_MORTALITY_OFF",
+				"depends-on" : {
+					"Enable_Vital_Dynamics" : 1
+				}
+			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
 			},
 			"Enable_Interventions" : {
 				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
 				"type" : "bool"
 			},
 			"Number_Basestrains" : {
@@ -2609,16 +2442,6 @@
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
 			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
 			"Immunity_Initialization_Distribution_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -2632,24 +2455,27 @@
 					"Enable_Immunity" : 1
 				}
 			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
-			},
-			"TB_Drug_Types_For_This_Sim" : {
-				"default" : [],
-				"description" : "The list of drug types that will be used with the AntiTBPropDep intervention. The values for the drug are defined by TB_Drug_Params.",
-				"type" : "Dynamic String Set",
-				"value_source" : "TB_Drug_Params.*"
+			"Susceptibility_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"CONSTANT_SUSCEPTIBILITY",
+					"LOG_LINEAR_FUNCTION_OF_TIME",
+					"LINEAR_FUNCTION_OF_AGE"
+				],
+				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
+				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Listed_Events" : {
 				"default" : [],
 				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
 				"type" : "Dynamic String Set",
 				"value_source" : ""
+			},
+			"TB_Drug_Types_For_This_Sim" : {
+				"default" : [],
+				"description" : "The list of drug types that will be used with the AntiTBPropDep intervention. The values for the drug are defined by TB_Drug_Params.",
+				"type" : "Dynamic String Set",
+				"value_source" : "TB_Drug_Params.*"
 			},
 			"TB_Drug_Params" : {
 				"<tb_drug_name_goes_here>" : {
@@ -2699,36 +2525,6 @@
 			}
 		},
 		"TBHIV_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -2746,29 +2542,6 @@
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
-			},
-			"Death_Rate_Dependence" : {
-				"type" : "enum",
-				"enum" : [
-					"NONDISEASE_MORTALITY_OFF",
-					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
-					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
-				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
-				"default" : "NONDISEASE_MORTALITY_OFF",
-				"depends-on" : {
-					"Enable_Vital_Dynamics" : 1
-				}
-			},
-			"Susceptibility_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"CONSTANT_SUSCEPTIBILITY",
-					"LOG_LINEAR_FUNCTION_OF_TIME",
-					"LINEAR_FUNCTION_OF_AGE"
-				],
-				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
-				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
@@ -2821,6 +2594,13 @@
 					"Enable_Demographics_Builtin" : 1
 				}
 			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
 			"Enable_Vital_Dynamics" : {
 				"default" : 1,
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -2831,14 +2611,38 @@
 				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
 				"type" : "bool"
 			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
+			"Death_Rate_Dependence" : {
+				"type" : "enum",
+				"enum" : [
+					"NONDISEASE_MORTALITY_OFF",
+					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
+					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
+				],
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"default" : "NONDISEASE_MORTALITY_OFF",
+				"depends-on" : {
+					"Enable_Vital_Dynamics" : 1
+				}
+			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
 			},
 			"Enable_Interventions" : {
 				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
 				"type" : "bool"
 			},
 			"Number_Basestrains" : {
@@ -2855,16 +2659,6 @@
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
 			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
 			"Immunity_Initialization_Distribution_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -2878,12 +2672,21 @@
 					"Enable_Immunity" : 1
 				}
 			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
+			"Susceptibility_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"CONSTANT_SUSCEPTIBILITY",
+					"LOG_LINEAR_FUNCTION_OF_TIME",
+					"LINEAR_FUNCTION_OF_AGE"
+				],
+				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
+				"default" : "CONSTANT_SUSCEPTIBILITY"
+			},
+			"Listed_Events" : {
+				"default" : [],
+				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
+				"type" : "Dynamic String Set",
+				"value_source" : ""
 			},
 			"Enable_Coinfection_Incidence" : {
 				"default" : 0,
@@ -2894,45 +2697,9 @@
 				"default" : 0,
 				"description" : "HIVTB specific mortality",
 				"type" : "bool"
-			},
-			"Listed_Events" : {
-				"default" : [],
-				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
-				"type" : "Dynamic String Set",
-				"value_source" : ""
 			}
 		},
 		"STI_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -2950,29 +2717,6 @@
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
-			},
-			"Death_Rate_Dependence" : {
-				"type" : "enum",
-				"enum" : [
-					"NONDISEASE_MORTALITY_OFF",
-					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
-					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
-				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
-				"default" : "NONDISEASE_MORTALITY_OFF",
-				"depends-on" : {
-					"Enable_Vital_Dynamics" : 1
-				}
-			},
-			"Susceptibility_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"CONSTANT_SUSCEPTIBILITY",
-					"LOG_LINEAR_FUNCTION_OF_TIME",
-					"LINEAR_FUNCTION_OF_AGE"
-				],
-				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
-				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
@@ -3025,6 +2769,13 @@
 					"Enable_Demographics_Builtin" : 1
 				}
 			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
 			"Enable_Vital_Dynamics" : {
 				"default" : 1,
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -3035,14 +2786,38 @@
 				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
 				"type" : "bool"
 			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
+			"Death_Rate_Dependence" : {
+				"type" : "enum",
+				"enum" : [
+					"NONDISEASE_MORTALITY_OFF",
+					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
+					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
+				],
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"default" : "NONDISEASE_MORTALITY_OFF",
+				"depends-on" : {
+					"Enable_Vital_Dynamics" : 1
+				}
+			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
 			},
 			"Enable_Interventions" : {
 				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
 				"type" : "bool"
 			},
 			"Number_Basestrains" : {
@@ -3059,16 +2834,6 @@
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
 			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
 			"Immunity_Initialization_Distribution_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -3082,77 +2847,24 @@
 					"Enable_Immunity" : 1
 				}
 			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
+			"Susceptibility_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"CONSTANT_SUSCEPTIBILITY",
+					"LOG_LINEAR_FUNCTION_OF_TIME",
+					"LINEAR_FUNCTION_OF_AGE"
+				],
+				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
+				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Listed_Events" : {
 				"default" : [],
 				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
 				"type" : "Dynamic String Set",
 				"value_source" : ""
-			},
-			"Enable_Coital_Dilution" : {
-				"default" : 1,
-				"description" : "Switch to enable coital dilution.",
-				"type" : "bool"
-			},
-			"Coital_Dilution_Factor_2_Partners" : {
-				"min" : 1.19209e-007,
-				"max" : 1,
-				"default" : 1,
-				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly two current partners. Represents coital dilution.",
-				"type" : "float"
-			},
-			"Coital_Dilution_Factor_3_Partners" : {
-				"min" : 1.19209e-007,
-				"max" : 1,
-				"default" : 1,
-				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly three current partners. Represents coital dilution.",
-				"type" : "float"
-			},
-			"Coital_Dilution_Factor_4_Plus_Partners" : {
-				"min" : 1.19209e-007,
-				"max" : 1,
-				"default" : 1,
-				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has four or more current partners. Represents coital dilution.",
-				"type" : "float"
 			}
 		},
 		"HIV_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -3170,29 +2882,6 @@
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
-			},
-			"Death_Rate_Dependence" : {
-				"type" : "enum",
-				"enum" : [
-					"NONDISEASE_MORTALITY_OFF",
-					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
-					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
-				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
-				"default" : "NONDISEASE_MORTALITY_OFF",
-				"depends-on" : {
-					"Enable_Vital_Dynamics" : 1
-				}
-			},
-			"Susceptibility_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"CONSTANT_SUSCEPTIBILITY",
-					"LOG_LINEAR_FUNCTION_OF_TIME",
-					"LINEAR_FUNCTION_OF_AGE"
-				],
-				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
-				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
@@ -3245,6 +2934,13 @@
 					"Enable_Demographics_Builtin" : 1
 				}
 			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
 			"Enable_Vital_Dynamics" : {
 				"default" : 1,
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -3255,14 +2951,38 @@
 				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
 				"type" : "bool"
 			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
+			"Death_Rate_Dependence" : {
+				"type" : "enum",
+				"enum" : [
+					"NONDISEASE_MORTALITY_OFF",
+					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
+					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
+				],
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"default" : "NONDISEASE_MORTALITY_OFF",
+				"depends-on" : {
+					"Enable_Vital_Dynamics" : 1
+				}
+			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
 			},
 			"Enable_Interventions" : {
 				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
 				"type" : "bool"
 			},
 			"Number_Basestrains" : {
@@ -3279,16 +2999,6 @@
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
 			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
 			"Immunity_Initialization_Distribution_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -3302,98 +3012,24 @@
 					"Enable_Immunity" : 1
 				}
 			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
+			"Susceptibility_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"CONSTANT_SUSCEPTIBILITY",
+					"LOG_LINEAR_FUNCTION_OF_TIME",
+					"LINEAR_FUNCTION_OF_AGE"
+				],
+				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
+				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Listed_Events" : {
 				"default" : [],
 				"description" : "The list of valid, user-defined events that will be included in the campaign. Any event used in the campaign must either be one of the built-in events or in this list.",
 				"type" : "Dynamic String Set",
 				"value_source" : ""
-			},
-			"Enable_Coital_Dilution" : {
-				"default" : 1,
-				"description" : "Switch to enable coital dilution.",
-				"type" : "bool"
-			},
-			"Coital_Dilution_Factor_2_Partners" : {
-				"min" : 1.19209e-007,
-				"max" : 1,
-				"default" : 1,
-				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly two current partners. Represents coital dilution.",
-				"type" : "float"
-			},
-			"Coital_Dilution_Factor_3_Partners" : {
-				"min" : 1.19209e-007,
-				"max" : 1,
-				"default" : 1,
-				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly three current partners. Represents coital dilution.",
-				"type" : "float"
-			},
-			"Coital_Dilution_Factor_4_Plus_Partners" : {
-				"min" : 1.19209e-007,
-				"max" : 1,
-				"default" : 1,
-				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has four or more current partners. Represents coital dilution.",
-				"type" : "float"
-			},
-			"Maternal_Transmission_ART_Multiplier" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0.1,
-				"description" : "Maternal transmission multiplier for on-ART mothers.",
-				"type" : "float"
-			},
-			"Days_Between_Symptomatic_And_Death_Weibull_Scale" : {
-				"min" : 1,
-				"max" : 3650,
-				"default" : 183,
-				"description" : "Time between onset of AIDS symptoms and death is sampled from a Weibull distribution. This parameter governs the scale of the Weibull.",
-				"type" : "float"
-			},
-			"Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity" : {
-				"min" : 0.1,
-				"max" : 10,
-				"default" : 1,
-				"description" : "Time between onset of AIDS symptoms and death is sampled from a Weibull distribution.  This parameter governs the heterogeneity (inverse shape) of the Weibull.",
-				"type" : "float"
 			}
 		},
 		"PY_SIM" : {
-			"Age_Initialization_Distribution_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"DISTRIBUTION_OFF",
-					"DISTRIBUTION_SIMPLE",
-					"DISTRIBUTION_COMPLEX"
-				],
-				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
-				"default" : "DISTRIBUTION_OFF"
-			},
-			"Migration_Model" : {
-				"type" : "enum",
-				"enum" : [
-					"NO_MIGRATION",
-					"FIXED_RATE_MIGRATION",
-					"VARIABLE_RATE_MIGRATION",
-					"LEVY_FLIGHTS"
-				],
-				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
-				"default" : "NO_MIGRATION"
-			},
-			"Population_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"USE_INPUT_FILE",
-					"FIXED_SCALING"
-				],
-				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
-				"default" : "USE_INPUT_FILE"
-			},
 			"Simulation_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -3411,29 +3047,6 @@
 				],
 				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
 				"default" : "GENERIC_SIM"
-			},
-			"Death_Rate_Dependence" : {
-				"type" : "enum",
-				"enum" : [
-					"NONDISEASE_MORTALITY_OFF",
-					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
-					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
-				],
-				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
-				"default" : "NONDISEASE_MORTALITY_OFF",
-				"depends-on" : {
-					"Enable_Vital_Dynamics" : 1
-				}
-			},
-			"Susceptibility_Scale_Type" : {
-				"type" : "enum",
-				"enum" : [
-					"CONSTANT_SUSCEPTIBILITY",
-					"LOG_LINEAR_FUNCTION_OF_TIME",
-					"LINEAR_FUNCTION_OF_AGE"
-				],
-				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
-				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
@@ -3486,6 +3099,13 @@
 					"Enable_Demographics_Builtin" : 1
 				}
 			},
+			"Node_Grid_Size" : {
+				"min" : 0.004167,
+				"max" : 90,
+				"default" : 0.004167,
+				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
+				"type" : "float"
+			},
 			"Enable_Vital_Dynamics" : {
 				"default" : 1,
 				"description" : "Set to 1 as a master switch to enable vital dynamics (births and deaths). Set to 0 to disable vital dynamics. Even when set to 1, the individual toggles for births and deaths can still disable these.",
@@ -3496,14 +3116,38 @@
 				"description" : "Set to 1 to enable disease mortality. Set to 0 to disable disease mortality.",
 				"type" : "bool"
 			},
-			"Enable_Heterogeneous_Intranode_Transmission" : {
-				"default" : 0,
-				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
-				"type" : "bool"
+			"Death_Rate_Dependence" : {
+				"type" : "enum",
+				"enum" : [
+					"NONDISEASE_MORTALITY_OFF",
+					"NONDISEASE_MORTALITY_BY_AGE_AND_GENDER",
+					"NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER"
+				],
+				"description" : "This parameter determines how the death rate specified in the demographics file is used. Possible values are: NONDISEASE_MORTALITY_OFF, NONDISEASE_MORTALITY_BY_AGE_AND_GENDER and NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER.",
+				"default" : "NONDISEASE_MORTALITY_OFF",
+				"depends-on" : {
+					"Enable_Vital_Dynamics" : 1
+				}
+			},
+			"Migration_Model" : {
+				"type" : "enum",
+				"enum" : [
+					"NO_MIGRATION",
+					"FIXED_RATE_MIGRATION",
+					"VARIABLE_RATE_MIGRATION",
+					"LEVY_FLIGHTS"
+				],
+				"description" : "Model to use for migration. Possible values are: NO_MIGRATION, FIXED_RATE_MIGRATION, VARIABLE_RATE_MIGRATION and  LEVY_FLIGHTS.  Note: VARIABLE_RATE_MIGRATION and LEVY FLIGHTS are currently not supported.",
+				"default" : "NO_MIGRATION"
 			},
 			"Enable_Interventions" : {
 				"default" : 0,
 				"description" : "Set to 1 to load campaign interventions from file. Set to 0 to run a baseline simulation without campaigns.",
+				"type" : "bool"
+			},
+			"Enable_Heterogeneous_Intranode_Transmission" : {
+				"default" : 0,
+				"description" : "Set to 1 to enable heterogeneous intra-node disease transmission. Requires individual property definitions and beta matrix to be specified. Set to 0 to disable.",
 				"type" : "bool"
 			},
 			"Number_Basestrains" : {
@@ -3520,16 +3164,6 @@
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
 			},
-			"Maternal_Transmission_Probability" : {
-				"min" : 0,
-				"max" : 1,
-				"default" : 0,
-				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
-				"type" : "float",
-				"depends-on" : {
-					"Enable_Maternal_Transmission" : 1
-				}
-			},
 			"Immunity_Initialization_Distribution_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -3543,12 +3177,15 @@
 					"Enable_Immunity" : 1
 				}
 			},
-			"Node_Grid_Size" : {
-				"min" : 0.004167,
-				"max" : 90,
-				"default" : 0.004167,
-				"description" : "Spatial resolution indicating the node grid size for a simulation in degrees.",
-				"type" : "float"
+			"Susceptibility_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"CONSTANT_SUSCEPTIBILITY",
+					"LOG_LINEAR_FUNCTION_OF_TIME",
+					"LINEAR_FUNCTION_OF_AGE"
+				],
+				"description" : "Alter infectivity by time or season. Possible values are: CONSTANT_SUSCEPTIBILITY, LOG_LINEAR_FUNCTION_OF_TIME",
+				"default" : "CONSTANT_SUSCEPTIBILITY"
 			},
 			"Listed_Events" : {
 				"default" : [],
@@ -3970,6 +3607,20 @@
 				"default" : 0,
 				"description" : "Inverse shape parameter of a Weibull distribution that represents the at-death CD4 cell count.",
 				"type" : "float"
+			},
+			"Days_Between_Symptomatic_And_Death_Weibull_Scale" : {
+				"min" : 1,
+				"max" : 3650,
+				"default" : 183,
+				"description" : "Time between onset of AIDS symptoms and death is sampled from a Weibull distribution. This parameter governs the scale of the Weibull.",
+				"type" : "float"
+			},
+			"Days_Between_Symptomatic_And_Death_Weibull_Heterogeneity" : {
+				"min" : 0.1,
+				"max" : 10,
+				"default" : 1,
+				"description" : "Time between onset of AIDS symptoms and death is sampled from a Weibull distribution.  This parameter governs the heterogeneity (inverse shape) of the Weibull.",
+				"type" : "float"
 			}
 		},
 		"HIVReportEventRecorder" : {
@@ -4166,6 +3817,15 @@
 				}
 			}
 		},
+		"IndividualHumanHIV" : {
+			"Maternal_Transmission_ART_Multiplier" : {
+				"min" : 0,
+				"max" : 1,
+				"default" : 0.1,
+				"description" : "Maternal transmission multiplier for on-ART mothers.",
+				"type" : "float"
+			}
+		},
 		"IndividualHumanSTI" : {
 			"Sexual_Debut_Age_Male_Weibull_Heterogeneity" : {
 				"min" : 0,
@@ -4235,6 +3895,32 @@
 				"max" : 1,
 				"default" : 0.9,
 				"description" : "Per-act multiplier of the transmission probability when a condom is used.",
+				"type" : "float"
+			},
+			"Enable_Coital_Dilution" : {
+				"default" : 1,
+				"description" : "Switch to enable coital dilution.",
+				"type" : "bool"
+			},
+			"Coital_Dilution_Factor_2_Partners" : {
+				"min" : 1.19209e-007,
+				"max" : 1,
+				"default" : 1,
+				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly two current partners. Represents coital dilution.",
+				"type" : "float"
+			},
+			"Coital_Dilution_Factor_3_Partners" : {
+				"min" : 1.19209e-007,
+				"max" : 1,
+				"default" : 1,
+				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly three current partners. Represents coital dilution.",
+				"type" : "float"
+			},
+			"Coital_Dilution_Factor_4_Plus_Partners" : {
+				"min" : 1.19209e-007,
+				"max" : 1,
+				"default" : 1,
+				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has four or more current partners. Represents coital dilution.",
 				"type" : "float"
 			}
 		},
@@ -5197,6 +4883,16 @@
 			}
 		},
 		"Node" : {
+			"Age_Initialization_Distribution_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"DISTRIBUTION_OFF",
+					"DISTRIBUTION_SIMPLE",
+					"DISTRIBUTION_COMPLEX"
+				],
+				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
+				"default" : "DISTRIBUTION_OFF"
+			},
 			"Infectivity_Scale_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -5287,6 +4983,16 @@
 					"Enable_Birth" : 1
 				}
 			},
+			"Maternal_Transmission_Probability" : {
+				"min" : 0,
+				"max" : 1,
+				"default" : 0,
+				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
+				"type" : "float",
+				"depends-on" : {
+					"Enable_Maternal_Transmission" : 1
+				}
+			},
 			"Enable_Demographics_Birth" : {
 				"default" : 0,
 				"description" : "Assumes that newborn characteristics such as sickle-cell status are heterogeneous. Set to 0 to assume by default that all newborns have identical characteristics.",
@@ -5323,6 +5029,15 @@
 				],
 				"description" : "Type of individual human sampling. Possible values are: TRACK_ALL, FIXED_SAMPLING, ADAPTED_SAMPLING_BY_POPULATION_SIZE, ADAPTED_SAMPLING_BY_AGE_GROUP, and ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE.",
 				"default" : "TRACK_ALL"
+			},
+			"Population_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"USE_INPUT_FILE",
+					"FIXED_SCALING"
+				],
+				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
+				"default" : "USE_INPUT_FILE"
 			},
 			"Base_Population_Scale_Factor" : {
 				"min" : 0,
@@ -5446,6 +5161,16 @@
 				"description" : "Number of days to continue tuning the pair formation rates.  After this duration, the rates will remain at the last rate value calculated.",
 				"type" : "float"
 			},
+			"Age_Initialization_Distribution_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"DISTRIBUTION_OFF",
+					"DISTRIBUTION_SIMPLE",
+					"DISTRIBUTION_COMPLEX"
+				],
+				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
+				"default" : "DISTRIBUTION_OFF"
+			},
 			"Infectivity_Scale_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -5536,6 +5261,16 @@
 					"Enable_Birth" : 1
 				}
 			},
+			"Maternal_Transmission_Probability" : {
+				"min" : 0,
+				"max" : 1,
+				"default" : 0,
+				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
+				"type" : "float",
+				"depends-on" : {
+					"Enable_Maternal_Transmission" : 1
+				}
+			},
 			"Enable_Demographics_Birth" : {
 				"default" : 0,
 				"description" : "Assumes that newborn characteristics such as sickle-cell status are heterogeneous. Set to 0 to assume by default that all newborns have identical characteristics.",
@@ -5572,6 +5307,15 @@
 				],
 				"description" : "Type of individual human sampling. Possible values are: TRACK_ALL, FIXED_SAMPLING, ADAPTED_SAMPLING_BY_POPULATION_SIZE, ADAPTED_SAMPLING_BY_AGE_GROUP, and ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE.",
 				"default" : "TRACK_ALL"
+			},
+			"Population_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"USE_INPUT_FILE",
+					"FIXED_SCALING"
+				],
+				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
+				"default" : "USE_INPUT_FILE"
 			},
 			"Base_Population_Scale_Factor" : {
 				"min" : 0,
@@ -5689,6 +5433,16 @@
 				"description" : "Value indicating how many mosquitoes are represented by a sample mosquito.  This parameter is only used for Vector_Sampling_Type value SAMPLE_IND_VECTORS.",
 				"type" : "integer"
 			},
+			"Age_Initialization_Distribution_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"DISTRIBUTION_OFF",
+					"DISTRIBUTION_SIMPLE",
+					"DISTRIBUTION_COMPLEX"
+				],
+				"description" : "Method for initializing the age distribution in the simulated population. Possible values are: DISTRIBUTION_OFF - All individuals default to age 20-years-old. DISTRIBUTION_SIMPLE - Individual ages are drawn from a distribution whose functional form and parameters are specified in the 'IndividualAttributes' demographics input layers: 'AgeDistributionFlag', 'AgeDistribution1', and 'AgeDistribution2'. DISTRIBUTION_COMPLEX - Individual ages are drawn from a piecewise linear distribution specified in the 'IndividualAttributes' demographics input layer 'AgeDistribution'.",
+				"default" : "DISTRIBUTION_OFF"
+			},
 			"Infectivity_Scale_Type" : {
 				"type" : "enum",
 				"enum" : [
@@ -5779,6 +5533,16 @@
 					"Enable_Birth" : 1
 				}
 			},
+			"Maternal_Transmission_Probability" : {
+				"min" : 0,
+				"max" : 1,
+				"default" : 0,
+				"description" : "Probability of transmission of infection from mother to infant at birth. Relevant only if Enable_Maternal_Transmission is set to 1. Note: This parameter should be set to 0 and ignored for malaria and vector simulations.",
+				"type" : "float",
+				"depends-on" : {
+					"Enable_Maternal_Transmission" : 1
+				}
+			},
 			"Enable_Demographics_Birth" : {
 				"default" : 0,
 				"description" : "Assumes that newborn characteristics such as sickle-cell status are heterogeneous. Set to 0 to assume by default that all newborns have identical characteristics.",
@@ -5815,6 +5579,15 @@
 				],
 				"description" : "Type of individual human sampling. Possible values are: TRACK_ALL, FIXED_SAMPLING, ADAPTED_SAMPLING_BY_POPULATION_SIZE, ADAPTED_SAMPLING_BY_AGE_GROUP, and ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE.",
 				"default" : "TRACK_ALL"
+			},
+			"Population_Scale_Type" : {
+				"type" : "enum",
+				"enum" : [
+					"USE_INPUT_FILE",
+					"FIXED_SCALING"
+				],
+				"description" : "Either use the initial population specified in the demographics input file or a fixed scaling of this value based on the population scaling factor parameter. Possible values are: USE_INPUT_FILE and FIXED_SCALING.",
+				"default" : "USE_INPUT_FILE"
 			},
 			"Base_Population_Scale_Factor" : {
 				"min" : 0,

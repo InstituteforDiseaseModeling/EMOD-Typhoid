@@ -18,6 +18,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "Log.h"
 #include "MalariaEnums.h"
+#include "MalariaParameters.h"
 
 #include "Sigmoid.h"
 #include "SusceptibilityMalaria.h"
@@ -204,14 +205,14 @@ namespace Kernel
                 break;
 
             case MalariaStrains::FALCIPARUM_RANDOM_STRAIN:
-                m_MSPtype = randgen->i(params()->falciparumMSPVars);
-                m_nonspectype = randgen->i(params()->falciparumNonSpecTypes);
+                m_MSPtype = randgen->i(params()->malaria_params->falciparumMSPVars);
+                m_nonspectype = randgen->i(params()->malaria_params->falciparumNonSpecTypes);
 
                 #pragma loop(hint_parallel(8))
 
                 for (int i = 0; i < CLONAL_PfEMP1_VARIANTS; i++)
                 {
-                    m_IRBCtype[i] = randgen->i(params()->falciparumPfEMP1Vars); 
+                    m_IRBCtype[i] = randgen->i(params()->malaria_params->falciparumPfEMP1Vars); 
                     m_minor_epitope_type[i] = randgen->i(MINOR_EPITOPE_VARS_PER_SET) + MINOR_EPITOPE_VARS_PER_SET * m_nonspectype;
                 }
                 break;
@@ -220,16 +221,16 @@ namespace Kernel
                 // in the future replace this with the specific strain ID
                 tempstrainID = infection_strain->GetGeneticID();
 
-                m_MSPtype = tempstrainID%params()->falciparumMSPVars;
-                m_nonspectype = (tempstrainID/params()->falciparumMSPVars)%params()->falciparumNonSpecTypes;
-                tempStridePosition = tempstrainID%params()->falciparumPfEMP1Vars;
-                tempStrideLength = stridelengths[(tempstrainID/params()->falciparumPfEMP1Vars)%120];// in case it goes over limit of primes
+                m_MSPtype = tempstrainID%params()->malaria_params->falciparumMSPVars;
+                m_nonspectype = (tempstrainID/params()->malaria_params->falciparumMSPVars)%params()->malaria_params->falciparumNonSpecTypes;
+                tempStridePosition = tempstrainID%params()->malaria_params->falciparumPfEMP1Vars;
+                tempStrideLength = stridelengths[(tempstrainID/params()->malaria_params->falciparumPfEMP1Vars)%120];// in case it goes over limit of primes
                #pragma loop(hint_parallel(8))
 
                 for (int i = 0; i < CLONAL_PfEMP1_VARIANTS; i++)
                 {
                     m_IRBCtype[i] = tempStridePosition; 
-                    tempStridePosition = (tempStridePosition + tempStrideLength)% params()->falciparumPfEMP1Vars;
+                    tempStridePosition = (tempStridePosition + tempStrideLength)% params()->malaria_params->falciparumPfEMP1Vars;
                     m_minor_epitope_type[i] = randgen->i(MINOR_EPITOPE_VARS_PER_SET) + MINOR_EPITOPE_VARS_PER_SET * m_nonspectype;
                 }
                 break;
@@ -252,7 +253,7 @@ namespace Kernel
         #pragma loop(hint_parallel(8))
         for (int i = 0; i < CLONAL_PfEMP1_VARIANTS; i++)
         {
-            if ((m_IRBCtype[i] > params()->falciparumPfEMP1Vars) || (m_IRBCtype[i] < 0))
+            if ((m_IRBCtype[i] > params()->malaria_params->falciparumPfEMP1Vars) || (m_IRBCtype[i] < 0))
             {
                 m_IRBCtype[i] = 0;
                 // ERROR: ("Error in IRBCtype!\n");

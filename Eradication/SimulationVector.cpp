@@ -24,6 +24,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "BinaryArchiveReader.h"
 #include "MpiDataExchanger.h"
 #include "VectorCohortIndividual.h"
+#include "VectorParameters.h"
 
 #include <chrono>
 typedef std::chrono::high_resolution_clock _clock;
@@ -182,8 +183,8 @@ namespace Kernel
         Simulation::Reports_CreateBuiltIn();
 
         // If we're running a simulation with actual vectors, do VectorSpeciesReport as well
-        if(!GET_CONFIGURABLE(SimulationConfig)->vector_species_names.empty())
-            reports.push_back(VectorSpeciesReport::CreateReport( GET_CONFIGURABLE(SimulationConfig)->vector_species_names ));
+        if(!GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_species_names.empty())
+            reports.push_back(VectorSpeciesReport::CreateReport( GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_species_names ));
         else
             LOG_INFO("Skipping VectorSpeciesReport; no vectors detected in simulation\n");
     }

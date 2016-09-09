@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Sigmoid.h"   // for Sigmoid::basic_sigmoid
 #include "NodeDemographics.h" // for static strings e.g. MSP_mean_antibody_distribution
 #include "SimulationConfig.h"
+#include "MalariaParameters.h"
 
 #ifdef randgen
 #undef randgen
@@ -714,14 +715,14 @@ namespace Kernel
             // take parasiteSmearSensitivity microliters of blood and see if any parasites
             // number of parasites will be Poisson distributed with mean=parasite_density*parasiteSmearSensitivity (default 0.1)
             // probability of more than one parasite is (1-exp(-mean))
-            if (randgen->e() < EXPCDF(-(m_parasite_density)*params()->parasiteSmearSensitivity))
+            if (randgen->e() < EXPCDF(-(m_parasite_density)*params()->malaria_params->parasiteSmearSensitivity))
                 return true; 
             else 
                 return false; 
         }
         else if (test_type == MALARIA_TEST_NEW_DIAGNOSTIC)
         {
-            if (randgen->e() < EXPCDF(-(m_parasite_density)*params()->newDiagnosticSensitivity))
+            if (randgen->e() < EXPCDF(-(m_parasite_density)*params()->malaria_params->newDiagnosticSensitivity))
                 return true; 
             else 
                 return false; 
@@ -739,9 +740,9 @@ namespace Kernel
             // perform a typical blood smear (default
             // take .1 microliters of blood and count parasites
             // 10xPoisson distributed with mean .1xparasite_density
-            if (params()->parasiteSmearSensitivity > 0)
+            if (params()->malaria_params->parasiteSmearSensitivity > 0)
             {
-                measured_count = float(1.0 / params()->parasiteSmearSensitivity * randgen->Poisson(params()->parasiteSmearSensitivity * m_parasite_density));
+                measured_count = float(1.0 / params()->malaria_params->parasiteSmearSensitivity * randgen->Poisson(params()->malaria_params->parasiteSmearSensitivity * m_parasite_density));
             }
 
             return measured_count;
@@ -761,15 +762,15 @@ namespace Kernel
         switch( type )
         {
         case MalariaAntibodyType::MSP1:
-            n_total = params()->falciparumMSPVars;
+            n_total = params()->malaria_params->falciparumMSPVars;
             break;
 
         case MalariaAntibodyType::PfEMP1_minor:
-            n_total = params()->falciparumNonSpecTypes * MINOR_EPITOPE_VARS_PER_SET;
+            n_total = params()->malaria_params->falciparumNonSpecTypes * MINOR_EPITOPE_VARS_PER_SET;
             break;
 
         case MalariaAntibodyType::PfEMP1_major:
-            n_total = params()->falciparumPfEMP1Vars;
+            n_total = params()->malaria_params->falciparumPfEMP1Vars;
             break;
 
         default:
@@ -899,15 +900,15 @@ namespace Kernel
             break;
             
         case MalariaAntibodyType::MSP1:
-            fraction = float(m_antibodies_to_n_variations[MalariaAntibodyType::MSP1]) / params()->falciparumMSPVars;
+            fraction = float(m_antibodies_to_n_variations[MalariaAntibodyType::MSP1]) / params()->malaria_params->falciparumMSPVars;
             break;
 
         case MalariaAntibodyType::PfEMP1_minor:
-            fraction = float(m_antibodies_to_n_variations[MalariaAntibodyType::PfEMP1_minor]) / (MINOR_EPITOPE_VARS_PER_SET*params()->falciparumNonSpecTypes); // five minor epitopes for each non-spec type
+            fraction = float(m_antibodies_to_n_variations[MalariaAntibodyType::PfEMP1_minor]) / (MINOR_EPITOPE_VARS_PER_SET*params()->malaria_params->falciparumNonSpecTypes); // five minor epitopes for each non-spec type
             break;
 
         case MalariaAntibodyType::PfEMP1_major:
-            fraction = float(m_antibodies_to_n_variations[MalariaAntibodyType::PfEMP1_major]) / params()->falciparumPfEMP1Vars;
+            fraction = float(m_antibodies_to_n_variations[MalariaAntibodyType::PfEMP1_major]) / params()->malaria_params->falciparumPfEMP1Vars;
             break;
 
         default:
@@ -1006,7 +1007,7 @@ namespace Kernel
     {
         // update maximum fever (is zero if undetectable through whole time step)
         float fever_ = get_fever();
-        if ( fever_ > params()->feverDetectionThreshold && 
+        if ( fever_ > params()->malaria_params->feverDetectionThreshold && 
              fever_ > m_max_fever_in_tstep )
         {
             m_max_fever_in_tstep = fever_;

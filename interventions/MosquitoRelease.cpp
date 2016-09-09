@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "SimulationConfig.h"
 #include "NodeVectorEventContext.h"  // for IMosquitoReleaseConsumer methods
+#include "VectorParameters.h"
 
 static const char * _module = "MosquitoRelease";
 
@@ -99,14 +100,6 @@ namespace Kernel
     , mate()
     , releasedNumber(10000)
     {
-        initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
-        initConfigTypeMap( "Released_Number", &releasedNumber, MR_Released_Number_DESC_TEXT, 1, 1e8, 10000);
-        releasedSpecies.constraints = "<configuration>:Vector_Species_Params.*";
-        releasedSpecies.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->vector_species_names;
-        initConfigTypeMap( "Released_Species", &releasedSpecies, MR_Released_Species_DESC_TEXT);
-        initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit, MR_Cost_To_Consumer_DESC_TEXT, 0, 999999, 0.0f);
-        mate.pesticideResistance = VectorAllele::NotMated;
-        mate.HEG = VectorAllele::NotMated;
     }
 
     MosquitoRelease::MosquitoRelease( const MosquitoRelease& master )
@@ -124,6 +117,19 @@ namespace Kernel
         const Configuration * inputJson
     )
     {
+        releasedSpecies.constraints = "<configuration>:Vector_Species_Params.*";
+        if( GET_CONFIGURABLE(SimulationConfig) != nullptr )
+        {
+            releasedSpecies.constraint_param = &GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_species_names;
+        }
+
+        initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
+        initConfigTypeMap( "Released_Number",  &releasedNumber,  MR_Released_Number_DESC_TEXT, 1, 1e8, 10000);
+        initConfigTypeMap( "Released_Species", &releasedSpecies, MR_Released_Species_DESC_TEXT);
+        initConfigTypeMap( "Cost_To_Consumer", &cost_per_unit,   MR_Cost_To_Consumer_DESC_TEXT, 0, 999999, 0.0f);
+        mate.pesticideResistance = VectorAllele::NotMated;
+        mate.HEG = VectorAllele::NotMated;
+
         VectorGender::Enum              gender;
         VectorSterility::Enum           sterility;
         VectorWolbachia::Enum           Wolbachia;

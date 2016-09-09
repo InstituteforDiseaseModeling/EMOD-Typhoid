@@ -38,6 +38,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Serialization.h"
 #include "IdmMpi.h"
 
+#ifdef ENABLE_TBHIV
+#include "TBHIVParameters.h"
+#endif
+
 static const char* _module = "Node";
 
 using namespace json;
@@ -60,6 +64,8 @@ namespace Kernel
         , _latitude(FLT_MAX)
         , _longitude(FLT_MAX)
         , ind_sampling_type( IndSamplingType::TRACK_ALL )
+        , age_initialization_distribution_type(DistributionType::DISTRIBUTION_OFF)
+        , population_scaling(PopulationScaling::USE_INPUT_FILE)
         , population_density_infectivity_correction(PopulationDensityInfectivityCorrection::CONSTANT_INFECTIVITY)
         , suid(_suid)
         , urban(false)
@@ -156,6 +162,8 @@ namespace Kernel
         , _latitude(FLT_MAX)
         , _longitude(FLT_MAX)
         , ind_sampling_type( IndSamplingType::TRACK_ALL )
+        , age_initialization_distribution_type(DistributionType::DISTRIBUTION_OFF)
+        , population_scaling(PopulationScaling::USE_INPUT_FILE)
         , population_density_infectivity_correction(PopulationDensityInfectivityCorrection::CONSTANT_INFECTIVITY)
         , suid(suids::nil_suid())
         , urban(false)
@@ -325,6 +333,8 @@ namespace Kernel
 
     bool Node::Configure( const Configuration* config )
     {
+        initConfig( "Age_Initialization_Distribution_Type", age_initialization_distribution_type, config, MetadataDescriptor::Enum(Age_Initialization_Distribution_Type_DESC_TEXT, Age_Initialization_Distribution_Type_DESC_TEXT, MDD_ENUM_ARGS(DistributionType)) );
+
         initConfig( "Infectivity_Scale_Type", infectivity_scaling, config, MetadataDescriptor::Enum("infectivity_scaling", Infectivity_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(InfectivityScaling)) );
         if ((infectivity_scaling == InfectivityScaling::SINUSOIDAL_FUNCTION_OF_TIME) || JsonConfigurable::_dryrun )
         {
@@ -361,6 +371,8 @@ namespace Kernel
         initConfigTypeMap( "Enable_Demographics_Gender",      &demographics_gender,     Enable_Demographics_Gender_DESC_TEXT,     true  );  // DJK*: This needs to be configurable!
 
         initConfigTypeMap( "Enable_Maternal_Transmission",    &maternal_transmission,   Enable_Maternal_Transmission_DESC_TEXT,   false, "Enable_Birth" );
+        initConfigTypeMap( "Maternal_Transmission_Probability", &prob_maternal_transmission, Maternal_Transmission_Probability_DESC_TEXT, 0.0f, 1.0f,    0.0f, "Enable_Maternal_Transmission"  );
+
         initConfigTypeMap( "Enable_Demographics_Birth",       &demographics_birth,      Enable_Demographics_Birth_DESC_TEXT,      false, "Enable_Birth" );  // DJK*: Should be "Enable_Disease_Heterogeneity_At_Birth"
         initConfig( "Birth_Rate_Dependence", vital_birth_dependence, config, MetadataDescriptor::Enum(Birth_Rate_Dependence_DESC_TEXT, Birth_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalBirthDependence)), "Enable_Birth" );
 
@@ -382,6 +394,7 @@ namespace Kernel
             initConfigTypeMap( "Sample_Rate_20_Plus",  &sample_rate_20_plus, Sample_Rate_20_Plus_DESC_TEXT,   0.0f, 1000.0f, 1.0f, "Individual_Sampling_Type", "ADAPTED_SAMPLING_BY_AGE_GROUP || ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE" );
         }
 
+        initConfig( "Population_Scale_Type", population_scaling,  config, MetadataDescriptor::Enum(Population_Scale_Type_DESC_TEXT, Population_Scale_Type_DESC_TEXT, MDD_ENUM_ARGS(PopulationScaling)) );
         initConfigTypeMap( "Base_Population_Scale_Factor",      &population_scaling_factor,  Base_Population_Scale_Factor_DESC_TEXT,      0.0f, FLT_MAX, 1.0f, "Population_Scale_Type", "FIXED_SCALING" );
         initConfigTypeMap( "Max_Node_Population_Samples",       &max_sampling_cell_pop,      Max_Node_Population_Samples_DESC_TEXT,       1.0f, FLT_MAX, 30.0f, "Individual_Sampling_Type", "ADAPTED_SAMPLING_BY_POPULATION_SIZE,ADAPTED_SAMPLING_BY_AGE_GROUP_AND_POP_SIZE" );
 
@@ -495,12 +508,13 @@ namespace Kernel
         {
             Above_Poverty = float(demographics["NodeAttributes"]["AbovePoverty"].AsDouble());
             urban = (demographics["NodeAttributes"]["Urban"].AsInt() != 0);
-
-            if (GET_CONFIGURABLE(SimulationConfig)->coinfection_incidence == true)
+#ifdef ENABLE_TBHIV
+            if (GET_CONFIGURABLE(SimulationConfig)->tbhiv_params->coinfection_incidence == true)
             {
                 demographic_distributions[NodeDemographicsDistribution::HIVCoinfectionDistribution] = NodeDemographicsDistribution::CreateDistribution(demographics["IndividualAttributes"]["HIVCoinfectionDistribution"], "gender", "time", "age");
                 demographic_distributions[NodeDemographicsDistribution::HIVMortalityDistribution]   = NodeDemographicsDistribution::CreateDistribution(demographics["IndividualAttributes"]["HIVMortalityDistribution"], "gender", "time", "age");
             }
+#endif // ENABLE_TBHIV
         }
 
         VitalDeathDependence::Enum vital_death_dependence = GET_CONFIGURABLE(SimulationConfig)->vital_death_dependence;
@@ -1181,7 +1195,7 @@ namespace Kernel
         uint32_t InitPop = uint32_t(demographics["NodeAttributes"]["InitialPopulation"].AsUint64());
 
         // correct initial population if necessary (historical simulation for instance
-        if ( GET_CONFIGURABLE(SimulationConfig)->population_scaling )
+        if ( population_scaling )
         {
             InitPop = uint32_t(InitPop * population_scaling_factor);
         }
@@ -1211,7 +1225,7 @@ namespace Kernel
 
         // Cache pointers to the initial age distribution with the node, so it doesn't have to be created for each individual.
         // After the demographic initialization is complete, it can be removed from the map and deleted
-        if( params()->age_initialization_distribution_type == DistributionType::DISTRIBUTION_COMPLEX )
+        if( age_initialization_distribution_type == DistributionType::DISTRIBUTION_COMPLEX )
         {
             if( !demographics.Contains( "IndividualAttributes" ) || !demographics["IndividualAttributes"].Contains( "AgeDistribution" ) )
             {
@@ -1334,7 +1348,7 @@ namespace Kernel
 
         // Don't need this distribution after demographic initialization is completed
         // (If we ever want to use it in the future, e.g. in relation to Outbreak ImportCases, we can remove the following.  Clean-up would then be done only in the destructor.)
-        if( params()->age_initialization_distribution_type == DistributionType::DISTRIBUTION_COMPLEX )
+        if( age_initialization_distribution_type == DistributionType::DISTRIBUTION_COMPLEX )
         {
             EraseAndDeleteDemographicsDistribution(NodeDemographicsDistribution::AgeDistribution);
         }
@@ -1422,7 +1436,6 @@ namespace Kernel
             if ( ind_sampling_type != IndSamplingType::TRACK_ALL && randgen->e() >= temp_sampling_rate ) continue;
 
             // Configure and/or add new individual (EAW: there doesn't appear to be any significant difference between the two cases below)
-            auto prob_maternal_transmission = GET_CONFIGURABLE(SimulationConfig)->prob_maternal_transmission;
             IIndividualHuman* child = nullptr;
             if (demographics_birth)
             {
@@ -1477,6 +1490,11 @@ namespace Kernel
         auto context = dynamic_cast<IIndividualHumanContext*>(mother);
         child->setupMaternalAntibodies(context, this);
         Births += mc_weight;//  Born with age=0 and no infections and added to sim with same sampling weight as mother
+    }
+
+    ProbabilityNumber Node::GetProbMaternalTransmission() const
+    {
+        return prob_maternal_transmission;
     }
 
     float Node::getPrevalenceInPossibleMothers()
@@ -1691,12 +1709,12 @@ namespace Kernel
     {
         // Set age from distribution, or if no proper distribution set, make all initial individuals 20 years old (7300 days)
 
-        if(params()->age_initialization_distribution_type == DistributionType::DISTRIBUTION_COMPLEX)
+        if(age_initialization_distribution_type == DistributionType::DISTRIBUTION_COMPLEX)
         {
             // "AgeDistribution" is added to map in Node::SetParameters if 'enable_age_initialization_distribution' flag is set
             age = GetDemographicsDistribution(NodeDemographicsDistribution::AgeDistribution)->DrawFromDistribution(randgen->e());
         }
-        else if (params()->age_initialization_distribution_type == DistributionType::DISTRIBUTION_SIMPLE)
+        else if (age_initialization_distribution_type == DistributionType::DISTRIBUTION_SIMPLE)
         {
             if( !demographics.Contains( "IndividualAttributes" ) ||
                 !demographics["IndividualAttributes"].Contains( "AgeDistributionFlag" ) ||
@@ -2290,6 +2308,7 @@ namespace Kernel
 
         if ((node.serializationMask & SerializationFlags::Parameters) != 0) {
             ar.labelElement("ind_sampling_type") & (uint32_t&)node.ind_sampling_type;
+            ar.labelElement("age_initialization_distribution_type") & (uint32_t&)node.age_initialization_distribution_type;
             ar.labelElement("population_density_infectivity_correction") & (uint32_t&)node.population_density_infectivity_correction;
 
             ar.labelElement("demographics_birth") & node.demographics_birth;
@@ -2307,6 +2326,7 @@ namespace Kernel
             ar.labelElement("immune_threshold_for_downsampling") & node.immune_threshold_for_downsampling;
 
             ar.labelElement("population_density_c50") & node.population_density_c50;
+            ar.labelElement("population_scaling") & (uint32_t&)node.population_scaling;
             ar.labelElement("population_scaling_factor") & node.population_scaling_factor;
             ar.labelElement("maternal_transmission") & node.maternal_transmission;
             ar.labelElement("vital_birth") & node.vital_birth;

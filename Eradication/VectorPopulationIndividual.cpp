@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Log.h"
 #include "Debug.h"
 #include "IMigrationInfoVector.h"
+#include "VectorParameters.h"
 
 #ifdef randgen
 #undef randgen
@@ -200,7 +201,7 @@ namespace Kernel
         float x_mortalityWolbachia = 1.0;
         if( cohort->GetVectorGenetics().GetWolbachia() != VectorWolbachia::WOLBACHIA_FREE )
         {
-            x_mortalityWolbachia = params()->WolbachiaMortalityModification;
+            x_mortalityWolbachia = params()->vector_params->WolbachiaMortalityModification;
         }
 
         // Oocysts, not sporozoites affect egg batch size:
@@ -208,7 +209,7 @@ namespace Kernel
         float x_infectedeggbatchmod  = (state == VectorStateEnum::STATE_INFECTED)   ? float(species()->infectedeggbatchmod)  : 1.0f;
 
         // Calculate local mortality (with or without age dependence) and convert to probability
-        if (params()->vector_aging)
+        if (params()->vector_params->vector_aging)
         { 
             localadultmortality = tempentry2->GetAdditionalMortality() + dryheatmortality + species()->adultmortality + mortalityFromAge(tempentry2->GetAge());
         }
@@ -227,7 +228,7 @@ namespace Kernel
             cumulative_probability = p_local_mortality + (1 - p_local_mortality) * probs()->diewithoutattemptingfeed;
             
             // possibly correct for sugar feeding
-            if( params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY && probs()->sugarTrapKilling > 0 )
+            if( params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY && probs()->sugarTrapKilling > 0 )
             {
                 cumulative_probability += (1 - cumulative_probability) * probs()->sugarTrapKilling;  // add in sugarTrap to kill rate
             }
@@ -264,8 +265,8 @@ namespace Kernel
             tempentry2->SetNewEggs(0);                     // reset eggs for next time
 
             // Now if sugar feeding exists every day or after each feed, and mortality is associated, then check for killing
-            if( (params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_FEED || 
-                params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY) && probs()->sugarTrapKilling > 0)
+            if( (params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_FEED || 
+                 params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY) && probs()->sugarTrapKilling > 0)
             {
                 if(randgen->e() < probs()->sugarTrapKilling)
                 {
@@ -452,7 +453,7 @@ namespace Kernel
 
     void VectorPopulationIndividual::ResetOvipositionTimer( IVectorCohortIndividual* mosquito )
     {
-        if( !params()->temperature_dependent_feeding_cycle )
+        if( !params()->vector_params->temperature_dependent_feeding_cycle )
         {
             // Simple behavior with constant configurable number of days between feeds:
             mosquito->SetOvipositionTimer( species()->daysbetweenfeeds );
@@ -527,9 +528,9 @@ namespace Kernel
                             for (uint32_t i = 0; i < temppop; i++)
                             { 
                                 // now if sugar feeding exists every day or after each feed, and mortality is associated, then check for killing
-                                if((params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_ON_EMERGENCE_ONLY || 
-                                    params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_FEED || 
-                                    params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY) && probs()->sugarTrapKilling >0)
+                                if((params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_ON_EMERGENCE_ONLY || 
+                                    params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_FEED || 
+                                    params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY) && probs()->sugarTrapKilling >0)
                                 {
                                     if(randgen->e() < probs()->sugarTrapKilling)
                                     {
@@ -564,9 +565,9 @@ namespace Kernel
                                 for (uint32_t i = 0; i < temppop; i++)
                                 { 
                                     // now if sugar feeding exists every day or after each feed, and mortality is associated, then check for killing
-                                    if((params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_ON_EMERGENCE_ONLY || 
-                                        params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_FEED || 
-                                        params()->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY) && probs()->sugarTrapKilling >0)
+                                    if((params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_ON_EMERGENCE_ONLY || 
+                                        params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_FEED || 
+                                        params()->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_EVERY_DAY) && probs()->sugarTrapKilling >0)
                                     {
                                         if(randgen->e() < probs()->sugarTrapKilling)
                                         {
@@ -725,7 +726,7 @@ namespace Kernel
         {
             if( exposed->GetVectorGenetics().GetWolbachia() != VectorWolbachia::WOLBACHIA_FREE )
             {
-                x_infectionWolbachia = params()->WolbachiaInfectionModification;
+                x_infectionWolbachia = params()->vector_params->WolbachiaInfectionModification;
             }
             // Determine if there is a new infection
             if ( randgen->e() < species()->acquiremod * x_infectionWolbachia * infection_prob / success_prob )

@@ -35,7 +35,7 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
     public:
-        static VectorSpeciesParameters* CreateVectorSpeciesParameters(const std::string& vector_species_name);
+        static VectorSpeciesParameters* CreateVectorSpeciesParameters( const Configuration* inputJson, const std::string& vector_species_name );
         virtual ~VectorSpeciesParameters();
         bool Configure( const ::Configuration *json );
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);

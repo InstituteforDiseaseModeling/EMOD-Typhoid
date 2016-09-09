@@ -1288,7 +1288,7 @@ namespace Kernel
     IndividualHuman::getProbMaternalTransmission()
     const
     {
-        return GET_CONFIGURABLE(SimulationConfig)->prob_maternal_transmission;
+        return parent->GetProbMaternalTransmission();
     }
 
 /* clorton

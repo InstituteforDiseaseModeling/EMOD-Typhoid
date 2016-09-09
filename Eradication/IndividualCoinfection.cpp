@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "InfectionHIV.h"
 #include "SusceptibilityHIV.h"
+#include "TBHIVParameters.h"
 
 #include "MasterInterventionsContainer.h"
 
@@ -405,7 +406,7 @@ namespace Kernel
 
     void IndividualHumanCoinfection::CheckHIVVitalDynamics( float dt)
     {
-        if (GET_CONFIGURABLE(SimulationConfig)->enable_coinfection_mortality == true)
+        if (GET_CONFIGURABLE(SimulationConfig)->tbhiv_params->enable_coinfection_mortality == true)
         {
             // "HIVMortalityDistribution" is added to map in Node::SetParameters if 'enable_coinfection_mortality' flag is set and you add the demographic file for HIV mortality
             //NOTE: HIV Mortality rates are amongst HIV pos people only!

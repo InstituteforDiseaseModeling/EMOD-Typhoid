@@ -13,6 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "JsonObjectDemog.h"
 #include "Log.h"
+#include "VectorParameters.h"
 
 static const char* _module = "LarvalHabitatMultiplier";
 
@@ -43,7 +44,7 @@ namespace Kernel
             std::map<std::string,float> species_map;
             VectorHabitatType::Enum vht = VectorHabitatType::Enum( VectorHabitatType::pairs::get_values()[i] );
 
-            for( auto& species : GET_CONFIGURABLE(SimulationConfig)->vector_species_names )
+            for( auto& species : GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_species_names )
             {
                 species_map.insert( std::make_pair( species, m_DefaultValue ) );
             }

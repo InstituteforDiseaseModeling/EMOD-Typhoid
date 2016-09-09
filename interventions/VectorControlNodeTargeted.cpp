@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionFactory.h"
 #include "NodeVectorEventContext.h" // for INodeVectorInterventionEffectsApply methods
 #include "SimulationConfig.h"
+#include "VectorParameters.h"
 
 static const char * _module = "VectorControlNodeTargeted";
 
@@ -330,12 +331,12 @@ namespace Kernel
     {
         if( !JsonConfigurable::_dryrun )
         {
-            VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_sampling_type;
+            VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_sampling_type;
             if ( vector_sampling_type == VectorSamplingType::VECTOR_COMPARTMENTS_NUMBER || vector_sampling_type == VectorSamplingType::VECTOR_COMPARTMENTS_PERCENT )
             {
                 throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Explicit sugar feeding only implemented in individual-mosquito model, not in cohort model." );
             }
-            if ( GET_CONFIGURABLE(SimulationConfig)->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_NONE )
+            if ( GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_sugar_feeding == VectorSugarFeeding::VECTOR_SUGAR_FEEDING_NONE )
             {
                 LOG_WARN("Distributing SugarTrap with vector sugar-feeding frequency set to VECTOR_SUGAR_FEEDING_NONE.\n");
             }
@@ -370,7 +371,7 @@ namespace Kernel
     {
         if( !JsonConfigurable::_dryrun )
         {
-            VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_sampling_type;
+            VectorSamplingType::Enum vector_sampling_type = GET_CONFIGURABLE(SimulationConfig)->vector_params->vector_sampling_type;
             if (vector_sampling_type == VectorSamplingType::VECTOR_COMPARTMENTS_NUMBER || vector_sampling_type == VectorSamplingType::VECTOR_COMPARTMENTS_PERCENT)
             {
                 throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Explicit oviposition only implemented in individual-mosquito model, not in cohort model." );

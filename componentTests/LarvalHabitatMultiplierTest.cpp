@@ -19,6 +19,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "IdmMpi.h"
 
 #include "LarvalHabitatMultiplier.h"
+#include "VectorParameters.h"
 
 using namespace Kernel;
 using namespace std;
@@ -40,9 +41,9 @@ SUITE(LarvalHabitatMultiplierTest)
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
             Environment::setSimulationConfig( m_pSimulationConfig );
 
-            m_pSimulationConfig->vector_species_names.insert( "arabiensis" );
-            m_pSimulationConfig->vector_species_names.insert( "funestus" );
-            m_pSimulationConfig->vector_species_names.insert( "gambiae" );
+            m_pSimulationConfig->vector_params->vector_species_names.insert( "arabiensis" );
+            m_pSimulationConfig->vector_params->vector_species_names.insert( "funestus" );
+            m_pSimulationConfig->vector_params->vector_species_names.insert( "gambiae" );
         }
 
         ~LhmFixture()

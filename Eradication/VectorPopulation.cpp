@@ -16,6 +16,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "NodeVector.h"
 #include "SimulationConfig.h"
 #include "Vector.h"
+#include "VectorParameters.h"
 #include "VectorCohortWithHabitat.h"
 
 #ifdef randgen
@@ -77,9 +78,9 @@ namespace Kernel
         // Wekesa, J. W., R. S. Copeland, et al. (1992). "Effect of Plasmodium Falciparum on Blood Feeding Behavior of Naturally Infected Anopheles Mosquitoes in Western Kenya." Am J Trop Med Hyg 47(4): 484-488.
         // ANDERSON, R. A., B. G. J. KNOLS, et al. (2000). "Plasmodium falciparum sporozoites increase feeding-associated mortality of their mosquito hosts Anopheles gambiae s.l." Parasitology 120(04): 329-333.
         infectiouscorrection = 0;
-        if (params()->human_feeding_mortality * species()->infectioushfmortmod < 1.0)
+        if (params()->vector_params->human_feeding_mortality * species()->infectioushfmortmod < 1.0)
         {
-            infectiouscorrection = float((1.0 - params()->human_feeding_mortality * species()->infectioushfmortmod) / (1.0 - params()->human_feeding_mortality));
+            infectiouscorrection = float((1.0 - params()->vector_params->human_feeding_mortality * species()->infectioushfmortmod) / (1.0 - params()->vector_params->human_feeding_mortality));
         }
 
         // Set up initial populations of adult/infectious/male mosquitoes
@@ -125,7 +126,7 @@ namespace Kernel
         {
             VectorHabitatType::Enum type = habitat_param.first;
             IVectorHabitat* habitat = ivnc->GetVectorHabitatBySpeciesAndType( species_ID, type, habitat_param.second );
-            float max_larval_capacity = habitat->GetMaximumLarvalCapacity() * params()->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type,species_ID);
+            float max_larval_capacity = habitat->GetMaximumLarvalCapacity() * params()->vector_params->x_templarvalhabitat * ivnc->GetLarvalHabitatMultiplier(type,species_ID);
 
             habitat->SetMaximumLarvalCapacity( max_larval_capacity );
 
@@ -363,8 +364,8 @@ namespace Kernel
         float x_infectionWolbachia = 1.0; 
         if( cohort->GetVectorGenetics().GetWolbachia() != VectorWolbachia::WOLBACHIA_FREE )
         {
-            x_mortalityWolbachia = params()->WolbachiaMortalityModification;
-            x_infectionWolbachia = params()->WolbachiaInfectionModification;
+            x_mortalityWolbachia = params()->vector_params->WolbachiaMortalityModification;
+            x_infectionWolbachia = params()->vector_params->WolbachiaInfectionModification;
         }
 
         // Oocysts, not sporozoites affect egg batch size:
@@ -375,7 +376,7 @@ namespace Kernel
         float p_local_mortality = float(EXPCDF(-dt * localadultmortality * x_mortalityWolbachia));
 
         // calculate feeding rate, either by temperature or by species parameter
-        float feedingrate = (params()->temperature_dependent_feeding_cycle) ? 1.0f / GetFeedingCycleDurationByTemperature() : species()->feedingrate;
+        float feedingrate = (params()->vector_params->temperature_dependent_feeding_cycle) ? 1.0f / GetFeedingCycleDurationByTemperature() : species()->feedingrate;
 
         // die before human feeding
         unsigned long int remainingPop = initPop;
@@ -783,7 +784,8 @@ namespace Kernel
         float locallarvalgrowthmod = 1.0; 
         
         // if density dependent delay, slow growth
-        if(!(params()->larval_density_dependence == LarvalDensityDependence::NO_DENSITY_DEPENDENCE || params()->larval_density_dependence == LarvalDensityDependence::LARVAL_AGE_DENSITY_DEPENDENT_MORTALITY_ONLY))
+        if(!(params()->vector_params->larval_density_dependence == LarvalDensityDependence::NO_DENSITY_DEPENDENCE ||
+             params()->vector_params->larval_density_dependence == LarvalDensityDependence::LARVAL_AGE_DENSITY_DEPENDENT_MORTALITY_ONLY))
         {
             locallarvalgrowthmod = larva->GetHabitat()->GetLocalLarvalGrowthModifier();
         }
@@ -966,24 +968,24 @@ namespace Kernel
         AllelePair_t matedHEGs;
         // This is the lowest-level Egg Cohort sorting function, invoked if HEGs are active
         // check whether early or late homing, now set to early homing only
-        if(params()->heg_model == HEGModel::OFF)
+        if(params()->vector_params->heg_model == HEGModel::OFF)
         {
             fractions = VectorMatingStructure::GetAlleleFractionsEarlyHoming(vms.GetHEG(), 0);// no homing
-        }else if(params()->heg_model == HEGModel::EGG_HOMING) // late
+        }else if(params()->vector_params->heg_model == HEGModel::EGG_HOMING) // late
         {
             fractions = VectorMatingStructure::GetAlleleFractions(vms.GetHEG());
 
             // Corrections for HEGs homing in heterozygous individuals
-            float homingFraction = params()->HEGhomingRate * fractions[VectorAllele::HALF];
+            float homingFraction = params()->vector_params->HEGhomingRate * fractions[VectorAllele::HALF];
             fractions[VectorAllele::HALF] -= homingFraction;
             fractions[VectorAllele::FULL] += homingFraction;
-        }else if(params()->heg_model == HEGModel::GERMLINE_HOMING) // early in females only
+        }else if(params()->vector_params->heg_model == HEGModel::GERMLINE_HOMING) // early in females only
         {
-            fractions = VectorMatingStructure::GetAlleleFractionsEarlyHoming(vms.GetHEG(), params()->HEGhomingRate);
-        }else if(params()->heg_model == HEGModel::DUAL_GERMLINE_HOMING) // early in males only
+            fractions = VectorMatingStructure::GetAlleleFractionsEarlyHoming(vms.GetHEG(), params()->vector_params->HEGhomingRate);
+        }else if(params()->vector_params->heg_model == HEGModel::DUAL_GERMLINE_HOMING) // early in males only
         {
-            fractions = VectorMatingStructure::GetAlleleFractionsDualEarlyHoming(vms.GetHEG(), params()->HEGhomingRate);
-        }else if(params()->heg_model == HEGModel::DRIVING_Y) // homing is fraction of eggs that would have been female that are now male (e.g. 90% male offspring is 80% homing)
+            fractions = VectorMatingStructure::GetAlleleFractionsDualEarlyHoming(vms.GetHEG(), params()->vector_params->HEGhomingRate);
+        }else if(params()->vector_params->heg_model == HEGModel::DRIVING_Y) // homing is fraction of eggs that would have been female that are now male (e.g. 90% male offspring is 80% homing)
         {
             // this HEG works differently than the others
             // all males inherit the driving-Y, females born are wildtype
@@ -1002,8 +1004,8 @@ namespace Kernel
             }else if(matedHEGs.second == VectorAllele::FULL)
             {
                 fractions[VectorAllele::WILD] = 0;
-                fractions[VectorAllele::HALF] = params()->HEGhomingRate;
-                fractions[VectorAllele::FULL] = 1.0f-params()->HEGhomingRate;
+                fractions[VectorAllele::HALF] = params()->vector_params->HEGhomingRate;
+                fractions[VectorAllele::FULL] = 1.0f-params()->vector_params->HEGhomingRate;
             }else
             {
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "DRIVING_Y allele", matedHEGs.second, VectorAllele::pairs::lookup_key(matedHEGs.second) );
@@ -1012,10 +1014,10 @@ namespace Kernel
 
         // Corrections for HEGs fecundity
         float fecundityFactor = 1.0f;
-        if(params()->heg_model == HEGModel::OFF)
+        if(params()->vector_params->heg_model == HEGModel::OFF)
         {
             fecundityFactor = 1.0f;
-        }else if(params()->heg_model == HEGModel::DRIVING_Y)
+        }else if(params()->vector_params->heg_model == HEGModel::DRIVING_Y)
         {
             switch( vms.GetHEG().second ) // fitness depends on male
             {
@@ -1023,10 +1025,10 @@ namespace Kernel
                 fecundityFactor = 1.0f;
                 break;
             case VectorAllele::HALF:
-                fecundityFactor = 1.0 - params()->HEGfecundityLimiting;
+                fecundityFactor = 1.0 - params()->vector_params->HEGfecundityLimiting;
                 break;
             case VectorAllele::FULL:
-                fecundityFactor = 1.0 - params()->HEGfecundityLimiting;
+                fecundityFactor = 1.0 - params()->vector_params->HEGfecundityLimiting;
                 break;
             case VectorAllele::NotMated: break;
             default: break;
@@ -1036,7 +1038,7 @@ namespace Kernel
             {
             case VectorAllele::FULL:
                 // fecundity reduction assumed to act on female (just an assumption)
-                fecundityFactor = 1.0 - params()->HEGfecundityLimiting;
+                fecundityFactor = 1.0 - params()->vector_params->HEGfecundityLimiting;
                 break;
 
             case VectorAllele::HALF:
@@ -1055,7 +1057,7 @@ namespace Kernel
             if( fraction_by_type.second > 0 )
             {
                 // Check for Driving Y male biased case here, or just proceed as normal
-                if(params()->heg_model == HEGModel::DRIVING_Y && fraction_by_type.first == VectorAllele::HALF)
+                if(params()->vector_params->heg_model == HEGModel::DRIVING_Y && fraction_by_type.first == VectorAllele::HALF)
                 {
                     vms.SetHEG(VectorAllele::FULL, VectorAllele::NotMated);
                     vms.SetGender(VectorGender::VECTOR_MALE);
@@ -1074,9 +1076,9 @@ namespace Kernel
     {
         // Calculate egg-hatch delay factor
         float eggHatchDelayFactor = 1.0;
-        if ( params()->egg_hatch_delay_dist != EggHatchDelayDist::NO_DELAY && params()->meanEggHatchDelay > 0 )
+        if ( params()->vector_params->egg_hatch_delay_dist != EggHatchDelayDist::NO_DELAY && params()->vector_params->meanEggHatchDelay > 0 )
         {
-            eggHatchDelayFactor = dt / params()->meanEggHatchDelay;
+            eggHatchDelayFactor = dt / params()->vector_params->meanEggHatchDelay;
             eggHatchDelayFactor = min(eggHatchDelayFactor, 1.0); // correct to avoid too many eggs
         }
 
@@ -1273,7 +1275,7 @@ namespace Kernel
 
 #if 0
         // Modified for inter-species competitive advantage for egg-crowding and larval mortality in case of shared habitat
-        if( params()->enable_vector_species_habitat_competition )
+        if( params()->vector_params->enable_vector_species_habitat_competition )
         {
             float max_capacity = habitat->GetMaximumLarvalCapacity();
             survival_weight = (max_capacity > 0) ? ( m_larval_capacities.at(habitat->GetVectorHabitatType()) / max_capacity ) : 0;
@@ -1298,7 +1300,7 @@ namespace Kernel
         m_context = context;
         
         LOG_DEBUG_F( "Creating VectorSpeciesParameters for %s and suid=%d\n", species_ID.c_str(), context->GetSuid().data);
-        m_species_params = GET_CONFIGURABLE(SimulationConfig)->vspMap.at( species_ID );
+        m_species_params = GET_CONFIGURABLE(SimulationConfig)->vector_params->vspMap.at( species_ID );
 
         // Query for vector node context
         IVectorNodeContext* ivnc = nullptr;

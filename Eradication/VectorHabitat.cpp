@@ -18,6 +18,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Vector.h"
 #include "INodeContext.h"
 #include "NodeEventContext.h"   // for INodeEventContext
+#include "VectorContexts.h"
+#include "VectorParameters.h"
 
 static const char * _module = "VectorHabitat";
 
@@ -140,7 +142,7 @@ namespace Kernel
         float larvalhabitat = GetCurrentLarvalCapacity();
         float total_larva_count = m_total_larva_count[CURRENT_TIME_STEP]; 
 
-        switch ( params()->egg_saturation )
+        switch ( params()->vector_params->egg_saturation )
         {
             case EggSaturation::NO_SATURATION:
                 m_egg_crowding_correction = 1.0;
@@ -181,8 +183,8 @@ namespace Kernel
 
             default:
                 throw BadEnumInSwitchStatementException(__FILE__, __LINE__, __FUNCTION__,
-                                                        "params()->egg_saturation", params()->egg_saturation,
-                                                        EggSaturation::pairs::lookup_key(params()->egg_saturation));
+                                                        "params()->egg_saturation", params()->vector_params->egg_saturation,
+                                                        EggSaturation::pairs::lookup_key(params()->vector_params->egg_saturation));
         }
 
         // After egg-crowding calculation has been calculated, reset new egg counter
@@ -204,14 +206,14 @@ namespace Kernel
     {
         const Climate* localWeather = node->GetLocalWeather();
         LOG_DEBUG_F("Habitat type = TEMPORARY_RAINFALL, Max larval capacity = %f\n", m_max_larval_capacity);
-        m_current_larval_capacity += float(localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - m_current_larval_capacity * exp(LARVAL_HABITAT_FACTOR1 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * LARVAL_HABITAT_FACTOR2 * params()->tempHabitatDecayScalar * sqrt(LARVAL_HABITAT_FACTOR3 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * (1.0f - localWeather->humidity()) * dt);
+        m_current_larval_capacity += float(localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - m_current_larval_capacity * exp(LARVAL_HABITAT_FACTOR1 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * LARVAL_HABITAT_FACTOR2 * params()->vector_params->tempHabitatDecayScalar * sqrt(LARVAL_HABITAT_FACTOR3 / (localWeather->airtemperature() + CELSIUS_TO_KELVIN)) * (1.0f - localWeather->humidity()) * dt);
     }
 
     void WaterVegetationHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
     {
         const Climate* localWeather = node->GetLocalWeather();
         LOG_DEBUG_F("Habitat type = WATER_VEGETATION, Max larval capacity = %f\n", m_max_larval_capacity);
-        m_current_larval_capacity += localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
+        m_current_larval_capacity += localWeather->accumulated_rainfall() * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->vector_params->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
     }
 
     void HumanPopulationHabitat::UpdateCurrentLarvalCapacity(float dt, INodeContext* node)
@@ -224,7 +226,7 @@ namespace Kernel
     {
         const Climate* localWeather = node->GetLocalWeather();
         LOG_DEBUG_F("Habitat type = BRACKISH_SWAMP, Max larval capacity = %f\n", m_max_larval_capacity);
-        m_current_larval_capacity += localWeather->accumulated_rainfall() * float(MM_PER_METER) / params()->mmRainfallToFillSwamp * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
+        m_current_larval_capacity += localWeather->accumulated_rainfall() * float(MM_PER_METER) / params()->vector_params->mmRainfallToFillSwamp * m_max_larval_capacity * params()->lloffset * params()->lloffset - params()->vector_params->semipermanentHabitatDecayRate * dt * m_current_larval_capacity;
         if(m_current_larval_capacity > m_max_larval_capacity * params()->lloffset * params()->lloffset)
         {
             m_current_larval_capacity = m_max_larval_capacity * params()->lloffset * params()->lloffset;
@@ -274,38 +276,38 @@ namespace Kernel
         //       in practice, this makes little difference for the Solomon Island rainfall patterns.
 
         // Paaijmans, K. P., M. O. Wandago, et al. (2007). "Unexpected High Losses of Anopheles gambiae Larvae Due to Rainfall." PLoS One 2(11): e1146.
-        if ( params()->vector_larval_rainfall_mortality == VectorRainfallMortality::NONE ||
+        if ( params()->vector_params->vector_larval_rainfall_mortality == VectorRainfallMortality::NONE ||
              m_habitat_type != VectorHabitatType::BRACKISH_SWAMP )
         {
             m_rainfall_mortality = 0;
         }
-        else if(params()->vector_larval_rainfall_mortality == VectorRainfallMortality::SIGMOID)
+        else if(params()->vector_params->vector_larval_rainfall_mortality == VectorRainfallMortality::SIGMOID)
         {
-            if( rainfall * MM_PER_METER < params()->larval_rainfall_mortality_threshold * dt )
+            if( rainfall * MM_PER_METER < params()->vector_params->larval_rainfall_mortality_threshold * dt )
             {
                 m_rainfall_mortality = 0;
             }
             else
             {
-                m_rainfall_mortality = (rainfall * MM_PER_METER - params()->larval_rainfall_mortality_threshold * dt) / (params()->larval_rainfall_mortality_threshold * dt);
+                m_rainfall_mortality = (rainfall * MM_PER_METER - params()->vector_params->larval_rainfall_mortality_threshold * dt) / (params()->vector_params->larval_rainfall_mortality_threshold * dt);
             }
         }
-        else if(params()->vector_larval_rainfall_mortality == VectorRainfallMortality::SIGMOID_HABITAT_SHIFTING)
+        else if(params()->vector_params->vector_larval_rainfall_mortality == VectorRainfallMortality::SIGMOID_HABITAT_SHIFTING)
         {
             float full_habitat = m_max_larval_capacity * params()->lloffset * params()->lloffset;
             float fraction_empty = (full_habitat - m_current_larval_capacity) / full_habitat;
-            if( rainfall * MM_PER_METER < params()->larval_rainfall_mortality_threshold * dt * fraction_empty )
+            if( rainfall * MM_PER_METER < params()->vector_params->larval_rainfall_mortality_threshold * dt * fraction_empty )
             {
                 m_rainfall_mortality = 0;
             }
             else
             {
-                m_rainfall_mortality = (rainfall * MM_PER_METER - params()->larval_rainfall_mortality_threshold * dt * fraction_empty) / (params()->larval_rainfall_mortality_threshold * dt);
+                m_rainfall_mortality = (rainfall * MM_PER_METER - params()->vector_params->larval_rainfall_mortality_threshold * dt * fraction_empty) / (params()->vector_params->larval_rainfall_mortality_threshold * dt);
             }
         }
         else
         {
-            throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "params()->vector_larval_rainfall_mortality", params()->vector_larval_rainfall_mortality, VectorRainfallMortality::pairs::lookup_key( params()->vector_larval_rainfall_mortality ) );
+            throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "params()->vector_larval_rainfall_mortality", params()->vector_params->vector_larval_rainfall_mortality, VectorRainfallMortality::pairs::lookup_key( params()->vector_params->vector_larval_rainfall_mortality ) );
         }
 
         LOG_DEBUG_F("Update rainfall-driven larval mortality to %f\n", m_rainfall_mortality);
@@ -346,7 +348,8 @@ namespace Kernel
     {
         // Summation of larval population depends on larval density model
         // GRADUAL_INSTAR_SPECIFIC is Notre Dame larval dynamics
-        if(params()->larval_density_dependence == LarvalDensityDependence::GRADUAL_INSTAR_SPECIFIC || params()->larval_density_dependence == LarvalDensityDependence::LARVAL_AGE_DENSITY_DEPENDENT_MORTALITY_ONLY)
+        if( params()->vector_params->larval_density_dependence == LarvalDensityDependence::GRADUAL_INSTAR_SPECIFIC || 
+            params()->vector_params->larval_density_dependence == LarvalDensityDependence::LARVAL_AGE_DENSITY_DEPENDENT_MORTALITY_ONLY )
         {
             // scaled by progress and by a factor of 10.0 to avoid float to int issues
             m_total_larva_count[CURRENT_TIME_STEP] += progress * larva;
@@ -417,7 +420,7 @@ namespace Kernel
         // Baseline aquatic mortality
         float locallarvalmortality = species_aquatic_mortality;
 
-        switch ( params()->larval_density_dependence )
+        switch ( params()->vector_params->larval_density_dependence )
         {
             // Linear-&-uniform increase in mortality 
             case LarvalDensityDependence::UNIFORM_WHEN_OVERPOPULATION:
@@ -430,7 +433,7 @@ namespace Kernel
             // Larval competition with Notre Dame larval dynamics
             case LarvalDensityDependence::GRADUAL_INSTAR_SPECIFIC:
             case LarvalDensityDependence::LARVAL_AGE_DENSITY_DEPENDENT_MORTALITY_ONLY:
-                locallarvalmortality *= exp(previous_larva_count / ( (progress * params()->larvalDensityMortalityScalar + params()->larvalDensityMortalityOffset) * larvalhabitat) );
+                locallarvalmortality *= exp(previous_larva_count / ( (progress * params()->vector_params->larvalDensityMortalityScalar + params()->vector_params->larvalDensityMortalityOffset) * larvalhabitat) );
                 break;
 
             case LarvalDensityDependence::NO_DENSITY_DEPENDENCE:
@@ -439,7 +442,7 @@ namespace Kernel
                 break;
 
             default:
-                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "params()->larval_density_dependence", params()->larval_density_dependence, LarvalDensityDependence::pairs::lookup_key( params()->larval_density_dependence ) );
+                throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "params()->larval_density_dependence", params()->vector_params->larval_density_dependence, LarvalDensityDependence::pairs::lookup_key( params()->vector_params->larval_density_dependence ) );
         }
 
         return locallarvalmortality;
