@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1299.0",
-		"DTK_Branch" : "MergeFor210 (197d786)",
-		"DTK_Build_Date" : "Sep  8 2016 10:06:12"
+		"DTK_Version" : "2.8.1307.0",
+		"DTK_Branch" : "MergeFor210 (20eb660)",
+		"DTK_Build_Date" : "Sep  9 2016 14:08:20"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -26,21 +26,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -57,7 +57,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -135,7 +135,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -191,21 +191,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -222,7 +222,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -300,7 +300,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -525,28 +525,28 @@
 					},
 					"Aquatic_Arrhenius_1" : {
 						"min" : 0,
-						"max" : 1e+015,
-						"default" : 8.42e+010,
+						"max" : 1e+15,
+						"default" : 8.42e+10,
 						"description" : "The duration of aquatic development is a decreasing function of temperature.  The daily rate of fractional progression from egg-hatching to emergence is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.  This parameter, a1, is a temperature-independent scale factor on the development rate.  Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
 					},
 					"Aquatic_Arrhenius_2" : {
 						"min" : 0,
-						"max" : 1e+015,
+						"max" : 1e+15,
 						"default" : 8328,
 						"description" : "The duration of aquatic development is a decreasing function of temperature.  The daily rate of fractional progression from egg-hatching to emergence is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.   This parameter, a2, governs how quickly the rate changes with temperature. Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
 					},
 					"Infected_Arrhenius_1" : {
 						"min" : 0,
-						"max" : 1e+015,
-						"default" : 1.17e+011,
+						"max" : 1e+15,
+						"default" : 1.17e+11,
 						"description" : "The duration of sporogony is a decreasing function of temperature.  The daily rate of fractional progression of infected mosquitoes to an infectious state is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.   This parameter, a1, is a temperature-independent scale factor on the development rate.  Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
 					},
 					"Infected_Arrhenius_2" : {
 						"min" : 0,
-						"max" : 1e+015,
+						"max" : 1e+15,
 						"default" : 8340,
 						"description" : "The duration of sporogony is a decreasing function of temperature.  The daily rate of fractional progression of infected mosquitoes to an infectious state is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.   This parameter, a2, governs how quickly the rate changes with temperature.   Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
@@ -652,21 +652,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -683,7 +683,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -761,7 +761,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -1037,28 +1037,28 @@
 					},
 					"Aquatic_Arrhenius_1" : {
 						"min" : 0,
-						"max" : 1e+015,
-						"default" : 8.42e+010,
+						"max" : 1e+15,
+						"default" : 8.42e+10,
 						"description" : "The duration of aquatic development is a decreasing function of temperature.  The daily rate of fractional progression from egg-hatching to emergence is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.  This parameter, a1, is a temperature-independent scale factor on the development rate.  Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
 					},
 					"Aquatic_Arrhenius_2" : {
 						"min" : 0,
-						"max" : 1e+015,
+						"max" : 1e+15,
 						"default" : 8328,
 						"description" : "The duration of aquatic development is a decreasing function of temperature.  The daily rate of fractional progression from egg-hatching to emergence is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.   This parameter, a2, governs how quickly the rate changes with temperature. Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
 					},
 					"Infected_Arrhenius_1" : {
 						"min" : 0,
-						"max" : 1e+015,
-						"default" : 1.17e+011,
+						"max" : 1e+15,
+						"default" : 1.17e+11,
 						"description" : "The duration of sporogony is a decreasing function of temperature.  The daily rate of fractional progression of infected mosquitoes to an infectious state is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.   This parameter, a1, is a temperature-independent scale factor on the development rate.  Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
 					},
 					"Infected_Arrhenius_2" : {
 						"min" : 0,
-						"max" : 1e+015,
+						"max" : 1e+15,
 						"default" : 8340,
 						"description" : "The duration of sporogony is a decreasing function of temperature.  The daily rate of fractional progression of infected mosquitoes to an infectious state is parameterized by the Arrhenius equation, a1 * exp( -a2 / T ), with T in degrees Kelvin.   This parameter, a2, governs how quickly the rate changes with temperature.   Reference: Craig M.H., Snow R.W., et al. (1999). A climate-based distribution model of malaria transmission in sub-Saharan Africa. Parasitology Today 15(3) 105-111.",
 						"type" : "float"
@@ -1279,21 +1279,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -1310,7 +1310,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -1388,7 +1388,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -1444,21 +1444,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -1475,7 +1475,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -1553,7 +1553,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -1613,7 +1613,7 @@
 			},
 			"Susceptibility_Scaling_Rate" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "For Susceptibility_Scale_Type of any_FUNCTION_OF_TIME, Susceptbility_Scaling_Rate determines the variation in time of the susceptibility to exposed contagion",
 				"type" : "float"
@@ -1649,7 +1649,7 @@
 			"Specific_Infectivity_Sabin1" : {
 				"min" : 0,
 				"max" : 1000,
-				"default" : 3.02e-005,
+				"default" : 3.02e-05,
 				"description" : "Specific infectivity of Sabin1.",
 				"type" : "float"
 			},
@@ -1851,42 +1851,42 @@
 			},
 			"Max_Log2_NAb_OPV1" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 2,
 				"description" : "Multiplicative factor on the natural log of neutralizing antibody titer in response to live poliovirus challenge for OPV1.",
 				"type" : "float"
 			},
 			"Max_Log2_NAb_OPV2" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 2,
 				"description" : "Multiplicative factor on the natural log of neutralizing antibody titer in response to live poliovirus challenge for OPV2.",
 				"type" : "float"
 			},
 			"Max_Log2_NAb_OPV3" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 2,
 				"description" : "Multiplicative factor on the natural log of neutralizing antibody titer in response to live poliovirus challenge for OPV3.",
 				"type" : "float"
 			},
 			"Max_Log2_NAb_IPV1" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 4,
 				"description" : "Multiplicative factor on the natural log of neutralizing antibody titer in response to live poliovirus challenge for IPV1.",
 				"type" : "float"
 			},
 			"Max_Log2_NAb_IPV2" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 4,
 				"description" : "Multiplicative factor on the natural log of neutralizing antibody titer in response to live poliovirus challenge for IPV2.",
 				"type" : "float"
 			},
 			"Max_Log2_NAb_IPV3" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 4,
 				"description" : "Multiplicative factor on the natural log of neutralizing antibody titer in response to live poliovirus challenge for IPV3.",
 				"type" : "float"
@@ -2152,57 +2152,57 @@
 			},
 			"Vaccine_Titer_tOPV1" : {
 				"min" : 0,
-				"max" : 1e+008,
-				"default" : 1e+006,
+				"max" : 1e+08,
+				"default" : 1e+06,
 				"description" : "Trivalent OPV titer in TCID50 per dose of type 1 component.",
 				"type" : "float"
 			},
 			"Vaccine_Titer_tOPV2" : {
 				"min" : 0,
-				"max" : 1e+008,
+				"max" : 1e+08,
 				"default" : 100000,
 				"description" : "Trivalent OPV titer in TCID50 per dose of type 2 component.",
 				"type" : "float"
 			},
 			"Vaccine_Titer_tOPV3" : {
 				"min" : 0,
-				"max" : 1e+008,
+				"max" : 1e+08,
 				"default" : 630000,
 				"description" : "Trivalent OPV titer in TCID50 per dose of type 3 component.",
 				"type" : "float"
 			},
 			"Vaccine_Titer_bOPV1" : {
 				"min" : 0,
-				"max" : 1e+008,
-				"default" : 1e+006,
+				"max" : 1e+08,
+				"default" : 1e+06,
 				"description" : "Bivalent OPV titer in TCID50 per dose of type 1 component.",
 				"type" : "float"
 			},
 			"Vaccine_Titer_bOPV3" : {
 				"min" : 0,
-				"max" : 1e+008,
+				"max" : 1e+08,
 				"default" : 630000,
 				"description" : "Bivalent OPV titer in TCID50 per dose of type 3 component.",
 				"type" : "float"
 			},
 			"Vaccine_Titer_mOPV1" : {
 				"min" : 0,
-				"max" : 1e+008,
-				"default" : 1e+006,
+				"max" : 1e+08,
+				"default" : 1e+06,
 				"description" : "Monovalent OPV type 1 titer in TCID50 per dose.",
 				"type" : "float"
 			},
 			"Vaccine_Titer_mOPV2" : {
 				"min" : 0,
-				"max" : 1e+008,
+				"max" : 1e+08,
 				"default" : 100000,
 				"description" : "Monovalent OPV type 2 titer in TCID50 per dose.",
 				"type" : "float"
 			},
 			"Vaccine_Titer_mOPV3" : {
 				"min" : 0,
-				"max" : 1e+008,
-				"default" : 1e+006,
+				"max" : 1e+08,
+				"default" : 1e+06,
 				"description" : "Monovalent OPV type 3 titer in TCID50 per dose.",
 				"type" : "float"
 			},
@@ -2328,21 +2328,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -2359,7 +2359,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -2437,7 +2437,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -2545,21 +2545,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -2576,7 +2576,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -2654,7 +2654,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -2720,21 +2720,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -2751,7 +2751,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -2829,7 +2829,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -2885,21 +2885,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -2916,7 +2916,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -2994,7 +2994,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -3050,21 +3050,21 @@
 			},
 			"Simulation_Duration" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Elapsed time noted in days from the start to the end of a simulation.",
 				"type" : "float"
 			},
 			"Simulation_Timestep" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Value indicating simulation time step in days.",
 				"type" : "float"
 			},
 			"Start_Time" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1,
 				"description" : "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter.",
 				"type" : "float"
@@ -3081,7 +3081,7 @@
 			},
 			"Default_Geography_Initial_Node_Population" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 1000,
 				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
 				"type" : "integer",
@@ -3159,7 +3159,7 @@
 			},
 			"Number_Substrains" : {
 				"min" : 1,
-				"max" : 1.67772e+007,
+				"max" : 1.67772e+07,
 				"default" : 256,
 				"description" : "The number of disease substrains for each base strain, such as genetic variants.",
 				"type" : "integer"
@@ -3573,7 +3573,7 @@
 			},
 			"ART_CD4_at_Initiation_Saturating_Reduction_in_Mortality" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 350,
 				"description" : "The duration from ART enrollment to on-ART HIV-cause death increases with CD4 at ART initiation up to a threshold determined by this parameter value.",
 				"type" : "float"
@@ -3685,7 +3685,7 @@
 			},
 			"x_Other_Mortality" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for scaling mortality from causes other than disease being simulated.",
 				"type" : "float",
@@ -3695,7 +3695,7 @@
 			},
 			"Minimum_Adult_Age_Years" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 15,
 				"description" : "TBD",
 				"type" : "float",
@@ -3857,7 +3857,7 @@
 			},
 			"Sexual_Debut_Age_Min" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 13,
 				"description" : "Minimum debut age.",
 				"type" : "float"
@@ -3880,7 +3880,7 @@
 				"description" : "Vector of ages governing the susceptibility of females relative to males, by age.",
 				"type" : "Vector Float",
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0
 			},
 			"Male_To_Female_Relative_Infectivity_Multipliers" : {
@@ -3903,21 +3903,21 @@
 				"type" : "bool"
 			},
 			"Coital_Dilution_Factor_2_Partners" : {
-				"min" : 1.19209e-007,
+				"min" : 1.19209e-07,
 				"max" : 1,
 				"default" : 1,
 				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly two current partners. Represents coital dilution.",
 				"type" : "float"
 			},
 			"Coital_Dilution_Factor_3_Partners" : {
-				"min" : 1.19209e-007,
+				"min" : 1.19209e-07,
 				"max" : 1,
 				"default" : 1,
 				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has exactly three current partners. Represents coital dilution.",
 				"type" : "float"
 			},
 			"Coital_Dilution_Factor_4_Plus_Partners" : {
-				"min" : 1.19209e-007,
+				"min" : 1.19209e-07,
 				"max" : 1,
 				"default" : 1,
 				"description" : "Multiplicative reduction in the coital act rate for all relationship types when an individual has four or more current partners. Represents coital dilution.",
@@ -3957,7 +3957,7 @@
 			},
 			"Base_Incubation_Period" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 6,
 				"description" : "Average duration, in days, of the incubation period before infected individuals becomes infectious.",
 				"type" : "float",
@@ -3967,7 +3967,7 @@
 			},
 			"Incubation_Period_Min" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "The minimum length of the incubation period. Used when the Incubation_Period_Distribution is UNIFORM_DURATION.",
 				"type" : "float",
@@ -3977,7 +3977,7 @@
 			},
 			"Incubation_Period_Max" : {
 				"min" : 0.6,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "The maximum length of the incubation period. Used when Incubation_Period_Distribution is UNIFORM_DURATION.",
 				"type" : "float",
@@ -3987,14 +3987,14 @@
 			},
 			"Incubation_Period_Mean" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 6,
 				"description" : "The standard deviation used when Incubation_Period_Distribution is either GAUSSIAN_DURATION or POISSON_DURATION.",
 				"type" : "float"
 			},
 			"Incubation_Period_Std_Dev" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "The standard deviation incubation period. Used when the Incubation_Period_Distribution is GAUSSIAN_DURATION.",
 				"type" : "float"
@@ -4019,7 +4019,7 @@
 			},
 			"Base_Infectious_Period" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 6,
 				"description" : "Average duration, in days, of the infectious period before the infection is cleared.",
 				"type" : "float",
@@ -4029,7 +4029,7 @@
 			},
 			"Infectious_Period_Min" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "The minimum length of the infectious period. Used when the Infectious_Period_Distribution is UNIFORM_DURATION.",
 				"type" : "float",
@@ -4039,7 +4039,7 @@
 			},
 			"Infectious_Period_Max" : {
 				"min" : 0.6,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "The maximum length of the infectious period. Used when Infectious_Period_Distribution is UNIFORM_DURATION.",
 				"type" : "float",
@@ -4049,14 +4049,14 @@
 			},
 			"Infectious_Period_Mean" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 6,
 				"description" : "The mean of the infectious period. Used when Infectious_Period_Distribution is either GAUSSIAN_DURATION or POISSON_DURATION.",
 				"type" : "float"
 			},
 			"Infectious_Period_Std_Dev" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "The standard deviation of the infectious period. Used when the Infectious_Period_Distribution is GAUSSIAN_DURATION.",
 				"type" : "float"
@@ -4106,15 +4106,15 @@
 				"type" : "float"
 			},
 			"Antibody_CSP_Killing_Threshold" : {
-				"min" : 1e-006,
-				"max" : 1e+006,
+				"min" : 1e-06,
+				"max" : 1e+06,
 				"default" : 10,
 				"description" : "Threshold value on CSP antibody concentration for sporozoite killing.",
 				"type" : "float"
 			},
 			"Antibody_CSP_Killing_Inverse_Width" : {
-				"min" : 1e-006,
-				"max" : 1e+006,
+				"min" : 1e-06,
+				"max" : 1e+06,
 				"default" : 1.5,
 				"description" : "Inverse width of sigmoidal sporozoite killing function of CSP antibody concentration.",
 				"type" : "float"
@@ -4189,13 +4189,13 @@
 				"type" : "double",
 				"min" : 0,
 				"max" : 1,
-				"default" : 2e-009
+				"default" : 2e-09
 			},
 			"Merozoites_Per_Hepatocyte" : {
 				"description" : "Number of IRBCs caused by a single infected hepatocyte at the start of infection.",
 				"type" : "double",
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 15000
 			},
 			"Merozoites_Per_Schizont" : {
@@ -4233,7 +4233,7 @@
 				"type" : "double",
 				"min" : 0,
 				"max" : 1.79769e+308,
-				"default" : 2e+006
+				"default" : 2e+06
 			},
 			"Fever_Mortality_Threshold" : {
 				"description" : "The fever mortality threshold for a simulation in units of degrees Celsius above normal body temperature. Sets the midpoint in the sigmoidal response for mortality rate associated with fever.",
@@ -4263,21 +4263,21 @@
 			},
 			"Anemia_Mortality_Inverse_Width" : {
 				"min" : 0.1,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 10,
 				"description" : "The inverse width relative to threshold value of severe disease turn-on around threshold for anemia.",
 				"type" : "float"
 			},
 			"Parasite_Mortality_Inverse_Width" : {
 				"min" : 0.1,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 10,
 				"description" : "The inverse width relative to threshold value of mortality turn-on around threshold for parasite density.",
 				"type" : "float"
 			},
 			"Fever_Mortality_Inverse_Width" : {
 				"min" : 0.1,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 10,
 				"description" : "The inverse width relative to threshold value of mortality turn-on around threshold for fever.",
 				"type" : "float"
@@ -4291,8 +4291,8 @@
 			},
 			"Parasite_Severe_Threshold" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
-				"default" : 1e+006,
+				"max" : 3.40282e+38,
+				"default" : 1e+06,
 				"description" : "The severe disease threshold level for parasite density.",
 				"type" : "float"
 			},
@@ -4305,21 +4305,21 @@
 			},
 			"Anemia_Severe_Inverse_Width" : {
 				"min" : 0.1,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 10,
 				"description" : "The inverse width relative to threshold value of severe disease turn-on around threshold for anemia.",
 				"type" : "float"
 			},
 			"Parasite_Severe_Inverse_Width" : {
 				"min" : 0.1,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 10,
 				"description" : "The inverse width relative to threshold value of severe disease turn-on around threshold for parasite density.",
 				"type" : "float"
 			},
 			"Fever_Severe_Inverse_Width" : {
 				"min" : 0.1,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 10,
 				"description" : "The inverse width relative to threshold value of severe disease turn-on around threshold for fever.",
 				"type" : "float"
@@ -4340,7 +4340,7 @@
 			},
 			"Min_Days_Between_Clinical_Incidents" : {
 				"min" : 0,
-				"max" : 1e+006,
+				"max" : 1e+06,
 				"default" : 3,
 				"description" : "The number of days with fever below the low threshold before a new incident can start when the high fever threshold is again exceeded.",
 				"type" : "float"
@@ -4389,7 +4389,7 @@
 			},
 			"Antibody_CSP_Decay_Days" : {
 				"min" : 1,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 90,
 				"description" : "Exponential decay time for CSP antibody concentration (in days).",
 				"type" : "float"
@@ -4420,7 +4420,7 @@
 			},
 			"Maternal_Antibody_Decay_Rate" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0.01,
 				"description" : "Decay rate per day in protection from maternal antibodies.",
 				"type" : "float"
@@ -4462,7 +4462,7 @@
 			},
 			"x_Local_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by foot travel.",
 				"type" : "float",
@@ -4562,7 +4562,7 @@
 			},
 			"x_Local_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by foot travel.",
 				"type" : "float",
@@ -4572,7 +4572,7 @@
 			},
 			"x_Air_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by air.",
 				"type" : "float",
@@ -4582,7 +4582,7 @@
 			},
 			"x_Regional_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by road vehicle.",
 				"type" : "float",
@@ -4592,7 +4592,7 @@
 			},
 			"x_Sea_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by sea.",
 				"type" : "float",
@@ -4602,7 +4602,7 @@
 			},
 			"x_Family_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "TBD",
 				"type" : "float",
@@ -4702,7 +4702,7 @@
 			},
 			"x_Local_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by foot travel.",
 				"type" : "float",
@@ -4712,7 +4712,7 @@
 			},
 			"x_Air_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by air.",
 				"type" : "float",
@@ -4722,7 +4722,7 @@
 			},
 			"x_Regional_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by road vehicle.",
 				"type" : "float",
@@ -4732,7 +4732,7 @@
 			},
 			"x_Sea_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by sea.",
 				"type" : "float",
@@ -4742,7 +4742,7 @@
 			},
 			"x_Family_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "TBD",
 				"type" : "float",
@@ -4801,7 +4801,7 @@
 			},
 			"x_Vector_Migration_Local" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of vector migration to adjacent nodes.",
 				"type" : "float",
@@ -4811,7 +4811,7 @@
 			},
 			"x_Vector_Migration_Regional" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of vector migration to non-adjacent nodes.",
 				"type" : "float",
@@ -4821,7 +4821,7 @@
 			},
 			"Vector_Migration_Habitat_Modifier" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "TBD",
 				"type" : "float",
@@ -4831,7 +4831,7 @@
 			},
 			"Vector_Migration_Food_Modifier" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "TBD",
 				"type" : "float",
@@ -4841,7 +4841,7 @@
 			},
 			"Vector_Migration_Stay_Put_Modifier" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "TBD",
 				"type" : "float",
@@ -4861,7 +4861,7 @@
 			},
 			"x_Local_Migration" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by foot travel.",
 				"type" : "float",
@@ -4876,7 +4876,7 @@
 			},
 			"x_Vector_Migration_Local" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier for rate of migration by foot travel.",
 				"type" : "float"
@@ -4921,7 +4921,7 @@
 			},
 			"Infectivity_Boxcar_Forcing_Amplitude" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "Fractional increase in R0 during high infectivity season, when Infectivity_Scale_Type is equal to ANNUAL_BOXCAR_FUNCTION. ",
 				"type" : "float"
@@ -5041,7 +5041,7 @@
 			},
 			"Base_Population_Scale_Factor" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "If Population_Scale_Type is set to FIXED_SCALING, the initial simulation population is uniformly scaled over the entire area to adjust for historical or future population density.",
 				"type" : "float",
@@ -5051,7 +5051,7 @@
 			},
 			"Max_Node_Population_Samples" : {
 				"min" : 1,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 30,
 				"description" : "Number of individuals when the sampling rate starts dropping to the rate of adapted sampling by population size.",
 				"type" : "float",
@@ -5070,7 +5070,7 @@
 			},
 			"x_Birth" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier of birth rate from input demographics file.",
 				"type" : "float",
@@ -5113,7 +5113,7 @@
 			},
 			"Birth_Rate_Boxcar_Forcing_Amplitude" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "Fractional increase in birth rate during high birth season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
 				"type" : "float",
@@ -5156,7 +5156,7 @@
 		"NodeSTI" : {
 			"PFA_Burnin_Duration_In_Days" : {
 				"min" : 1,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 365000,
 				"description" : "Number of days to continue tuning the pair formation rates.  After this duration, the rates will remain at the last rate value calculated.",
 				"type" : "float"
@@ -5199,7 +5199,7 @@
 			},
 			"Infectivity_Boxcar_Forcing_Amplitude" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "Fractional increase in R0 during high infectivity season, when Infectivity_Scale_Type is equal to ANNUAL_BOXCAR_FUNCTION. ",
 				"type" : "float"
@@ -5319,7 +5319,7 @@
 			},
 			"Base_Population_Scale_Factor" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "If Population_Scale_Type is set to FIXED_SCALING, the initial simulation population is uniformly scaled over the entire area to adjust for historical or future population density.",
 				"type" : "float",
@@ -5329,7 +5329,7 @@
 			},
 			"Max_Node_Population_Samples" : {
 				"min" : 1,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 30,
 				"description" : "Number of individuals when the sampling rate starts dropping to the rate of adapted sampling by population size.",
 				"type" : "float",
@@ -5348,7 +5348,7 @@
 			},
 			"x_Birth" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier of birth rate from input demographics file.",
 				"type" : "float",
@@ -5391,7 +5391,7 @@
 			},
 			"Birth_Rate_Boxcar_Forcing_Amplitude" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "Fractional increase in birth rate during high birth season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
 				"type" : "float",
@@ -5471,7 +5471,7 @@
 			},
 			"Infectivity_Boxcar_Forcing_Amplitude" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "Fractional increase in R0 during high infectivity season, when Infectivity_Scale_Type is equal to ANNUAL_BOXCAR_FUNCTION. ",
 				"type" : "float"
@@ -5591,7 +5591,7 @@
 			},
 			"Base_Population_Scale_Factor" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "If Population_Scale_Type is set to FIXED_SCALING, the initial simulation population is uniformly scaled over the entire area to adjust for historical or future population density.",
 				"type" : "float",
@@ -5601,7 +5601,7 @@
 			},
 			"Max_Node_Population_Samples" : {
 				"min" : 1,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 30,
 				"description" : "Number of individuals when the sampling rate starts dropping to the rate of adapted sampling by population size.",
 				"type" : "float",
@@ -5620,7 +5620,7 @@
 			},
 			"x_Birth" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "Multiplier of birth rate from input demographics file.",
 				"type" : "float",
@@ -5663,7 +5663,7 @@
 			},
 			"Birth_Rate_Boxcar_Forcing_Amplitude" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 0,
 				"description" : "Fractional increase in birth rate during high birth season, when Birth_Rate_Time_Dependence is equal to ANNUAL_BOXCAR_FUNCTION.",
 				"type" : "float",
@@ -5800,7 +5800,7 @@
 			},
 			"Paralytic_Immunity_Titer" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 8,
 				"description" : "Serum Nab protective threshold for paralysis.",
 				"type" : "float"
@@ -5850,7 +5850,7 @@
 			"Acquire_Rate_Default_Polio" : {
 				"min" : 0,
 				"max" : 1,
-				"default" : 3.7e-006,
+				"default" : 3.7e-06,
 				"description" : "Fraction of virus acquired from the mixing pool by default, used when the mixing pool option is disabled or both transmission options are on.",
 				"type" : "float"
 			},
@@ -6053,7 +6053,7 @@
 			},
 			"Run_Number" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 2.14748e+09,
 				"default" : 1,
 				"description" : "Sets the random number seed through a bit manipulation process for USE_PSEUDO_DES. When running a multi-core simulation, combines with processor rank to produce independent random number streams for each process.",
 				"type" : "integer"
@@ -6128,7 +6128,7 @@
 			},
 			"Run_Number" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 2.14748e+09,
 				"default" : 1,
 				"description" : "Sets the random number seed through a bit manipulation process for USE_PSEUDO_DES. When running a multi-core simulation, combines with processor rank to produce independent random number streams for each process.",
 				"type" : "integer"
@@ -6263,7 +6263,7 @@
 			},
 			"Run_Number" : {
 				"min" : 0,
-				"max" : 2.14748e+009,
+				"max" : 2.14748e+09,
 				"default" : 1,
 				"description" : "Sets the random number seed through a bit manipulation process for USE_PSEUDO_DES. When running a multi-core simulation, combines with processor rank to produce independent random number streams for each process.",
 				"type" : "integer"
@@ -6647,14 +6647,14 @@
 			"TB_Fast_Progressor_Rate" : {
 				"min" : 0,
 				"max" : 1,
-				"default" : 4.1096e-005,
+				"default" : 4.1096e-05,
 				"description" : "The mean rate at which individuals who are fast-progressors progress from a latently infected state to an active presymptomatic state. This rate is added to the TB_Latent_Cure_Rate to determine total_rate of the latently infected state, then the ratio of TB_Fast_Progressor_Rate to the total_rate is calculated. This ratio determines the probability that a latently infected fast-progressor will go to an active presymptomatic state after a mean duration of 1 / total_rate.",
 				"type" : "float"
 			},
 			"TB_Slow_Progressor_Rate" : {
 				"min" : 0,
 				"max" : 1,
-				"default" : 2.054e-006,
+				"default" : 2.054e-06,
 				"description" : "The mean rate at which individuals who are slow-progressors progress from a latently infected state to an active presymptomatic state. This rate is added to the TB_Latent_Cure_Rate to determine total_rate of the latently infected state, then the ratio of TB_Slow_Progressor_Rate to the total_rate is calculated. This ratio determines the probability that a latently infected fast-progressor will go to an active presymptomatic state after a mean duration of 1 / total_rate.",
 				"type" : "float"
 			},
@@ -6752,7 +6752,7 @@
 			"TB_Relapsed_to_Active_Rate" : {
 				"min" : 0,
 				"max" : 1,
-				"default" : 4.1096e-005,
+				"default" : 4.1096e-05,
 				"description" : "The mean rate at which relapsed individuals progress to an active symptomatic state. By default, the same value as the TB_Fast_Progressor_Rate is used.",
 				"type" : "float"
 			},
@@ -6776,7 +6776,7 @@
 			},
 			"TB_Active_Period_Std_Dev" : {
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1,
 				"description" : "When TB_Active_Period_Distribution is set to GAUSSIAN_DURATION, this parameter provides the value for standard deviation.",
 				"type" : "float"
@@ -6785,7 +6785,7 @@
 				"description" : "Increased risk per time step of TB activation by CD4",
 				"type" : "Vector Float",
 				"min" : 0,
-				"max" : 3.40282e+038,
+				"max" : 3.40282e+38,
 				"default" : 1
 			},
 			"CD4_Strata_Activation" : {
@@ -6846,7 +6846,7 @@
 				"CampaignEvent" : {
 					"Start_Day" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "Day of the simulation to activate the event's event coordinator",
 						"type" : "float"
@@ -6898,7 +6898,7 @@
 						"description" : "Vector of ints for simulation times at which distribution of events occurs in a CalendarEventCoordinator",
 						"type" : "Vector Int",
 						"min" : 1,
-						"max" : 2.14748e+009,
+						"max" : 2.14748e+09,
 						"default" : 0
 					},
 					"Distribution_Coverages" : {
@@ -6957,7 +6957,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -6967,8 +6967,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -7085,7 +7085,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -7095,8 +7095,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -7193,7 +7193,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -7203,8 +7203,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -7286,7 +7286,7 @@
 					},
 					"Time_Offset" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "time used in demographic file for intervention is simulation time - time_offset",
 						"type" : "float"
@@ -7340,7 +7340,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -7350,8 +7350,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -7448,7 +7448,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -7458,8 +7458,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -7511,15 +7511,15 @@
 						"<TargetedDistribution Value>" : {
 							"Start_Day" : {
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"default" : 0,
 								"description" : "TBD-The day to start distributing the intervention",
 								"type" : "float"
 							},
 							"End_Day" : {
 								"min" : 0,
-								"max" : 3.40282e+038,
-								"default" : 3.40282e+038,
+								"max" : 3.40282e+38,
+								"default" : 3.40282e+38,
 								"description" : "TBD-The day to stop distributing the intervention",
 								"type" : "float"
 							},
@@ -7527,21 +7527,21 @@
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (both genders randomly); Num_Targeted_Males/Females must be empty if using this",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"Num_Targeted_Males" : {
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (males only); Num_Targeted must be empty if using this and Num_Targeted_Females must be same length",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"Num_Targeted_Females" : {
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (females only); Num_Targeted must be empty if using this and Num_Targeted_Males must be same length",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"idmType:AgeRangeList" : {
@@ -7628,21 +7628,21 @@
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (both genders randomly); Num_Targeted_Males/Females must be empty if using this",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"Num_Targeted_Males" : {
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (males only); Num_Targeted must be empty if using this and Num_Targeted_Females must be same length",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"Num_Targeted_Females" : {
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (females only); Num_Targeted must be empty if using this and Num_Targeted_Males must be same length",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"idmType:AgeRangeList" : {
@@ -7720,21 +7720,21 @@
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (both genders randomly); Num_Targeted_Males/Females must be empty if using this",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"Num_Targeted_Males" : {
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (males only); Num_Targeted must be empty if using this and Num_Targeted_Females must be same length",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"Num_Targeted_Females" : {
 								"description" : "TBD-The number of individuals to distribute interventions to during this time period (females only); Num_Targeted must be empty if using this and Num_Targeted_Males must be same length",
 								"type" : "Vector Int",
 								"min" : 0,
-								"max" : 2.14748e+009,
+								"max" : 2.14748e+09,
 								"default" : 0
 							},
 							"idmType:AgeRangeList" : {
@@ -7815,7 +7815,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -7887,7 +7887,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -7897,8 +7897,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -7972,7 +7972,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -8044,7 +8044,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -8054,8 +8054,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -8165,7 +8165,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -8175,8 +8175,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -8290,7 +8290,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -8300,8 +8300,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -8378,7 +8378,7 @@
 					},
 					"Days_To_Achieve_Viral_Suppression" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 183,
 						"description" : "The number of days after ART initiation over which infectiousness declines linearly until the ART_Viral_Suppression_Multiplier takes full effect. ",
 						"type" : "float"
@@ -8447,14 +8447,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -8524,14 +8524,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -9151,8 +9151,8 @@
 						"type" : "float"
 					},
 					"Vaccine_Take_Age_Decay_Rate" : {
-						"min" : -3.40282e+038,
-						"max" : 3.40282e+038,
+						"min" : -3.40282e+38,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "This variable assumes that the vaccine take declines exponentially with age (in units of years). Vaccine_Take_Age_Decay_Rate specifies the rate of this exponential decline (in units of 1/years).",
 						"type" : "float"
@@ -9203,7 +9203,7 @@
 					},
 					"Duration" : {
 						"min" : -1,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : -1,
 						"description" : "The number of days to continue this intervention.",
 						"type" : "float"
@@ -9236,7 +9236,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -9246,8 +9246,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -9355,8 +9355,8 @@
 					},
 					"Max_Distance_To_Other_Nodes_Km" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "TBD",
 						"type" : "float"
 					},
@@ -9400,14 +9400,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -9474,8 +9474,8 @@
 					},
 					"Duration_To_Wait_Before_Revaccination" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "TBD",
 						"type" : "float"
 					},
@@ -9548,7 +9548,7 @@
 					},
 					"Delay_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
 						"type" : "float",
@@ -9558,7 +9558,7 @@
 					},
 					"Delay_Period_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Min to directly specify the minimum time delay (in number of days).",
 						"type" : "float",
@@ -9568,7 +9568,7 @@
 					},
 					"Delay_Period_Max" : {
 						"min" : 0.6,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Max to directly specify the maximum time delay (in number of days).",
 						"type" : "float",
@@ -9578,14 +9578,14 @@
 					},
 					"Delay_Period_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Mean to directly specify the mean time delay (in number of days).",
 						"type" : "float"
 					},
 					"Delay_Period_Std_Dev" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float"
@@ -9637,14 +9637,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -9740,14 +9740,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -9776,7 +9776,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -9865,14 +9865,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -9890,7 +9890,7 @@
 					},
 					"Adult_Treatment_Age" : {
 						"min" : -1,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 5,
 						"description" : "The age that delineates adult patients from pediatric patients for the purpose of treatment eligibility. Patients younger than this age may be eligible on the basis of their pediatric patient status.",
 						"type" : "float"
@@ -9908,7 +9908,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -9999,8 +9999,8 @@
 					},
 					"Expiration_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "A fixed time period, in days, after which the Broadcast_On_Expiration_Event occurs instead of the Broadcast_Event. Only applied if the Expiration_Period occurs earlier than the end of the delay period. For example, if loss to follow-up occurs at a high rate for the first 6 months of care, and then later transitions to a lower rate, then the Expiration_Period should be set to 183 days and Broadcast_On_Expiration_Event can link to another delay intervention with a longer average delay time until LTFU. If LTFU does not occur in the first 6 months, then the expiration will allow the first rate to give way to the post-6-month rate.",
 						"type" : "float"
 					},
@@ -10031,7 +10031,7 @@
 					},
 					"Delay_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
 						"type" : "float",
@@ -10041,7 +10041,7 @@
 					},
 					"Delay_Period_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Min to directly specify the minimum time delay (in number of days).",
 						"type" : "float",
@@ -10051,7 +10051,7 @@
 					},
 					"Delay_Period_Max" : {
 						"min" : 0.6,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Max to directly specify the maximum time delay (in number of days).",
 						"type" : "float",
@@ -10061,14 +10061,14 @@
 					},
 					"Delay_Period_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Mean to directly specify the mean time delay (in number of days).",
 						"type" : "float"
 					},
 					"Delay_Period_Std_Dev" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float"
@@ -10086,7 +10086,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -10150,14 +10150,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -10219,7 +10219,7 @@
 					},
 					"Max_Entries" : {
 						"min" : 0,
-						"max" : 2.14748e+009,
+						"max" : 2.14748e+09,
 						"default" : 1,
 						"description" : "The maximum number of times the individual can be registered with the HIVMuxer delay. Determines what should happen if an individual reaches the HIVMuxer stage of health care multiple times. For example, registering for an exponential delay two times effectively doubles the rate of leaving the delay. Setting Max_Entries to 1 prevents the rate from doubling.",
 						"type" : "integer"
@@ -10237,8 +10237,8 @@
 					},
 					"Expiration_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "A fixed time period, in days, after which the Broadcast_On_Expiration_Event occurs instead of the Broadcast_Event. Only applied if the Expiration_Period occurs earlier than the end of the delay period. For example, if loss to follow-up occurs at a high rate for the first 6 months of care, and then later transitions to a lower rate, then the Expiration_Period should be set to 183 days and Broadcast_On_Expiration_Event can link to another delay intervention with a longer average delay time until LTFU. If LTFU does not occur in the first 6 months, then the expiration will allow the first rate to give way to the post-6-month rate.",
 						"type" : "float"
 					},
@@ -10269,7 +10269,7 @@
 					},
 					"Delay_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "If a FIXED_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period to directly specify the time delay (in number of days). If EXPONENTIAL_DURATION is specified as the Delay_Distribution, Delay_Period, represents the exponential rate that describes the distribution of the time delay (in units of 1/days).",
 						"type" : "float",
@@ -10279,7 +10279,7 @@
 					},
 					"Delay_Period_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Min to directly specify the minimum time delay (in number of days).",
 						"type" : "float",
@@ -10289,7 +10289,7 @@
 					},
 					"Delay_Period_Max" : {
 						"min" : 0.6,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "If a UNIFORM_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Max to directly specify the maximum time delay (in number of days).",
 						"type" : "float",
@@ -10299,14 +10299,14 @@
 					},
 					"Delay_Period_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Mean to directly specify the mean time delay (in number of days).",
 						"type" : "float"
 					},
 					"Delay_Period_Std_Dev" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "If a GAUSSIAN_DURATION is specified as the Delay_Distribution, add this parameter Delay_Period_Std_Dev to specify the standard deviation describing the Gaussian distribution (in number of days).",
 						"type" : "float"
@@ -10324,7 +10324,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -10388,14 +10388,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -10420,7 +10420,7 @@
 					},
 					"Female_Multiplier" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "Allows for the probabilities in the Time_Value_Map to be different for males and females, by multiplying the female probabilities by a constant value.",
 						"type" : "float"
@@ -10445,7 +10445,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -10538,14 +10538,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -10640,14 +10640,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -10732,14 +10732,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -10817,14 +10817,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -10870,7 +10870,7 @@
 					},
 					"Female_Multiplier" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "Allows for the sigmoid time-varying probability to be different for males and females, by multiplying the female probability by a constant value.",
 						"type" : "float"
@@ -10937,14 +10937,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -11000,8 +11000,8 @@
 						"type" : "string"
 					},
 					"New_Tendency" : {
-						"min" : -3.40282e+038,
-						"max" : 3.40282e+038,
+						"min" : -3.40282e+38,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The new rate of seeking care. The original value was set by HealthSeekingBehaviorUpdateable.",
 						"type" : "float"
@@ -11395,14 +11395,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -11547,14 +11547,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -11571,7 +11571,7 @@
 					},
 					"Detection_Threshold" : {
 						"min" : 0,
-						"max" : 1e+006,
+						"max" : 1e+06,
 						"default" : 100,
 						"description" : "The diagnostic detection threshold for parasites in units of microliters of blood.",
 						"type" : "float",
@@ -11654,7 +11654,7 @@
 					},
 					"NodeID_To_Migrate_To" : {
 						"min" : 0,
-						"max" : 2.14748e+009,
+						"max" : 2.14748e+09,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "integer"
@@ -11684,14 +11684,14 @@
 					},
 					"Duration_Before_Leaving_Fixed" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_Before_Leaving_Uniform_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11701,7 +11701,7 @@
 					},
 					"Duration_Before_Leaving_Uniform_Max" : {
 						"min" : 0.6,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11711,7 +11711,7 @@
 					},
 					"Duration_Before_Leaving_Exponential_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float",
@@ -11721,21 +11721,21 @@
 					},
 					"Duration_Before_Leaving_Gausian_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_Before_Leaving_Gausian_StdDev" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_Before_Leaving_Poisson_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
@@ -11760,14 +11760,14 @@
 					},
 					"Duration_At_Node_Fixed" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_At_Node_Uniform_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11777,7 +11777,7 @@
 					},
 					"Duration_At_Node_Uniform_Max" : {
 						"min" : 0.6,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11787,7 +11787,7 @@
 					},
 					"Duration_At_Node_Exponential_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float",
@@ -11797,21 +11797,21 @@
 					},
 					"Duration_At_Node_Gausian_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_At_Node_Gausian_StdDev" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_At_Node_Poisson_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
@@ -11835,7 +11835,7 @@
 					},
 					"NodeID_To_Migrate_To" : {
 						"min" : 0,
-						"max" : 2.14748e+009,
+						"max" : 2.14748e+09,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "integer"
@@ -11865,14 +11865,14 @@
 					},
 					"Duration_Before_Leaving_Fixed" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_Before_Leaving_Uniform_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11882,7 +11882,7 @@
 					},
 					"Duration_Before_Leaving_Uniform_Max" : {
 						"min" : 0.6,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11892,7 +11892,7 @@
 					},
 					"Duration_Before_Leaving_Exponential_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float",
@@ -11902,21 +11902,21 @@
 					},
 					"Duration_Before_Leaving_Gausian_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_Before_Leaving_Gausian_StdDev" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_Before_Leaving_Poisson_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
@@ -11941,14 +11941,14 @@
 					},
 					"Duration_At_Node_Fixed" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_At_Node_Uniform_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11958,7 +11958,7 @@
 					},
 					"Duration_At_Node_Uniform_Max" : {
 						"min" : 0.6,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float",
@@ -11968,7 +11968,7 @@
 					},
 					"Duration_At_Node_Exponential_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float",
@@ -11978,21 +11978,21 @@
 					},
 					"Duration_At_Node_Gausian_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_At_Node_Gausian_StdDev" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "TBD",
 						"type" : "float"
 					},
 					"Duration_At_Node_Poisson_Mean" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 6,
 						"description" : "TBD",
 						"type" : "float"
@@ -12035,7 +12035,7 @@
 					},
 					"Released_Number" : {
 						"min" : 1,
-						"max" : 1e+008,
+						"max" : 1e+08,
 						"default" : 10000,
 						"description" : "Number of mosquitos released in the intervention.",
 						"type" : "integer"
@@ -12208,14 +12208,14 @@
 					},
 					"Duration" : {
 						"min" : -1,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : -1,
 						"description" : "The number of days to continue this intervention.",
 						"type" : "float"
 					},
 					"Blackout_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float"
@@ -12254,7 +12254,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -12264,8 +12264,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -12375,14 +12375,14 @@
 					},
 					"Duration" : {
 						"min" : -1,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : -1,
 						"description" : "The number of days to continue this intervention.",
 						"type" : "float"
 					},
 					"Blackout_Period" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "TBD",
 						"type" : "float"
@@ -12421,7 +12421,7 @@
 					},
 					"Target_Age_Min" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "Lower end of age targeted for intervention, in years.",
 						"type" : "float",
@@ -12431,8 +12431,8 @@
 					},
 					"Target_Age_Max" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Upper end of age targeted for intervention, in years.",
 						"type" : "float",
 						"depends-on" : {
@@ -12514,7 +12514,7 @@
 					},
 					"Genome" : {
 						"min" : -1,
-						"max" : 1.67772e+007,
+						"max" : 1.67772e+07,
 						"default" : 0,
 						"description" : "The genetic ID of the outbreak infection.",
 						"type" : "integer"
@@ -12526,7 +12526,7 @@
 					},
 					"Number_Cases_Per_Node" : {
 						"min" : 0,
-						"max" : 2.14748e+009,
+						"max" : 2.14748e+09,
 						"default" : 1,
 						"description" : "Number of new cases of Outbreak to import (per node). This will increase population. There is no control over demographics of these individuals.",
 						"type" : "integer"
@@ -12564,7 +12564,7 @@
 					},
 					"Genome" : {
 						"min" : -1,
-						"max" : 1.67772e+007,
+						"max" : 1.67772e+07,
 						"default" : 0,
 						"description" : "The genetic ID of the outbreak infection.",
 						"type" : "integer"
@@ -12760,8 +12760,8 @@
 					},
 					"Maximum_Duration" : {
 						"min" : -1,
-						"max" : 3.40282e+038,
-						"default" : 3.40282e+038,
+						"max" : 3.40282e+38,
+						"default" : 3.40282e+38,
 						"description" : "Maximum duration of 'delayed-release' property change, in days.",
 						"type" : "float"
 					},
@@ -12798,7 +12798,7 @@
 					},
 					"Boosted_Antibody_Concentration" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "Boosted antibody concentration (where unity equals maximum from natural exposure)",
 						"type" : "float"
@@ -12928,14 +12928,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -13146,14 +13146,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -13394,14 +13394,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -13590,14 +13590,14 @@
 					},
 					"Days_To_Diagnosis" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 0,
 						"description" : "The number of days from test until diagnosis.",
 						"type" : "float"
 					},
 					"Cost_To_Consumer" : {
 						"min" : 0,
-						"max" : 3.40282e+038,
+						"max" : 3.40282e+38,
 						"default" : 1,
 						"description" : "The unit 'cost' assigned to the intervention. Setting Cost_To_Consumer to zero for all other interventions, and to a non-zero amount for one intervention, provides a convenient way to track the number of times the intervention has been applied in a simulation.",
 						"type" : "float"
@@ -13788,7 +13788,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
@@ -13825,7 +13825,7 @@
 							{
 								"type" : "float",
 								"min" : 0,
-								"max" : 3.40282e+038,
+								"max" : 3.40282e+38,
 								"description" : "An array of values to match the defined Times."
 							}
 						]
