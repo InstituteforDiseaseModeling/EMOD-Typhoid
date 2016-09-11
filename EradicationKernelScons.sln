@@ -1,5 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CajunScons", "cajun\CajunScons.vcxproj", "{097B1ED2-A5F8-27A7-F731-67152356B8A0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CampaignScons", "campaign\CampaignScons.vcxproj", "{AC20518A-9196-C280-5432-DD14A8681280}"
