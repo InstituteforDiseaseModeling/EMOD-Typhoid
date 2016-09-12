@@ -51,7 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBGENERIC_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;$(BOOST_PATH)%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\;..\libgeneric_static</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH)%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\;..\libgeneric_static</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -73,7 +73,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBGENERIC_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libgeneric_static;..\Eradication\;..\Dependencies\ComputeClusterPack\Include;$(BOOST_PATH)%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\;..\interventions\;..\libgeneric_static</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libgeneric_static;..\Eradication\;..\Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH)%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\;..\interventions\;..\libgeneric_static</AdditionalIncludeDirectories>
       <AdditionalOptions>/D "_DLLS_" /bigobj %(AdditionalOptions)</AdditionalOptions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild>false</MinimalRebuild>

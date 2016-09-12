@@ -69,7 +69,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;WIN32;IDM_EXPORT;_DEBUG;_LIB;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(BOOST_PATH);..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\campaign;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IDM_BOOST_PATH);..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\campaign;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -89,7 +89,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;WIN32;IDM_EXPORT;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_PATH);..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\campaign;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IDM_BOOST_PATH);..\Dependencies\ComputeClusterPack\Include;..\cajun\Include;..\Eradication\;..\campaign;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -113,7 +113,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>DISABLE_MPI;BOOST_ALL_NO_LIB;WIN32;IDM_EXPORT;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_PATH);..\cajun\Include;..\Eradication\;..\campaign;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IDM_BOOST_PATH);..\cajun\Include;..\Eradication\;..\campaign;..\rapidjson\include;..\rapidjson\modp</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>

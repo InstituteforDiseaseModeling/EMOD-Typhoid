@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_HIV;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\UnitTest++\src;$(SolutionDir)baseReportLib;$(SolutionDir)Eradication;$(SolutionDir)interventions;$(SolutionDir)utils;$(SolutionDir)campaign;$(SolutionDir)Dependencies\ComputeClusterPack\Include;$(BOOST_PATH);$(SolutionDir)cajun\include;$(SolutionDir)rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\UnitTest++\src;$(SolutionDir)baseReportLib;$(SolutionDir)Eradication;$(SolutionDir)interventions;$(SolutionDir)utils;$(SolutionDir)campaign;$(SolutionDir)Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH);$(SolutionDir)cajun\include;$(SolutionDir)rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Strict</FloatingPointModel>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -61,7 +61,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Eradication.lib;cajun.lib;unittestlib.lib;msmpi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;$(BOOST_PATH)\lib\x64;$(SolutionDir)Dependencies\ComputeClusterPack\Lib\amd64;$(SolutionDir)Eradication\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;$(IDM_BOOST_PATH)\lib\x64;$(SolutionDir)Dependencies\ComputeClusterPack\Lib\amd64;$(SolutionDir)Eradication\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -80,7 +80,7 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_HIV;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\UnitTest++\src;$(SolutionDir)baseReportLib;$(SolutionDir)Eradication;$(SolutionDir)interventions;$(SolutionDir)utils;$(SolutionDir)campaign;$(SolutionDir)Dependencies\ComputeClusterPack\Include;$(BOOST_PATH);$(SolutionDir)cajun\include;$(SolutionDir)rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\UnitTest++\src;$(SolutionDir)baseReportLib;$(SolutionDir)Eradication;$(SolutionDir)interventions;$(SolutionDir)utils;$(SolutionDir)campaign;$(SolutionDir)Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH);$(SolutionDir)cajun\include;$(SolutionDir)rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Strict</FloatingPointModel>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -91,7 +91,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>Eradication.lib;cajun.lib;unittestlib.lib;msmpi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;$(BOOST_PATH);$(SolutionDir)Dependencies\ComputeClusterPack\Lib\amd64;$(SolutionDir)Eradication\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;$(IDM_BOOST_PATH);$(SolutionDir)Dependencies\ComputeClusterPack\Lib\amd64;$(SolutionDir)Eradication\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /y $(SolutionDir)Eradication\$(Platform)\$(Configuration)\Eradication.exe  $(SolutionDir)$(Platform)\$(Configuration)</Command>
