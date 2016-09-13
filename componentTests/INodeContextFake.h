@@ -19,10 +19,10 @@ private:
     suids::suid m_suid ;
 
 public:
-    INodeContextFake()
+    INodeContextFake( int id = 1 )
     : m_suid()
     {
-        m_suid.data = 1 ;
+        m_suid.data = id ;
     }
 
     INodeContextFake( const suids::suid& rSuid )

@@ -637,15 +637,15 @@ namespace Kernel
 
             for( auto p_ip : IPFactory::GetInstance()->GetIPList() )
             {
-                if( p_ip->GetIntraNodeTransmissions().HasMatrix() )
+                if( p_ip->GetIntraNodeTransmissions( GetExternalID() ).HasMatrix() )
                 {
-                    std::string routeName = p_ip->GetIntraNodeTransmissions().GetRouteName();
+                    std::string routeName = p_ip->GetIntraNodeTransmissions( GetExternalID() ).GetRouteName();
 
                     AddRoute( decayMap, routeName );
 
                     transmissionGroups->AddProperty( p_ip->GetKey().ToString(), 
                                                      p_ip->GetValues().GetValuesToList(),
-                                                     p_ip->GetIntraNodeTransmissions().GetMatrix(),
+                                                     p_ip->GetIntraNodeTransmissions( GetExternalID() ).GetMatrix(),
                                                      routeName );
                 }
                 else //HINT is enabled, but no transmission matrix is detected
@@ -1651,7 +1651,7 @@ namespace Kernel
         IIndividualHuman* new_individual = createHuman(parent->GetNextIndividualHumanSuid(), mc_weight, initial_age, gender, poverty_parameter); // initial_infections isn't needed here if SetInitialInfections function is used
 
         // EAW: is there a reason that the contents of the two functions below aren't absorbed into CreateHuman?  this whole process seems very convoluted.
-        new_individual->SetParameters(1.0, immunity_parameter, risk_parameter, migration_heterogeneity);// default values being used except for total number of communities
+        new_individual->SetParameters( this, 1.0, immunity_parameter, risk_parameter, migration_heterogeneity);// default values being used except for total number of communities
         new_individual->SetInitialInfections(initial_infections);
         new_individual->UpdateGroupMembership();
         new_individual->UpdateGroupPopulation(1.0f);
@@ -1677,7 +1677,7 @@ namespace Kernel
     {
         LOG_DEBUG_F( "1. %s\n", __FUNCTION__ );
         IIndividualHuman* new_individual = createHuman( suids::nil_suid(), 0, 0, 0, 0);
-        new_individual->SetParameters(1.0, 0, 0, 0);// default values being used except for total number of communities
+        new_individual->SetParameters( this, 1.0, 0, 0, 0);// default values being used except for total number of communities
 
 #if 0
         new_individual->SetInitialInfections(0);
@@ -2264,11 +2264,11 @@ namespace Kernel
 
         for( auto p_ip : IPFactory::GetInstance()->GetIPList() )
         {
-            if( p_ip->GetIntraNodeTransmissions().HasMatrix() )
+            if( p_ip->GetIntraNodeTransmissions( GetExternalID() ).HasMatrix() )
             {
                 oneOrMoreMatrices = true;
 
-                string route_name = p_ip->GetIntraNodeTransmissions().GetRouteName();
+                string route_name = p_ip->GetIntraNodeTransmissions( GetExternalID() ).GetRouteName();
                 if( !IsValidTransmissionRoute( route_name ) )
                 {
                     ostringstream message;

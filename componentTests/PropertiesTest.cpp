@@ -80,7 +80,7 @@ SUITE(PropertiesTest)
             return next;
         }
 
-        void TestReadingError( int lineNumber, const std::string& rDemogFilename, const std::string& rExpMsg )
+        void TestReadingError( bool readTwo, int lineNumber, const std::string& rDemogFilename, const std::string& rExpMsg )
         {
             // --------------------
             // --- Initialize test
@@ -98,20 +98,28 @@ SUITE(PropertiesTest)
                 node_id_suid_map.insert(nodeid_suid_pair(node_id, node_suid));
             }
 
-            INodeContext* nodeContext = new INodeContextFake();
-            unique_ptr<NodeDemographics> demographics( factory->CreateNodeDemographics(nodeContext) );
+            INodeContext* nodeContext_1 = new INodeContextFake( 1 );
+            unique_ptr<NodeDemographics> demographics_1( factory->CreateNodeDemographics( nodeContext_1 ) );
 
             try
             {
-                IPFactory::GetInstance()->Initialize( 1, demographics->GetJsonObject(), true );
-                CHECK( false );
+                IPFactory::GetInstance()->Initialize( 1, demographics_1->GetJsonObject(), true );
+                if( readTwo )
+                {
+                    INodeContext* nodeContext_2 = new INodeContextFake( 2 );
+                    unique_ptr<NodeDemographics> demographics_2( factory->CreateNodeDemographics( nodeContext_2 ) );
+
+                    IPFactory::GetInstance()->Initialize( 2, demographics_2->GetJsonObject(), true );
+                }
+                CHECK_LN( false, lineNumber );
             }
             catch( DetailedException& e )
             {
                 std::string msg = e.GetMsg();
-                bool passed = msg.find( rExpMsg) != std::string::npos;
+                bool passed = msg.find( rExpMsg ) != std::string::npos;
                 if( !passed )
                 {
+                    PrintDebug( rExpMsg );
                     PrintDebug( msg );
                 }
                 CHECK_LN( passed, lineNumber );
@@ -151,15 +159,15 @@ SUITE(PropertiesTest)
             CHECK( ip_values_1.Contains( "Accessibility:VaccineTake" ) );
             CHECK( ip_values_1.Contains( "Accessibility:VaccineRefuse" ) );
 
-            CHECK( ip_list[0]->GetIntraNodeTransmissions().HasMatrix() );
-            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions().GetRouteName() );
-            CHECK_EQUAL( 2,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix().size() );
-            CHECK_EQUAL( 2,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[0].size() );
-            CHECK_EQUAL( 1.1f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[0][0] );
-            CHECK_EQUAL( 0.3f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[0][1] );
-            CHECK_EQUAL( 2,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[1].size() );
-            CHECK_EQUAL( 0.3f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[1][0] );
-            CHECK_EQUAL( 5.0f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[1][1] );
+            CHECK( ip_list[0]->GetIntraNodeTransmissions( 1 ).HasMatrix() );
+            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions( 1 ).GetRouteName() );
+            CHECK_EQUAL( 2,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix().size() );
+            CHECK_EQUAL( 2,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[0].size() );
+            CHECK_EQUAL( 1.1f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[0][0] );
+            CHECK_EQUAL( 0.3f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[0][1] );
+            CHECK_EQUAL( 2,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[1].size() );
+            CHECK_EQUAL( 0.3f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[1][0] );
+            CHECK_EQUAL( 5.0f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[1][1] );
 
             IPKeyValueContainer ip_values_2 = ip_list[1]->GetValues();
             CHECK_EQUAL( 3, ip_values_2.Size() );
@@ -168,9 +176,9 @@ SUITE(PropertiesTest)
             CHECK(  ip_values_2.Contains( "Risk:LOW"    ) );
             CHECK( !ip_values_2.Contains( "Risk:XXX"    ) );
 
-            CHECK( !ip_list[1]->GetIntraNodeTransmissions().HasMatrix() );
-            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions().GetRouteName() );
-            CHECK_EQUAL( 0, ip_list[1]->GetIntraNodeTransmissions().GetMatrix().size() );
+            CHECK( !ip_list[1]->GetIntraNodeTransmissions( 1 ).HasMatrix() );
+            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions( 1 ).GetRouteName() );
+            CHECK_EQUAL( 0, ip_list[1]->GetIntraNodeTransmissions( 1 ).GetMatrix().size() );
         }
         catch( DetailedException& e )
         {
@@ -214,21 +222,21 @@ SUITE(PropertiesTest)
             CHECK( ip_values_1.Contains( "Age_Bin:Age_Bin_Property_From_5_To_13" ) );
             CHECK( ip_values_1.Contains( "Age_Bin:Age_Bin_Property_From_13_To_125" ) );
 
-            CHECK( ip_list[0]->GetIntraNodeTransmissions().HasMatrix() );
-            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions().GetRouteName() );
-            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix().size() );
-            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[0].size() );
-            CHECK_EQUAL( 1.4f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[0][0] );
-            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[0][1] );
-            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[0][2] );
-            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[1].size() );
-            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[1][0] );
-            CHECK_EQUAL( 2.5f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[1][1] );
-            CHECK_EQUAL( 0.7f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[1][2] );
-            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[2].size() );
-            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[2][0] );
-            CHECK_EQUAL( 0.7f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[2][1] );
-            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions().GetMatrix()[2][2] );
+            CHECK( ip_list[0]->GetIntraNodeTransmissions( 1 ).HasMatrix() );
+            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions( 1 ).GetRouteName() );
+            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix().size() );
+            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[0].size() );
+            CHECK_EQUAL( 1.4f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[0][0] );
+            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[0][1] );
+            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[0][2] );
+            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[1].size() );
+            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[1][0] );
+            CHECK_EQUAL( 2.5f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[1][1] );
+            CHECK_EQUAL( 0.7f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[1][2] );
+            CHECK_EQUAL( 3,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[2].size() );
+            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[2][0] );
+            CHECK_EQUAL( 0.7f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[2][1] );
+            CHECK_EQUAL( 1.0f, ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix()[2][2] );
 
             std::string act_filename = "testdata/PropertiesTest/output/TestReadAgeBins-Transitions-Actual.json" ;
             std::string exp_filename = "testdata/PropertiesTest/output/TestReadAgeBins-Transitions-Expected.json" ;
@@ -303,9 +311,9 @@ SUITE(PropertiesTest)
             CHECK( ip_values.Contains( "QualityOfCare:OK"   ) );
             CHECK( ip_values.Contains( "QualityOfCare:Bad"  ) );
 
-            CHECK( !ip_list[0]->GetIntraNodeTransmissions().HasMatrix() );
-            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions().GetRouteName() );
-            CHECK_EQUAL( 0,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix().size() );
+            CHECK( !ip_list[0]->GetIntraNodeTransmissions( 1 ).HasMatrix() );
+            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions( 1 ).GetRouteName() );
+            CHECK_EQUAL( 0,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix().size() );
 
             std::string act_filename = "testdata/PropertiesTest/output/TestReadTransitions-Transitions-Actual.json" ;
             std::string exp_filename = "testdata/PropertiesTest/output/TestReadTransitions-Transitions-Expected.json" ;
@@ -382,9 +390,9 @@ SUITE(PropertiesTest)
             CHECK( ip_values.Contains( "Place:SchoolBreak_Interaction"  ) );
             CHECK( ip_values.Contains( "Place:SchoolBreak_NonInteraction"  ) );
 
-            CHECK( ip_list[0]->GetIntraNodeTransmissions().HasMatrix() );
-            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions().GetRouteName() );
-            CHECK_EQUAL( 5,    ip_list[0]->GetIntraNodeTransmissions().GetMatrix().size() );
+            CHECK( ip_list[0]->GetIntraNodeTransmissions( 1 ).HasMatrix() );
+            CHECK_EQUAL( std::string("contact"), ip_list[0]->GetIntraNodeTransmissions( 1 ).GetRouteName() );
+            CHECK_EQUAL( 5,    ip_list[0]->GetIntraNodeTransmissions( 1 ).GetMatrix().size() );
 
             std::string act_filename = "testdata/PropertiesTest/output/TestReadTransitionsSchool-Transitions-Actual.json" ;
             std::string exp_filename = "testdata/PropertiesTest/output/TestReadTransitionsSchool-Transitions-Expected.json" ;
@@ -422,6 +430,98 @@ SUITE(PropertiesTest)
             PrintDebug( e.GetMsg() );
             CHECK( false );
         }
+    }
+
+    TEST_FIXTURE( PropertiesTestFixture, TestTwoNodes )
+    {
+        // --------------------
+        // --- Initialize test
+        // --------------------
+        pSimConfig->demographics_initial = true ;
+        NodeDemographicsFactory::SetDemographicsFileList( NodeDemographicsFactory::ConvertLegacyStringToSet( "testdata/PropertiesTest/demographics_TestTwoNodes.json" ) ) ;
+
+        nodeid_suid_map_t node_id_suid_map;
+        unique_ptr<NodeDemographicsFactory> factory( NodeDemographicsFactory::CreateNodeDemographicsFactory( &node_id_suid_map, Environment::getInstance()->Config, true, 10, 1000 ) );
+
+        vector<uint32_t> nodeIDs = factory->GetNodeIDs();
+        for( uint32_t node_id : nodeIDs )
+        {
+            suids::suid node_suid = GetNextNodeSuid();
+            node_id_suid_map.insert( nodeid_suid_pair( node_id, node_suid ) );
+        }
+
+        INodeContext* nodeContext_1 = new INodeContextFake( 1 );
+        unique_ptr<NodeDemographics> demographics_1( factory->CreateNodeDemographics( nodeContext_1 ) );
+
+        INodeContext* nodeContext_2 = new INodeContextFake( 2 );
+        unique_ptr<NodeDemographics> demographics_2( factory->CreateNodeDemographics( nodeContext_2 ) );
+
+        IPFactory::GetInstance()->Initialize( 1, demographics_1->GetJsonObject(), true );
+        IPFactory::GetInstance()->Initialize( 2, demographics_2->GetJsonObject(), true );
+
+        IPKeyValue kv_access_no  = IPFactory::GetInstance()->GetIP( "Accessibility" )->GetValues().Get( "Accessibility:NO"  );
+        IPKeyValue kv_access_yes = IPFactory::GetInstance()->GetIP( "Accessibility" )->GetValues().Get( "Accessibility:YES" );
+
+        CHECK_CLOSE( 0.85, kv_access_no.GetInitialDistribution(  1 ), 0.00001 );
+        CHECK_CLOSE( 0.15, kv_access_yes.GetInitialDistribution( 1 ), 0.00001 );
+        CHECK_CLOSE( 0.60, kv_access_no.GetInitialDistribution(  2 ), 0.00001 );
+        CHECK_CLOSE( 0.40, kv_access_yes.GetInitialDistribution( 2 ), 0.00001 );
+
+        IPKeyValue kv_risk_high = IPFactory::GetInstance()->GetIP( "Risk" )->GetValues().Get( "Risk:HIGH" );
+        IPKeyValue kv_risk_med  = IPFactory::GetInstance()->GetIP( "Risk" )->GetValues().Get( "Risk:MED"  );
+        IPKeyValue kv_risk_low  = IPFactory::GetInstance()->GetIP( "Risk" )->GetValues().Get( "Risk:LOW"  );
+
+        CHECK_CLOSE( 0.1, kv_risk_high.GetInitialDistribution( 1 ), 0.00001 );
+        CHECK_CLOSE( 0.4, kv_risk_med.GetInitialDistribution(  1 ), 0.00001 );
+        CHECK_CLOSE( 0.5, kv_risk_low.GetInitialDistribution(  1 ), 0.00001 );
+        CHECK_CLOSE( 0.0, kv_risk_high.GetInitialDistribution( 2 ), 0.00001 );
+        CHECK_CLOSE( 0.2, kv_risk_med.GetInitialDistribution(  2 ), 0.00001 );
+        CHECK_CLOSE( 0.8, kv_risk_low.GetInitialDistribution(  2 ), 0.00001 );
+
+        IndividualProperty* p_ip_access = IPFactory::GetInstance()->GetIP( "Accessibility" );
+        IndividualProperty* p_ip_risk   = IPFactory::GetInstance()->GetIP( "Risk" );
+
+        const IPIntraNodeTransmissions& r_access_trans_1 = p_ip_access->GetIntraNodeTransmissions( 1 );
+        CHECK( r_access_trans_1.HasMatrix() );
+        CHECK_EQUAL( std::string( "contact" ), r_access_trans_1.GetRouteName() );
+        CHECK_EQUAL( 2, r_access_trans_1.GetMatrix().size() );
+        CHECK_EQUAL( 2, r_access_trans_1.GetMatrix()[ 0 ].size() );
+        CHECK_EQUAL( 2, r_access_trans_1.GetMatrix()[ 1 ].size() );
+        CHECK_EQUAL( 1.1f, r_access_trans_1.GetMatrix()[ 0 ][ 0 ] );
+        CHECK_EQUAL( 1.2f, r_access_trans_1.GetMatrix()[ 0 ][ 1 ] );
+        CHECK_EQUAL( 1.3f, r_access_trans_1.GetMatrix()[ 1 ][ 0 ] );
+        CHECK_EQUAL( 1.4f, r_access_trans_1.GetMatrix()[ 1 ][ 1 ] );
+
+        const IPIntraNodeTransmissions& r_access_trans_2 = p_ip_access->GetIntraNodeTransmissions( 2 );
+        CHECK( r_access_trans_2.HasMatrix() );
+        CHECK_EQUAL( std::string( "contact" ), r_access_trans_2.GetRouteName() );
+        CHECK_EQUAL( 2, r_access_trans_2.GetMatrix().size() );
+        CHECK_EQUAL( 2, r_access_trans_2.GetMatrix()[ 0 ].size() );
+        CHECK_EQUAL( 2, r_access_trans_2.GetMatrix()[ 1 ].size() );
+        CHECK_EQUAL( 2.1f, r_access_trans_2.GetMatrix()[ 0 ][ 0 ] );
+        CHECK_EQUAL( 2.2f, r_access_trans_2.GetMatrix()[ 0 ][ 1 ] );
+        CHECK_EQUAL( 2.3f, r_access_trans_2.GetMatrix()[ 1 ][ 0 ] );
+        CHECK_EQUAL( 2.4f, r_access_trans_2.GetMatrix()[ 1 ][ 1 ] );
+
+        const IPIntraNodeTransmissions& r_risk_trans_1 = p_ip_risk->GetIntraNodeTransmissions( 1 );
+        CHECK( !r_risk_trans_1.HasMatrix() );
+
+        const IPIntraNodeTransmissions& r_risk_trans_2 = p_ip_risk->GetIntraNodeTransmissions( 2 );
+        CHECK( r_risk_trans_2.HasMatrix() );
+        CHECK_EQUAL( std::string( "contact" ), r_access_trans_2.GetRouteName() );
+        CHECK_EQUAL( 3, r_risk_trans_2.GetMatrix().size() );
+        CHECK_EQUAL( 3, r_risk_trans_2.GetMatrix()[ 0 ].size() );
+        CHECK_EQUAL( 3, r_risk_trans_2.GetMatrix()[ 1 ].size() );
+        CHECK_EQUAL( 3, r_risk_trans_2.GetMatrix()[ 2 ].size() );
+        CHECK_EQUAL( 2.1f, r_risk_trans_2.GetMatrix()[ 0 ][ 0 ] );
+        CHECK_EQUAL( 2.2f, r_risk_trans_2.GetMatrix()[ 0 ][ 1 ] );
+        CHECK_EQUAL( 2.3f, r_risk_trans_2.GetMatrix()[ 0 ][ 2 ] );
+        CHECK_EQUAL( 2.4f, r_risk_trans_2.GetMatrix()[ 1 ][ 0 ] );
+        CHECK_EQUAL( 2.5f, r_risk_trans_2.GetMatrix()[ 1 ][ 1 ] );
+        CHECK_EQUAL( 2.6f, r_risk_trans_2.GetMatrix()[ 1 ][ 2 ] );
+        CHECK_EQUAL( 2.7f, r_risk_trans_2.GetMatrix()[ 2 ][ 0 ] );
+        CHECK_EQUAL( 2.8f, r_risk_trans_2.GetMatrix()[ 2 ][ 1 ] );
+        CHECK_EQUAL( 2.9f, r_risk_trans_2.GetMatrix()[ 2 ][ 2 ] );
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestUninitialized)
@@ -472,7 +572,7 @@ SUITE(PropertiesTest)
 
         try
         {
-            kv.GetInitialDistribution();
+            kv.GetInitialDistribution( 1 );
             CHECK( false );
         }
         catch( NullPointerException& )
@@ -616,7 +716,7 @@ SUITE(PropertiesTest)
         {
             std::string key_str = "QualityOfCare";
             std::map<std::string,float> value_dist_map;
-            IPFactory::GetInstance()->AddIP( key_str, value_dist_map );
+            IPFactory::GetInstance()->AddIP( 1, key_str, value_dist_map );
             CHECK( false );
         }
         catch( DetailedException& e )
@@ -632,141 +732,165 @@ SUITE(PropertiesTest)
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidTransitionType)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidTransitionType.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidTransitionType.json",
                           "Invalid Individual_Property Transitions value for Type = XXX.  Known values are: At_Timestep and At_Age" );
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidAgeRestriction)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeRestriction.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeRestriction.json",
                           "Variable or parameter 'demographics[Age_In_Years_Restriction][Min]' with value 40 is incompatible with variable or parameter 'demographics[Age_In_Years_Restriction][Max]' with value 19. In the Demographics for IndividualProperties:Property=QualityOfCare, Max age must be greater than Min age.");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidCoverage)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidCoverage.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidCoverage.json",
                           "Variable Demographics[IndividualProperties][Property=QualityOfCare][Coverage] had value 999 which was inconsistent with range limit 1");
                            
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidProbability)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidProbability.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidProbability.json",
                           "Variable Demographics[IndividualProperties][Property=QualityOfCare][Probability_Per_Timestep] had value -1 which was inconsistent with range limit 0");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestMissingTo)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestMissingTo.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestMissingTo.json",
                           "Parameter 'To' not found in input file 'demographics file'");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestMissingStart)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestMissingStart.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestMissingStart.json",
                           "Parameter 'Start' not found in input file 'demographics file'");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidTransmissionMatrixA)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidTransmissionMatrixA.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidTransmissionMatrixA.json",
                           "Invalid Transmission Matrix for property 'Age_Bin'.  It has 2 rows when it should have 3.  It should be square with one row/col per value for the property.");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidTransmissionMatrixB)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidTransmissionMatrixB.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidTransmissionMatrixB.json",
                           "Invalid Transmission Matrix for property 'Age_Bin'.  Row 1 has 2 columns when it should have 3.  It should be square with one row/col per value for the property.");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestMissingValues)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestMissingValues.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestMissingValues.json",
                           "Failed to find Values in map demographics[IndividualProperties][0]");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestMissingInitialDistribution)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestMissingInitialDistribution.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestMissingInitialDistribution.json",
                           "Failed to find Initial_Distribution in map demographics[IndividualProperties][0]");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidNumInitialDistribution)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidNumInitialDistribution.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidNumInitialDistribution.json",
                           "Number of Values in Values (2) needs to be the same as number of values in Initial_Distribution (3).");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestDuplicateValues)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestDuplicateValues.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestDuplicateValues.json",
                           "demographics[IndividualProperties][0] with property=Risk has a duplicate value = HIGH");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestZeroValues)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestZeroValues.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestZeroValues.json",
                           "demographics[IndividualProperties][0][Values] (property=Risk) cannot have zero values.");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidInitialDistribution)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidInitialDistribution.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidInitialDistribution.json",
                           "The values in demographics[IndividualProperties][1][Initial_Distribution] (property=Risk) add up to 1.45.  They must add up to 1.0");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestMissingAgeBinEdge)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestMissingAgeBinEdge.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestMissingAgeBinEdge.json",
                           "Failed to find Age_Bin_Edges_In_Years in map demographics[IndividualProperties][0] (property = Age_Bin)");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidAgeBinEdgeA)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeA.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeA.json",
                           "demographics[IndividualProperties][0][Age_Bin_Edges_In_Years] must have at least two values: 0 must be first and -1 is last.");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidAgeBinEdgeB)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeB.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeB.json",
                           "demographics[IndividualProperties][0][Age_Bin_Edges_In_Years] must have at least two values: 0 must be first and -1 is last.  The first value cannot be 10");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidAgeBinEdgeC)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeC.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeC.json",
                           "demographics[IndividualProperties][0][Age_Bin_Edges_In_Years] must have at least two values: 0 must be first and -1 is last.  The last value cannot be 10");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidAgeBinEdgeD)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeD.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeD.json",
                           "demographics[IndividualProperties][0][Age_Bin_Edges_In_Years] must be in increasing order with the last value = -1.");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidAgeBinEdgeE)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeE.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinEdgeE.json",
                           "demographics[IndividualProperties][0][Age_Bin_Edges_In_Years] must be in increasing order with the last value = -1.");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestInvalidAgeBinTransition)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinTransition.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestInvalidAgeBinTransition.json",
                           "demographics[IndividualProperties][0][Transitions] has more than zero entries.  They are not allowed with property=Age_Bin");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestNotInWhiteList)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestNotInWhiteList.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestNotInWhiteList.json",
                           "Invalid Individual Property key 'NonWhiteListProperty' found in demographics file. Use one of: 'Accessibility', 'Age_Bin', 'Geographic', 'HasActiveTB', 'Place', 'QualityOfCare', 'Risk'");
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestTooManyProperties)
     {
-        TestReadingError( __LINE__, "testdata/PropertiesTest/demog_TestTooManyProperties.json",
+        TestReadingError( false, __LINE__, "testdata/PropertiesTest/demog_TestTooManyProperties.json",
                           "Too many Individual Properties (4). Max is 2.");
+    }
+
+    TEST_FIXTURE( PropertiesTestFixture, TestNotSameNumberOfIPs )
+    {
+        TestReadingError( true, __LINE__, "testdata/PropertiesTest/demog_TestNotSameNumberOfIPs.json",
+            "Individual Properties were first intialized for nodeId=1 and it had 2 propertie(s).\nnodeID=2 has 1 propertie(s).  All nodes must have the same keys and values." );
+    }
+
+    TEST_FIXTURE( PropertiesTestFixture, TestDifferentKey )
+    {
+        TestReadingError( true, __LINE__, "testdata/PropertiesTest/demog_TestDifferentKey.json",
+            "Individual Properties were first intialized for node 1 and it had property 'Risk'.\nnodeID=2 has 'RiskyBusiness'.  All nodes must have the same keys and values (and in the same order)." );
+    }
+
+    TEST_FIXTURE( PropertiesTestFixture, TestNotSameNumberOfValues )
+    {
+        TestReadingError( true, __LINE__, "testdata/PropertiesTest/demog_TestNotSameNumberOfValues.json",
+            "demographics[IndividualProperties][1][Values] for key=Risk and nodeId=2 has 4 values.\nThe previous node(s) had 3 values.  All nodes must have the same keys and values." );
+    }
+
+    TEST_FIXTURE( PropertiesTestFixture, TestDifferentValue )
+    {
+        TestReadingError( true, __LINE__, "testdata/PropertiesTest/demog_TestDifferentValue.json",
+            "demographics[IndividualProperties][1] with property=Risk for NodeId=2 has value=MED.\nPrevious node(s) do not have this value.  All nodes must have the same keys and values." );
     }
 
     TEST_FIXTURE(PropertiesTestFixture, TestGetAllPossibleKeyValueCombinations)

@@ -25,7 +25,7 @@ namespace Kernel
         virtual void setupMaternalAntibodies(IIndividualHumanContext* mother, INodeContext* node) = 0;
         virtual void AcquireNewInfection(StrainIdentity *infstrain = nullptr, int incubation_period_override = -1) = 0;
         virtual void SetInitialInfections(int init_infs) = 0;
-        virtual void SetParameters(float infsample, float imm_mod, float risk_mod, float mig_mod) = 0;
+        virtual void SetParameters( INodeContext* pParent, float infsample, float imm_mod, float risk_mod, float mig_mod) = 0;
         virtual void InitializeHuman() = 0;
         virtual void SetMigrationModifier( float modifier ) = 0;
 

@@ -472,7 +472,7 @@ namespace Kernel
         susceptibility = Susceptibility::CreateSusceptibility(this, m_age, immunity_modifier, risk_modifier);
     }
 
-    void IndividualHuman::SetParameters(float infsample, float immunity_modifier, float risk_modifier, float migration_modifier)
+    void IndividualHuman::SetParameters( INodeContext* pParent, float infsample, float immunity_modifier, float risk_modifier, float migration_modifier)
     {
         StateChange       = HumanStateChange::None;
 
@@ -504,7 +504,7 @@ namespace Kernel
         CreateSusceptibility(immunity_modifier, risk_modifier);
 
         // Populate the individuals set of Individual Properties with one value for each property
-        IPKeyValueContainer init_values = IPFactory::GetInstance()->GetInitialValues( EnvPtr->RNG );
+        IPKeyValueContainer init_values = IPFactory::GetInstance()->GetInitialValues( pParent->GetExternalID(), EnvPtr->RNG );
 
         Properties.clear();
         for( IPKeyValue kv : init_values )

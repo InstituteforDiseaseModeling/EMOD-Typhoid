@@ -71,13 +71,13 @@ SUITE(NChooserEventCoordinatorTest)
             location_ip_values.insert( std::make_pair( "URBAN", 0.8f ) );
             location_ip_values.insert( std::make_pair( "RURAL", 0.2f ) );
 
-            IPFactory::GetInstance()->AddIP( "Location", location_ip_values );
+            IPFactory::GetInstance()->AddIP( 1, "Location", location_ip_values );
 
             std::map<std::string,float> income_ip_values ;
             income_ip_values.insert( std::make_pair( "LOW",  0.9f ) );
             income_ip_values.insert( std::make_pair( "HIGH", 0.1f ) );
 
-            IPFactory::GetInstance()->AddIP( "Income", income_ip_values );
+            IPFactory::GetInstance()->AddIP( 1, "Income", income_ip_values );
         }
 
         ~NChooserEventCoordinatorFixture()
@@ -427,7 +427,7 @@ SUITE(NChooserEventCoordinatorTest)
             ip_values.insert( std::make_pair( "ANDORIAN", 0.2f ) );
             ip_values.insert( std::make_pair( "ROMULAN",  0.2f ) );
 
-            IPFactory::GetInstance()->AddIP( "Race", ip_values );
+            IPFactory::GetInstance()->AddIP( 1, "Race", ip_values );
 
             unique_ptr<Configuration> p_config( Environment::LoadConfigurationFile( rFilename ) );
 

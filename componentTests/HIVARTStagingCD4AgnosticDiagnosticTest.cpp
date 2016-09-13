@@ -71,7 +71,7 @@ SUITE(HivArtStagingCD4AgnosticDiagnosticTest)
 
             IPFactory::DeleteFactory();
             IPFactory::CreateFactory();
-            IPFactory::GetInstance()->AddIP( "HasActiveTB", ip_values );
+            IPFactory::GetInstance()->AddIP( 1, "HasActiveTB", ip_values );
         }
 
         ~DiagnosticFixture()

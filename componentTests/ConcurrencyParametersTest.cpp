@@ -90,13 +90,13 @@ SUITE(ConcurrencyParametersTest)
         risk_ip_values.insert( std::make_pair( "MED",  0.5f ) );
         risk_ip_values.insert( std::make_pair( "HIGH", 0.3f ) );
 
-        IPFactory::GetInstance()->AddIP( "RISK", risk_ip_values );
+        IPFactory::GetInstance()->AddIP( 1, "RISK", risk_ip_values );
 
         std::map<std::string,float> access_ip_values ;
         access_ip_values.insert( std::make_pair( "NO",  0.2f ) );
         access_ip_values.insert( std::make_pair( "YES", 0.8f ) );
 
-        IPFactory::GetInstance()->AddIP( "ACCESSIBILITY", access_ip_values );
+        IPFactory::GetInstance()->AddIP( 1, "ACCESSIBILITY", access_ip_values );
 
         ConcurrencyConfiguration* tmp_p_cc = nullptr;
         try
@@ -157,7 +157,7 @@ SUITE(ConcurrencyParametersTest)
         access_ip_values.insert( std::make_pair( "NO",  0.2f ) );
         access_ip_values.insert( std::make_pair( "YES", 0.8f ) );
 
-        IPFactory::GetInstance()->AddIP( "ACCESSIBILITY", access_ip_values );
+        IPFactory::GetInstance()->AddIP( 1, "ACCESSIBILITY", access_ip_values );
 
         tProperties individual_properties;
         individual_properties.insert( std::make_pair( "ACCESSIBILITY", "YES" ) );
@@ -197,13 +197,13 @@ SUITE(ConcurrencyParametersTest)
         risk_ip_values.insert( std::make_pair( "LOW",  0.7f ) );
         risk_ip_values.insert( std::make_pair( "HIGH", 0.3f ) );
 
-        IPFactory::GetInstance()->AddIP( "RISK", risk_ip_values );
+        IPFactory::GetInstance()->AddIP( 1, "RISK", risk_ip_values );
 
         std::map<std::string,float> access_ip_values ;
         access_ip_values.insert( std::make_pair( "NO",  0.2f ) );
         access_ip_values.insert( std::make_pair( "YES", 0.8f ) );
 
-        IPFactory::GetInstance()->AddIP( "ACCESSIBILITY", access_ip_values );
+        IPFactory::GetInstance()->AddIP( 1, "ACCESSIBILITY", access_ip_values );
 
         try
         {

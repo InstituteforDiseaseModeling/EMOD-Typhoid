@@ -68,7 +68,7 @@ SUITE(HivArtStagingByCD4DiagnosticTest)
 
             IPFactory::DeleteFactory();
             IPFactory::CreateFactory();
-            IPFactory::GetInstance()->AddIP( "HasActiveTB", ip_values );
+            IPFactory::GetInstance()->AddIP( 1, "HasActiveTB", ip_values );
 
             m_Human.GetProperties()->operator[]( "HasActiveTB" ) = "YES" ;
             //m_Human.GetProperties()->Set( IPKeyValue("HasActiveTB:YES") ) ;

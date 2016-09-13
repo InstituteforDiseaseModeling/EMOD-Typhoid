@@ -120,7 +120,9 @@ namespace Kernel
 
         // Return the initial distribution of individuals that should 
         // receive this property value for this property key
-        double GetInitialDistribution() const;
+        double GetInitialDistribution( uint32_t externalNodeId ) const;
+
+        void UpdateInitialDistribution( uint32_t externalNodeId, double value );
 
     protected:
         friend class IndividualProperty;
@@ -225,6 +227,7 @@ namespace Kernel
 
         //IPKeyValue Get( const std::string& rKeyStr ) const;
         IPKeyValue Get( const IPKey& rKey ) const;
+        IPKeyValue Get( const std::string& rKeyValueString ) const;
 
         void Set( const IPKeyValue& rKeyValue );
 
@@ -291,7 +294,7 @@ namespace Kernel
         ~IndividualProperty();
 
         // Read the one Individual Property from demographics
-        void Read( int idx, const JsonObjectDemog& rDemog );
+        void Read( int idx, uint32_t externalNodeId, const JsonObjectDemog& rDemog, bool isNotFirstNode );
 
         // Return the key / name of this property
         IPKey GetKey() const;
@@ -300,9 +303,9 @@ namespace Kernel
         const IPKeyValueContainer& GetValues() const;
 
         // Return a randomly selected value based on the initial distribution values
-        IPKeyValue GetInitialValue( RANDOMBASE* pRNG );
+        IPKeyValue GetInitialValue( uint32_t externalNodeId, RANDOMBASE* pRNG );
 
-        const IPIntraNodeTransmissions& GetIntraNodeTransmissions() const;
+        const IPIntraNodeTransmissions& GetIntraNodeTransmissions( uint32_t externalNodeId ) const;
 
     protected:
         friend class IPFactory;
@@ -311,15 +314,15 @@ namespace Kernel
 
         static bool Compare( IndividualProperty* pLeft, IndividualProperty* pRight );
 
-        IndividualProperty( const std::string& rKeyStr, const std::map<std::string,float>& rValues );
+        IndividualProperty( uint32_t externalNodeId, const std::string& rKeyStr, const std::map<std::string,float>& rValues );
 
         const std::string& GetKeyAsString() const { return m_Key; }
 
         std::vector<JsonObjectDemog> ConvertTransitions();
 
     private:
-        void ReadProperty( int idx, const JsonObjectDemog& rDemog );
-        void ReadPropertyAgeBin( int idx, const JsonObjectDemog& rDemog );
+        void ReadProperty( int idx, uint32_t externalNodeId, const JsonObjectDemog& rDemog, bool isNotFirstNode );
+        void ReadPropertyAgeBin( int idx, uint32_t externalNodeId, const JsonObjectDemog& rDemog, bool isNotFirstNode );
         void CreateAgeBinTransitions();
 
 #pragma warning( push )
@@ -327,7 +330,7 @@ namespace Kernel
         std::string  m_Key;
         IPKeyValueContainer  m_Values;
         std::vector<IPTransition*> m_Transitions;
-        IPIntraNodeTransmissions m_IntraNodeTransmission;
+        std::map<uint32_t,IPIntraNodeTransmissions*> m_IntraNodeTransmissionsMap;
 #pragma warning( pop )
     };
 
@@ -363,7 +366,7 @@ namespace Kernel
         // It is assumed that each node has the same Individual Property values in its demographics.
         // Hence, it will only read the demographics when it has no individual properties and
         // assume anything new / different is an error.
-        void Initialize( uint32_t node_id, const JsonObjectDemog& rDemog, bool isWhitelistEnabled );
+        void Initialize( uint32_t externNodeId, const JsonObjectDemog& rDemog, bool isWhitelistEnabled );
 
         // This method will write the transition data into a campaign.json formatted file
         // that is read in later by the application's initialization.  Only one process needs
@@ -376,7 +379,7 @@ namespace Kernel
         // Return an initial set of values for a human.  There should be one value for each key/property.
         // The values are determined by the initial distribution parameters set in the demographics data.
         // The values will be set randomly.
-        IPKeyValueContainer GetInitialValues( RANDOMBASE* pRNG ) const;
+        IPKeyValueContainer GetInitialValues( uint32_t externNodeId, RANDOMBASE* pRNG ) const;
 
         // Return the Individual Property of the whose key/name is given
         IndividualProperty* GetIP( const std::string& rKey, const std::string& rParameterName=std::string(""), bool throwOnNotFound=true );
@@ -386,7 +389,7 @@ namespace Kernel
         std::vector<std::string> GetAllPossibleKeyValueCombinations() const;
 
         // Add a new IP using the key and set of values
-        void AddIP( const std::string& rKey, const std::map<std::string,float>& rValues );
+        void AddIP( uint32_t externalNodeId, const std::string& rKey, const std::map<std::string,float>& rValues );
 
         // Returns a set of the possible IP keys.  Used with ConstrainedString in places 
         // where a key or other value (i.e. NONE) is allowed.
