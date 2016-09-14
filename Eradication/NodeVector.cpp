@@ -612,9 +612,9 @@ namespace Kernel
                     migratingvectors.pop_front();
 
                     // give vectors to attached communities like a sprinkler / round-robin
-                    auto emigre = dynamic_cast<IMigrate*>(tempentry);
+                    IMigrate* emigre = tempentry->GetIMigrate();
                     emigre->SetMigrating( *itNodeId, MigrationType::LOCAL_MIGRATION, 0.0, 0.0, false );
-                    ivsc->PostMigratingVector( this->GetSuid(), tempentry);
+                    ivsc->PostMigratingVector( this->GetSuid(), tempentry );
 
                     // circular iteration among available nodes
                     if ( ++itNodeId == vectormigCommIDs.end() )

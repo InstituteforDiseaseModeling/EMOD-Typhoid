@@ -1093,7 +1093,7 @@ namespace Kernel
             for (auto iterator = migratingIndividualQueues[myRank].rbegin(); iterator != migratingIndividualQueues[myRank].rend(); ++iterator)
             {
                 auto individual = *iterator;
-                auto* emigre = dynamic_cast<IMigrate*>(individual);
+                IMigrate* emigre = individual->GetIMigrate();
                 emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
                 if( individual->IsDead() )
                 {
@@ -1120,7 +1120,7 @@ namespace Kernel
                 (*static_cast<IArchive*>(reader.get())) & migratingIndividualQueues[myRank];
                 for (auto individual : migratingIndividualQueues[myRank])
                 {
-                    auto* immigrant = dynamic_cast<IMigrate*>(individual);
+                    IMigrate* immigrant = individual->GetIMigrate();
                     immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
                 }
             }
@@ -1144,7 +1144,7 @@ namespace Kernel
             *reader & migratingIndividualQueues[fromRank];
             for (auto individual : migratingIndividualQueues[fromRank])
             {
-                IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                IMigrate* immigrant = individual->GetIMigrate();
                 immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
                 if( individual->IsDead() )
                 {

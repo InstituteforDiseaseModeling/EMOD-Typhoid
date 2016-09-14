@@ -770,7 +770,7 @@ namespace Kernel
             { 
                 AdultQueues.erase(iCurrent);
 
-                auto emigre = dynamic_cast<IMigrate*>(tempentry);
+                IMigrate* emigre = tempentry->GetIMigrate();
                 emigre->SetMigrating( destination, mig_type, 0.0, 0.0, false );
                 pMigratingQueue->push_front( tempentry );
             }

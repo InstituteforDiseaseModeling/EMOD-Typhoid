@@ -142,6 +142,7 @@ public:
     //virtual tProperties* GetProperties() = 0;
     virtual NewInfectionState::_enum GetNewInfectionState() const override { throw std::exception("The method or operation is not implemented."); }
     virtual void Update(float current_time, float dt)             override { throw std::exception("The method or operation is not implemented."); }
+    virtual IMigrate* GetIMigrate()                               override { throw std::exception( "The method or operation is not implemented." ); }
 
     virtual INodeContext* GetParent() const override
     {

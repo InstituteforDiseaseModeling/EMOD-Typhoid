@@ -108,6 +108,8 @@ namespace Kernel
 
         virtual void Update(float currenttime, float dt) override;
 
+        virtual IMigrate* GetIMigrate() override;
+
         // IIndividualHumanContext
         virtual suids::suid GetSuid() const override;
         virtual suids::suid GetNextInfectionSuid() override;

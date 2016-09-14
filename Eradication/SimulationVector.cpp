@@ -208,7 +208,7 @@ namespace Kernel
             for (auto iterator = migratingVectorQueues[myRank].rbegin(); iterator != migratingVectorQueues[myRank].rend(); ++iterator)
             {
                 auto vector = *iterator;
-                IMigrate* emigre = dynamic_cast<IMigrate*>(vector);
+                IMigrate* emigre = vector->GetIMigrate();
                 emigre->ImmigrateTo( nodes[emigre->GetMigrationDestination()] );
             }
 #else
@@ -227,7 +227,7 @@ namespace Kernel
             (*static_cast<IArchive*>(reader)) & migratingVectorQueues[myRank];
             for (auto individual : migratingVectorQueues[myRank])
             {
-                IMigrate* immigrant = dynamic_cast<IMigrate*>(individual);
+                IMigrate* immigrant = individual->GetIMigrate();
                 immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()]);
             }
             delete reader;
@@ -252,7 +252,7 @@ namespace Kernel
             *reader & migratingVectorQueues[fromRank];
             for (auto vector : migratingVectorQueues[fromRank])
             {
-                IMigrate* immigrant = dynamic_cast<IMigrate*>(vector);
+                IMigrate* immigrant = vector->GetIMigrate();
                 immigrant->ImmigrateTo( nodes[immigrant->GetMigrationDestination()] );
             }
         };

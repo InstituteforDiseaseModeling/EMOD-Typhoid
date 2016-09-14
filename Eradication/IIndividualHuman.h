@@ -18,6 +18,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    struct IMigrate;
+
     // Interface for controlling objects (e.g. Node)
     struct IIndividualHuman : ISerializable
     {
@@ -50,6 +52,7 @@ namespace Kernel
         virtual NewInfectionState::_enum GetNewInfectionState() const = 0;
         virtual HumanStateChange GetStateChange() const = 0;
 
+        virtual IMigrate* GetIMigrate() = 0;
         virtual IIndividualHumanInterventionsContext* GetInterventionsContext() const = 0;
 
         virtual tProperties* GetProperties() = 0;

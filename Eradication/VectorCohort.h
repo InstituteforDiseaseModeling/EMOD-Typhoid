@@ -32,6 +32,7 @@ namespace Kernel
         virtual void SetVectorGenetics( const VectorMatingStructure& new_value ) = 0;
         virtual float GetMortality( uint32_t addition ) const = 0;
         virtual const StrainIdentity* GetStrainIdentity() const = 0;
+        virtual IMigrate* GetIMigrate() = 0;
     };
 
     struct INodeContext;
@@ -68,6 +69,7 @@ namespace Kernel
         virtual VectorMatingStructure& GetVectorGenetics() override; // used by VPI
         virtual void SetVectorGenetics( const VectorMatingStructure& new_value ) override;
         virtual float GetMortality( uint32_t addition ) const override;
+        virtual IMigrate* GetIMigrate() override;
 
     protected:
         VectorCohort();

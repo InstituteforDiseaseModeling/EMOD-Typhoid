@@ -404,6 +404,11 @@ namespace Kernel
         return is_dead ;
     }
 
+    IMigrate* IndividualHuman::GetIMigrate()
+    {
+        return static_cast<IMigrate*>(this);
+    }
+
     void IndividualHuman::SetContextTo(INodeContext* context)
     {
         INodeContext *old_context = parent;
@@ -425,7 +430,7 @@ namespace Kernel
                 migration_destination = suids::nil_suid();
             }
 
-            if( (parent->GetSuid() == home_node_id) && is_on_family_trip )
+            if( is_on_family_trip && (parent->GetSuid() == home_node_id) )
             {
                 is_on_family_trip = false ;
             }
