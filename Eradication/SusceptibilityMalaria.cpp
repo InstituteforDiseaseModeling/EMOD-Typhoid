@@ -300,7 +300,7 @@ namespace Kernel
 
     void SusceptibilityMalaria::Update(float dt)
     {
-        LOG_VALID("\n--------------------------------------------------\n\n");
+        //LOG_VALID("\n--------------------------------------------------\n\n");
         release_assert( params() );
 
         age += dt;
@@ -312,20 +312,20 @@ namespace Kernel
         {
             // This is the amount of "erythropoietin", assume absolute amounts of erythropoietin correlate linearly with absolute increases in hemoglobin
             float anemia_erythropoiesis_multiplier = exp( SusceptibilityMalariaConfig::erythropoiesis_anemia_effect * (1 - get_RBC_availability()) );
-            LOG_VALID_F( "Anemia erythropoiesis multiplier = %f at RBC availability of %f.\n", anemia_erythropoiesis_multiplier, get_RBC_availability() );
+            //LOG_VALID_F( "Anemia erythropoiesis multiplier = %f at RBC availability of %f.\n", anemia_erythropoiesis_multiplier, get_RBC_availability() );
             m_RBC = int64_t(m_RBC - (m_RBC * .00833 - m_RBCproduction * anemia_erythropoiesis_multiplier) * dt); // *.00833 ==/120 (AVERAGE_RBC_LIFESPAN)
         }
         else
         {
             m_RBC = int64_t(m_RBC - (m_RBC * .00833 - m_RBCproduction) * dt); // *.00833 ==/120 (AVERAGE_RBC_LIFESPAN)
         }
-        LOG_VALID_F( "I have %lld red blood cells\n", m_RBC );
+        //LOG_VALID_F( "I have %lld red blood cells\n", m_RBC );
 
         // Cytokines decay with time constant of 12 hours
         m_cytokines -= (m_cytokines * 2 * dt);
         if (m_cytokines < 0) { m_cytokines = 0; }
 
-        LOG_VALID_F( "fever = %0.9f  cytokines = %0.9f\n", get_fever(), m_cytokines );
+        //LOG_VALID_F( "fever = %0.9f  cytokines = %0.9f\n", get_fever(), m_cytokines );
 
         // Reset parasite density
         m_parasite_density = 0; // this is accumulated in updateImmunityPfEMP1Minor
@@ -352,14 +352,14 @@ namespace Kernel
         {
             // Update antigen-antibody reactions for MSP and PfEMP1 minor/major epitopes, including cytokine stimulation
             float temp_cytokine_stimulation = 0; // used to track total stimulation of cytokines due to rupturing schizonts
-            LOG_VALID("update MSP\n");
+            //LOG_VALID("update MSP\n");
             updateImmunityMSP(dt, temp_cytokine_stimulation);
-            LOG_VALID("update PfEMP1 minor\n");
+            //LOG_VALID("update PfEMP1 minor\n");
             updateImmunityPfEMP1Minor(dt);
-            LOG_VALID("update PfEMP1 major\n");
+            //LOG_VALID("update PfEMP1 major\n");
             updateImmunityPfEMP1Major(dt);
 
-            LOG_VALID_F( "cytokine stimulation: %0.9f (MSP)   %0.9f (PfEMP)\n", temp_cytokine_stimulation, m_cytokine_stimulation );
+            //LOG_VALID_F( "cytokine stimulation: %0.9f (MSP)   %0.9f (PfEMP)\n", temp_cytokine_stimulation, m_cytokine_stimulation );
 
             // inflammatory immune response--Stevenson, M. M. and E. M. Riley (2004). "Innate immunity to malaria." Nat Rev Immunol 4(3): 169-180.
             // now let cytokine be increased in response to IRBCs and ruptured schizonts, if any
@@ -368,7 +368,7 @@ namespace Kernel
             m_cytokines = float(m_cytokines + CYTOKINE_STIMULATION_SCALE * Sigmoid::basic_sigmoid(m_ind_pyrogenic_threshold, temp_cytokine_stimulation));//one time spike for rupturing schizonts
             m_cytokine_stimulation = 0; // and reset for next time step
 
-            LOG_VALID_F( "m_cytokines: %0.9f\n", m_cytokines );
+            //LOG_VALID_F( "m_cytokines: %0.9f\n", m_cytokines );
 
             // reset antigenic presence and IRBC counters
             m_antigenic_flag = 0;
@@ -391,7 +391,7 @@ namespace Kernel
         // Determine the disease state (symptomatic, severe, or fatal) of current clinical incident
         updateClinicalStates(dt);
 
-        LOG_VALID( "END Update\n" );
+        //LOG_VALID( "END Update\n" );
     }
 
     void SusceptibilityMalaria::UpdateInfectionCleared()
@@ -481,7 +481,7 @@ namespace Kernel
                 continue;
             }
 
-            LOG_VALID_F( "\tPfEMP1 major (before): capacity = %0.9f, Ab = %0.9f,  antigen = %lld\n", antibody->GetAntibodyCapacity(), antibody->GetAntibodyConcentration(), antibody->GetAntigenCount() );
+            //LOG_VALID_F( "\tPfEMP1 major (before): capacity = %0.9f, Ab = %0.9f,  antigen = %lld\n", antibody->GetAntibodyCapacity(), antibody->GetAntibodyConcentration(), antibody->GetAntigenCount() );
 
             // Cytokines released at low antibody concentration (if capacity hasn't switched into high proliferation rate yet)
             if ( antibody->GetAntibodyCapacity() <= 0.4 )
@@ -492,7 +492,7 @@ namespace Kernel
             antibody->UpdateAntibodyCapacity( dt, m_inv_microliters_blood );
             antibody->UpdateAntibodyConcentration( dt );
 
-            LOG_VALID_F( "\t    (after): capacity = %0.9f, Ab = %0.9f,  antigen = %lld\n", antibody->GetAntibodyCapacity(), antibody->GetAntibodyConcentration(), antibody->GetAntigenCount() );
+            //LOG_VALID_F( "\t    (after): capacity = %0.9f, Ab = %0.9f,  antigen = %lld\n", antibody->GetAntibodyCapacity(), antibody->GetAntibodyConcentration(), antibody->GetAntigenCount() );
         }
     }
 
