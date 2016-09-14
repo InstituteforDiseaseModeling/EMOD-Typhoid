@@ -226,7 +226,6 @@ namespace Kernel
         infection_list_t              infections;
         InterventionsContainer*       interventions;
         TransmissionGroupMembership_t transmissionGroupMembership;
-        map<string, TransmissionGroupMembership_t> transmissionGroupMembershipByRoute;
 
         // Infections
         bool  m_is_infected;    // TODO: replace with more sophisticated strain-tracking capability

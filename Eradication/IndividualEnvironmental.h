@@ -27,6 +27,7 @@ namespace Kernel
 
         virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = nullptr) override;
         virtual void UpdateInfectiousness(float dt) override;
+        virtual void UpdateGroupMembership() override;
 
     protected:
         IndividualHumanEnvironmental( suids::suid id = suids::nil_suid(), float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
@@ -34,6 +35,8 @@ namespace Kernel
         // Factory methods
         virtual IInfection* createInfection(suids::suid _suid) override;
         virtual void ReportInfectionState() override;
+
+        std::map<std::string, TransmissionGroupMembership_t> transmissionGroupMembershipByRoute;
 
         DECLARE_SERIALIZABLE(IndividualHumanEnvironmental);
     };

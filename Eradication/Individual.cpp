@@ -229,7 +229,6 @@ namespace Kernel
         , infections()
         , interventions(nullptr)
         , transmissionGroupMembership()
-        , transmissionGroupMembershipByRoute()
         , m_is_infected(false)
         , infectiousness(0.0f)
         , Inf_Sample_Rate(0)
@@ -277,7 +276,6 @@ namespace Kernel
         , infections()
         , interventions(nullptr)
         , transmissionGroupMembership()
-        , transmissionGroupMembershipByRoute()
         , m_is_infected(false)
         , infectiousness(0.0f)
         , Inf_Sample_Rate(0)
@@ -977,16 +975,8 @@ namespace Kernel
     {
         tProperties* properties = GetProperties();
         const RouteList_t& routes = parent->GetTransmissionRoutes();
-        LOG_DEBUG_F("Updating transmission group membership for individual %d for %d routes (first route is %s).\n", this->GetSuid().data, routes.size(), routes[0].c_str());
 
-        for (auto& route : routes)
-        {
-            LOG_DEBUG_F("Updating for Route %s.\n", route.c_str());
-            RouteList_t single_route;
-            single_route.push_back(route);
-            parent->GetGroupMembershipForIndividual(single_route, properties, &transmissionGroupMembershipByRoute[route]);
-        }
-        parent->GetGroupMembershipForIndividual(routes, properties, &transmissionGroupMembership);  // DJK: Why this and the one per-route above?
+        parent->GetGroupMembershipForIndividual( routes, properties, &transmissionGroupMembership );
     }
 
     void IndividualHuman::UpdateGroupPopulation(float size_changes)
