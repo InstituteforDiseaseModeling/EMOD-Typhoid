@@ -161,7 +161,7 @@ void Kernel::NodePolio::finalizeNodeStateCounters(void)
         throw CalculatedValueOutOfRangeException( __FILE__, __LINE__, __FUNCTION__, "numerator", numerator, 0 );
     }
 
-    float denominator = std::accumulate( infected_people_prior.begin(), infected_people_prior.end(), 0 );
+    float denominator = std::accumulate( infected_people_prior.begin(), infected_people_prior.end(), 0.0f );
     if( denominator && numerator )
     {
         mean_age_infection = numerator/( denominator * DAYSPERYEAR);

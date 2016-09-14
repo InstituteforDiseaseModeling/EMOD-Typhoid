@@ -50,13 +50,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;INTERVENTIONTESTDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\ComputeClusterPack\Include;..\..\campaign;C:\boost\boost_1_51_0;..\..\cajun\Include;..\..\jsonspirit;..\..\utils;..\..\Eradication;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependencies\ComputeClusterPack\Include;..\..\campaign;$(IDM_BOOST_PATH);..\..\cajun\Include;..\..\jsonspirit;..\..\utils;..\..\Eradication;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;%(AdditionalLibraryDirectories);..\..\x64\Debug\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Dependencies\ComputeClusterPack\Lib\amd64;%(AdditionalLibraryDirectories);..\..\x64\Debug\</AdditionalLibraryDirectories>
       <AdditionalOptions>cajun.lib utils.lib campaign.lib msmpi.lib %(AdditionalOptions)</AdditionalOptions>
       <IgnoreSpecificDefaultLibraries>libcpmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -70,7 +70,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;INTERVENTIONTESTDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\ComputeClusterPack\Include;..\..\campaign;C:\boost\boost_1_51_0;..\..\cajun\Include;..\..\jsonspirit;..\..\utils;..\..\Eradication;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependencies\ComputeClusterPack\Include;..\..\campaign;$(IDM_BOOST_PATH);..\..\cajun\Include;..\..\jsonspirit;..\..\utils;..\..\Eradication;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -78,7 +78,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalOptions>cajun.lib utils.lib campaign.lib msmpi.lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalLibraryDirectories>..\..\Dependencies\ComputeClusterPack\Lib\amd64;c:\boost\boost_1_51_0\lib\x64;%(AdditionalLibraryDirectories);..\..\x64\Release\;c:\boost\boost_1_51_0\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Dependencies\ComputeClusterPack\Lib\amd64;%(AdditionalLibraryDirectories);..\..\x64\Release\</AdditionalLibraryDirectories>
       <ShowProgress>LinkVerbose</ShowProgress>
     </Link>
   </ItemDefinitionGroup>

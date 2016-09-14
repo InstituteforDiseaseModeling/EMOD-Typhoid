@@ -42,6 +42,7 @@ namespace Kernel
 
     public:
         InputEIR();
+        InputEIR( const InputEIR& master );
         virtual ~InputEIR() { }
 
         // INodeDistributableIntervention

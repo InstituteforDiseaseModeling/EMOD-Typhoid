@@ -229,7 +229,6 @@ namespace Kernel
         , infections()
         , interventions(nullptr)
         , transmissionGroupMembership()
-        , transmissionGroupMembershipByRoute()
         , m_is_infected(false)
         , infectiousness(0.0f)
         , Inf_Sample_Rate(0)
@@ -277,7 +276,6 @@ namespace Kernel
         , infections()
         , interventions(nullptr)
         , transmissionGroupMembership()
-        , transmissionGroupMembershipByRoute()
         , m_is_infected(false)
         , infectiousness(0.0f)
         , Inf_Sample_Rate(0)
@@ -404,6 +402,11 @@ namespace Kernel
         return is_dead ;
     }
 
+    IMigrate* IndividualHuman::GetIMigrate()
+    {
+        return static_cast<IMigrate*>(this);
+    }
+
     void IndividualHuman::SetContextTo(INodeContext* context)
     {
         INodeContext *old_context = parent;
@@ -425,7 +428,7 @@ namespace Kernel
                 migration_destination = suids::nil_suid();
             }
 
-            if( (parent->GetSuid() == home_node_id) && is_on_family_trip )
+            if( is_on_family_trip && (parent->GetSuid() == home_node_id) )
             {
                 is_on_family_trip = false ;
             }
@@ -472,7 +475,7 @@ namespace Kernel
         susceptibility = Susceptibility::CreateSusceptibility(this, m_age, immunity_modifier, risk_modifier);
     }
 
-    void IndividualHuman::SetParameters(float infsample, float immunity_modifier, float risk_modifier, float migration_modifier)
+    void IndividualHuman::SetParameters( INodeContext* pParent, float infsample, float immunity_modifier, float risk_modifier, float migration_modifier)
     {
         StateChange       = HumanStateChange::None;
 
@@ -504,7 +507,7 @@ namespace Kernel
         CreateSusceptibility(immunity_modifier, risk_modifier);
 
         // Populate the individuals set of Individual Properties with one value for each property
-        IPKeyValueContainer init_values = IPFactory::GetInstance()->GetInitialValues( EnvPtr->RNG );
+        IPKeyValueContainer init_values = IPFactory::GetInstance()->GetInitialValues( pParent->GetExternalID(), EnvPtr->RNG );
 
         Properties.clear();
         for( IPKeyValue kv : init_values )
@@ -972,16 +975,8 @@ namespace Kernel
     {
         tProperties* properties = GetProperties();
         const RouteList_t& routes = parent->GetTransmissionRoutes();
-        LOG_DEBUG_F("Updating transmission group membership for individual %d for %d routes (first route is %s).\n", this->GetSuid().data, routes.size(), routes[0].c_str());
 
-        for (auto& route : routes)
-        {
-            LOG_DEBUG_F("Updating for Route %s.\n", route.c_str());
-            RouteList_t single_route;
-            single_route.push_back(route);
-            parent->GetGroupMembershipForIndividual(single_route, properties, &transmissionGroupMembershipByRoute[route]);
-        }
-        parent->GetGroupMembershipForIndividual(routes, properties, &transmissionGroupMembership);  // DJK: Why this and the one per-route above?
+        parent->GetGroupMembershipForIndividual( routes, properties, &transmissionGroupMembership );
     }
 
     void IndividualHuman::UpdateGroupPopulation(float size_changes)
@@ -1288,7 +1283,7 @@ namespace Kernel
     IndividualHuman::getProbMaternalTransmission()
     const
     {
-        return GET_CONFIGURABLE(SimulationConfig)->prob_maternal_transmission;
+        return parent->GetProbMaternalTransmission();
     }
 
 /* clorton

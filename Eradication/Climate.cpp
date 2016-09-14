@@ -278,7 +278,7 @@ namespace Kernel {
         ClimateUpdateResolution::Enum * const update_resolution,
         int * const pNumDatavalues,
         int * const pNumNodes,
-        std::hash_map<uint32_t, uint32_t> &node_offsets
+        std::unordered_map<uint32_t, uint32_t> &node_offsets
     )
     {
         LOG_DEBUG_F( "%s: %s\n", __FUNCTION__, data_filepath.c_str() );
@@ -370,6 +370,9 @@ namespace Kernel {
             throw FileIOException( __FILE__, __LINE__, __FUNCTION__, filepath.c_str() );
         }
 
+        // "Slim" climate files point several nodes to the same data, thus the size may be less than
+        // expected_size (generally num_datavalues * num_nodes * sizeof(float)).
+        /*
         file.seekg(0, ios::end);
         int filelen = (int)file.tellg();
 
@@ -380,6 +383,7 @@ namespace Kernel {
         }
 
         file.seekg(0, ios::beg);
+        */
 
         return true;
     }

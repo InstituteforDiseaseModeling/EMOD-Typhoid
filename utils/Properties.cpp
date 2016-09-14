@@ -127,13 +127,14 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
     class IPKeyValueInternal
     {
     public:
-        IPKeyValueInternal( IndividualProperty* pip, const std::string& rValue, const ProbabilityNumber& rInitialDist )
+        IPKeyValueInternal( IndividualProperty* pip, const std::string& rValue, uint32_t externalNodeId, const ProbabilityNumber& rInitialDist )
             : m_pIP( pip )
             , m_KeyValueString()
             , m_Value( rValue )
-            , m_InitialDistribution( rInitialDist )
+            , m_InitialDistributions()
         {
             m_KeyValueString = IPFactory::CreateKeyValueString( m_pIP->GetKeyAsString(), m_Value );
+            m_InitialDistributions[ externalNodeId ] = rInitialDist;
         }
 
     protected:
@@ -143,7 +144,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         IndividualProperty* m_pIP;
         std::string m_KeyValueString;
         std::string m_Value;
-        float m_InitialDistribution;
+        std::map<uint32_t,float> m_InitialDistributions;
     };
 
     // ------------------------------------------------------------------------
@@ -503,7 +504,6 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             // --------------------------------------------------------------------------
             for( JsonObjectDemog::Iterator it = birth_std_evt_coord.Begin(); it != birth_std_evt_coord.End(); )
             {
-                printf("key=%s\n",it.GetKey().c_str());
                 if( (it.GetKey() == "Target_Demographic"   ) ||
                     (it.GetKey() == "Target_Residents_Only" ) ||
                     (it.GetKey() == "Demographic_Coverage" ) ||
@@ -654,13 +654,22 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         return m_pInternal->m_Value;
     }
 
-    double IPKeyValue::GetInitialDistribution() const
+    double IPKeyValue::GetInitialDistribution( uint32_t externalNodeId ) const
     {
         if( m_pInternal == nullptr )
         {
             throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "m_pInternal" );
         }
-        return m_pInternal->m_InitialDistribution;
+        return m_pInternal->m_InitialDistributions[ externalNodeId ];
+    }
+
+    void IPKeyValue::UpdateInitialDistribution( uint32_t externalNodeId, double value )
+    {
+        if( m_pInternal == nullptr )
+        {
+            throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, "m_pInternal" );
+        }
+        m_pInternal->m_InitialDistributions[ externalNodeId ] = value;
     }
 
     // ------------------------------------------------------------------------
@@ -828,6 +837,11 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         }
     }
 
+    IPKeyValue IPKeyValueContainer::Get( const std::string& rKeyValueString ) const
+    {
+        return m_Map.at( rKeyValueString );
+    }
+
     bool IPKeyValueContainer::Contains( const std::string& rKeyValueString ) const
     {
         return (m_Map.count( rKeyValueString ) > 0);
@@ -990,11 +1004,11 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         : m_Key()
         , m_Values()
         , m_Transitions()
-        , m_IntraNodeTransmission()
+        , m_IntraNodeTransmissionsMap()
     {
     }
 
-    IndividualProperty::IndividualProperty( const std::string& rKeyStr, const std::map<std::string,float>& rValues )
+    IndividualProperty::IndividualProperty( uint32_t externalNodeId, const std::string& rKeyStr, const std::map<std::string,float>& rValues )
         : m_Key(rKeyStr)
         , m_Values()
         , m_Transitions()
@@ -1002,7 +1016,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         float total_prob = 0.0;
         for( auto entry : rValues )
         {
-            IPKeyValueInternal* pkvi = new IPKeyValueInternal( this, entry.first, entry.second );
+            IPKeyValueInternal* pkvi = new IPKeyValueInternal( this, entry.first, externalNodeId, entry.second );
             IPFactory::GetInstance()->AddKeyValue( pkvi );
             IPKeyValue kv( pkvi );
             m_Values.Add( kv );
@@ -1030,24 +1044,39 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             delete p_tran;
         }
         m_Transitions.clear();
+
+        for( auto entry : m_IntraNodeTransmissionsMap )
+        {
+            delete entry.second;
+        }
+        m_IntraNodeTransmissionsMap.clear();
     }
 
-    void IndividualProperty::Read( int idx, const JsonObjectDemog& rDemog )
+    void IndividualProperty::Read( int idx, uint32_t externalNodeId, const JsonObjectDemog& rDemog, bool isNotFirstNode )
     {
-        m_Key = rDemog[IP_NAME_KEY].AsString();
-
-        if( m_Key == IP_AGE_BIN_PROPERTY )
+        if( isNotFirstNode )
         {
-            ReadPropertyAgeBin( idx, rDemog );
+            release_assert( m_Key == rDemog[ IP_NAME_KEY ].AsString() );
         }
         else
         {
-            ReadProperty( idx, rDemog );
+            m_Key = rDemog[ IP_NAME_KEY ].AsString();
         }
-        m_IntraNodeTransmission.Read( m_Key, rDemog, m_Values.Size() );
+
+        if( m_Key == IP_AGE_BIN_PROPERTY )
+        {
+            ReadPropertyAgeBin( idx, externalNodeId, rDemog, isNotFirstNode );
+        }
+        else
+        {
+            ReadProperty( idx, externalNodeId, rDemog, isNotFirstNode );
+        }
+        IPIntraNodeTransmissions* p_transmission = new IPIntraNodeTransmissions();
+        p_transmission->Read( m_Key, rDemog, m_Values.Size() );
+        m_IntraNodeTransmissionsMap[ externalNodeId ] = p_transmission;
     }
 
-    void IndividualProperty::ReadProperty( int idx, const JsonObjectDemog& rDemog )
+    void IndividualProperty::ReadProperty( int idx, uint32_t externalNodeId, const JsonObjectDemog& rDemog, bool isNotFirstNode )
     {
         if( !rDemog.Contains( IP_VALUES_KEY ) )
         {
@@ -1081,9 +1110,15 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         else if( num_values == 0 )
         {
             std::ostringstream msg;
-            std::ostringstream ss;
             msg << "demographics[" << IP_KEY << "][" << idx << "][" << IP_VALUES_KEY << "] (property=" << m_Key << ") cannot have zero values.";
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+        }
+        else if( isNotFirstNode && (num_values != m_Values.Size()) )
+        {
+            std::stringstream ss;
+            ss << "demographics[" << IP_KEY << "][" << idx << "][" << IP_VALUES_KEY << "] for key=" << m_Key << " and nodeId=" << externalNodeId << " has " << num_values << " values.\n";
+            ss << "The previous node(s) had " << m_Values.Size() << " values.  All nodes must have the same keys and values.";
+            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
 
         IPFactory::GetInstance()->CheckIpKeyInWhitelist( m_Key, num_values );
@@ -1093,16 +1128,33 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         {
             std::string       value        = rDemog[IP_VALUES_KEY][val_idx].AsString();
             ProbabilityNumber initial_dist = rDemog[IP_INIT_KEY  ][val_idx].AsDouble();
-            if( m_Values.Contains( IPFactory::CreateKeyValueString( m_Key, value ) ) )
+            std::string kv_str = IPFactory::CreateKeyValueString( m_Key, value );
+            bool contains_kv = m_Values.Contains( kv_str );
+            if( isNotFirstNode )
             {
-                std::ostringstream ss;
-                ss << "demographics[" << IP_KEY << "][" << idx << "] with property=" << m_Key << " has a duplicate value = " << value ;
-                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                if( !contains_kv )
+                {
+                    std::ostringstream ss;
+                    ss << "demographics[" << IP_KEY << "][" << idx << "] with property=" << m_Key << " for NodeId=" << externalNodeId << " has value=" << value << ".\n";
+                    ss << "Previous node(s) do not have this value.  All nodes must have the same keys and values.";
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                }
+                IPKeyValue kv = m_Values.Get( kv_str );
+                kv.UpdateInitialDistribution( externalNodeId, initial_dist );
             }
-            IPKeyValueInternal* pkvi = new IPKeyValueInternal( this, value, initial_dist );
-            IPFactory::GetInstance()->AddKeyValue( pkvi );
-            IPKeyValue kv( pkvi );
-            m_Values.Add( kv );
+            else
+            {
+                if( contains_kv )
+                {
+                    std::ostringstream ss;
+                    ss << "demographics[" << IP_KEY << "][" << idx << "] with property=" << m_Key << " has a duplicate value = " << value ;
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                }
+                IPKeyValueInternal* pkvi = new IPKeyValueInternal( this, value, externalNodeId, initial_dist );
+                IPFactory::GetInstance()->AddKeyValue( pkvi );
+                IPKeyValue kv( pkvi );
+                m_Values.Add( kv );
+            }
             total_prob += initial_dist;
         }
 
@@ -1113,18 +1165,21 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
         }
 
-        if( rDemog.Contains( IP_TRANS_KEY ) )
+        if( !isNotFirstNode )
         {
-            for( int itran = 0 ; itran < rDemog[ IP_TRANS_KEY ].size() ; itran++ )
+            if( rDemog.Contains( IP_TRANS_KEY ) )
             {
-                IPTransition* p_tran = new IPTransition();
-                p_tran->Read( idx, itran, rDemog[ IP_TRANS_KEY ][ itran ], m_Key );
-                m_Transitions.push_back( p_tran );
+                for( int itran = 0 ; itran < rDemog[ IP_TRANS_KEY ].size() ; itran++ )
+                {
+                    IPTransition* p_tran = new IPTransition();
+                    p_tran->Read( idx, itran, rDemog[ IP_TRANS_KEY ][ itran ], m_Key );
+                    m_Transitions.push_back( p_tran );
+                }
             }
         }
     }
 
-    void IndividualProperty::ReadPropertyAgeBin( int idx, const JsonObjectDemog& rDemog )
+    void IndividualProperty::ReadPropertyAgeBin( int idx, uint32_t externalNodeId, const JsonObjectDemog& rDemog, bool isNotFirstNode )
     {
         if( !rDemog.Contains( IP_AGE_BIN_EDGE_KEY ) )
         {
@@ -1196,27 +1251,46 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             // ---------------
             // --- Add value
             // ---------------
-            if( m_Values.Contains( IPFactory::CreateKeyValueString( m_Key, value ) ) )
+            bool contains_kv = m_Values.Contains( IPFactory::CreateKeyValueString( m_Key, value ) );
+            if( isNotFirstNode )
             {
-                std::ostringstream ss;
-                ss <<  "Duplicate Value found: " << value;
-                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                if( !contains_kv )
+                {
+                    std::stringstream ss;
+                    ss << "demographics[" << IP_KEY << "][" << idx << "][" << IP_VALUES_KEY << "] for key=" << m_Key << "  and nodeId" << externalNodeId ;
+                    ss << " has value=" << value << " but the previous nodes do not have this value.  All nodes must have the same keys and values.";
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                }
             }
-            IPKeyValueInternal* pkvi = new IPKeyValueInternal( this, value, 0.0 );
-            IPFactory::GetInstance()->AddKeyValue( pkvi );
-            IPKeyValue kv( pkvi );
-            m_Values.Add( kv );
+            else
+            {
+                if( contains_kv )
+                {
+                    std::ostringstream ss;
+                    ss << "demographics[" << IP_KEY << "][" << idx << "][" << IP_VALUES_KEY << "] for key=" << m_Key << "  and nodeId" << externalNodeId ;
+                    ss << ": Duplicate Value found: " << value;
+                    throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                }
+                IPKeyValueInternal* pkvi = new IPKeyValueInternal( this, value, externalNodeId, 0.0 );
+                IPFactory::GetInstance()->AddKeyValue( pkvi );
+                IPKeyValue kv( pkvi );
+                m_Values.Add( kv );
+            }
         }
-        IPFactory::GetInstance()->CheckIpKeyInWhitelist( m_Key, m_Values.Size() );
 
-        if( rDemog.Contains( IP_TRANS_KEY ) && (rDemog[ IP_TRANS_KEY ].size() > 0) )
+        if( !isNotFirstNode )
         {
-            std::ostringstream msg;
-            msg << "demographics[" << IP_KEY << "][" << idx << "][" << IP_TRANS_KEY << "] has more than zero entries.  They are not allowed with property=" << IP_AGE_BIN_PROPERTY;
-            throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
-        }
+            IPFactory::GetInstance()->CheckIpKeyInWhitelist( m_Key, m_Values.Size() );
 
-        CreateAgeBinTransitions();
+            if( rDemog.Contains( IP_TRANS_KEY ) && (rDemog[ IP_TRANS_KEY ].size() > 0) )
+            {
+                std::ostringstream msg;
+                msg << "demographics[" << IP_KEY << "][" << idx << "][" << IP_TRANS_KEY << "] has more than zero entries.  They are not allowed with property=" << IP_AGE_BIN_PROPERTY;
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
+            }
+
+            CreateAgeBinTransitions();
+        }
     }
 
     void ExtractAges( const IPKeyValue& rTo, float* pMinAgeYears, float* pMaxAgeYears )
@@ -1261,14 +1335,14 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         return m_Values;
     }
 
-    IPKeyValue IndividualProperty::GetInitialValue( RANDOMBASE* pRNG )
+    IPKeyValue IndividualProperty::GetInitialValue( uint32_t externalNodeId, RANDOMBASE* pRNG )
     {
         float ran = pRNG->e();
         float prob = 0.0;
 
         for( auto kv : m_Values )
         {
-            prob += kv.GetInitialDistribution();
+            prob += kv.GetInitialDistribution( externalNodeId );
             if( prob >= ran )
             {
                 return kv;
@@ -1293,9 +1367,9 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         return main_list;
     }
 
-    const IPIntraNodeTransmissions& IndividualProperty::GetIntraNodeTransmissions() const
+    const IPIntraNodeTransmissions& IndividualProperty::GetIntraNodeTransmissions( uint32_t externalNodeId ) const
     {
-        return m_IntraNodeTransmission;
+        return *m_IntraNodeTransmissionsMap.at( externalNodeId );
     }
 
     bool IndividualProperty::Compare( IndividualProperty* pLeft, IndividualProperty* pRight )
@@ -1308,7 +1382,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
     // ------------------------------------------------------------------------
 
     IPFactory::IPFactory()
-        : m_ExternalNodeIdOfFirst(0)
+        : m_ExternalNodeIdOfFirst( UINT32_MAX )
         , m_WhiteListEnabled( true )
         , m_IPList()
         , m_KeyValueMap()
@@ -1377,13 +1451,20 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         return p_factory;
     }
 
-    void IPFactory::Initialize( uint32_t node_id, const JsonObjectDemog& rDemog, bool isWhitelistEnabled )
+    void IPFactory::Initialize( uint32_t externalNodeId, const JsonObjectDemog& rDemog, bool isWhitelistEnabled )
     {
         m_WhiteListEnabled = isWhitelistEnabled;
 
-        if( m_ExternalNodeIdOfFirst == 0 )
+        if( externalNodeId == UINT32_MAX )
         {
-            m_ExternalNodeIdOfFirst = node_id;
+            std::stringstream ss;
+            ss << "You are not allowed to use an external Node ID of " << UINT32_MAX << ".";
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+        }
+
+        if( m_ExternalNodeIdOfFirst == UINT32_MAX )
+        {
+            m_ExternalNodeIdOfFirst = externalNodeId;
         }
 
         if( !rDemog.Contains( IP_KEY ) )
@@ -1391,7 +1472,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             return;
         }
 
-        LOG_INFO_F( "%d Individual_Properties found in demographics for NodeId=%d\n", rDemog[IP_KEY].size(), node_id );
+        LOG_INFO_F( "%d Individual_Properties found in demographics for NodeId=%d\n", rDemog[IP_KEY].size(), externalNodeId );
 
         // Check that we're not using more than 2 axes in whitelist mode
         if( rDemog[IP_KEY].size() > 2 && isWhitelistEnabled )
@@ -1404,12 +1485,12 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
         }
 
-        if( m_ExternalNodeIdOfFirst == node_id )
+        if( m_ExternalNodeIdOfFirst == externalNodeId )
         {
             for( int idx = 0; idx < rDemog[IP_KEY].size(); idx++ )
             {
                 IndividualProperty* p_ip = new IndividualProperty();
-                p_ip->Read( idx, rDemog[IP_KEY][idx] );
+                p_ip->Read( idx, externalNodeId, rDemog[IP_KEY][idx], false );
                 m_IPList.push_back( p_ip );
             }
 
@@ -1423,8 +1504,8 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             if( rDemog[IP_KEY].size() != m_IPList.size() )
             {
                 std::stringstream ss;
-                ss << "Individual Properties were first intialized for node " << m_ExternalNodeIdOfFirst << " and had " << m_IPList.size() << " properties.\n";
-                ss << node_id << " has " << rDemog[IP_KEY].size() << " properties and they must be the same.  Different nodes are not allowed different Individual Properties.";
+                ss << "Individual Properties were first intialized for nodeId=" << m_ExternalNodeIdOfFirst << " and it had " << m_IPList.size() << " propertie(s).\n";
+                ss << "nodeID=" << externalNodeId << " has " << rDemog[IP_KEY].size() << " propertie(s).  All nodes must have the same keys and values.";
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
             }
             for( int idx = 0; idx < rDemog[IP_KEY].size(); idx++ )
@@ -1432,9 +1513,13 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
                 if( m_IPList[idx]->GetKey().ToString() != rDemog[IP_KEY][idx][IP_NAME_KEY].AsString() )
                 {
                     std::stringstream ss;
-                    ss << "Individual Properties were first intialized for node " << m_ExternalNodeIdOfFirst << " and has property " << m_IPList[idx]->GetKey().ToString() << ".\n";
-                    ss << node_id << " has " << rDemog[IP_KEY][idx][IP_NAME_KEY].AsString() << " and they must be the same.  Different nodes are not allowed different Individual Properties.";
+                    ss << "Individual Properties were first intialized for node " << m_ExternalNodeIdOfFirst << " and it had property '" << m_IPList[idx]->GetKey().ToString() << "'.\n";
+                    ss << "nodeID=" << externalNodeId << " has '" << rDemog[IP_KEY][idx][IP_NAME_KEY].AsString() << "'.  All nodes must have the same keys and values (and in the same order).";
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, ss.str().c_str() );
+                }
+                else
+                {
+                    m_IPList[ idx ]->Read( idx, externalNodeId, rDemog[ IP_KEY ][ idx ], true );
                 }
             }
         }
@@ -1486,7 +1571,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         }
     }
 
-    void IPFactory::AddIP( const std::string& rKeyStr, const std::map<std::string,float>& rValues )
+    void IPFactory::AddIP( uint32_t externalNodeId, const std::string& rKeyStr, const std::map<std::string,float>& rValues )
     {
         bool found = false;
         std::string known_keys;
@@ -1507,7 +1592,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
         }
 
-        IndividualProperty* p_ip = new IndividualProperty( rKeyStr, rValues );
+        IndividualProperty* p_ip = new IndividualProperty( externalNodeId, rKeyStr, rValues );
         m_IPList.push_back( p_ip );
     }
 
@@ -1604,7 +1689,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         return m_KeyValueMap.at( rKeyValueString );
     }
 
-    IPKeyValueContainer IPFactory::GetInitialValues( RANDOMBASE* pRNG ) const
+    IPKeyValueContainer IPFactory::GetInitialValues( uint32_t externalNodeId, RANDOMBASE* pRNG ) const
     {
         IPKeyValueContainer properties;
 
@@ -1612,7 +1697,7 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
         {
             if( pIP->GetKeyAsString() != IP_AGE_BIN_PROPERTY )
             {
-                IPKeyValue init_val = pIP->GetInitialValue( pRNG );
+                IPKeyValue init_val = pIP->GetInitialValue( externalNodeId, pRNG );
                 properties.Add( init_val );
             }
             else

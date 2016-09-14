@@ -189,7 +189,7 @@ namespace Kernel
         // Use the verbose "for" construct here because we may be modifying the list and need to protect the iterator.
         for (VectorCohortList_t::iterator iList = ImmatureQueues.begin(); iList != ImmatureQueues.end(); /* iList++ */)
         { 
-            VectorCohort *tempentry1 = *iList;
+            IVectorCohort* tempentry1 = *iList;
             release_assert( tempentry1 );
             VectorCohortList_t::iterator iCurrent = iList++;
 

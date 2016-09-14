@@ -143,5 +143,8 @@
     <ClCompile Include="PropertiesTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LarvalHabitatMultiplierTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

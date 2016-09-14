@@ -49,7 +49,7 @@ namespace Kernel
 
     public:
         MalariaDrugTypeParameters( const std::string& drugType );
-        static MalariaDrugTypeParameters* CreateMalariaDrugTypeParameters( const std::string& drugType );
+        static MalariaDrugTypeParameters* CreateMalariaDrugTypeParameters( const Configuration* inputJson, const std::string& drugType );
         virtual ~MalariaDrugTypeParameters();
         bool Configure( const ::Configuration *json );
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject);

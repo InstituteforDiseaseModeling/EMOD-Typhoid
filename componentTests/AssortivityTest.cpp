@@ -62,7 +62,7 @@ SUITE(AssortivityTest)
             ip_values.insert( std::make_pair( "ANDORIAN", 0.2f ) );
             ip_values.insert( std::make_pair( "ROMULAN",  0.2f ) );
 
-            IPFactory::GetInstance()->AddIP( "Race", ip_values );
+            IPFactory::GetInstance()->AddIP( 1, "Race", ip_values );
         }
 
         ~AssortivityFixture()

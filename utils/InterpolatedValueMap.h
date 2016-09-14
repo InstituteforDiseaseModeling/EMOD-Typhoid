@@ -14,15 +14,20 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
-
-    class IDMAPI InterpolatedValueMap : public JsonConfigurable, 
+#pragma warning(push)
+#pragma warning(disable: 4251)
+    class IDMAPI InterpolatedValueMap : public JsonConfigurable,
                                         public IComplexJsonConfigurable, 
                                         public JsonConfigurable::tFloatFloatMapConfigType /* really just a map */
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) { return e_NOINTERFACE; }
         public:
-            InterpolatedValueMap() {}
+            InterpolatedValueMap( float min_time = 0.0f,
+                                  float max_time = 999999.0f,
+                                  float min_value = 0.0f,
+                                  float max_value = FLT_MAX );
+
             float getValuePiecewiseConstant( float year, float default_value = 0) const;
             float getValueLinearInterpolation( float year, float default_value = 0) const;
             bool isAtEnd( float currentYear ) const;
@@ -30,5 +35,11 @@ namespace Kernel
             virtual json::QuickBuilder GetSchema() override;
 
             static void serialize( IArchive& ar, InterpolatedValueMap& map );
+        private:
+            float m_MinTime;
+            float m_MaxTime;
+            float m_MinValue;
+            float m_MaxValue;
     };
+#pragma warning( pop )
 }

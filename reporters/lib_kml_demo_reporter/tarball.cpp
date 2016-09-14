@@ -50,7 +50,7 @@ void LOCALNS::Tar::_init(void* header)
 {
     std::memset(header,0,sizeof(PosixTarHeader));
     std::sprintf(TARHEADER->magic,"ustar  ");
-    std::sprintf(TARHEADER->mtime,"%011lo",time(NULL));
+    std::sprintf(TARHEADER->mtime,"%I64o",uint64_t(time(NULL))); // was "%011lo"
     std::sprintf(TARHEADER->mode,"%07o",0644);
     //char * s = ::getlogin();
     //if(s!=NULL)  std::snprintf(TARHEADER,32,"%s",s);
@@ -101,7 +101,7 @@ LOCALNS::Tar::Tar(std::ostream& out):_finished(false),out(out)
 {
     if(sizeof(PosixTarHeader)!=512)
     {
-        printf("PosixTarHeader: %u\n", sizeof(PosixTarHeader));
+        printf("PosixTarHeader: %I64u\n", uint64_t(sizeof(PosixTarHeader))); // was "%u"
     }
 }
 

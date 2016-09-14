@@ -45,7 +45,7 @@
                     "Target_Property_Key": "QualityOfCare",
                     "Target_Property_Value": "OK",
                     "Daily_Probability": 0.5,
-                    "Maximum_Duration": 3.402823466385e+038,
+                    "Maximum_Duration": 3.402823466385e+38,
                     "Revert": 22
                 },
                 "Timesteps_Between_Repetitions": 0,
@@ -88,7 +88,7 @@
                             "Target_Property_Key": "QualityOfCare",
                             "Target_Property_Value": "Good",
                             "Daily_Probability": 0.4000000059605,
-                            "Maximum_Duration": 3.402823466385e+038,
+                            "Maximum_Duration": 3.402823466385e+38,
                             "Revert": 22
                         }
                     ]
@@ -139,7 +139,7 @@
                                 "Target_Property_Key": "QualityOfCare",
                                 "Target_Property_Value": "Good",
                                 "Daily_Probability": 0.4000000059605,
-                                "Maximum_Duration": 3.402823466385e+038,
+                                "Maximum_Duration": 3.402823466385e+38,
                                 "Revert": 22
                             }
                         ]

@@ -1,5 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cajun", "..\cajun\cajun.vcxproj", "{7F91BC71-562B-44AE-A246-010C632F9796}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utils", "..\utils\utils.vcxproj", "{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}"
@@ -9,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utils", "..\utils\utils.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "campaign", "..\campaign\campaign.vcxproj", "{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libtbpatientJSON_report_plugin", "libtbpatientJSON_report_plugin\libtbpatientJSON_report_plugin.vcxproj", "{CFAB1695-C663-4A50-A2E4-B037ADBAEAAD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libtbpatientJSON_report_plugin", "libtbpatientJSON_report_plugin\libtbpatientJSON_report_plugin.vcxproj", "{DAEC70D8-3133-49EB-8473-A70D7BDEA610}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D423EC17-4DDC-430C-A153-F1EB87CCDF31} = {D423EC17-4DDC-430C-A153-F1EB87CCDF31}
 		{DE5BA452-F1C7-4FC4-83D1-CDFAAF260929} = {DE5BA452-F1C7-4FC4-83D1-CDFAAF260929}
@@ -36,10 +38,10 @@ Global
 		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}.Debug|x64.Build.0 = Debug|x64
 		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}.Release|x64.ActiveCfg = Release|x64
 		{FAB434AD-C0FC-490D-8F18-E05C99B2FD52}.Release|x64.Build.0 = Release|x64
-		{CFAB1695-C663-4A50-A2E4-B037ADBAEAAD}.Debug|x64.ActiveCfg = Debug|x64
-		{CFAB1695-C663-4A50-A2E4-B037ADBAEAAD}.Debug|x64.Build.0 = Debug|x64
-		{CFAB1695-C663-4A50-A2E4-B037ADBAEAAD}.Release|x64.ActiveCfg = Release|x64
-		{CFAB1695-C663-4A50-A2E4-B037ADBAEAAD}.Release|x64.Build.0 = Release|x64
+		{DAEC70D8-3133-49EB-8473-A70D7BDEA610}.Debug|x64.ActiveCfg = Debug|x64
+		{DAEC70D8-3133-49EB-8473-A70D7BDEA610}.Debug|x64.Build.0 = Debug|x64
+		{DAEC70D8-3133-49EB-8473-A70D7BDEA610}.Release|x64.ActiveCfg = Release|x64
+		{DAEC70D8-3133-49EB-8473-A70D7BDEA610}.Release|x64.Build.0 = Release|x64
 		{D423EC17-4DDC-430C-A153-F1EB87CCDF31}.Debug|x64.ActiveCfg = Debug|x64
 		{D423EC17-4DDC-430C-A153-F1EB87CCDF31}.Debug|x64.Build.0 = Debug|x64
 		{D423EC17-4DDC-430C-A153-F1EB87CCDF31}.Release|x64.ActiveCfg = Release|x64

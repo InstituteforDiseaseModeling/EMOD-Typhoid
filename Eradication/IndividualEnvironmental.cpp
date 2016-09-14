@@ -25,8 +25,9 @@ namespace Kernel
     BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanEnvironmental, IndividualHuman)
     END_QUERY_INTERFACE_DERIVED(IndividualHumanEnvironmental, IndividualHuman)
 
-    IndividualHumanEnvironmental::IndividualHumanEnvironmental( suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) :
-        IndividualHuman( _suid, monte_carlo_weight, initial_age, gender, initial_poverty)
+    IndividualHumanEnvironmental::IndividualHumanEnvironmental( suids::suid _suid, float monte_carlo_weight, float initial_age, int gender, float initial_poverty) 
+    : IndividualHuman( _suid, monte_carlo_weight, initial_age, gender, initial_poverty)
+    , transmissionGroupMembershipByRoute()
     {
     }
 
@@ -104,6 +105,22 @@ namespace Kernel
            }
 
         }
+    }
+
+    void IndividualHumanEnvironmental::UpdateGroupMembership()
+    {
+        tProperties* properties = GetProperties();
+        const RouteList_t& routes = parent->GetTransmissionRoutes();
+        LOG_DEBUG_F( "Updating transmission group membership for individual %d for %d routes (first route is %s).\n", this->GetSuid().data, routes.size(), routes[ 0 ].c_str() );
+
+        for( auto& route : routes )
+        {
+            LOG_DEBUG_F( "Updating for Route %s.\n", route.c_str() );
+            RouteList_t single_route;
+            single_route.push_back( route );
+            parent->GetGroupMembershipForIndividual( single_route, properties, &transmissionGroupMembershipByRoute[ route ] );
+        }
+        IndividualHuman::UpdateGroupMembership();
     }
 
     IInfection* IndividualHumanEnvironmental::createInfection( suids::suid _suid )

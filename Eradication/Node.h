@@ -149,6 +149,8 @@ namespace Kernel
                                               float timeAtDestination,
                                               bool isDestinationNewHome ) override;
 
+        virtual ProbabilityNumber GetProbMaternalTransmission() const;
+
         virtual void ManageFamilyTrip( float currentTime, float dt );
 
     private:
@@ -164,6 +166,8 @@ namespace Kernel
         // moved from SimulationConfig
         IndSamplingType::Enum                        ind_sampling_type;                         // Individual_Sampling_Type
         PopulationDensityInfectivityCorrection::Enum population_density_infectivity_correction; // Population_Density_Infectivity_Correction
+        DistributionType::Enum                       age_initialization_distribution_type;      // Age_Initialization_Distribution_Type
+        PopulationScaling::Enum                      population_scaling;                        // POPULATION_SCALING
 
         // Node properties
         suids::suid suid;

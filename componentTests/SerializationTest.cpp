@@ -52,7 +52,7 @@ SUITE(SerializationTest)
             ip_values.insert( std::make_pair( "LOW",  0.9f ) );
             ip_values.insert( std::make_pair( "HIGH", 0.1f ) );
 
-            IPFactory::GetInstance()->AddIP( "Risk", ip_values );
+            IPFactory::GetInstance()->AddIP( 1, "Risk", ip_values );
         }
 
         ~SerializationFixture()

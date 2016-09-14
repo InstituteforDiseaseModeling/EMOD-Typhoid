@@ -618,7 +618,6 @@
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
-    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="PropertyReport.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="SimpleTransmissionGroups.cpp" />
@@ -628,7 +627,6 @@
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
-    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="PropertyReport.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="SimpleTransmissionGroups.cpp" />
@@ -1040,6 +1038,9 @@
     </ClCompile>
     <ClCompile Include="..\interventions\ControlledVaccine.cpp">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClCompile>
+    <ClCompile Include="LarvalHabitatMultiplier.cpp">
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2291,6 +2292,27 @@
     </ClInclude>
     <ClInclude Include="..\interventions\ControlledVaccine.h">
       <Filter>Source Files\Campaign\IndividualTargeted</Filter>
+    </ClInclude>
+    <ClInclude Include="IVectorHabitat.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="LarvalHabitatMultiplier.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="TBParameters.h">
+      <Filter>Source Files\Airborne\TB</Filter>
+    </ClInclude>
+    <ClInclude Include="TBHIVParameters.h">
+      <Filter>Source Files\TBHIV</Filter>
+    </ClInclude>
+    <ClInclude Include="PolioParameters.h">
+      <Filter>Source Files\Environmental\Polio</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorParameters.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="MalariaParameters.h">
+      <Filter>Source Files\Vector\Malaria</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
