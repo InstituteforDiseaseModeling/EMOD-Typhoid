@@ -168,7 +168,7 @@ namespace Kernel
     IIndividualHuman* NodeTB::processImmigratingIndividual( IIndividualHuman* individual )
     {
         individual = NodeAirborne::processImmigratingIndividual( individual );
-        dynamic_cast<IndividualHumanTB*>(individual)->RegisterInfectionIncidenceObserver( this );
+        static_cast<IndividualHumanTB*>(individual)->RegisterInfectionIncidenceObserver( this );
         return individual;
     }
 
