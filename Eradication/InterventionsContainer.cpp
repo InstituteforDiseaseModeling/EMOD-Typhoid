@@ -277,13 +277,6 @@ namespace Kernel
             throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "properties", property );
         }
 
-        //INodeContext* pNode = nullptr;
-        //if ( s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeContext), (void**)&pNode) )
-        //{
-        //    throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeContext", "INodeEventContext" );
-        //}
-        //pNode->checkValidIPValue( property, new_value );
-        printf("property=%s  new_value=%s\n",property,new_value); fflush(stdout);
         release_assert( IPFactory::GetInstance()->GetIP( property )->GetValues().Contains( IPFactory::CreateKeyValueString( property, new_value ) ) );
 
         if( (*pProps)[ property ] != new_value )

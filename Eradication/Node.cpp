@@ -2278,10 +2278,6 @@ namespace Kernel
                     message << "For malaria sims, transmissionMatrix is not supported (yet)." << endl;
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, message.str().c_str());
                 }
-                else 
-                {
-                    LOG_WARN_F("HINT Configuration: Missing 'Route' for property '%s'. Will use default route 'contact' (contagion is reset at each timestep).\n", p_ip->GetKey().ToString().c_str());
-                }
 
                 oneOrMoreMatrices = true;
             }

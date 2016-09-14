@@ -504,7 +504,6 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
             // --------------------------------------------------------------------------
             for( JsonObjectDemog::Iterator it = birth_std_evt_coord.Begin(); it != birth_std_evt_coord.End(); )
             {
-                printf("key=%s\n",it.GetKey().c_str());
                 if( (it.GetKey() == "Target_Demographic"   ) ||
                     (it.GetKey() == "Target_Residents_Only" ) ||
                     (it.GetKey() == "Demographic_Coverage" ) ||
