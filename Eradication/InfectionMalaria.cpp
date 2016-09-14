@@ -78,7 +78,8 @@ namespace Kernel
         m_temp_duration(0),
         m_max_parasites(0),
         m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
-        drugResistanceFlag(0)
+        drugResistanceFlag(0),
+        m_pMDE(nullptr)
     {
     }
 
@@ -99,7 +100,8 @@ namespace Kernel
         m_temp_duration(0),
         m_max_parasites(0),
         m_inv_microliters_blood(INV_MICROLITERS_BLOOD_ADULT),
-        drugResistanceFlag(0)
+        drugResistanceFlag(0),
+        m_pMDE( nullptr )
     {
     }
 
@@ -489,17 +491,21 @@ namespace Kernel
 
             // Offset basic sigmoid: effect rises as basic sigmoid beginning from a fever of MIN_FEVER_DEGREES_KILLING
             double fever_cytokine_killrate = (immunity->get_fever() > MIN_FEVER_DEGREES_KILLING) ? immunity->get_fever_killing_rate() * Sigmoid::basic_sigmoid(1.0, immunity->get_fever() - MIN_FEVER_DEGREES_KILLING) : 0.0;
-            LOG_VALID_F("fever = %0.9f (%0.2f C)  killrate = %0.9f\n", immunity->get_fever(), immunity->get_fever_celsius(), fever_cytokine_killrate);
+            //LOG_VALID_F("fever = %0.9f (%0.2f C)  killrate = %0.9f\n", immunity->get_fever(), immunity->get_fever_celsius(), fever_cytokine_killrate);
 
             // ability to query for drug effects
             IIndividualHumanContext *patient = GetParent();
             IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
-            IMalariaDrugEffects *imde = nullptr;
+
+            if( m_pMDE == nullptr )
+            {
+                context->QueryInterface( GET_IID( IMalariaDrugEffects ), (void **)&m_pMDE );
+            }
 
             double drug_killrate = 0;
-            if (s_OK ==  context->QueryInterface(GET_IID(IMalariaDrugEffects), (void **)&imde))
+            if( m_pMDE != nullptr )
             {
-                drug_killrate = imde->get_drug_IRBC_killrate();
+                drug_killrate = m_pMDE->get_drug_IRBC_killrate();
                 // crude preliminary version of drug resistance
                 if(getDrugResistanceFlag() > 0){drug_killrate = 0;}
             }
@@ -508,7 +514,7 @@ namespace Kernel
             {
                 if ( m_IRBC_count[i] == 0 ) continue; // don't need to estimate killing if there are no IRBC of this variant to kill!
 
-                LOG_VALID_F( "Ab concentration for variant %d: %0.9f (major) %0.9f (minor)\n", i, m_PfEMP1_antibodies[i].major->GetAntibodyConcentration(), m_PfEMP1_antibodies[i].minor->GetAntibodyConcentration() );
+                //LOG_VALID_F( "Ab concentration for variant %d: %0.9f (major) %0.9f (minor)\n", i, m_PfEMP1_antibodies[i].major->GetAntibodyConcentration(), m_PfEMP1_antibodies[i].minor->GetAntibodyConcentration() );
 
                 // total = antibodies (major, minor, maternal) + fever + drug
                 double pkill = EXPCDF(-dt * ( (m_PfEMP1_antibodies[i].major->GetAntibodyConcentration() + InfectionMalariaConfig::non_specific_antigenicity * m_PfEMP1_antibodies[i].minor->GetAntibodyConcentration() + immunity->get_maternal_antibodies() ) * InfectionMalariaConfig::antibody_IRBC_killrate + fever_cytokine_killrate + drug_killrate));
@@ -517,7 +523,7 @@ namespace Kernel
                 // This is fine for large numbers of killed IRBC's, but an issue arises for small numbers
                 // big question, is 1.5 killed IRBC's 1 or 2 killed?
 
-                LOG_VALID_F("pkill = %0.9f\n", pkill);
+                //LOG_VALID_F("pkill = %0.9f\n", pkill);
 
                 double tempval1 = m_IRBC_count[i] * pkill;
                 if ( tempval1 > 0 ) // don't need to smear the killing by a random number if it is going to be zero
@@ -562,7 +568,7 @@ namespace Kernel
             // only update if there are actually IRBCs
             if (m_IRBC_count[i] > 0)
             {
-                LOG_VALID_F("Increasing IRBC count by %lld for variant %d:  ( %d, %d )\n", m_IRBC_count[i], i, m_PfEMP1_antibodies[i].minor->GetAntibodyVariant(), m_PfEMP1_antibodies[i].major->GetAntibodyVariant());
+                //LOG_VALID_F("Increasing IRBC count by %lld for variant %d:  ( %d, %d )\n", m_IRBC_count[i], i, m_PfEMP1_antibodies[i].minor->GetAntibodyVariant(), m_PfEMP1_antibodies[i].major->GetAntibodyVariant());
 
                 // PfEMP-1 major epitopes
                 m_PfEMP1_antibodies[i].major->IncreaseAntigenCount(m_IRBC_count[i]);
@@ -582,7 +588,6 @@ namespace Kernel
         // ability to query for drug effects
         IIndividualHumanContext *patient              = GetParent();
         IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
-        IMalariaDrugEffects *imde                     = nullptr;
 
         // check for valid inputs
         if (dt > 0 && immunity)
@@ -595,14 +600,19 @@ namespace Kernel
                 // We leave this variable here at zero incase we change DepositInfectiousnessFromGametocytes()
                 double fever_cytokine_killrate = 0; // 0 = don't kill due to fever
 
+                if( m_pMDE == nullptr )
+                {
+                    context->QueryInterface( GET_IID( IMalariaDrugEffects ), (void **)&m_pMDE );
+                }
+
                 // gametocyte killing drugs
                 double drug_killrate = 0;
-                if (s_OK ==  context->QueryInterface(GET_IID(IMalariaDrugEffects), (void **)&imde))
+                if( m_pMDE != nullptr )
                 {
                     if (i < GametocyteStages::Stage3)
-                        drug_killrate = imde->get_drug_gametocyte02();
+                        drug_killrate = m_pMDE->get_drug_gametocyte02();
                     else
-                        drug_killrate = imde->get_drug_gametocyte34();
+                        drug_killrate = m_pMDE->get_drug_gametocyte34();
                 }
 
                 // no randomness in gametocyte killing, but a continuity correction
@@ -799,12 +809,16 @@ namespace Kernel
             // ability to query for drug effects
             IIndividualHumanContext *patient = GetParent();
             IIndividualHumanInterventionsContext *context = patient->GetInterventionsContext();
-            IMalariaDrugEffects *imde = nullptr;
+
+            if( m_pMDE == nullptr )
+            {
+                context->QueryInterface( GET_IID( IMalariaDrugEffects ), (void **)&m_pMDE );
+            }
 
             double drug_killrate = 0;
-            if (s_OK ==  context->QueryInterface(GET_IID(IMalariaDrugEffects), (void **)&imde))
+            if( m_pMDE != nullptr )
             {
-                drug_killrate = imde->get_drug_hepatocyte();
+                drug_killrate = m_pMDE->get_drug_hepatocyte();
             }
 
             //binomial chance of survival
