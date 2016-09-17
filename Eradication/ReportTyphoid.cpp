@@ -39,6 +39,7 @@ GET_SCHEMA_STATIC_WRAPPER_IMPL(ReportTyphoid,ReportTyphoid)
 
 ReportTyphoid::ReportTyphoid()
 : recording( false )
+, parent(nullptr)
 {
 }
 
@@ -67,8 +68,9 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
 {
     if( recording )
     {
-
-        ReportEnvironmental::EndTimestep( currentTime, dt );
+        //ReportEnvironmental::EndTimestep( currentTime, dt ); 
+        // bypass generic-level EndTimestep coz we don't care about those channels.
+        BaseChannelReport::EndTimestep( currentTime, dt );
 
         // Make sure we push at least one zero per timestep
         Accumulate( _num_chronic_carriers_label, 0 );
@@ -187,17 +189,26 @@ ReportTyphoid::LogNodeData(
         return;
     }
 
-    ReportEnvironmental::LogNodeData( pNC );
+    Accumulate(_stat_pop_label, pNC->GetStatPop());
+    Accumulate("Infected", pNC->GetInfected());
+    BaseChannelReport::LogNodeData( pNC );
+
     const INodeTyphoid * pTyphoidNode = NULL; // TBD: Use limited read-only interface, not full NodeTyphoid
     if( pNC->QueryInterface( GET_IID( INodeTyphoid), (void**) &pTyphoidNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTyphoid", "INodeContext" );
     }
 
-    auto contactContagionPop = pNC->GetTotalContagion();
-    Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
-    Accumulate( "Environmental Contagion Population", contactContagionPop["environmental"] );
+    auto contagionPop = pNC->GetTotalContagion();
+    NonNegativeFloat contactContagionPop = contagionPop["contact"];
+    NonNegativeFloat enviroContagionPop = contagionPop["environmental"];
+    Accumulate( "Contact Contagion Population", contactContagionPop  );
+    Accumulate( "Environmental Contagion Population", enviroContagionPop );
     //Accumulate( _aoi_label, pTyphoidNode->GetMeanAgeInfection() * total_infections ); // weight the age of infection by the number of infections in the node. global normalization happens in SimulationTyphoid
+}
+
+void ReportTyphoid::AccumulateSEIRW()
+{
 }
 
 #if USE_BOOST_SERIALIZATION

@@ -253,6 +253,9 @@ void ChannelDataMap::WriteOutput(
     pIJsonObj->Insert("Report_Type",         "InsetChart");
     pIJsonObj->Insert("Report_Version",      "3.2");
     pIJsonObj->Insert("Start_Time",          (*EnvPtr->Config)["Start_Time"         ].As<Number>() );
+    pIJsonObj->Insert("Report_Start_Year",   (*EnvPtr->Config)["Inset_Chart_Reporting_Start_Year"  ].As<Number>() );
+    pIJsonObj->Insert("Report_Stop_Year",    (*EnvPtr->Config)["Inset_Chart_Reporting_Stop_Year"   ].As<Number>() );
+    pIJsonObj->Insert("Start_Time",          (*EnvPtr->Config)["Start_Time"         ].As<Number>() );
     pIJsonObj->Insert("Simulation_Timestep", (*EnvPtr->Config)["Simulation_Timestep"].As<Number>() );
     unsigned int timesteps = 0;
     if( !channel_data_map.empty() )
@@ -294,8 +297,8 @@ void ChannelDataMap::WriteOutput(
     // Write output to file
     // GetFormattedOutput() could be used for a smaller but less human readable file
     LOG_DEBUG("Writing JSON output file\n");
-    char* buffer;
-    js.GetPrettyFormattedOutput(pIJsonObj, buffer);
+    const char* buffer;
+    js.GetFormattedOutput(pIJsonObj, buffer);
 
     ofstream inset_chart_json;
     inset_chart_json.open( FileSystem::Concat(EnvPtr->OutputPath, filename ).c_str() );

@@ -12,7 +12,6 @@ ALL WARRANTIES, EXPRESS OR IMPLIED, OR STATUTORY, INCLUDING IMPLIED WARRANTIES
 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 
 *****************************************************************************/
-
 #pragma once
 
 #include "ReportEnvironmental.h"
@@ -36,6 +35,7 @@ public:
     virtual bool Configure( const Configuration * inputJson );
     virtual void BeginTimestep() override;
     virtual void EndTimestep( float currentTime, float dt );
+    virtual void AccumulateSEIRW();
 
     virtual void LogIndividualData( IIndividualHuman * individual);
     virtual void LogNodeData( Kernel::INodeContext * pNC );

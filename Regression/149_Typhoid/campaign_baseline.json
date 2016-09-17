@@ -10,7 +10,7 @@
                          "Delay_Period_Min": 1,
                          "Delay_Period_Max": 30
                     }, 
-                    "Demographic_Coverage": 0.0025,
+                    "Demographic_Coverage": 0.5,
 					"Number_Repetitions": 5,
 					"Timesteps_Between_Repetitions": 730,
                     "class": "StandardInterventionDistributionEventCoordinator"

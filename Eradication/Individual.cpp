@@ -516,7 +516,7 @@ namespace Kernel
                     {
                         std::ostringstream msg;
                         msg << "Selected property value " << entry.second << " for key " << propertyKey << " for individual " << GetSuid().data << std::endl;
-                        LOG_DEBUG_F( msg.str().c_str() );
+                        LOG_INFO_F( msg.str().c_str() );
                     }
                     break;
                 }

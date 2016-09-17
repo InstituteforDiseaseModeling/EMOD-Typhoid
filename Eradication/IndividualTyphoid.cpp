@@ -297,6 +297,8 @@ namespace Kernel
         {
             int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
             int nDayOfYear = SimDay % 365;
+			int SimYear = floor((int)parent->GetTime().Year());
+
             float fEnvironment = cp->GetTotalContagion();
             if (fEnvironment==0.0)
             {
@@ -357,7 +359,18 @@ namespace Kernel
 			
 			}
 
-			//LOG_INFO_F("Environmental Amp %f\n", amplification);
+
+			float intervention_multiplier = 1;
+			if (SimYear == 1983){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1983;}
+			if (SimYear == 1984){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1984;}
+			if (SimYear == 1985){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1985;}
+			if (SimYear == 1986){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1986;}
+			if (SimYear == 1987){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1987;}
+			if (SimYear == 1988){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1988;}
+			if (SimYear == 1989){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1989;}
+			if (SimYear == 1990){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1990;}
+			if (SimYear >= 1991){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1991;}
+
 
 
             float fExposure = fEnvironment * amplification;
@@ -366,7 +379,7 @@ namespace Kernel
                 float infects = 1.0f-pow(1.0f + fExposure * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha); // Dose-response for prob of infection
                 float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count);
                 //float prob = 1.0f- pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt);
-                int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate * dt);
+                int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate * dt * intervention_multiplier);
                 //int number_of_exposures = randgen->Poisson(exposure_rate * dt);
                 float prob = 0;
                 if (number_of_exposures > 0)
