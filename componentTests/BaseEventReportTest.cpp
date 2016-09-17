@@ -78,12 +78,17 @@ public:
     MyIntervention( INodeTriggeredInterventionConsumer* pNTIC ) 
         : INodeDistributableIntervention()
         , m_pNTIC( pNTIC )
+        , m_Name("MyIntervention")
     {};
+
+    virtual const std::string& GetName() const override { return m_Name; }
 
     virtual void Update(float dt) override
     {
         m_pNTIC->TriggerNodeEventObservers( nullptr, IndividualEventTriggerType::NonDiseaseDeaths );
     };
+
+    virtual INodeDistributableIntervention* Clone() override { return nullptr; };
 
     virtual bool Distribute(INodeEventContext *context, IEventCoordinator2* pEC = nullptr ) override { assert( false ); return false; };
     virtual void SetContextTo(INodeEventContext *context) override {};
@@ -94,6 +99,7 @@ public:
 
 private:
     INodeTriggeredInterventionConsumer* m_pNTIC ;
+    std::string m_Name;
 };
 
 

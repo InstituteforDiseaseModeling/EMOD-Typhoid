@@ -67,9 +67,7 @@ namespace Kernel
     void SimulationTBHIV::Initialize( const ::Configuration *config )
     {
         SimulationAirborne::Initialize( config );
-        IndividualHumanCoinfection fakeHuman;
-        LOG_INFO( "Calling Configure on fakeHuman\n" );
-        fakeHuman.Configure( config );
+        IndividualHumanCoinfection::InitializeStaticsCoinfection( config );
     }
 
     void SimulationTBHIV::addNewNodeFromDemographics(suids::suid node_suid, NodeDemographicsFactory *nodedemographics_factory, ClimateFactory *climate_factory)

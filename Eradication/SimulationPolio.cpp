@@ -111,10 +111,8 @@ namespace Kernel
 
     void SimulationPolio::Initialize(const ::Configuration *config)
     {
-        SimulationEnvironmental::Initialize(config);
-        IndividualHumanPolio fakeHuman;
-        LOG_INFO( "Calling Configure on fakeHuman\n" );
-        fakeHuman.Configure( config );
+        SimulationEnvironmental::Initialize( config );
+        IndividualHumanPolio::InitializeStaticsPolio( config );
     }
 
     SimulationPolio *SimulationPolio::CreateSimulation()

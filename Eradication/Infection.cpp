@@ -54,7 +54,7 @@ namespace Kernel
         const Configuration* config
     )
     {
-        initConfig( "Mortality_Time_Course", mortality_time_course, config, MetadataDescriptor::Enum("mortality_time_course", Mortality_Time_Course_DESC_TEXT, MDD_ENUM_ARGS(MortalityTimeCourse)) ); // infection only (move)
+        initConfig( "Mortality_Time_Course", mortality_time_course, config, MetadataDescriptor::Enum("mortality_time_course", Mortality_Time_Course_DESC_TEXT, MDD_ENUM_ARGS(MortalityTimeCourse)), "Enable_Disease_Mortality" );
 
         incubation_distribution.Configure( this, config );
         infectious_distribution.Configure( this, config );
@@ -62,7 +62,7 @@ namespace Kernel
         LOG_DEBUG_F( "infectious_distribution = %s\n", DistributionFunction::pairs::lookup_key(infectious_distribution.GetType()) );
 
         initConfigTypeMap( "Base_Infectivity", &base_infectivity, Base_Infectivity_DESC_TEXT, 0.0f, 1000.0f, 0.3f ); // should default change depending on disease?
-        initConfigTypeMap( "Base_Mortality", &base_mortality, Base_Mortality_DESC_TEXT, 0.0f, 1000.0f, 0.001f ); // should default change depending on disease?
+        initConfigTypeMap( "Base_Mortality", &base_mortality, Base_Mortality_DESC_TEXT, 0.0f, 1000.0f, 0.001f, "Enable_Vital_Dynamics" ); // should default change depending on disease?
 
         bool bRet = JsonConfigurable::Configure( config );
 
@@ -136,11 +136,11 @@ namespace Kernel
         }
         else
         {
-            incubation_timer = incubation_distribution.CalculateDuration();
+            incubation_timer = InfectionConfig::incubation_distribution.CalculateDuration();
             LOG_DEBUG_F( "incubation_timer = %f\n", incubation_timer );
         }
         
-        infectious_timer = infectious_distribution.CalculateDuration();
+        infectious_timer = InfectionConfig::infectious_distribution.CalculateDuration();
         LOG_DEBUG_F( "infectious_timer = %f\n", infectious_timer );
 
         total_duration = incubation_timer + infectious_timer;
@@ -149,7 +149,7 @@ namespace Kernel
 
         if (incubation_timer <= 0)
         {
-            infectiousness = base_infectivity;
+            infectiousness = InfectionConfig::base_infectivity;
         }
     }
 
@@ -166,7 +166,7 @@ namespace Kernel
 // TODO        if (duration >= incubation_timer)
         if (duration > incubation_timer)
         {
-            infectiousness = base_infectivity;
+            infectiousness = InfectionConfig::base_infectivity;
 
             // Used to have a release_assert( infectiousness ) here to make sure infectiousness was not zero, 
             // but setting infectiousness to zero can be a valid use case (e.g., while applying external incidence only)
@@ -177,7 +177,7 @@ namespace Kernel
 
         // if disease has a daily mortality rate, and disease mortality is on, then check for death
         if (params()->vital_disease_mortality
-            && (mortality_time_course == MortalityTimeCourse::DAILY_MORTALITY)
+            && (InfectionConfig::mortality_time_course == MortalityTimeCourse::DAILY_MORTALITY)
             && (duration > incubation_timer))
         {
             if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IDrugVaccineInterventionEffects), (void**)&idvie) )
@@ -185,7 +185,7 @@ namespace Kernel
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionsContext()", "IDrugVaccineInterventionEffects", "IIndividualHumanInterventionsContext" );
             }
 
-            if ( randgen->e() < base_mortality * dt * immunity->getModMortality() * idvie->GetInterventionReducedMortality() )
+            if ( randgen->e() < InfectionConfig::base_mortality * dt * immunity->getModMortality() * idvie->GetInterventionReducedMortality() )
             { 
                 StateChange = InfectionStateChange::Fatal; 
             }
@@ -194,14 +194,14 @@ namespace Kernel
         if (duration > total_duration)
         {
             // disease mortality active and is accounted for at end of infectious period
-            if (params()->vital_disease_mortality && (mortality_time_course == MortalityTimeCourse::MORTALITY_AFTER_INFECTIOUS))
+            if (params()->vital_disease_mortality && (InfectionConfig::mortality_time_course == MortalityTimeCourse::MORTALITY_AFTER_INFECTIOUS))
             {
                 if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IDrugVaccineInterventionEffects), (void**)&idvie) )
                 {
                     throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetInterventionsContext()", "IDrugVaccineInterventionEffects", "IIndividualHumanInterventionsContext" );
                 }
 
-                if ( randgen->e() < base_mortality * immunity->getModMortality() * idvie->GetInterventionReducedMortality() )
+                if ( randgen->e() < InfectionConfig::base_mortality * immunity->getModMortality() * idvie->GetInterventionReducedMortality() )
                 {
                     StateChange = InfectionStateChange::Fatal;
                 }

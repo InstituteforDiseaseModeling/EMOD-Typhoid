@@ -24,7 +24,7 @@
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filenames": [
-            "Seattle_30arcsec_demographics.compiled.json"
+            "Seattle_30arcsec_demographics.json"
         ], 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
@@ -34,8 +34,8 @@
         "Enable_Default_Reporting": 1, 
         "Enable_Default_Shedding_Function": 1, 
         "Enable_Demographics_Birth": 0, 
+        "Enable_Demographics_Builtin": 0, 
         "Enable_Demographics_Gender": 1, 
-        "Enable_Demographics_Initial": 1, 
         "Enable_Demographics_Other": 0, 
         "Enable_Demographics_Reporting": 0, 
         "Enable_Disease_Mortality": 1, 
@@ -88,7 +88,7 @@
         "Pool_Transmission_Mode": "ENVIRONMENTAL_AND_CONTACT_TRANSMISSION", 
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
-        "Population_Scale_Type": "FIXED_SCALING", 
+        "Population_Scale_Type": "USE_INPUT_FILE", 
         "Regional_Migration_Filename": "Seattle_30arcsec_regional_migration.bin", 
         "Report_Event_Recorder": 0, 
         "Roundtrip_Waypoints": 1, 
@@ -135,6 +135,7 @@
         "TB_Smear_Positive_Fraction_Child": 1, 
         "Transmission_Blocking_Immunity_Decay_Rate": 0.1, 
         "Transmission_Blocking_Immunity_Duration_Before_Decay": 270, 
+        "logLevel_JsonConfigurable": "WARNING", 
         "x_Air_Migration": 1, 
         "x_Birth": 0.05, 
         "x_Family_Migration": 1, 

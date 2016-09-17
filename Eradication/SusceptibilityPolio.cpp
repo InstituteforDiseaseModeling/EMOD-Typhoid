@@ -22,9 +22,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Common.h"
 #include "Exceptions.h"
 #include "PolioVaccine.h"
-#include "PolioInterventionsContainer.h"
+// clorton #include "PolioInterventionsContainer.h"
 #include "RANDOM.h"
 #include "SimulationConfig.h"
+#include "PolioParameters.h"
 
 static const char * _module = "SusceptibilityPolio";
 
@@ -155,8 +156,8 @@ namespace Kernel
                 for(int i = 0; i < N_POLIO_SEROTYPES; i++)
                 {
                     // immune_response_OPV.xls, from Ogra1968, Warren1964, Dexiang1956
-                    float exp =  GET_CONFIGURABLE(SimulationConfig)->maternal_log2NAb_mean
-                        + (GET_CONFIGURABLE(SimulationConfig)->maternal_log2NAb_std * GetRandNBounded()) ;
+                    float exp =  GET_CONFIGURABLE(SimulationConfig)->polio_params->maternal_log2NAb_mean
+                              + (GET_CONFIGURABLE(SimulationConfig)->polio_params->maternal_log2NAb_std * GetRandNBounded()) ;
                     maternalSerumNAb[i] = pow( 2.0f, exp );
                 }
             }
@@ -198,7 +199,7 @@ namespace Kernel
                 humoralNAb[i_serotype] = humoralMemoryNAb[i_serotype];
 
                 maternalSerumNAb[i_serotype] = pow(2.0f, maternalSerumNAb[i_serotype]);
-                maternalSerumNAb[i_serotype] *= exp(-age * GET_CONFIGURABLE(SimulationConfig)->decayRatePassiveImmunity); // get maternal antibody level at present age of individual
+                maternalSerumNAb[i_serotype] *= exp(-age * GET_CONFIGURABLE(SimulationConfig)->polio_params->decayRatePassiveImmunity); // get maternal antibody level at present age of individual
             }
              
             waneAntibodyTitersFromLastEvent(); // wane mucosal and humoral from memory based on time since last infection
@@ -209,10 +210,10 @@ namespace Kernel
         {   /*Setting to have zero initial immunity humoral, mucosal or maternal */
             for(int i = 0; i < N_POLIO_SEROTYPES; i++)
             {
-                maternalSerumNAb[i] = pow(2.0f, GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->maternal_log2NAb_std 
-                                                                  + GET_CONFIGURABLE(SimulationConfig)->maternal_log2NAb_mean); // immune_response_OPV.xls, from Ogra1968, Warren1964, Dexiang1956
+                maternalSerumNAb[i] = pow(2.0f, GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->maternal_log2NAb_std 
+                                                                  + GET_CONFIGURABLE(SimulationConfig)->polio_params->maternal_log2NAb_mean); // immune_response_OPV.xls, from Ogra1968, Warren1964, Dexiang1956
                 
-                maternalSerumNAb[i] *= exp(-age * GET_CONFIGURABLE(SimulationConfig)->decayRatePassiveImmunity); // get maternal antibody level at present age of individual
+                maternalSerumNAb[i] *= exp(-age * GET_CONFIGURABLE(SimulationConfig)->polio_params->decayRatePassiveImmunity); // get maternal antibody level at present age of individual
             }
         }
 #if 0
@@ -303,15 +304,15 @@ namespace Kernel
 
         for(int i = 0; i < N_POLIO_SEROTYPES; i++)
         {
-            maternalSerumNAb[i] -= maternalSerumNAb[i] * dt * GET_CONFIGURABLE(SimulationConfig)->decayRatePassiveImmunity;
+            maternalSerumNAb[i] -= maternalSerumNAb[i] * dt * GET_CONFIGURABLE(SimulationConfig)->polio_params->decayRatePassiveImmunity;
             
-            delta_slow_Ab                   = (humoralNAb[i] - humoral_fastDecayCompartment[i]) * dt * waning_humoral_rate_slow;
-            delta_fast_Ab                   = humoral_fastDecayCompartment[i] * dt * waning_humoral_rate_fast;
+            delta_slow_Ab                   = (humoralNAb[i] - humoral_fastDecayCompartment[i]) * dt * SusceptibilityPolioConfig::waning_humoral_rate_slow;
+            delta_fast_Ab                   = humoral_fastDecayCompartment[i] * dt * SusceptibilityPolioConfig::waning_humoral_rate_fast;
             humoral_fastDecayCompartment[i]    -= delta_fast_Ab;
             humoralNAb[i]                      -= delta_slow_Ab + delta_fast_Ab;
 
-            delta_slow_Ab                   = (mucosalNAb[i] - mucosal_fastDecayCompartment[i]) * dt * waning_mucosal_rate_slow;
-            delta_fast_Ab                   = mucosal_fastDecayCompartment[i] * dt * waning_mucosal_rate_fast;
+            delta_slow_Ab                   = (mucosalNAb[i] - mucosal_fastDecayCompartment[i]) * dt * SusceptibilityPolioConfig::waning_mucosal_rate_slow;
+            delta_fast_Ab                   = mucosal_fastDecayCompartment[i] * dt * SusceptibilityPolioConfig::waning_mucosal_rate_fast;
             mucosal_fastDecayCompartment[i]    -= delta_fast_Ab;
             mucosalNAb[i]                      -= delta_slow_Ab + delta_fast_Ab;
             
@@ -344,8 +345,8 @@ namespace Kernel
     {
         NonNegativeFloat tmp_time;
         NonNegativeFloat tmp_slow_Ab;
-        NonNegativeFloat k_hum_fast = waning_humoral_fast_fraction;
-        NonNegativeFloat k_muc_fast = waning_mucosal_fast_fraction;
+        NonNegativeFloat k_hum_fast = SusceptibilityPolioConfig::waning_humoral_fast_fraction;
+        NonNegativeFloat k_muc_fast = SusceptibilityPolioConfig::waning_mucosal_fast_fraction;
 
         for(int i_serotype = 0; i_serotype < N_POLIO_SEROTYPES; i_serotype++)
         {
@@ -353,12 +354,12 @@ namespace Kernel
             humoral_fastDecayCompartment[i_serotype] = k_hum_fast * humoralMemoryNAb[i_serotype];
             mucosal_fastDecayCompartment[i_serotype] = k_muc_fast * mucosalMemoryNAb[i_serotype];
 
-            tmp_slow_Ab                                 = (humoralMemoryNAb[i_serotype] - humoral_fastDecayCompartment[i_serotype]) * exp(-tmp_time * waning_humoral_rate_slow);
-            humoral_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * waning_humoral_rate_fast);
+            tmp_slow_Ab                                 = (humoralMemoryNAb[i_serotype] - humoral_fastDecayCompartment[i_serotype]) * exp(-tmp_time * SusceptibilityPolioConfig::waning_humoral_rate_slow);
+            humoral_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * SusceptibilityPolioConfig::waning_humoral_rate_fast);
             humoralNAb[i_serotype]                      = tmp_slow_Ab + humoral_fastDecayCompartment[i_serotype];
 
-            tmp_slow_Ab                                 = (mucosalMemoryNAb[i_serotype] - mucosal_fastDecayCompartment[i_serotype]) * exp(-tmp_time * waning_mucosal_rate_slow);
-            mucosal_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * waning_mucosal_rate_fast);
+            tmp_slow_Ab                                 = (mucosalMemoryNAb[i_serotype] - mucosal_fastDecayCompartment[i_serotype]) * exp(-tmp_time * SusceptibilityPolioConfig::waning_mucosal_rate_slow);
+            mucosal_fastDecayCompartment[i_serotype]   *= exp(-tmp_time * SusceptibilityPolioConfig::waning_mucosal_rate_fast);
             mucosalNAb[i_serotype]                      = tmp_slow_Ab + mucosal_fastDecayCompartment[i_serotype];
         }
     }
@@ -377,9 +378,9 @@ namespace Kernel
                 StrainIdentity(PolioVirusTypes::WPV1, 0),
                 StrainIdentity(PolioVirusTypes::WPV2, 0),
                 StrainIdentity(PolioVirusTypes::WPV3, 0),
-                GET_CONFIGURABLE(SimulationConfig)->vaccine_strains[0],
-                GET_CONFIGURABLE(SimulationConfig)->vaccine_strains[1],
-                GET_CONFIGURABLE(SimulationConfig)->vaccine_strains[2]
+                GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_strains[0],
+                GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_strains[1],
+                GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_strains[2]
             };
 
         // set up array of all challenge viruses on this exposure
@@ -406,7 +407,7 @@ namespace Kernel
 
             LOG_DEBUG_F( "shedding_titer[%d] = %f, heterotypic_take_rates[%d] = %f\n", virustype, shedding_titer[virustype], virustype, heterotypic_take_rates[virustype] );
 
-            heterotypic_take_rates[virustype] *= GET_CONFIGURABLE(SimulationConfig)->viral_interference[virustype]; // virus-specific interference rate contribution
+            heterotypic_take_rates[virustype] *= GET_CONFIGURABLE(SimulationConfig)->polio_params->viral_interference[virustype]; // virus-specific interference rate contribution
 
             LOG_DEBUG_F( "(*viral_int) heterotypic_take_rates[%d] = %f\n", virustype, heterotypic_take_rates[virustype] );
 
@@ -416,7 +417,7 @@ namespace Kernel
             LOG_DEBUG_F( "(1-x) heterotypic_take_rates[%d] = %f\n", virustype, heterotypic_take_rates[virustype] );
 
             //load the vaccine take multiplier [0,1], fixed to 1 for all wild virus
-            vaccine_take_multiplier[virustype] = GET_CONFIGURABLE(SimulationConfig)->vaccine_take_multiplier[virustype];
+            vaccine_take_multiplier[virustype] = GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_take_multiplier[virustype];
         }
         // determine take rate for each challenge virus contributed by viral interference
         for(int i_challenge = 0; i_challenge < n_challenge_strains; i_challenge++)
@@ -454,7 +455,7 @@ namespace Kernel
         {
             throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "virus_type", virus_type, PolioVirusTypes::pairs::lookup_key( virus_type ) );
         }
-        else if( IS_SABIN_TYPE( virus_type ) && GET_CONFIGURABLE(SimulationConfig)->VDPV_virulence_model_type >= VDPVVirulenceModelType::POLIO_VDPV_PARALYSIS_AND_LOG_INFECTIVITY) // vaccine-related virus
+        else if( IS_SABIN_TYPE( virus_type ) && GET_CONFIGURABLE(SimulationConfig)->polio_params->VDPV_virulence_model_type >= VDPVVirulenceModelType::POLIO_VDPV_PARALYSIS_AND_LOG_INFECTIVITY) // vaccine-related virus
         {
             // convert sabin strain id to wild strain id equivalent without using fragile math
             // doing this "inline" to save overhead of function call, and coz this is the only place we do this.
@@ -477,15 +478,15 @@ namespace Kernel
                 throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "virus_type", virus_type, PolioVirusTypes::pairs::lookup_key( virus_type ) );
             }
             
-            specificInfectivity = GET_CONFIGURABLE(SimulationConfig)->PVinf0[virus_type] * pow( GET_CONFIGURABLE(SimulationConfig)->PVinf0[wild_strain] / GET_CONFIGURABLE(SimulationConfig)->PVinf0[virus_type], GetReversionDegree(strain_id) );
+            specificInfectivity = GET_CONFIGURABLE(SimulationConfig)->polio_params->PVinf0[virus_type] * pow( GET_CONFIGURABLE(SimulationConfig)->polio_params->PVinf0[wild_strain] / GET_CONFIGURABLE(SimulationConfig)->polio_params->PVinf0[virus_type], GetReversionDegree(strain_id) );
         }
         else if( (0 <= virus_type) && (virus_type < N_POLIO_VIRUS_TYPES) )  // redundant check here to get rid of code analysis warning C638
         {
-            specificInfectivity = GET_CONFIGURABLE(SimulationConfig)->PVinf0[virus_type];
+            specificInfectivity = GET_CONFIGURABLE(SimulationConfig)->polio_params->PVinf0[virus_type];
         }
 
         float NAb               = GetMucosalImmunity(strain_id);
-        float neutralization    = (1.0f + GET_CONFIGURABLE(SimulationConfig)->TauNAb * (NAb - 1.0f) * (1.0f - exp(-1.0f / GET_CONFIGURABLE(SimulationConfig)->TauNAb))) / NAb;
+        float neutralization    = (1.0f + GET_CONFIGURABLE(SimulationConfig)->polio_params->TauNAb * (NAb - 1.0f) * (1.0f - exp(-1.0f / GET_CONFIGURABLE(SimulationConfig)->polio_params->TauNAb))) / NAb;
         //float inf_beta          = GET_CONFIGURABLE(SimulationConfig)->InfectBeta;
         ProbabilityNumber ret = 1.0f - pow( 1.0f + (challenge_dose), -specificInfectivity * neutralization ); // Beta-Poisson infection model, where alpha is specificInfectivity and reduced by the factor of neutralizing antibodies
         LOG_DEBUG_F("challengedose=%f, specificInfectivity=%f, neutralization=%f, probability of infection = %f.\n", challenge_dose, specificInfectivity, neutralization, (float) ret);
@@ -501,9 +502,9 @@ namespace Kernel
         /*float drug_vaccine_mod_acquire = 1.0f;
         float drug_vaccine_mod_transmit = 1.0f;*/
         *n_vaccine_strains = 3;
-        strain_id[0] = GET_CONFIGURABLE(SimulationConfig)->vaccine_strains[PolioSerotypes::PV1];
-        strain_id[1] = GET_CONFIGURABLE(SimulationConfig)->vaccine_strains[PolioSerotypes::PV2];
-        strain_id[2] = GET_CONFIGURABLE(SimulationConfig)->vaccine_strains[PolioSerotypes::PV3];
+        strain_id[0] = GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_strains[PolioSerotypes::PV1];
+        strain_id[1] = GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_strains[PolioSerotypes::PV2];
+        strain_id[2] = GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_strains[PolioSerotypes::PV3];
         dose_titer[0] = 0.0f;
         dose_titer[1] = 0.0f;
         dose_titer[2] = 0.0f;
@@ -534,40 +535,40 @@ namespace Kernel
                 switch (new_vaccine_index)
                 {
                     case PolioVaccines::TOPV:
-                        dose_titer[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_tOPV[0];
-                        dose_titer[PolioSerotypes::PV2] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_tOPV[1];
-                        dose_titer[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_tOPV[2];
+                        dose_titer[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_tOPV[0];
+                        dose_titer[PolioSerotypes::PV2] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_tOPV[1];
+                        dose_titer[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_tOPV[2];
                         vaccine_doses_received_by_type[PolioSerotypes::PV1]++;
                         vaccine_doses_received_by_type[PolioSerotypes::PV2]++;
                         vaccine_doses_received_by_type[PolioSerotypes::PV3]++;
                         break;
 
                     case PolioVaccines::BOPV:
-                        dose_titer[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_bOPV[0];
-                        dose_titer[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_bOPV[1];
+                        dose_titer[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_bOPV[0];
+                        dose_titer[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_bOPV[1];
                         vaccine_doses_received_by_type[PolioSerotypes::PV1]++;
                         vaccine_doses_received_by_type[PolioSerotypes::PV3]++;
                     break;
 
                     case PolioVaccines::MOPV1:
-                        dose_titer[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_mOPV[0];
+                        dose_titer[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_mOPV[0];
                         vaccine_doses_received_by_type[PolioSerotypes::PV1]++;
                         break;
 
                     case PolioVaccines::MOPV2:
-                        dose_titer[PolioSerotypes::PV2] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_mOPV[1];
+                        dose_titer[PolioSerotypes::PV2] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_mOPV[1];
                         vaccine_doses_received_by_type[PolioSerotypes::PV2]++;
                         break;
 
                     case PolioVaccines::MOPV3:
-                        dose_titer[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->vaccine_titer_mOPV[2];
+                        dose_titer[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_titer_mOPV[2];
                         vaccine_doses_received_by_type[PolioSerotypes::PV3]++;
                         break;
 
                     case PolioVaccines::IPV:
-                        temp_IPV_Dantigen[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->vaccine_Dantigen_IPV[0];
-                        temp_IPV_Dantigen[PolioSerotypes::PV2] += GET_CONFIGURABLE(SimulationConfig)->vaccine_Dantigen_IPV[1];
-                        temp_IPV_Dantigen[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->vaccine_Dantigen_IPV[2];
+                        temp_IPV_Dantigen[PolioSerotypes::PV1] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_Dantigen_IPV[0];
+                        temp_IPV_Dantigen[PolioSerotypes::PV2] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_Dantigen_IPV[1];
+                        temp_IPV_Dantigen[PolioSerotypes::PV3] += GET_CONFIGURABLE(SimulationConfig)->polio_params->vaccine_Dantigen_IPV[2];
                         break;
 
                     default:
@@ -610,11 +611,11 @@ namespace Kernel
             float mucosalImmIPVmultiplier;
             if (isOPVExposed(i_serotype))
             {
-                mucosalImmIPVmultiplier = GET_CONFIGURABLE(SimulationConfig)->mucosalImmIPVOPVExposed;
+                mucosalImmIPVmultiplier = GET_CONFIGURABLE(SimulationConfig)->polio_params->mucosalImmIPVOPVExposed;
             }
             else
             {
-                mucosalImmIPVmultiplier = GET_CONFIGURABLE(SimulationConfig)->mucosalImmIPV;
+                mucosalImmIPVmultiplier = GET_CONFIGURABLE(SimulationConfig)->polio_params->mucosalImmIPV;
             }
 
             LOG_DEBUG_F("mucosal immunity IPV multiplier = %f\n.", mucosalImmIPVmultiplier);
@@ -623,23 +624,23 @@ namespace Kernel
             {
                 if(humoralMemoryNAb[i_serotype] > 1.0f ||  isOPVExposed(i_serotype)) //including individuals who failed to seroconvert due to OPV
                 {
-                    log2NAb_boost   = GET_CONFIGURABLE(SimulationConfig)->boostLog2NAb_IPV[i_serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->boostLog2NAb_stddev_IPV[i_serotype]);
+                    log2NAb_boost   = GET_CONFIGURABLE(SimulationConfig)->polio_params->boostLog2NAb_IPV[i_serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->boostLog2NAb_stddev_IPV[i_serotype]);
                     log2NAb_boost  *= log(dose_Dantigen_content[i_serotype] + 1.0f) / log(ReferenceEIPV_Dantigen[i_serotype] + 1.0f);
                     
-                    NAb_saturation          = LOG_2 - log(mucosalMemoryNAb[i_serotype]) / GET_CONFIGURABLE(SimulationConfig)->maxLog2NAb_IPV[i_serotype];
+                    NAb_saturation          = LOG_2 - log(mucosalMemoryNAb[i_serotype]) / GET_CONFIGURABLE(SimulationConfig)->polio_params->maxLog2NAb_IPV[i_serotype];
                     NO_LESS_THAN(NAb_saturation, 0.0f);
                     mucosalNAb[i_serotype] = mucosalMemoryNAb[i_serotype] * exp(log2NAb_boost * NAb_saturation * mucosalImmIPVmultiplier);
 
                     delta_mucosal           = mucosalMemoryNAb[i_serotype] - mucosalNAb[i_serotype];
 
-                    NAb_saturation          = LOG_2 - log(humoralMemoryNAb[i_serotype]) / GET_CONFIGURABLE(SimulationConfig)->maxLog2NAb_IPV[i_serotype];
+                    NAb_saturation          = LOG_2 - log(humoralMemoryNAb[i_serotype]) / GET_CONFIGURABLE(SimulationConfig)->polio_params->maxLog2NAb_IPV[i_serotype];
                     NO_LESS_THAN( NAb_saturation, 0.0f )
                     humoralNAb[i_serotype]  = humoralMemoryNAb[i_serotype] * exp( log2NAb_boost * NAb_saturation );
                     delta_humoral           = humoralMemoryNAb[i_serotype] - humoralNAb[i_serotype];
                 }
                 else
                 {
-                    log2NAb_prime  = GET_CONFIGURABLE(SimulationConfig)->primeLog2NAb_IPV[i_serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->primeLog2NAb_stddev_IPV[i_serotype]);
+                    log2NAb_prime  = GET_CONFIGURABLE(SimulationConfig)->polio_params->primeLog2NAb_IPV[i_serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->primeLog2NAb_stddev_IPV[i_serotype]);
                     log2NAb_prime *= log(dose_Dantigen_content[i_serotype] + 1.0f) / log(ReferenceEIPV_Dantigen[i_serotype] + 1.0f);
 
                     mucosalNAb[i_serotype] = pow(2.0f, mucosalImmIPVmultiplier * log2NAb_prime);
@@ -650,11 +651,11 @@ namespace Kernel
                 }
 
                 //    if the increase in NAb is greater than the NAb that would be assigned to fast compartment, then assign to fast compartment, else leave fast compartment as is
-                new_fast_Ab     = mucosalNAb[i_serotype] * waning_mucosal_fast_fraction;
+                new_fast_Ab     = mucosalNAb[i_serotype] * SusceptibilityPolioConfig::waning_mucosal_fast_fraction;
                 if( delta_mucosal > new_fast_Ab )
                     mucosal_fastDecayCompartment[i_serotype]  = new_fast_Ab;
 
-                 new_fast_Ab    = humoralNAb[i_serotype] * waning_humoral_fast_fraction;
+                 new_fast_Ab    = humoralNAb[i_serotype] * SusceptibilityPolioConfig::waning_humoral_fast_fraction;
                 if( delta_humoral > new_fast_Ab )
                     humoral_fastDecayCompartment[i_serotype]  = new_fast_Ab;
            }
@@ -676,13 +677,13 @@ namespace Kernel
 
         if(mucosalMemoryNAb[serotype] > 1.0f) // boosting
         {
-            float log2NAb_boost = GET_CONFIGURABLE(SimulationConfig)->boostLog2NAb_OPV[serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->boostLog2NAb_stddev_OPV[serotype]);
+            float log2NAb_boost = GET_CONFIGURABLE(SimulationConfig)->polio_params->boostLog2NAb_OPV[serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->boostLog2NAb_stddev_OPV[serotype]);
 
-            float NAb_saturation = LOG_2 - log(mucosalMemoryNAb[serotype]) / GET_CONFIGURABLE(SimulationConfig)->maxLog2NAb_OPV[serotype];
+            float NAb_saturation = LOG_2 - log(mucosalMemoryNAb[serotype]) / GET_CONFIGURABLE(SimulationConfig)->polio_params->maxLog2NAb_OPV[serotype];
             NO_LESS_THAN( NAb_saturation, 0.0f ) // antibody saturation scaling of immune response. scaling = 0 if antibodies are greater than maximum antibody titer
             mucosalNAb[serotype] = mucosalMemoryNAb[serotype] * exp( log2NAb_boost * NAb_saturation );
 
-            NAb_saturation       = LOG_2 - log(humoralMemoryNAb[serotype]) / GET_CONFIGURABLE(SimulationConfig)->maxLog2NAb_OPV[serotype];
+            NAb_saturation       = LOG_2 - log(humoralMemoryNAb[serotype]) / GET_CONFIGURABLE(SimulationConfig)->polio_params->maxLog2NAb_OPV[serotype];
             NO_LESS_THAN( NAb_saturation, 0.0f ) // antibody saturation scaling of immune response. scaling = 0 if antibodies are greater than maximum antibody titer
 
             humoralNAb[serotype] = humoralMemoryNAb[serotype] * exp( log2NAb_boost * NAb_saturation );
@@ -692,41 +693,41 @@ namespace Kernel
         }
         else // priming
         {
-            mucosalNAb[serotype] = pow (2.0f, GET_CONFIGURABLE(SimulationConfig)->primeLog2NAb_OPV[serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->primeLog2NAb_stddev_OPV[serotype]) );
+            mucosalNAb[serotype] = pow (2.0f, GET_CONFIGURABLE(SimulationConfig)->polio_params->primeLog2NAb_OPV[serotype] + (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->primeLog2NAb_stddev_OPV[serotype]) );
             NO_LESS_THAN( mucosalNAb[serotype], 1.0f ) // check result, minimum titer is 1 
                 // check we haven't exceeded the maximum titer this is a config parameter use thing so only throw warning
-            if ( log(mucosalNAb[serotype])/LOG_2 > GET_CONFIGURABLE(SimulationConfig)->maxLog2NAb_OPV[serotype] )
+            if ( log(mucosalNAb[serotype])/LOG_2 > GET_CONFIGURABLE(SimulationConfig)->polio_params->maxLog2NAb_OPV[serotype] )
             {
                 //float tmp_max_titer = exp(LOG_2*GET_CONFIGURABLE(SimulationConfig)->maxLog2NAb_OPV[serotype]);
-                throw CalculatedValueOutOfRangeException( __FILE__, __LINE__, __FUNCTION__, "log(mucosalNAb[serotype])/LOG_2", log(mucosalNAb[serotype])/LOG_2, GET_CONFIGURABLE(SimulationConfig)->maxLog2NAb_OPV[serotype] );
+                throw CalculatedValueOutOfRangeException( __FILE__, __LINE__, __FUNCTION__, "log(mucosalNAb[serotype])/LOG_2", log(mucosalNAb[serotype])/LOG_2, GET_CONFIGURABLE(SimulationConfig)->polio_params->maxLog2NAb_OPV[serotype] );
             }
 
             NO_LESS_THAN(humoralNAb[serotype], mucosalNAb[serotype]);
             LOG_DEBUG_F("priming for type %d, final humoral titer is %f\n.", serotype, humoralNAb[serotype]);
         }
         
-        humoral_fastDecayCompartment[serotype]  = humoralNAb[serotype] * waning_humoral_fast_fraction; // reset fast decay compartment
-        mucosal_fastDecayCompartment[serotype]  = mucosalNAb[serotype] * waning_mucosal_fast_fraction; // reset fast decay compartment
+        humoral_fastDecayCompartment[serotype]  = humoralNAb[serotype] * SusceptibilityPolioConfig::waning_humoral_fast_fraction; // reset fast decay compartment
+        mucosal_fastDecayCompartment[serotype]  = mucosalNAb[serotype] * SusceptibilityPolioConfig::waning_mucosal_fast_fraction; // reset fast decay compartment
     }
 
     float SusceptibilityPolio::GetFecalInfectiousDuration(StrainIdentity* strain_id)
     {
-        float shed_LnDuration = (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->shedFecalMaxLnDuration_Stddev) + GET_CONFIGURABLE(SimulationConfig)->shedFecalMaxLnDuration * (1.0f - log(GetMucosalImmunity(strain_id)) / (GET_CONFIGURABLE(SimulationConfig)->shedFecalDurationBlockLog2NAb * LOG_2));
+        float shed_LnDuration = (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->shedFecalMaxLnDuration_Stddev) + GET_CONFIGURABLE(SimulationConfig)->polio_params->shedFecalMaxLnDuration * (1.0f - log(GetMucosalImmunity(strain_id)) / (GET_CONFIGURABLE(SimulationConfig)->polio_params->shedFecalDurationBlockLog2NAb * LOG_2));
         return exp(shed_LnDuration);
     }
 
     float SusceptibilityPolio::GetOralInfectiousDuration(StrainIdentity* strain_id)
     {
-        float shed_LnDuration = (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->shedOralMaxLnDuration_Stddev) + GET_CONFIGURABLE(SimulationConfig)->shedOralMaxLnDuration * (1.0f - log(GetMucosalImmunity(strain_id)) / (GET_CONFIGURABLE(SimulationConfig)->shedOralDurationBlockLog2NAb * LOG_2));
+        float shed_LnDuration = (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->shedOralMaxLnDuration_Stddev) + GET_CONFIGURABLE(SimulationConfig)->polio_params->shedOralMaxLnDuration * (1.0f - log(GetMucosalImmunity(strain_id)) / (GET_CONFIGURABLE(SimulationConfig)->polio_params->shedOralDurationBlockLog2NAb * LOG_2));
         return exp(shed_LnDuration);
     }
 
     float SusceptibilityPolio::GetPeakFecalLog10VirusTiter(StrainIdentity* strain_id)
     {
         float rand = GetRandNBounded();
-        float stddev = GET_CONFIGURABLE(SimulationConfig)->shedFecalMaxLog10PeakTiter_Stddev;
-        float numerator = GET_CONFIGURABLE(SimulationConfig)->shedFecalMaxLog10PeakTiter;
-        float denom = GET_CONFIGURABLE(SimulationConfig)->shedFecalTiterBlockLog2NAb * LOG_2;
+        float stddev = GET_CONFIGURABLE(SimulationConfig)->polio_params->shedFecalMaxLog10PeakTiter_Stddev;
+        float numerator = GET_CONFIGURABLE(SimulationConfig)->polio_params->shedFecalMaxLog10PeakTiter;
+        float denom = GET_CONFIGURABLE(SimulationConfig)->polio_params->shedFecalTiterBlockLog2NAb * LOG_2;
         float immun_factor = log(GetMucosalImmunity(strain_id));
 
         float meanlog10titer = ( numerator * (1.0f - immun_factor / denom) ); 
@@ -741,7 +742,7 @@ namespace Kernel
 
     float SusceptibilityPolio::GetPeakOralLog10VirusTiter(StrainIdentity* strain_id)
     {
-        float log10titer = (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->shedOralMaxLog10PeakTiter_Stddev) + GET_CONFIGURABLE(SimulationConfig)->shedOralMaxLog10PeakTiter * (1.0f - log(GetMucosalImmunity(strain_id)) / (GET_CONFIGURABLE(SimulationConfig)->shedOralTiterBlockLog2NAb * LOG_2));
+        float log10titer = (GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->shedOralMaxLog10PeakTiter_Stddev) + GET_CONFIGURABLE(SimulationConfig)->polio_params->shedOralMaxLog10PeakTiter * (1.0f - log(GetMucosalImmunity(strain_id)) / (GET_CONFIGURABLE(SimulationConfig)->polio_params->shedOralTiterBlockLog2NAb * LOG_2));
         return log10titer;
     }
 
@@ -750,13 +751,13 @@ namespace Kernel
         float rn = randgen->eGauss();
 
         // Would use NO_LESS_THAN/UPPER_THRESH but want the 'else' in here for optimization
-        if(rn < -GET_CONFIGURABLE(SimulationConfig)->MaxRandStdDev)
+        if(rn < -GET_CONFIGURABLE(SimulationConfig)->polio_params->MaxRandStdDev)
         {
-            rn = -GET_CONFIGURABLE(SimulationConfig)->MaxRandStdDev;
+            rn = -GET_CONFIGURABLE(SimulationConfig)->polio_params->MaxRandStdDev;
         }
-        else if(rn >  GET_CONFIGURABLE(SimulationConfig)->MaxRandStdDev)
+        else if(rn >  GET_CONFIGURABLE(SimulationConfig)->polio_params->MaxRandStdDev)
         {
-            rn = GET_CONFIGURABLE(SimulationConfig)->MaxRandStdDev;
+            rn = GET_CONFIGURABLE(SimulationConfig)->polio_params->MaxRandStdDev;
         }
 
         return rn;    
@@ -768,19 +769,19 @@ namespace Kernel
 
         float revDegree = GetReversionDegree(strain_id);
         float seronegativeParalysisRate;
-        if( IS_SABIN_TYPE( strain_id->GetAntigenID() ) && GET_CONFIGURABLE(SimulationConfig)->VDPV_virulence_model_type == VDPVVirulenceModelType::POLIO_VDPV_LOG_PARALYSIS_AND_LOG_INFECTIVITY) // reversion-dependent log(paralysis rate)
+        if( IS_SABIN_TYPE( strain_id->GetAntigenID() ) && GET_CONFIGURABLE(SimulationConfig)->polio_params->VDPV_virulence_model_type == VDPVVirulenceModelType::POLIO_VDPV_LOG_PARALYSIS_AND_LOG_INFECTIVITY) // reversion-dependent log(paralysis rate)
         {
-            seronegativeParalysisRate = pow( GET_CONFIGURABLE(SimulationConfig)->paralysis_base_rate[serotype], revDegree ) * pow( GET_CONFIGURABLE(SimulationConfig)->paralysis_base_rate[strain_id->GetAntigenID()], 1.0f - revDegree ); // paralytic range is recipient VAPP to WPV rates
+            seronegativeParalysisRate = pow( GET_CONFIGURABLE(SimulationConfig)->polio_params->paralysis_base_rate[serotype], revDegree ) * pow( GET_CONFIGURABLE(SimulationConfig)->polio_params->paralysis_base_rate[strain_id->GetAntigenID()], 1.0f - revDegree ); // paralytic range is recipient VAPP to WPV rates
         }
         else
         {
-            seronegativeParalysisRate = revDegree * GET_CONFIGURABLE(SimulationConfig)->paralysis_base_rate[serotype]; // linear reversion-dependent paralysis rate
+            seronegativeParalysisRate = revDegree * GET_CONFIGURABLE(SimulationConfig)->polio_params->paralysis_base_rate[serotype]; // linear reversion-dependent paralysis rate
         }
 
-        float p_paralysis = seronegativeParalysisRate * float(GetHumoralImmunity(strain_id) < paralytic_immunity_titer);
+        float p_paralysis = seronegativeParalysisRate * float(GetHumoralImmunity(strain_id) < SusceptibilityPolioConfig::paralytic_immunity_titer);
         if(p_paralysis && randgen->e() < p_paralysis)
         {
-            float t_paral = exp( GET_CONFIGURABLE(SimulationConfig)->Incubation_Disease_Mu + GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->Incubation_Disease_Sigma ); // lognormal distributed incubation period, from Casey 1942, mu=2.3893 sigma=0.4558
+            float t_paral = exp( GET_CONFIGURABLE(SimulationConfig)->polio_params->Incubation_Disease_Mu + GetRandNBounded() * GET_CONFIGURABLE(SimulationConfig)->polio_params->Incubation_Disease_Sigma ); // lognormal distributed incubation period, from Casey 1942, mu=2.3893 sigma=0.4558
             
             if(t_paral >= infect_duration) // paralysis must occur before the infection is cleared
             {
@@ -795,7 +796,7 @@ namespace Kernel
     float SusceptibilityPolio::GetReversionDegree(StrainIdentity* strain_id)
     {
         float reversion_degree = 0.0f;
-        if(GET_CONFIGURABLE(SimulationConfig)->number_substrains > 1 && GET_CONFIGURABLE(SimulationConfig)->VDPV_virulence_model_type > VDPVVirulenceModelType::POLIO_VDPV_NONVIRULENT)
+        if(GET_CONFIGURABLE(SimulationConfig)->number_substrains > 1 && GET_CONFIGURABLE(SimulationConfig)->polio_params->VDPV_virulence_model_type > VDPVVirulenceModelType::POLIO_VDPV_NONVIRULENT)
         {
             if( IS_SABIN_TYPE( strain_id->GetAntigenID() ) ) // vaccine strain
             {
@@ -806,7 +807,7 @@ namespace Kernel
                 else // VRPV
                 {
                     int serotype        = GetSerotype(strain_id);
-                    reversion_degree    = (1.0f + floor(log(float(strain_id->GetGeneticID())) / LOG_2)) / GET_CONFIGURABLE(SimulationConfig)->reversionSteps_cVDPV[serotype]; // log(2.0)=0.6931472
+                    reversion_degree    = (1.0f + floor(log(float(strain_id->GetGeneticID())) / LOG_2)) / GET_CONFIGURABLE(SimulationConfig)->polio_params->reversionSteps_cVDPV[serotype]; // log(2.0)=0.6931472
                     
                     if(reversion_degree > 1.0f)
                     {
@@ -900,9 +901,9 @@ namespace Kernel
         LOG_DEBUG_F( "Individual has humoral immunity of %f for antigen %d compared to config param for paralytic immunity_titer of %f.\n",
                      GetHumoralImmunity(&strain_identity),
                      pvType,
-                     paralytic_immunity_titer );
+                     SusceptibilityPolioConfig::paralytic_immunity_titer );
 
-        bool is_susceptible_to_paralysis = GetHumoralImmunity(&strain_identity) < paralytic_immunity_titer;
+        bool is_susceptible_to_paralysis = GetHumoralImmunity(&strain_identity) < SusceptibilityPolioConfig::paralytic_immunity_titer;
 
         if ( is_susceptible_to_paralysis )
         {
@@ -927,7 +928,7 @@ namespace Kernel
     {
         int serotype = GetSerotype(strain_id);
 
-        float effective_NAb = mucosalNAb[serotype] + pow( maternalSerumNAb[serotype] + 1.0f, GET_CONFIGURABLE(SimulationConfig)->mucosalImmIPV ) - 1.0f; // any antigenic cross reactivity would also go here
+        float effective_NAb = mucosalNAb[serotype] + pow( maternalSerumNAb[serotype] + 1.0f, GET_CONFIGURABLE(SimulationConfig)->polio_params->mucosalImmIPV ) - 1.0f; // any antigenic cross reactivity would also go here
         NO_LESS_THAN( effective_NAb, 1.0f )
         return effective_NAb;
     }
@@ -943,7 +944,7 @@ namespace Kernel
 
     float SusceptibilityPolio::GetDefaultAcquireRate(void)
     {
-        return acquire_rate_default_polio * individual_acquire_risk;
+        return SusceptibilityPolioConfig::acquire_rate_default_polio * individual_acquire_risk;
     }
 
     void SusceptibilityPolio::ResetTimeSinceLastInfection(int serotype)
@@ -985,9 +986,9 @@ namespace Kernel
         {
             int n_bits = int(log(float(n_substrain)) / LOG_2);
 
-            if(     n_bits < ((GET_CONFIGURABLE(SimulationConfig)->Sabin1_Site_Rates).size() - 1)
-                ||  n_bits < ((GET_CONFIGURABLE(SimulationConfig)->Sabin2_Site_Rates).size() - 1)
-                ||  n_bits < ((GET_CONFIGURABLE(SimulationConfig)->Sabin3_Site_Rates).size() - 1))
+            if(     n_bits < ((GET_CONFIGURABLE(SimulationConfig)->polio_params->Sabin1_Site_Rates).size() - 1)
+                ||  n_bits < ((GET_CONFIGURABLE(SimulationConfig)->polio_params->Sabin2_Site_Rates).size() - 1)
+                ||  n_bits < ((GET_CONFIGURABLE(SimulationConfig)->polio_params->Sabin3_Site_Rates).size() - 1))
             {
                 throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__, "The number of Sabin reversion site rates may not be greater than the number of bits in the genome." ); 
             }
@@ -999,7 +1000,7 @@ namespace Kernel
     {
         float receiveHumoralMemoryNAb[N_POLIO_SEROTYPES];
         GetHumoralMemoryNAb( receiveHumoralMemoryNAb );
-        auto pit = paralytic_immunity_titer;
+        auto pit = SusceptibilityPolioConfig::paralytic_immunity_titer;
         return( receiveHumoralMemoryNAb[ serotype ] > pit );
     }
 

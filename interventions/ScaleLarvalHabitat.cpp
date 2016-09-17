@@ -18,6 +18,16 @@ namespace Kernel
 
     IMPLEMENT_FACTORY_REGISTERED(ScaleLarvalHabitat)
 
+    ScaleLarvalHabitat::ScaleLarvalHabitat()
+    : SimpleVectorControlNode()
+    {
+    }
+
+    ScaleLarvalHabitat::ScaleLarvalHabitat( const ScaleLarvalHabitat& master )
+    : SimpleVectorControlNode( master )
+    {
+    }
+
     void ScaleLarvalHabitat::Update( float dt )
     {
         // Do not decay the scaled habitat,
@@ -50,6 +60,41 @@ namespace Kernel
             // Use habitat reduction function, hence (1-Habitat_Scale)
             invic->UpdateLarvalHabitatReduction( GetHabitatTarget(), 
                                                  1.0f - GetReduction() );
+        }
+        else
+        {
+            throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, 
+                                        "invic", "INodeVectorInterventionEffectsApply" );
+        }
+    }
+
+
+    IMPLEMENT_FACTORY_REGISTERED(ScaleLarvalHabitatLHM)
+
+    ScaleLarvalHabitatLHM::ScaleLarvalHabitatLHM()
+    : ScaleLarvalHabitat()
+    , m_LHM()
+    {
+    }
+
+    ScaleLarvalHabitatLHM::ScaleLarvalHabitatLHM( const ScaleLarvalHabitatLHM& master )
+    : ScaleLarvalHabitat( master )
+    , m_LHM( master.m_LHM )
+    {
+    }
+
+    bool ScaleLarvalHabitatLHM::Configure( const Configuration * inputJson )
+    {
+        initConfigComplexType( "Larval_Habitat_Multiplier", &m_LHM, "TBD" );
+
+        return JsonConfigurable::Configure( inputJson );
+    }
+
+    void ScaleLarvalHabitatLHM::ApplyEffects()
+    {
+        if( invic )
+        {
+            invic->UpdateLarvalHabitatReduction( m_LHM );
         }
         else
         {

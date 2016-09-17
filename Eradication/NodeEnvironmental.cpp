@@ -86,94 +86,46 @@ namespace Kernel
         return correction;
     }
 
-    void NodeEnvironmental::SetupIntranodeTransmission()
+    ITransmissionGroups* NodeEnvironmental::CreateTransmissionGroups()
     {
-        transmissionGroups = TransmissionGroupsFactory::CreateNodeGroups(TransmissionGroupType::StrainAwareGroups);
-        RouteToContagionDecayMap_t decayMap;
-        LOG_DEBUG_F("Number of basestrains: %d\n", params()->number_basestrains);
-
-        if( demographics.Contains( IP_KEY ) && params()->heterogeneous_intranode_transmission_enabled)
-        {
-            ValidateIntranodeTransmissionConfiguration();
-            const NodeDemographics& properties = demographics[IP_KEY];
-            for (int iProperty = 0; iProperty < properties.size(); iProperty++)
-            {
-                const NodeDemographics& property = properties[iProperty];
-                if (property.Contains(TRANSMISSION_MATRIX_KEY))
-                {
-                    string propertyName = property[IP_NAME_KEY].AsString();
-                    string routeName = property[TRANSMISSION_MATRIX_KEY][ROUTE_KEY].AsString();
-                    std::transform(routeName.begin(), routeName.end(), routeName.begin(), ::tolower);
-                    if (decayMap.find(routeName)==decayMap.end())
-                    {
-                        if (routeName =="contact")
-                        {
-                            decayMap[routeName] = 1.0f;
-                            routes.push_back(routeName);
-                        }
-                        else if (routeName == "environmental")
-                        {
-                            decayMap[routeName] = node_contagion_decay_fraction;
-                            routes.push_back(routeName);
-                        }
-                        else
-                        {
-                            throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, std::string( "Found route " + routeName + ". For Environmental/polio sims, routes other than 'contact' and 'environmental' are not supported.").c_str());
-                        }
-                        LOG_DEBUG_F("HINT: Adding route %s.\n", routeName.c_str());
-                    }
-
-                    PropertyValueList_t valueList;
-                    const NodeDemographics& propertyValues = property[IP_VALUES_KEY];
-                    int valueCount = propertyValues.size();
-
-                    const NodeDemographics& scalingMatrixRows = property[TRANSMISSION_MATRIX_KEY][TRANSMISSION_DATA_KEY];
-                    ScalingMatrix_t scalingMatrix;
-
-                    for (int iValue = 0; iValue < valueCount; iValue++)
-                    {
-                        valueList.push_back(propertyValues[iValue].AsString());
-                        MatrixRow_t matrixRow;
-                        const NodeDemographics& scalingMatrixRow = scalingMatrixRows[iValue];
-
-                        for (int iSink = 0; iSink < valueCount; iSink++)
-                        {
-                            matrixRow.push_back(float(scalingMatrixRow[iSink].AsDouble()));
-                        }
-
-                        scalingMatrix.push_back(matrixRow);
-                    }
-                    LOG_DEBUG_F("adding property [%s]:%s\n", propertyName.c_str(), routeName.c_str());
-                    transmissionGroups->AddProperty(propertyName, valueList, scalingMatrix, routeName);
-                }
-                else //HINT is enabled, but no transmission matrix is detected
-                {
-                    string default_route = string("environmental");
-                    float default_fraction = node_contagion_decay_fraction;
-                    if (decayMap.find(default_route)==decayMap.end())
-                    {
-                        LOG_DEBUG("HINT on with no transmission matrix: Adding route 'environmental'.\n");
-                        decayMap[default_route] = default_fraction;
-                        routes.push_back(default_route);
-                    }
-                }
-            }
-
-        }
-        else
-        {
-            //default scenario with no HINT
-            LOG_DEBUG("non-HINT: Adding route 'environmental'.\n");
-            decayMap[string("environmental")] = node_contagion_decay_fraction;
-            routes.push_back(string("environmental"));
-        }
-
-        transmissionGroups->Build(decayMap, params()->number_basestrains, params()->number_substrains);
+        return TransmissionGroupsFactory::CreateNodeGroups( TransmissionGroupType::StrainAwareGroups );
     }
 
-    void NodeEnvironmental::ValidateIntranodeTransmissionConfiguration()
+    void NodeEnvironmental::AddDefaultRoute( RouteToContagionDecayMap_t& rDecayMap )
     {
-        Node::ValidateIntranodeTransmissionConfiguration();
+        AddRoute( rDecayMap, "environmental" );
+    }
+
+    void NodeEnvironmental::AddRoute( RouteToContagionDecayMap_t& rDecayMap, const std::string& rRouteName )
+    {
+        if( rDecayMap.find( rRouteName ) == rDecayMap.end() )
+        {
+            float contagion_decay = 1.0;
+            if( rRouteName =="contact" )
+            {
+                contagion_decay = 1.0;
+            }
+            else if( rRouteName == "environmental" )
+            {
+                contagion_decay = node_contagion_decay_fraction;
+            }
+
+            LOG_DEBUG_F("Adding route %s.\n", rRouteName.c_str());
+            rDecayMap[ rRouteName ] = contagion_decay;
+            routes.push_back( rRouteName );
+        }
+    }
+
+    void NodeEnvironmental::BuildTransmissionRoutes( RouteToContagionDecayMap_t& rDecayMap )
+    {
+        LOG_DEBUG_F("Number of basestrains: %d\n", params()->number_basestrains);
+        transmissionGroups->Build( rDecayMap, params()->number_basestrains, params()->number_substrains );
+    }
+
+    bool NodeEnvironmental::IsValidTransmissionRoute( string& transmissionRoute )
+    {
+        bool isValid = ((transmissionRoute == "contact") || (transmissionRoute == "environmental"));
+        return isValid;
     }
 
     REGISTER_SERIALIZABLE(NodeEnvironmental);

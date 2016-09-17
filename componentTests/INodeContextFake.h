@@ -19,10 +19,10 @@ private:
     suids::suid m_suid ;
 
 public:
-    INodeContextFake()
+    INodeContextFake( int id = 1 )
     : m_suid()
     {
-        m_suid.data = 1 ;
+        m_suid.data = id ;
     }
 
     INodeContextFake( const suids::suid& rSuid )
@@ -77,11 +77,6 @@ public:
     }
 
     virtual void UpdateTransmissionGroupPopulation( const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight ) override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
-    virtual std::map< std::string, float > GetTotalContagion() const override
     {
         throw std::exception("The method or operation is not implemented.");
     }
@@ -172,16 +167,6 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
-    virtual const tDistrib& GetIndividualPropertyDistributions() const override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
-    virtual void checkValidIPValue( const std::string& key, const std::string& to_value ) override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
     virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override
     {
         throw std::exception("The method or operation is not implemented.");
@@ -203,21 +188,6 @@ public:
     }
 
     act_prob_vec_t DiscreteGetTotalContagion(const TransmissionGroupMembership_t* membership) override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
-    void RegisterNewInfectionObserver(void* id, INodeContext::callback_t observer) override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
-    void UnregisterNewInfectionObserver(void* id) override
-    {
-        throw std::exception("The method or operation is not implemented.");
-    }
-
-    virtual void VerifyPropertyDefined( const std::string& rKey, const std::string& rVal ) const override
     {
         throw std::exception("The method or operation is not implemented.");
     }
@@ -283,4 +253,15 @@ public:
     virtual void PopulateFromDemographics()                                                                    override { throw std::exception("The method is not implemented."); }
     virtual void Update(float)                                                                                 override { throw std::exception("The method is not implemented."); }
     virtual IIndividualHuman* processImmigratingIndividual(IIndividualHuman*)                                  override { throw std::exception("The method is not implemented."); }
+
+    virtual float GetBasePopulationScaleFactor() const
+    {
+        return 1.0;
+    }
+
+    virtual ProbabilityNumber GetProbMaternalTransmission() const
+    {
+        return 1.0;
+    }
+
 };

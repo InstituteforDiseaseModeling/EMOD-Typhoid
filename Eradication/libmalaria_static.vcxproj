@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -31,14 +31,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -71,7 +71,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;c:\boost\boost_1_51_0;%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\;..\interventions\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Eradication\;..\Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH);%(AdditionalIncludeDirectories);unittest++\src;..\cajun\include;..\jsonspirit;..\unittest\UnitTest++\src;..\utils\;..\campaign\;..\interventions\</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>

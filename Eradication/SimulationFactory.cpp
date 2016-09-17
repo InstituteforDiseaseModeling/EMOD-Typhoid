@@ -220,8 +220,7 @@ namespace Kernel
             release_assert(newsim);
         }
         catch ( GeneralConfigurationException& e ) {
-            LOG_ERR(e.GetMsg());
-            LOG_ERR("Caught GeneralConfigurationException trying to CreateSimulation(). Returning NULL for newsim.\n");
+            throw e;
         }
 
         return newsim;

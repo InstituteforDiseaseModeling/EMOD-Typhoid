@@ -43,24 +43,8 @@ namespace Kernel
                         << " is not a valid VectorHabitatType.";
                     throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
                 }
-                try
-                {
-                    NonNegativeFloat habitat_param = 0.0f;
-                    try {
-                        habitat_param = (NonNegativeFloat) ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>());
-                    }
-                    catch( const json::Exception & )
-                    {
-                        throw Kernel::JsonTypeConfigurationException( __FILE__, __LINE__, __FUNCTION__, data->name.c_str(), json::QuickInterpreter( tvcs ), "Expected NUMBER" );
-                    }
-                    habitat_map.insert( std::make_pair( habitat_type, habitat_param ) );
-                }
-                catch( OutOfRangeException &except )
-                {
-                    LOG_WARN_F( "Out of range exception: %s(Rethrowing in more useful form.)\n", except.what() );
-                    throw ConfigurationRangeException( __FILE__, __LINE__, __FUNCTION__,
-                            habitat_type_string.c_str(), ((json::QuickInterpreter( tvcs ))[ data->name ].As<json::Number>()), 0 );
-                }
+                Configuration* json_copy = Configuration::CopyFromElement( tvcs );
+                habitat_map.insert( std::make_pair( habitat_type, json_copy ) );
             }
             LOG_DEBUG_F( "Found %d larval habitats\n", habitat_map.size() );
         }
@@ -156,14 +140,14 @@ namespace Kernel
     {
     }
 
-    VectorSpeciesParameters* VectorSpeciesParameters::CreateVectorSpeciesParameters(const std::string& vector_species_name)
+    VectorSpeciesParameters* VectorSpeciesParameters::CreateVectorSpeciesParameters( const Configuration* inputJson, const std::string& vector_species_name)
     {
         LOG_DEBUG( "CreateVectorSpeciesParameters\n" );
         VectorSpeciesParameters* params = _new_ VectorSpeciesParameters();
         params->Initialize(vector_species_name);
         if( !JsonConfigurable::_dryrun )
         {
-            auto tmp_config = Configuration::CopyFromElement( (*EnvPtr->Config)["Vector_Species_Params"][vector_species_name.c_str()] );
+            auto tmp_config = Configuration::CopyFromElement( (*inputJson)["Vector_Species_Params"][vector_species_name.c_str()] );
             params->Configure( tmp_config );
             delete tmp_config;
             tmp_config = nullptr;
@@ -195,7 +179,16 @@ namespace Kernel
         initConfigTypeMap( ( "Infectious_Human_Feed_Mortality_Factor" ), &infectioushfmortmod, Infectious_Human_Feed_Mortality_Factor_DESC_TEXT, 0.0f, 1000.0f, 1.5f );
         initConfigTypeMap( ( "Indoor_Feeding_Fraction" ), &indoor_feeding, Indoor_Feeding_Fraction_DESC_TEXT, 0.0f, 1.0f, 1.0f );
 
-        bool ret =  JsonConfigurable::Configure( config );
+        bool ret = false;
+        try {
+            ret =  JsonConfigurable::Configure( config );
+        }
+        catch( DetailedException& exc )
+        {
+            LOG_WARN_F( "Please note that the specification of larval habitats in the config.json recently changed. Up to now you had to input matching Habitat_Type and Required_Habitat_Factor (per vector species). Now they are input together in a single Larval_Habitat_Types parameter.\n" );
+            throw exc;
+        }
+
         feedingrate    = 1.0f / daysbetweenfeeds;
         adultmortality = 1.0f / adultlifeexpectancy;
         immaturerate   = 1.0f / immatureduration;

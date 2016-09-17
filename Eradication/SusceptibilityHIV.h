@@ -28,7 +28,7 @@ namespace Kernel
         virtual void         TerminateSuppression(float days_till_death) = 0;
     };
 
-    class SusceptibilityHIVConfig : public JsonConfigurable
+    class SusceptibilityHIVConfig : public SusceptibilitySTIConfig
     {
         friend class IndividualHumanCoinfection;
         GET_SCHEMA_STATIC_WRAPPER(SusceptibilityHIVConfig)
@@ -39,22 +39,24 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
-        //these are the config params
+        friend class SusceptibilityHIV;
+
         static float post_infection_CD4_lambda;
         static float post_infection_CD4_inverse_kappa;
         static float disease_death_CD4_alpha;
         static float disease_death_CD4_inverse_beta;
+        static float days_between_symptomatic_and_death_lambda;
+        static float days_between_symptomatic_and_death_inv_kappa;
     };
 
     //---------------------------- SusceptibilityHIV ----------------------------------------
-    class SusceptibilityHIV : public SusceptibilitySTI, virtual public ISusceptibilityHIV, public SusceptibilityHIVConfig
+    class SusceptibilityHIV : public SusceptibilitySTI, virtual public ISusceptibilityHIV
     {
     public:
         friend class IndividualHumanCoinfection;
          friend class IndividualHumanHIV;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
-        //virtual bool Configure( const Configuration* config );
 
         virtual ~SusceptibilityHIV(void);
         static Susceptibility *CreateSusceptibility(IIndividualHumanContext *context, float age, float immmod, float riskmod);

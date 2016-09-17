@@ -20,16 +20,13 @@ namespace Kernel
 
     class IIndividualHumanPy : public ISupports
     {
-    public:
-        
     };
 
     class IndividualHumanPy : public IndividualHuman, public IIndividualHumanPy
     {
         friend class SimulationPy;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
-        DECLARE_QUERY_INTERFACE()
-        GET_SCHEMA_STATIC_WRAPPER(IndividualHumanPy);
+        DECLARE_QUERY_INTERFACE();
 
     public:
         static IndividualHumanPy *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
@@ -47,6 +44,7 @@ namespace Kernel
         virtual void setupInterventionsContainer();
         virtual void PropagateContextToDependents();
 
+        virtual void UpdateGroupMembership() override;
         virtual void UpdateInfectiousness(float dt);
         virtual void Update(float currenttime, float dt);
         virtual Infection* createInfection(suids::suid _suid);
@@ -63,6 +61,8 @@ namespace Kernel
         bool isDead;  // is this individual dead?
         bool state_changed;
 
+        std::map<std::string, TransmissionGroupMembership_t> transmissionGroupMembershipByRoute;
+
     private:
 #ifdef ENABLE_PYTHON
         PyObject * expose_vars;
@@ -70,6 +70,6 @@ namespace Kernel
         SusceptibilityPy * pydemo_susceptibility;
         std::map< TransmissionRoute::Enum, float > contagion_population_by_route;
 
-        virtual bool Configure( const Configuration* config );
+        static void InitializeStaticsPy( const Configuration* config );
     };
 }

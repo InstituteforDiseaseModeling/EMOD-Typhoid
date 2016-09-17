@@ -22,7 +22,8 @@
             "SAMPLING": {
                 "Base_Individual_Sample_Rate": 0.01
             }, 
-            "Enable_Demographics_Initial": 0
+            "Enable_Local_Migration": 1, 
+            "Enable_Demographics_Builtin": 1
         }, 
         "PRIMARY": {
             "Simulation_Duration": 180, 
