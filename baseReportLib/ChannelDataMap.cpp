@@ -374,7 +374,8 @@ void ChannelDataMap::WriteOutput(
     }
     pIJsonObj->FinishWriter();
     delete pIJsonObj ;
-    delete buffer;
+    // following line causing crash in typhoid. TBD.
+    //delete buffer;
 }
 
 
