@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1307.0",
-		"DTK_Branch" : "MergeFor210 (20eb660)",
-		"DTK_Build_Date" : "Sep  9 2016 14:08:20"
+		"DTK_Version" : "2.8.1324.0",
+		"DTK_Branch" : "GH-757 (3baccee)",
+		"DTK_Build_Date" : "Sep 19 2016 14:06:29"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -12984,47 +12984,13 @@
 						"description" : "TBD",
 						"type" : "string"
 					},
-					"Habitat_Target" : {
-						"type" : "enum",
-						"enum" : [
-							"TEMPORARY_RAINFALL",
-							"WATER_VEGETATION",
-							"HUMAN_POPULATION",
-							"CONSTANT",
-							"BRACKISH_SWAMP",
-							"LINEAR_SPLINE",
-							"ALL_HABITATS"
-						],
-						"description" : "The habitat type for which the larval habitat is scaled. Possible values are: TEMPORARY_RAINFALL WATER_VEGETATION HUMAN_POPULATION CONSTANT BRACKISH_SWAMP ALL_HABITATS ",
-						"default" : "TEMPORARY_RAINFALL"
-					},
-					"Habitat_Scale" : {
-						"min" : 0,
-						"max" : 10,
-						"default" : 1,
-						"description" : "Larval habitat scale factor for the targeted habitat type.",
-						"type" : "float"
-					},
-					"iv_type" : "NodeTargeted",
-					"class" : "ScaleLarvalHabitat"
-				},
-				"ScaleLarvalHabitatLHM" : {
-					"Sim_Types" : [
-						"VECTOR_SIM",
-						"MALARIA_SIM"
-					],
-					"Intervention_Name" : {
-						"default" : "struct Kernel::BaseNodeIntervention",
-						"description" : "TBD",
-						"type" : "string"
-					},
 					"idmType:LarvalHabitatMultiplier" : null,
 					"Larval_Habitat_Multiplier" : {
 						"description" : "TBD",
 						"type" : "idmType:LarvalHabitatMultiplier"
 					},
 					"iv_type" : "NodeTargeted",
-					"class" : "ScaleLarvalHabitatLHM"
+					"class" : "ScaleLarvalHabitat"
 				},
 				"ScreeningHousingModification" : {
 					"Sim_Types" : [
