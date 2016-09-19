@@ -200,17 +200,18 @@ def OptionalScript(sconscript_name):
         print("Skipping missing script: '{0}'".format(sconscript_path))
 
 if os.sys.platform == 'win32':
-    OptionalScript('reporters/SConscript_Generic_AgeAtInfection')
-    OptionalScript('reporters/SConscript_Generic_AgeAtInfectionHistogram')
-    OptionalScript('reporters/SConscript_Generic_Basic')
-    OptionalScript('reporters/SConscript_Generic_EventCounter')
-    OptionalScript('reporters/SConscript_Generic_HumanMigrationTracking')
-    OptionalScript('reporters/SConscript_Generic_KmlDemo')
-    OptionalScript('reporters/SConscript_Generic_NodeDemographics')
-
     disease = "ALL"
     if 'Disease' in env and len(env['Disease']) > 0:
         disease = env["Disease"]
+
+    if disease != "Typhoid":
+        OptionalScript('reporters/SConscript_Generic_AgeAtInfection')
+        OptionalScript('reporters/SConscript_Generic_AgeAtInfectionHistogram')
+        OptionalScript('reporters/SConscript_Generic_Basic')
+        OptionalScript('reporters/SConscript_Generic_EventCounter')
+        OptionalScript('reporters/SConscript_Generic_HumanMigrationTracking')
+        OptionalScript('reporters/SConscript_Generic_KmlDemo')
+        OptionalScript('reporters/SConscript_Generic_NodeDemographics')
 
     if( (disease == "ALL") or (disease == "HIV") ):
         OptionalScript('reporters/SConscript_HIV_WHO2015')
