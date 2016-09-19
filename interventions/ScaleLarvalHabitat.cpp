@@ -20,11 +20,13 @@ namespace Kernel
 
     ScaleLarvalHabitat::ScaleLarvalHabitat()
     : SimpleVectorControlNode()
+    , m_LHM()
     {
     }
 
     ScaleLarvalHabitat::ScaleLarvalHabitat( const ScaleLarvalHabitat& master )
     : SimpleVectorControlNode( master )
+    , m_LHM( master.m_LHM )
     {
     }
 
@@ -39,58 +41,12 @@ namespace Kernel
 
     bool ScaleLarvalHabitat::Configure( const Configuration * inputJson )
     {
-        initConfig( "Habitat_Target", 
-                    habitat_target, 
-                    inputJson, 
-                    MetadataDescriptor::Enum( "Habitat_Target", 
-                                              SLH_Habitat_Target_DESC_TEXT, 
-                                              MDD_ENUM_ARGS(VectorHabitatType) 
-                                            ) 
-                  );
-
-        initConfigTypeMap("Habitat_Scale", &reduction, SLH_Habitat_Scale_DESC_TEXT, 0, 10, 1);
+        initConfigComplexType( "Larval_Habitat_Multiplier", &m_LHM, SLH_Larval_Habitat_Multiplier_DESC_TEXT );
 
         return JsonConfigurable::Configure( inputJson );
     }
 
     void ScaleLarvalHabitat::ApplyEffects()
-    {
-        if( invic )
-        {
-            // Use habitat reduction function, hence (1-Habitat_Scale)
-            invic->UpdateLarvalHabitatReduction( GetHabitatTarget(), 
-                                                 1.0f - GetReduction() );
-        }
-        else
-        {
-            throw NullPointerException( __FILE__, __LINE__, __FUNCTION__, 
-                                        "invic", "INodeVectorInterventionEffectsApply" );
-        }
-    }
-
-
-    IMPLEMENT_FACTORY_REGISTERED(ScaleLarvalHabitatLHM)
-
-    ScaleLarvalHabitatLHM::ScaleLarvalHabitatLHM()
-    : ScaleLarvalHabitat()
-    , m_LHM()
-    {
-    }
-
-    ScaleLarvalHabitatLHM::ScaleLarvalHabitatLHM( const ScaleLarvalHabitatLHM& master )
-    : ScaleLarvalHabitat( master )
-    , m_LHM( master.m_LHM )
-    {
-    }
-
-    bool ScaleLarvalHabitatLHM::Configure( const Configuration * inputJson )
-    {
-        initConfigComplexType( "Larval_Habitat_Multiplier", &m_LHM, "TBD" );
-
-        return JsonConfigurable::Configure( inputJson );
-    }
-
-    void ScaleLarvalHabitatLHM::ApplyEffects()
     {
         if( invic )
         {

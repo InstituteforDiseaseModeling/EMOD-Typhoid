@@ -28,21 +28,6 @@ namespace Kernel
 
     protected:
         virtual void ApplyEffects();
-    };
-
-    class ScaleLarvalHabitatLHM : public ScaleLarvalHabitat
-    {
-        DECLARE_FACTORY_REGISTERED(InterventionFactory, ScaleLarvalHabitatLHM, INodeDistributableIntervention) 
-
-    public:
-        ScaleLarvalHabitatLHM();
-        ScaleLarvalHabitatLHM( const ScaleLarvalHabitatLHM& master );
-        virtual ~ScaleLarvalHabitatLHM() {};
-
-        virtual bool Configure( const Configuration * config );
-
-    protected:
-        virtual void ApplyEffects();
 
         LarvalHabitatMultiplier m_LHM;
     };
