@@ -142,6 +142,7 @@ public:
     //virtual tProperties* GetProperties() = 0;
     virtual NewInfectionState::_enum GetNewInfectionState() const override { throw std::exception("The method or operation is not implemented."); }
     virtual void Update(float current_time, float dt)             override { throw std::exception("The method or operation is not implemented."); }
+    virtual IMigrate* GetIMigrate()                               override { throw std::exception( "The method or operation is not implemented." ); }
 
     virtual INodeContext* GetParent() const override
     {
@@ -156,7 +157,7 @@ public:
     virtual void setupMaternalAntibodies(Kernel::IIndividualHumanContext *,Kernel::INodeContext *) override { throw std::exception("The method or operation is not implemented."); }
     virtual void AcquireNewInfection(Kernel::StrainIdentity *,int)                                 override { throw std::exception("The method or operation is not implemented."); }
     virtual void SetInitialInfections(int)                                                         override { throw std::exception("The method or operation is not implemented."); }
-    virtual void SetParameters(float,float,float,float)                                            override { throw std::exception("The method or operation is not implemented."); }
+    virtual void SetParameters(Kernel::INodeContext *,float,float,float,float)                     override { throw std::exception("The method or operation is not implemented."); }
     virtual void InitializeHuman(void)                                                             override { throw std::exception("The method or operation is not implemented."); }
     virtual void UpdateInfectiousness(float)                                                       override { throw std::exception("The method or operation is not implemented."); }
     virtual float GetAcquisitionImmunity(void) const                                               override { throw std::exception("The method or operation is not implemented."); }
@@ -317,6 +318,7 @@ public:
 
 
 
+    virtual void UpdateHistory( const IdmDateTime& rCurrentTime, float dt ) override { throw std::exception("The method or operation is not implemented."); }
     virtual bool AvailableForRelationship(RelationshipType::Enum) const override { throw std::exception("The method or operation is not implemented."); }
     virtual void UpdateEligibility()                                    override { throw std::exception("The method or operation is not implemented."); }
     virtual void ConsiderRelationships(float dt)                        override { throw std::exception("The method or operation is not implemented."); }

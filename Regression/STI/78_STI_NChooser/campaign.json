@@ -57,7 +57,7 @@
                     }
                 ],
                 "Intervention_Config": {
-                    "class": "RevaccinatableVaccine",
+                    "class": "ControlledVaccine",
                     "Cost_To_Consumer": 10,
                     "Vaccine_Type": "AcquisitionBlocking",
                     "Vaccine_Take": 1.0,

@@ -1,7 +1,7 @@
 {
     "Header": {
-        "DateTime": "Thu Apr 28 14:53:59 2016",
-        "DTK_Version": "1036 SimpleCSW (10b3a46) Apr 27 2016 15:38:50",
+        "DateTime": "Thu Jun 23 17:39:26 2016",
+        "DTK_Version": "1166 GH-573 (e2381f8) Jun 22 2016 17:45:21",
         "Report_Type": "InsetChart",
         "Report_Version": "3.2",
         "Start_Time": 0,
@@ -270,8 +270,8 @@
             "Units": "",
             "Data": [
                 3,
-                11980,
-                25946,
+                20680,
+                25947,
                 54,
                 40,
                 39,

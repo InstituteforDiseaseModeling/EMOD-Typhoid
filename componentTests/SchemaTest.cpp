@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "SimulationConfig.h"
 #include "IdmMpi.h"
+#include "Properties.h"
 
 #include <string>
 #include <climits>
@@ -46,6 +47,10 @@ SUITE(SchemaTest)
 
             Environment::Finalize();
             Environment::setLogger( new SimpleLogger( Logger::tLevel::WARNING ) );
+
+            IPFactory::DeleteFactory();
+            IPFactory::CreateFactory();
+
             int argc      = 1;
             char* exeName = "componentTests.exe";
             char** argv   = &exeName;
@@ -55,11 +60,14 @@ SUITE(SchemaTest)
             string statePath(".");
             string dllPath(".");
             Environment::Initialize( m_pMpi, nullptr, configFilename, inputPath, outputPath, /*statePath, */dllPath, true);
+            JsonConfigurable::_dryrun = false;
         }
 
         ~SchemaFixture()
         {
+            IPFactory::DeleteFactory();
             Environment::Finalize();
+            JsonConfigurable::_dryrun = false;
         }
     };
 

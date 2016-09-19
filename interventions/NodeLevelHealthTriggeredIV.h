@@ -62,6 +62,7 @@ namespace Kernel
         std::map<suids::suid,bool> event_occurred_while_resident_away;
         IndividualInterventionConfig actual_intervention_config;
         IDistributableIntervention *_di;
+        INodeDistributableIntervention *_ndi;
 
         virtual bool qualifiesToGetIntervention( const IIndividualHumanEventContext * pIndividual );
         virtual float getDemographicCoverage() const;

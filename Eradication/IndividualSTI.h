@@ -48,6 +48,12 @@ namespace Kernel
         static std::vector<float> maleToFemaleRelativeInfectivityAges;
         static std::vector<float> maleToFemaleRelativeInfectivityMultipliers;
 
+        static bool  enable_coital_dilution;
+
+        static float coital_dilution_2_partners;
+        static float coital_dilution_3_partners;
+        static float coital_dilution_4_plus_partners;
+
         virtual bool Configure( const Configuration* config ) override;
     };
 
@@ -67,6 +73,7 @@ namespace Kernel
                                                   float initial_poverty = 0.5f );
         virtual void InitializeHuman() override;
         virtual void Update(float currenttime, float dt) override;
+        virtual void UpdateHistory( const IdmDateTime& rCurrentTime, float dt ) override;
 
         virtual void UpdateSTINetworkParams(const char *prop = nullptr, const char* new_value = nullptr) override;
 

@@ -15,13 +15,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <fstream>
 
 #ifdef __GNUC__
-#include <ext/hash_map>
+#include <ext/unordered_map>
 namespace std
 {
      using namespace __gnu_cxx;
 }
 #else
-#include <hash_map>
+#include <unordered_map>
 #endif
 
 #include "IMigrationInfo.h"
@@ -250,7 +250,7 @@ namespace Kernel
         uint32_t                m_AgeDataSize;
         std::ifstream           m_FileStream;
 
-        std::hash_map< ExternalNodeId_t, uint32_t > m_Offsets;
+        std::unordered_map< ExternalNodeId_t, uint32_t > m_Offsets;
 #pragma warning( pop )
     };
 
@@ -269,7 +269,6 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
 
-        MigrationInfoFactoryFile( bool enableHumanMigration );
         MigrationInfoFactoryFile();
         virtual ~MigrationInfoFactoryFile();
 
@@ -285,7 +284,7 @@ namespace Kernel
                                                      const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override;
     protected:
         virtual void CreateInfoFileList();
-        virtual void InitializeInfoFileList( bool enableHumanMigration, const Configuration* config );
+        virtual void InitializeInfoFileList( const Configuration* config );
         static std::vector<std::vector<MigrationRateData>> GetRateData( INodeContext *parent_node, 
                                                                         const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap,
                                                                         std::vector<MigrationInfoFile*>& infoFileList,
@@ -295,7 +294,6 @@ namespace Kernel
 #pragma warning( disable: 4251 ) // See IdmApi.h for details
         std::vector<MigrationInfoFile*> m_InfoFileList ;
         bool m_IsHeterogeneityEnabled;
-        bool m_EnableHumanMigration;
 #pragma warning( pop )
     private:
     };
@@ -314,7 +312,7 @@ namespace Kernel
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
         DECLARE_QUERY_INTERFACE()
 
-        MigrationInfoFactoryDefault( bool enableHumanMigration, int torusSize );
+        MigrationInfoFactoryDefault( int torusSize );
         MigrationInfoFactoryDefault();
         virtual ~MigrationInfoFactoryDefault();
 
@@ -339,6 +337,6 @@ namespace Kernel
         int   m_TorusSize;
 #pragma warning( pop )
     private:
-        void InitializeParameters( bool enableHumanMigration ); // just used in multiple constructors
+        void InitializeParameters(); // just used in multiple constructors
     };
 }

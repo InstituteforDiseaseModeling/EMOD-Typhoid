@@ -52,9 +52,14 @@ namespace Kernel
         initConfigComplexType( "Durability_Map", &m_DurationMap, WEM_Durability_Map_End_DESC_TEXT );
 
         bool ret = JsonConfigurable::Configure(pInputJson);
-        if( ret )
+        if( ret && !JsonConfigurable::_dryrun )
         {
             m_EffectOriginal = m_EffectCurrent;
+
+            if( m_DurationMap.size() == 0 )
+            {
+                throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, "Durability_Map has no values.  Please add values to the map." );
+            }
         }
         return ret;
     }
@@ -145,7 +150,30 @@ namespace Kernel
 
     float WaningEffectMapPiecewise::GetMultiplier( float timeSinceVaccination ) const
     {
-        return m_DurationMap.getValuePiecewiseConstant( timeSinceVaccination );
+        release_assert( m_DurationMap.size() > 0 );
+
+        float first_time = m_DurationMap.begin()->first;
+        float first_mult = m_DurationMap.begin()->second;
+        float last_time  = m_DurationMap.rbegin()->first;
+        float last_mult  = m_DurationMap.rbegin()->second;
+
+        // ------------------------------------------------------------------------------------
+        // --- Times that are outside the range are capped at either the first or last value 
+        // ------------------------------------------------------------------------------------
+        float rate = 0.0;
+        if( timeSinceVaccination <= first_time )
+        {
+            rate = first_mult;
+        }
+        else if( timeSinceVaccination >= last_time )
+        {
+            rate = last_mult;
+        }
+        else
+        {
+            rate = m_DurationMap.getValuePiecewiseConstant( timeSinceVaccination, first_mult );
+        }
+        return rate;
     }
 
     void WaningEffectMapPiecewise::serialize( IArchive& ar, WaningEffectMapPiecewise* obj )
