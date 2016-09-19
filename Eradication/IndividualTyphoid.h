@@ -32,7 +32,7 @@ namespace Kernel
         virtual bool IsPrePatent( bool incidence_only = true ) const = 0;
     };
 
-    class IndividualHumanTyphoid : public IndividualHumanEnvironmental, public IIndividualHumanTyphoid
+    class IndividualHumanTyphoid : public IndividualHumanEnvironmental, public IIndividualHumanTyphoid, public JsonConfigurable
     {
         friend class SimulationTyphoid;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();

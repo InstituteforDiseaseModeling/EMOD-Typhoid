@@ -705,13 +705,13 @@ namespace Kernel
     #define GET_SCHEMA_STATIC_WRAPPER(x)\
     static json::QuickBuilder GetSchemaImpl() \
     { \
-        _dryrun = true; \
+        JsonConfigurable::_dryrun = true; \
         x * newInst = new x(); \
         newInst->Configure(nullptr); \
         return newInst->GetSchema(); \
     } \
     private: \
-    static Registrator registrator;
+    static JsonConfigurable::Registrator registrator;
 
     #define GET_SCHEMA_STATIC_WRAPPER_IMPL(x,y) \
     JsonConfigurable::Registrator y::registrator( #x, &y::GetSchemaImpl );

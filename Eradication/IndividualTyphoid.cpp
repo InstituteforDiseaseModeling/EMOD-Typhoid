@@ -197,18 +197,18 @@ namespace Kernel
     }
 
     bool
-        IndividualHumanTyphoid::Configure( const Configuration* config ) // just called once!
-        {
-            LOG_DEBUG( "Configure\n" );
-            // typhoid
-            SusceptibilityTyphoidConfig fakeImmunity;
-            fakeImmunity.Configure( config );
-            InfectionTyphoidConfig fakeInfection;
-            fakeInfection.Configure( config );
+    IndividualHumanTyphoid::Configure( const Configuration* config ) // just called once!
+    {
+        LOG_DEBUG( "Configure\n" );
+        // typhoid
+        SusceptibilityTyphoidConfig fakeImmunity;
+        fakeImmunity.Configure( config );
+        InfectionTyphoidConfig fakeInfection;
+        fakeInfection.Configure( config );
 
-            //do we need to call initConfigTypeMap? DLC 
-            return IndividualHumanEnvironmental::Configure( config );
-        }
+        //do we need to call initConfigTypeMap? DLC 
+        return JsonConfigurable::Configure( config );
+    }
 
     IndividualHumanTyphoid *IndividualHumanTyphoid::CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
     {

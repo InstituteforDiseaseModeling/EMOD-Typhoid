@@ -85,6 +85,9 @@ namespace Kernel
         RouteToContagionDecayMap_t decayMap;
         LOG_DEBUG_F("Number of basestrains: %d\n", GET_CONFIGURABLE(SimulationConfig)->number_basestrains);
 
+        // Can't remember why we copy-pasted this here from original. Now that some IP code has changed, this needs to be modified
+        // also. Going to comment out and call base-class for now.
+#if 0
         if( demographics.Contains( IP_KEY ) && GET_CONFIGURABLE(SimulationConfig)->heterogeneous_intranode_transmission_enabled)
         {
             ValidateIntranodeTransmissionConfiguration();
@@ -163,6 +166,8 @@ namespace Kernel
         }
 
         transmissionGroups->Build(decayMap, GET_CONFIGURABLE(SimulationConfig)->number_basestrains, GET_CONFIGURABLE(SimulationConfig)->number_substrains);
+#endif
+        NodeEnvironmental::SetupIntranodeTransmission();
     }
 
     void NodeTyphoid::resetNodeStateCounters(void)
