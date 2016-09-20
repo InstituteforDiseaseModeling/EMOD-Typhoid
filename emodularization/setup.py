@@ -1,8 +1,16 @@
 from distutils.core import setup, Extension
 
-#module1 = Extension('dtk_datetime', sources = ['dtk_datetime_module.c', 'IdmDateTime.cpp' ])
+import os
+os.environ['CC'] = 'g++'
+os.environ['CXX'] = 'g++'
+os.environ['CPP'] = 'g++'
+#os.environ['LDSHARED'] = 'g++'
+
 module1 = Extension('dtk_datetime',
-        sources = ['../utils/IdmDateTime.cpp' ],
+        sources = [
+            'dtk_datetime_module.c',
+            '../utils/IdmDateTime.cpp'
+        ],
         extra_compile_args = ["-std=c++11", "-w", "-fpermissive" ], 
         include_dirs=[
             '../interventions/',

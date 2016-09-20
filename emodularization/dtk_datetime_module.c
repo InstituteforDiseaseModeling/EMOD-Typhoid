@@ -1,7 +1,8 @@
 #include <Python.h>
 
+#include "IdmDateTime.h"
 
-IdmDateTime _instance;
+Kernel::IdmDateTime _instance;
 
 static PyObject*
 create_individual(PyObject* self, PyObject* args)
@@ -30,10 +31,19 @@ update(PyObject* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
+static PyObject*
+getBaseYear(PyObject* self, PyObject* args)
+{
+    float base_year = _instance.getBaseYear();
+    
+    return Py_BuildValue("f", base_year);;
+}
+
 static PyMethodDef DtkDateTimeMethods[] =
 {
      {"create", create_individual, METH_VARARGS, "Create new object."},
      {"update", update, METH_VARARGS, "Update."},
+     {"get_base_year", getBaseYear, METH_VARARGS, "Get the base year (if set). Returns 0 if not."},
      {NULL, NULL, 0, NULL}
 };
 
