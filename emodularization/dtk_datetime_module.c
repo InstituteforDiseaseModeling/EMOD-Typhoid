@@ -21,12 +21,13 @@ create_individual(PyObject* self, PyObject* args)
 static PyObject*
 update(PyObject* self, PyObject* args)
 {
-    const char* name;
+    //const char* name;
+    float increment;
 
-    if (!PyArg_ParseTuple(args, "s", &name))
+    if (!PyArg_ParseTuple(args, "f", &increment))
         return NULL;
 
-    printf("Bye-bye %s!\n", name);
+    _instance.Update( increment );
 
     Py_RETURN_NONE;
 }
@@ -37,6 +38,14 @@ getBaseYear(PyObject* self, PyObject* args)
     float base_year = _instance.getBaseYear();
     
     return Py_BuildValue("f", base_year);;
+}
+
+static PyObject*
+getTime(PyObject* self, PyObject* args)
+{
+    float time = _instance.time;
+    
+    return Py_BuildValue("f", time);;
 }
 
 static PyObject*
@@ -56,6 +65,7 @@ static PyMethodDef DtkDateTimeMethods[] =
 {
      {"create", create_individual, METH_VARARGS, "Create new object."},
      {"update", update, METH_VARARGS, "Update."},
+     {"get_time", getTime, METH_VARARGS, "Get the current time."},
      {"get_base_year", getBaseYear, METH_VARARGS, "Get the base year (if set). Returns 0 if not."},
      {"set_base_year", setBaseYear, METH_VARARGS, "Sets the base year."},
      {NULL, NULL, 0, NULL}
