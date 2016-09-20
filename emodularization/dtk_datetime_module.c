@@ -61,6 +61,23 @@ setBaseYear(PyObject* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
+static PyObject*
+isLessThan(PyObject* self, PyObject* args)
+{
+    float comp = 0.0f;
+
+    if (!PyArg_ParseTuple(args, "f", &comp))
+        return NULL;
+
+    bool ret = false;
+    if( _instance.time < comp )
+    {
+        ret = true;
+    }
+
+    return Py_BuildValue("b", ret);;
+}
+
 static PyMethodDef DtkDateTimeMethods[] =
 {
      {"create", create_individual, METH_VARARGS, "Create new object."},
@@ -68,6 +85,7 @@ static PyMethodDef DtkDateTimeMethods[] =
      {"get_time", getTime, METH_VARARGS, "Get the current time."},
      {"get_base_year", getBaseYear, METH_VARARGS, "Get the base year (if set). Returns 0 if not."},
      {"set_base_year", setBaseYear, METH_VARARGS, "Sets the base year."},
+     {"is_less_than", isLessThan, METH_VARARGS, "Compare time."},
      {NULL, NULL, 0, NULL}
 };
 

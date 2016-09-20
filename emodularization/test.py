@@ -26,3 +26,7 @@ print( str( dtk_datetime.get_base_year() ) )
 dtk_datetime.set_base_year( 1234 )
 print( str( dtk_datetime.get_base_year() ) )
 
+# test is less
+
+print( str( dtk_datetime.is_less_than( 5 ) ) )
+print( str( dtk_datetime.is_less_than( 1234+5 ) ) )
