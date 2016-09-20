@@ -21,7 +21,7 @@ dtk_datetime.update( 1 )
 print( str( dtk_datetime.get_time() ) )
 dtk_datetime.update( 1 )
 print( str( dtk_datetime.get_time() ) )
-dtk_datetime.create( 1 )
+
 print( str( dtk_datetime.get_base_year() ) )
 dtk_datetime.set_base_year( 1234 )
 print( str( dtk_datetime.get_base_year() ) )

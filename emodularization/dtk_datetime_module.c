@@ -5,20 +5,6 @@
 Kernel::IdmDateTime _instance;
 
 static PyObject*
-create_individual(PyObject* self, PyObject* args)
-{
-    const char* name;
-
-    printf( "%s not implemented yet.\n", __FUNCTION__ );
-    /*if (!PyArg_ParseTuple(args, "s", &name))
-        return NULL;
-
-    printf("Hello %s!\n", name);*/
-
-    Py_RETURN_NONE;
-}
-
-static PyObject*
 update(PyObject* self, PyObject* args)
 {
     //const char* name;
@@ -80,7 +66,6 @@ isLessThan(PyObject* self, PyObject* args)
 
 static PyMethodDef DtkDateTimeMethods[] =
 {
-     {"create", create_individual, METH_VARARGS, "Create new object."},
      {"update", update, METH_VARARGS, "Update."},
      {"get_time", getTime, METH_VARARGS, "Get the current time."},
      {"get_base_year", getBaseYear, METH_VARARGS, "Get the base year (if set). Returns 0 if not."},
