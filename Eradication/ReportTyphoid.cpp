@@ -195,9 +195,11 @@ ReportTyphoid::LogNodeData(
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTyphoid", "INodeContext" );
     }
 
-    auto contactContagionPop = pNC->GetTotalContagion();
-    Accumulate( "Contact Contagion Population", contactContagionPop["contact"] );
-    Accumulate( "Environmental Contagion Population", contactContagionPop["environmental"] );
+	auto contagionPop = pNC->GetTotalContagion();
+    NonNegativeFloat contactContagionPop = contagionPop["contact"];
+    NonNegativeFloat enviroContagionPop = contagionPop["environmental"];
+    Accumulate( "Contact Contagion Population", contactContagionPop  );
+	Accumulate( "Environmental Contagion Population", enviroContagionPop );
     //Accumulate( _aoi_label, pTyphoidNode->GetMeanAgeInfection() * total_infections ); // weight the age of infection by the number of infections in the node. global normalization happens in SimulationTyphoid
 }
 

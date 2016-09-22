@@ -85,6 +85,8 @@ namespace Kernel
         TransmissionRoute::Enum _routeOfInfection; // how did this person get infected?
         bool isDead;  // is this individual dead?
         bool state_changed;
+		int treatment_multiplier;
+		std::string doseTracking;
 
 
 
@@ -102,10 +104,12 @@ namespace Kernel
 
         // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
         // mean and std dev of log normal distribution
-        static const float mpe;
-        static const float spe;
-        static const float mpf;
-        static const float spf;
+        static const float mph;
+        static const float sph;
+        static const float mpm;
+        static const float spm;
+		static const float mpl;
+        static const float spl;
 
         // Subclinical infectious duration parameters: mean and standard deviation under and over 30
         static const float mso30;
@@ -123,6 +127,7 @@ namespace Kernel
         static const float CFRU;   // case fatality rate?
         static const float CFRH; // hospitalized case fatality rate?
         static const float treatmentprobability;  // probability of treatment
+	
 
         // typhoid constants from "OutBase.csv" file
         //////////JG REMOVE static float agechronicmale[200]; //probability of becoming chronic carrier, male

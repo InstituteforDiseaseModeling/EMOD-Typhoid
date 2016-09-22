@@ -361,8 +361,9 @@ namespace Kernel
         float typhoid_environmental_exposure_rate;
         float typhoid_contact_exposure_rate;
         //float typhoid_environmental_exposure_rate_seasonal_max;
-        float typhoid_environmental_ramp_duration;
-        float typhoid_environmental_peak_start;
+        float typhoid_environmental_ramp_up_duration;
+		float typhoid_environmental_ramp_down_duration;
+		float typhoid_environmental_peak_start;
         float typhoid_environmental_cutoff_days;
         //float typhoid_environmental_amplification;
         float typhoid_environmental_peak_multiplier;

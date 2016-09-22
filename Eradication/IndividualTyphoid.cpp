@@ -89,10 +89,12 @@ namespace Kernel
 
     // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
     // mean and std dev of log normal distribution
-    const float IndividualHumanTyphoid::mpe = 2.23f;
-    const float IndividualHumanTyphoid::spe = 0.05192995f;
-    const float IndividualHumanTyphoid::mpf = 1.55f; // math.log(4.7)
-    const float IndividualHumanTyphoid::spf = 0.0696814f;
+	const float IndividualHumanTyphoid::mpl = 2.2350f;
+    const float IndividualHumanTyphoid::spl = 0.4964f;
+    const float IndividualHumanTyphoid::mpm = 2.0026f;
+    const float IndividualHumanTyphoid::spm = 0.7604f;
+    const float IndividualHumanTyphoid::mph = 1.5487f; // math.log(4.7)
+    const float IndividualHumanTyphoid::sph = 0.3442f;
 
     // Subclinical infectious duration parameters: mean and standard deviation under and over 30 (refitted without carriers)
     //const float IndividualHumanTyphoid::mso30=3.430830f;
@@ -115,13 +117,14 @@ namespace Kernel
     const float IndividualHumanTyphoid::sau30=0.483390f;
 
     const int IndividualHumanTyphoid::acute_treatment_day = 5; // how many days after infection will people receive treatment
-    const float IndividualHumanTyphoid::CFRU = 0.08f;   // case fatality rate?
-    const float IndividualHumanTyphoid::CFRH = 0.08f; // hospitalized case fatality rate?
+    const float IndividualHumanTyphoid::CFRU = 0.00f;   // case fatality rate?
+    const float IndividualHumanTyphoid::CFRH = 0.00f; // hospitalized case fatality rate?
     const float IndividualHumanTyphoid::treatmentprobability = 1.0f;  // probability of treatment seeking for an acute case. we are in santiago so assume 100%
 
     // environmental exposure constants
     const int IndividualHumanTyphoid::N50 = 1110000;
     const float IndividualHumanTyphoid::alpha = 0.175f;
+
 
     const int GallstoneDataLength= 9;
     const double FemaleGallstones[GallstoneDataLength] = {0.0, 0.097, 0.234, 0.431, 0.517, 0.60, 0.692, 0.692, 0.555}; // 10-year age bins
@@ -172,6 +175,9 @@ namespace Kernel
         _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         _routeOfInfection = TransmissionRoute::TRANSMISSIONROUTE_ALL;// IS THIS OK for a default? DLC
         isDead = false;
+		doseTracking = "None";
+		treatment_multiplier = 1;
+
 
 #endif
     }
@@ -305,27 +311,30 @@ namespace Kernel
                 return;
             }
 
-            float ramp_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_duration;
+            float ramp_down_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_down_duration;
+			float ramp_up_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_up_duration;
 			float cutoff_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_cutoff_days;
             float peak_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_multiplier;
             float peak_start_day = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_start); 
 			if (peak_start_day > 365){
 				peak_start_day = peak_start_day - 365;}
 		//this is mostly for calibtool purposes
-			float peak_days = (365 - cutoff_days) - (2 * ramp_days);
+			float peak_days = (365 - cutoff_days) - (ramp_down_days + ramp_up_days);
             float peak_end_day = peak_start_day + peak_days;
 			if (peak_end_day > 365){
 				peak_end_day = peak_end_day - 365;}
 
-            float slope = peak_amplification / ramp_days;
+            float slope_up = peak_amplification / ramp_up_days;
+			float slope_down = peak_amplification / ramp_down_days;
+
             float amplification = 0;
             //float HarvestDayOfYear = nDayOfYear - GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period;
             //if( HarvestDayOfYear < 1){
             //    HarvestDayOfYear = 365 - HarvestDayOfYear;
 	    //}
-			if (peak_start_day - ramp_days > 0){
-            if ((nDayOfYear >= peak_start_day-ramp_days) && ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
-                amplification=((nDayOfYear- (peak_start_day-ramp_days))+0.5)*(slope);
+			if (peak_start_day - ramp_up_days > 0){
+            if ((nDayOfYear >= peak_start_day-ramp_up_days) && ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
+                amplification=((nDayOfYear- (peak_start_day-ramp_up_days))+0.5)*(slope_up);
 	    }
 			if ((peak_start_day - peak_end_day > 0) && ((nDayOfYear >= peak_start_day)  || (nDayOfYear<=peak_end_day))) { // peak of wastewater irrigation
                 amplification= peak_amplification;
@@ -333,18 +342,18 @@ namespace Kernel
 			if ((peak_start_day - peak_end_day < 0) && (nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
                 amplification= peak_amplification;
 	    }
-            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
-                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope);
+            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_down_days)) ){ // end of wastewater irrigation
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);
 		}
 			}
 
-			else if (peak_start_day - ramp_days < 1){
-			if ((nDayOfYear >= peak_start_day-ramp_days+365) || ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
-                if (nDayOfYear >= peak_start_day-ramp_days+365){
-					amplification= (nDayOfYear - (peak_start_day-ramp_days+365)+0.5)*(slope);
+			else if (peak_start_day - ramp_up_days < 1){
+			if ((nDayOfYear >= peak_start_day-ramp_up_days+365) || ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
+                if (nDayOfYear >= peak_start_day-ramp_up_days+365){
+					amplification= (nDayOfYear - (peak_start_day-ramp_up_days+365)+0.5)*(slope_up);
 				}
 				else if (nDayOfYear < peak_start_day) {
-				amplification= (((ramp_days-peak_start_day) + nDayOfYear)  + 0.5)*(slope);
+				amplification= (((ramp_up_days-peak_start_day) + nDayOfYear)  + 0.5)*(slope_up);
 				}
 			}
 			if ((peak_start_day - peak_end_day > 0) && ((nDayOfYear >= peak_start_day)  || (nDayOfYear<=peak_end_day))) { // peak of wastewater irrigation
@@ -353,8 +362,8 @@ namespace Kernel
 			if ((peak_start_day - peak_end_day < 0) && (nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
                 amplification= peak_amplification;
 	    }
-            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_days)) ){ // end of wastewater irrigation
-                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope);
+            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_down_days)) ){ // end of wastewater irrigation
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);
 		}
 			
 			}
@@ -394,7 +403,14 @@ namespace Kernel
                     _routeOfInfection = transmission_route;
                     StrainIdentity strainId;
                     //LOG_DEBUG("INDIVIDUAL INFECTED BY ENVIRONMENT.\n"); // This is for reporting DON'T DELETE :)
-                    AcquireNewInfection(&strainId);
+					if (fEnvironment <= 10000){ 
+						doseTracking = "Low";}
+					if (fEnvironment > 10000 & fEnvironment <= 10000000){
+						doseTracking = "Medium";}
+					if (fEnvironment > 10000000){
+						doseTracking = "High";}
+					//LOG_INFO_F("dose %f, tracking %s", fEnvironment, doseTracking);
+					AcquireNewInfection(&strainId);
                     return;
                 } else {
                     return;
@@ -426,8 +442,15 @@ namespace Kernel
                     LOG_DEBUG("INDIVIDUAL INFECTED BY CONTACT.\n"); // FOR REPORTING
                     _routeOfInfection = transmission_route;
                     StrainIdentity strainId;
-                    AcquireNewInfection(&strainId);
-                    return;
+					if (fContact <= 10000){ 
+						doseTracking = "Low";}
+					if (fContact > 10000 & fContact <= 10000000){
+						doseTracking = "Medium";}
+					if (fContact > 10000000){
+						doseTracking = "High";}
+					AcquireNewInfection(&strainId);
+
+						return;
                 } else {
                     return;
                 }
@@ -480,7 +503,7 @@ namespace Kernel
 			float base_infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_acute_infectiousness;
             if (acute_timer>=0)
             {
-                infectiousness = base_infectiousness*interventions->GetInterventionReducedTransmit();
+                infectiousness = treatment_multiplier*base_infectiousness*interventions->GetInterventionReducedTransmit();
             }
             else if (prepatent_timer>=0)
             {
@@ -611,6 +634,7 @@ namespace Kernel
                 //            LOG_INFO_F("%d INFECTED!!!%d,%d,%d,%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
                 if (prepatent_timer > UNINIT_TIMER)
                 { // pre-patent
+
                     state_to_report="P";
                     prepatent_timer -= dt;
                     if( UNINIT_TIMER<prepatent_timer && prepatent_timer<=0 )
@@ -635,7 +659,7 @@ namespace Kernel
                                 //if (_acute_duration > 365)
                                 //    isChronic = true; // will be a chronic carrier
                             } else {
-                                if (getAgeInYears() < 30.0)
+                                if (getAgeInYears() <= 30.0)
                                     _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30)*7);
                                 else
                                     _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30)*7);
@@ -708,47 +732,24 @@ namespace Kernel
                                 isDead = true;
                                 state_to_report = "D";
                                 acute_timer = UNINIT_TIMER;
-                            } else 
-                            {
-                                acute_timer = UNINIT_TIMER;
-								float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
-                                float carrier_prob = 0;
-                                int agebin = int(floor(getAgeInYears()/10));
-                                if (agebin>=GallstoneDataLength)
-                                    agebin=GallstoneDataLength-1;
-                                if (GetGender()==1)
-                                {
-                                    p3=FemaleGallstones[agebin];
-                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male * 1.3793;
-                                } 
-                                else if (GetGender()==0)
-                                {
-                                    p3=MaleGallstones[agebin];
-                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
-                                }
-                                if (randgen->e()< p3*carrier_prob)
-                                {
-                                    chronic_timer = _chronic_duration;
-                                }
+                            } else treatment_multiplier = 0.5;
+
                             }
                         }
 
-                        //if they dont seek treatment, just keep them infectious until the end of their acute stage
 
 
                         //Assume all acute individuals seek treatment since this is Mike's "reported" fraction
                         //Some fraction are treated effectively, some become chronic carriers, some die, some remain infectious
 
-                        //assume all other risks are dependent on unsuccessful treatment
                         if (UNINIT_TIMER < acute_timer && acute_timer<= 0)
                         {
-                            acute_timer = UNINIT_TIMER;
-                            if (randgen->e() < CFRU)
+							if ((randgen->e() < CFRU) & (treatment_multiplier < 1)) // untreated at end of period has higher fatality rate
                             {
                                 isDead = true;
                                 state_to_report = "D";
                             }
-                            else{
+                            else {
                               //if they survived, calculate probability of being a carrier
                                 float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
                                 float carrier_prob = 0;
@@ -769,9 +770,11 @@ namespace Kernel
                                 {
                                     chronic_timer = _chronic_duration;
                                 }
-							}   
+							} 
+							acute_timer = UNINIT_TIMER;
+							treatment_multiplier = 1;
                         }
-               }
+               
 
 
                 if (chronic_timer > UNINIT_TIMER) {
@@ -780,7 +783,8 @@ namespace Kernel
                     if (UNINIT_TIMER< chronic_timer && chronic_timer<=0)
                         chronic_timer = UNINIT_TIMER;
                 }
-            }
+				}
+            
             if (hasClinicalImmunity && subclinical_timer ==UNINIT_TIMER && prepatent_timer ==UNINIT_TIMER )
             {
                 state_to_report="CI";
@@ -852,16 +856,19 @@ namespace Kernel
             }
             delete check;
 #else
-            if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL) {
-                _prepatent_duration = (int)(generateRandFromLogNormal(mpe, spe));
+            if (doseTracking == "High") {
+                _prepatent_duration = (int)(generateRandFromLogNormal(mph, sph));
 
-            } else if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_CONTACT) {
-                _prepatent_duration = (int)(generateRandFromLogNormal(mpf, spf));
+            } else if (doseTracking == "Medium") {
+                _prepatent_duration = (int)(generateRandFromLogNormal(mpm, spm));
+			}	
+			else if (doseTracking == "Low") {
+                _prepatent_duration = (int)(generateRandFromLogNormal(mpl, spl));
             } else {
                 // neither environmental nor contact source. probably from initial seeding
-                _prepatent_duration = (int)(generateRandFromLogNormal(mpf, spf));
+                _prepatent_duration = (int)(generateRandFromLogNormal(mpl, spl));
             }
-            //		LOG_INFO_F("Prepatent %d.\n", _prepatent_duration);
+            		//LOG_INFO_F("Prepatent %d. dose %s \n", _prepatent_duration, doseTracking);
             _infection_count ++;
             prepatent_timer=_prepatent_duration;
 #endif
