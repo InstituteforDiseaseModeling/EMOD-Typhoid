@@ -80,27 +80,8 @@ void Report::BeginTimestep()
 
 void Report::EndTimestep( float currentTime, float dt )
 {
-//#ifdef __GNUC__
-//    auto now = clock(); // msec on linux, seconds on windoze!
-//#else
-//    auto now = GetTickCount(); // msec on win
-//#endif
-//
-//    float diff = 0;
-//    if( last_time > 0 )
-//    {
-//        //std::cout << "now = " << now << ", last = " << last_time << std::endl;
-//        diff = now - last_time;
-//    }
-    //Accumulate("Disease Deaths", disease_deaths);
-    //Accumulate("Timestep Wallclock Duration", diff);
+    Accumulate("Disease Deaths", disease_deaths);
     BaseChannelReport::EndTimestep( currentTime, dt );
-    //last_time = clock();
-//#ifdef __GNUC__
-//    last_time = clock(); // msec on linux, seconds on windoze!
-//#else
-//    last_time = GetTickCount();
-//#endif
 }
 
 void
@@ -133,9 +114,9 @@ Report::LogNodeData(
     LOG_DEBUG( "LogNodeData\n" );
 
     Accumulate(_stat_pop_label, pNC->GetStatPop());
-    //Accumulate("Births", pNC->GetBirths());
+    Accumulate("Births", pNC->GetBirths());
     Accumulate("Infected", pNC->GetInfected());
-    //Accumulate(_aoi_label, pNC->GetMeanAgeInfection() ); // * pNC->GetInfected());
+    Accumulate(_aoi_label, pNC->GetMeanAgeInfection() ); // * pNC->GetInfected());
 
     if (pNC->GetLocalWeather())
     {
@@ -145,16 +126,16 @@ Report::LogNodeData(
         Accumulate("Relative Humidity", pNC->GetLocalWeather()->humidity());
     }
 
-    //Accumulate(_new_infections_label,                 new_infections);
-    //new_infections = 0.0f;
-    //Accumulate(_new_reported_infections_label,        new_reported_infections);
-    //new_reported_infections = 0.0f;
+    Accumulate(_new_infections_label,                 new_infections);
+    new_infections = 0.0f;
+    Accumulate(_new_reported_infections_label,        new_reported_infections);
+    new_reported_infections = 0.0f;
 
-    //Accumulate("Campaign Cost",                  pNC->GetCampaignCost());
-    //Accumulate("Human Infectious Reservoir",     pNC->GetInfectivity());
-    //Accumulate(_infection_rate_label,   pNC->GetInfectionRate());
+    Accumulate("Campaign Cost",                  pNC->GetCampaignCost());
+    Accumulate("Human Infectious Reservoir",     pNC->GetInfectivity());
+    Accumulate(_infection_rate_label,   pNC->GetInfectionRate());
 
-    //AccumulateSEIRW();
+    AccumulateSEIRW();
 }
 
 void 
