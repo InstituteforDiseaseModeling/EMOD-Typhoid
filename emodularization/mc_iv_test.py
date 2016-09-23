@@ -10,3 +10,5 @@ def report_challenge( type, num, coverage ):
 
 mc.my_set_callback( report_challenge )
 mc.distribute()
+schema = mc.get_schema()
+print( schema )

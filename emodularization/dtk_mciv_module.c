@@ -35,8 +35,15 @@ my_set_callback(PyObject *dummy, PyObject *args)
     return result;
 }
 
-static void initMC()
+static void initMC( bool dr = false )
 {
+    if( dr == true )
+    {
+        Kernel::JsonConfigurable::_dryrun = dr;
+        configStubJson = Configuration::Load("malariachallenge.json"); // don't want to have to do this
+        _instance.Configure( configStubJson  );
+        Kernel::JsonConfigurable::_dryrun = !false;
+    }
     if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("malariachallenge.json");
@@ -125,15 +132,33 @@ distribute(PyObject* self, PyObject* args)
 
     initMC();
     StubMalariaNode node;
-    _instance.Distribute( &node, nullptr );
+    ret = _instance.Distribute( &node, nullptr );
+    /*
+    Kernel::JsonConfigurable::_dryrun = true;
     auto schema = _instance.GetSchema();
-    return Py_BuildValue("b", ret);;
+    std::ostringstream schema_ostream;
+    json::Writer::Write( schema, schema_ostream );
+    */
+    return Py_BuildValue( "b", ret );;
+}
+
+static PyObject*
+getSchema(PyObject* self, PyObject* args)
+{
+    bool ret = false;
+
+    initMC( true );
+    auto schema = _instance.GetSchema();
+    std::ostringstream schema_ostream;
+    json::Writer::Write( schema, schema_ostream );
+    return Py_BuildValue("s", schema_ostream.str().c_str() );;
 }
 
 static PyMethodDef DtkMalariaChallengeMethods[] =
 {
      {"distribute", distribute, METH_VARARGS, "Update."},
      {"my_set_callback", my_set_callback, METH_VARARGS, "Update."},
+     {"get_schema", getSchema, METH_VARARGS, "Update."},
      {NULL, NULL, 0, NULL}
 };
 
