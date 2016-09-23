@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "MalariaChallenge.h"
-//#include "INodeContext.h"
 #include "NodeMalariaEventContext.h"
 
 using namespace Kernel;
@@ -40,8 +39,7 @@ static void initMC( bool dr = false )
     if( dr == true )
     {
         Kernel::JsonConfigurable::_dryrun = dr;
-        configStubJson = Configuration::Load("malariachallenge.json"); // don't want to have to do this
-        _instance.Configure( configStubJson  );
+        _instance.Configure( nullptr  );
         Kernel::JsonConfigurable::_dryrun = !false;
     }
     if( configStubJson == nullptr )
@@ -133,12 +131,6 @@ distribute(PyObject* self, PyObject* args)
     initMC();
     StubMalariaNode node;
     ret = _instance.Distribute( &node, nullptr );
-    /*
-    Kernel::JsonConfigurable::_dryrun = true;
-    auto schema = _instance.GetSchema();
-    std::ostringstream schema_ostream;
-    json::Writer::Write( schema, schema_ostream );
-    */
     return Py_BuildValue( "b", ret );;
 }
 
