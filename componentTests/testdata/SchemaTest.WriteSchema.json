@@ -59,7 +59,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -69,7 +69,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -224,7 +224,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -234,7 +234,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -685,7 +685,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -695,7 +695,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1312,7 +1312,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1322,7 +1322,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1477,7 +1477,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1487,7 +1487,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2361,7 +2361,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2371,7 +2371,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2578,7 +2578,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2588,7 +2588,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2753,7 +2753,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2763,7 +2763,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2918,7 +2918,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2928,7 +2928,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -3083,7 +3083,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -3093,7 +3093,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
