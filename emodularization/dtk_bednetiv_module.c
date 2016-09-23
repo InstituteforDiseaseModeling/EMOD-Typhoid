@@ -48,9 +48,7 @@ static void initBN( bool dr = false )
     }
     else if( configStubJson == nullptr )
     {
-        std::cout << "Configuring BN intervention from json." << std::endl;
         configStubJson = Configuration::Load("bn.json");
-        std::cout << "Configuring BN intervention from json." << std::endl;
         Kernel::JsonConfigurable::_useDefaults = true;
         _instance.Configure( configStubJson  );
     }
@@ -59,6 +57,12 @@ static void initBN( bool dr = false )
 class StubVectorIndividual : public IIndividualHumanInterventionsContext, public IBednetConsumer, public IInterventionConsumer
 {
     public:
+        StubVectorIndividual  () {}
+        ~StubVectorIndividual  ()
+        {
+            std::cout << "StubVectorIndividual DTOR." << std::endl;
+        }
+        
         virtual int32_t AddRef() {}
         virtual int32_t Release() {}
 
@@ -108,25 +112,27 @@ class StubVectorIndividual : public IIndividualHumanInterventionsContext, public
             std::cout << "Intervention distributed to individual. Call py callback here?" << std::endl;
         }
 
+        virtual void Test() override
+        {
+            std::cout << __FUNCTION__ << std::endl;
+        }
+
         virtual void UpdateProbabilityOfKilling( float current_killingrate ) override
         {
-            //std::cout << __FUNCTION__ << std::endl;
-#if 0
             assert( my_callback );
-            PyObject *arglist = Py_BuildValue("(f)", current_killingrate );
+            PyObject *arglist = Py_BuildValue("(s,f)", "killing", current_killingrate );
             PyObject_CallObject(my_callback, arglist);
             Py_DECREF(arglist);
-#endif
         }
         virtual void UpdateProbabilityOfBlocking( float current_blockingrate ) override
         {
-            std::cout << __FUNCTION__ << std::endl;
             assert( my_callback );
-            PyObject *arglist = Py_BuildValue("(f)", current_blockingrate );
+            PyObject *arglist = Py_BuildValue("(s,f)", "blocking", current_blockingrate );
             PyObject_CallObject(my_callback, arglist);
             Py_DECREF(arglist);
         }
 };
+StubVectorIndividual man;
 
 static PyObject*
 distribute(PyObject* self, PyObject* args)
@@ -134,7 +140,6 @@ distribute(PyObject* self, PyObject* args)
     bool ret = false;
 
     initBN();
-    StubVectorIndividual man;
     ret = _instance.Distribute( &man, nullptr );
     return Py_BuildValue( "b", ret );;
 }
@@ -142,15 +147,12 @@ distribute(PyObject* self, PyObject* args)
 static PyObject*
 update(PyObject* self, PyObject* args)
 {
-    std::cout << __FUNCTION__ << std::endl;
     float dt;
 
     if( !PyArg_ParseTuple(args, "f", &dt ) )
         return NULL;
 
-    std::cout << __FUNCTION__ << std::endl;
     _instance.Update( dt );
-    std::cout << __FUNCTION__ << std::endl;
 
     return Py_BuildValue("b", true );
 }
