@@ -8,11 +8,19 @@ def report_apply( action, prob ):
     print( "Update probability of " + action + " with value " + str( prob ) )
 
 bednet.my_set_callback( report_apply )
+
+def get_schema():
+    schema = bednet.get_schema()
+    print( schema )
+
+# individual stuff
 bednet.distribute()
 
 # Update not working yet. Crashes during callback
 bednet.update( 1 )
 
-# This works if you want to use it.
-#schema = bednet.get_schema()
-#print( schema )
+
+# batch stuff
+bednet.create_batch( 100 )
+bednet.distribute_batch()
+bednet.update_batch( 1 )

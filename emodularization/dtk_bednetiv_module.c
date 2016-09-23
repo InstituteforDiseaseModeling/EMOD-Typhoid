@@ -1,5 +1,6 @@
 #include <Python.h>
 #include <iostream>
+#include <vector>
 
 #include "Bednet.h"
 #include "VectorInterventionsContainer.h"
@@ -11,6 +12,7 @@ using namespace Kernel;
 //Kernel::WaningEffectFactory fact;
 
 Kernel::SimpleBednet _instance;
+std::vector<Kernel::SimpleBednet*> _batch; // array of pointers
 
 Configuration * configStubJson = nullptr;
 
@@ -133,6 +135,7 @@ class StubVectorIndividual : public IIndividualHumanInterventionsContext, public
         }
 };
 StubVectorIndividual man;
+std::vector<StubVectorIndividual> _pop;
 
 static PyObject*
 distribute(PyObject* self, PyObject* args)
@@ -145,6 +148,22 @@ distribute(PyObject* self, PyObject* args)
 }
 
 static PyObject*
+distributeBatch(PyObject* self, PyObject* args)
+{
+    bool ret = false;
+
+    _pop.resize( _batch.size() );
+    for( int idx = 0; idx < _batch.size(); idx ++ )
+    {
+        auto bednet = _batch[ idx ];
+        auto &man = _pop[ idx ];
+        ret = bednet->Distribute( &man, nullptr );
+    }
+
+    return Py_BuildValue( "b", ret );;
+}
+
+static PyObject*
 update(PyObject* self, PyObject* args)
 {
     float dt;
@@ -153,6 +172,49 @@ update(PyObject* self, PyObject* args)
         return NULL;
 
     _instance.Update( dt );
+
+    return Py_BuildValue("b", true );
+}
+
+static PyObject*
+updateBatch(PyObject* self, PyObject* args)
+{
+    float dt;
+
+    if( !PyArg_ParseTuple(args, "f", &dt ) )
+        return NULL;
+
+    for( int idx = 0; idx < _batch.size(); idx ++ )
+    {
+        auto bednet = _batch[ idx ];
+        bednet->Update( dt );
+    }
+
+    return Py_BuildValue("b", true );
+}
+
+static PyObject*
+createBatch(PyObject* self, PyObject* args)
+{
+    unsigned int number;
+
+    if( !PyArg_ParseTuple(args, "I", &number ) )
+    {
+        std::cout << "That didn't work: " << __FUNCTION__ << std::endl;
+        return NULL;
+    }
+    std::cout << "number = " << number << std::endl;
+
+    _batch.resize( number );
+    auto configStubJson = Configuration::Load("bn.json");
+    Kernel::JsonConfigurable::_useDefaults = true;
+    for( int idx = 0; idx<number; ++idx )
+    {
+        auto * bn = new Kernel::SimpleBednet();
+        bn->Configure( configStubJson  );
+        _batch[ idx ] = bn;
+    }
+    Kernel::JsonConfigurable::_useDefaults = false;
 
     return Py_BuildValue("b", true );
 }
@@ -171,6 +233,9 @@ getSchema(PyObject* self, PyObject* args)
 
 static PyMethodDef DtkbednetMethods[] =
 {
+     {"create_batch", createBatch, METH_VARARGS, "Create a list of N bednets."},
+     {"distribute_batch", distributeBatch, METH_VARARGS, "Distribute the N bednets to N individuals."},
+     {"update_batch", updateBatch, METH_VARARGS, "Update the N bednets."},
      {"distribute", distribute, METH_VARARGS, "Distribute."},
      {"update", update, METH_VARARGS, "Update."},
      {"my_set_callback", my_set_callback, METH_VARARGS, "Update."},
