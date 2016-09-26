@@ -688,7 +688,7 @@ namespace Kernel
                         if (GetGender()==1)
                         {
                             p2=FemaleGallstones[agebin];
-                            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male * 1.3793;
+                            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female ;
                         } 
                         else if (GetGender()==0)
                         {

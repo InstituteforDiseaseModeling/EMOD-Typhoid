@@ -353,6 +353,7 @@ namespace Kernel
         float typhoid_protection_per_infection;
         float typhoid_subclinical_relative_infectiousness;
         float typhoid_carrier_probability_male;
+		float typhoid_carrier_probability_female;
         float typhoid_3year_susceptible_fraction;
         float typhoid_6month_susceptible_fraction;
         float typhoid_6year_susceptible_fraction;
