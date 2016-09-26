@@ -11,6 +11,8 @@ module1 = Extension('dtk_bednet',
             '../interventions/Bednet.cpp',
             '../Eradication/EventTrigger.cpp',
             '../interventions/WaningEffectBox.cpp',
+            '../interventions/WaningEffectExponential.cpp',
+            '../interventions/WaningEffectBoxExponential.cpp',
             '../interventions/WaningEffectFactory.cpp'
         ],
         extra_compile_args = ["-std=c++11", "-w", "-fpermissive" ], 
