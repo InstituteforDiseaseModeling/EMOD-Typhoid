@@ -19,8 +19,11 @@ bednet.distribute()
 # Update not working yet. Crashes during callback
 bednet.update( 1 )
 
-
 # batch stuff
-bednet.create_batch( 100 )
-bednet.distribute_batch()
-bednet.update_batch( 1 )
+def test_batch():
+    bednet.create_batch( 10 )
+    bednet.distribute_batch()
+    for i in range( 4000 ):
+        bednet.update_batch( 1 )
+
+test_batch()
