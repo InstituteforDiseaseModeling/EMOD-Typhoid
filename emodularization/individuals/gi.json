@@ -1,0 +1,20 @@
+{
+	"Enable_Aging" : 1, 
+	"Infection_Updates_Per_Timestep" : 1
+	"Enable_Immunity" : 1,
+	"Enable_Superinfection" : 0,
+	"Max_Individual_Infections" : 1,
+	"x_Other_Mortality" : 1,
+	"Minimum_Adult_Age_Years" : 15,
+	"Migration_Pattern" : "RANDOM_WALK_DIFFUSION",
+	"Local_Migration_Roundtrip_Probability" : 0.95,
+	"Air_Migration_Roundtrip_Probability" : 0.8,,
+	"Regional_Migration_Roundtrip_Probability" : 0.1,
+	"Sea_Migration_Roundtrip_Probability" : 0.25,
+	"Local_Migration_Roundtrip_Duration" : 1,
+	"Air_Migration_Roundtrip_Duration" : 1,
+	"Regional_Migration_Roundtrip_Duration" : 1,
+	"Sea_Migration_Roundtrip_Duration" : 1,
+	"Family_Migration_Roundtrip_Duration" : 1,
+	"Roundtrip_Waypoints" : 10
+}
