@@ -54,21 +54,17 @@ update(PyObject* self, PyObject* args)
     Py_RETURN_NONE;
 }
     namespace Kernel {
-    class TestInitializer
+    class Simulation
     {
         public:
         static std::string result;
-        TestInitializer()
+        Simulation()
         {
             Kernel::JsonConfigurable::_dryrun = true;
             Kernel::IndividualHumanConfig adam;
-            std::cout << __LINE__ << std::endl;
             adam.Configure( nullptr ); // protected
-            std::cout << __LINE__ << std::endl;
             auto schema = adam.GetSchema();
-            std::cout << __LINE__ << std::endl;
             std::ostringstream schema_ostream;
-            std::cout << __LINE__ << std::endl;
             json::Writer::Write( schema, schema_ostream );
             std::cout << schema_ostream.str() << std::endl;
             result = schema_ostream.str();
@@ -76,16 +72,14 @@ update(PyObject* self, PyObject* args)
         }
     
     };
-    std::string TestInitializer::result = "";
+    std::string Simulation::result = "";
     }
 
 static PyObject*
 getSchema(PyObject* self, PyObject* args)
 {
     bool ret = false;
-    std::cout << __LINE__ << std::endl;
-    //auto schema = person->GetSchema();
-    Kernel::TestInitializer ti;
+    Kernel::Simulation ti;
     return Py_BuildValue("s", ti.result.c_str() );;
 }
 
