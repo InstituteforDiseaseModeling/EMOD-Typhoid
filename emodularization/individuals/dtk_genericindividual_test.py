@@ -10,9 +10,11 @@ def get_schema():
     schema = gi.get_schema()
     print( schema )
 
-#print( "creating individual." )
-#gi.create()
-print( "getting schema." )
-get_schema()
+#print( "getting schema." )
+#get_schema()
 
-#gi.update()
+print( "creating individual." )
+gi.create()
+for tstep in range( 0,100 ):
+    print( "Updating individual." )
+    gi.update( 1.0 )

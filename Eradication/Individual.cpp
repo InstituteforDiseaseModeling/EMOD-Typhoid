@@ -58,6 +58,10 @@ namespace Kernel
     float IndividualHumanConfig::x_othermortality = 0.0f;
     float IndividualHumanConfig::min_adult_age_years = 15.0f;
 
+    MigrationStructure::Enum   IndividualHumanConfig::migration_structure = MigrationStructure::NO_MIGRATION;
+    VitalDeathDependence::Enum IndividualHumanConfig::vital_death_dependence = VitalDeathDependence::NONDISEASE_MORTALITY_OFF;
+    bool                       IndividualHumanConfig::vital_dynamics = false;
+
     // QI stuff in case we want to use it more extensively outside of campaigns
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanConfig)
     BEGIN_QUERY_INTERFACE_BODY(IndividualHumanConfig)
@@ -100,6 +104,7 @@ namespace Kernel
         const Configuration* config
     )
     {
+        std::cout << __FUNCTION__ << std::endl;
         LOG_DEBUG( "Configure\n" );
         initConfigTypeMap( "Enable_Aging", &aging, Enable_Aging_DESC_TEXT, true, "Enable_Vital_Dynamics" );
         initConfigTypeMap( "Infection_Updates_Per_Timestep", &infection_updates_per_tstep, Infection_Updates_Per_Timestep_DESC_TEXT, 0, 144, 1 );
@@ -155,7 +160,20 @@ namespace Kernel
             RegisterWaypointsHomeParameters();
         }
 
+        if( GET_CONFIGURABLE(SimulationConfig) == nullptr )
+        {
+            initConfigTypeMap( "Enable_Vital_Dynamics", &vital_dynamics, Enable_Vital_Dynamics_DESC_TEXT, true );
+            initConfig( "Death_Rate_Dependence", vital_death_dependence, config, MetadataDescriptor::Enum(Death_Rate_Dependence_DESC_TEXT, Death_Rate_Dependence_DESC_TEXT, MDD_ENUM_ARGS(VitalDeathDependence)), "Enable_Vital_Dynamics" ); // node only (move)
+            initConfig( "Migration_Model",       migration_structure,    config, MetadataDescriptor::Enum(Migration_Model_DESC_TEXT,       Migration_Model_DESC_TEXT,       MDD_ENUM_ARGS(MigrationStructure)) ); // 'global'
+        }
         bool bRet = JsonConfigurable::Configure( config );
+        if( GET_CONFIGURABLE(SimulationConfig) )
+        {
+            IndividualHumanConfig::vital_dynamics = GET_CONFIGURABLE(SimulationConfig)->vital_dynamics;
+            IndividualHumanConfig::vital_death_dependence = GET_CONFIGURABLE(SimulationConfig)->vital_death_dependence;
+            IndividualHumanConfig::migration_structure = GET_CONFIGURABLE(SimulationConfig)->migration_structure;
+        }
+
         if( local_roundtrip_duration_rate != 0 )
         {
              local_roundtrip_duration_rate = 1.0f/local_roundtrip_duration_rate;
@@ -395,7 +413,7 @@ namespace Kernel
     bool IndividualHuman::IsDead() const
     {
         auto state_change = GetStateChange();
-        bool is_dead = (GET_CONFIGURABLE(SimulationConfig)->vital_dynamics &&
+        bool is_dead = (IndividualHumanConfig::vital_dynamics &&
                        ( (state_change == HumanStateChange::DiedFromNaturalCauses) || 
                          (state_change == HumanStateChange::KilledByInfection    ) ) ) 
                     || (state_change == HumanStateChange::KilledByMCSampling) ;    //Killed by MC sampling should not rely on vital_dynamics being true.  
@@ -454,7 +472,7 @@ namespace Kernel
         }
 
 
-        if( parent )
+        if( parent && parent->GetEventContext() )
         {
             if (s_OK != parent->GetEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), reinterpret_cast<void**>(&broadcaster)))
             {
@@ -507,12 +525,18 @@ namespace Kernel
         CreateSusceptibility(immunity_modifier, risk_modifier);
 
         // Populate the individuals set of Individual Properties with one value for each property
-        IPKeyValueContainer init_values = IPFactory::GetInstance()->GetInitialValues( pParent->GetExternalID(), EnvPtr->RNG );
-
-        Properties.clear();
-        for( IPKeyValue kv : init_values )
+        release_assert( pParent );
+        release_assert( EnvPtr );
+        //release_assert( IPFactory::GetInstance() );
+        if( pParent && EnvPtr && IPFactory::GetInstance() )
         {
-            Properties[ kv.GetKey().ToString() ] = kv.GetValueAsString();
+            IPKeyValueContainer init_values = IPFactory::GetInstance()->GetInitialValues( pParent->GetExternalID(), EnvPtr->RNG );
+
+            Properties.clear();
+            for( IPKeyValue kv : init_values )
+            {
+                Properties[ kv.GetKey().ToString() ] = kv.GetValueAsString();
+            }
         }
     }
 
@@ -599,7 +623,9 @@ namespace Kernel
         // Process list of infections
         if (infections.size() == 0) // don't need to process infections or go hour by hour
         {
+            release_assert( susceptibility );
             susceptibility->Update(dt);
+            release_assert( interventions );
             interventions->Update(dt);
         }
         else
@@ -662,7 +688,10 @@ namespace Kernel
         applyNewInterventionEffects(dt);
 
         // Trigger "every-update" event observers
-        broadcaster->TriggerNodeEventObservers(GetEventContext(), IndividualEventTriggerType::EveryUpdate);
+        if( broadcaster )
+        {
+            broadcaster->TriggerNodeEventObservers(GetEventContext(), IndividualEventTriggerType::EveryUpdate);
+        }
 
         //  Get new infections
         ExposeToInfectivity(dt, &transmissionGroupMembership); // Need to do it even if infectivity==0, because of diseases in which immunity of acquisition depends on challenge (eg malaria)
@@ -670,16 +699,20 @@ namespace Kernel
         //  Is there an active infection for statistical purposes?
         m_is_infected = (infections.size() > 0);
 
-        if (StateChange == HumanStateChange::None && GET_CONFIGURABLE(SimulationConfig)->vital_dynamics) // Individual can't die if they're already dead
+        if (StateChange == HumanStateChange::None && IndividualHumanConfig::vital_dynamics) // Individual can't die if they're already dead
+        {
             CheckVitalDynamics(currenttime, dt);
+        }
 
-        if (StateChange == HumanStateChange::None && GET_CONFIGURABLE(SimulationConfig)->migration_structure) // Individual can't migrate if they're already dead
+        if (StateChange == HumanStateChange::None && IndividualHumanConfig::migration_structure) // Individual can't migrate if they're already dead
+        {
             CheckForMigration(currenttime, dt);
+        }
     }
 
     void IndividualHuman::CheckVitalDynamics(float currenttime, float dt)
     {
-        VitalDeathDependence::Enum vital_death_dependence = GET_CONFIGURABLE(SimulationConfig)->vital_death_dependence;
+        VitalDeathDependence::Enum vital_death_dependence = IndividualHumanConfig::vital_death_dependence;
         if (  vital_death_dependence == VitalDeathDependence::NONDISEASE_MORTALITY_BY_AGE_AND_GENDER ||
                 vital_death_dependence == VitalDeathDependence::NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER )
         {
@@ -792,8 +825,7 @@ namespace Kernel
     void IndividualHuman::CheckForMigration(float currenttime, float dt)
     {
         //  Determine if individual moves during this time step
-
-        switch (GET_CONFIGURABLE(SimulationConfig)->migration_structure)
+        switch (IndividualHumanConfig::migration_structure)
         {
         case MigrationStructure::FIXED_RATE_MIGRATION:
             if( leave_on_family_trip )
@@ -847,7 +879,7 @@ namespace Kernel
         case MigrationStructure::NO_MIGRATION:
         default:
             std::stringstream msg;
-            msg << "Invalid migration_structure=" << GET_CONFIGURABLE(SimulationConfig)->migration_structure;
+            msg << "Invalid migration_structure=" << IndividualHumanConfig::migration_structure;
             throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, msg.str().c_str() );
             break;
         }
@@ -863,7 +895,7 @@ namespace Kernel
         // --- That is, I should be able to travel to a node and return from it, even if the
         // --- residents of the node do not migrate.
         // ----------------------------------------------------------------------------------------
-        if( GET_CONFIGURABLE(SimulationConfig)->migration_structure != MigrationStructure::NO_MIGRATION )
+        if( IndividualHumanConfig::migration_structure != MigrationStructure::NO_MIGRATION )
         {
             if(waypoints.size() == 0)
                 migration_outbound = true;
