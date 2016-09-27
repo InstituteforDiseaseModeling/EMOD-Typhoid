@@ -44,6 +44,9 @@ namespace Kernel
         static float base_mortality;
         static MortalityTimeCourse::Enum                          mortality_time_course;                            // MORTALITY_TIME_COURSE
 
+        // optional
+        static bool vital_disease_mortality;
+
         GET_SCHEMA_STATIC_WRAPPER(InfectionConfig)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

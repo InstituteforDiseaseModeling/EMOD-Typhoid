@@ -27,6 +27,7 @@ namespace Kernel
     DurationDistribution InfectionConfig::infectious_distribution = DurationDistribution( DistributionFunction::FIXED_DURATION );
     float InfectionConfig::base_infectivity = 1.0f;
     float InfectionConfig::base_mortality = 1.0f;
+    bool  InfectionConfig::vital_disease_mortality = false;
 
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Infection,InfectionConfig)
     BEGIN_QUERY_INTERFACE_BODY(InfectionConfig)
@@ -63,6 +64,11 @@ namespace Kernel
 
         initConfigTypeMap( "Base_Infectivity", &base_infectivity, Base_Infectivity_DESC_TEXT, 0.0f, 1000.0f, 0.3f ); // should default change depending on disease?
         initConfigTypeMap( "Base_Mortality", &base_mortality, Base_Mortality_DESC_TEXT, 0.0f, 1000.0f, 0.001f, "Enable_Vital_Dynamics" ); // should default change depending on disease?
+
+        if( GET_CONFIGURABLE(SimulationConfig) == nullptr )
+        {
+            initConfigTypeMap( "Enable_Disease_Mortality", &vital_disease_mortality, Enable_Disease_Mortality_DESC_TEXT, true );
+        }
 
         bool bRet = JsonConfigurable::Configure( config );
 
@@ -139,7 +145,7 @@ namespace Kernel
             incubation_timer = InfectionConfig::incubation_distribution.CalculateDuration();
             LOG_DEBUG_F( "incubation_timer = %f\n", incubation_timer );
         }
-        
+
         infectious_timer = InfectionConfig::infectious_distribution.CalculateDuration();
         LOG_DEBUG_F( "infectious_timer = %f\n", infectious_timer );
 
@@ -175,8 +181,13 @@ namespace Kernel
         // To query for mortality-reducing effects of drugs or vaccines
         IDrugVaccineInterventionEffects* idvie = nullptr;
 
+        bool vdm = InfectionConfig::vital_disease_mortality;
+        if( params() != nullptr )
+        {
+            vdm = params()->vital_disease_mortality;
+        }
         // if disease has a daily mortality rate, and disease mortality is on, then check for death
-        if (params()->vital_disease_mortality
+        if (vdm
             && (InfectionConfig::mortality_time_course == MortalityTimeCourse::DAILY_MORTALITY)
             && (duration > incubation_timer))
         {
@@ -194,7 +205,7 @@ namespace Kernel
         if (duration > total_duration)
         {
             // disease mortality active and is accounted for at end of infectious period
-            if (params()->vital_disease_mortality && (InfectionConfig::mortality_time_course == MortalityTimeCourse::MORTALITY_AFTER_INFECTIOUS))
+            if (vdm && (InfectionConfig::mortality_time_course == MortalityTimeCourse::MORTALITY_AFTER_INFECTIOUS))
             {
                 if ( s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IDrugVaccineInterventionEffects), (void**)&idvie) )
                 {
