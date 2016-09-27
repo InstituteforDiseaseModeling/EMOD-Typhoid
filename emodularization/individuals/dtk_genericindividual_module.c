@@ -8,14 +8,14 @@ Configuration * configStubJson = nullptr;
 
 static void initInd( bool dr = false )
 {
-    if( dr == true )
+    /*if( dr == true )
     {
         std::cout << "Doing get-schema-style init." << std::endl;
         Kernel::JsonConfigurable::_dryrun = dr;
         Kernel::IndividualHuman::InitializeStatics( nullptr );
         Kernel::JsonConfigurable::_dryrun = false;
     }
-    else if( configStubJson == nullptr )
+    else*/ if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("gi.json");
         Kernel::JsonConfigurable::_useDefaults = true;
@@ -53,33 +53,35 @@ update(PyObject* self, PyObject* args)
 
     Py_RETURN_NONE;
 }
-    namespace Kernel {
+
+// Simualtion class is a friend which is necessary for calling Configure
+namespace Kernel {
     class Simulation
     {
         public:
-        static std::string result;
-        Simulation()
-        {
-            Kernel::JsonConfigurable::_dryrun = true;
-            Kernel::IndividualHumanConfig adam;
-            adam.Configure( nullptr ); // protected
-            auto schema = adam.GetSchema();
-            std::ostringstream schema_ostream;
-            json::Writer::Write( schema, schema_ostream );
-            std::cout << schema_ostream.str() << std::endl;
-            result = schema_ostream.str();
-            Kernel::JsonConfigurable::_dryrun = false;
-        }
-    
+            static std::string result;
+            Simulation()
+            {
+                Kernel::JsonConfigurable::_dryrun = true;
+                Kernel::IndividualHumanConfig adam;
+                adam.Configure( nullptr ); // protected
+                auto schema = adam.GetSchema();
+                std::ostringstream schema_ostream;
+                json::Writer::Write( schema, schema_ostream );
+                //std::cout << schema_ostream.str() << std::endl;
+                result = schema_ostream.str();
+                Kernel::JsonConfigurable::_dryrun = false;
+            }
     };
     std::string Simulation::result = "";
-    }
+}
 
 static PyObject*
 getSchema(PyObject* self, PyObject* args)
 {
     bool ret = false;
     Kernel::Simulation ti;
+    //std::cout << ti.result.c_str() << std::endl;
     return Py_BuildValue("s", ti.result.c_str() );;
 }
 
