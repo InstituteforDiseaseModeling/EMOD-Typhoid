@@ -1279,6 +1279,9 @@ namespace Kernel
 
     float IndividualHuman::GetAcquisitionImmunity() const
     {
+        release_assert( susceptibility );
+        release_assert( interventions );
+        //std::cout << "getModAcquire() = " << susceptibility->getModAcquire() << ", interventions->GetInterventionReducedAcquire() = " << interventions->GetInterventionReducedAcquire() << std::endl;
         return susceptibility->getModAcquire()*interventions->GetInterventionReducedAcquire();
     }
 
