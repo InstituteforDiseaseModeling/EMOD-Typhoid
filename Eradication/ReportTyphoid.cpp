@@ -199,6 +199,7 @@ ReportTyphoid::LogNodeData(
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTyphoid", "INodeContext" );
     }
 
+
     auto contagionPop = pNC->GetTotalContagion();
     NonNegativeFloat contactContagionPop = contagionPop["contact"];
     NonNegativeFloat enviroContagionPop = contagionPop["environmental"];
