@@ -181,6 +181,7 @@ namespace Kernel
         float typhoid_protection_per_infection;
         float typhoid_subclinical_relative_infectiousness;
         float typhoid_carrier_probability_male;
+		float typhoid_carrier_probability_female;
         float typhoid_3year_susceptible_fraction;
         float typhoid_6month_susceptible_fraction;
         float typhoid_6year_susceptible_fraction;
@@ -189,8 +190,9 @@ namespace Kernel
         float typhoid_environmental_exposure_rate;
         float typhoid_contact_exposure_rate;
         //float typhoid_environmental_exposure_rate_seasonal_max;
-        float typhoid_environmental_ramp_duration;
-        float typhoid_environmental_peak_start;
+        float typhoid_environmental_ramp_up_duration;
+		float typhoid_environmental_ramp_down_duration;
+		float typhoid_environmental_peak_start;
         float typhoid_environmental_cutoff_days;
         //float typhoid_environmental_amplification;
         float typhoid_environmental_peak_multiplier;
