@@ -245,7 +245,7 @@
 #define Serialization_Test_Cycles_DESC_TEXT "Serialization_Test_Cycles"
 #define Simulation_Duration_DESC_TEXT     "Elapsed time noted in days from the start to the end of a simulation."
 #define Simulation_Timestep_DESC_TEXT     "Value indicating simulation time step in days."
-#define Simulation_Type_DESC_TEXT     "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM."
+#define Simulation_Type_DESC_TEXT     "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option."
 #define Spatial_Output_Channels_DESC_TEXT     "An array of channel names for spatial output by Node and time step. The data from each channel will be written to a separate binary file. For full documentation of spatial output channels, please see the online documentation."
 #define Start_Day_DESC_TEXT "Day of the simulation to activate the event's event coordinator"
 #define Start_Time_DESC_TEXT     "Time noted in days when the simulation begins. This time influences the point in the temporal input data, such as where in the climate input the DTK starts running the simulation. Note: The Start_Day of campaign events is in absolute time. So, time relative to the beginning of the simulation depends on this parameter."
@@ -351,7 +351,7 @@ NO_DENSITY_DEPENDENCE."
 
 #define Serialization_Test_Cycles_DESC_TEXT "Serialization_Test_Cycles"
 #define Path_to_Python_Scripts_DESC_TEXT "Path to Python Scripts"
-        
+
 #define HIV_Coinfection_Probability_DESC_TEXT "Probability of getting both HIV and TB when creating a new TB infection"
 #define Coinfected_Mortality_Rate_DESC_TEXT "Mortality rate per timestep when coinfected (NOTE! this is the addl mortality OVER TB-only mortality"
 
@@ -472,8 +472,8 @@ NO_DENSITY_DEPENDENCE."
 #define Birth_Rate_Time_Dependence_DESC_TEXT    "Allows for time dependence in the birth rate.  Available values are NONE, SINUSOIDAL_FUNCTION_OF_TIME, ANNUAL_BOXCAR_FUNCTION"
 #define Migration_Rate_Time_Dependence_DESC_TEXT    "Allows for time dependence in the migration rate.  Available values are NONE, SINUSOIDAL_FUNCTION_OF_TIME, ANNUAL_BOXCAR_FUNCTION"
 #define Susceptibility_Scaling_Intercept_DESC_TEXT "For Susceptibility_Scale_Type of any_FUNCTION_OF_AGE, describes the susceptibility scaling factor at age 0."
-#define Distribution_Times_DESC_TEXT "Vector of ints for simulation times at which distribution of events occurs in a CalendarEventCoordinator" 
-#define Distribution_Coverages_DESC_TEXT "Vector of floats for fraction of individuals that will receive this intervention in a CalendarEventCoordinator" 
+#define Distribution_Times_DESC_TEXT "Vector of ints for simulation times at which distribution of events occurs in a CalendarEventCoordinator"
+#define Distribution_Coverages_DESC_TEXT "Vector of floats for fraction of individuals that will receive this intervention in a CalendarEventCoordinator"
 
 #define Vector_Migration_Filename_Local_DESC_TEXT     "Path of input file defining patterns of vector migration to adjacent nodes."
 #define Vector_Migration_Filename_Regional_DESC_TEXT     "Path of input file defining patterns of vector migration to non-adjacent nodes."
