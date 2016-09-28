@@ -15,6 +15,9 @@ static PyObject *my_callback = NULL;
 
 using namespace Kernel;
 
+//
+// Initialize the rng in the Environment.
+//
 void
 pyMathFuncInit()
 {
@@ -28,6 +31,9 @@ pyMathFuncInit()
     }
 }
 
+// 
+// We'll need a stub node object as the individual's parent. Most functions are empty.
+//
 class StubNode : public INodeContext
 {
     public:
@@ -136,6 +142,8 @@ class StubNode : public INodeContext
         virtual void SetupMigration( IMigrationInfoFactory * migration_factory, MigrationStructure::Enum ms, const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override { std::cout << __FUNCTION__ << std::endl; }
         virtual std::vector<bool> GetMigrationTypeEnabledFromDemographics() const override { std::cout << __FUNCTION__ << std::endl; }
         virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, MigrationType::Enum migrationType, float timeUntilTrip, float timeAtDestination, bool isDestinationNewHome ) override { std::cout << __FUNCTION__ << std::endl; }
+        // We want to be able to infect someone but not with existing Tx groups. Call into py layer here and get a bool back
+        // True to infect, False to leave alone.
         virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) override
         {
             //transmissionGroups->ExposeToContagion(candidate, individual, dt);
@@ -153,9 +161,12 @@ class StubNode : public INodeContext
             Py_DECREF(arglist);
         }
 };
+
+// Declare signle node here
 StubNode node;
 
 
+// Boiler-plate callback setting function that will be put in common file.
 my_set_callback(PyObject *dummy, PyObject *args)
 {
     PyObject *result = NULL;
@@ -177,8 +188,11 @@ my_set_callback(PyObject *dummy, PyObject *args)
     return result;
 }
 
+// Json-configure & Initialize a (single) individual
+// Use json file on disk.
 static void initInd( bool dr = false )
 {
+    person = Kernel::IndividualHuman::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, 365.0f, 0, 0 );
     if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("gi.json");
@@ -192,30 +206,21 @@ static void initInd( bool dr = false )
 }
 
 
+// create individual human 
 static PyObject*
 create(PyObject* self, PyObject* args)
 {
-    //const char* name;
-
-    //if (!PyArg_ParseTuple(args, "s", &name))
-        //return NULL;
-
-    //printf("Hello %s!\n", name);
-    person = Kernel::IndividualHuman::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, 365.0f, 0, 0 );
     initInd();
-
     Py_RETURN_NONE;
 }
 
+//
+// Some functions to interact with the human
+//
+// update individual (hard-coded time values)
 static PyObject*
 update(PyObject* self, PyObject* args)
 {
-    /*const char* name;
-
-    if (!PyArg_ParseTuple(args, "s", &name))
-        return NULL;
-
-    printf("Bye-bye %s!\n", name);*/
     person->Update( 0.0f, 1.0f );
 
     Py_RETURN_NONE;
@@ -242,7 +247,9 @@ getImmunity(PyObject* self, PyObject* args)
     return Py_BuildValue("f", imm );
 }
 
-// Simualtion class is a friend which is necessary for calling Configure
+// Supporting GetSchema here
+//
+// Simulation class is a friend which is necessary for calling Configure
 namespace Kernel {
     class Simulation
     {
@@ -273,6 +280,8 @@ getSchema(PyObject* self, PyObject* args)
     return Py_BuildValue("s", ti.result.c_str() );
 }
 
+
+// PyMod contract code below
 static PyMethodDef GenericIndividualMethods[] =
 {
      {"create", create, METH_VARARGS, "Create somebody."},
