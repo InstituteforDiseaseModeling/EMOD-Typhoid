@@ -33,13 +33,13 @@ namespace Kernel
         virtual void Update_Male_Queue      ( float dt ) override;
 
         // function to support adding in new vectors (Wolbachia types, etc...)
-        virtual void AddVectors(VectorMatingStructure _vector_genetics, unsigned long int releasedNumber) override;
+        virtual void AddVectors(VectorMatingStructure _vector_genetics, uint64_t releasedNumber) override;
 
         // IInfectable
         virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route ) override;
 
         virtual void Vector_Migration( IMigrationInfo* pMigInfo, VectorCohortList_t* pMigratingQueue ) override;
-        virtual unsigned long int Vector_Migration(float = 0.0f, VectorCohortList_t * = nullptr) override;
+        virtual uint64_t Vector_Migration(float = 0.0f, VectorCohortList_t * = nullptr) override;
 
     protected:
         uint32_t m_mosquito_weight;
