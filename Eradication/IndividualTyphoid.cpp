@@ -342,12 +342,20 @@ namespace Kernel
 			if ((peak_start_day - peak_end_day < 0) && (nDayOfYear >= peak_start_day) && (nDayOfYear <= peak_end_day)) { // peak of wastewater irrigation
                 amplification= peak_amplification;
 	    }
-            if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_down_days)) ){ // end of wastewater irrigation
-                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);
+            if ((peak_end_day + ramp_down_days < 365) && (nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_down_days))){                
+				amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);}
+			if ((peak_end_day + ramp_down_days >= 365) && ((nDayOfYear > peak_end_day) || (nDayOfYear < ramp_down_days - (365- peak_end_day)))){
+				// end of wastewater irrigation
+				if (nDayOfYear > peak_end_day){
+				amplification = peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);}
+				if (nDayOfYear < ramp_down_days - (365 - peak_end_day)){
+					amplification = peak_amplification - (((365-peak_end_day)+nDayOfYear-0.5)*slope_down);}
+
+				
 		}
 			}
 
-			else if (peak_start_day - ramp_up_days < 1){
+			else if (peak_start_day - ramp_up_days < 0){
 			if ((nDayOfYear >= peak_start_day-ramp_up_days+365) || ( nDayOfYear < peak_start_day)) { // beginning of wastewater irrigation
                 if (nDayOfYear >= peak_start_day-ramp_up_days+365){
 					amplification= (nDayOfYear - (peak_start_day-ramp_up_days+365)+0.5)*(slope_up);
@@ -367,6 +375,7 @@ namespace Kernel
 		}
 			
 			}
+			LOG_INFO_F("day of year %i amplification %f start %f end %f \n", nDayOfYear, amplification, peak_start_day, peak_end_day);
 
 
 			float intervention_multiplier = 1;
@@ -403,11 +412,11 @@ namespace Kernel
                     _routeOfInfection = transmission_route;
                     StrainIdentity strainId;
                     //LOG_DEBUG("INDIVIDUAL INFECTED BY ENVIRONMENT.\n"); // This is for reporting DON'T DELETE :)
-					if (fEnvironment <= 10000){ 
+					if (fEnvironment <= 5050000){ 
 						doseTracking = "Low";}
-					if (fEnvironment > 10000 & fEnvironment <= 10000000){
+					if (fEnvironment > 5050000 & fEnvironment <= 55000000){
 						doseTracking = "Medium";}
-					if (fEnvironment > 10000000){
+					if (fEnvironment > 55000000){
 						doseTracking = "High";}
 					//LOG_INFO_F("dose %f, tracking %s", fEnvironment, doseTracking);
 					AcquireNewInfection(&strainId);
@@ -759,7 +768,7 @@ namespace Kernel
                                 if (GetGender()==1)
                                 {
                                     p3=FemaleGallstones[agebin];
-                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male * 1.3793;
+                                    carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female;
                                 } 
                                 else if (GetGender()==0)
                                 {
