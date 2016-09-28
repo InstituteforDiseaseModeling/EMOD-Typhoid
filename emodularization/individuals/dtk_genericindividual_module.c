@@ -1,5 +1,6 @@
 #include <Python.h>
 #include <iostream>
+#include "RANDOM.h"
 
 #include "Environment.h"
 #include "SimulationConfig.h"
@@ -10,8 +11,22 @@
 
 Kernel::IndividualHuman * person = nullptr;
 Configuration * configStubJson = nullptr;
+static PyObject *my_callback = NULL;
 
 using namespace Kernel;
+
+void
+pyMathFuncInit()
+{
+    if( Environment::getInstance()->RNG == nullptr )
+    {
+        unsigned int randomseed[2];
+        randomseed[0] = 0;
+        randomseed[1] = 0;
+        auto rng = new PSEUDO_DES(*reinterpret_cast<uint32_t*>(randomseed));
+        const_cast<Environment*>(Environment::getInstance())->RNG = rng;
+    }
+}
 
 class StubNode : public INodeContext
 {
@@ -19,6 +34,7 @@ class StubNode : public INodeContext
         StubNode()
         {
             //IPFactory::CreateFactory();
+            pyMathFuncInit();
         }
 
         virtual int32_t AddRef() {}
@@ -56,70 +72,110 @@ class StubNode : public INodeContext
         }
 
         // This is so we can pass a faux-node
-        virtual void VisitIndividuals( INodeEventContext::individual_visit_function_t func) {}
-        virtual int VisitIndividuals(IVisitIndividual* pIndividualVisitImpl, int limit = -1) {} 
-        virtual const NodeDemographics& GetDemographics() {}
-        virtual bool GetUrban() const {}
-        virtual IdmDateTime GetTime() const {}
-        virtual void UpdateInterventions(float = 0.0f) {} 
-        virtual void RegisterTravelDistributionSource(ITravelLinkedDistributionSource *tles, INodeEventContext::TravelEventType type) {}
-        virtual void UnregisterTravelDistributionSource(ITravelLinkedDistributionSource *tles, INodeEventContext::TravelEventType type) {} 
-        virtual const suids::suid & GetId() const {}
-        virtual void SetContextTo(INodeContext* context) {}
-        virtual std::list<INodeDistributableIntervention*> GetInterventionsByType(const std::string& type_name) {}
-        virtual void PurgeExisting( const std::string& iv_name ) {} 
-        virtual bool IsInPolygon(float* vertex_coords, int numcoords) {}
-        virtual bool IsInExternalIdSet( const tNodeIdList& nodelist ) {}
-        virtual ::RANDOMBASE* GetRng() {}
-        virtual INodeContext* GetNodeContext() {} 
-        virtual int GetIndividualHumanCount() const {}
-        virtual ExternalNodeId_t GetExternalId() const {}
+        virtual void VisitIndividuals( INodeEventContext::individual_visit_function_t func) { std::cout << __FUNCTION__ << std::endl; }
+        virtual int VisitIndividuals(IVisitIndividual* pIndividualVisitImpl, int limit = -1) { std::cout << __FUNCTION__ << std::endl; } 
+        virtual const NodeDemographics& GetDemographics() { std::cout << __FUNCTION__ << std::endl; }
+        virtual bool GetUrban() const { std::cout << __FUNCTION__ << std::endl; }
+        virtual IdmDateTime GetTime() const { std::cout << __FUNCTION__ << std::endl; }
+        virtual void UpdateInterventions(float = 0.0f) { std::cout << __FUNCTION__ << std::endl; } 
+        virtual void RegisterTravelDistributionSource(ITravelLinkedDistributionSource *tles, INodeEventContext::TravelEventType type) { std::cout << __FUNCTION__ << std::endl; }
+        virtual void UnregisterTravelDistributionSource(ITravelLinkedDistributionSource *tles, INodeEventContext::TravelEventType type) { std::cout << __FUNCTION__ << std::endl; } 
+        virtual const suids::suid & GetId() const { std::cout << __FUNCTION__ << std::endl; }
+        virtual void SetContextTo(INodeContext* context) { std::cout << __FUNCTION__ << std::endl; }
+        virtual std::list<INodeDistributableIntervention*> GetInterventionsByType(const std::string& type_name) { std::cout << __FUNCTION__ << std::endl; }
+        virtual void PurgeExisting( const std::string& iv_name ) { std::cout << __FUNCTION__ << std::endl; } 
+        virtual bool IsInPolygon(float* vertex_coords, int numcoords) { std::cout << __FUNCTION__ << std::endl; }
+        virtual bool IsInExternalIdSet( const tNodeIdList& nodelist ) { std::cout << __FUNCTION__ << std::endl; }
+        virtual ::RANDOMBASE* GetRng() { std::cout << __FUNCTION__ << std::endl; }
+        virtual INodeContext* GetNodeContext() { std::cout << __FUNCTION__ << std::endl; } 
+        virtual int GetIndividualHumanCount() const { std::cout << __FUNCTION__ << std::endl; }
+        virtual ExternalNodeId_t GetExternalId() const { std::cout << __FUNCTION__ << std::endl; }
 
 
-        virtual ISimulationContext* GetParent() override {}
-        virtual suids::suid GetSuid() const override {}
-        virtual void SetContextTo( ISimulationContext* ) override {}
-        virtual void SetMonteCarloParameters(float indsamplerate =.05, int nummininf = 0) override {}
-        virtual void SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory) override {}
-        virtual void PopulateFromDemographics() override {}
-        virtual suids::suid GetNextInfectionSuid() override {}
-        virtual void Update(float dt) override {}
+        virtual ISimulationContext* GetParent() override { std::cout << __FUNCTION__ << std::endl; }
+        virtual suids::suid GetSuid() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void SetContextTo( ISimulationContext* ) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void SetMonteCarloParameters(float indsamplerate =.05, int nummininf = 0) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void SetParameters(NodeDemographicsFactory *demographics_factory, ClimateFactory *climate_factory) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void PopulateFromDemographics() override { std::cout << __FUNCTION__ << std::endl; }
+        virtual suids::suid GetNextInfectionSuid() override {
+            std::cout << __FUNCTION__ << std::endl;
+            return Kernel::suids::nil_suid();
+        }
+        virtual void Update(float dt) override { std::cout << __FUNCTION__ << std::endl; }
         virtual IIndividualHuman* processImmigratingIndividual( IIndividualHuman* ) override { return nullptr; }
-        virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) override {}
-        virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual) override {}
-        virtual void GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) override {}
-        virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight) override {}
-        virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership) override {}
-        virtual const RouteList_t& GetTransmissionRoutes( ) const override {}
-        virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const override {}
-        virtual float getBoxcarCorrection(float boxcar_amplitude, float boxcar_start_time, float boxcar_end_time) const override {}
-        virtual act_prob_vec_t DiscreteGetTotalContagion(const TransmissionGroupMembership_t* membership) override {}
-        virtual IMigrationInfo* GetMigrationInfo() override {}
+        virtual void DepositFromIndividual(StrainIdentity* strain_IDs, float contagion_quantity, const TransmissionGroupMembership_t* individual) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void GetGroupMembershipForIndividual(const RouteList_t& route, tProperties* properties, TransmissionGroupMembership_t* membershipOut ) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void UpdateTransmissionGroupPopulation(const TransmissionGroupMembership_t* membership, float size_changes,float mc_weight) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float GetTotalContagion(const TransmissionGroupMembership_t* membership) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual const RouteList_t& GetTransmissionRoutes( ) const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float getSinusoidalCorrection(float sinusoidal_amplitude, float sinusoidal_phase) const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float getBoxcarCorrection(float boxcar_amplitude, float boxcar_start_time, float boxcar_end_time) const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual act_prob_vec_t DiscreteGetTotalContagion(const TransmissionGroupMembership_t* membership) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual IMigrationInfo* GetMigrationInfo() override { std::cout << __FUNCTION__ << std::endl; }
         virtual const NodeDemographics* GetDemographics() const override { return nullptr; }
         virtual const NodeDemographicsDistribution* GetDemographicsDistribution(std::string) const override { return nullptr; }
-        virtual float       GetInfected()      const override {}
-        virtual float       GetStatPop()       const override {}
-        virtual float       GetBirths()        const override {}
-        virtual float       GetCampaignCost()  const override {}
-        virtual float       GetInfectivity()   const override {}
-        virtual float       GetInfectionRate() const override {}
-        virtual float       GetSusceptDynamicScaling() const override {}
-        virtual const Climate* GetLocalWeather() const override {}
-        virtual long int GetPossibleMothers()  const override {}
-        virtual float GetMeanAgeInfection()    const override {}
-        virtual float GetLatitudeDegrees() override {}
-        virtual float GetLongitudeDegrees() override {}
-        virtual ExternalNodeId_t GetExternalID() const override {}
+        virtual float       GetInfected()      const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float       GetStatPop()       const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float       GetBirths()        const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float       GetCampaignCost()  const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float       GetInfectivity()   const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float       GetInfectionRate() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float       GetSusceptDynamicScaling() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual const Climate* GetLocalWeather() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual long int GetPossibleMothers()  const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float GetMeanAgeInfection()    const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float GetLatitudeDegrees() override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float GetLongitudeDegrees() override { std::cout << __FUNCTION__ << std::endl; }
+        virtual ExternalNodeId_t GetExternalID() const override { std::cout << __FUNCTION__ << std::endl; }
         virtual INodeEventContext* GetEventContext() override { return nullptr; }
-        virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override {}
-        virtual bool IsEveryoneHome() const override {}
-        virtual float GetBasePopulationScaleFactor() const override {}
-        virtual ProbabilityNumber GetProbMaternalTransmission() const override {}
-        virtual void SetupMigration( IMigrationInfoFactory * migration_factory, MigrationStructure::Enum ms, const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override {}
-        virtual std::vector<bool> GetMigrationTypeEnabledFromDemographics() const override {}
-        virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, MigrationType::Enum migrationType, float timeUntilTrip, float timeAtDestination, bool isDestinationNewHome ) override {}
+        virtual void AddEventsFromOtherNodes( const std::vector<std::string>& rEventNameList ) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual bool IsEveryoneHome() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual float GetBasePopulationScaleFactor() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual ProbabilityNumber GetProbMaternalTransmission() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void SetupMigration( IMigrationInfoFactory * migration_factory, MigrationStructure::Enum ms, const boost::bimap<ExternalNodeId_t, suids::suid>& rNodeIdSuidMap ) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual std::vector<bool> GetMigrationTypeEnabledFromDemographics() const override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void SetWaitingForFamilyTrip( suids::suid migrationDestination, MigrationType::Enum migrationType, float timeUntilTrip, float timeAtDestination, bool isDestinationNewHome ) override { std::cout << __FUNCTION__ << std::endl; }
+        virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) override
+        {
+            //transmissionGroups->ExposeToContagion(candidate, individual, dt);
+            std::cout << __FUNCTION__ << std::endl;
+            PyObject *arglist = Py_BuildValue("(s,f)", "expose", 1.0 );
+            PyObject *retVal = PyObject_CallObject(my_callback, arglist);
+            bool infect = false;
+            infect = PyInt_AsLong( retVal );
+            if( infect )
+            {
+                IInfectionAcquirable* ind = nullptr;
+                candidate->QueryInterface( GET_IID( IInfectionAcquirable ), &ind );
+                ind->AcquireNewInfection();
+            }
+            Py_DECREF(arglist);
+        }
 };
 StubNode node;
+
+
+my_set_callback(PyObject *dummy, PyObject *args)
+{
+    PyObject *result = NULL;
+    PyObject *temp;
+
+    if (PyArg_ParseTuple(args, "O:set_callback", &temp))
+    {
+        if (!PyCallable_Check(temp)) {
+            PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+            return NULL;
+        } 
+        Py_XINCREF(temp);         /* Add a reference to new callback */ 
+        Py_XDECREF(my_callback);  /* Dispose of previous callback */ 
+        my_callback = temp;       /* Remember new callback */
+        /* Boilerplate to return "None" */
+        Py_INCREF(Py_None);
+        result = Py_None;
+    }
+    return result;
+}
 
 static void initInd( bool dr = false )
 {
@@ -131,7 +187,7 @@ static void initInd( bool dr = false )
         Kernel::IndividualHuman::InitializeStatics( configStubJson );
         std::cout << "Initialized Statics from gi.json." << std::endl;
         Kernel::JsonConfigurable::_useDefaults = false; 
-        person->SetParameters( &node, 0.0f, 0.0f, 0.0f, 0.0f );
+        person->SetParameters( &node, 0.0f, 1.0f, 0.0f, 0.0f );
     }
 }
 
@@ -165,6 +221,27 @@ update(PyObject* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
+static PyObject*
+getAge(PyObject* self, PyObject* args)
+{
+    auto age = person->GetAge();
+    return Py_BuildValue("f", age );
+}
+
+static PyObject*
+isInfected(PyObject* self, PyObject* args)
+{
+    bool inf_status = person->IsInfected();
+    return Py_BuildValue("b", inf_status );
+}
+
+static PyObject*
+getImmunity(PyObject* self, PyObject* args)
+{
+    float imm = person->GetAcquisitionImmunity();
+    return Py_BuildValue("f", imm );
+}
+
 // Simualtion class is a friend which is necessary for calling Configure
 namespace Kernel {
     class Simulation
@@ -193,13 +270,17 @@ getSchema(PyObject* self, PyObject* args)
     bool ret = false;
     Kernel::Simulation ti;
     //std::cout << ti.result.c_str() << std::endl;
-    return Py_BuildValue("s", ti.result.c_str() );;
+    return Py_BuildValue("s", ti.result.c_str() );
 }
 
 static PyMethodDef GenericIndividualMethods[] =
 {
      {"create", create, METH_VARARGS, "Create somebody."},
      {"update", update, METH_VARARGS, "Update somebody."},
+     {"get_age", getAge, METH_VARARGS, "Get age."},
+     {"is_infected", isInfected, METH_VARARGS, "Has 1+ infections."},
+     {"get_immunity", getImmunity, METH_VARARGS, "Returns acquisition immunity (product of immune system and interventions modifier)."},
+     {"my_set_callback", my_set_callback, METH_VARARGS, "Set callback."},
      {"get_schema", getSchema, METH_VARARGS, "Update."},
      {NULL, NULL, 0, NULL}
 };
