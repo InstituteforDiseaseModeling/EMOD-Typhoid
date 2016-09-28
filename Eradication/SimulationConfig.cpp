@@ -24,6 +24,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "Log.h"
 #include "Sugar.h"
+#include "NoCrtWarnings.h"
 
 #ifndef DISABLE_VECTOR
 #include "VectorParameters.h"

@@ -13,15 +13,13 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include <vector>
 #include <string>
 #include <fstream>
+#include <unordered_map>
 
 #ifdef __GNUC__
-#include <ext/unordered_map>
 namespace std
 {
      using namespace __gnu_cxx;
 }
-#else
-#include <unordered_map>
 #endif
 
 #include "IMigrationInfo.h"
