@@ -74,7 +74,6 @@ namespace Kernel
 
         // typhoid infection state
         std::string state_to_report; // typhoid status of individual
-        std::string last_state_reported; // previous typhoid status of individual
         bool hasClinicalImmunity; // is immune to clinical infection
         bool isChronic;       // is or will be a chronic carrier (using "Ames" definition)
         int _infection_count;     // number of times infected;

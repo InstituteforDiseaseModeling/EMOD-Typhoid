@@ -76,6 +76,7 @@ namespace Kernel
         int _prepatent_duration;
         int _acute_duration; // duration of state in days
         bool isDead;  // is this individual dead?
+        std::string last_state_reported; // previous typhoid status of individual
         static const int _chronic_duration;
         static const int _clinical_immunity_duration;
 

@@ -149,6 +149,7 @@ namespace Kernel
         _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         isDead = false;
         InfectionEnvironmental::Initialize(_suid);
+        last_state_reported = "S";
     }
 
     InfectionTyphoid *InfectionTyphoid::CreateInfection(IIndividualHumanContext *context, suids::suid _suid)
@@ -197,6 +198,7 @@ namespace Kernel
         auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
         auto mort = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedMortality();
         bool hasClinicalImmunity = false;
+        bool state_changed = false;
         std::string state_to_report = "S"; // default state is susceptible
         {
             //            LOG_INFO_F("%d INFECTED!!!%d,%d,%d,%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
@@ -309,8 +311,6 @@ namespace Kernel
                 }
             }
 
-
-
             //Assume all acute individuals seek treatment since this is Mike's "reported" fraction
             //Some fraction are treated effectively, some become chronic carriers, some die, some remain infectious
 
@@ -357,6 +357,38 @@ namespace Kernel
                 if (UNINIT_TIMER< chronic_timer && chronic_timer<=0)
                     chronic_timer = UNINIT_TIMER;
             }
+        }
+
+        if (last_state_reported==state_to_report)
+        {
+            // typhoid state is the same as before
+            state_changed = false;
+        }
+        else
+        {
+            // typhoid state changed
+            last_state_reported=state_to_report;
+            state_changed = true;
+        }
+        LOG_DEBUG_F( "state_to_report for individual %d = %s\n", GetSuid().data, state_to_report.c_str() );
+
+        if( state_to_report == "S" && state_changed ) // && GetInfections().size() > 0 )
+        {
+            // ClearInfection
+            /*
+            auto inf = GetInfections().front();
+            IInfectionTyphoid * inf_typhoid  = NULL;
+            if (s_OK != inf->QueryInterface(GET_IID(IInfectionTyphoid ), (void**)&inf_typhoid) )
+            {
+                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionTyphoid ", "Infection" );
+            }
+            // get InfectionTyphoid pointer
+            inf_typhoid->Clear();*/
+            Clear();
+        }
+        else if( state_to_report == "D" && state_changed )
+        {    
+            LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
         return;
         /*
