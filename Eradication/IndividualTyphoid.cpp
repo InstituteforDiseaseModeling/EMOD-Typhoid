@@ -45,16 +45,10 @@ IdmPyInit(
 
 static const char * _module = "IndividualTyphoid";
 
-#define UNINIT_TIMER (-100.0f)
 
 
 namespace Kernel
 {
-    inline float generateRandFromLogNormal(float m, float s) {
-        // inputs: m is mean of underlying distribution, s is std dev
-        return (exp((m)+randgen->eGauss()*s));
-    }
-
 
     class Stopwatch
     {
@@ -82,53 +76,12 @@ namespace Kernel
     };
     const float IndividualHumanTyphoid::P5 = 0.05f; // probability of typhoid death
     const float IndividualHumanTyphoid::P7 = 0.0f; // probability of clinical immunity after acute infection
-    const float IndividualHumanTyphoid::P10 = 0.0f; // probability of clinical immunity from a subclinical infection
-
-    const int IndividualHumanTyphoid::_chronic_duration = 100000000;
-    const int IndividualHumanTyphoid::_clinical_immunity_duration = 160*30;
-
-    // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
-    // mean and std dev of log normal distribution
-    const float IndividualHumanTyphoid::mpl = 2.2350f;
-    const float IndividualHumanTyphoid::spl = 0.4964f;
-    const float IndividualHumanTyphoid::mpm = 2.0026f;
-    const float IndividualHumanTyphoid::spm = 0.7604f;
-    const float IndividualHumanTyphoid::mph = 1.5487f; // math.log(4.7)
-    const float IndividualHumanTyphoid::sph = 0.3442f;
-
-    // Subclinical infectious duration parameters: mean and standard deviation under and over 30 (refitted without carriers)
-    //const float IndividualHumanTyphoid::mso30=3.430830f;
-    //const float IndividualHumanTyphoid::sso30=0.922945f;
-    //const float IndividualHumanTyphoid::msu30=3.1692211f;
-    //const float IndividualHumanTyphoid::ssu30=0.5385523f;
-    const float IndividualHumanTyphoid::mso30=1.2584990f;
-    const float IndividualHumanTyphoid::sso30=0.7883767f;
-    const float IndividualHumanTyphoid::msu30=1.171661f;
-    const float IndividualHumanTyphoid::ssu30=0.483390f;
-
-    // Acute infectious duration parameters: mean and standard deviation under and over 30
-    //const float IndividualHumanTyphoid::mao30=3.430830f;
-    //const float IndividualHumanTyphoid::sao30=0.922945f;
-    //const float IndividualHumanTyphoid::mau30=3.1692211f;
-    //const float IndividualHumanTyphoid::sau30=0.5385523f;
-    const float IndividualHumanTyphoid::mao30=1.2584990f;
-    const float IndividualHumanTyphoid::sao30=0.7883767f;
-    const float IndividualHumanTyphoid::mau30=1.171661f;
-    const float IndividualHumanTyphoid::sau30=0.483390f;
-
-    const int IndividualHumanTyphoid::acute_treatment_day = 5; // how many days after infection will people receive treatment
-    const float IndividualHumanTyphoid::CFRU = 0.00f;   // case fatality rate?
-    const float IndividualHumanTyphoid::CFRH = 0.00f; // hospitalized case fatality rate?
-    const float IndividualHumanTyphoid::treatmentprobability = 1.0f;  // probability of treatment seeking for an acute case. we are in santiago so assume 100%
 
     // environmental exposure constants
     const int IndividualHumanTyphoid::N50 = 1110000;
     const float IndividualHumanTyphoid::alpha = 0.175f;
 
 
-    const int GallstoneDataLength= 9;
-    const double FemaleGallstones[GallstoneDataLength] = {0.0, 0.097, 0.234, 0.431, 0.517, 0.60, 0.692, 0.692, 0.555}; // 10-year age bins
-    const double MaleGallstones[GallstoneDataLength] = {0.0, 0.0, 0.045, 0.134, 0.167, 0.198, 0.247, 0.435, 0.4};
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Individual,IndividualHumanTyphoid)
     BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanTyphoid, IndividualHumanEnvironmental)
         HANDLE_INTERFACE(IIndividualHumanTyphoid)
@@ -167,16 +120,8 @@ namespace Kernel
         last_state_reported = "S";
         _infection_count=0; // should not be necessary
         hasClinicalImmunity = false;
-        chronic_timer = UNINIT_TIMER;
-        subclinical_timer = UNINIT_TIMER;
-        acute_timer = UNINIT_TIMER;
-        prepatent_timer = UNINIT_TIMER;
-        clinical_immunity_timer =UNINIT_TIMER;
-        _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         _routeOfInfection = TransmissionRoute::TRANSMISSIONROUTE_ALL;// IS THIS OK for a default? DLC
-        isDead = false;
         doseTracking = "None";
-        treatment_multiplier = 1;
 #endif
     }
 
@@ -553,25 +498,6 @@ namespace Kernel
         {
             return;
         }
-        infectiousness = 0.0f;
-        float base_infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_acute_infectiousness;
-        if (acute_timer>=0)
-        {
-            infectiousness = treatment_multiplier*base_infectiousness*interventions->GetInterventionReducedTransmit();
-        }
-        else if (prepatent_timer>=0)
-        {
-            infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_prepatent_relative_infectiousness*interventions->GetInterventionReducedTransmit();
-        }
-        else if (subclinical_timer>=0)
-        {
-            infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_subclinical_relative_infectiousness*interventions->GetInterventionReducedTransmit();
-        }
-        else if (chronic_timer>=0)
-        {
-            infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_chronic_relative_infectiousness*interventions->GetInterventionReducedTransmit();
-        }
-
         //parent->GetTransmissionRoutes()
 
         for (auto infection : infections)
@@ -589,8 +515,8 @@ namespace Kernel
                 LOG_DEBUG_F("Found route:%s.\n",entry.first.c_str());
                 if (entry.first==string("contact"))
                 {
-                    //          float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousnessByRoute(string("contact"));
-                    float tmp_infectiousnessOral = infectiousness;
+                    float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousness(); //ByRoute(string("contact"));
+                    //float tmp_infectiousnessOral = infectiousness;
                     if (tmp_infectiousnessOral > 0.0f)
                     {
                         LOG_DEBUG_F("Depositing %f to route %s: (antigen=%d, substain=%d)\n", tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());
@@ -599,9 +525,8 @@ namespace Kernel
                 }
                 else if (entry.first==string("environmental"))
                 {
-                    //                    float tmp_infectiousnessFecal =  m_mc_weight * infection->GetInfectiousnessByRoute(string("environmental"));
-
-                    float tmp_infectiousnessFecal =  infectiousness;
+                    float tmp_infectiousnessFecal =  m_mc_weight * infection->GetInfectiousness(); // ByRoute(string("environmental"));
+                    //float tmp_infectiousnessFecal =  infectiousness;
                     if (tmp_infectiousnessFecal > 0.0f)
                     {
                         LOG_DEBUG_F("UpdateInfectiousness::Depositing %f to route %s: (antigen=%d, substain=%d)\n", tmp_infectiousnessFecal, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());    
@@ -682,6 +607,7 @@ namespace Kernel
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
 #else
+#if 0
         state_to_report = "S"; // default state is susceptible
         if( IsInfected() )
         {
@@ -844,8 +770,9 @@ namespace Kernel
                     chronic_timer = UNINIT_TIMER;
             }
         }
+#endif
 
-        if (hasClinicalImmunity && subclinical_timer ==UNINIT_TIMER && prepatent_timer ==UNINIT_TIMER )
+        /*if (hasClinicalImmunity && subclinical_timer ==UNINIT_TIMER && prepatent_timer ==UNINIT_TIMER )
         {
             state_to_report="CI";
             clinical_immunity_timer -= dt;
@@ -854,7 +781,7 @@ namespace Kernel
                 hasClinicalImmunity = false;
                 clinical_immunity_timer = UNINIT_TIMER;
             }
-        }
+        }*/
 
         if (last_state_reported==state_to_report)
         {
@@ -920,28 +847,14 @@ namespace Kernel
         }
         delete check;
 #else
-        if (doseTracking == "High")
-        {
-            _prepatent_duration = (int)(generateRandFromLogNormal(mph, sph));
-
-        }
-        else if (doseTracking == "Medium")
-        {
-            _prepatent_duration = (int)(generateRandFromLogNormal(mpm, spm));
-        }	
-        else if (doseTracking == "Low")
-        {
-            _prepatent_duration = (int)(generateRandFromLogNormal(mpl, spl));
-        }
-        else
-        {
-            // neither environmental nor contact source. probably from initial seeding
-            _prepatent_duration = (int)(generateRandFromLogNormal(mpl, spl));
-        }
         //LOG_INFO_F("Prepatent %d. dose %s \n", _prepatent_duration, doseTracking);
         _infection_count ++;
-        prepatent_timer=_prepatent_duration;
 #endif
+    }
+
+    const std::string IndividualHumanTyphoid::getDoseTracking() const
+    {
+        return doseTracking;
     }
 
     HumanStateChange IndividualHumanTyphoid::GetStateChange() const

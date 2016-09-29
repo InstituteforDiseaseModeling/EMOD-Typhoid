@@ -50,6 +50,7 @@ namespace Kernel
         virtual bool IsSubClinical( bool incidence_only = true ) const;
         virtual bool IsAcute( bool incidence_only = true ) const;
         virtual bool IsPrePatent( bool incidence_only = true ) const;
+        const std::string getDoseTracking() const;
 
     protected:
         // New Exposure Pattern
@@ -74,21 +75,11 @@ namespace Kernel
         // typhoid infection state
         std::string state_to_report; // typhoid status of individual
         std::string last_state_reported; // previous typhoid status of individual
-        int chronic_timer,
-            subclinical_timer,
-            acute_timer,
-            prepatent_timer,
-            clinical_immunity_timer;  // timers of days left in state, or UNINIT_TIMER if not used //JG- I'm going to leave clinical immunity in for now. 
-        int _subclinical_duration,
-            _prepatent_duration,
-            _acute_duration; // duration of state in days
         bool hasClinicalImmunity; // is immune to clinical infection
         bool isChronic;       // is or will be a chronic carrier (using "Ames" definition)
         int _infection_count;     // number of times infected;
         TransmissionRoute::Enum _routeOfInfection; // how did this person get infected?
-        bool isDead;  // is this individual dead?
         bool state_changed;
-		int treatment_multiplier;
 		std::string doseTracking;
 
 
@@ -100,37 +91,7 @@ namespace Kernel
         static const float P7; // probability of clinical immunity after acute infection
         //////////JG REMOVE static const float P8; // probability of sterile immunity from a subclinical infectin in the clinically immune
         //////////JG REMOVE static const float P9; // probability of sterile immunity from a subclinical infection
-        static const float P10; // probability of clinical immunity from a subclinical infection
 
-        static const int _chronic_duration;
-        static const int _clinical_immunity_duration;
-
-        // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
-        // mean and std dev of log normal distribution
-        static const float mph;
-        static const float sph;
-        static const float mpm;
-        static const float spm;
-		static const float mpl;
-        static const float spl;
-
-        // Subclinical infectious duration parameters: mean and standard deviation under and over 30
-        static const float mso30;
-        static const float sso30;
-        static const float msu30;
-        static const float ssu30;
-
-        // Acute infectious duration parameters: mean and standard deviation under and over 30
-        static const float mao30;
-        static const float sao30;
-        static const float mau30;
-        static const float sau30;
-
-        static const int acute_treatment_day; // what day individuals are treated
-        static const float CFRU;   // case fatality rate?
-        static const float CFRH; // hospitalized case fatality rate?
-        static const float treatmentprobability;  // probability of treatment
-	
 
         // typhoid constants from "OutBase.csv" file
         //////////JG REMOVE static float agechronicmale[200]; //probability of becoming chronic carrier, male
