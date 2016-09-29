@@ -65,6 +65,7 @@ namespace Kernel
         virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
         virtual HumanStateChange GetStateChange() const;
         
+        float getSeasonalAmplitude() const;
 
         std::string processPrePatent( float dt );
 
