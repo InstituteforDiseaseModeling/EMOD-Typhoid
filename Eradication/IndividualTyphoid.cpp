@@ -260,6 +260,7 @@ namespace Kernel
         susceptibility = newsusceptibility;
     }
 
+    // I think I want to move this function to NodeTyphoid
     float IndividualHumanTyphoid::getSeasonalAmplitude() const
     {
         float amplification = 0.0f;
@@ -290,11 +291,12 @@ namespace Kernel
         //}
         int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
         int nDayOfYear = SimDay % DAYSPERYEAR;
+#define HALF (0.5f)
         if (peak_start_day - ramp_up_days > 0)
         {
             if ((nDayOfYear >= peak_start_day-ramp_up_days) && ( nDayOfYear < peak_start_day))
             { // beginning of wastewater irrigation
-                amplification=((nDayOfYear- (peak_start_day-ramp_up_days))+0.5)*(slope_up);
+                amplification=((nDayOfYear- (peak_start_day-ramp_up_days))+ HALF )*(slope_up);
             }
             if ((peak_start_day - peak_end_day > 0) && ((nDayOfYear >= peak_start_day)  || (nDayOfYear<=peak_end_day)))
             { // peak of wastewater irrigation
@@ -306,18 +308,18 @@ namespace Kernel
             }
             if ((peak_end_day + ramp_down_days < DAYSPERYEAR) && (nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_down_days)))
             {                
-                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)- HALF )*slope_down);
             }
             if ((peak_end_day + ramp_down_days >= DAYSPERYEAR) && ((nDayOfYear > peak_end_day) || (nDayOfYear < ramp_down_days - (DAYSPERYEAR- peak_end_day))))
             {
                 // end of wastewater irrigation
                 if (nDayOfYear > peak_end_day)
                 {
-                    amplification = peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);
+                    amplification = peak_amplification-(((nDayOfYear-peak_end_day)- HALF )*slope_down);
                 }
                 if (nDayOfYear < ramp_down_days - (DAYSPERYEAR - peak_end_day))
                 {
-                    amplification = peak_amplification - (((DAYSPERYEAR-peak_end_day)+nDayOfYear-0.5)*slope_down);
+                    amplification = peak_amplification - (((DAYSPERYEAR-peak_end_day)+nDayOfYear- HALF )*slope_down);
                 }
             }
         }
@@ -327,11 +329,11 @@ namespace Kernel
             { // beginning of wastewater irrigation
                 if (nDayOfYear >= peak_start_day-ramp_up_days+DAYSPERYEAR)
                 {
-                    amplification= (nDayOfYear - (peak_start_day-ramp_up_days+DAYSPERYEAR)+0.5)*(slope_up);
+                    amplification= (nDayOfYear - (peak_start_day-ramp_up_days+DAYSPERYEAR)+ HALF )*(slope_up);
                 }
                 else if (nDayOfYear < peak_start_day) 
                 {
-                    amplification= (((ramp_up_days-peak_start_day) + nDayOfYear)  + 0.5)*(slope_up);
+                    amplification= (((ramp_up_days-peak_start_day) + nDayOfYear)  +  HALF )*(slope_up);
                 }
             }
             if ((peak_start_day - peak_end_day > 0) && ((nDayOfYear >= peak_start_day)  || (nDayOfYear<=peak_end_day)))
@@ -344,7 +346,7 @@ namespace Kernel
             }
             if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_down_days)) )
             { // end of wastewater irrigation
-                amplification= peak_amplification-(((nDayOfYear-peak_end_day)-0.5)*slope_down);
+                amplification= peak_amplification-(((nDayOfYear-peak_end_day)- HALF )*slope_down);
             }
 
         }
@@ -352,33 +354,37 @@ namespace Kernel
         return amplification;
     }
 
+#define HIGH_ENVIRO_DOSE_THRESHOLD (55000000)
+#define LOW_ENVIRO_DOSE_THRESHOLD (5050000)
     void IndividualHumanTyphoid::quantizeEnvironmentalDoseTracking( float fEnvironment )
     {
-        if (fEnvironment <= 5050000)
+        if (fEnvironment <= LOW_ENVIRO_DOSE_THRESHOLD )
         { 
             doseTracking = "Low";
         }
-        else if (fEnvironment > 5050000 & fEnvironment <= 55000000)
+        else if( fEnvironment > LOW_ENVIRO_DOSE_THRESHOLD && fEnvironment <= HIGH_ENVIRO_DOSE_THRESHOLD )
         {
             doseTracking = "Medium";
         }
-        if (fEnvironment > 55000000)
+        else if( fEnvironment > HIGH_ENVIRO_DOSE_THRESHOLD ) // just else should do
         {
             doseTracking = "High";
         }
     }
 
+#define HIGH_CONTACT_DOSE_THRESHOLD (10000000)
+#define LOW_CONTACT_DOSE_THRESHOLD (10000)
     void IndividualHumanTyphoid::quantizeContactDoseTracking( float fContact )
     {
-        if (fContact <= 10000)
+        if( fContact <= LOW_CONTACT_DOSE_THRESHOLD )
         { 
             doseTracking = "Low";
         }
-        if (fContact > 10000 & fContact <= 10000000)
+        else if( fContact > LOW_CONTACT_DOSE_THRESHOLD && fContact <= HIGH_CONTACT_DOSE_THRESHOLD )
         {
             doseTracking = "Medium";
         }
-        if (fContact > 10000000)
+        else if( fContact > HIGH_CONTACT_DOSE_THRESHOLD ) // just else should do
         {
             doseTracking = "High";
         }
