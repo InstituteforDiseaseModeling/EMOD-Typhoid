@@ -199,7 +199,7 @@ static void initInd( bool dr = false )
         configStubJson = Configuration::Load("ti.json");
         std::cout << "configStubJson initialized from ti.json." << std::endl;
         Kernel::JsonConfigurable::_useDefaults = true;
-        Kernel::IndividualHuman::InitializeStatics( configStubJson );
+        Kernel::IndividualHumanTyphoid::InitializeStatics( configStubJson );
         std::cout << "Initialized Statics from ti.json." << std::endl;
         Kernel::JsonConfigurable::_useDefaults = false; 
         person->SetParameters( &node, 0.0f, 1.0f, 0.0f, 0.0f );
@@ -244,7 +244,8 @@ isInfected(PyObject* self, PyObject* args)
 static PyObject*
 getImmunity(PyObject* self, PyObject* args)
 {
-    float imm = person->GetAcquisitionImmunity();
+    //float imm = person->GetAcquisitionImmunity();
+    float imm = 1.0f - person->GetImmunityReducedAcquire(); // value returned is the multiple use to modify the prob of acquisition: so 0 means you're immune
     return Py_BuildValue("f", imm );
 }
 
