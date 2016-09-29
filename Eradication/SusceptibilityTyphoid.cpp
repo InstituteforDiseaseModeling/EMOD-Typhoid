@@ -25,6 +25,8 @@ static const char * _module = "SusceptibilityTyphoid";
 
 namespace Kernel
 {
+#define LOG_INFO_F printf
+#define LOG_DEBUG_F printf
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Susceptibility,SusceptibilityTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(SusceptibilityTyphoidConfig)
     END_QUERY_INTERFACE_BODY(SusceptibilityTyphoidConfig)

@@ -37,8 +37,8 @@ static const char* _module = "InfectionTyphoid";
 namespace Kernel
 {
 #define UNINIT_TIMER (-100.0f)
-//#define LOG_INFO_F printf
-//#define LOG_DEBUG_F printf
+#define LOG_INFO_F printf
+#define LOG_DEBUG_F printf
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Infection,InfectionTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(InfectionTyphoidConfig)
     END_QUERY_INTERFACE_BODY(InfectionTyphoidConfig)
@@ -193,7 +193,6 @@ namespace Kernel
         auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
         auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
         auto mort = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedMortality();
-        std::cout << "mort = " << mort << std::endl;
         //state_to_report="P";
         //LOG_DEBUG_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
         prepatent_timer=UNINIT_TIMER; 
@@ -201,16 +200,16 @@ namespace Kernel
         if (randgen->e()<(IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction*mort)) //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
         {
             if (age < ageThresholdInYears)
-                _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
+                _acute_duration = int(generateRandFromLogNormal(mau30, sau30) * DAYSPERWEEK );
             else
-                _acute_duration = int(generateRandFromLogNormal(mao30, sao30)*7);
+                _acute_duration = int(generateRandFromLogNormal(mao30, sao30) * DAYSPERWEEK );
             LOG_DEBUG_F("Infection stage transition: Prepatent->Acute: acute dur=%d\n", _acute_duration);
             acute_timer = _acute_duration;
         } else {
             if (age <= ageThresholdInYears)
-                _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30)*7);
+                _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30) * DAYSPERWEEK );
             else
-                _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30)*7);
+                _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30) * DAYSPERWEEK );
             LOG_DEBUG_F("Infection stage transition: Prepatent->SubClinical: subc dur=%d\n", _subclinical_duration );
             subclinical_timer = _subclinical_duration;
         }
@@ -237,12 +236,12 @@ namespace Kernel
             {
                 agebin=GallstoneDataLength-1;
             }
-            if (sex==1)
+            if (sex==Gender::FEMALE)
             {
                 p3=FemaleGallstones[agebin];
                 carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female;
             } 
-            else if (sex==0)
+            else // if (sex==Gender::MALE)
             {
                 p3=MaleGallstones[agebin];
                 carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_male;
