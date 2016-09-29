@@ -331,7 +331,7 @@ namespace Kernel
             }
         }
 
-        transmissionGroups->EndUpdate(1.0f);
+        transmissionGroups->EndUpdate(1.0f); // finish processing human-to-mosquito infectiousness
 
         // don't need to update the vector populations before the first timestep
         if ( dt <= 0 ) 
@@ -345,6 +345,9 @@ namespace Kernel
             population->UpdateVectorPopulation(dt);
             infectionrate += float(population->getInfectivity());
         }
+
+        // do again so that humans bitten this time step get infected
+        transmissionGroups->EndUpdate( 1.0f ); // finish processing mosquito-to-human infectiousness
 
         // Now process the node's emigrating mosquitoes
         processEmigratingVectors();

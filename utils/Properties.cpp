@@ -1444,10 +1444,10 @@ const char* IPFactory::transitions_dot_json_filename = "transitions.json";
     IPFactory* IPFactory::GetInstance()
     {
         IPFactory* p_factory = (IPFactory*)Environment::getIPFactory();
-        if( p_factory == nullptr )
+        /*if( p_factory == nullptr )
         {
             throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "IPFactory has not been created." );
-        }
+        }*/
         return p_factory;
     }
 

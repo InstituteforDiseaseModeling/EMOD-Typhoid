@@ -211,6 +211,7 @@ namespace Kernel
         {
             p2 = 1.0/p2; // data entered as inverse kappa, but need kappa
         }
+        release_assert( Probability::getInstance() );
         float duration = Probability::getInstance()->fromDistribution( m_Type, p1, p2, 0.0 );
         return duration;
     }

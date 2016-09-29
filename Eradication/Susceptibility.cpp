@@ -76,6 +76,7 @@ namespace Kernel
 
         // immune modifiers
         mod_acquire   = immmod;
+        //std::cout << "mod_acquire = " << mod_acquire << " in " << __FUNCTION__ << " based on init value: " << immmod << std::endl;
         mod_transmit  = 1;
         mod_mortality = 1;
 
@@ -141,7 +142,8 @@ namespace Kernel
     const
     {
         float susceptibility_correction = 1;
-        if( GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE &&
+        if( GET_CONFIGURABLE(SimulationConfig) && 
+            GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE &&
             GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling_rate > 0.0f )
         {
             susceptibility_correction = GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling_intercept + age*GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling_rate/DAYSPERYEAR;
@@ -179,6 +181,7 @@ namespace Kernel
         mod_acquire   *= SusceptibilityConfig::baseacqupdate;
         mod_transmit  *= SusceptibilityConfig::basetranupdate;
         mod_mortality *= SusceptibilityConfig::basemortupdate;
+        //std::cout << "mod_acquire = " << mod_acquire << " in " << __FUNCTION__ << " based on config value: " << SusceptibilityConfig::baseacqupdate << std::endl;
 
         acqdecayoffset  = SusceptibilityConfig::baseacqoffset;
         trandecayoffset = SusceptibilityConfig::basetranoffset;

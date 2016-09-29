@@ -78,6 +78,11 @@ namespace Kernel
         static int max_ind_inf;
         static bool superinfection;
         static float x_othermortality;
+        
+        // From SimConfig
+        static MigrationStructure::Enum                             migration_structure;                              // MIGRATION_STRUCTURE
+        static VitalDeathDependence::Enum                           vital_death_dependence;                           // Vital_Death_Dependence
+        static bool vital_dynamics;
 
         virtual bool Configure( const Configuration* config ) override;
 
@@ -282,6 +287,7 @@ namespace Kernel
 
         virtual void PropagateContextToDependents();
         INodeTriggeredInterventionConsumer* broadcaster;
+
 
     private:
 

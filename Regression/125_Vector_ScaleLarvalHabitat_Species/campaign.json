@@ -4,8 +4,10 @@
             "Event_Coordinator_Config": {
                 "Intervention_Config": {
                     "class": "ScaleLarvalHabitat",
-                    "Habitat_Target": "TEMPORARY_RAINFALL", 
-                    "Habitat_Scale": 0.05
+                    "Larval_Habitat_Multiplier" :
+                    {
+                        "TEMPORARY_RAINFALL" : 0.05
+                    }
                 }, 
                 "class": "NodeEventCoordinator"
             }, 
@@ -19,10 +21,9 @@
             "Event_Coordinator_Config": {
                 "Intervention_Config": {
 
-                    "COMMENT1" : "We use the LHM version so we can target a specific species without changing the others in that habitat type.",
-                    "COMMENT2" : "If we dont set the other species (i.e. gambiae) to the previous value, their habitats wont be reduced anymore.",
+                    "COMMENT1" : "NOTICE: If we dont set the other species (i.e. gambiae) to the previous value, their habitats wont be reduced anymore.",
 
-                    "class": "ScaleLarvalHabitatLHM",
+                    "class": "ScaleLarvalHabitat",
                     "Larval_Habitat_Multiplier" :
                     {
                         "TEMPORARY_RAINFALL" :
