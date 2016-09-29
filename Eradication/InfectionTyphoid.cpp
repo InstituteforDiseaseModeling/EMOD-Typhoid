@@ -37,6 +37,8 @@ static const char* _module = "InfectionTyphoid";
 namespace Kernel
 {
 #define UNINIT_TIMER (-100.0f)
+//#define LOG_INFO_F printf
+//#define LOG_DEBUG_F printf
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Infection,InfectionTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(InfectionTyphoidConfig)
     END_QUERY_INTERFACE_BODY(InfectionTyphoidConfig)
@@ -110,6 +112,14 @@ namespace Kernel
 
     InfectionTyphoid::InfectionTyphoid(IIndividualHumanContext *context) : InfectionEnvironmental(context)
     {
+        treatment_multiplier = 1;
+        chronic_timer = UNINIT_TIMER;
+        subclinical_timer = UNINIT_TIMER;
+        acute_timer = UNINIT_TIMER;
+        prepatent_timer = UNINIT_TIMER;
+        _subclinical_duration = _prepatent_duration = _acute_duration = 0;
+        isDead = false;
+        last_state_reported = "S";
         auto doseTracking = ((IndividualHumanTyphoid*)context)->getDoseTracking();
         if (doseTracking == "High")
         {
@@ -130,19 +140,12 @@ namespace Kernel
             _prepatent_duration = (int)(generateRandFromLogNormal(mpl, spl));
         }
         prepatent_timer=_prepatent_duration;
+        std::cout << "Initialized prepatent_timer to " << prepatent_timer << " using doseTracking value of " << doseTracking << std::endl;
     }
 
     void InfectionTyphoid::Initialize(suids::suid _suid)
     {
-        treatment_multiplier = 1;
-        chronic_timer = UNINIT_TIMER;
-        subclinical_timer = UNINIT_TIMER;
-        acute_timer = UNINIT_TIMER;
-        prepatent_timer = UNINIT_TIMER;
-        _subclinical_duration = _prepatent_duration = _acute_duration = 0;
-        isDead = false;
         InfectionEnvironmental::Initialize(_suid);
-        last_state_reported = "S";
     }
 
     InfectionTyphoid *InfectionTyphoid::CreateInfection(IIndividualHumanContext *context, suids::suid _suid)
@@ -190,30 +193,27 @@ namespace Kernel
         auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
         auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
         auto mort = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedMortality();
+        std::cout << "mort = " << mort << std::endl;
         //state_to_report="P";
-        //LOG_INFO_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
+        //LOG_DEBUG_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
         prepatent_timer=UNINIT_TIMER; 
-        if (randgen->e()<(IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction*mort))
-        { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
+        LOG_DEBUG_F( "Deciding post-prepatent tx using typhoid_symptomatic_fraction=%f.\n", IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction );
+        if (randgen->e()<(IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction*mort)) //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
+        {
             if (age < ageThresholdInYears)
                 _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
             else
                 _acute_duration = int(generateRandFromLogNormal(mao30, sao30)*7);
-            //LOG_INFO_F("acute dur %d\n", _acute_duration);
+            LOG_DEBUG_F("Infection stage transition: Prepatent->Acute: acute dur=%d\n", _acute_duration);
             acute_timer = _acute_duration;
-            //if (_acute_duration > 365)
-            //    isChronic = true; // will be a chronic carrier
         } else {
             if (age <= ageThresholdInYears)
                 _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30)*7);
             else
                 _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30)*7);
+            LOG_DEBUG_F("Infection stage transition: Prepatent->SubClinical: subc dur=%d\n", _subclinical_duration );
             subclinical_timer = _subclinical_duration;
-            //if (_subclinical_duration > 365)
-            //    isChronic = true;
-            //state_to_report="C";
         }
-        //return state_to_report;
     }
 
     void InfectionTyphoid::handleAcuteExpiry()
@@ -290,7 +290,7 @@ namespace Kernel
         bool state_changed = false;
         std::string state_to_report = "S"; // default state is susceptible
 
-        LOG_DEBUG_F("%d INFECTED!!!%d,%d,%d,%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
+        LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
         if (prepatent_timer > UNINIT_TIMER)
         { // pre-patent
 
