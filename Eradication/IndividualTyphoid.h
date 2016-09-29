@@ -66,6 +66,8 @@ namespace Kernel
         virtual HumanStateChange GetStateChange() const;
         
         float getSeasonalAmplitude() const;
+        void quantizeContactDoseTracking( float fContact );
+        void quantizeEnvironmentalDoseTracking( float fEnvironment );
 
         std::string processPrePatent( float dt );
 

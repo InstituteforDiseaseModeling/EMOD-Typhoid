@@ -333,6 +333,38 @@ namespace Kernel
         return amplification;
     }
 
+    void IndividualHumanTyphoid::quantizeEnvironmentalDoseTracking( float fEnvironment )
+    {
+        if (fEnvironment <= 5050000)
+        { 
+            doseTracking = "Low";
+        }
+        else if (fEnvironment > 5050000 & fEnvironment <= 55000000)
+        {
+            doseTracking = "Medium";
+        }
+        if (fEnvironment > 55000000)
+        {
+            doseTracking = "High";
+        }
+    }
+
+    void IndividualHumanTyphoid::quantizeContactDoseTracking( float fContact )
+    {
+        if (fContact <= 10000)
+        { 
+            doseTracking = "Low";
+        }
+        if (fContact > 10000 & fContact <= 10000000)
+        {
+            doseTracking = "Medium";
+        }
+        if (fContact > 10000000)
+        {
+            doseTracking = "High";
+        }
+    }
+
     void IndividualHumanTyphoid::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
     { 
 #ifdef ENABLE_PYTHOID
@@ -399,7 +431,6 @@ namespace Kernel
             }
             float amplification = getSeasonalAmplitude();
 
-
             float intervention_multiplier = 1;
             int SimYear = floor((int)parent->GetTime().Year());
             if (SimYear == 1983){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1983;}
@@ -428,23 +459,13 @@ namespace Kernel
                 //LOG_INFO_F("Reduced Acquire multiplier %f\n", interventions->GetInterventionReducedAcquire());
                 //LOG_INFO_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
                 //LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
-                if (prob>0.0f && randgen->e() < prob)
+                //if (prob>0.0f && randgen->e() < prob)
+                if( SMART_DRAW( prob ) )
                 {
                     _routeOfInfection = transmission_route;
                     StrainIdentity strainId;
                     //LOG_DEBUG("INDIVIDUAL INFECTED BY ENVIRONMENT.\n"); // This is for reporting DON'T DELETE :)
-                    if (fEnvironment <= 5050000)
-                    { 
-                        doseTracking = "Low";
-                    }
-                    else if (fEnvironment > 5050000 & fEnvironment <= 55000000)
-                    {
-                        doseTracking = "Medium";
-                    }
-                    if (fEnvironment > 55000000)
-                    {
-                        doseTracking = "High";
-                    }
+                    quantizeEnvironmentalDoseTracking( fEnvironment );
                     //LOG_INFO_F("dose %f, tracking %s", fEnvironment, doseTracking);
                     AcquireNewInfection(&strainId);
                     return;
@@ -480,18 +501,7 @@ namespace Kernel
                 LOG_DEBUG("INDIVIDUAL INFECTED BY CONTACT.\n"); // FOR REPORTING
                 _routeOfInfection = transmission_route;
                 StrainIdentity strainId;
-                if (fContact <= 10000)
-                { 
-                    doseTracking = "Low";
-                }
-                if (fContact > 10000 & fContact <= 10000000)
-                {
-                    doseTracking = "Medium";
-                }
-                if (fContact > 10000000)
-                {
-                    doseTracking = "High";
-                }
+                quantizeContactDoseTracking( fContact );
                 AcquireNewInfection(&strainId);
 
                 return;
