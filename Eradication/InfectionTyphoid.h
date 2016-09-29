@@ -66,6 +66,9 @@ namespace Kernel
 
         InfectionTyphoid(IIndividualHumanContext *context);
         void Initialize(suids::suid _suid);
+        void handlePrepatentExpiry();
+        void handleAcuteExpiry();
+        void handleSubclinicalExpiry();
 		int treatment_multiplier;
         int chronic_timer;
         int subclinical_timer;

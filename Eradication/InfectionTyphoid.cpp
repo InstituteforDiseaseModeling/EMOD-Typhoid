@@ -192,171 +192,200 @@ namespace Kernel
         return InfectionEnvironmental::InitInfectionImmunology( _immunity );
     }
 
-    void InfectionTyphoid::Update(float dt, ISusceptibilityContext* _immunity)
+    void InfectionTyphoid::handlePrepatentExpiry()
     {
-        auto age = _immunity->getAge() / DAYSPERYEAR;
+        bool hasClinicalImmunity = false;
+        auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
         auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
         auto mort = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedMortality();
+        //state_to_report="P";
+        //LOG_INFO_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
+        prepatent_timer=UNINIT_TIMER;
+        if (hasClinicalImmunity)
+        {
+            if (age < 30.0)
+                _subclinical_duration = int(generateRandFromLogNormal(msu30, ssu30)*7);
+            else
+                _subclinical_duration = int(generateRandFromLogNormal(mso30, sso30)*7);
+            subclinical_timer = _subclinical_duration;
+        }
+        else if (!hasClinicalImmunity)
+        {
+            if (randgen->e()<(GET_CONFIGURABLE(SimulationConfig)->typhoid_symptomatic_fraction*mort)) { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
+                if (age < 30.0)
+                    _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
+                else
+                    _acute_duration = int(generateRandFromLogNormal(mao30, sao30)*7);
+                //LOG_INFO_F("acute dur %d\n", _acute_duration);
+                acute_timer = _acute_duration;
+                //if (_acute_duration > 365)
+                //    isChronic = true; // will be a chronic carrier
+            } else {
+                if (age <= 30.0)
+                    _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30)*7);
+                else
+                    _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30)*7);
+                subclinical_timer = _subclinical_duration;
+                //if (_subclinical_duration > 365)
+                //    isChronic = true;
+                //state_to_report="C";
+            }
+        }
+        //return state_to_report;
+    }
+
+    void InfectionTyphoid::handleAcuteExpiry()
+    {
+        auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
+        auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
+
+        if ((randgen->e() < CFRU) & (treatment_multiplier < 1)) // untreated at end of period has higher fatality rate
+        {
+            isDead = true;
+            //state_to_report = "D";
+            LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
+        }
+        else
+        {
+            //if they survived, calculate probability of being a carrier
+            float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
+            float carrier_prob = 0;
+            int agebin = int(floor(age/10));
+            if (agebin>=GallstoneDataLength)
+            {
+                agebin=GallstoneDataLength-1;
+            }
+            if (sex==1)
+            {
+                p3=FemaleGallstones[agebin];
+                carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female;
+            } 
+            else if (sex==0)
+            {
+                p3=MaleGallstones[agebin];
+                carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
+            }
+            if (randgen->e()< p3*carrier_prob)
+            {
+                chronic_timer = _chronic_duration;
+            }
+        } 
+        acute_timer = UNINIT_TIMER;
+        treatment_multiplier = 1;
+    }
+
+    void InfectionTyphoid::handleSubclinicalExpiry()
+    {
         bool hasClinicalImmunity = false;
+        auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
+        auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
+
+        //LOG_INFO_F("SOMEONE FINSIHED SUB %d, %d\n", _subclinical_duration, subclinical_timer);
+        subclinical_timer = UNINIT_TIMER;
+        float p2 = 0;
+        float carrier_prob = 0;
+        int agebin = int(floor(age/10));
+        if (agebin>=GallstoneDataLength)
+            agebin=GallstoneDataLength-1;
+        if (sex==1)
+        {
+            p2=FemaleGallstones[agebin];
+            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female ;
+        } 
+        else if (sex==0)
+        {
+            p2=MaleGallstones[agebin];
+            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
+
+        }
+        //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
+        if (randgen->e() < p2*carrier_prob)
+        {
+            chronic_timer = _chronic_duration;
+        }
+        else
+        {
+            // shift individuals who recovered into immunity states
+            if (hasClinicalImmunity)
+            {
+                clinical_immunity_timer += _clinical_immunity_duration;
+            }
+            else
+            {
+                if (P10>0.0 && randgen->e() < P10)
+                {
+                    hasClinicalImmunity = true;
+                    clinical_immunity_timer = _clinical_immunity_duration;
+                }
+            }
+        }
+    }
+
+    void InfectionTyphoid::Update(float dt, ISusceptibilityContext* _immunity)
+    {
+        //bool hasClinicalImmunity = false;
         bool state_changed = false;
         std::string state_to_report = "S"; // default state is susceptible
+
+        LOG_DEBUG_F("%d INFECTED!!!%d,%d,%d,%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
+        if (prepatent_timer > UNINIT_TIMER)
+        { // pre-patent
+
+            state_to_report="P";
+            prepatent_timer -= dt;
+            if( UNINIT_TIMER<prepatent_timer && prepatent_timer<=0 )
+            {
+                handlePrepatentExpiry();
+            }
+        }
+        if (subclinical_timer > UNINIT_TIMER)
+        { // asymptomatic infection
+            //              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
+            state_to_report="SUB";
+            subclinical_timer -= dt;
+            if (UNINIT_TIMER<subclinical_timer && subclinical_timer<=0)
+            {
+                handleSubclinicalExpiry();
+            }
+        }
+        if (acute_timer > UNINIT_TIMER)
         {
-            //            LOG_INFO_F("%d INFECTED!!!%d,%d,%d,%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
-            if (prepatent_timer > UNINIT_TIMER)
-            { // pre-patent
-
-                state_to_report="P";
-                prepatent_timer -= dt;
-                if( UNINIT_TIMER<prepatent_timer && prepatent_timer<=0 )
-                {
-                    //LOG_INFO_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
-                    prepatent_timer=UNINIT_TIMER;
-                    if (hasClinicalImmunity)
-                    {
-                        if (age < 30.0)
-                            _subclinical_duration = int(generateRandFromLogNormal(msu30, ssu30)*7);
-                        else
-                            _subclinical_duration = int(generateRandFromLogNormal(mso30, sso30)*7);
-                        subclinical_timer = _subclinical_duration;
-                    }
-                    else if (!hasClinicalImmunity)
-                    {
-                        if (randgen->e()<(GET_CONFIGURABLE(SimulationConfig)->typhoid_symptomatic_fraction*mort)) { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
-                            if (age < 30.0)
-                                _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
-                            else
-                                _acute_duration = int(generateRandFromLogNormal(mao30, sao30)*7);
-                            //LOG_INFO_F("acute dur %d\n", _acute_duration);
-                            acute_timer = _acute_duration;
-                            //if (_acute_duration > 365)
-                            //    isChronic = true; // will be a chronic carrier
-                        } else {
-                            if (age <= 30.0)
-                                _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30)*7);
-                            else
-                                _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30)*7);
-                            subclinical_timer = _subclinical_duration;
-                            //if (_subclinical_duration > 365)
-                            //    isChronic = true;
-                            //state_to_report="C";
-                        }
-                    }
-                }
-            }
-            if (subclinical_timer > UNINIT_TIMER)
-            { // asymptomatic infection
-                //              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
-                state_to_report="SUB";
-                subclinical_timer -= dt;
-                if (UNINIT_TIMER<subclinical_timer && subclinical_timer<=0)
-                {
-                    //LOG_INFO_F("SOMEONE FINSIHED SUB %d, %d\n", _subclinical_duration, subclinical_timer);
-                    subclinical_timer = UNINIT_TIMER;
-                    float p2 = 0;
-                    float carrier_prob = 0;
-                    int agebin = int(floor(age/10));
-                    if (agebin>=GallstoneDataLength)
-                        agebin=GallstoneDataLength-1;
-                    if (sex==1)
-                    {
-                        p2=FemaleGallstones[agebin];
-                        carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female ;
-                    } 
-                    else if (sex==0)
-                    {
-                        p2=MaleGallstones[agebin];
-                        carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
-
-                    }
-                    //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
-                    if (randgen->e() < p2*carrier_prob)
-                    {
-                        chronic_timer = _chronic_duration;
-                    }
-                    else
-                    {
-                        // shift individuals who recovered into immunity states
-                        if (hasClinicalImmunity)
-                        {
-                            clinical_immunity_timer += _clinical_immunity_duration;
-                        }
-                        else
-                        {
-                            if (P10>0.0 && randgen->e() < P10)
-                            {
-                                hasClinicalImmunity = true;
-                                clinical_immunity_timer = _clinical_immunity_duration;
-                            }
-                        }
-                    }
-                }
-            }
-            if (acute_timer > UNINIT_TIMER)
-            {
-                // acute infection
-                state_to_report = "A";
-                acute_timer -= dt;
-                if( ( _acute_duration - acute_timer ) >= acute_treatment_day &&
-                        ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day ) && 
-                        (randgen->e() < treatmentprobability)
-                  )
-                {       //if they seek treatment and don't die, we are assuming they have a probability of becoming a carrier (chloramphenicol treatment does not prevent carriage)
-                      if (randgen->e() < CFRH)
-                      {
-                          isDead = true;
-                          state_to_report = "D";
-                          acute_timer = UNINIT_TIMER;
-                      } else treatment_multiplier = 0.5;
-
-                }
-            }
-
-            //Assume all acute individuals seek treatment since this is Mike's "reported" fraction
-            //Some fraction are treated effectively, some become chronic carriers, some die, some remain infectious
-
-            if (UNINIT_TIMER < acute_timer && acute_timer<= 0)
-            {
-                if ((randgen->e() < CFRU) & (treatment_multiplier < 1)) // untreated at end of period has higher fatality rate
+            // acute infection
+            state_to_report = "A";
+            acute_timer -= dt;
+            if( ( _acute_duration - acute_timer ) >= acute_treatment_day &&
+                    ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day ) && 
+                    (randgen->e() < treatmentprobability)
+              )
+            {       //if they seek treatment and don't die, we are assuming they have a probability of becoming a carrier (chloramphenicol treatment does not prevent carriage)
+                if (randgen->e() < CFRH)
                 {
                     isDead = true;
                     state_to_report = "D";
+                    acute_timer = UNINIT_TIMER;
                 }
                 else
                 {
-                    //if they survived, calculate probability of being a carrier
-                    float p3=0.0; // P3 is age dependent so is determined below. Probability of becoming a chronic carrier from a CLINICAL infection
-                    float carrier_prob = 0;
-                    int agebin = int(floor(age/10));
-                    if (agebin>=GallstoneDataLength)
-                    {
-                        agebin=GallstoneDataLength-1;
-                    }
-                    if (sex==1)
-                    {
-                        p3=FemaleGallstones[agebin];
-                        carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female;
-                    } 
-                    else if (sex==0)
-                    {
-                        p3=MaleGallstones[agebin];
-                        carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
-                    }
-                    if (randgen->e()< p3*carrier_prob)
-                    {
-                        chronic_timer = _chronic_duration;
-                    }
-                } 
-                acute_timer = UNINIT_TIMER;
-                treatment_multiplier = 1;
+                    treatment_multiplier = 0.5;
+                }
             }
 
-            if (chronic_timer > UNINIT_TIMER)
+            if (acute_timer<= 0)
             {
-                state_to_report="C";
-                chronic_timer -= dt;
-                if (UNINIT_TIMER< chronic_timer && chronic_timer<=0)
-                    chronic_timer = UNINIT_TIMER;
+                handleAcuteExpiry();
             }
+        }
+
+        //Assume all acute individuals seek treatment since this is Mike's "reported" fraction
+        //Some fraction are treated effectively, some become chronic carriers, some die, some remain infectious
+
+
+        if (chronic_timer > UNINIT_TIMER)
+        {
+            state_to_report="C";
+            chronic_timer -= dt;
+            if (UNINIT_TIMER< chronic_timer && chronic_timer<=0)
+                chronic_timer = UNINIT_TIMER;
         }
 
         if (last_state_reported==state_to_report)
@@ -374,16 +403,6 @@ namespace Kernel
 
         if( state_to_report == "S" && state_changed ) // && GetInfections().size() > 0 )
         {
-            // ClearInfection
-            /*
-            auto inf = GetInfections().front();
-            IInfectionTyphoid * inf_typhoid  = NULL;
-            if (s_OK != inf->QueryInterface(GET_IID(IInfectionTyphoid ), (void**)&inf_typhoid) )
-            {
-                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionTyphoid ", "Infection" );
-            }
-            // get InfectionTyphoid pointer
-            inf_typhoid->Clear();*/
             Clear();
         }
         else if( state_to_report == "D" && state_changed )
