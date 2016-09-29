@@ -43,6 +43,9 @@ namespace Kernel
 
     // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
     // mean and std dev of log normal distribution
+    //
+    const float ageThresholdInYears = 30.0f;
+
     const float InfectionTyphoid::mpl = 2.2350f;
     const float InfectionTyphoid::spl = 0.4964f;
     const float InfectionTyphoid::mpm = 2.0026f;
@@ -50,21 +53,13 @@ namespace Kernel
     const float InfectionTyphoid::mph = 1.5487f; // math.log(4.7)
     const float InfectionTyphoid::sph = 0.3442f;
 
-    // Subclinical infectious duration parameters: mean and standard deviation under and over 30 (refitted without carriers)
-    //const float IndividualHumanTyphoid::mso30=3.430830f;
-    //const float IndividualHumanTyphoid::sso30=0.922945f;
-    //const float IndividualHumanTyphoid::msu30=3.1692211f;
-    //const float IndividualHumanTyphoid::ssu30=0.5385523f;
+    // Subclinical infectious duration parameters: mean and standard deviation under and over 30 (refitted without carriers) 
     const float InfectionTyphoid::mso30=1.2584990f;
     const float InfectionTyphoid::sso30=0.7883767f;
     const float InfectionTyphoid::msu30=1.171661f;
     const float InfectionTyphoid::ssu30=0.483390f;
 
-    // Acute infectious duration parameters: mean and standard deviation under and over 30
-    //const float InfectionTyphoid::mao30=3.430830f;
-    //const float InfectionTyphoid::sao30=0.922945f;
-    //const float InfectionTyphoid::mau30=3.1692211f;
-    //const float InfectionTyphoid::sau30=0.5385523f;
+    // Acute infectious duration parameters: mean and standard deviation under and over 30 
     const float InfectionTyphoid::mao30=1.2584990f;
     const float InfectionTyphoid::sao30=0.7883767f;
     const float InfectionTyphoid::mau30=1.171661f;
@@ -77,7 +72,6 @@ namespace Kernel
     const float InfectionTyphoid::P10 = 0.0f; // probability of clinical immunity from a subclinical infection
 
     const int InfectionTyphoid::_chronic_duration = 100000000;
-    const int InfectionTyphoid::_clinical_immunity_duration = 160*30;
 
     const int InfectionTyphoid::acute_treatment_day = 5; // how many days after infection will people receive treatment
     const float InfectionTyphoid::CFRU = 0.00f;   // case fatality rate?
@@ -145,7 +139,6 @@ namespace Kernel
         subclinical_timer = UNINIT_TIMER;
         acute_timer = UNINIT_TIMER;
         prepatent_timer = UNINIT_TIMER;
-        clinical_immunity_timer =UNINIT_TIMER;
         _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         isDead = false;
         InfectionEnvironmental::Initialize(_suid);
@@ -194,42 +187,31 @@ namespace Kernel
 
     void InfectionTyphoid::handlePrepatentExpiry()
     {
-        bool hasClinicalImmunity = false;
         auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
         auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
         auto mort = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedMortality();
         //state_to_report="P";
         //LOG_INFO_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
-        prepatent_timer=UNINIT_TIMER;
-        if (hasClinicalImmunity)
-        {
-            if (age < 30.0)
-                _subclinical_duration = int(generateRandFromLogNormal(msu30, ssu30)*7);
+        prepatent_timer=UNINIT_TIMER; 
+        if (randgen->e()<(GET_CONFIGURABLE(SimulationConfig)->typhoid_symptomatic_fraction*mort))
+        { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
+            if (age < ageThresholdInYears)
+                _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
             else
-                _subclinical_duration = int(generateRandFromLogNormal(mso30, sso30)*7);
+                _acute_duration = int(generateRandFromLogNormal(mao30, sao30)*7);
+            //LOG_INFO_F("acute dur %d\n", _acute_duration);
+            acute_timer = _acute_duration;
+            //if (_acute_duration > 365)
+            //    isChronic = true; // will be a chronic carrier
+        } else {
+            if (age <= ageThresholdInYears)
+                _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30)*7);
+            else
+                _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30)*7);
             subclinical_timer = _subclinical_duration;
-        }
-        else if (!hasClinicalImmunity)
-        {
-            if (randgen->e()<(GET_CONFIGURABLE(SimulationConfig)->typhoid_symptomatic_fraction*mort)) { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
-                if (age < 30.0)
-                    _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
-                else
-                    _acute_duration = int(generateRandFromLogNormal(mao30, sao30)*7);
-                //LOG_INFO_F("acute dur %d\n", _acute_duration);
-                acute_timer = _acute_duration;
-                //if (_acute_duration > 365)
-                //    isChronic = true; // will be a chronic carrier
-            } else {
-                if (age <= 30.0)
-                    _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30)*7);
-                else
-                    _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30)*7);
-                subclinical_timer = _subclinical_duration;
-                //if (_subclinical_duration > 365)
-                //    isChronic = true;
-                //state_to_report="C";
-            }
+            //if (_subclinical_duration > 365)
+            //    isChronic = true;
+            //state_to_report="C";
         }
         //return state_to_report;
     }
@@ -276,7 +258,6 @@ namespace Kernel
 
     void InfectionTyphoid::handleSubclinicalExpiry()
     {
-        bool hasClinicalImmunity = false;
         auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
         auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
 
@@ -296,34 +277,16 @@ namespace Kernel
         {
             p2=MaleGallstones[agebin];
             carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
-
         }
         //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
         if (randgen->e() < p2*carrier_prob)
         {
             chronic_timer = _chronic_duration;
         }
-        else
-        {
-            // shift individuals who recovered into immunity states
-            if (hasClinicalImmunity)
-            {
-                clinical_immunity_timer += _clinical_immunity_duration;
-            }
-            else
-            {
-                if (P10>0.0 && randgen->e() < P10)
-                {
-                    hasClinicalImmunity = true;
-                    clinical_immunity_timer = _clinical_immunity_duration;
-                }
-            }
-        }
     }
 
     void InfectionTyphoid::Update(float dt, ISusceptibilityContext* _immunity)
     {
-        //bool hasClinicalImmunity = false;
         bool state_changed = false;
         std::string state_to_report = "S"; // default state is susceptible
 

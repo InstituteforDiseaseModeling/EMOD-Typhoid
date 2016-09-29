@@ -52,7 +52,6 @@ namespace Kernel
         virtual bool IsPrePatent( bool incidence_only = true ) const;
         const std::string getDoseTracking() const;
 
-    protected:
         // New Exposure Pattern
         virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route );
 
@@ -66,6 +65,7 @@ namespace Kernel
         virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
         virtual HumanStateChange GetStateChange() const;
         
+    protected:
         float getSeasonalAmplitude() const;
         void quantizeContactDoseTracking( float fContact );
         void quantizeEnvironmentalDoseTracking( float fEnvironment );
@@ -74,7 +74,6 @@ namespace Kernel
 
         // typhoid infection state
         std::string state_to_report; // typhoid status of individual
-        bool hasClinicalImmunity; // is immune to clinical infection
         bool isChronic;       // is or will be a chronic carrier (using "Ames" definition)
         int _infection_count;     // number of times infected;
         TransmissionRoute::Enum _routeOfInfection; // how did this person get infected?

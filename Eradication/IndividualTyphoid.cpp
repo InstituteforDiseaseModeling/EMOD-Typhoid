@@ -118,7 +118,6 @@ namespace Kernel
         delete check;
 #else 
         _infection_count=0; // should not be necessary
-        hasClinicalImmunity = false;
         _routeOfInfection = TransmissionRoute::TRANSMISSIONROUTE_ALL;// IS THIS OK for a default? DLC
         doseTracking = "None";
 #endif
@@ -355,7 +354,7 @@ namespace Kernel
         delete check;
         return;
 #else
-        LOG_DEBUG_F("Expose route: %d, %f\n", transmission_route, cp->GetTotalContagion());
+        //LOG_DEBUG_F("Expose route: %d, %f\n", transmission_route, cp->GetTotalContagion());
         if( IsInfected() )
         {
             return;
@@ -606,16 +605,7 @@ namespace Kernel
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
 #else
-        /*if (hasClinicalImmunity && subclinical_timer ==UNINIT_TIMER && prepatent_timer ==UNINIT_TIMER )
-        {
-            state_to_report="CI";
-            clinical_immunity_timer -= dt;
-            if (clinical_immunity_timer <= 0)
-            {
-                hasClinicalImmunity = false;
-                clinical_immunity_timer = UNINIT_TIMER;
-            }
-        }*/
+
 #if 0
         if (last_state_reported==state_to_report)
         {
@@ -654,17 +644,20 @@ namespace Kernel
     void IndividualHumanTyphoid::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
     {
         LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
-        if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL)
+        if( infstrain )
         {
-            infstrain->SetGeneticID( 0 );
-        }
-        else if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_CONTACT)
-        {
-            infstrain->SetGeneticID( 1 );
-        }
-        else
-        {
-            infstrain->SetGeneticID( 2 );
+            if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL)
+            {
+                infstrain->SetGeneticID( 0 );
+            }
+            else if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_CONTACT)
+            {
+                infstrain->SetGeneticID( 1 );
+            }
+            else
+            {
+                infstrain->SetGeneticID( 2 );
+            }
         }
         // neither environmental nor contact source. probably from initial seeding
         IndividualHumanEnvironmental::AcquireNewInfection( infstrain, incubation_period_override );
