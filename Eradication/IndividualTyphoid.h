@@ -23,6 +23,55 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 namespace Kernel
 {
     class SusceptibilityTyphoid;
+    class IndividualHumanTyphoidConfig : public JsonConfigurable
+    {
+        GET_SCHEMA_STATIC_WRAPPER(IndividualHumanTyphoidConfig)
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
+        DECLARE_QUERY_INTERFACE()
+    protected:
+        friend class SimulationTyphoid;
+        friend class IndividualHumanTyphoid;
+        friend class InfectionTyphoid;
+        friend class SusceptibilityTyphoid;
+        static float environmental_incubation_period; // NaturalNumber please
+        static float typhoid_acute_infectiousness;
+        static float typhoid_chronic_relative_infectiousness;
+
+//        static float typhoid_environmental_exposure;
+        static float typhoid_prepatent_relative_infectiousness;
+        static float typhoid_protection_per_infection;
+        static float typhoid_subclinical_relative_infectiousness;
+        static float typhoid_carrier_probability_male;
+		static float typhoid_carrier_probability_female;
+        static float typhoid_3year_susceptible_fraction;
+        static float typhoid_6month_susceptible_fraction;
+        static float typhoid_6year_susceptible_fraction;
+		static float typhoid_symptomatic_fraction;
+
+        static float typhoid_environmental_exposure_rate;
+        static float typhoid_contact_exposure_rate;
+        //static float typhoid_environmental_exposure_rate_seasonal_max;
+        static float typhoid_environmental_ramp_up_duration;
+		static float typhoid_environmental_ramp_down_duration;
+		static float typhoid_environmental_peak_start;
+        static float typhoid_environmental_cutoff_days;
+        //static float typhoid_environmental_amplification;
+        static float typhoid_environmental_peak_multiplier;
+
+		static float typhoid_exposure_1983;
+		static float typhoid_exposure_1984;
+		static float typhoid_exposure_1985;
+		static float typhoid_exposure_1986;
+		static float typhoid_exposure_1987;
+		static float typhoid_exposure_1988;
+		static float typhoid_exposure_1989;
+		static float typhoid_exposure_1990;
+		static float typhoid_exposure_1991;
+
+        virtual bool Configure( const Configuration* config );
+    };
+
+
     class IIndividualHumanTyphoid : public ISupports
     {
     public:
@@ -32,16 +81,16 @@ namespace Kernel
         virtual bool IsPrePatent( bool incidence_only = true ) const = 0;
     };
 
-    class IndividualHumanTyphoid : public IndividualHumanEnvironmental, public IIndividualHumanTyphoid, public JsonConfigurable
+    class IndividualHumanTyphoid : public IndividualHumanEnvironmental, public IIndividualHumanTyphoid
     {
         friend class SimulationTyphoid;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
         DECLARE_QUERY_INTERFACE()
-        GET_SCHEMA_STATIC_WRAPPER(IndividualHumanTyphoid);
 
     public:
         static IndividualHumanTyphoid *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
         virtual ~IndividualHumanTyphoid(void);
+        static void InitializeStatics( const Configuration* config );
 
         virtual void CreateSusceptibility(float imm_mod = 1.0, float risk_mod = 1.0);
         virtual void ExposeToInfectivity(float dt = 1.0, const TransmissionGroupMembership_t* transmissionGroupMembership = NULL);
@@ -102,7 +151,6 @@ namespace Kernel
     private:
         SusceptibilityTyphoid * typhoid_susceptibility;
         std::map< TransmissionRoute::Enum, float > contagion_population_by_route;
-        virtual bool Configure( const Configuration* config );
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         ///////////////////////////////////////////////////////////////////////////
         // Serialization

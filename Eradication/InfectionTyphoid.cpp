@@ -193,7 +193,7 @@ namespace Kernel
         //state_to_report="P";
         //LOG_INFO_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
         prepatent_timer=UNINIT_TIMER; 
-        if (randgen->e()<(GET_CONFIGURABLE(SimulationConfig)->typhoid_symptomatic_fraction*mort))
+        if (randgen->e()<(IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction*mort))
         { //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
             if (age < ageThresholdInYears)
                 _acute_duration = int(generateRandFromLogNormal(mau30, sau30)*7);
@@ -240,12 +240,12 @@ namespace Kernel
             if (sex==1)
             {
                 p3=FemaleGallstones[agebin];
-                carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female;
+                carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female;
             } 
             else if (sex==0)
             {
                 p3=MaleGallstones[agebin];
-                carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
+                carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_male;
             }
             if (randgen->e()< p3*carrier_prob)
             {
@@ -271,12 +271,12 @@ namespace Kernel
         if (sex==1)
         {
             p2=FemaleGallstones[agebin];
-            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_female ;
+            carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female ;
         } 
         else if (sex==0)
         {
             p2=MaleGallstones[agebin];
-            carrier_prob = GET_CONFIGURABLE(SimulationConfig)->typhoid_carrier_probability_male;
+            carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_male;
         }
         //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
         if (randgen->e() < p2*carrier_prob)
@@ -386,7 +386,7 @@ namespace Kernel
     float InfectionTyphoid::GetInfectiousness() const
     {
         float infectiousness = 0.0f;
-        float base_infectiousness = GET_CONFIGURABLE(SimulationConfig)->typhoid_acute_infectiousness;
+        float base_infectiousness = IndividualHumanTyphoidConfig::typhoid_acute_infectiousness;
         auto irt = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedTransmit();
         if (acute_timer>=0)
         {
@@ -394,15 +394,15 @@ namespace Kernel
         }
         else if (prepatent_timer>=0)
         {
-            infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_prepatent_relative_infectiousness*irt;
+            infectiousness = base_infectiousness*IndividualHumanTyphoidConfig::typhoid_prepatent_relative_infectiousness*irt;
         }
         else if (subclinical_timer>=0)
         {
-            infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_subclinical_relative_infectiousness*irt;
+            infectiousness = base_infectiousness*IndividualHumanTyphoidConfig::typhoid_subclinical_relative_infectiousness*irt;
         }
         else if (chronic_timer>=0)
         {
-            infectiousness = base_infectiousness*GET_CONFIGURABLE(SimulationConfig)->typhoid_chronic_relative_infectiousness*irt;
+            infectiousness = base_infectiousness*IndividualHumanTyphoidConfig::typhoid_chronic_relative_infectiousness*irt;
         }
         return infectiousness;
     }

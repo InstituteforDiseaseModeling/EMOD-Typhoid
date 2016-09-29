@@ -49,6 +49,95 @@ static const char * _module = "IndividualTyphoid";
 
 namespace Kernel
 {
+    float IndividualHumanTyphoidConfig::environmental_incubation_period = 0.0f; // NaturalNumber please
+    float IndividualHumanTyphoidConfig::typhoid_acute_infectiousness = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_chronic_relative_infectiousness = 0.0f;
+
+    //        float IndividualHumanTyphoidConfig::typhoid_environmental_exposure = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_prepatent_relative_infectiousness = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_protection_per_infection = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_subclinical_relative_infectiousness = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_carrier_probability_male = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_carrier_probability_female = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_3year_susceptible_fraction = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_6month_susceptible_fraction = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_6year_susceptible_fraction = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction = 0.0f;
+
+    float IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_contact_exposure_rate = 0.0f;
+    //float IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate_seasonal_max = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_environmental_ramp_up_duration = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_environmental_ramp_down_duration = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_environmental_peak_start = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_environmental_cutoff_days = 0.0f;
+    //float IndividualHumanTyphoidConfig::typhoid_environmental_amplification = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_environmental_peak_multiplier = 0.0f;
+
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1983 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1984 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1985 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1986 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1987 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1988 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1989 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1990 = 0.0f;
+    float IndividualHumanTyphoidConfig::typhoid_exposure_1991 = 0.0f;
+
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanTyphoidConfig)
+    BEGIN_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
+    END_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
+
+    bool
+    IndividualHumanTyphoidConfig::Configure( const Configuration* config ) // just called once!
+    {
+        LOG_DEBUG( "Configure\n" );
+        // 
+        // typhoid
+        //
+        initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 0, 100, 30 );
+        initConfigTypeMap( "Typhoid_Acute_Infectiousness", &typhoid_acute_infectiousness, "Typhoid_Acute_Infectiousness.", 0, 1e7, 4000 );
+        initConfigTypeMap( "Typhoid_Chronic_Relative_Infectiousness", &typhoid_chronic_relative_infectiousness, "Typhoid_Chronic_Relative_Infectiousness.", 0, 1e7, 1000 ); 
+        initConfigTypeMap( "Typhoid_Prepatent_Relative_Infectiousness", &typhoid_prepatent_relative_infectiousness, "Typhoid_Prepatent_Relative_Infectiousness.", 0, 1e7, 3e3 ); 
+        initConfigTypeMap( "Typhoid_Protection_Per_Infection", &typhoid_protection_per_infection, "Typhoid_Protection_Per_Infection.", 0, 1, 0.1f ); 
+        initConfigTypeMap( "Typhoid_Subclinical_Relative_Infectiousness", &typhoid_subclinical_relative_infectiousness, "Typhoid_Subclinical_Relative_Infectiousness.", 0, 1e7, 2000 );
+        initConfigTypeMap( "Typhoid_Carrier_Probability_Male", &typhoid_carrier_probability_male, "Typhoid_Carrier_Probability_Male.", 0, 1, 0.25 );
+        initConfigTypeMap( "Typhoid_Carrier_Probability_Female", &typhoid_carrier_probability_female, "Typhoid_Carrier_Probability_Female.", 0, 1, 0.25 );
+		initConfigTypeMap( "Typhoid_6month_Susceptible_Fraction", &typhoid_6month_susceptible_fraction, "Typhoid_6month_Susceptible_Fraction.", 0, 1, 0.5);
+        initConfigTypeMap( "Typhoid_3year_Susceptible_Fraction", &typhoid_3year_susceptible_fraction, "Typhoid_3year_Susceptible_Fraction.", 0, 1, 0.5);
+        initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate", &typhoid_environmental_exposure_rate, "Typhoid_Environmental_Exposure_Rate.", 0, 10, 0.5);
+        initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 100, 0.5);
+        initConfigTypeMap( "Typhoid_Environmental_Ramp_Up_Duration", &typhoid_environmental_ramp_up_duration, "Typhoid_Environmental_Ramp_Up_Duration.", 0, 200, 2);
+        initConfigTypeMap( "Typhoid_Environmental_Ramp_Down_Duration", &typhoid_environmental_ramp_down_duration, "Typhoid_Environmental_Ramp_Down_Duration.", 0, 270, 2);
+		initConfigTypeMap( "Typhoid_Environmental_Cutoff_Days", &typhoid_environmental_cutoff_days, "Typhoid_Environmental_Cutoff_Days.", 0, 365, 2);
+        initConfigTypeMap( "Typhoid_Environmental_Peak_Start", &typhoid_environmental_peak_start, "Typhoid_Environmental_Peak_Start.", 0, 500, 2);
+        initConfigTypeMap( "Typhoid_Environmental_Peak_Multiplier", &typhoid_environmental_peak_multiplier, "Typhoid_Environmental_Peak_Multiplier.", 0, 10000, 3 );
+		initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
+		initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1983", &typhoid_exposure_1983, "Typhoid_Exposure_1983.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1984", &typhoid_exposure_1984, "Typhoid_Exposure_1984.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1985", &typhoid_exposure_1985, "Typhoid_Exposure_1985.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1986", &typhoid_exposure_1986, "Typhoid_Exposure_1986.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1987", &typhoid_exposure_1987, "Typhoid_Exposure_1987.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1988", &typhoid_exposure_1988, "Typhoid_Exposure_1988.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1989", &typhoid_exposure_1989, "Typhoid_Exposure_1989.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1990", &typhoid_exposure_1990, "Typhoid_Exposure_1990.", 0, 1, 0.5);	
+		initConfigTypeMap( "Typhoid_Exposure_1991", &typhoid_exposure_1991, "Typhoid_Exposure_1991.", 0, 1, 0.5);
+
+        SusceptibilityTyphoidConfig fakeImmunity;
+        fakeImmunity.Configure( config );
+        InfectionTyphoidConfig fakeInfection;
+        fakeInfection.Configure( config );
+
+        //do we need to call initConfigTypeMap? DLC 
+        return JsonConfigurable::Configure( config );
+    }
+
+    void IndividualHumanTyphoid::InitializeStatics( const Configuration * config )
+    {
+        IndividualHumanTyphoidConfig human_config;
+        human_config.Configure( config );
+    }
 
     class Stopwatch
     {
@@ -82,7 +171,6 @@ namespace Kernel
     const float IndividualHumanTyphoid::alpha = 0.175f;
 
 
-    GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Individual,IndividualHumanTyphoid)
     BEGIN_QUERY_INTERFACE_DERIVED(IndividualHumanTyphoid, IndividualHumanEnvironmental)
         HANDLE_INTERFACE(IIndividualHumanTyphoid)
     END_QUERY_INTERFACE_DERIVED(IndividualHumanTyphoid, IndividualHumanEnvironmental)
@@ -143,20 +231,6 @@ namespace Kernel
 #endif
     }
 
-    bool
-    IndividualHumanTyphoid::Configure( const Configuration* config ) // just called once!
-    {
-        LOG_DEBUG( "Configure\n" );
-        // typhoid
-        SusceptibilityTyphoidConfig fakeImmunity;
-        fakeImmunity.Configure( config );
-        InfectionTyphoidConfig fakeInfection;
-        fakeInfection.Configure( config );
-
-        //do we need to call initConfigTypeMap? DLC 
-        return JsonConfigurable::Configure( config );
-    }
-
     IndividualHumanTyphoid *IndividualHumanTyphoid::CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight, float initial_age, int gender, float initial_poverty)
     {
         IndividualHumanTyphoid *newhuman = _new_ IndividualHumanTyphoid(id, monte_carlo_weight, initial_age, gender, initial_poverty);
@@ -188,11 +262,11 @@ namespace Kernel
     {
         float amplification = 0.0f;
 
-        float ramp_down_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_down_duration;
-        float ramp_up_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_ramp_up_duration;
-        float cutoff_days = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_cutoff_days;
-        float peak_amplification = GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_multiplier;
-        float peak_start_day = floor(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_peak_start); 
+        float ramp_down_days = IndividualHumanTyphoidConfig::typhoid_environmental_ramp_down_duration;
+        float ramp_up_days = IndividualHumanTyphoidConfig::typhoid_environmental_ramp_up_duration;
+        float cutoff_days = IndividualHumanTyphoidConfig::typhoid_environmental_cutoff_days;
+        float peak_amplification = IndividualHumanTyphoidConfig::typhoid_environmental_peak_multiplier;
+        float peak_start_day = floor(IndividualHumanTyphoidConfig::typhoid_environmental_peak_start); 
         if (peak_start_day > 365)
         {
             peak_start_day = peak_start_day - 365;
@@ -208,7 +282,7 @@ namespace Kernel
         float slope_up = peak_amplification / ramp_up_days;
         float slope_down = peak_amplification / ramp_down_days;
 
-        //float HarvestDayOfYear = nDayOfYear - GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period;
+        //float HarvestDayOfYear = nDayOfYear - IndividualHumanTyphoidConfig::environmental_incubation_period;
         //if( HarvestDayOfYear < 1){
         //    HarvestDayOfYear = 365 - HarvestDayOfYear;
         //}
@@ -311,7 +385,7 @@ namespace Kernel
     void IndividualHumanTyphoid::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
     { 
 #ifdef ENABLE_PYTHOID
-        if( randgen->e() > GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_fraction )
+        if( randgen->e() > IndividualHumanTyphoidConfig::typhoid_exposure_fraction )
         {
             return;
         }
@@ -376,23 +450,23 @@ namespace Kernel
 
             float intervention_multiplier = 1;
             int SimYear = floor((int)parent->GetTime().Year());
-            if (SimYear == 1983){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1983;}
-            if (SimYear == 1984){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1984;}
-            if (SimYear == 1985){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1985;}
-            if (SimYear == 1986){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1986;}
-            if (SimYear == 1987){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1987;}
-            if (SimYear == 1988){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1988;}
-            if (SimYear == 1989){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1989;}
-            if (SimYear == 1990){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1990;}
-            if (SimYear >= 1991){ intervention_multiplier = GET_CONFIGURABLE(SimulationConfig)->typhoid_exposure_1991;}
+            if (SimYear == 1983){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1983;}
+            if (SimYear == 1984){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1984;}
+            if (SimYear == 1985){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1985;}
+            if (SimYear == 1986){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1986;}
+            if (SimYear == 1987){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1987;}
+            if (SimYear == 1988){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1988;}
+            if (SimYear == 1989){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1989;}
+            if (SimYear == 1990){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1990;}
+            if (SimYear >= 1991){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1991;}
 
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
                 float infects = 1.0f-pow(1.0f + fExposure * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha); // Dose-response for prob of infection
-                float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count);
+                float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
                 //float prob = 1.0f- pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt);
-                int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_environmental_exposure_rate * dt * intervention_multiplier);
+                int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate * dt * intervention_multiplier);
                 //int number_of_exposures = randgen->Poisson(exposure_rate * dt);
                 float prob = 0;
                 if (number_of_exposures > 0)
@@ -431,9 +505,9 @@ namespace Kernel
             float infects = 1.0f-pow(1.0f + fContact * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha);
             //LOG_INFO_F("Environ contagion %f %f\n", fContact, infects);
 
-            float immunity= pow(1-GET_CONFIGURABLE(SimulationConfig)->typhoid_protection_per_infection, _infection_count);             
+            float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);             
             //float prob = min(1.0f, 1.0f- (float) pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt));
-            int number_of_exposures = randgen->Poisson(GET_CONFIGURABLE(SimulationConfig)->typhoid_contact_exposure_rate * dt);
+            int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_contact_exposure_rate * dt);
             float prob = 0;
             if (number_of_exposures > 0)
             {

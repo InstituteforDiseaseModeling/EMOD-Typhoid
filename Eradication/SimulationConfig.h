@@ -172,41 +172,6 @@ namespace Kernel
         PolioParameters*   polio_params;
         TBHIVParameters*   tbhiv_params;
 
-        float environmental_incubation_period; // NaturalNumber please
-        float typhoid_acute_infectiousness;
-        float typhoid_chronic_relative_infectiousness;
-
-//        float typhoid_environmental_exposure;
-        float typhoid_prepatent_relative_infectiousness;
-        float typhoid_protection_per_infection;
-        float typhoid_subclinical_relative_infectiousness;
-        float typhoid_carrier_probability_male;
-		float typhoid_carrier_probability_female;
-        float typhoid_3year_susceptible_fraction;
-        float typhoid_6month_susceptible_fraction;
-        float typhoid_6year_susceptible_fraction;
-		float typhoid_symptomatic_fraction;
-
-        float typhoid_environmental_exposure_rate;
-        float typhoid_contact_exposure_rate;
-        //float typhoid_environmental_exposure_rate_seasonal_max;
-        float typhoid_environmental_ramp_up_duration;
-		float typhoid_environmental_ramp_down_duration;
-		float typhoid_environmental_peak_start;
-        float typhoid_environmental_cutoff_days;
-        //float typhoid_environmental_amplification;
-        float typhoid_environmental_peak_multiplier;
-
-		float typhoid_exposure_1983;
-		float typhoid_exposure_1984;
-		float typhoid_exposure_1985;
-		float typhoid_exposure_1986;
-		float typhoid_exposure_1987;
-		float typhoid_exposure_1988;
-		float typhoid_exposure_1989;
-		float typhoid_exposure_1990;
-		float typhoid_exposure_1991;
-
 
 
         ///////////////////////////////////////////
