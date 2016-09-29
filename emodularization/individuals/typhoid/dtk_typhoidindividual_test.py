@@ -29,7 +29,7 @@ def get_schema():
 
 print( "creating individual." )
 gi.create()
-for tstep in range( 0,100 ):
+for tstep in range( 0,1000 ):
     print( "Updating individual, age = {0}, infected = {1}, immunity = {2}.".format( gi.get_age(), gi.is_infected(), gi.get_immunity() ) )
     gi.update( 1.0 )
 
