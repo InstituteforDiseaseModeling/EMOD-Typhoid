@@ -350,7 +350,7 @@ namespace Kernel
             }
 
         }
-        LOG_INFO_F("day of year %i amplification %f start %f end %f \n", nDayOfYear, amplification, peak_start_day, peak_end_day); 
+        LOG_DEBUG_F("day of year %i amplification %f start %f end %f \n", nDayOfYear, amplification, peak_start_day, peak_end_day); 
         return amplification;
     }
 
@@ -372,22 +372,10 @@ namespace Kernel
         }
     }
 
-#define HIGH_CONTACT_DOSE_THRESHOLD (10000000)
-#define LOW_CONTACT_DOSE_THRESHOLD (10000)
     void IndividualHumanTyphoid::quantizeContactDoseTracking( float fContact )
     {
-        if( fContact <= LOW_CONTACT_DOSE_THRESHOLD )
-        { 
-            doseTracking = "Low";
-        }
-        else if( fContact > LOW_CONTACT_DOSE_THRESHOLD && fContact <= HIGH_CONTACT_DOSE_THRESHOLD )
-        {
-            doseTracking = "Medium";
-        }
-        else if( fContact > HIGH_CONTACT_DOSE_THRESHOLD ) // just else should do
-        {
-            doseTracking = "High";
-        }
+        
+        doseTracking = "High";
     }
 
     void IndividualHumanTyphoid::Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route )
@@ -482,7 +470,7 @@ namespace Kernel
                     prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
                 }
                 //LOG_INFO_F("Reduced Acquire multiplier %f\n", interventions->GetInterventionReducedAcquire());
-                //LOG_INFO_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
+                //LOG_DEBUG_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
                 //LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
                 //if (prob>0.0f && randgen->e() < prob)
                 if( SMART_DRAW( prob ) )
