@@ -82,7 +82,8 @@ namespace Kernel
 
     inline float generateRandFromLogNormal(float m, float s) {
         // inputs: m is mean of underlying distribution, s is std dev
-        return (exp((m)+randgen->eGauss()*s));
+        //return (exp((m)+randgen->eGauss()*s));
+        return Probability::getInstance()->fromDistribution( DistributionFunction::LOG_NORMAL_DURATION, exp(m), s );
     }
 
     bool
@@ -120,27 +121,26 @@ namespace Kernel
         _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         isDead = false;
         last_state_reported = "S";
+        // TBD: Nasty cast: prefer QI.
         auto doseTracking = ((IndividualHumanTyphoid*)context)->getDoseTracking();
+
+        float mu = mpl;
+        float sigma = spl;
         if (doseTracking == "High")
         {
-            _prepatent_duration = (int)(generateRandFromLogNormal(mph, sph));
-
+            mu = mph; sigma = sph;
         }
         else if (doseTracking == "Medium")
         {
-            _prepatent_duration = (int)(generateRandFromLogNormal(mpm, spm));
+            mu = mpm; sigma = spm;
         }	
         else if (doseTracking == "Low")
         {
-            _prepatent_duration = (int)(generateRandFromLogNormal(mpl, spl));
+            mu = mpl; sigma = spl;
         }
-        else
-        {
-            // neither environmental nor contact source. probably from initial seeding
-            _prepatent_duration = (int)(generateRandFromLogNormal(mpl, spl));
-        }
+        _prepatent_duration = (int)(generateRandFromLogNormal(mu, sigma));
         prepatent_timer=_prepatent_duration;
-        std::cout << "Initialized prepatent_timer to " << prepatent_timer << " using doseTracking value of " << doseTracking << std::endl;
+        //std::cout << "Initialized prepatent_timer to " << prepatent_timer << " using doseTracking value of " << doseTracking << std::endl;
     }
 
     void InfectionTyphoid::Initialize(suids::suid _suid)
@@ -197,21 +197,29 @@ namespace Kernel
         //LOG_DEBUG_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
         prepatent_timer=UNINIT_TIMER; 
         LOG_DEBUG_F( "Deciding post-prepatent tx using typhoid_symptomatic_fraction=%f.\n", IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction );
+        float mu = 0.0f;
+        float sigma = 0.0f;
         if (randgen->e()<(IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction*mort)) //THIS IS NOT ACTUALLY MORTALITY, I AM JUST USING THE CALL 
         {
             if (age < ageThresholdInYears)
-                _acute_duration = int(generateRandFromLogNormal(mau30, sau30) * DAYSPERWEEK );
-            else
-                _acute_duration = int(generateRandFromLogNormal(mao30, sao30) * DAYSPERWEEK );
+            {
+                mu = mau30; sigma = sau30;
+            } else {
+                mu = mao30; sigma = sao30;
+            }
             LOG_DEBUG_F("Infection stage transition: Prepatent->Acute: acute dur=%d\n", _acute_duration);
+            _acute_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             acute_timer = _acute_duration;
         } else {
             if (age <= ageThresholdInYears)
-                _subclinical_duration = int(generateRandFromLogNormal( msu30, ssu30) * DAYSPERWEEK );
-            else
-                _subclinical_duration = int(generateRandFromLogNormal( mso30, sso30) * DAYSPERWEEK );
-            LOG_DEBUG_F("Infection stage transition: Prepatent->SubClinical: subc dur=%d\n", _subclinical_duration );
+            {
+                mu = msu30; sigma = ssu30;
+            } else {
+                mu = mso30; sigma = sso30;
+            }
+            _subclinical_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             subclinical_timer = _subclinical_duration;
+            LOG_DEBUG_F("Infection stage transition: Prepatent->SubClinical: subc dur=%d\n", _subclinical_duration );
         }
     }
 
@@ -246,8 +254,10 @@ namespace Kernel
                 p3=MaleGallstones[agebin];
                 carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_male;
             }
+            LOG_DEBUG_F( "Deciding whether to go from acute->chronic based on probability=%f.\n", p3*carrier_prob);
             if (randgen->e()< p3*carrier_prob)
             {
+                LOG_DEBUG_F( "Individual just went chronic.\n" );
                 chronic_timer = _chronic_duration;
             }
         } 
@@ -277,9 +287,15 @@ namespace Kernel
             p2=MaleGallstones[agebin];
             carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_male;
         }
+        else
+        {
+            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "individual is apparently neither male nor female." );
+        }
         //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
+        LOG_DEBUG_F( "Deciding whether to go from subclinical->chronic based on probability=%f.\n", p2*carrier_prob);
         if (randgen->e() < p2*carrier_prob)
         {
+            LOG_DEBUG_F( "Individual just went chronic.\n" );
             chronic_timer = _chronic_duration;
         }
     }
@@ -372,14 +388,6 @@ namespace Kernel
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
         return;
-        /*
-        StateChange = InfectionStateChange::None;
-        ISusceptibilityTyphoid* immunity = NULL;
-        if( _immunity->QueryInterface( GET_IID( ISusceptibilityTyphoid ), (void**)&immunity ) != s_OK )
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "_immunity", "Susceptibility", "SusceptibilityTyphoid" );
-        } */
-        //return InfectionEnvironmental::Update( dt, _immunity );
     }
 
     float InfectionTyphoid::GetInfectiousness() const
