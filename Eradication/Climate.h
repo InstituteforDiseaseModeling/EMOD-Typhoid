@@ -12,6 +12,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include <fstream>
 #include <math.h>
+#include <unordered_map>
 
 #include "BoostLibWrapper.h"
 
@@ -23,13 +24,10 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configure.h"
 
 #ifdef __GNUC__
-#include <ext/unordered_map>
 namespace std
 {
      using namespace __gnu_cxx;
 }
-#else
-#include <unordered_map>
 #endif
 
 class Configuration;

@@ -56,7 +56,7 @@ namespace Kernel
         void         updateVectorLifecycleProbabilities(float dt);
 
         void SetVectorPopulations(void);    //default--1 population as before
-        virtual void AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, unsigned long int releasedNumber) override;
+        virtual void AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, uint64_t releasedNumber) override;
 
         virtual void SetupMigration( IMigrationInfoFactory * migration_factory, 
                                      MigrationStructure::Enum ms,
