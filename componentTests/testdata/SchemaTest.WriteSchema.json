@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1324.0",
-		"DTK_Branch" : "GH-757 (3baccee)",
-		"DTK_Build_Date" : "Sep 19 2016 14:06:29"
+		"DTK_Version" : "2.8.1337.0",
+		"DTK_Branch" : "LinuxFixes (a9df04b)",
+		"DTK_Build_Date" : "Oct  6 2016 11:14:45"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -21,7 +21,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -186,7 +186,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -647,7 +647,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -1274,7 +1274,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -1439,7 +1439,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2323,7 +2323,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2540,7 +2540,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2715,7 +2715,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2880,7 +2880,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -3045,7 +3045,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -6073,7 +6073,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -6208,7 +6208,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -6310,7 +6310,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			}
 		},
