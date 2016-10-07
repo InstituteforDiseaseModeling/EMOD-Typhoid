@@ -37,12 +37,6 @@ namespace Kernel
     REGISTER_SERIALIZATION_VOID_CAST(MyEventCoordinator, IEventCoordinator)
     REGISTER_SERIALIZATION_VOID_CAST(MyEventCoordinator, ITravelLinkedDistributionSource)
 
-    QuickBuilder
-    MyEventCoordinator::GetSchema()
-    {
-        return QuickBuilder ( jsonSchemaBase );
-    }
-
     // ctor
     MyEventCoordinator::MyEventCoordinator()
     : parent(NULL)

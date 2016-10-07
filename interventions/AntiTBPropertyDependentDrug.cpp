@@ -72,7 +72,7 @@ namespace Kernel
     json::QuickBuilder
     DrugTypeByProperty::GetSchema()
     {
-        json::QuickBuilder schema( jsonSchemaBase );
+        json::QuickBuilder schema( GetSchemaBase() );
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:DrugTypeByProperty" );

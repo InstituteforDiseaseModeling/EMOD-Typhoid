@@ -23,11 +23,6 @@ namespace Kernel
         // No base-class initialization stuff
     }
 
-    QuickBuilder NodeEventCoordinator::GetSchema()
-    {
-        return QuickBuilder( jsonSchemaBase );
-    }
-
     bool NodeEventCoordinator::Configure(const Configuration* inputJson)
     {
         bool reset = JsonConfigurable::_useDefaults;

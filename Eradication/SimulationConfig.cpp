@@ -254,7 +254,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 QuickBuilder SimulationConfig::GetSchema()
 {
     LOG_DEBUG( "GetSchema\n" );
-    json::Object * job = new json::Object( jsonSchemaBase );
+    json::Object * job = new json::Object( GetSchemaBase() );
     json::QuickBuilder retJson( *job );
 
 #if !defined(_DLLS_)

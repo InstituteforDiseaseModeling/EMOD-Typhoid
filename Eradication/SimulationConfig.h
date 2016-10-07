@@ -176,8 +176,9 @@ namespace Kernel
         SimulationConfig();
         virtual ~SimulationConfig();
 
-        const Configuration* GetJsonConfigObj() const { return m_jsonConfig; }
+        virtual QuickBuilder SimulationConfig::GetSchema() override;
 
+        const Configuration* GetJsonConfigObj() const { return m_jsonConfig; }
 
     protected:
 

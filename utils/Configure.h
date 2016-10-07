@@ -172,7 +172,7 @@ namespace Kernel
 
     public:
 
-        json::QuickBuilder GetSchema() { return json::QuickBuilder( jsonSchemaBase ); }
+        virtual json::QuickBuilder GetSchema();
 
         static bool _dryrun;
         static bool _useDefaults;
@@ -195,36 +195,48 @@ namespace Kernel
         static void ClearMissingParameters() { missing_parameters_set.clear() ; }
 
     protected:
-        tBoolConfigTypeMapType boolConfigTypeMap;
-        tIntConfigTypeMapType intConfigTypeMap;
-        tFloatConfigTypeMapType floatConfigTypeMap;
-        tDoubleConfigTypeMapType doubleConfigTypeMap;
-        tEnumConfigTypeMapType enumConfigTypeMap;
-        tStringConfigTypeMapType stringConfigTypeMap;
-        tStringSetConfigTypeMapType stringSetConfigTypeMap;
-        jsonConfigurable::tConStringConfigTypeMapType conStringConfigTypeMap;
-        tVectorStringConfigTypeMapType vectorStringConfigTypeMap;
-        tVector2dStringConfigTypeMapType vector2dStringConfigTypeMap;
-        tVectorStringConstraintsTypeMapType vectorStringConstraintsTypeMap;
-        tVectorStringConstraintsTypeMapType vector2dStringConstraintsTypeMap;
-        tVectorFloatConfigTypeMapType vectorFloatConfigTypeMap;
-        tVectorIntConfigTypeMapType vectorIntConfigTypeMap;
-        tVector2dFloatConfigTypeMapType vector2dFloatConfigTypeMap;
-        tVector2dIntConfigTypeMapType vector2dIntConfigTypeMap;
-        tFloatFloatMapConfigTypeMapType ffMapConfigTypeMap;
-        tStringFloatMapConfigTypeMapType sfMapConfigTypeMap;
-        tRangedFloatConfigTypeMapType rangedFloatConfigTypeMap;
-        tNNConfigTypeMapType naturalNumberConfigTypeMap;
-        tJsonConfigurableMapType jcTypeMap;
-        tComplexJsonConfigurableMapType complexTypeMap;
-        tIPKeyMapType ipKeyTypeMap ;
-        tIPKeyValueMapType ipKeyValueTypeMap;
+        struct ConfigData
+        {
+            tBoolConfigTypeMapType boolConfigTypeMap;
+            tIntConfigTypeMapType intConfigTypeMap;
+            tFloatConfigTypeMapType floatConfigTypeMap;
+            tDoubleConfigTypeMapType doubleConfigTypeMap;
+            tEnumConfigTypeMapType enumConfigTypeMap;
+            tStringConfigTypeMapType stringConfigTypeMap;
+            tStringSetConfigTypeMapType stringSetConfigTypeMap;
+            jsonConfigurable::tConStringConfigTypeMapType conStringConfigTypeMap;
+            tVectorStringConfigTypeMapType vectorStringConfigTypeMap;
+            tVector2dStringConfigTypeMapType vector2dStringConfigTypeMap;
+            tVectorStringConstraintsTypeMapType vectorStringConstraintsTypeMap;
+            tVectorStringConstraintsTypeMapType vector2dStringConstraintsTypeMap;
+            tVectorFloatConfigTypeMapType vectorFloatConfigTypeMap;
+            tVectorIntConfigTypeMapType vectorIntConfigTypeMap;
+            tVector2dFloatConfigTypeMapType vector2dFloatConfigTypeMap;
+            tVector2dIntConfigTypeMapType vector2dIntConfigTypeMap;
+            tFloatFloatMapConfigTypeMapType ffMapConfigTypeMap;
+            tStringFloatMapConfigTypeMapType sfMapConfigTypeMap;
+            tRangedFloatConfigTypeMapType rangedFloatConfigTypeMap;
+            tNNConfigTypeMapType naturalNumberConfigTypeMap;
+            tJsonConfigurableMapType jcTypeMap;
+            tComplexJsonConfigurableMapType complexTypeMap;
+            tIPKeyMapType ipKeyTypeMap ;
+            tIPKeyValueMapType ipKeyValueTypeMap;
 
+        };
+    private:
+        // make this private so subclasses have to call GetConfigData()
+        ConfigData* m_pData;
+        
+    protected:
         json::Object jsonSchemaBase;
+
+        ConfigData* GetConfigData();
+        json::Object& GetSchemaBase();
+
         static std::set< std::string > empty_set;
 #pragma warning( pop )
 
-        JsonConfigurable() {}
+        JsonConfigurable();
 
         static const char * default_description;
 

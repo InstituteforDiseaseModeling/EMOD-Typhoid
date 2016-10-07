@@ -50,7 +50,7 @@ namespace Kernel
     json::QuickBuilder
     ResistanceHegGenetics::GetSchema()
     {
-        json::QuickBuilder schema( jsonSchemaBase );
+        json::QuickBuilder schema( GetSchemaBase() );
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
 
@@ -86,11 +86,6 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(MosquitoRelease)
 
     IMPLEMENT_FACTORY_REGISTERED(MosquitoRelease)
-
-    QuickBuilder MosquitoRelease::GetSchema()
-    {
-        return QuickBuilder( jsonSchemaBase );
-    }
 
     MosquitoRelease::MosquitoRelease()
     : BaseNodeIntervention()
