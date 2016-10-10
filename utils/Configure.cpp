@@ -413,6 +413,12 @@ namespace Kernel
         // -----------------------------------------------------------------------
     }
 
+    JsonConfigurable::~JsonConfigurable()
+    {
+        delete m_pData;
+        m_pData = nullptr;
+    }
+
     JsonConfigurable::ConfigData* JsonConfigurable::GetConfigData()
     {
         // ---------------------------------------------------------------------------------------

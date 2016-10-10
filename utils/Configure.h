@@ -237,6 +237,7 @@ namespace Kernel
 #pragma warning( pop )
 
         JsonConfigurable();
+        virtual ~JsonConfigurable();
 
         static const char * default_description;
 
