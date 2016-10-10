@@ -16,23 +16,8 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "stdafx.h"
 #include <string>
 
-/*#include "Debug.h"
-#include "MathFunctions.h"
-#include "Environment.h"
-#include "Types.h"
-
-#include "Interventions.h"
-#include "NodeDemographics.h"
-#include "Common.h"
-#include "Exceptions.h"
-#include "Individual.h" // for IIndividualHumanEventContext
-#include "NodeDemographics.h" // for static strings e.g. tOPV_dose_distribution
-#include "RANDOM.h"
-#include "SimulationConfig.h"
-#include "Vaccine.h"
-*/
-
 #include "SusceptibilityTyphoid.h"
+#include "IndividualTyphoid.h"
 #include "SimulationConfig.h"
 
 static const char * _module = "SusceptibilityTyphoid";
@@ -40,6 +25,8 @@ static const char * _module = "SusceptibilityTyphoid";
 
 namespace Kernel
 {
+#define LOG_INFO_F printf
+#define LOG_DEBUG_F printf
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Susceptibility,SusceptibilityTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(SusceptibilityTyphoidConfig)
     END_QUERY_INTERFACE_BODY(SusceptibilityTyphoidConfig)
@@ -100,6 +87,7 @@ namespace Kernel
 
     void SusceptibilityTyphoid::Update(float dt)
     {
+        std::cout << "SusceptibilityTyphoid::Update." << std::endl;
         age += dt; // tracks age for immune purposes
          // if cross N year age boundary
 
@@ -107,7 +95,7 @@ namespace Kernel
         float age_boundary =  0.5f * DAYSPERYEAR;
         if( age >= age_boundary && age-dt< age_boundary && mod_acquire == 0 )
         {
-           if( randgen->e() < GET_CONFIGURABLE(SimulationConfig)->typhoid_6month_susceptible_fraction)
+           if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6month_susceptible_fraction)
             {
                 LOG_DEBUG_F( "1-yo being made susceptible.\n" );
                 mod_acquire = 1.0f;
@@ -117,7 +105,7 @@ namespace Kernel
         float age_boundary_2 = 3 * DAYSPERYEAR;
         if( age >= age_boundary_2 && age-dt< age_boundary_2 && mod_acquire == 0 )
         {
-           if( randgen->e() < GET_CONFIGURABLE(SimulationConfig)->typhoid_3year_susceptible_fraction )
+           if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_3year_susceptible_fraction )
             {
                 LOG_DEBUG_F( "3-yo being made susceptible.\n" );
                 mod_acquire = 1.0f;
@@ -126,7 +114,7 @@ namespace Kernel
 		float age_boundary_3 = 6 * DAYSPERYEAR;
         if( age >= age_boundary_3 && age-dt< age_boundary_3 && mod_acquire == 0 )
         {
-           if( randgen->e() < GET_CONFIGURABLE(SimulationConfig)->typhoid_6year_susceptible_fraction )
+           if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6year_susceptible_fraction )
             {
                 LOG_DEBUG_F( "6-yo being made susceptible.\n" );
                 mod_acquire = 1.0f;

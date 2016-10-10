@@ -37,7 +37,9 @@
         "Default_Genome": 0, 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filenames": ["..\\polio_input\\Sandbox_naive_demographics.compiled.json"], 
+        "Demographics_Filenames": [
+            "..\\polio_input\\Sandbox_naive_demographics.compiled.json"
+        ], 
         "Disease_Susceptible_Report_Poliovirus_Type": "VRPV1", 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
@@ -45,8 +47,8 @@
         "Enable_Contact_Tracing": 0, 
         "Enable_Default_Reporting": 1, 
         "Enable_Demographics_Birth": 1, 
+        "Enable_Demographics_Builtin": 0, 
         "Enable_Demographics_Gender": 1, 
-        "Enable_Demographics_Initial": 1, 
         "Enable_Demographics_Other": 1, 
         "Enable_Demographics_Reporting": 0, 
         "Enable_Disease_Mortality": 0, 

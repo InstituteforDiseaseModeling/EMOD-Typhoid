@@ -14,6 +14,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "ReportMalaria.h"
 #include "BinnedReportMalaria.h"
 #include "SpatialReportMalaria.h"
+#include "FactorySupport.h"
+#include "ProgVersion.h"
 
 #pragma warning(disable : 4996)
 
@@ -109,9 +111,7 @@ namespace Kernel
     void SimulationMalaria::Initialize(const ::Configuration *config)
     {
         SimulationVector::Initialize(config);
-        IndividualHumanMalaria fakeHuman;
-        LOG_INFO( "Calling Configure on fakeHumanMalaria\n" );
-        fakeHuman.Configure( config );
+        IndividualHumanMalaria::InitializeStaticsMalaria( config );
     }
 
     SimulationMalaria *SimulationMalaria::CreateSimulation()

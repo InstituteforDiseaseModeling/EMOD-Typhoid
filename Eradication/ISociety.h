@@ -14,6 +14,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Configure.h"
 #include "IRelationship.h"
 
+
 namespace Kernel {
 
     struct IIdGeneratorSTI;
@@ -21,6 +22,7 @@ namespace Kernel {
     struct IPairFormationAgent;
     struct IPairFormationStats;
     struct IRelationshipParameters;
+    struct IConcurrency;
 
     struct IDMAPI ISociety : public JsonConfigurable
     {
@@ -34,6 +36,8 @@ namespace Kernel {
 
         virtual void SetParameters( IIdGeneratorSTI* pIdGen, const Configuration* config ) = 0;
         virtual IRelationshipParameters* GetRelationshipParameters( RelationshipType::Enum type ) = 0;
+
+        virtual IConcurrency* GetConcurrency() = 0;
 
         // JsonConfigurable - making public
         virtual bool Configure(const Configuration *config) = 0;

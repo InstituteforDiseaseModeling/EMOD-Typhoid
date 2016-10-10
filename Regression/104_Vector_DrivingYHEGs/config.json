@@ -51,7 +51,7 @@
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
         "Demographics_Filenames": [
-            "Namawala_single_node_demographics.compiled.json"
+            "Namawala_single_node_demographics.json"
         ], 
         "Egg_Hatch_Delay_Distribution": "NO_DELAY", 
         "Egg_Saturation_At_Oviposition": "SATURATION_AT_OVIPOSITION", 
@@ -62,8 +62,8 @@
         "Enable_Default_Reporting": 1, 
         "Enable_Default_Shedding_Function": 1, 
         "Enable_Demographics_Birth": 0, 
+        "Enable_Demographics_Builtin": 0, 
         "Enable_Demographics_Gender": 1, 
-        "Enable_Demographics_Initial": 1, 
         "Enable_Demographics_Other": 0, 
         "Enable_Demographics_Reporting": 0, 
         "Enable_Disease_Mortality": 0, 

@@ -11,7 +11,8 @@
         { "path": "00_Households/test_suite/35_5x5_MigrateIndividuals_Moving" , "reports" : "ReportNodeDemographics.csv ReportMalariaFiltered.json" },
         { "path": "Multicore_Nosibe/Scenarios/TB/01_BasicModel/A_SEIR"        , "reports" : "Report_Scenarios.json" },
         { "path": "STI/40_STI_Trivial_All_Reporters"                          , "reports" : "RelationshipQueueReporter.json" },
-        { "path": "HIV/12_HIV_CascadeOfCare"                                  , "reports" : "Report_HIV_WHO2015.csv" }
+        { "path": "HIV/12_HIV_CascadeOfCare"                                  , "reports" : "Report_HIV_WHO2015.csv" },
+        { "path": "GitHub-426"                                                , "reports" : "ReportMalariaFiltered.json" }
     ],
     "Migration": [
         { "path": "STI/61_STI_Marital_Only_Relationship_Migration_Multicore"  , "reports" : "ReportRelationshipMigrationTracking.csv" }

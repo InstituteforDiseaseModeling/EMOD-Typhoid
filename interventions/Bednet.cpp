@@ -75,7 +75,7 @@ namespace Kernel
         if( !JsonConfigurable::_dryrun )
         {
             auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
-            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json ); 
 
             killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
             blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
@@ -98,12 +98,14 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IBednetConsumer", "IIndividualHumanInterventionsContext" );
         }
+        //ibc->Test();
         context->PurgeExisting( typeid(*this).name() );
         bool ret = BaseIntervention::Distribute( context, pCCO );
         if( ret && !on_distributed_event.IsUninitialized() && (on_distributed_event != NO_TRIGGER_STR) )
         {
             INodeTriggeredInterventionConsumer* broadcaster = nullptr;
-            if (s_OK != context->GetParent()->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster))
+            if( context->GetParent() != nullptr &&
+                s_OK != context->GetParent()->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeTriggeredInterventionConsumer), (void**)&broadcaster) )
             {
                 throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, 
                                                "parent->GetEventContext()->GetNodeEventContext()", 
@@ -112,6 +114,7 @@ namespace Kernel
             }
             broadcaster->TriggerNodeEventObserversByString( context->GetParent()->GetEventContext(), on_distributed_event );
         }
+        //ibc->UpdateProbabilityOfBlocking( 0 );
         return ret ;
     }
 
@@ -123,6 +126,7 @@ namespace Kernel
         float current_blockingrate = blocking_effect->Current();
         LOG_DEBUG_F( "current_killingrate = %f\n", current_killingrate );
         LOG_DEBUG_F( "current_blockingrate = %f\n", current_blockingrate );
+        release_assert( ibc );
         ibc->UpdateProbabilityOfKilling( current_killingrate );
         ibc->UpdateProbabilityOfBlocking( current_blockingrate );
     }

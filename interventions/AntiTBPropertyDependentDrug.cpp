@@ -17,6 +17,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "TBContexts.h"
 #include "Debug.h"                        // for release-assert
 #include "SimulationConfig.h"
+#include "TBParameters.h"
+#include "TBDrugTypeParameters.h" //for TBDrugTypes
 
 static const char* _module = "AntiTBPropDepDrug";
 
@@ -116,7 +118,7 @@ namespace Kernel
         
         tProperties* pProp = ivc->GetParent()->GetEventContext()->GetProperties();
 
-        auto tbdtMap = GET_CONFIGURABLE(SimulationConfig)->TBDrugMap;
+        auto tbdtMap = GET_CONFIGURABLE(SimulationConfig)->tb_params->TBDrugMap;
         for (auto& pair : (*pProp))
         {
             const std::string& propkey = pair.first;

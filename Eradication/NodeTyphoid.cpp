@@ -26,6 +26,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "IndividualTyphoid.h"
 #include "TransmissionGroupsFactory.h"
 #include "SimulationConfig.h"
+#include "Properties.h"
 #include "Python.h"
 
 using namespace Kernel;
@@ -85,17 +86,24 @@ namespace Kernel
         RouteToContagionDecayMap_t decayMap;
         LOG_DEBUG_F("Number of basestrains: %d\n", GET_CONFIGURABLE(SimulationConfig)->number_basestrains);
 
-        if( demographics.Contains( IP_KEY ) && GET_CONFIGURABLE(SimulationConfig)->heterogeneous_intranode_transmission_enabled)
+        // Can't remember why we copy-pasted this here from original. Now that some IP code has changed, this needs to be modified
+        // also. Going to comment out and call base-class for now.
+#if 1
+        if( (IPFactory::GetInstance()->GetIPList().size() > 0) && GET_CONFIGURABLE(SimulationConfig)->heterogeneous_intranode_transmission_enabled )
         {
             ValidateIntranodeTransmissionConfiguration();
-            const NodeDemographics& properties = demographics[IP_KEY];
-            for (int iProperty = 0; iProperty < properties.size(); iProperty++)
+            //const NodeDemographics& properties = demographics[IP_KEY];
+            //for (int iProperty = 0; iProperty < properties.size(); iProperty++)
+            for( auto p_ip : IPFactory::GetInstance()->GetIPList() )
             {
-                const NodeDemographics& property = properties[iProperty];
-                if (property.Contains(TRANSMISSION_MATRIX_KEY))
+                //const NodeDemographics& property = properties[iProperty];
+                //if (property.Contains(TRANSMISSION_MATRIX_KEY))
+#if 0
+                if( p_ip->GetIntraNodeTransmissions( GetExternalID() ).HasMatrix() )
                 {
+                    std::string routeName = p_ip->GetIntraNodeTransmissions( GetExternalID() ).GetRouteName();
                     string propertyName = property[IP_NAME_KEY].AsString();
-                    string routeName = property[TRANSMISSION_MATRIX_KEY][ROUTE_KEY].AsString();
+                    //string routeName = property[TRANSMISSION_MATRIX_KEY][ROUTE_KEY].AsString();
                     std::transform(routeName.begin(), routeName.end(), routeName.begin(), ::tolower);
                     if (decayMap.find(routeName)==decayMap.end())
                     {
@@ -140,6 +148,7 @@ namespace Kernel
                     transmissionGroups->AddProperty(propertyName, valueList, scalingMatrix, routeName);
                 }
                 else //HINT is enabled, but no transmission matrix is detected
+#endif
                 {
                     string default_route = string("environmental");
                     float default_fraction = node_contagion_decay_fraction;
@@ -163,6 +172,8 @@ namespace Kernel
         }
 
         transmissionGroups->Build(decayMap, GET_CONFIGURABLE(SimulationConfig)->number_basestrains, GET_CONFIGURABLE(SimulationConfig)->number_substrains);
+#endif
+        //NodeEnvironmental::SetupIntranodeTransmission();
     }
 
     void NodeTyphoid::resetNodeStateCounters(void)

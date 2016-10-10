@@ -1,29 +1,17 @@
 {
     "Header": {
-        "DateTime": "Fri Jul 31 12:02:06 2015",
-        "DTK_Version": "5526 trunk 2015/07/28 13:55:52",
+        "DateTime": "Wed Jul 13 11:22:11 2016",
+        "DTK_Version": "1225 schema_changes (1a9b052) Jul 13 2016 08:27:48",
         "Report_Type": "InsetChart",
         "Report_Version": "3.2",
         "Start_Time": 0,
         "Simulation_Timestep": 1,
         "Timesteps": 7,
-        "Channels": 34,
+        "Channels": 35,
         "Base_Year": 1960.5
     },
     "Channels": {
-        "Active Informal Relationships": {
-            "Units": "Relationships",
-            "Data": [
-                0,
-                0,
-                0,
-                4,
-                4,
-                6,
-                8
-            ]
-        },
-        "Active Marital Relationships": {
+        "Active COMMERCIAL Relationships": {
             "Units": "Relationships",
             "Data": [
                 0,
@@ -35,7 +23,19 @@
                 0
             ]
         },
-        "Active Transitory Relationships": {
+        "Active INFORMAL Relationships": {
+            "Units": "Relationships",
+            "Data": [
+                0,
+                0,
+                0,
+                2,
+                4,
+                4,
+                4
+            ]
+        },
+        "Active MARITAL Relationships": {
             "Units": "Relationships",
             "Data": [
                 0,
@@ -44,6 +44,18 @@
                 0,
                 0,
                 0,
+                0
+            ]
+        },
+        "Active TRANSITORY Relationships": {
+            "Units": "Relationships",
+            "Data": [
+                0,
+                2,
+                2,
+                2,
+                2,
+                4,
                 4
             ]
         },
@@ -207,24 +219,24 @@
             "Units": "",
             "Data": [
                 1,
-                1739,
-                1,
+                1740,
                 0,
                 0,
                 0,
-                2
+                0,
+                0
             ]
         },
         "Number of Individuals Ever in a Relationship": {
             "Units": "",
             "Data": [
                 0,
-                0,
-                0,
-                4,
+                2,
+                2,
                 4,
                 6,
-                12
+                8,
+                8
             ]
         },
         "Number of Individuals HIV+ w/ CD4 < 200 (non-ART)": {
@@ -291,24 +303,24 @@
             "Units": "People",
             "Data": [
                 0,
-                0,
-                0,
-                4,
+                2,
+                2,
                 4,
                 6,
-                12
+                8,
+                8
             ]
         },
         "Post-Debut Population": {
             "Units": "",
             "Data": [
-                978,
-                978,
-                978,
-                977,
-                977,
-                977,
-                977
+                993,
+                993,
+                993,
+                993,
+                993,
+                993,
+                993
             ]
         },
         "Prevalence (Females, 15-49)": {
@@ -362,25 +374,25 @@
         "Single Post-Debut Men": {
             "Units": "People",
             "Data": [
-                450,
-                450,
-                450,
-                448,
-                448,
-                447,
-                444
+                465,
+                464,
+                464,
+                463,
+                462,
+                461,
+                461
             ]
         },
         "Single Post-Debut Women": {
             "Units": "People",
             "Data": [
                 528,
-                528,
-                528,
-                525,
+                527,
+                527,
+                526,
                 525,
                 524,
-                521
+                524
             ]
         },
         "Statistical Population": {
@@ -388,7 +400,7 @@
             "Data": [
                 1739,
                 1739,
-                1739,
+                1738,
                 1738,
                 1738,
                 1738,

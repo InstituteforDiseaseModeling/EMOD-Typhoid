@@ -102,10 +102,10 @@ namespace Kernel
             release_assert( SimulationTyphoid::base_year > 0 );
             next_report_time = DAYSPERYEAR*(startYear - SimulationTyphoid::base_year) + DAYSPERYEAR - dt; // / 2.0f ;
             // e.g., Suppose we started sim in 1940, and want to report from 1943 through 1944. dt=1
-            //       nrt = 365 * ( 1943.0 - 1940.0 ) +365 - 1
-            //           = 365 * 4 - 0.5
+            //       nrt = DAYSPERYEAR * ( 1943.0 - 1940.0 ) +DAYSPERYEAR - 1
+            //           = DAYSPERYEAR * 4 - 0.5
             //           = 1459.0 aka "Dec 31 of this year"
-            LOG_INFO_F( "Starting to collect data now, next_report_time = %f\n", next_report_time );
+            LOG_INFO_F( "Starting to collect data now, next_report_time = %f\n", (float) next_report_time );
         }
         else if( is_collecting_data && (_parent->GetSimulationTime().Year() > stopYear) )
         {

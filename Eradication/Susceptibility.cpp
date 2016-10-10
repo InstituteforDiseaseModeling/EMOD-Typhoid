@@ -56,16 +56,16 @@ namespace Kernel
         const Configuration* config
     )
     {
-        initConfigTypeMap( "Enable_Immune_Decay", &immune_decay, Enable_Immune_Decay_DESC_TEXT, true );
-        initConfigTypeMap( "Acquisition_Blocking_Immunity_Decay_Rate", &acqdecayrate, Acquisition_Blocking_Immunity_Decay_Rate_DESC_TEXT, 0.0f, 1000.0f, 0.001f );
-        initConfigTypeMap( "Transmission_Blocking_Immunity_Decay_Rate", &trandecayrate, Transmission_Blocking_Immunity_Decay_Rate_DESC_TEXT, 0.0f, 1000.0f, 0.001f );
-        initConfigTypeMap( "Mortality_Blocking_Immunity_Decay_Rate", &mortdecayrate, Mortality_Blocking_Immunity_Decay_Rate_DESC_TEXT, 0.0f, 1000.0f, 0.001f );
-        initConfigTypeMap( "Immunity_Acquisition_Factor", &baseacqupdate, Immunity_Acquisition_Factor_DESC_TEXT, 0.0f, 1000.0f, 0.0f );
-        initConfigTypeMap( "Immunity_Transmission_Factor", &basetranupdate, Immunity_Transmission_Factor_DESC_TEXT, 0.0f, 1000.0f, 0.0f );
-        initConfigTypeMap( "Immunity_Mortality_Factor", &basemortupdate, Immunity_Mortality_Factor_DESC_TEXT, 0.0f, 1000.0f, 0.0f );
-        initConfigTypeMap( "Acquisition_Blocking_Immunity_Duration_Before_Decay", &baseacqoffset, Acquisition_Blocking_Immunity_Duration_Before_Decay_DESC_TEXT, 0.0f, MAX_HUMAN_LIFETIME, 0.0f );
-        initConfigTypeMap( "Transmission_Blocking_Immunity_Duration_Before_Decay", &basetranoffset, Transmission_Blocking_Immunity_Duration_Before_Decay_DESC_TEXT, 0.0f, MAX_HUMAN_LIFETIME, 0.0f );
-        initConfigTypeMap( "Mortality_Blocking_Immunity_Duration_Before_Decay", &basemortoffset, Mortality_Blocking_Immunity_Duration_Before_Decay_DESC_TEXT, 0.0f, MAX_HUMAN_LIFETIME, 0.0f );
+        initConfigTypeMap( "Enable_Immune_Decay", &immune_decay, Enable_Immune_Decay_DESC_TEXT, true, "Enable_Immunity" );
+        initConfigTypeMap( "Acquisition_Blocking_Immunity_Decay_Rate", &acqdecayrate, Acquisition_Blocking_Immunity_Decay_Rate_DESC_TEXT, 0.0f, 1000.0f, 0.001f, "Enable_Immune_Decay" );
+        initConfigTypeMap( "Transmission_Blocking_Immunity_Decay_Rate", &trandecayrate, Transmission_Blocking_Immunity_Decay_Rate_DESC_TEXT, 0.0f, 1000.0f, 0.001f, "Enable_Immune_Decay" );
+        initConfigTypeMap( "Mortality_Blocking_Immunity_Decay_Rate", &mortdecayrate, Mortality_Blocking_Immunity_Decay_Rate_DESC_TEXT, 0.0f, 1000.0f, 0.001f, "Enable_Immune_Decay" );
+        initConfigTypeMap( "Immunity_Acquisition_Factor", &baseacqupdate, Immunity_Acquisition_Factor_DESC_TEXT, 0.0f, 1000.0f, 0.0f, "Enable_Immunity" );
+        initConfigTypeMap( "Immunity_Transmission_Factor", &basetranupdate, Immunity_Transmission_Factor_DESC_TEXT, 0.0f, 1000.0f, 0.0f, "Enable_Immunity" );
+        initConfigTypeMap( "Immunity_Mortality_Factor", &basemortupdate, Immunity_Mortality_Factor_DESC_TEXT, 0.0f, 1000.0f, 0.0f, "Enable_Immunity" );
+        initConfigTypeMap( "Acquisition_Blocking_Immunity_Duration_Before_Decay", &baseacqoffset, Acquisition_Blocking_Immunity_Duration_Before_Decay_DESC_TEXT, 0.0f, MAX_HUMAN_LIFETIME, 0.0f, "Enable_Immune_Decay" );
+        initConfigTypeMap( "Transmission_Blocking_Immunity_Duration_Before_Decay", &basetranoffset, Transmission_Blocking_Immunity_Duration_Before_Decay_DESC_TEXT, 0.0f, MAX_HUMAN_LIFETIME, 0.0f, "Enable_Immune_Decay" );
+        initConfigTypeMap( "Mortality_Blocking_Immunity_Duration_Before_Decay", &basemortoffset, Mortality_Blocking_Immunity_Duration_Before_Decay_DESC_TEXT, 0.0f, MAX_HUMAN_LIFETIME, 0.0f, "Enable_Immune_Decay" );
         bool bRet = JsonConfigurable::Configure( config );
         return bRet;
     }
@@ -76,6 +76,7 @@ namespace Kernel
 
         // immune modifiers
         mod_acquire   = immmod;
+        //std::cout << "mod_acquire = " << mod_acquire << " in " << __FUNCTION__ << " based on init value: " << immmod << std::endl;
         mod_transmit  = 1;
         mod_mortality = 1;
 
@@ -141,7 +142,8 @@ namespace Kernel
     const
     {
         float susceptibility_correction = 1;
-        if( GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE &&
+        if( GET_CONFIGURABLE(SimulationConfig) && 
+            GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling == SusceptibilityScaling::LINEAR_FUNCTION_OF_AGE &&
             GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling_rate > 0.0f )
         {
             susceptibility_correction = GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling_intercept + age*GET_CONFIGURABLE(SimulationConfig)->susceptibility_scaling_rate/DAYSPERYEAR;
@@ -156,33 +158,34 @@ namespace Kernel
         age += dt; // tracks age for immune purposes
 
         if (mod_acquire < 1) { acqdecayoffset -= dt; }
-        if (immune_decay && acqdecayoffset < 0)
+        if (SusceptibilityConfig::immune_decay && acqdecayoffset < 0)
         {
-            mod_acquire += (1.0f - mod_acquire) * acqdecayrate * dt;
+            mod_acquire += (1.0f - mod_acquire) * SusceptibilityConfig::acqdecayrate * dt;
         }
 
         if (mod_transmit < 1) {trandecayoffset -= dt;}
-        if (immune_decay && trandecayoffset < 0)
+        if (SusceptibilityConfig::immune_decay && trandecayoffset < 0)
         {
-            mod_transmit += (1.0f - mod_transmit) * trandecayrate * dt;
+            mod_transmit += (1.0f - mod_transmit) * SusceptibilityConfig::trandecayrate * dt;
         }
 
         if (mod_mortality < 1) {mortdecayoffset -= dt;}
-        if (immune_decay && mortdecayoffset < 0)
+        if (SusceptibilityConfig::immune_decay && mortdecayoffset < 0)
         {
-            mod_mortality += (1.0f - mod_mortality) * mortdecayrate * dt;
+            mod_mortality += (1.0f - mod_mortality) * SusceptibilityConfig::mortdecayrate * dt;
         }
     }
 
     void Susceptibility::UpdateInfectionCleared()
     {
-        mod_acquire   *= baseacqupdate;
-        mod_transmit  *= basetranupdate;
-        mod_mortality *= basemortupdate;
+        mod_acquire   *= SusceptibilityConfig::baseacqupdate;
+        mod_transmit  *= SusceptibilityConfig::basetranupdate;
+        mod_mortality *= SusceptibilityConfig::basemortupdate;
+        //std::cout << "mod_acquire = " << mod_acquire << " in " << __FUNCTION__ << " based on config value: " << SusceptibilityConfig::baseacqupdate << std::endl;
 
-        acqdecayoffset  = baseacqoffset;
-        trandecayoffset = basetranoffset;
-        mortdecayoffset = basemortoffset;
+        acqdecayoffset  = SusceptibilityConfig::baseacqoffset;
+        trandecayoffset = SusceptibilityConfig::basetranoffset;
+        mortdecayoffset = SusceptibilityConfig::basemortoffset;
     }
 
     bool Susceptibility::IsImmune() const

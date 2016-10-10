@@ -126,9 +126,10 @@ namespace Kernel
     void SimulationTyphoid::Initialize(const ::Configuration *config)
     {
         SimulationEnvironmental::Initialize(config);
-        IndividualHumanTyphoid fakeHuman;
+        //IndividualHumanTyphoid fakeHuman;
         LOG_INFO( "Calling Configure on fakeHuman\n" );
-        fakeHuman.Configure( config );
+        //fakeHuman.Configure( config );
+        IndividualHumanTyphoid::InitializeStatics( config );
     }
 
     SimulationTyphoid *SimulationTyphoid::CreateSimulation()

@@ -36,11 +36,16 @@ namespace Kernel
         virtual bool Configure( const Configuration* config ) override;
 
     protected:
+        friend class Infection;
+
         static DurationDistribution incubation_distribution;
         static DurationDistribution infectious_distribution;
         static float base_infectivity;
         static float base_mortality;
         static MortalityTimeCourse::Enum                          mortality_time_course;                            // MORTALITY_TIME_COURSE
+
+        // optional
+        static bool vital_disease_mortality;
 
         GET_SCHEMA_STATIC_WRAPPER(InfectionConfig)
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -49,7 +54,7 @@ namespace Kernel
 
     // generic infection base class
     // may not necessary want to derive from this for real infections
-    class Infection : public IInfection, protected InfectionConfig
+    class Infection : public IInfection
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()

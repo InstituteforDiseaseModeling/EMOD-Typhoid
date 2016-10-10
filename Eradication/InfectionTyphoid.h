@@ -56,6 +56,7 @@ namespace Kernel
         virtual void Update(float dt, ISusceptibilityContext* _immunity = NULL) override;
         void SetMCWeightOfHost(float ind_mc_weight);
         virtual void Clear() override;
+        virtual float GetInfectiousness() const override;
 
         // InfectionTyphoidReportable methods
     protected:
@@ -65,6 +66,51 @@ namespace Kernel
 
         InfectionTyphoid(IIndividualHumanContext *context);
         void Initialize(suids::suid _suid);
+        void handlePrepatentExpiry();
+        void handleAcuteExpiry();
+        void handleSubclinicalExpiry();
+		int treatment_multiplier;
+        int chronic_timer;
+        int subclinical_timer;
+        int acute_timer;
+        int prepatent_timer;
+        int clinical_immunity_timer;  // timers of days left in state, or UNINIT_TIMER if not used //JG- I'm going to leave clinical immunity in for now. 
+        int _subclinical_duration;
+        int _prepatent_duration;
+        int _acute_duration; // duration of state in days
+        bool isDead;  // is this individual dead?
+        std::string last_state_reported; // previous typhoid status of individual
+        static const int _chronic_duration;
+        static const int _clinical_immunity_duration;
+
+        static const int acute_treatment_day; // what day individuals are treated
+        static const float CFRU;   // case fatality rate?
+        static const float CFRH; // hospitalized case fatality rate?
+        static const float treatmentprobability;  // probability of treatment
+	
+
+        // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
+        // mean and std dev of log normal distribution
+        static const float mph;
+        static const float sph;
+        static const float mpm;
+        static const float spm;
+		static const float mpl;
+        static const float spl;
+
+        // Subclinical infectious duration parameters: mean and standard deviation under and over 30
+        static const float mso30;
+        static const float sso30;
+        static const float msu30;
+        static const float ssu30;
+
+        // Acute infectious duration parameters: mean and standard deviation under and over 30
+        static const float mao30;
+        static const float sao30;
+        static const float mau30;
+        static const float sau30;
+
+        static const float P10; // probability of clinical immunity from a subclinical infection
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

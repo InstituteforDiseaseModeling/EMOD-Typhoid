@@ -68,6 +68,7 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
 {
     if( recording )
     {
+        //ReportEnvironmental::EndTimestep( currentTime, dt ); 
         // bypass generic-level EndTimestep coz we don't care about those channels.
         BaseChannelReport::EndTimestep( currentTime, dt );
 
@@ -191,11 +192,13 @@ ReportTyphoid::LogNodeData(
     Accumulate(_stat_pop_label, pNC->GetStatPop());
     Accumulate("Infected", pNC->GetInfected());
     BaseChannelReport::LogNodeData( pNC );
+
     const INodeTyphoid * pTyphoidNode = NULL; // TBD: Use limited read-only interface, not full NodeTyphoid
     if( pNC->QueryInterface( GET_IID( INodeTyphoid), (void**) &pTyphoidNode ) != s_OK )
     {
         throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "pNC", "INodeTyphoid", "INodeContext" );
     }
+
 
     auto contagionPop = pNC->GetTotalContagion();
     NonNegativeFloat contactContagionPop = contagionPop["contact"];

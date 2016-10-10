@@ -71,14 +71,16 @@
             }
         },
         "OUTPUT": {
-            "Enable_Property_Output": 1,
-            "Enable_Spatial_Output": 1,
+            "Enable_Property_Output": 0,
+            "Enable_Spatial_Output": 0,
             "Spatial_Output_Channels": [
                 "Prevalence",
                 "New_Infections"
             ]
         },
         "PRIMARY": {
+            "logLevel_JsonConfigurable" : "WARNING",
+            "logLevel_SimpleHealthSeekingBehavior" : "WARNING",
             "Config_Name": "HINT_WAPertussis_BaselineOutbreak -- multicore",
             "Geography": "SamplesInput",
             "Node_Grid_Size": 0.009,

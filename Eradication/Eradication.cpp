@@ -133,7 +133,10 @@ int main(int argc, char* argv[])
     auto sims = getSimTypeList();
     std::stringstream output;
     output << "Intellectual Ventures(R)/EMOD Disease Transmission Kernel " << pv->getVersion() << std::endl
-           << "Built on " << pv->getBuildDate() << " from " << pv->getSccsBranch() << " checked in on " << pv->getSccsDate() << std::endl;
+           << "Built on " << pv->getBuildDate() <<
+           " by " << pv->getBuilderName() <<
+           " from " << pv->getSccsBranch() <<
+           " checked in on " << pv->getSccsDate() << std::endl;
     
     std::string sim_types_str = "Supports sim_types: ";
     for( auto sim_type: sims  )
@@ -322,15 +325,6 @@ void IDMAPI writeInputSchemas(
     }
 
     total_schema[ "config" ] = configSchemaAll;
-
-    json::Object fakeJsonRoot3;
-    json::QuickBuilder fakeECJson( fakeJsonRoot3 );
-    fakeECJson["class"] = json::String("StandardInterventionDistributionEventCoordinator");
-    auto fakeConfig = Configuration::CopyFromElement( fakeECJson );
-    Kernel::StandardInterventionDistributionEventCoordinator * pTempEC = dynamic_cast<Kernel::StandardInterventionDistributionEventCoordinator*>( Kernel::EventCoordinatorFactory::CreateInstance( fakeConfig ) );
-    delete fakeConfig;
-    fakeConfig = nullptr;
-    /* json::QuickBuilder ec_schema = */ pTempEC->GetSchema();
 
     if( !Kernel::InterventionFactory::getInstance() )
     {

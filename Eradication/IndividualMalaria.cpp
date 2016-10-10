@@ -21,6 +21,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "SimulationConfig.h"
 #include "MathFunctions.h"
 #include "MalariaBarcode.h"
+#include "MalariaParameters.h"
 
 #ifdef randgen
 #undef randgen
@@ -38,16 +39,19 @@ static const char * _module = "IndividualMalaria";
 
 namespace Kernel
 {
-    GET_SCHEMA_STATIC_WRAPPER_IMPL(Malaria.Individual,IndividualHumanMalaria)
+    GET_SCHEMA_STATIC_WRAPPER_IMPL(Malaria.Individual,IndividualHumanMalariaConfig)
 
     // ----------------- IndividualHumanMalariaConfig ---------------
-    MalariaModel::Enum    IndividualHumanMalaria::malaria_model                     = MalariaModel::MALARIA_MECHANISTIC_MODEL;
-    float                 IndividualHumanMalaria::mean_sporozoites_per_bite         = 0.0f;
-    float                 IndividualHumanMalaria::base_sporozoite_survival_fraction = 0.0f;
-    float                 IndividualHumanMalaria::antibody_csp_killing_threshold    = 0.0f;
-    float                 IndividualHumanMalaria::antibody_csp_killing_invwidth     = 0.0f;
+    MalariaModel::Enum    IndividualHumanMalariaConfig::malaria_model                     = MalariaModel::MALARIA_MECHANISTIC_MODEL;
+    float                 IndividualHumanMalariaConfig::mean_sporozoites_per_bite         = 0.0f;
+    float                 IndividualHumanMalariaConfig::base_sporozoite_survival_fraction = 0.0f;
+    float                 IndividualHumanMalariaConfig::antibody_csp_killing_threshold    = 0.0f;
+    float                 IndividualHumanMalariaConfig::antibody_csp_killing_invwidth     = 0.0f;
 
-    bool IndividualHumanMalaria::Configure( const Configuration * config )
+    BEGIN_QUERY_INTERFACE_BODY(IndividualHumanMalariaConfig)
+    END_QUERY_INTERFACE_BODY(IndividualHumanMalariaConfig)
+
+    bool IndividualHumanMalariaConfig::Configure( const Configuration * config )
     {
         LOG_DEBUG( "Configure\n" );
 
@@ -65,12 +69,17 @@ namespace Kernel
         initConfigTypeMap( "Antibody_CSP_Killing_Threshold",     &antibody_csp_killing_threshold,    Antibody_CSP_Killing_Threshold_DESC_TEXT,     1e-6f, 1e6f,    DEFAULT_ANTIBODY_CSP_KILLING_THRESHOLD );
         initConfigTypeMap( "Antibody_CSP_Killing_Inverse_Width", &antibody_csp_killing_invwidth,     Antibody_CSP_Killing_Inverse_Width_DESC_TEXT, 1e-6f, 1e6f,    DEFAULT_ANTIBODY_CSP_KILLING_INVWIDTH );
 
-        SusceptibilityMalariaConfig fakeImmunity;
-        fakeImmunity.Configure( config );
-        InfectionMalariaConfig fakeInfection;
-        fakeInfection.Configure( config );
-
         return JsonConfigurable::Configure( config );
+    }
+
+    void IndividualHumanMalaria::InitializeStaticsMalaria( const Configuration * config )
+    {
+        SusceptibilityMalariaConfig immunity_config;
+        immunity_config.Configure( config );
+        InfectionMalariaConfig infection_config;
+        infection_config.Configure( config );
+        IndividualHumanMalariaConfig individual_config;
+        individual_config.Configure( config );
     }
 
     // ----------------- IndividualHumanMalaria ---------------
@@ -192,7 +201,7 @@ namespace Kernel
     {
         // If m_initial_infected_hepatocytes=0, this function is being called from initial infections at t=0 or an Outbreak intervention.
         // In that case, default to the mean number of infected hepatocytes.
-        int initial_hepatocytes = int(mean_sporozoites_per_bite * base_sporozoite_survival_fraction);
+        int initial_hepatocytes = int(IndividualHumanMalariaConfig::mean_sporozoites_per_bite * IndividualHumanMalariaConfig::base_sporozoite_survival_fraction);
 
         // A non-zero value for m_initial_infected_hepatocytes means
         // that the Poisson draw in ApplyTotalBitingExposure initiated the AcquireNewInfection function call.
@@ -220,7 +229,7 @@ namespace Kernel
         // This is just a proxy for exposure with an approximately 3-year time constant.
         if ( infectivity > 0 )
         {
-            m_CSP_antibody->UpdateAntibodyCapacity( dt, infectivity * 0.001);  // 0.001 ~= 1 / (3*DAYSPERYEAR)
+            m_CSP_antibody->UpdateAntibodyCapacityByRate( dt, infectivity * 0.001);  // 0.001 ~= 1 / (3*DAYSPERYEAR)
             m_CSP_antibody->SetAntigenicPresence(true);
         }
         else
@@ -260,7 +269,7 @@ namespace Kernel
 
     bool IndividualHumanMalaria::ChallengeWithBites( int n_infectious_bites )
     {
-        int n_sporozoites = n_infectious_bites * mean_sporozoites_per_bite;
+        int n_sporozoites = n_infectious_bites * IndividualHumanMalariaConfig::mean_sporozoites_per_bite;
         return ChallengeWithSporozoites( n_sporozoites );
     }
 
@@ -273,13 +282,13 @@ namespace Kernel
         //       - verify the decay is not structurally problematic (need to specialize MalariaAntibodyCSP::UpdateAntibodyConcentration to deal with >1 concentrations)
         //       - verify the decay is scientifically accurate based on RTS,S trial numbers (again feed into if concentration>1 block of UpdateAntibodyConcentration)
 
-        float sporozoite_survival_prob = base_sporozoite_survival_fraction;
+        float sporozoite_survival_prob = IndividualHumanMalariaConfig::base_sporozoite_survival_fraction;
 
         float anti_csp_concentration = m_CSP_antibody->GetAntibodyConcentration();
         if ( anti_csp_concentration > 0 )
         {
             // TODO: is this an adequate functional form?
-            sporozoite_survival_prob *= ( 1.0f - Sigmoid::variableWidthSigmoid( log10(anti_csp_concentration), log10(antibody_csp_killing_threshold), antibody_csp_killing_invwidth ) ); 
+            sporozoite_survival_prob *= ( 1.0f - Sigmoid::variableWidthSigmoid( log10(anti_csp_concentration), log10(IndividualHumanMalariaConfig::antibody_csp_killing_threshold), IndividualHumanMalariaConfig::antibody_csp_killing_invwidth ) ); 
         }
 
         m_initial_infected_hepatocytes = randgen->Poisson( n_sporozoites * sporozoite_survival_prob );
@@ -557,7 +566,7 @@ namespace Kernel
 
             // then gametocytes
             float gametocyte_density = (m_female_gametocytes + m_male_gametocytes) * m_inv_microliters_blood;
-            m_gametocytes_detected = float(1.0 / params()->parasiteSmearSensitivity * randgen->Poisson(params()->parasiteSmearSensitivity * gametocyte_density));
+            m_gametocytes_detected = float(1.0 / params()->malaria_params->parasiteSmearSensitivity * randgen->Poisson(params()->malaria_params->parasiteSmearSensitivity * gametocyte_density));
         }
         else if (test_type == MALARIA_TEST_NEW_DIAGNOSTIC)
         {
@@ -599,7 +608,7 @@ namespace Kernel
 
     bool  IndividualHumanMalaria::HasFever() const
     {
-        return malaria_susceptibility->get_fever() > GET_CONFIGURABLE(SimulationConfig)->feverDetectionThreshold;
+        return malaria_susceptibility->get_fever() > GET_CONFIGURABLE(SimulationConfig)->malaria_params->feverDetectionThreshold;
     }
 
     float IndividualHumanMalaria::CheckGametocyteCountWithTest(int test_type) const

@@ -52,6 +52,8 @@ namespace Kernel
         static bool CanSupportFamilyTrips( IMigrationInfoFactory* pmi );
 
     protected:
+        friend class IndividualHuman;
+
         static bool aging;
         static float min_adult_age_years ;
 
@@ -76,6 +78,11 @@ namespace Kernel
         static int max_ind_inf;
         static bool superinfection;
         static float x_othermortality;
+        
+        // From SimConfig
+        static MigrationStructure::Enum                             migration_structure;                              // MIGRATION_STRUCTURE
+        static VitalDeathDependence::Enum                           vital_death_dependence;                           // Vital_Death_Dependence
+        static bool vital_dynamics;
 
         virtual bool Configure( const Configuration* config ) override;
 
@@ -92,8 +99,7 @@ namespace Kernel
                             public IIndividualHumanEventContext,
                             public IInfectable,
                             public IInfectionAcquirable,
-                            public IMigrate,
-                            protected IndividualHumanConfig
+                            public IMigrate
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
         DECLARE_QUERY_INTERFACE()
@@ -106,6 +112,8 @@ namespace Kernel
         virtual ~IndividualHuman();
 
         virtual void Update(float currenttime, float dt) override;
+
+        virtual IMigrate* GetIMigrate() override;
 
         // IIndividualHumanContext
         virtual suids::suid GetSuid() const override;
@@ -134,6 +142,7 @@ namespace Kernel
         virtual void Die( HumanStateChange ) override;
         virtual INodeEventContext   * GetNodeEventContext() override; // for campaign cost reporting in e.g. HealthSeekingBehavior
         virtual tProperties* GetProperties() override;
+        //virtual IPKeyValueContainer* GetProperties();
         virtual const std::string& GetPropertyReportString() const override { return m_PropertyReportString; }
         virtual void SetPropertyReportString( const std::string& str ) override { m_PropertyReportString = str; }
         virtual bool AtHome() const override;
@@ -164,7 +173,7 @@ namespace Kernel
 
         // Initialization
         virtual void SetInitialInfections(int init_infs) override;
-        virtual void SetParameters(float infsample, float imm_mod, float risk_mod, float mig_mod) override; // specify each parameter, default version of SetParams()
+        virtual void SetParameters( INodeContext* pParent, float infsample, float imm_mod, float risk_mod, float mig_mod) override; // specify each parameter, default version of SetParams()
         virtual void CreateSusceptibility(float imm_mod=1.0, float risk_mod=1.0);
         virtual void setupMaternalAntibodies(IIndividualHumanContext* mother, INodeContext* node) override;
         virtual void SetMigrationModifier( float modifier ) override { migration_mod = modifier; }
@@ -204,6 +213,8 @@ namespace Kernel
         virtual void SetWaitingToGoOnFamilyTrip() override;
         virtual void GoHome() override;
 
+        static void InitializeStatics( const Configuration* config );
+
     protected:
 
         // Core properties
@@ -221,7 +232,6 @@ namespace Kernel
         infection_list_t              infections;
         InterventionsContainer*       interventions;
         TransmissionGroupMembership_t transmissionGroupMembership;
-        map<string, TransmissionGroupMembership_t> transmissionGroupMembershipByRoute;
 
         // Infections
         bool  m_is_infected;    // TODO: replace with more sophisticated strain-tracking capability
@@ -257,6 +267,7 @@ namespace Kernel
         suids::suid home_node_id ;
 
         tProperties Properties;
+        //IPKeyValueContainer* pProperties;
         std::string m_PropertyReportString;
 
         INodeContext* parent;   // Access back to node/simulation methods
@@ -276,6 +287,7 @@ namespace Kernel
 
         virtual void PropagateContextToDependents();
         INodeTriggeredInterventionConsumer* broadcaster;
+
 
     private:
 

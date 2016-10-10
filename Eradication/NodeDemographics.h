@@ -62,11 +62,9 @@ namespace Kernel
         bool operator==( const NodeDemographics& rThat ) const ;
         bool operator!=( const NodeDemographics& rThat ) const ;
 
-        // Explicit checks for required keys for Individual Properties transitions
-        void validateIPTransition() const;
-
         std::string ToString() const { return jsonValue.ToString(); }
         bool IsObject() const { return jsonValue.IsObject(); }
+        const JsonObjectDemog& GetJsonObject() const { return jsonValue; }
 
     protected:
         friend class NodeDemographicsFactory;
@@ -194,6 +192,8 @@ namespace Kernel
         // values used when generating the default geography
         uint32_t torus_size;
         uint32_t default_population;
+        int default_torus_size;
+        int default_node_population;
 
         static std::vector<std::string> demographics_filenames_list;
 

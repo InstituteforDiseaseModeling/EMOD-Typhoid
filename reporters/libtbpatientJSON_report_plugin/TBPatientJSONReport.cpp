@@ -16,7 +16,6 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "FileSystem.h"
 #include "IndividualTB.h"
 #include "../interventions/IDrug.h"
-#include "ReportUtilities.h"
 
 #include "DllInterfaceHelper.h"
 #include "DllDefs.h"
@@ -227,7 +226,7 @@ void TBPatientJSONReport::LogIndividualData( Kernel::IIndividualHuman* individua
         }
 
         // New drugs
-        std::list<IDrug*> drug_list = ReportUtilities::GetDrugList( individual, std::string("class Kernel::AntiTBDrug") );
+        std::list<void*> drug_list = individual->GetInterventionsContext()->GetInterventionsByInterface( GET_IID(IDrug) );
         LOG_DEBUG_F( "Drug doses distributed = %d\n", drug_list.size() );
 
         if ( !drug_list.empty() && patient->drug_treatments.size() == 0 )
@@ -238,7 +237,8 @@ void TBPatientJSONReport::LogIndividualData( Kernel::IIndividualHuman* individua
         if ( drug_list.size() > patient->n_drug_treatments )
         {
             patient->n_drug_treatments++;
-            std::string new_drug_type = drug_list.back()->GetDrugName();
+            IDrug* p_drug = static_cast<IDrug*>(drug_list.back());
+            std::string new_drug_type = p_drug->GetDrugName();
             //patient->drug_treatments.push_back(new_drug_type);
             patient->drug_treatments.push_back("");
         }

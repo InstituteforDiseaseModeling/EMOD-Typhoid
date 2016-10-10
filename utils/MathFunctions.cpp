@@ -13,6 +13,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Environment.h"
 #include "RANDOM.h"
 #include "Log.h"
+#include "Debug.h"
 
 
 static const char * _module = "MathFunctions";
@@ -26,6 +27,7 @@ namespace Kernel
         //std::cout << __FUNCTION__ << " called with distribution = " << distribution_flag << std::endl;
         double value;
         auto rng = Environment::getInstance()->RNG;
+        release_assert( rng );
 
         switch (distribution_flag)
         {

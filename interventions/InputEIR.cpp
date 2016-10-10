@@ -85,11 +85,20 @@ namespace Kernel
     }
 
     InputEIR::InputEIR() 
-        : today(0)
-        , daily_EIR(0.0f)
-        , risk_function(nullptr)
+    : BaseNodeIntervention()
+    , today(0)
+    , daily_EIR(0.0f)
+    , risk_function(nullptr)
     {
         initSimTypes( 1, "MALARIA_SIM" ); // using sporozoite challenge
+    }
+
+    InputEIR::InputEIR( const InputEIR& master )
+    : BaseNodeIntervention( master )
+    , today( master.today )
+    , daily_EIR( master.daily_EIR )
+    , risk_function( master.risk_function )
+    {
     }
 
     bool InputEIR::Configure( const Configuration * inputJson )

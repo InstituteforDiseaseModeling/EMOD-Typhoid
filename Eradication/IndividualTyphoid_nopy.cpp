@@ -199,7 +199,7 @@ namespace Kernel
         if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL)
         {
             int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
-            int nDayOfYear = SimDay % 365;
+            int nDayOfYear = SimDay % DAYSPERYEAR;
             double fEnvironment = cp->GetTotalContagion(); //JG: should this be getenvironmentalcontagion? is there such a thing? 
             if (nDayOfYear >=91 && nDayOfYear<=274)
                 fEnvironment *= 0.2; // less exposure during the rainy season
@@ -289,9 +289,9 @@ namespace Kernel
                             _subclinical_duration = int(RANDFROMLOGNORMAL(msu30, ssu30));
                         else
                             _subclinical_duration = int(RANDFROMLOGNORMAL(mso30, sso30));
-                        // DLC - Do we need to truncate the duration to 365?
+                        // DLC - Do we need to truncate the duration to DAYSPERYEAR?
                         subclinical_timer = _subclinical_duration;
-                        if (_subclinical_duration > 365)
+                        if (_subclinical_duration > DAYSPERYEAR)
                             isAmesChronic = true;
                         else
                             isAmesChronic = false;
@@ -301,18 +301,18 @@ namespace Kernel
                                 _acute_duration = int(RANDFROMLOGNORMAL(mau30, sau30));
                             else
                                 _acute_duration = int(RANDFROMLOGNORMAL(mao30, sao30));
-                            // DLC - Do we need to truncate the duration to 365?
+                            // DLC - Do we need to truncate the duration to DAYSPERYEAR?
                             acute_timer = _acute_duration;
-                            if (_acute_duration > 365)
+                            if (_acute_duration > DAYSPERYEAR)
                                 isAmesChronic = true;
                         } else {
                             if (GetAge() < 30.0)
                                 _subclinical_duration = int(RANDFROMLOGNORMAL( msu30, ssu30));
                             else
                                 _subclinical_duration = int(RANDFROMLOGNORMAL( mso30, sso30));
-                            // DLC - Do we need to truncate the duration to 365?
+                            // DLC - Do we need to truncate the duration to DAYSPERYEAR?
                             subclinical_timer = _subclinical_duration;
-                            if (_subclinical_duration > 365)
+                            if (_subclinical_duration > DAYSPERYEAR)
                                 isAmesChronic = true;
                         }
                     }

@@ -53,7 +53,7 @@ namespace Kernel
 
         VectorPopulationIndividual(uint32_t mosquito_weight);
         virtual void InitializeVectorQueues(unsigned int adults, unsigned int _infectious) override;
-        virtual uint32_t ProcessFeedingCycle(float dt, VectorCohort *queue, VectorStateEnum::Enum state) override;
+        virtual uint32_t ProcessFeedingCycle( float dt, IVectorCohort* cohort, VectorStateEnum::Enum state ) override;
         void ExposeCohortList( const IContagionPopulation* cp, VectorCohortList_t& list, float success_prob, float infection_prob );
         void ResetOvipositionTimer( IVectorCohortIndividual* mosquito );
         IVectorCohortIndividual * current_vci; // added this since we have it, then call a function, and function re-qi's for it, which is unnecessary.

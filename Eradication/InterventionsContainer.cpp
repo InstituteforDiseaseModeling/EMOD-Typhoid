@@ -21,6 +21,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #endif
 #include "NodeEventContext.h"
 #include "INodeContext.h"
+#include "Properties.h"
 
 static const char* _module = "InterventionsContainer";
 
@@ -107,6 +108,36 @@ namespace Kernel
         }
 
         return interventions_of_type;
+    }
+
+    std::list<IDistributableIntervention*> InterventionsContainer::GetInterventionsByName(const std::string &intervention_name)
+    {
+        std::list<IDistributableIntervention*> interventions_list;
+        LOG_DEBUG_F( "Looking for interventions with name %s\n", intervention_name.c_str() );
+        for (auto intervention : interventions)
+        {
+            if( intervention->GetName() == intervention_name )
+            {
+                interventions_list.push_back( intervention );
+            }
+        }
+
+        return interventions_list;
+    }
+
+    std::list<void*> InterventionsContainer::GetInterventionsByInterface( iid_t iid )
+    {
+        std::list<void*> interface_list;
+        for (auto intervention : interventions)
+        {
+            void* p_interface = nullptr;
+            if ( s_OK == intervention->QueryInterface( iid, (void**)&p_interface) )
+            {
+                interface_list.push_back( p_interface );
+            }
+        }
+
+        return interface_list;
     }
 
     IDistributableIntervention* InterventionsContainer::GetIntervention( const std::string& iv_name )
@@ -246,13 +277,7 @@ namespace Kernel
             throw BadMapKeyException( __FILE__, __LINE__, __FUNCTION__, "properties", property );
         }
 
-        INodeContext* pNode = nullptr;
-        if ( s_OK != parent->GetEventContext()->GetNodeEventContext()->QueryInterface(GET_IID(INodeContext), (void**)&pNode) )
-        {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "parent->GetEventContext()->GetNodeEventContext()", "INodeContext", "INodeEventContext" );
-        }
-        pNode->checkValidIPValue( property, new_value );
-        //dynamic_cast<INodeContext*>(parent->GetEventContext()->GetNodeEventContext())->checkValidIPValue( property, new_value );
+        release_assert( IPFactory::GetInstance()->GetIP( property )->GetValues().Contains( IPFactory::CreateKeyValueString( property, new_value ) ) );
 
         if( (*pProps)[ property ] != new_value )
         {

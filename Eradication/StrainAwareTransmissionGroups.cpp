@@ -147,10 +147,10 @@ namespace Kernel
                 if( routeIndex == 1 ) // I know 1 == ENVIRO, can we do this with an actual variable? 
                 {
                     forceOfInfection = 0;
-                    if( enviroContagionQ.size() == int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period) ))
+                    /*if( enviroContagionQ.size() == int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period) ))
                     {
                         forceOfInfection = enviroContagionQ.back()[iAntigen];
-                    }
+                    }*/
                 }
                 substrainDistributions.push_back(&sumInfectivityByAntigenRouteGroupSubstrain[iAntigen][routeIndex][groupIndex]);
 
@@ -279,10 +279,10 @@ namespace Kernel
                     if( iRoute == 1 ) // I know 1 == ENVIRO, can we do this with an actual variable?
                     {
                         enviroContagionQ.push( forceOfInfectionForAntigenAndRoute );
-                        if( enviroContagionQ.size() > int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period )))
+                        /*if( enviroContagionQ.size() > int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period )))
                         {
                             enviroContagionQ.pop();
-                        }
+                        }*/
                     }
                 }
                 else

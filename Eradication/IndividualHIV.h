@@ -17,6 +17,19 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 namespace Kernel
 {
+    class IndividualHumanHIVConfig : public IndividualHumanSTIConfig
+    {
+        GET_SCHEMA_STATIC_WRAPPER( IndividualHumanHIVConfig )
+        IMPLEMENT_DEFAULT_REFERENCE_COUNTING()  
+        DECLARE_QUERY_INTERFACE()
+    protected:
+        friend class IndividualHumanHIV;
+
+        static float maternal_transmission_ART_multiplier;
+
+        virtual bool Configure( const Configuration* config ) override;
+    };
+
     class IHIVInfection;
     class IHIVSusceptibility;
     class IndividualHumanHIV : public IndividualHumanSTI, public IIndividualHumanHIV
@@ -34,7 +47,6 @@ namespace Kernel
                                                   int gender = int(Gender::MALE), 
                                                   float initial_poverty = 0.5f );
         virtual void InitializeHuman() override;
-        virtual bool Configure( const Configuration* config ) override;
         virtual void Update( float currenttime, float dt ) override;
 
         // Infections and Susceptibility
@@ -52,6 +64,8 @@ namespace Kernel
         virtual std::string toString() const override;
 
     protected:
+        static void InitializeStaticsHIV( const Configuration* config );
+
         IndividualHumanHIV( suids::suid id = suids::nil_suid(), 
                             float monte_carlo_weight = 1.0f, 
                             float initial_age = 0.0f, 

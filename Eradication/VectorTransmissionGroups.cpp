@@ -12,7 +12,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "VectorTransmissionGroups.h"
 #include "Exceptions.h"
 #include "VectorPopulation.h"
+#ifndef DISABLE_VECTOR
 #include "NodeVector.h"
+#endif
 #include "IInfectable.h"
 #include "IContagionPopulation.h"
 
