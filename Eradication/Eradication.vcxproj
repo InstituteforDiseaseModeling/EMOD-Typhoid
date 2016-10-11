@@ -381,7 +381,6 @@
     <ClCompile Include="HIVInterventionsContainer.cpp" /> 
     <ClCompile Include="SimulationTyphoid.cpp" />
     <ClCompile Include="SpatialReportTyphoid.cpp" />
-    <ClCompile Include="STINetworkParameters.cpp" />
     <ClCompile Include="StiObjectFactory.cpp" />
     <ClCompile Include="HivObjectFactory.cpp" />
     <ClCompile Include="StiRelationshipEndReporter.cpp" />
