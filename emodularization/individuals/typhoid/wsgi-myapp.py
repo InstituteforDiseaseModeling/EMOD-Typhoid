@@ -28,28 +28,50 @@ def application(environ,start_response):
     output='Hello world'
     #os.makedirs( "hello" )
 
-    schema = ti.get_schema()
+    #schema = ti.get_schema()
     d = parse_qs( environ["QUERY_STRING"] )
     tsteps = d.get('tsteps', [''])[0]
     get_schema = d.get('schema', [''])[0]
+    tai = d.get('tai', [''])[0]
+    #os.chdir( "/usr/local/wsgi/scripts/" )
+    #config_json = json.loads( open( "ti.json", 'r' ).read() )
 
     output = '<html>'
     #output += os.getcwd()
     #output += str( get_schema )
     infection_history = []
+    suscept_history = []
+    infectiousness_history = []
     if get_schema == '1':
         output += "<pre>" + ti.get_schema() + "</pre>"
         #output += 'schema will be here...<br>'
     elif tsteps == '':
+        schema = ti.get_schema()
         output += "<h2>Typhoid Single-Individual Intrahost Demo</h2>"
-        output += "Enter number of timesteps to run:<br>"
-        output += '<form action="myapp" Timesteps:<br> <input type="text" name="tsteps" value="1"> <br><br> <input type="submit" value="Submit"></form>'
+        output += "Configure parameters and enter number of timesteps to run:<br><br>"
+        output += '<form action="myapp">'
+        output += 'Acute Infectiousness: <input type="text" name="tai" value="4000"><br>'
+        #for param in schema.keys():
+            #output += param + ': <input type="text" name="' + tbd + '" value="' + schema[param]["default"] + '"><br>'
+        output += 'Timesteps: <input type="text" name="tsteps" value="1"><br><br>\
+                   <input type="submit" value="Submit"><hr>\
+                   </form>'
         output += '<form action="myapp" Schema:<br><input type="hidden" name="schema" value="1"><input type="submit" value="schema"></form>'
     else:
         #output += str( environ["QUERY_STRING"] )
         os.chdir( "/usr/local/wsgi/scripts/" )
+        syslog.syslog( syslog.LOG_INFO, "Setting config.json param(s): Typhoid_Acute_Infectiousness=" + tai ) 
+        ti.set_param( ( "Typhoid_Acute_Infectiousness", int(tai) ) )
         syslog.syslog( syslog.LOG_INFO, "Creating Typhoid individual." )
         ti.create()
+
+        #with open( "ti.json", 'w' ) as ti_json:
+        #    ti_json.write( json.dumps( config_json, indent=4, sort_keys=True ) )
+
+        #f = open( sim_dir + "/config.json", 'w' )
+        #f.write( json.dumps( reply_json, sort_keys=True, indent=4 ) )
+        #f.close()
+
         tsteps = int( tsteps )
         syslog.syslog( syslog.LOG_INFO, "tsteps = " + str(tsteps) + " of type " + str(type(tsteps)) )
         for tstep in xrange( tsteps ):
@@ -74,6 +96,9 @@ def application(environ,start_response):
                     infection_history.append( 'C' )
             else:
                 infection_history.append( 'U' )
+            suscept_history.append( ti.get_immunity() )
+            inf_ness = serial_man["individual"]["infectiousness"]
+            infectiousness_history.append( inf_ness )
 
         ind_json = ti.serialize()
         print( str( ind_json ) )
@@ -83,12 +108,15 @@ def application(environ,start_response):
         output += ( "<br>age=" + str(serial_man["individual"]["m_age"]/365.0) )
         output += ( "<br>infected status=" + str(serial_man["individual"]["m_is_infected"]) )
         output += ( "<br>number of (historical) infections=" + str(serial_man["individual"]["_infection_count"]) )
-        output += ( "<br>infectiousness=" + str(serial_man["individual"]["infectiousness"]) )
-        output += ( "<br>prepatent_timer=" + str(serial_man["individual"]["infections"][0]["prepatent_timer"]) )
-        output += ( "<br>acute_timer=" + str(serial_man["individual"]["infections"][0]["acute_timer"]) )
-        output += ( "<br>subclinical_timer=" + str(serial_man["individual"]["infections"][0]["subclinical_timer"]) )
-        output += ( "<br>chronic_timer=" + str(serial_man["individual"]["infections"][0]["chronic_timer"]) )
-        output += ( "<br>history=" + str(infection_history) )
+        if serial_man["individual"]["m_is_infected"]:
+            output += ( "<br>infectiousness=" + str(serial_man["individual"]["infectiousness"]) )
+            output += ( "<br>prepatent_timer=" + str(serial_man["individual"]["infections"][0]["prepatent_timer"]) )
+            output += ( "<br>acute_timer=" + str(serial_man["individual"]["infections"][0]["acute_timer"]) )
+            output += ( "<br>subclinical_timer=" + str(serial_man["individual"]["infections"][0]["subclinical_timer"]) )
+            output += ( "<br>chronic_timer=" + str(serial_man["individual"]["infections"][0]["chronic_timer"]) )
+        output += ( "<br>infection stage history=" + str(infection_history) )
+        output += ( "<br>infectiousness history=" + str(infectiousness_history) )
+        output += ( "<br>immunity history=" + str(suscept_history) )
         #output += str( ind_json )
         output += "<br>"
     output += '</html>'

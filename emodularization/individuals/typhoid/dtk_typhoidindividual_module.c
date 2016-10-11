@@ -1,5 +1,6 @@
 #include <Python.h>
 #include <iostream>
+#include <map>
 #include "RANDOM.h"
 
 #include "Environment.h"
@@ -13,6 +14,7 @@
 Kernel::IndividualHumanTyphoid * person = nullptr;
 Configuration * configStubJson = nullptr;
 static PyObject *my_callback = NULL;
+static std::map< std::string, int > userParams;
 
 using namespace Kernel;
 
@@ -198,6 +200,21 @@ static void initInd( bool dr = false )
     if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("ti.json");
+        const json::Object& config_obj = json_cast<const Object&>( *configStubJson );
+        //json::QuickBuilder config( *configStubJson );
+        std::cout << "Overriding loaded config.json with " << userParams.size() << " parameters." << std::endl;
+        for( auto config : userParams )
+        {
+            std::string key = config.first;
+            int value = config.second;
+            std::cout << "Overriding " << key << " with value " << value << std::endl;
+            config_obj[ key ] = json::Number( value );
+        }
+        std::string key = "Typhoid_Acute_Infectiousness";
+        std::cout << "Using value "
+                  << (*configStubJson)[ key ].As<json::Number>()
+                  << " for key "
+                  << key << std::endl;
         Kernel::JsonConfigurable::_useDefaults = true;
         Kernel::IndividualHumanTyphoid::InitializeStatics( configStubJson );
         Kernel::JsonConfigurable::_useDefaults = false; 
@@ -276,6 +293,21 @@ namespace Kernel {
 }
 
 static PyObject*
+setParam(PyObject* self, PyObject* args)
+{
+    char * param_name;
+    int param_value;
+    if( !PyArg_ParseTuple(args, "(sl)", &param_name, &param_value ) )
+    {
+        std::cout << "Failed to parse in setParam." << std::endl;
+    }
+    userParams[ param_name ] = param_value;
+    std::cout << "Set param " << param_name << " to value " << param_value << std::endl;
+    
+    Py_RETURN_NONE;
+}
+
+static PyObject*
 getSchema(PyObject* self, PyObject* args)
 {
     bool ret = false;
@@ -306,6 +338,7 @@ static PyMethodDef TyphoidIndividualMethods[] =
      {"get_immunity", getImmunity, METH_VARARGS, "Returns acquisition immunity (product of immune system and interventions modifier)."},
      {"my_set_callback", my_set_callback, METH_VARARGS, "Set callback."},
      {"get_schema", getSchema, METH_VARARGS, "Update."},
+     {"set_param", setParam, METH_VARARGS, "Setting a config.json-type param."},
      {"serialize", serialize, METH_VARARGS, "Serialize to JSON."},
      {NULL, NULL, 0, NULL}
 };
