@@ -8,6 +8,7 @@
 #include "IndividualTyphoid.h"
 #include "INodeContext.h"
 #include "Properties.h"
+#include "JsonFullWriter.h"
 
 Kernel::IndividualHumanTyphoid * person = nullptr;
 Configuration * configStubJson = nullptr;
@@ -148,11 +149,11 @@ class StubNode : public INodeContext
         virtual void ExposeIndividual(IInfectable* candidate, const TransmissionGroupMembership_t* individual, float dt) override
         {
             //transmissionGroups->ExposeToContagion(candidate, individual, dt);
-            std::cout << __FUNCTION__ << std::endl;
             PyObject *arglist = Py_BuildValue("(s,f)", "expose", 1.0 );
             PyObject *retVal = PyObject_CallObject(my_callback, arglist);
-            bool infect = false;
+            int infect = 0;
             infect = PyInt_AsLong( retVal );
+            std::cout << "Expose callback returned: " << infect << std::endl;
             if( infect )
             {
                 IInfectionAcquirable* ind = nullptr;
@@ -193,14 +194,12 @@ my_set_callback(PyObject *dummy, PyObject *args)
 // Use json file on disk.
 static void initInd( bool dr = false )
 {
-    person = Kernel::IndividualHumanTyphoid::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, 365.0f, 0, 0 );
+    person = Kernel::IndividualHumanTyphoid::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, 30*365.0f, 0, 0 );
     if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("ti.json");
-        std::cout << "configStubJson initialized from ti.json." << std::endl;
         Kernel::JsonConfigurable::_useDefaults = true;
         Kernel::IndividualHumanTyphoid::InitializeStatics( configStubJson );
-        std::cout << "Initialized Statics from ti.json." << std::endl;
         Kernel::JsonConfigurable::_useDefaults = false; 
         person->SetParameters( &node, 0.0f, 1.0f, 0.0f, 0.0f );
     }
@@ -211,6 +210,8 @@ static void initInd( bool dr = false )
 static PyObject*
 create(PyObject* self, PyObject* args)
 {
+    char ti_json[ 2048 ];
+    PyArg_ParseTuple(args, "s", &ti_json );
     initInd();
     Py_RETURN_NONE;
 }
@@ -222,6 +223,7 @@ create(PyObject* self, PyObject* args)
 static PyObject*
 update(PyObject* self, PyObject* args)
 {
+    //std::cout << "Skipping update of individual as test. no-op." << std::endl;
     person->Update( 0.0f, 1.0f );
 
     Py_RETURN_NONE;
@@ -253,14 +255,14 @@ getImmunity(PyObject* self, PyObject* args)
 //
 // Simulation class is a friend which is necessary for calling Configure
 namespace Kernel {
-    class Simulation
+    class SimulationTyphoid
     {
         public:
             static std::string result;
-            Simulation()
+            SimulationTyphoid()
             {
                 Kernel::JsonConfigurable::_dryrun = true;
-                Kernel::IndividualHumanConfig adam;
+                Kernel::IndividualHumanTyphoidConfig adam;
                 adam.Configure( nullptr ); // protected
                 auto schema = adam.GetSchema();
                 std::ostringstream schema_ostream;
@@ -270,16 +272,27 @@ namespace Kernel {
                 Kernel::JsonConfigurable::_dryrun = false;
             }
     };
-    std::string Simulation::result = "";
+    std::string SimulationTyphoid::result = "";
 }
 
 static PyObject*
 getSchema(PyObject* self, PyObject* args)
 {
     bool ret = false;
-    Kernel::Simulation ti;
+    Kernel::SimulationTyphoid ti;
     //std::cout << ti.result.c_str() << std::endl;
     return Py_BuildValue("s", ti.result.c_str() );
+}
+
+static PyObject*
+serialize(PyObject* self, PyObject* args)
+{ 
+    IArchive* writer = static_cast<IArchive*>(new JsonFullWriter());
+    ISerializable* serializable = dynamic_cast<ISerializable*>(person);
+    (*writer).labelElement( "individual" ) & serializable;
+    std::string serialized_man = (*writer).GetBuffer(); // , (*writer).GetBufferSize(), t, true );
+    delete writer;
+    return Py_BuildValue("s", serialized_man.c_str() );
 }
 
 
@@ -293,6 +306,7 @@ static PyMethodDef TyphoidIndividualMethods[] =
      {"get_immunity", getImmunity, METH_VARARGS, "Returns acquisition immunity (product of immune system and interventions modifier)."},
      {"my_set_callback", my_set_callback, METH_VARARGS, "Set callback."},
      {"get_schema", getSchema, METH_VARARGS, "Update."},
+     {"serialize", serialize, METH_VARARGS, "Serialize to JSON."},
      {NULL, NULL, 0, NULL}
 };
 
