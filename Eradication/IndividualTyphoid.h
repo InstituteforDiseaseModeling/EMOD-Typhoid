@@ -86,6 +86,7 @@ namespace Kernel
         friend class SimulationTyphoid;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
         DECLARE_QUERY_INTERFACE()
+        DECLARE_SERIALIZABLE(IndividualHumanTyphoid);
 
     public:
         static IndividualHumanTyphoid *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);

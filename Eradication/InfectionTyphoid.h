@@ -113,6 +113,7 @@ namespace Kernel
         static const float P10; // probability of clinical immunity from a subclinical infection
 
     private:
+        DECLARE_SERIALIZABLE(InfectionTyphoid);
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;
 

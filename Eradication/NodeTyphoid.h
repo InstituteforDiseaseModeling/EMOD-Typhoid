@@ -72,13 +72,4 @@ namespace Kernel
         friend void serialize(Archive & ar, NodeTyphoid &node, const unsigned int  file_version );
 #endif
     };
-
-    class NodeTyphoidTest : public NodeTyphoid
-    {
-        public:
-            static NodeTyphoidTest *CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid);
-        protected:
-            NodeTyphoidTest(ISimulationContext *_parent_sim, suids::suid node_suid);
-        private:
-    };
 }

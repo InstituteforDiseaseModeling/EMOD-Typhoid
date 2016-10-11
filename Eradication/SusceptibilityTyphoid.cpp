@@ -136,7 +136,7 @@ namespace Kernel
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityTyphoid)
+//BOOST_CLASS_EXPORT(Kernel::SusceptibilityTyphoid)
 /*
 namespace Kernel {
 

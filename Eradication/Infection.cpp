@@ -302,8 +302,8 @@ namespace Kernel
         ar.labelElement("infectiousness") & infection.infectiousness;
         ar.labelElement("infectiousnessByRoute") & infection.infectiousnessByRoute;
         ar.labelElement("StateChange") & (uint32_t&)infection.StateChange;
-        ar.labelElement("infection_strain");
 #if defined(WIN32)
+        ar.labelElement("infection_strain");
         Kernel::serialize(ar, infection.infection_strain);
 #endif
     }

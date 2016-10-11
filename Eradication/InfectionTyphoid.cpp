@@ -257,8 +257,10 @@ namespace Kernel
             LOG_DEBUG_F( "Deciding whether to go from acute->chronic based on probability=%f.\n", p3*carrier_prob);
             if (randgen->e()< p3*carrier_prob)
             {
-                LOG_DEBUG_F( "Individual just went chronic.\n" );
                 chronic_timer = _chronic_duration;
+                LOG_DEBUG_F( "Individual age %f, sex %d, just went chronic (from acute) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
+                             age, sex, chronic_timer, p3, carrier_prob
+                           );
             }
         } 
         acute_timer = UNINIT_TIMER;
@@ -277,26 +279,23 @@ namespace Kernel
         int agebin = int(floor(age/10));
         if (agebin>=GallstoneDataLength)
             agebin=GallstoneDataLength-1;
-        if (sex==1)
+        if( sex == Gender::FEMALE )
         {
             p2=FemaleGallstones[agebin];
             carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female ;
         } 
-        else if (sex==0)
+        else // if (sex==0)
         {
             p2=MaleGallstones[agebin];
             carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_male;
-        }
-        else
-        {
-            throw IllegalOperationException( __FILE__, __LINE__, __FUNCTION__, "individual is apparently neither male nor female." );
-        }
-        //LOG_INFO_F("Gallstone percentage is %f %f\n", getAgeInYears(), p2);
-        LOG_DEBUG_F( "Deciding whether to go from subclinical->chronic based on probability=%f.\n", p2*carrier_prob);
+        } 
+
         if (randgen->e() < p2*carrier_prob)
         {
-            LOG_DEBUG_F( "Individual just went chronic.\n" );
             chronic_timer = _chronic_duration;
+            LOG_DEBUG_F( "Individual age %f, sex %d, just went chronic (from subclinical) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
+                         age, sex, chronic_timer, p2, carrier_prob
+                       );
         }
     }
 
@@ -418,6 +417,17 @@ namespace Kernel
     {
         LOG_DEBUG_F( "Infection cleared.\n" );
         StateChange = InfectionStateChange::Cleared;
+    }
+
+    REGISTER_SERIALIZABLE(InfectionTyphoid);
+
+    void InfectionTyphoid::serialize(IArchive& ar, InfectionTyphoid* obj)
+    {
+        InfectionTyphoid& infection = *obj;
+        ar.labelElement("prepatent_timer") & infection.prepatent_timer;
+        ar.labelElement("acute_timer") & infection.acute_timer;
+        ar.labelElement("subclinical_timer") & infection.subclinical_timer;
+        ar.labelElement("chronic_timer") & infection.chronic_timer;
     }
 }
 

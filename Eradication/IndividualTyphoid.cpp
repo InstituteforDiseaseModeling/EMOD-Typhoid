@@ -49,8 +49,8 @@ static const char * _module = "IndividualTyphoid";
 
 namespace Kernel
 {
-#define LOG_INFO_F printf
-#define LOG_DEBUG_F printf
+//#define LOG_INFO_F printf
+//#define LOG_DEBUG_F printf
     float IndividualHumanTyphoidConfig::environmental_incubation_period = 0.0f; // NaturalNumber please
     float IndividualHumanTyphoidConfig::typhoid_acute_infectiousness = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_chronic_relative_infectiousness = 0.0f;
@@ -116,6 +116,8 @@ namespace Kernel
         initConfigTypeMap( "Typhoid_Environmental_Peak_Multiplier", &typhoid_environmental_peak_multiplier, "Typhoid_Environmental_Peak_Multiplier.", 0, 10000, 3 );
 		initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
 		initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);	
+
+        // The config params below are not long for this world.
 		initConfigTypeMap( "Typhoid_Exposure_1983", &typhoid_exposure_1983, "Typhoid_Exposure_1983.", 0, 1, 0.5);	
 		initConfigTypeMap( "Typhoid_Exposure_1984", &typhoid_exposure_1984, "Typhoid_Exposure_1984.", 0, 1, 0.5);	
 		initConfigTypeMap( "Typhoid_Exposure_1985", &typhoid_exposure_1985, "Typhoid_Exposure_1985.", 0, 1, 0.5);	
@@ -830,9 +832,25 @@ namespace Kernel
             return false;
         }
     }
+    REGISTER_SERIALIZABLE(IndividualHumanTyphoid);
+    //template PoolManager<IndividualHumanTyphoid> IndividualHumanTyphoid::_pool;
+    //template<> std::stack<IndividualHumanTyphoid*> PoolManager<IndividualHumanTyphoid>::_pool;                                   
+    void IndividualHumanTyphoid::serialize(IArchive& ar, IndividualHumanTyphoid* obj)
+    {
+        IndividualHumanTyphoid& individual = *obj;
+        //ar.labelElement("P1") & individual.P1;
+        ar.labelElement("state_to_report") & individual.state_to_report;
+        ar.labelElement("isChronic") & individual.isChronic;
+        ar.labelElement("_infection_count") & individual._infection_count;
+        //ar.labelElement("_routeOfInfection") & individual._routeOfInfection;
+        ar.labelElement("state_changed") & individual.state_changed;
+        ar.labelElement("doseTracking") & individual.doseTracking;
+        ar.labelElement("_infection_count") & individual._infection_count;
+        IndividualHumanEnvironmental::serialize(ar, obj);
+    }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+//#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
 #include "InfectionTyphoid.h"
 #include "SusceptibilityTyphoid.h"
 #include "TyphoidInterventionsContainer.h"
@@ -840,27 +858,26 @@ namespace Kernel
 #include <boost/serialization/export.hpp>
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanTyphoid)
 
-    /*
-       namespace Kernel
-       {
-       template<class Archive>
-       void serialize(Archive & ar, IndividualHumanTyphoid& human, const unsigned int  file_version )
-       {
-       LOG_DEBUG("(De)serializing IndividualHumanTyphoid\n");
+   
 
-       ar.template register_type<Kernel::InfectionTyphoid>();
-       ar.template register_type<Kernel::SusceptibilityTyphoid>();
-       ar.template register_type<Kernel::TyphoidInterventionsContainer>();
+namespace Kernel
+{
+    template<class Archive>
+        void serialize(Archive & ar, IndividualHumanTyphoid& human, const unsigned int  file_version )
+        {
+            LOG_DEBUG("(De)serializing IndividualHumanTyphoid\n");
 
-    // Serialize fields - N/A
+            ar.template register_type<Kernel::InfectionTyphoid>();
+            ar.template register_type<Kernel::SusceptibilityTyphoid>();
+            ar.template register_type<Kernel::TyphoidInterventionsContainer>();
 
+            // Serialize fields - N/A
 
-    // Serialize base class
-    ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
-    }
-    }
-    */
+            // Serialize base class
+            ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
+        }
+}
 
-#endif
+//#endif
 
 #endif // ENABLE_TYPHOID
