@@ -87,7 +87,6 @@ namespace Kernel
 
     void SusceptibilityTyphoid::Update(float dt)
     {
-        std::cout << "SusceptibilityTyphoid::Update." << std::endl;
         age += dt; // tracks age for immune purposes
          // if cross N year age boundary
 
@@ -111,7 +110,7 @@ namespace Kernel
                 mod_acquire = 1.0f;
             }
         }
-		float age_boundary_3 = 6 * DAYSPERYEAR;
+        float age_boundary_3 = 6 * DAYSPERYEAR;
         if( age >= age_boundary_3 && age-dt< age_boundary_3 && mod_acquire == 0 )
         {
            if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6year_susceptible_fraction )

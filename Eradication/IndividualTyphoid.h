@@ -128,7 +128,7 @@ namespace Kernel
         int _infection_count;     // number of times infected;
         TransmissionRoute::Enum _routeOfInfection; // how did this person get infected?
         bool state_changed;
-		std::string doseTracking;
+        std::string doseTracking;
 
 
 

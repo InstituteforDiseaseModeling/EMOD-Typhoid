@@ -133,7 +133,7 @@ namespace Kernel
         else if (doseTracking == "Medium")
         {
             mu = mpm; sigma = spm;
-        }	
+        }
         else if (doseTracking == "Low")
         {
             mu = mpl; sigma = spl;

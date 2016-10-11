@@ -69,7 +69,7 @@ namespace Kernel
         void handlePrepatentExpiry();
         void handleAcuteExpiry();
         void handleSubclinicalExpiry();
-		int treatment_multiplier;
+        int treatment_multiplier;
         int chronic_timer;
         int subclinical_timer;
         int acute_timer;
@@ -87,7 +87,7 @@ namespace Kernel
         static const float CFRU;   // case fatality rate?
         static const float CFRH; // hospitalized case fatality rate?
         static const float treatmentprobability;  // probability of treatment
-	
+    
 
         // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
         // mean and std dev of log normal distribution
@@ -95,7 +95,7 @@ namespace Kernel
         static const float sph;
         static const float mpm;
         static const float spm;
-		static const float mpl;
+        static const float mpl;
         static const float spl;
 
         // Subclinical infectious duration parameters: mean and standard deviation under and over 30
