@@ -3,10 +3,13 @@ import os
 import syslog
 import json
 import random
+import string
 #import ti
 
 import dtk_typhoidindividual as ti
 from cgi import parse_qs, escape
+
+var_to_param_map = {}
 
 def expose( action, prob ):
     print( "expose: " + action + " with value " + str( prob ) ) 
@@ -22,6 +25,12 @@ def expose( action, prob ):
         return 0
 
 ti.my_set_callback( expose )
+
+def convert_param_name_to_var_name( param_name ):
+    param_name = param_name.translate(None,string.ascii_lowercase)
+    param_name = param_name.replace( '_', '' )
+    param_name = param_name.lower()
+    return param_name
 
 def application(environ,start_response):
     status='200 OK'
@@ -46,13 +55,14 @@ def application(environ,start_response):
         output += "<pre>" + ti.get_schema() + "</pre>"
         #output += 'schema will be here...<br>'
     elif tsteps == '':
-        schema = ti.get_schema()
+        schema = json.loads( ti.get_schema() )
         output += "<h2>Typhoid Single-Individual Intrahost Demo</h2>"
         output += "Configure parameters and enter number of timesteps to run:<br><br>"
         output += '<form action="myapp">'
-        output += 'Acute Infectiousness: <input type="text" name="tai" value="4000"><br>'
-        #for param in schema.keys():
-            #output += param + ': <input type="text" name="' + tbd + '" value="' + schema[param]["default"] + '"><br>'
+        #output += 'Acute Infectiousness: <input type="text" name="tai" value="4000"><br>'
+        for param in sorted( schema.keys() ):
+            if "Infectiousness" in param:
+                output += str(param) + ': <input type="text" name="' + convert_param_name_to_var_name( str( param ) ) + '" value="' + str(schema[param]["default"]) + '"><br>'
         output += 'Timesteps: <input type="text" name="tsteps" value="1"><br><br>\
                    <input type="submit" value="Submit"><hr>\
                    </form>'
@@ -60,8 +70,20 @@ def application(environ,start_response):
     else:
         #output += str( environ["QUERY_STRING"] )
         os.chdir( "/usr/local/wsgi/scripts/" )
-        syslog.syslog( syslog.LOG_INFO, "Setting config.json param(s): Typhoid_Acute_Infectiousness=" + tai ) 
-        ti.set_param( ( "Typhoid_Acute_Infectiousness", int(tai) ) )
+
+        schema = json.loads( ti.get_schema() )
+        syslog.syslog( syslog.LOG_INFO, str( schema.keys() ) )
+        for param in schema.keys():
+            syslog.syslog( syslog.LOG_INFO, param )
+            if "Infectiousness" in param:
+                var_name = convert_param_name_to_var_name( str( param ) )
+                var_to_param_map[ var_name ] = param
+                syslog.syslog( syslog.LOG_INFO, var_name + ", " + str( param ) )
+                qs_val = d.get(var_name, [''])[0]
+                syslog.syslog( syslog.LOG_INFO, str( qs_val ) )
+                if qs_val != None: 
+                    syslog.syslog( syslog.LOG_INFO, "Setting config.json param(s): " + str( param ) + "=" + (qs_val) ) 
+                    ti.set_param( ( param, int(qs_val) ) )
         syslog.syslog( syslog.LOG_INFO, "Creating Typhoid individual." )
         ti.create()
 
