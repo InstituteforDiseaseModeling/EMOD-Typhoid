@@ -87,7 +87,7 @@ namespace Kernel
         // 
         // typhoid
         //
-        initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 0, 100, 30 );
+        //initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 0, 100, 30 );
         initConfigTypeMap( "Typhoid_Acute_Infectiousness", &typhoid_acute_infectiousness, "Typhoid_Acute_Infectiousness.", 0, 1e7, 4000 );
         initConfigTypeMap( "Typhoid_Chronic_Relative_Infectiousness", &typhoid_chronic_relative_infectiousness, "Typhoid_Chronic_Relative_Infectiousness.", 0, 1e7, 1000 ); 
         initConfigTypeMap( "Typhoid_Prepatent_Relative_Infectiousness", &typhoid_prepatent_relative_infectiousness, "Typhoid_Prepatent_Relative_Infectiousness.", 0, 1e7, 3e3 ); 
