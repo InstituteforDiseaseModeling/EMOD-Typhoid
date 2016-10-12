@@ -213,7 +213,7 @@ if os.sys.platform == 'win32':
                           "#/baseReportLib",
                           "#/utils",
                           "#/libgeneric_static",
-                          "#/C:/boost/boost_1_51_0",
+                          "#/C:/boost/boost_1_61_0",
                           "#/C:/Python27/Include",
                           "#/Dependencies/ComputeClusterPack/Include",
                           "#/cajun/include",
