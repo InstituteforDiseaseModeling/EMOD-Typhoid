@@ -29,6 +29,10 @@ namespace Kernel
         JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
         initializeInterventionConfig( inputJson );
         bool configured = JsonConfigurable::Configure( inputJson );
+        if( configured && !JsonConfigurable::_dryrun )
+        {
+            validateInterventionConfig( intervention_config._json );
+        }
         JsonConfigurable::_useDefaults = reset;
         return configured;
     }
