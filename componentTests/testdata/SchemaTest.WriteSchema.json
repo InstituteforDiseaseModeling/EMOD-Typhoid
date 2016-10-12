@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1337.0",
-		"DTK_Branch" : "LinuxFixes (a9df04b)",
-		"DTK_Build_Date" : "Oct  6 2016 11:14:45"
+		"DTK_Version" : "2.8.1342.0",
+		"DTK_Branch" : "GH-797 (cd0a5a3)",
+		"DTK_Build_Date" : "Oct 11 2016 06:42:30"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -9198,7 +9198,7 @@
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
 					},
 					"Actual_IndividualIntervention_Config" : {
-						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"description" : "The configuration of the actual individual-based intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
 						"type" : "idmType:IndividualIntervention"
 					},
 					"Duration" : {
@@ -12199,11 +12199,18 @@
 						"description" : "TBD",
 						"type" : "string"
 					},
+					"idmType:NodeIntervention" : {
+						"base" : "interventions.idmAbstractType.NodeIntervention"
+					},
+					"Actual_NodeIntervention_Config" : {
+						"description" : "The configuration of the actual node-level intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"type" : "idmType:NodeIntervention"
+					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
 					},
 					"Actual_IndividualIntervention_Config" : {
-						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"description" : "The configuration of the actual individual-based intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
 						"type" : "idmType:IndividualIntervention"
 					},
 					"Duration" : {
@@ -12369,8 +12376,15 @@
 						"description" : "if you qualify by everything except demographic coverage, you get this array of interventions",
 						"type" : "idmType:IndividualIntervention"
 					},
+					"idmType:NodeIntervention" : {
+						"base" : "interventions.idmAbstractType.NodeIntervention"
+					},
+					"Actual_NodeIntervention_Config" : {
+						"description" : "The configuration of the actual node-level intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"type" : "idmType:NodeIntervention"
+					},
 					"Actual_IndividualIntervention_Config" : {
-						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"description" : "The configuration of the actual individual-based intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
 						"type" : "idmType:IndividualIntervention"
 					},
 					"Duration" : {

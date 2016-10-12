@@ -45,9 +45,11 @@ namespace Kernel
     , notification_occured(false)
     , event_occured_map()
     , event_occurred_while_resident_away()
-    , actual_intervention_config()
+    , actual_individual_intervention_config()
+    , actual_node_intervention_config()
     , _di(nullptr)
     , _ndi(nullptr)
+    , using_individual_config(false)
     {
     }
 
@@ -160,7 +162,21 @@ namespace Kernel
     {
         JsonConfigurable::_useDefaults = InterventionFactory::useDefaults;
 
-        initConfigComplexType("Actual_IndividualIntervention_Config", &actual_intervention_config, BT_Actual_Intervention_Config_DESC_TEXT);
+        if( JsonConfigurable::_dryrun || inputJson->Exist( "Actual_NodeIntervention_Config" ) )
+        {
+            initConfigComplexType( "Actual_NodeIntervention_Config", &actual_node_intervention_config, BT_Actual_NodeIntervention_Config_DESC_TEXT );
+        }
+        if( JsonConfigurable::_dryrun || inputJson->Exist( "Actual_IndividualIntervention_Config" ) )
+        {
+            initConfigComplexType( "Actual_IndividualIntervention_Config", &actual_individual_intervention_config, BT_Actual_IndividualIntervention_Config_DESC_TEXT );
+        }
+        if( !JsonConfigurable::_dryrun && 
+            ( ( inputJson->Exist( "Actual_IndividualIntervention_Config" ) &&  inputJson->Exist( "Actual_NodeIntervention_Config" )) || 
+              (!inputJson->Exist( "Actual_IndividualIntervention_Config" ) && !inputJson->Exist( "Actual_NodeIntervention_Config" )) ) )
+        {
+            throw InvalidInputDataException( __FILE__, __LINE__, __FUNCTION__, "You must define either 'Actual_IndividualIntervention_Config' or 'Actual_NodeIntervention_Config' but not both." );
+        }
+
         initConfigTypeMap("Duration", &max_duration, BT_Duration_DESC_TEXT, -1.0f, FLT_MAX, -1.0f ); // -1 is a convention for indefinite duration
 
         initConfigTypeMap( "Blackout_Period", &blackout_period, Blackout_Period_DESC_TEXT, 0.0f, FLT_MAX, 0.0f );
@@ -171,10 +187,19 @@ namespace Kernel
         bool retValue = ConfigureTriggers( inputJson );
 
         //this section copied from standardevent coordinator
-        if( retValue )
+        if( retValue && !JsonConfigurable::_dryrun )
         {
             demographic_restrictions.CheckConfiguration();
-            InterventionValidator::ValidateIntervention( actual_intervention_config._json );
+            if( inputJson->Exist( "Actual_IndividualIntervention_Config" ) )
+            {
+                InterventionValidator::ValidateIntervention( actual_individual_intervention_config._json );
+                using_individual_config = true;
+            }
+            else if( inputJson->Exist( "Actual_NodeIntervention_Config" ) )
+            {
+                InterventionValidator::ValidateIntervention( actual_node_intervention_config._json );
+                using_individual_config = false;
+            }
         }
         JsonConfigurable::_useDefaults = false;
         return retValue;    
@@ -327,7 +352,7 @@ namespace Kernel
             distributed = di->Distribute( pIndiv->GetInterventionsContext(), iCCO );
             if( distributed )
             {
-                auto classname = (std::string) json::QuickInterpreter(actual_intervention_config._json)["class"].As<json::String>();
+                auto classname = (std::string) json::QuickInterpreter(actual_individual_intervention_config._json)["class"].As<json::String>();
                 LOG_DEBUG_F("A Node level health-triggered intervention (%s) was successfully distributed to individual %d\n",
                             classname.c_str(),
                             pIndiv->GetInterventionsContext()->GetParent()->GetSuid().data
@@ -352,7 +377,7 @@ namespace Kernel
 
             if( distributed )
             {
-                auto classname = (std::string) json::QuickInterpreter(actual_intervention_config._json)["class"].As<json::String>();
+                auto classname = (std::string) json::QuickInterpreter(actual_node_intervention_config._json)["class"].As<json::String>();
                 LOG_INFO_F("Distributed '%s' intervention to node %d\n", classname.c_str(), parent->GetExternalId() );
             }
             ndi->Release();
@@ -418,7 +443,15 @@ namespace Kernel
         }
         if( (_di == nullptr) && (_ndi == nullptr) )
         {
-            auto config = Configuration::CopyFromElement( (actual_intervention_config._json) );
+            Configuration* config = nullptr;
+            if( using_individual_config )
+            {
+                config = Configuration::CopyFromElement( (actual_individual_intervention_config._json) );
+            }
+            else
+            {
+                config = Configuration::CopyFromElement( (actual_node_intervention_config._json) );
+            }
 
             _di = const_cast<IInterventionFactory*>(ifobj)->CreateIntervention( config );
 
