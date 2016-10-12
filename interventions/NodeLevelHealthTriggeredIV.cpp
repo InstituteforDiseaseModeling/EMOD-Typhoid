@@ -352,7 +352,7 @@ namespace Kernel
             distributed = di->Distribute( pIndiv->GetInterventionsContext(), iCCO );
             if( distributed )
             {
-                auto classname = (std::string) json::QuickInterpreter(actual_individual_intervention_config._json)["class"].As<json::String>();
+                std::string classname = GetInterventionClassName();
                 LOG_DEBUG_F("A Node level health-triggered intervention (%s) was successfully distributed to individual %d\n",
                             classname.c_str(),
                             pIndiv->GetInterventionsContext()->GetParent()->GetSuid().data
@@ -377,7 +377,7 @@ namespace Kernel
 
             if( distributed )
             {
-                auto classname = (std::string) json::QuickInterpreter(actual_node_intervention_config._json)["class"].As<json::String>();
+                std::string classname = GetInterventionClassName();
                 LOG_INFO_F("Distributed '%s' intervention to node %d\n", classname.c_str(), parent->GetExternalId() );
             }
             ndi->Release();
@@ -498,6 +498,20 @@ namespace Kernel
     void NodeLevelHealthTriggeredIV::onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv )
     {
         //do nothing, this is for the scale up switch
+    }
+
+    std::string NodeLevelHealthTriggeredIV::GetInterventionClassName() const
+    {
+        std::string class_name;
+        if( using_individual_config )
+        {
+            class_name = std::string(json::QuickInterpreter( actual_individual_intervention_config._json )[ "class" ].As<json::String>());
+        }
+        else
+        {
+            class_name = std::string( json::QuickInterpreter( actual_node_intervention_config._json )[ "class" ].As<json::String>() );
+        }
+        return class_name;
     }
 }
 

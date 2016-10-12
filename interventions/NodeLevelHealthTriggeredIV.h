@@ -69,5 +69,6 @@ namespace Kernel
         virtual bool qualifiesToGetIntervention( const IIndividualHumanEventContext * pIndividual );
         virtual float getDemographicCoverage() const;
         virtual void onDisqualifiedByCoverage( IIndividualHumanEventContext *pIndiv );
+        std::string GetInterventionClassName() const;
     };
 }

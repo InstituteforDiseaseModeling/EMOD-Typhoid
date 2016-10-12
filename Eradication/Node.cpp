@@ -798,8 +798,10 @@ namespace Kernel
         // This is based on the current infectiousness at the start of the timestep of all individuals present at the start of the timestep
         updateInfectivity(dt);
 
-        for (auto individual : individualHumans)
+        for( int i = 0 ; i < individualHumans.size() ; ++i )
         {
+            IIndividualHuman* individual = individualHumans[i];
+
             individual->Update(GetTime().time, dt);
 
             // JPS: Should we do this later, after updateVitalDynamics() instead?  
