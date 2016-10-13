@@ -117,7 +117,7 @@ namespace Kernel
         chronic_timer = UNINIT_TIMER;
         subclinical_timer = UNINIT_TIMER;
         acute_timer = UNINIT_TIMER;
-        prepatent_timer = UNINIT_TIMER;
+        //prepatent_timer = UNINIT_TIMER;
         _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         isDead = false;
         last_state_reported = "S";
@@ -139,7 +139,9 @@ namespace Kernel
             mu = mpl; sigma = spl;
         }
         _prepatent_duration = (int)(generateRandFromLogNormal(mu, sigma));
-        prepatent_timer=_prepatent_duration;
+        prepatent_timer =_prepatent_duration;
+        prepatent_timer.handle = std::bind( &InfectionTyphoid::handlePrepatentExpiry, this );
+
         //std::cout << "Initialized prepatent_timer to " << prepatent_timer << " using doseTracking value of " << doseTracking << std::endl;
     }
 
@@ -195,7 +197,7 @@ namespace Kernel
         auto mort = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedMortality();
         //state_to_report="P";
         //LOG_DEBUG_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
-        prepatent_timer=UNINIT_TIMER; 
+        //prepatent_timer=UNINIT_TIMER; 
         LOG_DEBUG_F( "Deciding post-prepatent tx using typhoid_symptomatic_fraction=%f.\n", IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction );
         float mu = 0.0f;
         float sigma = 0.0f;
@@ -304,8 +306,9 @@ namespace Kernel
         bool state_changed = false;
         std::string state_to_report = "S"; // default state is susceptible
 
-        LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", GetSuid().data, prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
-        if (prepatent_timer > UNINIT_TIMER)
+        LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", GetSuid().data, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
+        prepatent_timer.Decrement( dt );
+        /*if (prepatent_timer > UNINIT_TIMER)
         { // pre-patent
 
             state_to_report="P";
@@ -314,7 +317,7 @@ namespace Kernel
             {
                 handlePrepatentExpiry();
             }
-        }
+        }*/
         if (subclinical_timer > UNINIT_TIMER)
         { // asymptomatic infection
             //              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
