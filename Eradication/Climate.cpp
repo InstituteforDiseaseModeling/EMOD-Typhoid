@@ -278,7 +278,7 @@ namespace Kernel {
         ClimateUpdateResolution::Enum * const update_resolution,
         int * const pNumDatavalues,
         int * const pNumNodes,
-        std::hash_map<uint32_t, uint32_t> &node_offsets
+        std::unordered_map<uint32_t, uint32_t> &node_offsets
     )
     {
         LOG_DEBUG_F( "%s: %s\n", __FUNCTION__, data_filepath.c_str() );

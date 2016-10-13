@@ -49,8 +49,15 @@ static const char * _module = "IndividualTyphoid";
 
 namespace Kernel
 {
-//#define LOG_INFO_F printf
-//#define LOG_DEBUG_F printf
+#ifdef LOG_INFO_F
+#undef LOG_INFO_F
+#endif
+#define LOG_INFO_F printf
+#ifdef LOG_DEBUG_F
+#undef LOG_DEBUG_F
+#endif
+#define LOG_DEBUG_F printf
+
     float IndividualHumanTyphoidConfig::environmental_incubation_period = 0.0f; // NaturalNumber please
     float IndividualHumanTyphoidConfig::typhoid_acute_infectiousness = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_chronic_relative_infectiousness = 0.0f;
