@@ -737,6 +737,12 @@ namespace Kernel
         return retVal;
     }
 
+    float IndividualHumanTyphoid::GetImmunityReducedAcquire() const
+    {
+        float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
+        return immunity;
+    }
+
     bool IndividualHumanTyphoid::IsChronicCarrier( bool incidence_only ) const
     {
         if( state_to_report == "C" &&
