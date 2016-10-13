@@ -103,6 +103,7 @@ namespace Kernel
         virtual void Update(float currenttime, float dt);
         virtual Infection* createInfection(suids::suid _suid);
         virtual void AcquireNewInfection(StrainIdentity *infstrain = NULL, int incubation_period_override = -1);
+        virtual float GetImmunityReducedAcquire() const override;
         virtual HumanStateChange GetStateChange() const;
         
     protected:
