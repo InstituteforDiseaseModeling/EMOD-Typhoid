@@ -798,6 +798,10 @@ namespace Kernel
         // This is based on the current infectiousness at the start of the timestep of all individuals present at the start of the timestep
         updateInfectivity(dt);
 
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // !!! GH-798 - I had to change this for loop to use an index so that a user could have an Outbreak intervention within
+        // !!! a NLHTIV. Outbreak will import/add people to the scenario.  This gets around the issue of the iterator being violated.
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         for( int i = 0 ; i < individualHumans.size() ; ++i )
         {
             IIndividualHuman* individual = individualHumans[i];
