@@ -48,30 +48,39 @@ namespace Kernel
     }
 
     SimpleVectorControlNode::SimpleVectorControlNode()
-        : killing_effect( nullptr )
-        , blocking_effect( nullptr )
-        , habitat_target(VectorHabitatType::ALL_HABITATS) 
-        , invic(NULL)
+    : BaseNodeIntervention()
+    , killing_effect( nullptr )
+    , blocking_effect( nullptr )
+    , habitat_target(VectorHabitatType::ALL_HABITATS) 
+    , invic( nullptr )
     {
         initSimTypes( 2, "VECTOR_SIM", "MALARIA_SIM" );
     }
 
     SimpleVectorControlNode::SimpleVectorControlNode( const SimpleVectorControlNode& master )
     : BaseNodeIntervention( master )
+    , killing_effect( nullptr )
+    , blocking_effect( nullptr )
+    , habitat_target( VectorHabitatType::ALL_HABITATS )
+    , invic( nullptr )
     {
-        killing_config  = master.killing_config;
-        blocking_config = master.blocking_config;
+        if( master.blocking_effect != nullptr )
+        {
+            blocking_config = master.blocking_config;
+            auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
+            blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
+            delete tmp_blocking;
+            tmp_blocking = nullptr;
+        }
 
-        auto tmp_killing  = Configuration::CopyFromElement( killing_config._json  );
-        auto tmp_blocking = Configuration::CopyFromElement( blocking_config._json );
-
-        killing_effect  = WaningEffectFactory::CreateInstance( tmp_killing  );
-        blocking_effect = WaningEffectFactory::CreateInstance( tmp_blocking );
-
-        delete tmp_killing;
-        delete tmp_blocking;
-        tmp_killing  = nullptr;
-        tmp_blocking = nullptr;
+        if( master.killing_effect != nullptr )
+        {
+            killing_config = master.killing_config;
+            auto tmp_killing = Configuration::CopyFromElement( killing_config._json );
+            killing_effect = WaningEffectFactory::CreateInstance( tmp_killing );
+            delete tmp_killing;
+            tmp_killing = nullptr;
+        }
     }
 
     SimpleVectorControlNode::~SimpleVectorControlNode()

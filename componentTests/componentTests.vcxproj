@@ -53,7 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_HIV;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;_DEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions);_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\UnitTest++\src;$(SolutionDir)baseReportLib;$(SolutionDir)Eradication;$(SolutionDir)interventions;$(SolutionDir)utils;$(SolutionDir)campaign;$(SolutionDir)Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH);$(SolutionDir)cajun\include;$(SolutionDir)rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Precise</FloatingPointModel>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -81,7 +81,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_HIV;ENABLE_PYTHON;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\UnitTest++\src;$(SolutionDir)baseReportLib;$(SolutionDir)Eradication;$(SolutionDir)interventions;$(SolutionDir)utils;$(SolutionDir)campaign;$(SolutionDir)Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH);$(SolutionDir)cajun\include;$(SolutionDir)rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Precise</FloatingPointModel>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>

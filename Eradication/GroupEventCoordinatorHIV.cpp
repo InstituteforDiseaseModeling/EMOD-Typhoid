@@ -35,12 +35,6 @@ namespace Kernel
 
     IMPL_QUERY_INTERFACE2(GroupInterventionDistributionEventCoordinatorHIV, IEventCoordinator, IConfigurable)
 
-      QuickBuilder
-    GroupInterventionDistributionEventCoordinatorHIV::GetSchema()
-    {
-        return QuickBuilder( jsonSchemaBase );
-    }
-
     bool
     GroupInterventionDistributionEventCoordinatorHIV::Configure( const Configuration * inputJson)
     {

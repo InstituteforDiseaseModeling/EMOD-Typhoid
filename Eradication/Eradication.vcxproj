@@ -96,7 +96,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Precise</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -144,7 +144,7 @@
       <AdditionalIncludeDirectories>..\Dependencies\ComputeClusterPack\Include;$(IDM_BOOST_PATH);%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;$(IDM_PYTHON_PATH)\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;ENABLE_TYPHOID;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Precise</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -195,7 +195,7 @@
       <AdditionalIncludeDirectories>$(IDM_BOOST_PATH);%(AdditionalIncludeDirectories);..\cajun\include;..\baseReportLib;..\campaign\;..\utils\;..\Eradication\;..\interventions\;..\rapidjson\include;..\rapidjson\modp;..\snappy;$(IDM_PYTHON_PATH)\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DISABLE_MPI;BOOST_ALL_NO_LIB;ENABLE_PYTHON;ENABLE_PYTHON_FEVER;ENABLE_TB;ENABLE_TBHIV;ENABLE_POLIO;ENABLE_TYPHOID;WIN32;IDM_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FloatingPointModel>Precise</FloatingPointModel>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>

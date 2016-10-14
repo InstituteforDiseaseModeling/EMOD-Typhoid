@@ -55,11 +55,6 @@ namespace Kernel
         return ret;
     }
 
-    QuickBuilder CampaignEventByYear::GetSchema()
-    {
-        return QuickBuilder( jsonSchemaBase );
-    }
-
     CampaignEventByYear::~CampaignEventByYear()
     {
     }

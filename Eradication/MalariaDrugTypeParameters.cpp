@@ -64,7 +64,7 @@ namespace Kernel
     DoseMap::GetSchema()
     {
         // maybe put this type into central "complex-types" section and define variable as this type?
-        json::QuickBuilder schema( jsonSchemaBase );
+        json::QuickBuilder schema( GetSchemaBase() );
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:DoseMap" );
