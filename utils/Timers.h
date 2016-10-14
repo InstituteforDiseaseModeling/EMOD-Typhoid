@@ -30,7 +30,7 @@ namespace Kernel {
         protected:
             bool expired() const;
         private:
-        
+            bool dead;
     };
 }
 

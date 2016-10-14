@@ -93,7 +93,7 @@ namespace Kernel {
         static std::stack<T*> _pool;
     };
 
-#if defined(WIN32)
+//#if defined(WIN32)
 #define DECLARE_SERIALIZABLE(classname)                                             \
     private:                                                                        \
         virtual const char* GetClassName() override { return _class_name; }         \
@@ -109,15 +109,5 @@ namespace Kernel {
 #define REGISTER_SERIALIZABLE(classname)                                                     \
     char* classname::_class_name = #classname;                                               \
     SerializationRegistrationCaller<classname> classname::serialization_registration_caller; \
-    std::stack<classname*> PoolManager<classname>::_pool;                                    
-#else
-#define DECLARE_SERIALIZABLE(classname)                                             \
-    protected:                                                                      \ 
-        static void serialize(IArchive&, classname*);                               
-#define REGISTER_SERIALIZABLE(classname)                                                     
-    /*char* classname::_class_name = #classname;                                               \
-    SerializationRegistrationCaller<classname> classname::serialization_registration_caller; \
-    template<> std::stack< classname* > PoolManager< classname >::_pool;                     \
-    */
-#endif
+    template<> std::stack<classname*> PoolManager<classname>::_pool = std::stack<classname*>();                                   
 }

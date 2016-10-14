@@ -57,6 +57,7 @@ namespace Kernel
 #undef LOG_DEBUG_F
 #endif
 #define LOG_DEBUG_F printf
+
     float IndividualHumanTyphoidConfig::environmental_incubation_period = 0.0f; // NaturalNumber please
     float IndividualHumanTyphoidConfig::typhoid_acute_infectiousness = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_chronic_relative_infectiousness = 0.0f;
@@ -82,16 +83,6 @@ namespace Kernel
     //float IndividualHumanTyphoidConfig::typhoid_environmental_amplification = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_environmental_peak_multiplier = 0.0f;
 
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1983 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1984 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1985 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1986 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1987 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1988 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1989 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1990 = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_exposure_1991 = 0.0f;
-
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
     END_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
@@ -103,7 +94,7 @@ namespace Kernel
         // 
         // typhoid
         //
-        initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 0, 100, 30 );
+        //initConfigTypeMap( "Environmental_Incubation_Period", &environmental_incubation_period, "So-called Waiting Period for environmental contagion, time between deposit and exposure.", 0, 100, 30 );
         initConfigTypeMap( "Typhoid_Acute_Infectiousness", &typhoid_acute_infectiousness, "Typhoid_Acute_Infectiousness.", 0, 1e7, 4000 );
         initConfigTypeMap( "Typhoid_Chronic_Relative_Infectiousness", &typhoid_chronic_relative_infectiousness, "Typhoid_Chronic_Relative_Infectiousness.", 0, 1e7, 1000 ); 
         initConfigTypeMap( "Typhoid_Prepatent_Relative_Infectiousness", &typhoid_prepatent_relative_infectiousness, "Typhoid_Prepatent_Relative_Infectiousness.", 0, 1e7, 3e3 ); 
@@ -111,26 +102,17 @@ namespace Kernel
         initConfigTypeMap( "Typhoid_Subclinical_Relative_Infectiousness", &typhoid_subclinical_relative_infectiousness, "Typhoid_Subclinical_Relative_Infectiousness.", 0, 1e7, 2000 );
         initConfigTypeMap( "Typhoid_Carrier_Probability_Male", &typhoid_carrier_probability_male, "Typhoid_Carrier_Probability_Male.", 0, 1, 0.25 );
         initConfigTypeMap( "Typhoid_Carrier_Probability_Female", &typhoid_carrier_probability_female, "Typhoid_Carrier_Probability_Female.", 0, 1, 0.25 );
-		initConfigTypeMap( "Typhoid_6month_Susceptible_Fraction", &typhoid_6month_susceptible_fraction, "Typhoid_6month_Susceptible_Fraction.", 0, 1, 0.5);
+        initConfigTypeMap( "Typhoid_6month_Susceptible_Fraction", &typhoid_6month_susceptible_fraction, "Typhoid_6month_Susceptible_Fraction.", 0, 1, 0.5);
         initConfigTypeMap( "Typhoid_3year_Susceptible_Fraction", &typhoid_3year_susceptible_fraction, "Typhoid_3year_Susceptible_Fraction.", 0, 1, 0.5);
         initConfigTypeMap( "Typhoid_Environmental_Exposure_Rate", &typhoid_environmental_exposure_rate, "Typhoid_Environmental_Exposure_Rate.", 0, 10, 0.5);
         initConfigTypeMap( "Typhoid_Contact_Exposure_Rate", &typhoid_contact_exposure_rate, "Typhoid_Contact_Exposure_Rate.", 0, 100, 0.5);
         initConfigTypeMap( "Typhoid_Environmental_Ramp_Up_Duration", &typhoid_environmental_ramp_up_duration, "Typhoid_Environmental_Ramp_Up_Duration.", 0, 200, 2);
         initConfigTypeMap( "Typhoid_Environmental_Ramp_Down_Duration", &typhoid_environmental_ramp_down_duration, "Typhoid_Environmental_Ramp_Down_Duration.", 0, 270, 2);
-		initConfigTypeMap( "Typhoid_Environmental_Cutoff_Days", &typhoid_environmental_cutoff_days, "Typhoid_Environmental_Cutoff_Days.", 0, DAYSPERYEAR, 2);
+        initConfigTypeMap( "Typhoid_Environmental_Cutoff_Days", &typhoid_environmental_cutoff_days, "Typhoid_Environmental_Cutoff_Days.", 0, DAYSPERYEAR, 2);
         initConfigTypeMap( "Typhoid_Environmental_Peak_Start", &typhoid_environmental_peak_start, "Typhoid_Environmental_Peak_Start.", 0, 500, 2);
         initConfigTypeMap( "Typhoid_Environmental_Peak_Multiplier", &typhoid_environmental_peak_multiplier, "Typhoid_Environmental_Peak_Multiplier.", 0, 10000, 3 );
-		initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
-		initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1983", &typhoid_exposure_1983, "Typhoid_Exposure_1983.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1984", &typhoid_exposure_1984, "Typhoid_Exposure_1984.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1985", &typhoid_exposure_1985, "Typhoid_Exposure_1985.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1986", &typhoid_exposure_1986, "Typhoid_Exposure_1986.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1987", &typhoid_exposure_1987, "Typhoid_Exposure_1987.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1988", &typhoid_exposure_1988, "Typhoid_Exposure_1988.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1989", &typhoid_exposure_1989, "Typhoid_Exposure_1989.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1990", &typhoid_exposure_1990, "Typhoid_Exposure_1990.", 0, 1, 0.5);	
-		initConfigTypeMap( "Typhoid_Exposure_1991", &typhoid_exposure_1991, "Typhoid_Exposure_1991.", 0, 1, 0.5);
+        initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
+        initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);    
 
         SusceptibilityTyphoidConfig fakeImmunity;
         fakeImmunity.Configure( config );
@@ -451,17 +433,6 @@ namespace Kernel
             float amplification = getSeasonalAmplitude();
 
             float intervention_multiplier = 1;
-            int SimYear = floor((int)parent->GetTime().Year());
-            if (SimYear == 1983){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1983;}
-            if (SimYear == 1984){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1984;}
-            if (SimYear == 1985){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1985;}
-            if (SimYear == 1986){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1986;}
-            if (SimYear == 1987){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1987;}
-            if (SimYear == 1988){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1988;}
-            if (SimYear == 1989){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1989;}
-            if (SimYear == 1990){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1990;}
-            if (SimYear >= 1991){ intervention_multiplier = IndividualHumanTyphoidConfig::typhoid_exposure_1991;}
-
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
@@ -773,6 +744,12 @@ namespace Kernel
         return retVal;
     }
 
+    float IndividualHumanTyphoid::GetImmunityReducedAcquire() const
+    {
+        float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
+        return immunity;
+    }
+
     bool IndividualHumanTyphoid::IsChronicCarrier( bool incidence_only ) const
     {
         if( state_to_report == "C" &&
@@ -836,9 +813,25 @@ namespace Kernel
             return false;
         }
     }
+    REGISTER_SERIALIZABLE(IndividualHumanTyphoid);
+    //template PoolManager<IndividualHumanTyphoid> IndividualHumanTyphoid::_pool;
+    //template<> std::stack<IndividualHumanTyphoid*> PoolManager<IndividualHumanTyphoid>::_pool;                                   
+    void IndividualHumanTyphoid::serialize(IArchive& ar, IndividualHumanTyphoid* obj)
+    {
+        IndividualHumanTyphoid& individual = *obj;
+        //ar.labelElement("P1") & individual.P1;
+        ar.labelElement("state_to_report") & individual.state_to_report;
+        ar.labelElement("isChronic") & individual.isChronic;
+        ar.labelElement("_infection_count") & individual._infection_count;
+        //ar.labelElement("_routeOfInfection") & individual._routeOfInfection;
+        ar.labelElement("state_changed") & individual.state_changed;
+        ar.labelElement("doseTracking") & individual.doseTracking;
+        ar.labelElement("_infection_count") & individual._infection_count;
+        IndividualHumanEnvironmental::serialize(ar, obj);
+    }
 }
 
-#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
+//#if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
 #include "InfectionTyphoid.h"
 #include "SusceptibilityTyphoid.h"
 #include "TyphoidInterventionsContainer.h"
@@ -846,27 +839,26 @@ namespace Kernel
 #include <boost/serialization/export.hpp>
 BOOST_CLASS_EXPORT(Kernel::IndividualHumanTyphoid)
 
-    /*
-       namespace Kernel
-       {
-       template<class Archive>
-       void serialize(Archive & ar, IndividualHumanTyphoid& human, const unsigned int  file_version )
-       {
-       LOG_DEBUG("(De)serializing IndividualHumanTyphoid\n");
+   
 
-       ar.template register_type<Kernel::InfectionTyphoid>();
-       ar.template register_type<Kernel::SusceptibilityTyphoid>();
-       ar.template register_type<Kernel::TyphoidInterventionsContainer>();
+namespace Kernel
+{
+    template<class Archive>
+        void serialize(Archive & ar, IndividualHumanTyphoid& human, const unsigned int  file_version )
+        {
+            LOG_DEBUG("(De)serializing IndividualHumanTyphoid\n");
 
-    // Serialize fields - N/A
+            ar.template register_type<Kernel::InfectionTyphoid>();
+            ar.template register_type<Kernel::SusceptibilityTyphoid>();
+            ar.template register_type<Kernel::TyphoidInterventionsContainer>();
 
+            // Serialize fields - N/A
 
-    // Serialize base class
-    ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
-    }
-    }
-    */
+            // Serialize base class
+            ar & boost::serialization::base_object<Kernel::IndividualHumanEnvironmental>(human);
+        }
+}
 
-#endif
+//#endif
 
 #endif // ENABLE_TYPHOID

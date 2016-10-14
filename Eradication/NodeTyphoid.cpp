@@ -252,24 +252,6 @@ namespace Kernel
         }
     }
 #endif
-
-    NodeTyphoidTest *
-    NodeTyphoidTest::CreateNode(ISimulationContext *_parent_sim, suids::suid node_suid)
-    {
-        auto *newnode = _new_ NodeTyphoidTest(_parent_sim, node_suid);
-        newnode->Initialize();
-
-        return newnode;
-    }
-
-    NodeTyphoidTest::NodeTyphoidTest(ISimulationContext *_parent_sim, suids::suid node_suid)
-    {
-        parent = _parent_sim;
-        auto newPerson = configureAndAddNewIndividual(1.0F /*mc*/, 0 /*age*/, 0.0f /*prev*/, 0.5f /*gender*/); // N.B. temp_prevalence=0 without maternal_transmission flag
-        for (auto pIndividual : individualHumans)
-        {
-             // Nothing to do at the moment.
-        }
-    }
+    
 }
 #endif // ENABLE_TYPHOID

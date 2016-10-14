@@ -58,16 +58,6 @@ namespace Kernel
         //static float typhoid_environmental_amplification;
         static float typhoid_environmental_peak_multiplier;
 
-		static float typhoid_exposure_1983;
-		static float typhoid_exposure_1984;
-		static float typhoid_exposure_1985;
-		static float typhoid_exposure_1986;
-		static float typhoid_exposure_1987;
-		static float typhoid_exposure_1988;
-		static float typhoid_exposure_1989;
-		static float typhoid_exposure_1990;
-		static float typhoid_exposure_1991;
-
         virtual bool Configure( const Configuration* config );
     };
 
@@ -86,6 +76,7 @@ namespace Kernel
         friend class SimulationTyphoid;
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING();
         DECLARE_QUERY_INTERFACE()
+        DECLARE_SERIALIZABLE(IndividualHumanTyphoid);
 
     public:
         static IndividualHumanTyphoid *CreateHuman(INodeContext *context, suids::suid id, float monte_carlo_weight = 1.0f, float initial_age = 0.0f, int gender = 0, float initial_poverty = 0.5f);
@@ -127,7 +118,7 @@ namespace Kernel
         int _infection_count;     // number of times infected;
         TransmissionRoute::Enum _routeOfInfection; // how did this person get infected?
         bool state_changed;
-		std::string doseTracking;
+        std::string doseTracking;
 
 
 

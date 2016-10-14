@@ -16,6 +16,7 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #pragma once
 #include "InfectionEnvironmental.h"
 #include "TyphoidDefs.h" // for N_TYPHOID_SEROTYPES
+#include "Timers.h" // for N_TYPHOID_SEROTYPES
 
 namespace Kernel
 {
@@ -69,11 +70,12 @@ namespace Kernel
         void handlePrepatentExpiry();
         void handleAcuteExpiry();
         void handleSubclinicalExpiry();
-		int treatment_multiplier;
+        int treatment_multiplier;
         int chronic_timer;
         int subclinical_timer;
         int acute_timer;
-        int prepatent_timer;
+        //int prepatent_timer;
+        CountdownTimer prepatent_timer;
         int clinical_immunity_timer;  // timers of days left in state, or UNINIT_TIMER if not used //JG- I'm going to leave clinical immunity in for now. 
         int _subclinical_duration;
         int _prepatent_duration;
@@ -87,7 +89,7 @@ namespace Kernel
         static const float CFRU;   // case fatality rate?
         static const float CFRH; // hospitalized case fatality rate?
         static const float treatmentprobability;  // probability of treatment
-	
+    
 
         // Incubation period by transmission route (taken from Glynn's dose response analysis) assuming low dose for environmental.
         // mean and std dev of log normal distribution
@@ -95,7 +97,7 @@ namespace Kernel
         static const float sph;
         static const float mpm;
         static const float spm;
-		static const float mpl;
+        static const float mpl;
         static const float spl;
 
         // Subclinical infectious duration parameters: mean and standard deviation under and over 30
@@ -113,6 +115,7 @@ namespace Kernel
         static const float P10; // probability of clinical immunity from a subclinical infection
 
     private:
+        DECLARE_SERIALIZABLE(InfectionTyphoid);
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
         friend class boost::serialization::access;
 

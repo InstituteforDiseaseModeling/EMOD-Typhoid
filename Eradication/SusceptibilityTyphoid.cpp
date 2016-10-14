@@ -93,15 +93,14 @@ namespace Kernel
 
     void SusceptibilityTyphoid::Update(float dt)
     {
-        std::cout << "SusceptibilityTyphoid::Update." << std::endl;
         age += dt; // tracks age for immune purposes
-         // if cross N year age boundary
+        // if cross N year age boundary
 
         //end of maternal antibodies at 6 months
         float age_boundary =  0.5f * DAYSPERYEAR;
         if( age >= age_boundary && age-dt< age_boundary && mod_acquire == 0 )
         {
-           if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6month_susceptible_fraction)
+            if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6month_susceptible_fraction)
             {
                 LOG_DEBUG_F( "1-yo being made susceptible.\n" );
                 mod_acquire = 1.0f;
@@ -111,16 +110,16 @@ namespace Kernel
         float age_boundary_2 = 3 * DAYSPERYEAR;
         if( age >= age_boundary_2 && age-dt< age_boundary_2 && mod_acquire == 0 )
         {
-           if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_3year_susceptible_fraction )
+            if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_3year_susceptible_fraction )
             {
                 LOG_DEBUG_F( "3-yo being made susceptible.\n" );
                 mod_acquire = 1.0f;
             }
         }
-		float age_boundary_3 = 6 * DAYSPERYEAR;
+        float age_boundary_3 = 6 * DAYSPERYEAR;
         if( age >= age_boundary_3 && age-dt< age_boundary_3 && mod_acquire == 0 )
         {
-           if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6year_susceptible_fraction )
+            if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6year_susceptible_fraction )
             {
                 LOG_DEBUG_F( "6-yo being made susceptible.\n" );
                 mod_acquire = 1.0f;
@@ -130,9 +129,9 @@ namespace Kernel
         float age_boundary_4 = 10 * DAYSPERYEAR;
         if( age >= age_boundary_4 && age-dt< age_boundary_4 && mod_acquire == 0 )
         {
-                LOG_DEBUG_F( "Schoolkids being made susceptible.\n" );
-                mod_acquire = 1.0f;
-            }
+            LOG_DEBUG_F( "Schoolkids being made susceptible.\n" );
+            mod_acquire = 1.0f;
+        }
 
         if( age > age_boundary_4+dt && mod_acquire == 0)
         {
@@ -142,7 +141,7 @@ namespace Kernel
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
-BOOST_CLASS_EXPORT(Kernel::SusceptibilityTyphoid)
+//BOOST_CLASS_EXPORT(Kernel::SusceptibilityTyphoid)
 /*
 namespace Kernel {
 
