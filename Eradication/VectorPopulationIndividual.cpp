@@ -648,11 +648,11 @@ namespace Kernel
         }
     }
 
-    void VectorPopulationIndividual::AddVectors(VectorMatingStructure _vector_genetics, unsigned long int releasedNumber)
+    void VectorPopulationIndividual::AddVectors(VectorMatingStructure _vector_genetics, uint64_t releasedNumber)
     {
         VectorCohortIndividual* tempentry;
         VectorCohortAging* tempentrym;
-        unsigned long int temppop = releasedNumber / m_mosquito_weight;
+        uint64_t temppop = releasedNumber / m_mosquito_weight;
         // insert into correct Male or Female list
         if (_vector_genetics.GetGender() == VectorGender::VECTOR_FEMALE) //female
         {
@@ -780,9 +780,9 @@ namespace Kernel
 
 
     // receives a rate, and sends that fraction of mosquitoes to other communities
-    unsigned long int VectorPopulationIndividual::Vector_Migration(float migrate, VectorCohortList_t *Migration_Queue)
+    uint64_t VectorPopulationIndividual::Vector_Migration(float migrate, VectorCohortList_t *Migration_Queue)
     { 
-        unsigned long int migrating_vectors = 0;
+        uint64_t migrating_vectors = 0;
 
         // only process Adult_Queue
 

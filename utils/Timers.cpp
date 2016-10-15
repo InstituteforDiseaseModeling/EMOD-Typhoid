@@ -17,11 +17,13 @@ namespace Kernel {
 
     CountdownTimer::CountdownTimer()
     : NonNegativeFloat( 0 ) // need diff base class (RangedFloat?) if we want to init with -1
+    , dead( false )
     {
     }
 
     CountdownTimer::CountdownTimer( float initValue )
     : NonNegativeFloat( initValue )
+    , dead( false )
     {
     }
 
@@ -39,7 +41,11 @@ namespace Kernel {
     {
         if( expired() )
         {
-            handle( dt );
+            if( !dead )
+            {
+                handle( dt );
+            }
+            dead = true;
         }
         else
         {

@@ -44,7 +44,7 @@ namespace Kernel
     {
     public:
         virtual const VectorPopulationList_t& GetVectorPopulations() = 0;
-        virtual void AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, unsigned long int releasedNumber) = 0;
+        virtual void AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, uint64_t releasedNumber) = 0;
         virtual void processImmigratingVector( VectorCohort* immigrant ) = 0;
     };
 

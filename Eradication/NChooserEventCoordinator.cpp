@@ -126,7 +126,7 @@ namespace Kernel
             ar.Configure( nullptr );
         }
 
-        json::QuickBuilder schema( jsonSchemaBase );
+        json::QuickBuilder schema( GetSchemaBase() );
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:AgeRangeList" );
@@ -694,7 +694,7 @@ namespace Kernel
             p_td->Configure( nullptr );
         }
 
-        json::QuickBuilder schema( jsonSchemaBase );
+        json::QuickBuilder schema( GetSchemaBase() );
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:TargetedDistributionList" );
@@ -853,11 +853,6 @@ namespace Kernel
         delete m_pObjectFactory;
     }
 
-
-    QuickBuilder NChooserEventCoordinator::GetSchema()
-    {
-        return QuickBuilder( jsonSchemaBase );
-    }
 
     bool NChooserEventCoordinator::Configure( const Configuration * inputJson )
     {

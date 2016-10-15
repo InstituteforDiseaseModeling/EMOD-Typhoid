@@ -81,6 +81,11 @@ public:
         throw std::exception("The method or operation is not implemented.");
     }
 
+    virtual std::map< std::string, float > GetTotalContagion() const // developed for Typhoid
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
+
     virtual float GetTotalContagion( const TransmissionGroupMembership_t* membership ) override
     {
         throw std::exception("The method or operation is not implemented.");

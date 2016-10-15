@@ -1,8 +1,8 @@
 {
 	"Version" : {
-		"DTK_Version" : "2.8.1324.0",
-		"DTK_Branch" : "GH-757 (3baccee)",
-		"DTK_Build_Date" : "Sep 19 2016 14:06:29"
+		"DTK_Version" : "2.8.1342.0",
+		"DTK_Branch" : "GH-797 (cd0a5a3)",
+		"DTK_Build_Date" : "Oct 11 2016 06:42:30"
 	},
 	"config" : {
 		"GENERIC_SIM" : {
@@ -21,7 +21,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -59,7 +59,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -69,7 +69,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -186,7 +186,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -224,7 +224,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -234,7 +234,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -647,7 +647,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -685,7 +685,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -695,7 +695,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1274,7 +1274,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -1312,7 +1312,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1322,7 +1322,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1439,7 +1439,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -1477,7 +1477,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -1487,7 +1487,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2323,7 +2323,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2361,7 +2361,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2371,7 +2371,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2540,7 +2540,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2578,7 +2578,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2588,7 +2588,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2715,7 +2715,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2753,7 +2753,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2763,7 +2763,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2880,7 +2880,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -2918,7 +2918,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -2928,7 +2928,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -3045,7 +3045,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			},
 			"Simulation_Duration" : {
@@ -3083,7 +3083,7 @@
 				"min" : 0,
 				"max" : 1e+06,
 				"default" : 1000,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is the initial number of individuals in each node.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is the initial number of individuals in each node.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -3093,7 +3093,7 @@
 				"min" : 3,
 				"max" : 100,
 				"default" : 10,
-				"description" : "TBD - When using the default geography (i.e. Enable_Demographis_Initial = 0), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
+				"description" : "TBD - When using the default geography (i.e. Enable_Demographics_Builtin = 1), this is square root of the number of nodes in the simulation.  For migration, the nodes are assumed to be a torus.",
 				"type" : "integer",
 				"depends-on" : {
 					"Enable_Demographics_Builtin" : 1
@@ -6073,7 +6073,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -6208,7 +6208,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -6310,7 +6310,7 @@
 					"HIV_SIM",
 					"PY_SIM"
 				],
-				"description" : "Type of disease being simulated. Possible values are: GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, ENVIRONMENTAL_SIM, AIRBORNE_SIM, TB_SIM, STI_SIM and HIV_SIM.",
+				"description" : "Type of disease being simulated. Supported values include GENERIC_SIM, VECTOR_SIM, MALARIA_SIM, TB_SIM, STI_SIM, HIV_SIM, and PY_SIM. To query the values supported for your specific build, use the --version option.",
 				"default" : "GENERIC_SIM"
 			}
 		},
@@ -9198,7 +9198,7 @@
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
 					},
 					"Actual_IndividualIntervention_Config" : {
-						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"description" : "The configuration of the actual individual-based intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
 						"type" : "idmType:IndividualIntervention"
 					},
 					"Duration" : {
@@ -12199,11 +12199,18 @@
 						"description" : "TBD",
 						"type" : "string"
 					},
+					"idmType:NodeIntervention" : {
+						"base" : "interventions.idmAbstractType.NodeIntervention"
+					},
+					"Actual_NodeIntervention_Config" : {
+						"description" : "The configuration of the actual node-level intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"type" : "idmType:NodeIntervention"
+					},
 					"idmType:IndividualIntervention" : {
 						"base" : "interventions.idmAbstractType.IndividualIntervention"
 					},
 					"Actual_IndividualIntervention_Config" : {
-						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"description" : "The configuration of the actual individual-based intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
 						"type" : "idmType:IndividualIntervention"
 					},
 					"Duration" : {
@@ -12369,8 +12376,15 @@
 						"description" : "if you qualify by everything except demographic coverage, you get this array of interventions",
 						"type" : "idmType:IndividualIntervention"
 					},
+					"idmType:NodeIntervention" : {
+						"base" : "interventions.idmAbstractType.NodeIntervention"
+					},
+					"Actual_NodeIntervention_Config" : {
+						"description" : "The configuration of the actual node-level intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"type" : "idmType:NodeIntervention"
+					},
 					"Actual_IndividualIntervention_Config" : {
-						"description" : "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
+						"description" : "The configuration of the actual individual-based intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class.",
 						"type" : "idmType:IndividualIntervention"
 					},
 					"Duration" : {

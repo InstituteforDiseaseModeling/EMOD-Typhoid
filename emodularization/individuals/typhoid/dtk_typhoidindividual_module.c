@@ -14,7 +14,7 @@
 Kernel::IndividualHumanTyphoid * person = nullptr;
 Configuration * configStubJson = nullptr;
 static PyObject *my_callback = NULL;
-static std::map< std::string, int > userParams;
+static std::map< std::string, float > userParams;
 
 using namespace Kernel;
 
@@ -206,7 +206,7 @@ static void initInd( bool dr = false )
         for( auto config : userParams )
         {
             std::string key = config.first;
-            int value = config.second;
+            float value = config.second;
             std::cout << "Overriding " << key << " with value " << value << std::endl;
             config_obj[ key ] = json::Number( value );
         }
@@ -296,8 +296,8 @@ static PyObject*
 setParam(PyObject* self, PyObject* args)
 {
     char * param_name;
-    int param_value;
-    if( !PyArg_ParseTuple(args, "(sl)", &param_name, &param_value ) )
+    float param_value;
+    if( !PyArg_ParseTuple(args, "(sf)", &param_name, &param_value ) )
     {
         std::cout << "Failed to parse in setParam." << std::endl;
     }

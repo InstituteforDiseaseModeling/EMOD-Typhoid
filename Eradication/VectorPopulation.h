@@ -71,9 +71,9 @@ namespace Kernel
 
         // For NodeVector to calculate # of migrating vectors (processEmigratingVectors) and put them in new node (processImmigratingVector)
         virtual void Vector_Migration( IMigrationInfo* pMigInfo, VectorCohortList_t* pMigratingQueue );
-        virtual unsigned long int Vector_Migration(float = 0, VectorCohortList_t * = nullptr);
+        virtual uint64_t Vector_Migration(float = 0, VectorCohortList_t * = nullptr);
         void AddAdults(VectorCohort *adults) { AdultQueues.push_front(adults); }
-        virtual void AddVectors(VectorMatingStructure _vector_genetics, unsigned long int releasedNumber);
+        virtual void AddVectors(VectorMatingStructure _vector_genetics, uint64_t releasedNumber);
 
         // IInfectable
         virtual void Expose( const IContagionPopulation* cp, float dt, TransmissionRoute::Enum transmission_route ) override;

@@ -66,7 +66,7 @@ namespace Kernel
 
     json::QuickBuilder PropertyRestrictions::GetSchema()
     {
-        json::QuickBuilder schema( jsonSchemaBase );
+        json::QuickBuilder schema( GetSchemaBase() );
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
 
