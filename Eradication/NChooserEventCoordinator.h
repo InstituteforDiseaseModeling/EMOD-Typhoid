@@ -270,7 +270,6 @@ namespace Kernel
         virtual ~NChooserEventCoordinator();
 
         virtual bool Configure( const Configuration * inputJson ) override;
-        virtual QuickBuilder GetSchema() override;
 
         // IEventCoordinator methods
         virtual void SetContextTo(ISimulationEventContext *isec) override;

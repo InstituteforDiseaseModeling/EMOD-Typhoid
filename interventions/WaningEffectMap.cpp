@@ -39,11 +39,6 @@ namespace Kernel
     }
 
 
-    json::QuickBuilder WaningEffectMapAbstract::GetSchema()
-    {
-        return json::QuickBuilder( jsonSchemaBase );
-    }
-
     bool WaningEffectMapAbstract::Configure( const Configuration * pInputJson )
     {
         initConfigTypeMap( "Initial_Effect",               &m_EffectCurrent,          WEE_Initial_Effect_DESC_TEXT,                0, 1, 1);

@@ -332,15 +332,15 @@ namespace Kernel
     uint32_t VectorPopulation::ProcessFeedingCycle(float dt, IVectorCohort* cohort, VectorStateEnum::Enum state)
     {
         // start of outcome calculation
-        unsigned long int initPop = cohort->GetPopulation();
-        unsigned long int dead_mosquitoes        = 0;
-        unsigned long int successful_animal_feed = 0;
-        unsigned long int successful_AD_feed     = 0;
-        unsigned long int attempt_indoor_feed    = 0;
-        unsigned long int human_outdoor_feed     = 0;
-        unsigned long int successful_human_feed  = 0;
+        uint64_t initPop = cohort->GetPopulation();
+        uint64_t dead_mosquitoes        = 0;
+        uint64_t successful_animal_feed = 0;
+        uint64_t successful_AD_feed     = 0;
+        uint64_t attempt_indoor_feed    = 0;
+        uint64_t human_outdoor_feed     = 0;
+        uint64_t successful_human_feed  = 0;
 #ifdef _DEBUG
-        unsigned long int survived_wo_feeding    = 0;
+        uint64_t survived_wo_feeding    = 0;
 #endif
 
         // reset counters
@@ -379,9 +379,9 @@ namespace Kernel
         float feedingrate = (params()->vector_params->temperature_dependent_feeding_cycle) ? 1.0f / GetFeedingCycleDurationByTemperature() : species()->feedingrate;
 
         // die before human feeding
-        unsigned long int remainingPop = initPop;
+        uint64_t remainingPop = initPop;
         float temp_probability = p_local_mortality + (1.0f - p_local_mortality) * feedingrate * dt * probs()->diebeforeattempttohumanfeed + (1.0f - p_local_mortality) * (1.0f - species()->feedingrate * dt) * probs()->diewithoutattemptingfeed;
-        unsigned long int temp_number = uint32_t(randgen->binomial_approx(remainingPop, temp_probability));
+        uint64_t temp_number = uint32_t(randgen->binomial_approx(remainingPop, temp_probability));
         dead_mosquitoes += temp_number;
         remainingPop -= temp_number;
         cumulative_probability += temp_probability;
@@ -578,7 +578,7 @@ namespace Kernel
 
         // now adjust population and eggs
         if (dead_mosquitoes > 0) { cohort->SetPopulation( cohort->GetPopulation() - dead_mosquitoes); }
-        unsigned long int tempeggs = unsigned long(species()->eggbatchsize * x_infectedeggbatchmod * (successful_human_feed + successful_AD_feed * ADfeed_eggbatchmod + successful_animal_feed * animalfeed_eggbatchmod));
+        uint64_t tempeggs = uint64_t(species()->eggbatchsize * x_infectedeggbatchmod * (successful_human_feed + successful_AD_feed * ADfeed_eggbatchmod + successful_animal_feed * animalfeed_eggbatchmod));
         neweggs += tempeggs;
         gender_mating_eggs[cohort->GetVectorGenetics().GetIndex()] += tempeggs;
         LOG_DEBUG_F("adding %d eggs to vector genetics index %d.  current total=%d\n", tempeggs, cohort->GetVectorGenetics().GetIndex(), gender_mating_eggs[cohort->GetVectorGenetics().GetIndex()]);
@@ -617,7 +617,7 @@ namespace Kernel
     void VectorPopulation::Update_Immature_Queue( float dt )
     {
         float currentProbability = 0.0;
-        unsigned long int tempPop = 0;
+        uint64_t tempPop = 0;
 
         // calculate local mortality, includes outdoor area killling
         float p_local_mortality = float(EXPCDF(-dt * localadultmortality));
@@ -1179,7 +1179,7 @@ namespace Kernel
         }
     }
 
-    void VectorPopulation::AddVectors(VectorMatingStructure _vector_genetics, unsigned long int releasedNumber)
+    void VectorPopulation::AddVectors(VectorMatingStructure _vector_genetics, uint64_t releasedNumber)
     {
         VectorCohort* tempentry;
         
@@ -1223,7 +1223,7 @@ namespace Kernel
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
     }
 
-    unsigned long int VectorPopulation::Vector_Migration(float migrate, VectorCohortList_t *Migration_Queue)
+    uint64_t VectorPopulation::Vector_Migration(float migrate, VectorCohortList_t *Migration_Queue)
     {
         throw NotYetImplementedException( __FILE__, __LINE__, __FUNCTION__, "Vector migration only currently supported for individual (not cohort) model." );
     }

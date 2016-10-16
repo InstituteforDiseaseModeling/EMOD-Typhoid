@@ -482,7 +482,7 @@ namespace Kernel
         }
     }
 
-    void NodeVector::AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, unsigned long int releasedNumber)
+    void NodeVector::AddVectors(std::string releasedSpecies, VectorMatingStructure _vector_genetics, uint64_t releasedNumber)
     {
         bool found_existing_vector_population = false;
         for (auto population : m_vectorpopulations)

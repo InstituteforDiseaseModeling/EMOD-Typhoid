@@ -175,7 +175,7 @@ namespace Kernel
 
     void VectorPopulationAging::Update_Immature_Queue( float dt )
     { 
-        unsigned long int tempPop = 0;
+        uint64_t tempPop = 0;
         float currentProbability = 0.0;
 
         float p_local_mortality = 0;
@@ -282,7 +282,7 @@ namespace Kernel
         }
     }
 
-    void VectorPopulationAging::AddVectors(VectorMatingStructure _vector_genetics, unsigned long int releasedNumber)
+    void VectorPopulationAging::AddVectors(VectorMatingStructure _vector_genetics, uint64_t releasedNumber)
     {
         VectorCohortAging* tempentry;
         

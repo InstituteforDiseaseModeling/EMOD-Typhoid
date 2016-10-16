@@ -636,7 +636,6 @@
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
-    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="PropertyReport.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="SimpleTransmissionGroups.cpp" />

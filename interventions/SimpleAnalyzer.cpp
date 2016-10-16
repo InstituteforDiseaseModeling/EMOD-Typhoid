@@ -49,11 +49,6 @@ namespace Kernel
     // JsonConfigurable
     //---------------------------------------------------------------------------------------------
 
-    QuickBuilder SimpleAnalyzer::GetSchema()
-    {
-        return QuickBuilder( jsonSchemaBase );
-    }
-
     bool SimpleAnalyzer::Configure( const Configuration * inputJson )
     {
         initConfig( "Trigger_Condition", m_trigger_condition, inputJson, MetadataDescriptor::Enum("trigger_condition", "Condition triggering analyzer", MDD_ENUM_ARGS(IndividualEventTriggerType)) );

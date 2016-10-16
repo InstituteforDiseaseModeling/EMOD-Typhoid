@@ -35,7 +35,8 @@ Tafenoquine (TQ)"
 #define AD_Target_DESC_TEXT "The targeted deployment of artificial diet. Possible values are: \
 AD_WithinVillage, \
 AD_OutsideVillage"
-#define BT_Actual_Intervention_Config_DESC_TEXT "The configuration of the actual intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class."
+#define BT_Actual_IndividualIntervention_Config_DESC_TEXT "The configuration of the actual individual-based intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class."
+#define BT_Actual_NodeIntervention_Config_DESC_TEXT "The configuration of the actual node-level intervention sought. Selects a class for the intervention and configures the parameters specific for that intervention class."
 #define BT_Demographic_Coverage_DESC_TEXT "The fraction of newborns who receive an actual intervention. "
 #define BT_Duration_DESC_TEXT "The number of days to continue this intervention."
 #define DRUG_Cost_To_Consumer_DESC_TEXT "Unit cost per drug (unamortized)."

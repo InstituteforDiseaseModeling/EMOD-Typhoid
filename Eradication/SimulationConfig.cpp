@@ -24,6 +24,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "InterventionEnums.h"
 #include "Log.h"
 #include "Sugar.h"
+#include "NoCrtWarnings.h"
 
 #ifndef DISABLE_VECTOR
 #include "VectorParameters.h"
@@ -254,7 +255,7 @@ bool SimulationConfig::Configure(const Configuration * inputJson)
 QuickBuilder SimulationConfig::GetSchema()
 {
     LOG_DEBUG( "GetSchema\n" );
-    json::Object * job = new json::Object( jsonSchemaBase );
+    json::Object * job = new json::Object( GetSchemaBase() );
     json::QuickBuilder retJson( *job );
 
 #if !defined(_DLLS_)

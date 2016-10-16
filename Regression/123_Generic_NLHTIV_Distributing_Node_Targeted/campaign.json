@@ -12,7 +12,7 @@
                     "class": "NodeLevelHealthTriggeredIV",
                     "Trigger_Condition": "NewInfectionEvent",
                     "Demographic_Coverage": 1.0,
-                    "Actual_IndividualIntervention_Config":
+                    "Actual_NodeIntervention_Config":
                     {
                         "class": "MigrateFamily",
                         "NodeID_To_Migrate_To": 4,

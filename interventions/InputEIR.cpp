@@ -57,7 +57,7 @@ namespace Kernel
     json::QuickBuilder
     InputEIRConfig::GetSchema()
     {
-        json::QuickBuilder schema( jsonSchemaBase );
+        json::QuickBuilder schema( GetSchemaBase() );
         auto tn = JsonConfigurable::_typename_label();
         auto ts = JsonConfigurable::_typeschema_label();
         schema[ tn ] = json::String( "idmType:InputEIRConfig" );
@@ -78,11 +78,6 @@ namespace Kernel
     END_QUERY_INTERFACE_BODY(InputEIR)
 
     IMPLEMENT_FACTORY_REGISTERED(InputEIR)
-
-    QuickBuilder InputEIR::GetSchema()
-    {
-        return QuickBuilder( jsonSchemaBase );
-    }
 
     InputEIR::InputEIR() 
     : BaseNodeIntervention()
