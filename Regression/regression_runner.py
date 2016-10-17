@@ -288,11 +288,17 @@ class MyRegressionRunner():
                 for py_file in glob.glob( os.path.join( config_id, "dtk_*.py" ) ):
                     self.copy_sim_file( config_id, sim_dir, os.path.basename( py_file ) )
             elif psp_param == "SHARED":
-                py_input = params.py_input
+                py_input = self.params.py_input
+                for py_file in glob.glob( os.path.join( config_id, "dtk_*.py" ) ):
+                    self.copy_sim_file( config_id, sim_dir, os.path.basename( py_file ) )
+                for py_file in glob.glob( os.path.join( "shared_embedded_py_scripts", "dtk_*.py" ) ):
+                    self.copy_sim_file( "shared_embedded_py_scripts", py_input, os.path.basename( py_file ) )
             elif psp_param != "NO":
                 print( psp_param + " is not a valid value for Python_Script_Path. Valid values are NO, LOCAL, SHARED. Exiting." )
                 sys.exit() 
             del( reply_json["parameters"]["Python_Script_Path"] )
+
+
 
         self.copy_input_files_to_user_input(sim_id, config_id, reply_json, is_local)
 
