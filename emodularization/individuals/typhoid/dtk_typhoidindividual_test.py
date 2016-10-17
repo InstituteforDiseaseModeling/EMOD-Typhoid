@@ -9,8 +9,9 @@ import pdb
 
 def expose( action, prob ):
     #print( "expose: " + action + " with value " + str( prob ) )
-    if random.random() < 0.1:
-        if gi.get_immunity() < 1:
+    if gi.is_infected() == 0 and random.random() < 1.0:
+        imm = gi.get_immunity()
+        if imm < 1:
             print( "Let's infect based on random draw." )
             return 1
         else:
@@ -31,6 +32,6 @@ print( "creating individual." )
 gi.create()
 for tstep in range( 0,1000 ):
     print( "Updating individual, age = {0}, infected = {1}, immunity = {2}.".format( gi.get_age(), gi.is_infected(), gi.get_immunity() ) )
-    gi.update( 1.0 )
+    gi.update()
 
 print( "Done!" )

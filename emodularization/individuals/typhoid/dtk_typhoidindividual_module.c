@@ -227,12 +227,13 @@ static void initInd( bool dr = false )
 static PyObject*
 create(PyObject* self, PyObject* args)
 {
-    char ti_json[ 2048 ];
-    PyArg_ParseTuple(args, "s", &ti_json );
+    //char ti_json[ 2048 ];
+    //PyArg_ParseTuple(args, "s", &ti_json );
     initInd();
     Py_RETURN_NONE;
 }
 
+static int timestep = 0;
 //
 // Some functions to interact with the human
 //
@@ -241,7 +242,7 @@ static PyObject*
 update(PyObject* self, PyObject* args)
 {
     //std::cout << "Skipping update of individual as test. no-op." << std::endl;
-    person->Update( 0.0f, 1.0f );
+    person->Update( timestep++, 1.0f );
 
     Py_RETURN_NONE;
 }
