@@ -176,7 +176,7 @@ def application(environ,start_response):
                 <dd>{0}</dd>
             </dl>
             <dl>
-                <dt>iinfected status</dt>
+                <dt>infected status</dt>
                 <dd>{1}</dd>
             </dl>
             <dl>
