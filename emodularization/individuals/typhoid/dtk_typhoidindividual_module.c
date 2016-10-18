@@ -194,9 +194,14 @@ my_set_callback(PyObject *dummy, PyObject *args)
 
 // Json-configure & Initialize a (single) individual
 // Use json file on disk.
-static void initInd( bool dr = false )
+static void initInd( float age=30, char sex='M', bool dr = false )
 {
-    person = Kernel::IndividualHumanTyphoid::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, 30*365.0f, 0, 0 );
+    int sex_int = 0;
+    if( sex == 'F' )
+    {
+        sex_int = 1;
+    }
+    person = Kernel::IndividualHumanTyphoid::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, age*365.0f, sex_int, 0 );
     if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("ti.json");
@@ -227,9 +232,15 @@ static void initInd( bool dr = false )
 static PyObject*
 create(PyObject* self, PyObject* args)
 {
-    //char ti_json[ 2048 ];
-    //PyArg_ParseTuple(args, "s", &ti_json );
-    initInd();
+    // parse out individual (initial) age and sex.
+    float age = 0.0f;
+    char  sex = 'M';
+    if( PyArg_ParseTuple(args, "(fs)", &age, &sex ) )
+    {
+        age = 0.0f;
+        sex = 'M';
+    }
+    initInd( age, sex );
     Py_RETURN_NONE;
 }
 
@@ -243,6 +254,7 @@ update(PyObject* self, PyObject* args)
 {
     //std::cout << "Skipping update of individual as test. no-op." << std::endl;
     person->Update( timestep++, 1.0f );
+    person->GetStateChange();
 
     Py_RETURN_NONE;
 }

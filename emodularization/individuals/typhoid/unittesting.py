@@ -22,6 +22,7 @@ ti.my_set_callback( expose )
 
 def getSerializedIndividualAsJson( man ):
     the_man = json.loads( str( man.serialize() ) ) 
+    #print( the_man )
     return the_man
 
 class TestStringMethods(unittest.TestCase):
@@ -34,7 +35,7 @@ class TestStringMethods(unittest.TestCase):
         #self.mean = 10.0
 
     def test_uninfected_at_start(self):
-        ti.create()
+        ti.create( ( 30, 'M' ) )
         serial_man_json = json.loads( str( ti.serialize() ) )
         num_infections = len(serial_man_json[ "individual" ]["infections"] ) 
         self.assertEqual( num_infections, 0 )
@@ -42,11 +43,13 @@ class TestStringMethods(unittest.TestCase):
     def test_infected_after_one(self):
         #self.assertTrue('FOO'.isupper())
         #self.assertFalse('Foo'.isupper())
-        ti.create()
+        ti.create( ( 30, 'M' ) )
         ti.update()
         serial_man = getSerializedIndividualAsJson( ti )
         num_infections = len(serial_man[ "individual" ]["infections"] ) 
+        state = serial_man[ "individual" ]["state_to_report"]
         self.assertEqual( num_infections, 1 )
+        self.assertEqual( state, "P" )
 
 if __name__ == '__main__':
     #ti.create()

@@ -94,21 +94,24 @@ def application(environ,start_response):
                 <dl>
                     <dt><label>{0}</label></dt><dd><input type="text" name="{1}" size="8" value="{2}"></dd>
                 </dl>
-""".format(str(param), convert_param_name_to_var_name( str( param ) ), str(schema[param]["default"]))
+""".format(str(param), convert_param_name_to_var_name( str( param ) ), 
+                #(str(schema[param]["default"]), d.get(param, [""])[0])[d.get(param, [""])[0] != ""]
+                str(schema[param]["default"])
+        )
 
                 #the following *should* work to populate {2} value above (default if not in query string).
                 #(str(schema[param]["default"]), d.get(param, [""])[0])[d.get(param, [""])[0] != ""]
 
         output += """
                 <dl>
-                    <dt><label>Timesteps</label></dt><dd><input type="text" name="tsteps" size="8" value="1"></dd>
+                    <dt><label>Timesteps</label></dt><dd><input type="text" name="tsteps" size="8" value="{0}"></dd>
                 </dl>
                 <dl>
                     <dt><em>Set parameters and number of timesteps, then...</em></dt>
                     <dd><input type="submit" value="Run"/></dd>
                 </dl>
             </form>
- """
+        """.format( 1 if tsteps == '' else tsteps )
         if tsteps != '':
 
             for param in schema.keys():
@@ -123,7 +126,7 @@ def application(environ,start_response):
                         syslog.syslog( syslog.LOG_INFO, "Setting config.json param(s): " + str( param ) + "=" + (qs_val) )
                         ti.set_param( ( param, int(qs_val) ) )
             syslog.syslog( syslog.LOG_INFO, "Creating Typhoid individual." )
-            ti.create()
+            ti.create( 30, 'M' )
 
             #with open( "ti.json", 'w' ) as ti_json:
             #    ti_json.write( json.dumps( config_json, indent=4, sort_keys=True ) )
