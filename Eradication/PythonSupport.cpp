@@ -58,7 +58,7 @@ namespace Kernel
 
     std::string PythonSupport::CreatePythonScriptPath( const std::string& script_filename )
     {
-        std::string path_to_script = FileSystem::Concat( m_PythonScriptPath, std::string(script_filename)+".py" );
+        std::string path_to_script = FileSystem::Concat( std::string( "." ), std::string(script_filename)+".py" );
         return path_to_script;
     }
 
@@ -165,6 +165,7 @@ namespace Kernel
         release_assert( path );
     
         //std::cout << "Calling PyList_Append." << std::endl;
+        PyList_Append(sys_path, PyString_FromString( "." ));
         if (PyList_Append(sys_path, path) < 0)
         {
             PyErr_Print();
