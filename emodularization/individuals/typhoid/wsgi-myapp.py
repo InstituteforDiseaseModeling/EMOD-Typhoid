@@ -4,7 +4,6 @@ import syslog
 import json
 import random
 import string
-#import ti
 
 import dtk_typhoidindividual as ti
 from cgi import parse_qs, escape
@@ -140,25 +139,12 @@ def application(environ,start_response):
             for tstep in xrange( tsteps ):
                 syslog.syslog( syslog.LOG_INFO, "Updating Typhoid individual for timestep: " + str( tstep ) )
                 syslog.syslog( syslog.LOG_INFO, "Updating individual, age = {0}, infected = {1}, immunity = {2}.".format( ti.get_age(), ti.is_infected(), ti.get_immunity() ) )
-                ti.update( 1 )
+                ti.update()
                 syslog.syslog( syslog.LOG_INFO, "Finished updating individual." )
                 ind_json = ti.serialize()
                 serial_man = json.loads( ind_json )
-                if serial_man["individual"]["m_is_infected"]:
-                    pp = serial_man["individual"]["infections"][0]["prepatent_timer"]
-                    ac = serial_man["individual"]["infections"][0]["acute_timer"]
-                    sc = serial_man["individual"]["infections"][0]["subclinical_timer"]
-                    ch = serial_man["individual"]["infections"][0]["chronic_timer"]
-                    if pp > -2:
-                        infection_history.append( 'P' )
-                    elif ac > -2:
-                        infection_history.append( 'A' )
-                    elif sc > -2:
-                        infection_history.append( 'S' )
-                    elif ch > -2:
-                        infection_history.append( 'C' )
-                else:
-                    infection_history.append( 'U' )
+                state = serial_man["individual"]["state_to_report"]
+                infection_history.append( state )
                 suscept_history.append( ti.get_immunity() )
                 inf_ness = serial_man["individual"]["infectiousness"]
                 infectiousness_history.append( inf_ness )
@@ -179,7 +165,7 @@ def application(environ,start_response):
                 <dd>{0}</dd>
             </dl>
             <dl>
-                <dt>iinfected status</dt>
+                <dt>infected status</dt>
                 <dd>{1}</dd>
             </dl>
             <dl>
