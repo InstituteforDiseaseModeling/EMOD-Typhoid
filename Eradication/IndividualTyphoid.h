@@ -114,7 +114,7 @@ namespace Kernel
         std::string processPrePatent( float dt );
 
         // typhoid infection state
-        std::string state_to_report; // typhoid status of individual
+        std::string state_to_report; // typhoid status of individual: cache from infection
         bool isChronic;       // is or will be a chronic carrier (using "Ames" definition)
         int _infection_count;     // number of times infected;
         TransmissionRoute::Enum _routeOfInfection; // how did this person get infected?

@@ -653,37 +653,6 @@ namespace Kernel
         }
 #else
 
-#if 0
-        if (last_state_reported==state_to_report)
-        {
-            // typhoid state is the same as before
-            state_changed = false;
-        }
-        else
-        {
-            // typhoid state changed
-            last_state_reported=state_to_report;
-            state_changed = true;
-        }
-        LOG_DEBUG_F( "state_to_report for individual %d = %s\n", GetSuid().data, state_to_report.c_str() );
-
-        if( state_to_report == "S" && state_changed && GetInfections().size() > 0 )
-        {
-            // ClearInfection
-            auto inf = GetInfections().front();
-            IInfectionTyphoid * inf_typhoid  = NULL;
-            if (s_OK != inf->QueryInterface(GET_IID(IInfectionTyphoid ), (void**)&inf_typhoid) )
-            {
-                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionTyphoid ", "Infection" );
-            }
-            // get InfectionTyphoid pointer
-            inf_typhoid->Clear();
-        }
-        else if( state_to_report == "D" && state_changed )
-        {    
-            LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
-        }
-#endif
 #endif
         return IndividualHumanEnvironmental::Update( currenttime, dt);
     }
@@ -735,6 +704,12 @@ namespace Kernel
     HumanStateChange IndividualHumanTyphoid::GetStateChange() const
     {
         HumanStateChange retVal = StateChange;
+        if( infections.size() == 0 )
+        {
+            state_to_report = "SUS";
+            return retVal;
+        }
+        state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
         //auto parsed = IdmString(state_to_report).split();
         if( state_to_report == "D" )
         {
@@ -768,7 +743,7 @@ namespace Kernel
 
     bool IndividualHumanTyphoid::IsSubClinical( bool incidence_only ) const
     {
-        if( state_to_report == "SUB" &&
+        if( state_to_report == "U" &&
                 ( ( incidence_only && state_changed ) ||
                   ( incidence_only == false )
                 )

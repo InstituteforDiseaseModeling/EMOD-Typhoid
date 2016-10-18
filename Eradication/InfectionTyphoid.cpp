@@ -147,6 +147,7 @@ namespace Kernel
         _prepatent_duration = (int)(generateRandFromLogNormal(mu, sigma));
         prepatent_timer =_prepatent_duration;
         prepatent_timer.handle = std::bind( &InfectionTyphoid::handlePrepatentExpiry, this );
+        state_to_report="P";
 
         //std::cout << "Initialized prepatent_timer to " << prepatent_timer << " using doseTracking value of " << doseTracking << std::endl;
     }
@@ -201,7 +202,6 @@ namespace Kernel
         auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
         auto sex = dynamic_cast<IIndividualHuman*>(parent)->GetGender();
         auto mort = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedMortality();
-        //state_to_report="P";
         //LOG_DEBUG_F("hasclin subclinical dur %d, pre %d\n", _subclinical_duration, prepatent_timer); 
         //prepatent_timer=UNINIT_TIMER; 
         LOG_DEBUG_F( "Deciding post-prepatent tx using typhoid_symptomatic_fraction=%f.\n", IndividualHumanTyphoidConfig::typhoid_symptomatic_fraction );
@@ -218,7 +218,10 @@ namespace Kernel
             LOG_DEBUG_F("Infection stage transition: Prepatent->Acute: acute dur=%d\n", _acute_duration);
             _acute_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             acute_timer = _acute_duration;
-        } else {
+            state_to_report="A";
+        }
+        else
+        {
             if (age <= ageThresholdInYears)
             {
                 mu = msu30; sigma = ssu30;
@@ -228,6 +231,7 @@ namespace Kernel
             _subclinical_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             subclinical_timer = _subclinical_duration;
             LOG_DEBUG_F("Infection stage transition: Prepatent->SubClinical: subc dur=%d\n", _subclinical_duration );
+            state_to_report="U";
         }
     }
 
@@ -239,7 +243,7 @@ namespace Kernel
         if ((randgen->e() < CFRU) & (treatment_multiplier < 1)) // untreated at end of period has higher fatality rate
         {
             isDead = true;
-            //state_to_report = "D";
+            state_to_report = "D";
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
         else
@@ -266,9 +270,13 @@ namespace Kernel
             if (randgen->e()< p3*carrier_prob)
             {
                 chronic_timer = _chronic_duration;
-                LOG_DEBUG_F( "Individual age %f, sex %d, just went chronic (from acute) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
-                             age, sex, chronic_timer, p3, carrier_prob
+                LOG_DEBUG_F( "Individual %d age %f, sex %d, just went chronic (from acute) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
+                             GetSuid().data, age, sex, chronic_timer, p3, carrier_prob
                            );
+            }
+            else
+            {
+                LOG_VALID_F( "Individual %d age %f, sex %d, just recovered (from acute).\n", GetSuid().data, age, sex );
             }
         } 
         acute_timer = UNINIT_TIMER;
@@ -310,24 +318,13 @@ namespace Kernel
     void InfectionTyphoid::Update(float dt, ISusceptibilityContext* _immunity)
     {
         bool state_changed = false;
-        std::string state_to_report = "S"; // default state is susceptible
 
         LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", GetSuid().data, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
         prepatent_timer.Decrement( dt );
-        /*if (prepatent_timer > UNINIT_TIMER)
-        { // pre-patent
-
-            state_to_report="P";
-            prepatent_timer -= dt;
-            if( UNINIT_TIMER<prepatent_timer && prepatent_timer<=0 )
-            {
-                handlePrepatentExpiry();
-            }
-        }*/
         if (subclinical_timer > UNINIT_TIMER)
         { // asymptomatic infection
             //              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
-            state_to_report="SUB";
+            state_to_report="U";
             subclinical_timer -= dt;
             if (UNINIT_TIMER<subclinical_timer && subclinical_timer<=0)
             {
@@ -437,6 +434,7 @@ namespace Kernel
         ar.labelElement("acute_timer") & infection.acute_timer;
         ar.labelElement("subclinical_timer") & infection.subclinical_timer;
         ar.labelElement("chronic_timer") & infection.chronic_timer;
+        ar.labelElement("state_to_report") & infection.state_to_report;
     }
 }
 

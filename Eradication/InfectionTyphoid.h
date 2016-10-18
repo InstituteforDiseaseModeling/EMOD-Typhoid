@@ -38,6 +38,7 @@ namespace Kernel
     {
         public:
         virtual void Clear() = 0;
+        virtual const std::string& GetStateToReport() const = 0;
     };
 
     class InfectionTyphoid
@@ -58,6 +59,7 @@ namespace Kernel
         void SetMCWeightOfHost(float ind_mc_weight);
         virtual void Clear() override;
         virtual float GetInfectiousness() const override;
+        virtual const std::string& GetStateToReport() const override { return state_to_report; }
 
         // InfectionTyphoidReportable methods
     protected:
@@ -81,6 +83,7 @@ namespace Kernel
         int _prepatent_duration;
         int _acute_duration; // duration of state in days
         bool isDead;  // is this individual dead?
+        std::string state_to_report; // default state is susceptible
         std::string last_state_reported; // previous typhoid status of individual
         static const int _chronic_duration;
         static const int _clinical_immunity_duration;
