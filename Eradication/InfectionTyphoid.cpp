@@ -117,6 +117,13 @@ namespace Kernel
         return GET_CONFIGURABLE(SimulationConfig);
     }
 
+#define SUSCEPT_STATE_LABEL "SUS"
+#define PREPAT_STATE_LABEL "PRE"
+#define ACUTE_STATE_LABEL "ACU"
+#define SUBCLINICAL_STATE_LABEL "SUB"
+#define CHRONIC_STATE_LABEL "CHR"
+#define DEAD_STATE_LABEL "DED"
+
     InfectionTyphoid::InfectionTyphoid(IIndividualHumanContext *context) : InfectionEnvironmental(context)
     {
         treatment_multiplier = 1;
@@ -126,7 +133,7 @@ namespace Kernel
         //prepatent_timer = UNINIT_TIMER;
         _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         isDead = false;
-        last_state_reported = "S";
+        last_state_reported = SUSCEPT_STATE_LABEL;
         // TBD: Nasty cast: prefer QI.
         auto doseTracking = ((IndividualHumanTyphoid*)context)->getDoseTracking();
 
@@ -147,7 +154,7 @@ namespace Kernel
         _prepatent_duration = (int)(generateRandFromLogNormal(mu, sigma));
         prepatent_timer =_prepatent_duration;
         prepatent_timer.handle = std::bind( &InfectionTyphoid::handlePrepatentExpiry, this );
-        state_to_report="P";
+        state_to_report=PREPAT_STATE_LABEL;
 
         //std::cout << "Initialized prepatent_timer to " << prepatent_timer << " using doseTracking value of " << doseTracking << std::endl;
     }
@@ -218,7 +225,7 @@ namespace Kernel
             LOG_DEBUG_F("Infection stage transition: Prepatent->Acute: acute dur=%d\n", _acute_duration);
             _acute_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             acute_timer = _acute_duration;
-            state_to_report="A";
+            state_to_report=ACUTE_STATE_LABEL;
         }
         else
         {
@@ -231,7 +238,7 @@ namespace Kernel
             _subclinical_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             subclinical_timer = _subclinical_duration;
             LOG_DEBUG_F("Infection stage transition: Prepatent->SubClinical: subc dur=%d\n", _subclinical_duration );
-            state_to_report="U";
+            state_to_report=SUBCLINICAL_STATE_LABEL;
         }
     }
 
@@ -243,7 +250,7 @@ namespace Kernel
         if ((randgen->e() < CFRU) & (treatment_multiplier < 1)) // untreated at end of period has higher fatality rate
         {
             isDead = true;
-            state_to_report = "D";
+            state_to_report = DEAD_STATE_LABEL;
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
         else
@@ -273,10 +280,12 @@ namespace Kernel
                 LOG_DEBUG_F( "Individual %d age %f, sex %d, just went chronic (from acute) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
                              GetSuid().data, age, sex, chronic_timer, p3, carrier_prob
                            );
+                state_to_report = CHRONIC_STATE_LABEL;
             }
             else
             {
                 LOG_VALID_F( "Individual %d age %f, sex %d, just recovered (from acute).\n", GetSuid().data, age, sex );
+                state_to_report = SUSCEPT_STATE_LABEL;
             }
         } 
         acute_timer = UNINIT_TIMER;
@@ -312,6 +321,11 @@ namespace Kernel
             LOG_DEBUG_F( "Individual age %f, sex %d, just went chronic (from subclinical) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
                          age, sex, chronic_timer, p2, carrier_prob
                        );
+            state_to_report = CHRONIC_STATE_LABEL;
+        }
+        else
+        {
+            state_to_report = SUSCEPT_STATE_LABEL;
         }
     }
 
@@ -324,7 +338,7 @@ namespace Kernel
         if (subclinical_timer > UNINIT_TIMER)
         { // asymptomatic infection
             //              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
-            state_to_report="U";
+            state_to_report=SUBCLINICAL_STATE_LABEL;
             subclinical_timer -= dt;
             if (UNINIT_TIMER<subclinical_timer && subclinical_timer<=0)
             {
@@ -334,22 +348,24 @@ namespace Kernel
         if (acute_timer > UNINIT_TIMER)
         {
             // acute infection
-            state_to_report = "A";
+            state_to_report = ACUTE_STATE_LABEL;
             acute_timer -= dt;
             if( ( _acute_duration - acute_timer ) >= acute_treatment_day &&
                     ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day ) && 
                     (randgen->e() < treatmentprobability)
               )
             {       //if they seek treatment and don't die, we are assuming they have a probability of becoming a carrier (chloramphenicol treatment does not prevent carriage)
+                // so they either get treatment or die?
                 if (randgen->e() < CFRH)
                 {
                     isDead = true;
-                    state_to_report = "D";
+                    state_to_report = DEAD_STATE_LABEL;
                     acute_timer = UNINIT_TIMER;
                 }
                 else
                 {
                     treatment_multiplier = 0.5;
+                    LOG_VALID_F( "Individual ID: %d, State: Acute, GetTreatment: True.\n", parent->GetSuid().data );
                 }
             }
 
@@ -365,7 +381,7 @@ namespace Kernel
 
         if (chronic_timer > UNINIT_TIMER)
         {
-            state_to_report="C";
+            state_to_report=CHRONIC_STATE_LABEL;
             chronic_timer -= dt;
             if (UNINIT_TIMER< chronic_timer && chronic_timer<=0)
                 chronic_timer = UNINIT_TIMER;
@@ -384,11 +400,11 @@ namespace Kernel
         }
         LOG_DEBUG_F( "state_to_report for individual %d = %s\n", GetSuid().data, state_to_report.c_str() );
 
-        if( state_to_report == "S" && state_changed ) // && GetInfections().size() > 0 )
+        if( state_to_report == SUSCEPT_STATE_LABEL && state_changed ) // && GetInfections().size() > 0 )
         {
             Clear();
         }
-        else if( state_to_report == "D" && state_changed )
+        else if( state_to_report == DEAD_STATE_LABEL && state_changed )
         {    
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
