@@ -49,14 +49,14 @@ static const char * _module = "IndividualTyphoid";
 
 namespace Kernel
 {
-#ifdef LOG_INFO_F
-#undef LOG_INFO_F
-#endif
-#define LOG_INFO_F printf
-#ifdef LOG_DEBUG_F
-#undef LOG_DEBUG_F
-#endif
-#define LOG_DEBUG_F printf
+//#ifdef LOG_INFO_F
+//#undef LOG_INFO_F
+//#endif
+//#define LOG_INFO_F printf
+//#ifdef LOG_DEBUG_F
+//#undef LOG_DEBUG_F
+//#endif
+//#define LOG_DEBUG_F printf
 
     float IndividualHumanTyphoidConfig::environmental_incubation_period = 0.0f; // NaturalNumber please
     float IndividualHumanTyphoidConfig::typhoid_acute_infectiousness = 0.0f;
@@ -564,7 +564,8 @@ namespace Kernel
                     //float tmp_infectiousnessOral = infectiousness;
                     if (tmp_infectiousnessOral > 0.0f)
                     {
-                        LOG_DEBUG_F("Depositing %f to route %s: (antigen=%d, substain=%d)\n", tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());
+                        LOG_VALID_F("Individual %d depositing %f to route %s: (antigen=%d, substrain=%d) at time %f in state %s.\n",
+                                    GetSuid().data, tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep), state_to_report.c_str());
                         parent->DepositFromIndividual(&tmp_strainID, tmp_infectiousnessOral, &entry.second);
                     } 
                 }
@@ -574,7 +575,9 @@ namespace Kernel
                     //float tmp_infectiousnessFecal =  infectiousness;
                     if (tmp_infectiousnessFecal > 0.0f)
                     {
-                        LOG_DEBUG_F("UpdateInfectiousness::Depositing %f to route %s: (antigen=%d, substain=%d)\n", tmp_infectiousnessFecal, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());    
+                        LOG_VALID_F( "Individual %d depositing %f to route %s: (antigen=%d, substrain=%d) at time %f in state %s..\n",
+                                     GetSuid().data, tmp_infectiousnessFecal, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep)
+                                   );
                         parent->DepositFromIndividual(&tmp_strainID, tmp_infectiousnessFecal, &entry.second);
                         ///LOG_DEBUG_F("contagion= %f\n", cp->GetTotalContagion());
                     }
