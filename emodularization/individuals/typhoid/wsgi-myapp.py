@@ -4,7 +4,6 @@ import syslog
 import json
 import random
 import string
-#import ti
 
 import dtk_typhoidindividual as ti
 from cgi import parse_qs, escape
@@ -94,21 +93,24 @@ def application(environ,start_response):
                 <dl>
                     <dt><label>{0}</label></dt><dd><input type="text" name="{1}" size="8" value="{2}"></dd>
                 </dl>
-""".format(str(param), convert_param_name_to_var_name( str( param ) ), str(schema[param]["default"]))
+""".format(str(param), convert_param_name_to_var_name( str( param ) ), 
+                #(str(schema[param]["default"]), d.get(param, [""])[0])[d.get(param, [""])[0] != ""]
+                str(schema[param]["default"])
+        )
 
                 #the following *should* work to populate {2} value above (default if not in query string).
                 #(str(schema[param]["default"]), d.get(param, [""])[0])[d.get(param, [""])[0] != ""]
 
         output += """
                 <dl>
-                    <dt><label>Timesteps</label></dt><dd><input type="text" name="tsteps" size="8" value="1"></dd>
+                    <dt><label>Timesteps</label></dt><dd><input type="text" name="tsteps" size="8" value="{0}"></dd>
                 </dl>
                 <dl>
                     <dt><em>Set parameters and number of timesteps, then...</em></dt>
                     <dd><input type="submit" value="Run"/></dd>
                 </dl>
             </form>
- """
+        """.format( 1 if tsteps == '' else tsteps )
         if tsteps != '':
 
             for param in schema.keys():
@@ -123,7 +125,7 @@ def application(environ,start_response):
                         syslog.syslog( syslog.LOG_INFO, "Setting config.json param(s): " + str( param ) + "=" + (qs_val) )
                         ti.set_param( ( param, int(qs_val) ) )
             syslog.syslog( syslog.LOG_INFO, "Creating Typhoid individual." )
-            ti.create()
+            ti.create( 30, 'M' )
 
             #with open( "ti.json", 'w' ) as ti_json:
             #    ti_json.write( json.dumps( config_json, indent=4, sort_keys=True ) )
@@ -137,25 +139,12 @@ def application(environ,start_response):
             for tstep in xrange( tsteps ):
                 syslog.syslog( syslog.LOG_INFO, "Updating Typhoid individual for timestep: " + str( tstep ) )
                 syslog.syslog( syslog.LOG_INFO, "Updating individual, age = {0}, infected = {1}, immunity = {2}.".format( ti.get_age(), ti.is_infected(), ti.get_immunity() ) )
-                ti.update( 1 )
+                ti.update()
                 syslog.syslog( syslog.LOG_INFO, "Finished updating individual." )
                 ind_json = ti.serialize()
                 serial_man = json.loads( ind_json )
-                if serial_man["individual"]["m_is_infected"]:
-                    pp = serial_man["individual"]["infections"][0]["prepatent_timer"]
-                    ac = serial_man["individual"]["infections"][0]["acute_timer"]
-                    sc = serial_man["individual"]["infections"][0]["subclinical_timer"]
-                    ch = serial_man["individual"]["infections"][0]["chronic_timer"]
-                    if pp > -2:
-                        infection_history.append( 'P' )
-                    elif ac > -2:
-                        infection_history.append( 'A' )
-                    elif sc > -2:
-                        infection_history.append( 'S' )
-                    elif ch > -2:
-                        infection_history.append( 'C' )
-                else:
-                    infection_history.append( 'U' )
+                state = serial_man["individual"]["state_to_report"]
+                infection_history.append( state )
                 suscept_history.append( ti.get_immunity() )
                 inf_ness = serial_man["individual"]["infectiousness"]
                 infectiousness_history.append( inf_ness )

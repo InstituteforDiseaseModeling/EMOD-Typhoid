@@ -23,7 +23,7 @@ module1 = Extension('dtk_typhoidindividual',
             '../../../Eradication/NodeDemographics.cpp',
             '../../../Eradication/StrainIdentity.cpp'
         ],
-        extra_compile_args = ["-std=c++11", "-w", "-fpermissive", "-DENABLE_TYPHOID" ], 
+        extra_compile_args = ["-std=c++11", "-w", "-fpermissive", "-DENABLE_TYPHOID", "-DENABLE_LOG_VALID" ], 
         include_dirs=[
             '../../../interventions/',
             '../../../campaign/',

@@ -49,14 +49,14 @@ static const char * _module = "IndividualTyphoid";
 
 namespace Kernel
 {
-#ifdef LOG_INFO_F
-#undef LOG_INFO_F
-#endif
-#define LOG_INFO_F printf
-#ifdef LOG_DEBUG_F
-#undef LOG_DEBUG_F
-#endif
-#define LOG_DEBUG_F printf
+//#ifdef LOG_INFO_F
+//#undef LOG_INFO_F
+//#endif
+//#define LOG_INFO_F printf
+//#ifdef LOG_DEBUG_F
+//#undef LOG_DEBUG_F
+//#endif
+//#define LOG_DEBUG_F printf
 
     float IndividualHumanTyphoidConfig::environmental_incubation_period = 0.0f; // NaturalNumber please
     float IndividualHumanTyphoidConfig::typhoid_acute_infectiousness = 0.0f;
@@ -564,7 +564,8 @@ namespace Kernel
                     //float tmp_infectiousnessOral = infectiousness;
                     if (tmp_infectiousnessOral > 0.0f)
                     {
-                        LOG_DEBUG_F("Depositing %f to route %s: (antigen=%d, substain=%d)\n", tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());
+                        LOG_VALID_F("Individual %d depositing %f to route %s: (antigen=%d, substrain=%d) at time %f in state %s.\n",
+                                    GetSuid().data, tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep), state_to_report.c_str());
                         parent->DepositFromIndividual(&tmp_strainID, tmp_infectiousnessOral, &entry.second);
                     } 
                 }
@@ -574,7 +575,9 @@ namespace Kernel
                     //float tmp_infectiousnessFecal =  infectiousness;
                     if (tmp_infectiousnessFecal > 0.0f)
                     {
-                        LOG_DEBUG_F("UpdateInfectiousness::Depositing %f to route %s: (antigen=%d, substain=%d)\n", tmp_infectiousnessFecal, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID());    
+                        LOG_VALID_F( "Individual %d depositing %f to route %s: (antigen=%d, substrain=%d) at time %f in state %s..\n",
+                                     GetSuid().data, tmp_infectiousnessFecal, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep)
+                                   );
                         parent->DepositFromIndividual(&tmp_strainID, tmp_infectiousnessFecal, &entry.second);
                         ///LOG_DEBUG_F("contagion= %f\n", cp->GetTotalContagion());
                     }
@@ -653,37 +656,6 @@ namespace Kernel
         }
 #else
 
-#if 0
-        if (last_state_reported==state_to_report)
-        {
-            // typhoid state is the same as before
-            state_changed = false;
-        }
-        else
-        {
-            // typhoid state changed
-            last_state_reported=state_to_report;
-            state_changed = true;
-        }
-        LOG_DEBUG_F( "state_to_report for individual %d = %s\n", GetSuid().data, state_to_report.c_str() );
-
-        if( state_to_report == "S" && state_changed && GetInfections().size() > 0 )
-        {
-            // ClearInfection
-            auto inf = GetInfections().front();
-            IInfectionTyphoid * inf_typhoid  = NULL;
-            if (s_OK != inf->QueryInterface(GET_IID(IInfectionTyphoid ), (void**)&inf_typhoid) )
-            {
-                throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "inf", "IInfectionTyphoid ", "Infection" );
-            }
-            // get InfectionTyphoid pointer
-            inf_typhoid->Clear();
-        }
-        else if( state_to_report == "D" && state_changed )
-        {    
-            LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
-        }
-#endif
 #endif
         return IndividualHumanEnvironmental::Update( currenttime, dt);
     }
@@ -735,6 +707,12 @@ namespace Kernel
     HumanStateChange IndividualHumanTyphoid::GetStateChange() const
     {
         HumanStateChange retVal = StateChange;
+        if( infections.size() == 0 )
+        {
+            state_to_report = "SUS";
+            return retVal;
+        }
+        state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
         //auto parsed = IdmString(state_to_report).split();
         if( state_to_report == "D" )
         {
@@ -768,7 +746,7 @@ namespace Kernel
 
     bool IndividualHumanTyphoid::IsSubClinical( bool incidence_only ) const
     {
-        if( state_to_report == "SUB" &&
+        if( state_to_report == "U" &&
                 ( ( incidence_only && state_changed ) ||
                   ( incidence_only == false )
                 )

@@ -4,6 +4,7 @@ import sys
 sys.path.append( "./build/lib.linux-x86_64-2.7" )
 import random
 import dtk_typhoidindividual as gi
+import json
 
 import pdb
 
@@ -29,9 +30,11 @@ def get_schema():
 #get_schema()
 
 print( "creating individual." )
-gi.create()
+gi.create( 10, 'F' )
 for tstep in range( 0,1000 ):
     print( "Updating individual, age = {0}, infected = {1}, immunity = {2}.".format( gi.get_age(), gi.is_infected(), gi.get_immunity() ) )
     gi.update()
+    serial_man = json.loads( gi.serialize() )
+    #print( json.dumps( serial_man["individual"], indent=4, sort_keys=True ) )
 
 print( "Done!" )

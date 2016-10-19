@@ -314,7 +314,6 @@ void ChannelDataMap::WriteOutput(
     pIJsonObj->Insert("Start_Time",          (*EnvPtr->Config)["Start_Time"         ].As<Number>() );
     pIJsonObj->Insert("Report_Start_Year",   (*EnvPtr->Config)["Inset_Chart_Reporting_Start_Year"  ].As<Number>() );
     pIJsonObj->Insert("Report_Stop_Year",    (*EnvPtr->Config)["Inset_Chart_Reporting_Stop_Year"   ].As<Number>() );
-    pIJsonObj->Insert("Start_Time",          (*EnvPtr->Config)["Start_Time"         ].As<Number>() );
     pIJsonObj->Insert("Simulation_Timestep", (*EnvPtr->Config)["Simulation_Timestep"].As<Number>() );
     unsigned int timesteps = 0;
     if( !channel_data_map.empty() )

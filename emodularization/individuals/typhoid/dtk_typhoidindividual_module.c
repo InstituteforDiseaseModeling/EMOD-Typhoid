@@ -194,32 +194,37 @@ my_set_callback(PyObject *dummy, PyObject *args)
 
 // Json-configure & Initialize a (single) individual
 // Use json file on disk.
-static void initInd( bool dr = false )
+static void initInd( float age=30, char sex='M', bool dr = false )
 {
-    person = Kernel::IndividualHumanTyphoid::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, 30*365.0f, 0, 0 );
+    int sex_int = 0;
+    if( sex == 'F' )
+    {
+        sex_int = 1;
+    }
+    person = Kernel::IndividualHumanTyphoid::CreateHuman( &node, Kernel::suids::nil_suid(), 1.0f, age*365.0f, sex_int, 0 );
     if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("ti.json");
-        const json::Object& config_obj = json_cast<const Object&>( *configStubJson );
-        //json::QuickBuilder config( *configStubJson );
-        std::cout << "Overriding loaded config.json with " << userParams.size() << " parameters." << std::endl;
-        for( auto config : userParams )
-        {
-            std::string key = config.first;
-            float value = config.second;
-            std::cout << "Overriding " << key << " with value " << value << std::endl;
-            config_obj[ key ] = json::Number( value );
-        }
-        std::string key = "Typhoid_Acute_Infectiousness";
-        std::cout << "Using value "
-                  << (*configStubJson)[ key ].As<json::Number>()
-                  << " for key "
-                  << key << std::endl;
-        Kernel::JsonConfigurable::_useDefaults = true;
-        Kernel::IndividualHumanTyphoid::InitializeStatics( configStubJson );
-        Kernel::JsonConfigurable::_useDefaults = false; 
-        person->SetParameters( &node, 0.0f, 1.0f, 0.0f, 0.0f );
     }
+    const json::Object& config_obj = json_cast<const Object&>( *configStubJson );
+    //json::QuickBuilder config( *configStubJson );
+    std::cout << "Overriding loaded config.json with " << userParams.size() << " parameters." << std::endl;
+    for( auto config : userParams )
+    {
+        std::string key = config.first;
+        float value = config.second;
+        std::cout << "Overriding " << key << " with value " << value << std::endl;
+        config_obj[ key ] = json::Number( value );
+    }
+    std::string key = "Typhoid_Acute_Infectiousness";
+    std::cout << "Using value "
+        << (*configStubJson)[ key ].As<json::Number>()
+        << " for key "
+        << key << std::endl;
+    Kernel::JsonConfigurable::_useDefaults = true;
+    Kernel::IndividualHumanTyphoid::InitializeStatics( configStubJson );
+    Kernel::JsonConfigurable::_useDefaults = false; 
+    person->SetParameters( &node, 0.0f, 1.0f, 0.0f, 0.0f );
 }
 
 
@@ -227,9 +232,23 @@ static void initInd( bool dr = false )
 static PyObject*
 create(PyObject* self, PyObject* args)
 {
-    //char ti_json[ 2048 ];
-    //PyArg_ParseTuple(args, "s", &ti_json );
-    initInd();
+    // parse out individual (initial) age and sex.
+    long age = 0;
+    const char* sex;
+    PyErr_Clear();
+    if( !PyArg_ParseTuple(args, "ls", &age, &sex ) )
+    {
+        age = 0;
+        sex = "M";
+        std::cout << "Parsing failed: useing default age of " << age << " and sex/gender of " << sex << std::endl;
+    }
+    else
+    {
+        std::cout << "Using specified age of " << age << " and sex/gender of " << sex << std::endl;
+    }
+    assert( age >= 0 );
+    assert( age < 125 );
+    initInd( age, sex[0] );
     Py_RETURN_NONE;
 }
 
@@ -243,6 +262,7 @@ update(PyObject* self, PyObject* args)
 {
     //std::cout << "Skipping update of individual as test. no-op." << std::endl;
     person->Update( timestep++, 1.0f );
+    person->GetStateChange();
 
     Py_RETURN_NONE;
 }
