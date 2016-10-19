@@ -447,9 +447,13 @@ namespace Kernel
     {
         InfectionTyphoid& infection = *obj;
         ar.labelElement("prepatent_timer") & infection.prepatent_timer;
+        ar.labelElement("prepatent_duration") & infection._prepatent_duration;
         ar.labelElement("acute_timer") & infection.acute_timer;
+        ar.labelElement("acute_duration") & infection._acute_duration;
         ar.labelElement("subclinical_timer") & infection.subclinical_timer;
+        ar.labelElement("subclinical_duration") & infection._subclinical_duration;
         ar.labelElement("chronic_timer") & infection.chronic_timer;
+        //ar.labelElement("chronic_duration") & infection._chronic_duration;
         ar.labelElement("state_to_report") & infection.state_to_report;
     }
 }
