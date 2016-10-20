@@ -6,14 +6,21 @@ import math
 import pdb
 import os
 import dtk_plot_wrapper
+import dtk_sft as sft
 
 # C version: infectiousness = exp( -1 * _infectiousness_param_1 * pow(duration - _infectiousness_param_2,2) ) / _infectiousness_param_3;
 
 def inf_calc( dur, c1, c2, c3 ):
+    """
+    Your SFT will probably have some mathematical calculation based on the requirements document.
+    """
     x = c1 * math.pow( (dur - c2), 2 )
     return math.exp(-1*x) /c3
 
 def get_val( key, line ):    
+    """
+    We might want to move this into the dtk_sft module.
+    """
     regex = key + "=(\d*\.*\d*)"
     match = re.search(regex, line)
     if match != None:   
@@ -33,7 +40,7 @@ def application( report_file ):
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
     #c1 = cdj["Infectiousness_Asymptomatic_Naive_1"]
     success = True
-    with open( "scientific_feature_report.txt", "w" ) as report_file:
+    with open( sft.sft_output_filename, "w" ) as report_file:
         if len( lines ) == 0:
             success = False
             report_file.write( "Found no data matching test case.\n" )
@@ -45,7 +52,7 @@ def application( report_file ):
                     report_file.write( "BAD: immunity for newborn={0} instead of 1.0\n".format( immunity ) )
                     
         if success:
-            report_file.write( "SUMMARY: Success={0}\n".format( success ) )
+            report_file.write( sft.format_success_msg( success ) )
 
     #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 
