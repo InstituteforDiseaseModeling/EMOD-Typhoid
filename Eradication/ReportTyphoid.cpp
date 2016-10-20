@@ -49,7 +49,7 @@ bool ReportTyphoid::Configure( const Configuration * inputJson )
     initConfigTypeMap( "Inset_Chart_Reporting_Stop_Year", &stopYear, "Stop Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
     bool ret = JsonConfigurable::Configure( inputJson );
     LOG_DEBUG_F( "Read in Start_Year (%f) and Stop_Year(%f).\n", startYear, stopYear );
-    if( startYear >= stopYear )
+    if( !JsonConfigurable::_dryrun && startYear >= stopYear )
     {
         throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Inset_Chart_Reporting_Start_Year", startYear, "Inset_Chart_Reporting_Stop_Year", stopYear );
     }
@@ -98,12 +98,10 @@ void ReportTyphoid::EndTimestep( float currentTime, float dt )
 void
 ReportTyphoid::postProcessAccumulatedData()
 {
-    ReportEnvironmental::postProcessAccumulatedData();
-
-    // pass through normalization
-    // order matters, since we're changing channels in place (not like old way)
-    //normalizeChannel(_aoi_label, _tot_prev_label);
-
+    // Don't call into base class -- too much stuff we don't want. Just copy-paste a couple into here.
+    LOG_DEBUG( "postProcessAccumulatedData\n" );
+    normalizeChannel("Infected", _stat_pop_label);
+    addDerivedCumulativeSummaryChannel(_new_infections_label, "Cumulative Infections");
 }
 
 void

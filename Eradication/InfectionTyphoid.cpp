@@ -152,7 +152,7 @@ namespace Kernel
             mu = mpl; sigma = spl;
         }
         _prepatent_duration = (int)(generateRandFromLogNormal(mu, sigma));
-        LOG_VALID_F( "Calculated prepatent duration = %f using Log-Normal draw; mu = %f, sigma = %f, doseTracking = %s.\n",
+        LOG_VALID_F( "Calculated prepatent duration = %d using Log-Normal draw; mu = %f, sigma = %f, doseTracking = %s.\n",
                      _prepatent_duration, mu, sigma, doseTracking.c_str() );
         prepatent_timer =_prepatent_duration;
         prepatent_timer.handle = std::bind( &InfectionTyphoid::handlePrepatentExpiry, this );
