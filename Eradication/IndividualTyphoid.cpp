@@ -628,7 +628,7 @@ namespace Kernel
             }
             else
             {
-                state_to_report = "D";
+                state_to_report = "DED";
             }
             //Py_DECREF( vars );
             //Py_DECREF( py_existing_id_str );
@@ -638,7 +638,7 @@ namespace Kernel
         delete check;
         LOG_DEBUG_F( "state_to_report for individual %d = %s; Infected = %d.\n", GetSuid().data, state_to_report.c_str(), IsInfected() );
 
-        if( state_to_report == "S" && state_changed && GetInfections().size() > 0 )
+        if( state_to_report == "SUS" && state_changed && GetInfections().size() > 0 )
         {
             // ClearInfection
             auto inf = GetInfections().front();
@@ -650,7 +650,7 @@ namespace Kernel
             // get InfectionTyphoid pointer
             inf_typhoid->Clear();
         }
-        else if( state_to_report == "D" && state_changed )
+        else if( state_to_report == "DED" && state_changed )
         {
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
@@ -714,7 +714,7 @@ namespace Kernel
         }
         state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
         //auto parsed = IdmString(state_to_report).split();
-        if( state_to_report == "D" )
+        if( state_to_report == "DED" )
         {
             LOG_INFO_F( "[GetStateChange] Somebody died from their infection.\n" );
             retVal = HumanStateChange::KilledByInfection;
@@ -730,7 +730,7 @@ namespace Kernel
 
     bool IndividualHumanTyphoid::IsChronicCarrier( bool incidence_only ) const
     {
-        if( state_to_report == "C" &&
+        if( state_to_report == "CHR" &&
                 ( ( incidence_only && state_changed ) ||
                   ( incidence_only == false )
                 )
@@ -746,7 +746,7 @@ namespace Kernel
 
     bool IndividualHumanTyphoid::IsSubClinical( bool incidence_only ) const
     {
-        if( state_to_report == "U" &&
+        if( state_to_report == "SUB" &&
                 ( ( incidence_only && state_changed ) ||
                   ( incidence_only == false )
                 )
@@ -762,7 +762,7 @@ namespace Kernel
 
     bool IndividualHumanTyphoid::IsAcute( bool incidence_only ) const
     {
-        if( state_to_report == "A" &&
+        if( state_to_report == "ACU" &&
                 ( ( incidence_only && state_changed ) ||
                   ( incidence_only == false )
                 )
@@ -778,7 +778,7 @@ namespace Kernel
 
     bool IndividualHumanTyphoid::IsPrePatent( bool incidence_only ) const
     {
-        if( state_to_report == "P" &&
+        if( state_to_report == "PRE" &&
                 ( ( incidence_only && state_changed ) ||
                   ( incidence_only == false )
                 )
