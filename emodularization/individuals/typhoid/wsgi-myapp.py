@@ -39,6 +39,15 @@ def application(environ,start_response):
     #schema = ti.get_schema()
     d = parse_qs( environ["QUERY_STRING"] )
     tsteps = d.get('tsteps', [''])[0]
+    age = d.get('age', [''])[0]
+    if age != '':
+        if age < 0:
+            age = 0
+        elif age > 125:
+            age = 125
+    sex = d.get('sex', [''])[0]
+    if sex != '' and sex != 'F':
+        sex = 'M'
     get_schema = d.get('schema', [''])[0]
     tai = d.get('tai', [''])[0]
     #os.chdir( "/usr/local/wsgi/scripts/" )
@@ -103,16 +112,21 @@ def application(environ,start_response):
 
         output += """
                 <dl>
-                    <dt><label>Timesteps</label></dt><dd><input type="text" name="tsteps" size="8" value="{0}"></dd>
+                    <dt><label>Age (in yrs)</label></dt><dd><input type="text" name="age" size="8" value="{0}"></dd>
+                </dl>
+                <dl>
+                    <dt><label>Sex (M/F)</label></dt><dd><input type="text" name="sex" size="8" value="{1}"></dd>
+                </dl>
+                <dl>
+                    <dt><label>Timesteps</label></dt><dd><input type="text" name="tsteps" size="8" value="{2}"></dd>
                 </dl>
                 <dl>
                     <dt><em>Set parameters and number of timesteps, then...</em></dt>
                     <dd><input type="submit" value="Run"/></dd>
                 </dl>
             </form>
-        """.format( 1 if tsteps == '' else tsteps )
+        """.format( 30 if age == '' else age, 'M' if sex == '' else sex, 1 if tsteps == '' else tsteps )
         if tsteps != '':
-
             for param in schema.keys():
                 syslog.syslog( syslog.LOG_INFO, param )
                 if "Infectiousness" in param:
@@ -124,8 +138,8 @@ def application(environ,start_response):
                     if qs_val != None:
                         syslog.syslog( syslog.LOG_INFO, "Setting config.json param(s): " + str( param ) + "=" + (qs_val) )
                         ti.set_param( ( param, int(qs_val) ) )
-            syslog.syslog( syslog.LOG_INFO, "Creating Typhoid individual." )
-            ti.create( 30, 'M' )
+            syslog.syslog( syslog.LOG_INFO, "Creating Typhoid individual with age " + str(age) + " and sex " + 'M' )
+            ti.create( long(age), sex )
 
             #with open( "ti.json", 'w' ) as ti_json:
             #    ti_json.write( json.dumps( config_json, indent=4, sort_keys=True ) )
