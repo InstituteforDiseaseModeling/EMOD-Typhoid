@@ -49,7 +49,7 @@ bool ReportTyphoid::Configure( const Configuration * inputJson )
     initConfigTypeMap( "Inset_Chart_Reporting_Stop_Year", &stopYear, "Stop Year for reporting.", MIN_YEAR, MAX_YEAR, 0.0f );
     bool ret = JsonConfigurable::Configure( inputJson );
     LOG_DEBUG_F( "Read in Start_Year (%f) and Stop_Year(%f).\n", startYear, stopYear );
-    if( startYear >= stopYear )
+    if( !JsonConfigurable::_dryrun && startYear >= stopYear )
     {
         throw IncoherentConfigurationException( __FILE__, __LINE__, __FUNCTION__, "Inset_Chart_Reporting_Start_Year", startYear, "Inset_Chart_Reporting_Stop_Year", stopYear );
     }
