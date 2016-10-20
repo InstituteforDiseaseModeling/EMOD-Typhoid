@@ -10,7 +10,7 @@ EXIT /B
 @ECHO %EMOD_ROOT%
 
 @del *.txt
-@%EMOD_ROOT%\build\x64\Release\Eradication\Eradication.exe -C config.json -I %EMOD_ROOT%\Regression\InputDataFiles\ -P %EMOD_ROOT%\Regression\shared_embedded_py_scripts > test.txt
+@%EMOD_ROOT%\build\x64\Release\Eradication\Eradication.exe -C config.json -I %EMOD_ROOT%\Regression\Typhoid\ -P %EMOD_ROOT%\Regression\shared_embedded_py_scripts > test.txt
 @type scientific_feature_report.txt
 
 @del "%HOMEDRIVE%%HOMEPATH%.rt_show.sft"
