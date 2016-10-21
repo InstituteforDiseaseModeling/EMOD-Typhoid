@@ -23,7 +23,6 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.
 #include "Drugs.h"
 #include "Interventions.h"
 #include "InterventionsContainer.h"
-//#include "SimpleTypemapRegistration.h"
 
 namespace Kernel
 {
@@ -35,10 +34,17 @@ namespace Kernel
         virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ) = 0;
     };
 
+    struct ITyphoidVaccineEffectsApply : public ISupports
+    {
+        virtual void ApplyReducedSheddingEffect( float rate ) = 0;
+        virtual void ApplyReducedDoseEffect( float rate ) = 0;
+        virtual void ApplyReducedNumberExposuresEffect( float rate ) = 0;
+    };
+
     class ITyphoidVaccine;
 
     class TyphoidInterventionsContainer : public InterventionsContainer,
-                                          //public ITyphoidDrugEffects,
+                                          public ITyphoidVaccineEffectsApply,
                                           public ITyphoidDrugEffectsApply
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
@@ -56,12 +62,31 @@ namespace Kernel
         virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ); // not used for anything
         virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ); // not used for anything
 
-        //ITyphoidDrugEffects(Get)
+        virtual void ApplyReducedSheddingEffect( float rate ) override
+        {
+            current_shedding_attenuation = rate;
+        }
+        virtual void ApplyReducedDoseEffect( float rate ) override
+        {
+            current_dose_attenuation = rate;
+        }
+        virtual void ApplyReducedNumberExposuresEffect( float rate ) override
+        {
+            current_exposures_attenuation = rate;
+        }
+
+        virtual float GetContactDepositAttenuation() const
+        {
+            return current_shedding_attenuation;
+        }
 
         virtual void Update(float dt); // example of intervention timestep update
 
     protected:
         void GiveDrug(IDrug* drug);
+        float current_shedding_attenuation;
+        float current_dose_attenuation;
+        float current_exposures_attenuation;
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
