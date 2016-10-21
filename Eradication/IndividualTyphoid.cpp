@@ -432,7 +432,7 @@ namespace Kernel
             }
             float amplification = getSeasonalAmplitude();
 
-            float intervention_multiplier = 1;
+            float intervention_multiplier = ((TyphoidInterventionsContainer*)interventions)->GetEnviroExposuresAttenuation();
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
@@ -480,7 +480,8 @@ namespace Kernel
 
             float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);             
             //float prob = min(1.0f, 1.0f- (float) pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt));
-            int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_contact_exposure_rate * dt);
+            float intervention_multiplier = ((TyphoidInterventionsContainer*)interventions)->GetContactExposuresAttenuation();
+            int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_contact_exposure_rate * dt * intervention_multiplier);
             float prob = 0;
             if (number_of_exposures > 0)
             {
@@ -558,9 +559,10 @@ namespace Kernel
             for(auto& entry : transmissionGroupMembershipByRoute)
             {
                 LOG_DEBUG_F("Found route:%s.\n",entry.first.c_str());
+                auto tic = (TyphoidInterventionsContainer*)interventions;
                 if (entry.first==string("contact"))
                 {
-                    float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousness(); //ByRoute(string("contact"));
+                    float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousness() * tic->GetContactDepositAttenuation(); //ByRoute(string("contact"));
                     //float tmp_infectiousnessOral = infectiousness;
                     if (tmp_infectiousnessOral > 0.0f)
                     {
@@ -571,7 +573,7 @@ namespace Kernel
                 }
                 else if (entry.first==string("environmental"))
                 {
-                    float tmp_infectiousnessFecal =  m_mc_weight * infection->GetInfectiousness(); // ByRoute(string("environmental"));
+                    float tmp_infectiousnessFecal =  m_mc_weight * infection->GetInfectiousness() * tic->GetEnviroDepositAttenuation(); // ByRoute(string("environmental"));
                     //float tmp_infectiousnessFecal =  infectiousness;
                     if (tmp_infectiousnessFecal > 0.0f)
                     {

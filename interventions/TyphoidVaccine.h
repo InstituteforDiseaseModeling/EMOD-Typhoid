@@ -37,6 +37,7 @@ namespace Kernel
         virtual QueryResult QueryInterface(iid_t iid, void **ppvObject) override;
 
         TyphoidVaccineMode::Enum vaccine_mode;
+        TransmissionRoute::Enum route;
         float effect;
         ITyphoidVaccineEffectsApply * itvc; // interventions container
         IIndividualHumanContext *parent;

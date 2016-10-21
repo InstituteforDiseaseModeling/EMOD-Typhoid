@@ -62,22 +62,40 @@ namespace Kernel
         virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ); // not used for anything
         virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ); // not used for anything
 
+        // Typhoid 'Vaccine' Apply/Update/Setter functions
         virtual void ApplyReducedSheddingEffect( float rate ) override
         {
             current_shedding_attenuation = rate;
         }
         virtual void ApplyReducedDoseEffect( float rate ) override
         {
-            current_dose_attenuation = rate;
+            //current_dose_attenuation = rate;
+            drugVaccineReducedAcquire = rate;
         }
         virtual void ApplyReducedNumberExposuresEffect( float rate ) override
         {
             current_exposures_attenuation = rate;
         }
 
+        // Typhoid 'Vaccine' Getter functions
         virtual float GetContactDepositAttenuation() const
         {
             return current_shedding_attenuation;
+        }
+
+        virtual float GetEnviroDepositAttenuation() const
+        {
+            return current_shedding_attenuation;
+        }
+
+        virtual float GetContactExposuresAttenuation() const
+        {
+            return current_exposures_attenuation;
+        }
+
+        virtual float GetEnviroExposuresAttenuation() const
+        {
+            return current_exposures_attenuation;
         }
 
         virtual void Update(float dt); // example of intervention timestep update

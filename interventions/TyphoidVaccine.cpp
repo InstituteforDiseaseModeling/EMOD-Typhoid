@@ -32,6 +32,8 @@ namespace Kernel
     )
     {
         initConfig( "Mode", vaccine_mode, inputJson, MetadataDescriptor::Enum("Mode", "Shedding, Dose, or Exposures", MDD_ENUM_ARGS(TyphoidVaccineMode)) );
+        // not sure whether we're using route yet.
+        initConfig( "Route", route, inputJson, MetadataDescriptor::Enum("Route", "Contact or Environmental", MDD_ENUM_ARGS(TransmissionRoute)) );
         initConfigTypeMap("Effect", &effect, "How effective is this?", 0.0, 1.0, 1.0 ); 
 
         bool configured = BaseIntervention::Configure( inputJson );
@@ -69,6 +71,18 @@ namespace Kernel
         }
 
         bool distribute =  BaseIntervention::Distribute( context, pCCO );
+        if( vaccine_mode == TyphoidVaccineMode::Shedding )
+        {
+            itvc->ApplyReducedSheddingEffect( effect );
+        }
+        else if( vaccine_mode == TyphoidVaccineMode::Dose )
+        {
+            itvc->ApplyReducedDoseEffect( effect );
+        }
+        else if( vaccine_mode == TyphoidVaccineMode::Exposures )
+        {
+            itvc->ApplyReducedNumberExposuresEffect( effect );
+        }
         return distribute;
     }
 
@@ -94,7 +108,7 @@ namespace Kernel
 
     void TyphoidVaccine::serialize(IArchive& ar, TyphoidVaccine* obj)
     {
-        SimpleVaccine::serialize( ar, obj );
+        BaseIntervention::serialize( ar, obj );
         TyphoidVaccine& vaccine = *obj;
         //ar.labelElement("acquire_effect")                 & vaccine.acquire_effect;
     }
