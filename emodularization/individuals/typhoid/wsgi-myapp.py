@@ -41,9 +41,9 @@ def application(environ,start_response):
     tsteps = d.get('tsteps', [''])[0]
     age = d.get('age', [''])[0]
     if age != '':
-        if age < 0:
+        if int(age) < 0:
             age = 0
-        elif age > 125:
+        elif int(age) > 125:
             age = 125
     sex = d.get('sex', [''])[0]
     if sex != '' and sex != 'F':

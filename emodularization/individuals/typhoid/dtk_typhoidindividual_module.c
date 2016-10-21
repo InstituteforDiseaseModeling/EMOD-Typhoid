@@ -285,7 +285,7 @@ static PyObject*
 getImmunity(PyObject* self, PyObject* args)
 {
     //float imm = person->GetAcquisitionImmunity();
-    float imm = 1.0f - person->GetImmunityReducedAcquire(); // value returned is the multiple use to modify the prob of acquisition: so 0 means you're immune
+    float imm = person->GetImmunityReducedAcquire(); // value returned is the multiple use to modify the prob of acquisition: so 0 means you're immune
     return Py_BuildValue("f", imm );
 }
 

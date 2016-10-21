@@ -659,7 +659,15 @@ namespace Kernel
 #else
 
 #endif
-        return IndividualHumanEnvironmental::Update( currenttime, dt);
+        IndividualHumanEnvironmental::Update( currenttime, dt);
+        if( infections.size() == 0 )
+        {
+            state_to_report = "SUS";
+        }
+        else
+        {
+            state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
+        }
     }
 
     void IndividualHumanTyphoid::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
@@ -724,7 +732,11 @@ namespace Kernel
 
     float IndividualHumanTyphoid::GetImmunityReducedAcquire() const
     {
-        float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
+        // immunity = 1 - susceptibility
+        auto base_susceptibility = susceptibility->getModAcquire();
+        auto acquired_susceptibility = pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
+        float immunity = (1-base_susceptibility) + (1-acquired_susceptibility);
+        NO_MORE_THAN( immunity, 1.0f );
         return immunity;
     }
 
