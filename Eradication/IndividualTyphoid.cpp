@@ -711,10 +711,8 @@ namespace Kernel
         HumanStateChange retVal = StateChange;
         if( infections.size() == 0 )
         {
-            state_to_report = "SUS";
             return retVal;
         }
-        state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
         //auto parsed = IdmString(state_to_report).split();
         if( state_to_report == "DED" )
         {
