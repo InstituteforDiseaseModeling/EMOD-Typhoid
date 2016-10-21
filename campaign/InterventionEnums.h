@@ -106,4 +106,10 @@ namespace Kernel
     ENUM_DEFINE(EventOrConfig,
         ENUM_VALUE_SPEC(Config          , 1)
         ENUM_VALUE_SPEC(Event           , 2))
+
+    ENUM_DEFINE(TyphoidVaccineMode,
+        ENUM_VALUE_SPEC(Shedding        , 1)
+        ENUM_VALUE_SPEC(Dose            , 2)
+        ENUM_VALUE_SPEC(Exposures       , 3)
+    )
 }

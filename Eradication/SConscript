@@ -241,6 +241,7 @@ else:
                             "SimulationTyphoid.cpp",
                             "SpatialReportTyphoid.cpp",
                             "SusceptibilityTyphoid.cpp",
+                            "../interventions/TyphoidVaccine.cpp",
                         ]
                         
     airborneSrcFiles = [
