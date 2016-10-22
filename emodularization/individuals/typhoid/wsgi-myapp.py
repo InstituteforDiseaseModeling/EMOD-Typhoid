@@ -68,6 +68,22 @@ def application(environ,start_response):
         dd, input[type=text] { font-family: "Consolas", "Menlo", serif; font-size: 1em; color: crimson; padding: 4px; }
         input[type=submit] { width: 99%; box-sizing: border-box; padding: 6px; }
         em { color: crimson; }
+        section.chart { width: 90%; }
+        table { display: table; width: 100%; border-collapse: separate; border-spacing: 0; }
+        thead tr td { border-bottom: 1px solid pink; }
+        tfoot tr td { border-top: 1px solid pink; }
+        td { display: table-cell; min-height: 3em; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; }
+        td samp { display: block; width: 100%; height: 100%;}
+        td.SUS samp { background: cornflowerblue; }
+        td.PRE samp { background: limegreen; }
+        td.ACU samp { background: gold; }
+        td.SUB samp { background: orange; }
+        td.CHR samp { background: crimson; }
+        td.DED samp { background: slategrey; }
+        tr.infectiousness td { height: 200px; vertical-align: bottom; }
+        tr.immunity td { height: 200px; vertical-align: top; }
+        tr.infectiousness, tr.immunity { opacity: 0.8; }
+        td:hover { opacity: 1 !important; }
     </style>
 </head>
 <body>
@@ -78,9 +94,12 @@ def application(environ,start_response):
 
     #output += os.getcwd()
     #output += str( get_schema )
-    infection_history = []
-    suscept_history = []
-    infectiousness_history = []
+
+    #infection_history = []
+    #suscept_history = []
+    #infectiousness_history = []
+
+    results = []
 
     if get_schema == '1':
         output += "<pre>" + ti.get_schema() + "</pre>"
@@ -158,10 +177,20 @@ def application(environ,start_response):
                 ind_json = ti.serialize()
                 serial_man = json.loads( ind_json )
                 state = serial_man["individual"]["state_to_report"]
-                infection_history.append( state )
-                suscept_history.append( ti.get_immunity() )
                 inf_ness = serial_man["individual"]["infectiousness"]
-                infectiousness_history.append( inf_ness )
+
+                results.append((state, inf_ness, ti.get_immunity()))
+                #infection_history.append( state )
+                #suscept_history.append( ti.get_immunity() )
+                #infectiousness_history.append( inf_ness )
+
+            infect_max = max(zip(*results)[1])
+            immune_min = min(zip(*results)[2]) * 0.8 #buffered
+
+            for i, (a, b, c) in enumerate(results):
+                infect_factor = int(100 * (b / infect_max))
+                immune_factor = int(100 * (c - immune_min) / (1 - immune_min))
+                results[i] = (a, b, c, i, infect_factor, immune_factor)
 
             ind_json = ti.serialize()
             print( str( ind_json ) )
@@ -169,7 +198,7 @@ def application(environ,start_response):
             output += """
         </section>
         <section>
-            <h3>After {0}, the individual has the following attributes:</h3>
+            <h3>After {0} timesteps, the individual has the following attributes:</h3>
 """.format(str( tsteps ))
 
             serial_man = json.loads( ind_json )
@@ -197,21 +226,41 @@ def application(environ,start_response):
 
             output += """
         </section>
-        <section>
-            <dl>
-                <dt>infection stage history</dt>
-                <dd>{0}</dd>
-            </dl>
-            <dl>
-                <dt>infectiousness history</dt>
-                <dd>{1}</dd>
-            </dl>
-            <dl>
-                <dt>immunity history</dt>
-                <dd>{2}</dd>
-            </dl>
-""".format(str(infection_history), str(infectiousness_history), str(suscept_history))
+        <section class="chart">
+            <table>
+                <thead>
+                    <tr><td colspan="{0}">Infectiousness History<td></tr>
+                </thead>
+                <tbody>
+                    <tr class="infectiousness">""".format(len(results))
 
+            for data in results:
+                output += """
+                        <td class="{0}"><samp title="{3}: {1}" style="height:{4}%">&nbsp;</samp></td>""".format(*data)
+
+            output += """
+                    </tr>
+                    <tr class="stage">"""
+
+            for data in results:
+                output += """
+                        <td class="{0}"><samp title="{3}: {0}">&nbsp;</samp></td>""".format(*data)
+
+            output += """
+                    </tr>
+                    <tr class="immunity">"""
+
+            for data in results:
+                output += """
+                        <td class="{0}"><samp title="{3}: {2}" style="height:{5}%">&nbsp;</samp></td>""".format(*data)
+
+            output += """
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr><td colspan="{0}">Immunity History</td><tr>
+                </tfoot>
+            </table>""".format(len(results))
 
     output += """
         </section>
