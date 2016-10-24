@@ -37,14 +37,7 @@ static const char* _module = "InfectionTyphoid";
 namespace Kernel
 {
 #define UNINIT_TIMER (-100.0f)
-#ifdef LOG_INFO_F
-#undef LOG_INFO_F
-#endif
-#define LOG_INFO_F printf
-#ifdef LOG_DEBUG_F
-#undef LOG_DEBUG_F
-#endif
-#define LOG_DEBUG_F printf
+
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Infection,InfectionTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(InfectionTyphoidConfig)
     END_QUERY_INTERFACE_BODY(InfectionTyphoidConfig)
