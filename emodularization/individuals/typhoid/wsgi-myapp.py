@@ -106,6 +106,9 @@ def application(environ,start_response):
         }
         .switch-field label:hover { cursor: pointer; }
         .switch-field input:checked + label { background-color: khaki; }
+        table.legend { margin: 3em 1em; width: auto; }
+        table.legend td { text-indent: 0.5em; }
+        table.legend samp { font-size: 1em; min-width: 2em; }
     </style>
 </head>
 <body>
@@ -212,7 +215,7 @@ def application(environ,start_response):
                 #infectiousness_history.append( inf_ness )
 
             infect_max = max(zip(*results)[1])
-            immune_min = min(zip(*results)[2]) * 0.8 #buffered
+            immune_min = min(zip(*results)[2]) * 0.9 #buffered
 
             for i, (a, b, c) in enumerate(results):
                 infect_factor = int(100 * (b / infect_max))
@@ -291,6 +294,36 @@ def application(environ,start_response):
                     <tr><td colspan="{0}">Immunity History</td><tr>
                 </tfoot>
             </table>""".format(len(results))
+
+            output += """
+            <table class="legend">
+                <tbody>
+                    <tr>
+                        <td class="SUS"><samp>&nbsp;</samp></td>
+                        <td>Susceptible (uninfected, regular state)</td>
+                    </tr>
+                    <tr>
+                        <td class="PRE"><samp>&nbsp;</samp></td>
+                        <td>Pre-Patent (always the first stage)</td>
+                    </tr>
+                    <tr>
+                        <td class="ACU"><samp>&nbsp;</samp></td>
+                        <td>Acute (one of two possible second stages)</td>
+                    </tr>
+                    <tr>
+                        <td class="SUB"><samp>&nbsp;</samp></td>
+                        <td>Sub-Clinical (the other possible second stage)</td>
+                    </tr>
+                    <tr>
+                        <td class="CHR"><samp>&nbsp;</samp></td>
+                        <td>Chronic (possible stage after Acute or Sub-Clinical if you don't recover or die. You never leave this)</td>
+                    </tr>
+                    <tr>
+                        <td class="DED"><samp>&nbsp;</samp></td>
+                        <td>Room temperature</td>
+                    </tr>
+                </tbody>
+            </table>"""
 
     output += """
         </section>
