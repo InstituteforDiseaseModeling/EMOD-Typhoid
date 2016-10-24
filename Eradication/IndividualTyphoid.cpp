@@ -424,7 +424,6 @@ namespace Kernel
 
         if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL) 
         {
-
             float fEnvironment = cp->GetTotalContagion();
             if (fEnvironment==0.0)
             {
@@ -446,10 +445,10 @@ namespace Kernel
                 {
                     prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
                 }
-                //LOG_INFO_F("Reduced Acquire multiplier %f\n", interventions->GetInterventionReducedAcquire());
                 //LOG_DEBUG_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
-                //LOG_DEBUG_F("Expose::TRANSMISSIONROUTE_ENVIRONMENTAL %f, %f, %f, %f, %f\n", prob, infects, immunity, fExposure, fEnvironment);
-                //if (prob>0.0f && randgen->e() < prob)
+                LOG_VALID_F( "Exposing inividual %d on route 'environment': prob=%f, infects=%f, immunity=%f, fExposure=%f, fEnvironment=%f.\n",
+                             parent->GetSuid().data, prob, infects, immunity, fExposure, fEnvironment
+                           );
                 if( SMART_DRAW( prob ) )
                 {
                     _routeOfInfection = transmission_route;
@@ -487,6 +486,9 @@ namespace Kernel
             {
                 prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
             }
+            LOG_VALID_F( "Exposing inividual %d on route 'contact': prob=%f, infects=%f, immunity=%f, fContact=%f.\n",
+                         parent->GetSuid().data, prob, infects, immunity, fContact
+                       );
             if (prob>0.0f && randgen->e() < prob)
             {
                 LOG_DEBUG("INDIVIDUAL INFECTED BY CONTACT.\n"); // FOR REPORTING
@@ -659,7 +661,15 @@ namespace Kernel
 #else
 
 #endif
-        return IndividualHumanEnvironmental::Update( currenttime, dt);
+        IndividualHumanEnvironmental::Update( currenttime, dt);
+        if( infections.size() == 0 )
+        {
+            state_to_report = "SUS";
+        }
+        else
+        {
+            state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
+        }
     }
 
     void IndividualHumanTyphoid::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
@@ -724,7 +734,11 @@ namespace Kernel
 
     float IndividualHumanTyphoid::GetImmunityReducedAcquire() const
     {
-        float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
+        // immunity = 1 - susceptibility
+        auto base_susceptibility = susceptibility->getModAcquire();
+        auto acquired_susceptibility = pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
+        float immunity = (1-base_susceptibility) + (1-acquired_susceptibility);
+        NO_MORE_THAN( immunity, 1.0f );
         return immunity;
     }
 

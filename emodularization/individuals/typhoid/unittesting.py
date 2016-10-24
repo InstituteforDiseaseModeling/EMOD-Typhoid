@@ -36,6 +36,7 @@ class TestStringMethods(unittest.TestCase):
         pass
         #self.mean = 10.0
 
+    @unittest.skip('')
     def test_uninfected_at_start(self):
         print( "\nRunning test to confirm that newly created individuals is not infected.\n" )
         ti.create( 30, 'M' )
@@ -47,18 +48,24 @@ class TestStringMethods(unittest.TestCase):
         #self.assertTrue('FOO'.isupper())
         #self.assertFalse('Foo'.isupper())
         
-        print( "\nRunning test to confirm that newly infected individual IS infected.\n" )
+        print( "\nRunning test to confirm that newly infected individual IS infected across all ages and both sexes. But newborns have immunity.\n" )
         TestStringMethods.prob_exposure  = 1.0
         for sex in [ 'M', 'F' ]:
             for age in xrange( 125 ):
                 ti.create( age, sex )
+                immunity = ti.get_immunity()
                 ti.update()
                 serial_man = getSerializedIndividualAsJson( ti )
                 num_infections = len(serial_man[ "individual" ]["infections"] ) 
                 state = serial_man[ "individual" ]["state_to_report"]
-                self.assertEqual( num_infections, 1 )
-                self.assertEqual( state, "PRE" )
+                if immunity < 1.0:
+                    self.assertEqual( num_infections, 1 )
+                    self.assertEqual( state, "PRE" )
+                else:
+                    self.assertEqual( num_infections, 0 )
+                    self.assertEqual( state, "SUS" )
 
+    @unittest.skip('')
     def test_prepatent(self):
         """
         Requirements: 

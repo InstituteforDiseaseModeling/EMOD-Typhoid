@@ -25,14 +25,7 @@ static const char * _module = "SusceptibilityTyphoid";
 
 namespace Kernel
 {
-#ifdef LOG_INFO_F
-#undef LOG_INFO_F
-#endif
-#define LOG_INFO_F printf
-#ifdef LOG_DEBUG_F
-#undef LOG_DEBUG_F
-#endif
-#define LOG_DEBUG_F printf
+
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Typhoid.Susceptibility,SusceptibilityTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(SusceptibilityTyphoidConfig)
     END_QUERY_INTERFACE_BODY(SusceptibilityTyphoidConfig)
@@ -68,13 +61,13 @@ namespace Kernel
         LOG_DEBUG_F( "Initializing Typhoid immunity object for new individual: id=%lu, age=%f, immunity modifier=%f, risk modifier=%f\n", parent->GetSuid().data, _age, _immmod, _riskmod );
         SusceptibilityEnvironmental::Initialize(_age, _immmod, _riskmod);
 
-        
-       if( _age == 0.0f )
+
+        if( _age == 0.0f )
         {
             mod_acquire = 0.0f;
             LOG_DEBUG_F( "Newborn being made immune for now.\n" );
-        
-        // throws exception on error, no return type. 
+
+            // throws exception on error, no return type. 
         }
     }
 
@@ -143,14 +136,14 @@ namespace Kernel
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI
 //BOOST_CLASS_EXPORT(Kernel::SusceptibilityTyphoid)
 /*
-namespace Kernel {
+   namespace Kernel {
 
-    template<class Archive>
-    void serialize(Archive & ar, SusceptibilityTyphoid &sus, const unsigned int  file_version )
-    {
-        ar & boost::serialization::base_object<SusceptibilityEnvironmental>(sus);
-    }
-}*/
+   template<class Archive>
+   void serialize(Archive & ar, SusceptibilityTyphoid &sus, const unsigned int  file_version )
+   {
+   ar & boost::serialization::base_object<SusceptibilityEnvironmental>(sus);
+   }
+   }*/
 #endif
 
 #endif // ENABLE_TYPHOID

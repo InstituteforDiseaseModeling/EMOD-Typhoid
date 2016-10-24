@@ -38,6 +38,9 @@ namespace Kernel
     END_QUERY_INTERFACE_DERIVED(TyphoidInterventionsContainer, InterventionsContainer)
 
     TyphoidInterventionsContainer::TyphoidInterventionsContainer()
+        : current_shedding_attenuation( 1.0f )
+        , current_dose_attenuation( 1.0f )
+        , current_exposures_attenuation( 1.0f )
     {
     }
 

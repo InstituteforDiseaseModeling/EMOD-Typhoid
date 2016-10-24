@@ -193,7 +193,7 @@ namespace Kernel
                 if (routeNameFromMap == routeName)
                 {
                     //LOG_VALID_F("foundRoute: routeIndex=%d\n",idx);
-                    (*membershipOut)[idx] = 0;
+                    (*membershipOut)[idx] = iRoute;
                 }
             }
             idx++;
