@@ -73,17 +73,21 @@ def application(environ,start_response):
         thead tr td { border-bottom: 1px solid pink; }
         tfoot tr td { border-top: 1px solid pink; }
         td { display: table-cell; min-height: 3em; padding: 0; border-right: 1px solid white; border-bottom: 1px solid white; }
-        td samp { display: block; width: 100%; height: 100%;}
+        td samp { display: block; width: 100%; height: 100%; font-size: 1px; }
+        td:nth-child(10n) { border-right: 1px solid aqua; }
         td.SUS samp { background: cornflowerblue; }
         td.PRE samp { background: limegreen; }
         td.ACU samp { background: gold; }
         td.SUB samp { background: orange; }
         td.CHR samp { background: crimson; }
         td.DED samp { background: slategrey; }
+        tr.stage samp { min-height: 16px; }
         tr.infectiousness td { height: 200px; vertical-align: bottom; }
         tr.immunity td { height: 200px; vertical-align: top; }
-        tr.infectiousness, tr.immunity { opacity: 0.8; }
+        tr.infectiousness td, tr.immunity td { opacity: 0.8; }
         td:hover { opacity: 1 !important; }
+        td.yaxis { width: 1%; opacity: 1 !important; }
+        td.yaxis > div { width: 1px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
     </style>
 </head>
 <body>
@@ -232,7 +236,8 @@ def application(environ,start_response):
                     <tr><td colspan="{0}">Infectiousness History<td></tr>
                 </thead>
                 <tbody>
-                    <tr class="infectiousness">""".format(len(results))
+                    <tr class="infectiousness">
+                        <td class="yaxis"><div><dfn>{1}</dfn><dfn>0.0</dfn></div></td>""".format(len(results), infect_max)
 
             for data in results:
                 output += """
@@ -240,7 +245,8 @@ def application(environ,start_response):
 
             output += """
                     </tr>
-                    <tr class="stage">"""
+                    <tr class="stage">
+                        <td class="yaxis"></td>"""
 
             for data in results:
                 output += """
@@ -248,7 +254,8 @@ def application(environ,start_response):
 
             output += """
                     </tr>
-                    <tr class="immunity">"""
+                    <tr class="immunity">
+                        <td class="yaxis"><div><dfn>{0}</dfn><dfn>1.0</dfn></div></td>""".format(immune_min)
 
             for data in results:
                 output += """
