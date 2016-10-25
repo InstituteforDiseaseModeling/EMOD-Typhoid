@@ -101,7 +101,7 @@ ReportTyphoid::postProcessAccumulatedData()
     // Don't call into base class -- too much stuff we don't want. Just copy-paste a couple into here.
     LOG_DEBUG( "postProcessAccumulatedData\n" );
     normalizeChannel("Infected", _stat_pop_label);
-    addDerivedCumulativeSummaryChannel(_new_infections_label, "Cumulative Infections");
+    //addDerivedCumulativeSummaryChannel(_new_infections_label, "Cumulative Infections");
 }
 
 void
