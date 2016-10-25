@@ -328,7 +328,7 @@ namespace Kernel
     {
         bool state_changed = false;
 
-        LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", GetSuid().data, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
+        LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", parent->GetSuid().data, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
         prepatent_timer.Decrement( dt );
         if (subclinical_timer > UNINIT_TIMER)
         { // asymptomatic infection
@@ -411,21 +411,25 @@ namespace Kernel
         float infectiousness = 0.0f;
         float base_infectiousness = IndividualHumanTyphoidConfig::typhoid_acute_infectiousness;
         auto irt = dynamic_cast<IDrugVaccineInterventionEffects*>(parent->GetInterventionsContext())->GetInterventionReducedTransmit();
-        if (acute_timer>=0)
+        if (acute_timer>0)
         {
             infectiousness = treatment_multiplier*base_infectiousness*irt;
+            LOG_VALID_F( "ACUTE infectiousness calculated as %f\n", infectiousness );
         }
-        else if (prepatent_timer>=0)
+        else if (prepatent_timer>0)
         {
             infectiousness = base_infectiousness*IndividualHumanTyphoidConfig::typhoid_prepatent_relative_infectiousness*irt;
+            LOG_VALID_F( "PREPATENT infectiousness calculated as %f\n", infectiousness );
         }
-        else if (subclinical_timer>=0)
+        else if (subclinical_timer>0)
         {
             infectiousness = base_infectiousness*IndividualHumanTyphoidConfig::typhoid_subclinical_relative_infectiousness*irt;
+            LOG_VALID_F( "SUBCLINICAL infectiousness calculated as %f\n", infectiousness );
         }
-        else if (chronic_timer>=0)
+        else if (chronic_timer>0)
         {
             infectiousness = base_infectiousness*IndividualHumanTyphoidConfig::typhoid_chronic_relative_infectiousness*irt;
+            LOG_VALID_F( "CHRONIC infectiousness calculated as %f\n", infectiousness );
         }
         return infectiousness;
     }
