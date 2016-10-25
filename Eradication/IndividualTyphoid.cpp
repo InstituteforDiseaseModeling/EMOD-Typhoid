@@ -546,11 +546,11 @@ namespace Kernel
         {
             return;
         }
-        //parent->GetTransmissionRoutes()
 
+        state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
         for (auto infection : infections)
         {
-            LOG_DEBUG("Getting infectiousness by route.\n");
+            //LOG_DEBUG("Getting infectiousness by route.\n");
 
             StrainIdentity tmp_strainID;
             infection->GetInfectiousStrainID(&tmp_strainID);
@@ -658,8 +658,6 @@ namespace Kernel
         {
             LOG_INFO_F( "[Update] Somebody died from their infection.\n" );
         }
-#else
-
 #endif
         IndividualHumanEnvironmental::Update( currenttime, dt);
         if( infections.size() == 0 )
