@@ -79,7 +79,7 @@ def application( report_file ):
                     timers_m.append(duration)
                 else:
                     category=line.split()[-1]
-                    report_file.write("Found dose category: {} that does not fall in High, Medium and Kiw categoty.\n".format(category))
+                    report_file.write("Found dose category: {} that does not fall in High, Medium and Low category.\n".format(category))
 
             if timers_l==[] and timers_h==[] and timers_m==[]:
                 report_file.write( "Found no data matching test case.\n")
