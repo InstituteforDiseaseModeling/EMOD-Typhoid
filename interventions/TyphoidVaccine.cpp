@@ -39,6 +39,11 @@ namespace Kernel
         bool configured = BaseIntervention::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
         {
+            if( route != TransmissionRoute::TRANSMISSIONROUTE_CONTACT &&
+                route != TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+            {
+                throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The 'Route' param can only be CONTACT or ENVIRONMENT in this intervention." );
+            }
         }
         LOG_DEBUG_F( "Vaccine configured with type %d and effect %f.\n", vaccine_mode, effect );
         return configured;
@@ -73,15 +78,15 @@ namespace Kernel
         bool distribute =  BaseIntervention::Distribute( context, pCCO );
         if( vaccine_mode == TyphoidVaccineMode::Shedding )
         {
-            itvc->ApplyReducedSheddingEffect( effect );
+            itvc->ApplyReducedSheddingEffect( effect, route );
         }
         else if( vaccine_mode == TyphoidVaccineMode::Dose )
         {
-            itvc->ApplyReducedDoseEffect( effect );
+            itvc->ApplyReducedDoseEffect( effect, route );
         }
         else if( vaccine_mode == TyphoidVaccineMode::Exposures )
         {
-            itvc->ApplyReducedNumberExposuresEffect( effect );
+            itvc->ApplyReducedNumberExposuresEffect( effect, route );
         }
         return distribute;
     }

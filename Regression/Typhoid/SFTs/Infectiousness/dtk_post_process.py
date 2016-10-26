@@ -59,7 +59,7 @@ def application( report_file ):
     global tpri
     tpri = cdj["Typhoid_Prepatent_Relative_Infectiousness"]
     global tbiam
-    tbiam =cdj["Transmission_Blocking_Intervention_Attenuation_Modifiers"]
+    tbiam =0.5
     global treatment_multiplier
     treatment_multiplier = 0.5
     global tsri

@@ -447,7 +447,7 @@ namespace Kernel
                 }
                 //LOG_DEBUG_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
                 LOG_VALID_F( "Exposing inividual %d on route 'environment': prob=%f, infects=%f, immunity=%f, fExposure=%f, fEnvironment=%f.\n",
-                             parent->GetSuid().data, prob, infects, immunity, fExposure, fEnvironment
+                             GetSuid().data, prob, infects, immunity, fExposure, fEnvironment
                            );
                 if( SMART_DRAW( prob ) )
                 {
@@ -487,7 +487,7 @@ namespace Kernel
                 prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
             }
             LOG_VALID_F( "Exposing inividual %d on route 'contact': prob=%f, infects=%f, immunity=%f, fContact=%f.\n",
-                         parent->GetSuid().data, prob, infects, immunity, fContact
+                         GetSuid().data, prob, infects, immunity, fContact
                        );
             if (prob>0.0f && randgen->e() < prob)
             {

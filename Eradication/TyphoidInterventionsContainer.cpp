@@ -38,9 +38,12 @@ namespace Kernel
     END_QUERY_INTERFACE_DERIVED(TyphoidInterventionsContainer, InterventionsContainer)
 
     TyphoidInterventionsContainer::TyphoidInterventionsContainer()
-        : current_shedding_attenuation( 1.0f )
-        , current_dose_attenuation( 1.0f )
-        , current_exposures_attenuation( 1.0f )
+        : current_shedding_attenuation_contact( 1.0f )
+        , current_dose_attenuation_contact( 1.0f )
+        , current_exposures_attenuation_contact( 1.0f )
+        , current_shedding_attenuation_environment( 1.0f )
+        , current_dose_attenuation_environment( 1.0f )
+        , current_exposures_attenuation_environment( 1.0f )
     {
     }
 
@@ -85,6 +88,41 @@ namespace Kernel
     {
     }
 
+    void TyphoidInterventionsContainer::ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+    {
+        if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+        {
+            current_shedding_attenuation_environment = rate;
+        }
+        else // CONTACT
+        {
+            current_shedding_attenuation_contact = rate;
+        }
+    }
+
+    void TyphoidInterventionsContainer::ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+    {
+        if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+        {
+            current_dose_attenuation_environment = rate;
+        }
+        else // CONTACT
+        {
+            current_dose_attenuation_contact = rate;
+        }
+    }
+
+    void TyphoidInterventionsContainer::ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+    {
+        if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+        {
+            current_exposures_attenuation_environment = rate;
+        }
+        else // CONTACT
+        {
+            current_exposures_attenuation_contact = rate;
+        }
+    }
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

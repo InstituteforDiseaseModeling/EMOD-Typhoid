@@ -36,9 +36,9 @@ namespace Kernel
 
     struct ITyphoidVaccineEffectsApply : public ISupports
     {
-        virtual void ApplyReducedSheddingEffect( float rate ) = 0;
-        virtual void ApplyReducedDoseEffect( float rate ) = 0;
-        virtual void ApplyReducedNumberExposuresEffect( float rate ) = 0;
+        virtual void ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) = 0;
+        virtual void ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) = 0;
+        virtual void ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) = 0;
     };
 
     class ITyphoidVaccine;
@@ -63,48 +63,41 @@ namespace Kernel
         virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ); // not used for anything
 
         // Typhoid 'Vaccine' Apply/Update/Setter functions
-        virtual void ApplyReducedSheddingEffect( float rate ) override
-        {
-            current_shedding_attenuation = rate;
-        }
-        virtual void ApplyReducedDoseEffect( float rate ) override
-        {
-            //current_dose_attenuation = rate;
-            drugVaccineReducedAcquire = rate;
-        }
-        virtual void ApplyReducedNumberExposuresEffect( float rate ) override
-        {
-            current_exposures_attenuation = rate;
-        }
+        virtual void ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override; 
+        virtual void ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override;
+        virtual void ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override;
 
-        // Typhoid 'Vaccine' Getter functions
+        // Typhoid 'Vaccine' Getter functions, x6, explicit
         virtual float GetContactDepositAttenuation() const
         {
-            return current_shedding_attenuation;
+            return current_shedding_attenuation_contact;
         }
 
         virtual float GetEnviroDepositAttenuation() const
         {
-            return current_shedding_attenuation;
+            return current_shedding_attenuation_environment;
         }
 
         virtual float GetContactExposuresAttenuation() const
         {
-            return current_exposures_attenuation;
+            return current_exposures_attenuation_contact;
         }
 
         virtual float GetEnviroExposuresAttenuation() const
         {
-            return current_exposures_attenuation;
+            return current_exposures_attenuation_environment;
         }
 
         virtual void Update(float dt); // example of intervention timestep update
 
     protected:
         void GiveDrug(IDrug* drug);
-        float current_shedding_attenuation;
-        float current_dose_attenuation;
-        float current_exposures_attenuation;
+        float current_shedding_attenuation_contact;
+        float current_shedding_attenuation_environment;
+        float current_dose_attenuation_contact;
+        float current_dose_attenuation_environment;
+        float current_exposures_attenuation_contact;
+        float current_exposures_attenuation_environment;
 
     private:
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

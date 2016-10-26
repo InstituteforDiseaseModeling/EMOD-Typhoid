@@ -72,7 +72,7 @@ namespace Kernel
         void handlePrepatentExpiry();
         void handleAcuteExpiry();
         void handleSubclinicalExpiry();
-        int treatment_multiplier;
+        float treatment_multiplier;
         int chronic_timer;
         int subclinical_timer;
         int acute_timer;
