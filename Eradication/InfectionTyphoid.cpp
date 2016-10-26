@@ -217,7 +217,7 @@ namespace Kernel
             } else {
                 mu = mao30; sigma = sao30;
             }
-            LOG_DEBUG_F("Infection stage transition: Individual=%d: Prepatent->Acute: acute dur=%d\n", parent->GetSuid().data, _acute_duration);
+            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->Acute: acute dur=%d\n", parent->GetSuid().data, age, _acute_duration);
             _acute_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             acute_timer = _acute_duration;
             state_to_report=ACUTE_STATE_LABEL;
@@ -232,7 +232,7 @@ namespace Kernel
             }
             _subclinical_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
             subclinical_timer = _subclinical_duration;
-            LOG_DEBUG_F("Infection stage transition: Individual=%d: Prepatent->SubClinical: subc dur=%d\n", parent->GetSuid().data, _subclinical_duration );
+            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->SubClinical: subc dur=%d\n", parent->GetSuid().data, age, _subclinical_duration );
             state_to_report=SUBCLINICAL_STATE_LABEL;
         }
     }
