@@ -88,7 +88,7 @@ namespace Kernel
     {
     }
 
-    void TyphoidInterventionsContainer::ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+    void TyphoidInterventionsContainer::ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route )
     {
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
@@ -100,7 +100,7 @@ namespace Kernel
         }
     }
 
-    void TyphoidInterventionsContainer::ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+    void TyphoidInterventionsContainer::ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route )
     {
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
@@ -112,7 +112,7 @@ namespace Kernel
         }
     }
 
-    void TyphoidInterventionsContainer::ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+    void TyphoidInterventionsContainer::ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route )
     {
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
