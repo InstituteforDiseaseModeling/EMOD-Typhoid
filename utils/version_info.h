@@ -12,25 +12,27 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #ifdef WIN32
 static const char* BUILD_DATE = __DATE__ " " __TIME__;
-static const char *SCCS_URL   = "https://github.com/InstituteforDiseaseModeling/DtkTrunk/commit/388e180";
 #else
 #define BUILD_DATE __DATE__
 #endif
 
 #ifndef SCCS_BRANCH
-#define    SCCS_BRANCH      "Typhoid-Ongoing (388e180)"
+#define    SCCS_BRANCH      "unknown-branch (unknown)"
 #endif
 #ifndef SCCS_DATE
-#define    SCCS_DATE        "2016-08-22 14:06:07 -0700"
+#define    SCCS_DATE        "date time unknown"
 #endif
 
 #define    MAJOR_VERSION    2
-#define    MINOR_VERSION    5
+#define    MINOR_VERSION    8
 #ifndef REVISION_NUMBER
-#define    REVISION_NUMBER  1099
+#define    REVISION_NUMBER  00
 #endif
 #define    BUILD_NUMBER     0
 
+#ifndef BUILDER_NAME
+#define    BUILDER_NAME     "jgauld"
+#endif
 
-#define FULL_VERSION_WITH_SVN      XSTRINGIFY(MAJOR_VERSION) "." XSTRINGIFY(MINOR_VERSION) "." XSTRINGIFY(REVISION_NUMBER)
-#define FULL_VERSION_WITH_SVN_NQ   MAJOR_VERSION,MINOR_VERSION,REVISION_NUMBER,BUILD_NUMBER
+#define FULL_VERSION_WITH_SVN       XSTRINGIFY(MAJOR_VERSION) "." XSTRINGIFY(MINOR_VERSION) "." XSTRINGIFY(REVISION_NUMBER)
+#define FULL_VERSION_WITH_SVN_NQ    MAJOR_VERSION,MINOR_VERSION,REVISION_NUMBER,BUILD_NUMBER

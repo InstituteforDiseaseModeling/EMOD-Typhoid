@@ -81,7 +81,7 @@ namespace Kernel
     float IndividualHumanTyphoidConfig::typhoid_environmental_peak_start = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_environmental_cutoff_days = 0.0f;
     //float IndividualHumanTyphoidConfig::typhoid_environmental_amplification = 0.0f;
-    float IndividualHumanTyphoidConfig::typhoid_environmental_peak_multiplier = 0.0f;
+    //float IndividualHumanTyphoidConfig::typhoid_environmental_peak_multiplier = 0.0f;
 
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
@@ -110,7 +110,6 @@ namespace Kernel
         initConfigTypeMap( "Typhoid_Environmental_Ramp_Down_Duration", &typhoid_environmental_ramp_down_duration, "Typhoid_Environmental_Ramp_Down_Duration.", 0, 270, 2);
         initConfigTypeMap( "Typhoid_Environmental_Cutoff_Days", &typhoid_environmental_cutoff_days, "Typhoid_Environmental_Cutoff_Days.", 0, DAYSPERYEAR, 2);
         initConfigTypeMap( "Typhoid_Environmental_Peak_Start", &typhoid_environmental_peak_start, "Typhoid_Environmental_Peak_Start.", 0, 500, 2);
-        initConfigTypeMap( "Typhoid_Environmental_Peak_Multiplier", &typhoid_environmental_peak_multiplier, "Typhoid_Environmental_Peak_Multiplier.", 0, 10000, 3 );
         initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
         initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);    
 
@@ -256,7 +255,7 @@ namespace Kernel
         float ramp_down_days = IndividualHumanTyphoidConfig::typhoid_environmental_ramp_down_duration;
         float ramp_up_days = IndividualHumanTyphoidConfig::typhoid_environmental_ramp_up_duration;
         float cutoff_days = IndividualHumanTyphoidConfig::typhoid_environmental_cutoff_days;
-        float peak_amplification = IndividualHumanTyphoidConfig::typhoid_environmental_peak_multiplier;
+        float peak_amplification = 1.0f;
         float peak_start_day = floor(IndividualHumanTyphoidConfig::typhoid_environmental_peak_start); 
         if (peak_start_day > DAYSPERYEAR)
         {
