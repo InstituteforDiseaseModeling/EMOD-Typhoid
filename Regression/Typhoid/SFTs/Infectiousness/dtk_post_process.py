@@ -32,7 +32,7 @@ def calc_expected_infectiousness( line, treatment_list):
         if match != None:
             if regex == "state PRE.":
                 state = "Prepatent"
-                expected_infectiousness = tai * tpri * tbiam
+                expected_infectiousness = tai * tpri
             elif regex == "state SUB.":
                 state = "Subclinical"
                 expected_infectiousness = tai * tsri
@@ -58,8 +58,9 @@ def application( report_file ):
     tai = cdj["Typhoid_Acute_Infectiousness"]
     global tpri
     tpri = cdj["Typhoid_Prepatent_Relative_Infectiousness"]
-    global tbiam
-    tbiam =0.5
+    # remove param tbiam
+    # global tbiam
+    #tbiam =0.5
     global treatment_multiplier
     treatment_multiplier = 0.5
     global tsri
