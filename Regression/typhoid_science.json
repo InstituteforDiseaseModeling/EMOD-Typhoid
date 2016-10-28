@@ -1,0 +1,8 @@
+{
+     "science": [
+        { "path" : "Typhoid/SFTs/AcuteAndSubClinicalDuration" },
+        { "path" : "Typhoid/SFTs/AcuteTreatment" },
+        { "path" : "Typhoid/SFTs/PrepatentDuration" },
+        { "path" : "Typhoid/SFTs/Infectiousness" }
+    ]
+}

@@ -79,9 +79,9 @@ namespace Kernel
         //int prepatent_timer;
         CountdownTimer prepatent_timer;
         int clinical_immunity_timer;  // timers of days left in state, or UNINIT_TIMER if not used //JG- I'm going to leave clinical immunity in for now. 
-        int _subclinical_duration;
-        int _prepatent_duration;
-        int _acute_duration; // duration of state in days
+        float _subclinical_duration;
+        float _prepatent_duration;
+        float _acute_duration; // duration of state in days
         bool isDead;  // is this individual dead?
         std::string state_to_report; // default state is susceptible
         std::string last_state_reported; // previous typhoid status of individual

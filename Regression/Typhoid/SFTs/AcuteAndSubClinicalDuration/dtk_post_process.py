@@ -24,23 +24,7 @@ def get_val( key, line ):
     else:
         raise LookupError
 
-def test_lognorm(timers,mu,sigma,report_file, category):
-    """
-        kstest for lognormal distribution
-    """
-    scale=math.exp(mu)
-    result = stats.kstest(timers, 'lognorm', args=(sigma, 0, scale))
-    p = float(get_val("pvalue=", str(result)))
-    s = float(get_val("statistic=", str(result)))
-    report_file.write("s is {0}, p is : {1} for {2}.\n".format(s, p, category))
-    if s > 1e-1 or p < 5e-2:
-        report_file.write("BAD: log normal kstest result for {0} is: statistic={1}, pvalue={2}, expected s close to 0 and p larger than 0.05.\n".format(category, s, p))
-        return False
-    else:
-        return True
-    
 def application( report_file ):
-    #pdb.set_trace()
     #print( "Post-processing: " + report_file ) 
     lines = []
     with open( "test.txt" ) as logfile:
@@ -96,21 +80,24 @@ def application( report_file ):
                     else:
                         Timers_subc_under_30.append(duration)
 
+            #Don't want to print anything for troubleshooting until the test.txt processing is done.
+            #print( str( Timers_acute_over_30 ) )
+            #print( str( Timers_acute_under_30 ) )
 
             if Timers_acute_over_30 == [] and Timers_acute_under_30 == [] and Timers_subc_over_30 == [] and Timers_subc_under_30 == [] and Timers_chronic == []:
                 report_file.write("Found no duration in the test case.\n")
             else:
                 if Timers_acute_over_30 != []:
-                    if not test_lognorm(Timers_acute_over_30,acute_mu_over_30,acute_sigma_over_30,report_file, "Acute_over_30"):
+                    if not sft.test_lognorm(Timers_acute_over_30,acute_mu_over_30,acute_sigma_over_30,report_file, "Acute_over_30"):
                         success=False
                 if Timers_acute_under_30 != []:
-                    if not test_lognorm(Timers_acute_under_30,acute_mu_under_30,acute_sigma_under_30,report_file, "Acute_under_30"):
+                    if not sft.test_lognorm(Timers_acute_under_30,acute_mu_under_30,acute_sigma_under_30,report_file, "Acute_under_30"):
                         success=False
                 if Timers_subc_over_30 != []:
-                    if not test_lognorm(Timers_subc_over_30,subc_mu_over_30,subc_sigma_over_30,report_file, "SubClinical_over_30"):
+                    if not sft.test_lognorm(Timers_subc_over_30,subc_mu_over_30,subc_sigma_over_30,report_file, "SubClinical_over_30"):
                         success=False
                 if Timers_subc_under_30 != []:
-                    if not test_lognorm(Timers_subc_under_30,subc_mu_under_30,subc_sigma_under_30,report_file, "SubClinical_under_30"):
+                    if not sft.test_lognorm(Timers_subc_under_30,subc_mu_under_30,subc_sigma_under_30,report_file, "SubClinical_under_30"):
                         success=False
 
         if not success:
