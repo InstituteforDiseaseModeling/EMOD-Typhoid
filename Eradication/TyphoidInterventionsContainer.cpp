@@ -80,7 +80,6 @@ namespace Kernel
 
     void TyphoidInterventionsContainer::ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route )
     {
-        LOG_VALID_F( "%s\n", __FUNCTION__ );
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
             LOG_VALID_F( "%s: Set current_shedding_attenuation_environment  to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
@@ -95,7 +94,6 @@ namespace Kernel
 
     void TyphoidInterventionsContainer::ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route )
     {
-        LOG_VALID_F( "%s\n", __FUNCTION__ );
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
             LOG_VALID_F( "%s: Set current_dose_attenuation_environment to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
@@ -124,13 +122,13 @@ namespace Kernel
 
     float TyphoidInterventionsContainer::GetContactDepositAttenuation() const
     {
-        LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_contact for individual %d.\n", __FUNCTION__, current_shedding_attenuation_contact, parent->GetSuid().data );
+        //LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_contact for individual %d.\n", __FUNCTION__, current_shedding_attenuation_contact, parent->GetSuid().data );
         return current_shedding_attenuation_contact;
     }
 
     float TyphoidInterventionsContainer::GetEnviroDepositAttenuation() const
     {
-        LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_environment for individual %d.\n", __FUNCTION__, current_shedding_attenuation_environment, parent->GetSuid().data );
+        //LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_environment for individual %d.\n", __FUNCTION__, current_shedding_attenuation_environment, parent->GetSuid().data );
         return current_shedding_attenuation_environment;
     }
 

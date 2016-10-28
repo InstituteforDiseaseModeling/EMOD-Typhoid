@@ -563,12 +563,13 @@ namespace Kernel
                 auto tic = (TyphoidInterventionsContainer*)interventions;
                 if (entry.first==string("contact"))
                 {
-                    float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousness() * tic->GetContactDepositAttenuation(); //ByRoute(string("contact"));
+                    auto cda = tic->GetContactDepositAttenuation();
+                    float tmp_infectiousnessOral = m_mc_weight * infection->GetInfectiousness() * cda; //ByRoute(string("contact"));
                     //float tmp_infectiousnessOral = infectiousness;
                     if (tmp_infectiousnessOral > 0.0f)
                     {
                         LOG_VALID_F("Individual %d depositing %f to route %s: (antigen=%d, substrain=%d) at time %f in state %s. Attenuated by intervention factor %f.\n",
-                                    GetSuid().data, tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep), state_to_report.c_str(), tic->GetContactDepositAttenuation()
+                                    GetSuid().data, tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep), state_to_report.c_str(), cda
                                    );
                         parent->DepositFromIndividual(&tmp_strainID, tmp_infectiousnessOral, &entry.second);
                     } 
