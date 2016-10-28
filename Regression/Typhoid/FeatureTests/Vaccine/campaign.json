@@ -21,10 +21,16 @@
         },
         {
             "Event_Coordinator_Config": {
-                "Demographic_Coverage": 0.05,
+                "Demographic_Coverage": 1.0,
                 "Intervention_Config": {
                     "Mode": "Shedding",
                     "Effect": 0.5,
+                    "Changing_Effect": {
+                        "class": "WaningEffectBox",
+                        "Box_Duration": 30, 
+                        "Initial_Effect": 0.75
+                    },
+                    "Route": "TRANSMISSIONROUTE_ENVIRONMENTAL",
                     "class": "TyphoidVaccine"
                 },
                 "class": "StandardInterventionDistributionEventCoordinator"
@@ -42,6 +48,7 @@
                 "Intervention_Config": {
                     "Mode": "Dose",
                     "Effect": 0.5,
+                    "Route": "TRANSMISSIONROUTE_ENVIRONMENTAL",
                     "class": "TyphoidVaccine"
                 },
                 "class": "StandardInterventionDistributionEventCoordinator"
@@ -49,7 +56,7 @@
             "Nodeset_Config": {
                 "class": "NodeSetAll"
             },
-            "Start_Year": 1,
+            "Start_Day": 1000,
             "Target_Demographic": "Everyone",
             "class": "CampaignEvent"
         },
@@ -59,6 +66,7 @@
                 "Intervention_Config": {
                     "Mode": "Exposures",
                     "Effect": 0.5,
+                    "Route": "TRANSMISSIONROUTE_ENVIRONMENTAL",
                     "class": "TyphoidVaccine"
                 },
                 "class": "StandardInterventionDistributionEventCoordinator"
@@ -66,7 +74,7 @@
             "Nodeset_Config": {
                 "class": "NodeSetAll"
             },
-            "Start_Year": 1,
+            "Start_Day": 1000,
             "Target_Demographic": "Everyone",
             "class": "CampaignEvent"
         }

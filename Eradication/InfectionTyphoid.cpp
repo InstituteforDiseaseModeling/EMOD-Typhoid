@@ -82,7 +82,9 @@ namespace Kernel
     inline float generateRandFromLogNormal(float m, float s) {
         // inputs: m is mean of underlying distribution, s is std dev
         //return (exp((m)+randgen->eGauss()*s));
-        return Probability::getInstance()->fromDistribution( DistributionFunction::LOG_NORMAL_DURATION, exp(m), s );
+        auto draw = Probability::getInstance()->fromDistribution( DistributionFunction::LOG_NORMAL_DURATION, exp(m), s );
+        //LOG_VALID_F( "Drew log-normal value of %f from mu=%f and sigma=%f.\n", draw, exp(m), s );
+        return draw;
     }
 
     bool
@@ -222,8 +224,8 @@ namespace Kernel
             } else {
                 mu = mao30; sigma = sao30;
             }
-            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->Acute: acute dur=%d\n", parent->GetSuid().data, age, _acute_duration);
             _acute_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
+            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->Acute: acute dur=%d\n", parent->GetSuid().data, age, _acute_duration);
             acute_timer = _acute_duration;
             state_to_report=ACUTE_STATE_LABEL;
         }
