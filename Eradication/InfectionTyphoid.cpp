@@ -400,7 +400,7 @@ namespace Kernel
             last_state_reported=state_to_report;
             state_changed = true;
         }
-        LOG_DEBUG_F( "state_to_report for individual %d = %s\n", GetSuid().data, state_to_report.c_str() );
+        LOG_DEBUG_F( "state_to_report for individual %d = %s\n", parent->GetSuid().data, state_to_report.c_str() );
 
         if( state_to_report == SUSCEPT_STATE_LABEL && state_changed ) // && GetInfections().size() > 0 )
         {
