@@ -124,18 +124,19 @@ namespace Kernel
             changing_effect->Update( dt );
             _effect = changing_effect->Current();
         }
+        auto multiplier = 1.0f-_effect;
         switch( vaccine_mode )
         {
             case TyphoidVaccineMode::Shedding:
-            itvc->ApplyReducedSheddingEffect( _effect, route );
+            itvc->ApplyReducedSheddingEffect( multiplier, route );
             break;
 
             case TyphoidVaccineMode::Dose:
-            itvc->ApplyReducedDoseEffect( _effect, route );
+            itvc->ApplyReducedDoseEffect( multiplier, route );
             break;
         
             case TyphoidVaccineMode::Exposures:
-            itvc->ApplyReducedNumberExposuresEffect( _effect, route );
+            itvc->ApplyReducedNumberExposuresEffect( multiplier, route );
             break;
 
             default:
