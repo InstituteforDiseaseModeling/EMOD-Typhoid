@@ -2,12 +2,10 @@
 
 import re
 import json
-import math
 import pdb
 import os
 import dtk_sft as sft
 import numpy as np
-from scipy import stats
 #import test_lognorm
 
 # C version: infectiousness = exp( -1 * _infectiousness_param_1 * pow(duration - _infectiousness_param_2,2) ) / _infectiousness_param_3;
@@ -24,18 +22,6 @@ def get_val( key, line ):
         return match.group(1)
     else:
         raise LookupError
-
-def test_lognorm(timers,mu,sigma,report_file, category):
-    scale=math.exp(mu)
-    result = stats.kstest(timers, 'lognorm', args=(sigma, 0, scale))
-    p = float(get_val("pvalue=", str(result)))
-    s = float(get_val("statistic=", str(result)))
-    if s > 1e-1 or p < 5e-2:
-        report_file.write("BAD: log normal kstest result for {0} is: statistic={1}, pvalue={2}, expected s close to 0 and p larger than 0.05.\n".format(category, s, p))
-        return False
-    else:
-        return True
-
 
 def application( report_file ):
     #pdb.set_trace()
@@ -85,13 +71,13 @@ def application( report_file ):
                 report_file.write( "Found no data matching test case.\n")
             else:
                 if timers_l!=[]:
-                    if not test_lognorm(timers_l,lognormal_mu_l,lognormal_sigma_l,report_file, "Low"):
+                    if not sft.test_lognorm(timers_l,lognormal_mu_l,lognormal_sigma_l,report_file, "Low"):
                         success=False
                 if timers_m != []:
-                    if not test_lognorm(timers_m, lognormal_mu_m, lognormal_sigma_m, report_file, "Medium"):
+                    if not sft.test_lognorm(timers_m, lognormal_mu_m, lognormal_sigma_m, report_file, "Medium"):
                         success = False
                 if timers_h != []:
-                    if not test_lognorm(timers_h, lognormal_mu_h, lognormal_sigma_h, report_file, "high"):
+                    if not sft.test_lognorm(timers_h, lognormal_mu_h, lognormal_sigma_h, report_file, "high"):
                         success = False
 
             if not success:
