@@ -144,6 +144,11 @@ namespace Kernel
         {
             mu = mpl; sigma = spl;
         }
+        else
+        {
+            LOG_WARN_F( "doseTracking not set. This will lead to bad prepatent durations.\n" );
+        }
+
         _prepatent_duration = (int)(generateRandFromLogNormal(mu, sigma));
         LOG_VALID_F( "Calculated prepatent duration = %d using Log-Normal draw; mu = %f, sigma = %f, doseTracking = %s.\n",
                      _prepatent_duration, mu, sigma, doseTracking.c_str() );

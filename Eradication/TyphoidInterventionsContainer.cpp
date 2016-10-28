@@ -32,9 +32,7 @@ namespace Kernel
     static const char* _module = "TyphoidInterventionsContainer";
 
     BEGIN_QUERY_INTERFACE_DERIVED(TyphoidInterventionsContainer, InterventionsContainer)
-        //HANDLE_INTERFACE(ITyphoidVaccineEffects)
-        //HANDLE_INTERFACE(ITyphoidDrugEffects)
-        HANDLE_INTERFACE(ITyphoidDrugEffectsApply)
+        HANDLE_INTERFACE(ITyphoidVaccineEffectsApply)
     END_QUERY_INTERFACE_DERIVED(TyphoidInterventionsContainer, InterventionsContainer)
 
     TyphoidInterventionsContainer::TyphoidInterventionsContainer()
@@ -80,34 +78,32 @@ namespace Kernel
         drug->ConfigureDrugTreatment();
     }
 
-    void TyphoidInterventionsContainer::ApplyDrugVaccineReducedAcquireEffect( float rate )
-    {
-    }
-    
-    void TyphoidInterventionsContainer::ApplyDrugVaccineReducedTransmitEffect( float rate )
-    {
-    }
-
     void TyphoidInterventionsContainer::ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route )
     {
+        LOG_VALID_F( "%s\n", __FUNCTION__ );
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
+            LOG_VALID_F( "%s: Set current_shedding_attenuation_environment  to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
             current_shedding_attenuation_environment = rate;
         }
         else // CONTACT
         {
+            LOG_VALID_F( "%s: Set current_shedding_attenuation_contact to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
             current_shedding_attenuation_contact = rate;
         }
     }
 
     void TyphoidInterventionsContainer::ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route )
     {
+        LOG_VALID_F( "%s\n", __FUNCTION__ );
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
+            LOG_VALID_F( "%s: Set current_dose_attenuation_environment to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
             current_dose_attenuation_environment = rate;
         }
         else // CONTACT
         {
+            LOG_VALID_F( "%s: Set current_dose_attenuation_contact to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
             current_dose_attenuation_contact = rate;
         }
     }
@@ -117,12 +113,37 @@ namespace Kernel
         if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
         {
             current_exposures_attenuation_environment = rate;
+            LOG_VALID_F( "%s: Set current_exposures_attenuation_environment to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
         }
         else // CONTACT
         {
+            LOG_VALID_F( "%s: Set current_exposures_attenuation_contact to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
             current_exposures_attenuation_contact = rate;
         }
     }
+
+    float TyphoidInterventionsContainer::GetContactDepositAttenuation() const
+    {
+        LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_contact for individual %d.\n", __FUNCTION__, current_shedding_attenuation_contact, parent->GetSuid().data );
+        return current_shedding_attenuation_contact;
+    }
+
+    float TyphoidInterventionsContainer::GetEnviroDepositAttenuation() const
+    {
+        LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_environment for individual %d.\n", __FUNCTION__, current_shedding_attenuation_environment, parent->GetSuid().data );
+        return current_shedding_attenuation_environment;
+    }
+
+    float TyphoidInterventionsContainer::GetContactExposuresAttenuation() const
+    {
+        return current_exposures_attenuation_contact;
+    }
+
+    float TyphoidInterventionsContainer::GetEnviroExposuresAttenuation() const
+    {
+        return current_exposures_attenuation_environment;
+    }
+
 }
 
 #if USE_BOOST_SERIALIZATION || USE_BOOST_MPI

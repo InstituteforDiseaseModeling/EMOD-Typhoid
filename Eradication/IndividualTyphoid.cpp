@@ -197,7 +197,7 @@ namespace Kernel
 #else 
         _infection_count=0; // should not be necessary
         _routeOfInfection = TransmissionRoute::TRANSMISSIONROUTE_ALL;// IS THIS OK for a default? DLC
-        doseTracking = "None";
+        doseTracking = "High"; // ???
 #endif
     }
 
@@ -358,11 +358,11 @@ namespace Kernel
         {
             doseTracking = "High";
         }
+        release_assert( doseTracking != "None" );
     }
 
     void IndividualHumanTyphoid::quantizeContactDoseTracking( float fContact )
     {
-        
         doseTracking = "High";
     }
 
@@ -568,8 +568,9 @@ namespace Kernel
                     //float tmp_infectiousnessOral = infectiousness;
                     if (tmp_infectiousnessOral > 0.0f)
                     {
-                        LOG_VALID_F("Individual %d depositing %f to route %s: (antigen=%d, substrain=%d) at time %f in state %s.\n",
-                                    GetSuid().data, tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep), state_to_report.c_str());
+                        LOG_VALID_F("Individual %d depositing %f to route %s: (antigen=%d, substrain=%d) at time %f in state %s. Attenuated by intervention factor %f.\n",
+                                    GetSuid().data, tmp_infectiousnessOral, entry.first.c_str(), tmp_strainID.GetAntigenID(), tmp_strainID.GetGeneticID(), float(parent->GetTime().timestep), state_to_report.c_str(), tic->GetContactDepositAttenuation()
+                                   );
                         parent->DepositFromIndividual(&tmp_strainID, tmp_infectiousnessOral, &entry.second);
                     } 
                 }
