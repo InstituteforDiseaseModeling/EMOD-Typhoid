@@ -28,19 +28,28 @@ def test_lognorm(timers,mu,sigma,report_file, category):
     """
         kstest for lognormal distribution
     """
+    #print( "Running test_lognorm for " + category )
     scale=math.exp(mu)
     result = stats.kstest(timers, 'lognorm', args=(sigma, 0, scale))
-    p = float(get_val("pvalue=", str(result)))
-    s = float(get_val("statistic=", str(result)))
+    #print( str( result ) )
+    p = s = 0
+    # NOTE: different versions of kstest seem to produce different output.
+    if "pvalue" in result:
+        p = float(get_val("pvalue=", str(result)))
+        s = float(get_val("statistic=", str(result)))
+    else:
+        s = result[0]
+        p = result[1]
     report_file.write("s is {0}, p is : {1} for {2}.\n".format(s, p, category))
-    if s > 1e-1 or p < 5e-2:
+    #if s > 1e-1 or p < 5e-2:
+    # changing to use p-value only.
+    if p < 5e-2:
         report_file.write("BAD: log normal kstest result for {0} is: statistic={1}, pvalue={2}, expected s close to 0 and p larger than 0.05.\n".format(category, s, p))
         return False
     else:
         return True
     
 def application( report_file ):
-    #pdb.set_trace()
     #print( "Post-processing: " + report_file ) 
     lines = []
     with open( "test.txt" ) as logfile:
@@ -96,6 +105,9 @@ def application( report_file ):
                     else:
                         Timers_subc_under_30.append(duration)
 
+            #Don't want to print anything for troubleshooting until the test.txt processing is done.
+            #print( str( Timers_acute_over_30 ) )
+            #print( str( Timers_acute_under_30 ) )
 
             if Timers_acute_over_30 == [] and Timers_acute_under_30 == [] and Timers_subc_over_30 == [] and Timers_subc_under_30 == [] and Timers_chronic == []:
                 report_file.write("Found no duration in the test case.\n")
