@@ -10,6 +10,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #pragma once
 
 #include "TyphoidInterventionsContainer.h"
+#include "IWaningEffect.h"
 //#include "Interventions.h"
 
 namespace Kernel
@@ -41,6 +42,8 @@ namespace Kernel
         float effect;
         ITyphoidVaccineEffectsApply * itvc; // interventions container
         IIndividualHumanContext *parent;
+        WaningConfig   changing_config;
+        IWaningEffect* changing_effect;
 
     protected:
         // context for this intervention--does not need to be reset upon migration, it is just for GiveVaccine()

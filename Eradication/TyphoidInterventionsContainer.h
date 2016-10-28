@@ -28,12 +28,6 @@ namespace Kernel
 {
     // this container becomes a help implementation member of the relevant IndividualHuman class 
     // it needs to implement consumer interfaces for all the relevant intervention types
-    struct ITyphoidDrugEffectsApply : public ISupports
-    {
-        virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ) = 0;
-        virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ) = 0;
-    };
-
     struct ITyphoidVaccineEffectsApply : public ISupports
     {
         virtual void ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) = 0;
@@ -41,11 +35,9 @@ namespace Kernel
         virtual void ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) = 0;
     };
 
-    class ITyphoidVaccine;
-
     class TyphoidInterventionsContainer : public InterventionsContainer,
-                                          public ITyphoidVaccineEffectsApply,
-                                          public ITyphoidDrugEffectsApply
+                                          public ITyphoidVaccineEffectsApply
+                                          //public ITyphoidDrugEffectsApply
     {
         IMPLEMENT_DEFAULT_REFERENCE_COUNTING()
 
@@ -58,35 +50,16 @@ namespace Kernel
         // IVaccineConsumer: not any more!
         virtual bool GiveIntervention( IDistributableIntervention * pIV );
 
-        // ITyphoidDrugEffectsApply
-        virtual void ApplyDrugVaccineReducedAcquireEffect( float rate ); // not used for anything
-        virtual void ApplyDrugVaccineReducedTransmitEffect( float rate ); // not used for anything
-
         // Typhoid 'Vaccine' Apply/Update/Setter functions
         virtual void ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override; 
         virtual void ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override;
         virtual void ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override;
 
         // Typhoid 'Vaccine' Getter functions, x6, explicit
-        virtual float GetContactDepositAttenuation() const
-        {
-            return current_shedding_attenuation_contact;
-        }
-
-        virtual float GetEnviroDepositAttenuation() const
-        {
-            return current_shedding_attenuation_environment;
-        }
-
-        virtual float GetContactExposuresAttenuation() const
-        {
-            return current_exposures_attenuation_contact;
-        }
-
-        virtual float GetEnviroExposuresAttenuation() const
-        {
-            return current_exposures_attenuation_environment;
-        }
+        virtual float GetContactDepositAttenuation() const; 
+        virtual float GetEnviroDepositAttenuation() const;
+        virtual float GetContactExposuresAttenuation() const; 
+        virtual float GetEnviroExposuresAttenuation() const;
 
         virtual void Update(float dt); // example of intervention timestep update
 

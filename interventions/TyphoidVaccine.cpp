@@ -9,7 +9,7 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "stdafx.h"
 #include "TyphoidVaccine.h"
-#include "InterventionsContainer.h"  // for IVaccineConsumer methods
+#include "InterventionsContainer.h" 
 
 static const char* _module = "TyphoidVaccine";
 
@@ -35,6 +35,7 @@ namespace Kernel
         // not sure whether we're using route yet.
         initConfig( "Route", route, inputJson, MetadataDescriptor::Enum("Route", "Contact or Environmental", MDD_ENUM_ARGS(TransmissionRoute)) );
         initConfigTypeMap("Effect", &effect, "How effective is this?", 0.0, 1.0, 1.0 ); 
+        initConfigComplexType("Changing_Effect", &changing_config, "Highly configurable effect that changes over time, derived from WaningConfig." );
 
         bool configured = BaseIntervention::Configure( inputJson );
         if( !JsonConfigurable::_dryrun )
@@ -44,22 +45,53 @@ namespace Kernel
             {
                 throw GeneralConfigurationException( __FILE__, __LINE__, __FUNCTION__, "The 'Route' param can only be CONTACT or ENVIRONMENT in this intervention." );
             }
+            auto tmp_waning = Configuration::CopyFromElement( changing_config._json );
+            // Would really like to find the right way to see if user omitted the Changing_Config instead of using exception handling.
+            try {
+                changing_effect = WaningEffectFactory::CreateInstance( tmp_waning );
+            }
+            catch( JsonTypeConfigurationException e )
+            {
+                LOG_INFO_F( "Looks like we're just going with fixed-value effect and not a variable-over-time effect structure.\n" );
+            }
+            delete tmp_waning;
+            tmp_waning = nullptr;
         }
         LOG_DEBUG_F( "Vaccine configured with type %d and effect %f.\n", vaccine_mode, effect );
         return configured;
     }
 
     TyphoidVaccine::TyphoidVaccine() 
+    : changing_effect( nullptr )
+    , route( TransmissionRoute::TRANSMISSIONROUTE_CONTACT )
+    , effect( 1.0f )
+    , vaccine_mode( TyphoidVaccineMode::Shedding )
     {
     }
 
     TyphoidVaccine::TyphoidVaccine( const TyphoidVaccine& master )
+    : changing_config(master.changing_config)
+    , changing_effect( nullptr )
     {
-        //vaccine_take = master.vaccine_take; 
+        vaccine_mode = master.vaccine_mode;
+        route = master.route;
+        effect = master.effect;
+        auto tmp_changing = Configuration::CopyFromElement( changing_config._json );
+        try {
+            changing_effect = WaningEffectFactory::CreateInstance( tmp_changing );
+        }
+        catch( JsonTypeConfigurationException e )
+        {
+            LOG_INFO_F( "Looks like we're just going with fixed-value effect and not a variable-over-time effect structure.\n" );
+        }
+        delete tmp_changing;
+        tmp_changing = nullptr;
     }
 
     TyphoidVaccine::~TyphoidVaccine()
     {
+        delete changing_effect;
+        changing_effect = nullptr;
     }
 
     bool
@@ -70,31 +102,45 @@ namespace Kernel
     {
         // store itvc for apply
         LOG_DEBUG("Distributing SimpleVaccine.\n");
-        if (s_OK != context->QueryInterface(GET_IID(IVaccineConsumer), (void**)&itvc) )
+        if (s_OK != context->QueryInterface(GET_IID(ITyphoidVaccineEffectsApply), (void**)&itvc) )
         {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "IVaccineConsumer", "IIndividualHumanInterventionsContext" );
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context", "ITyphoidVaccineEffectsApply", "IIndividualHumanInterventionsContext" );
         }
 
+        /*auto iface = static_cast<InterventionsContainer*>(context);
+        auto iface2 = static_cast<TyphoidInterventionsContainer*>(iface);
+        itvc = static_cast<ITyphoidVaccineEffectsApply*>(iface2);*/
+
         bool distribute =  BaseIntervention::Distribute( context, pCCO );
-        if( vaccine_mode == TyphoidVaccineMode::Shedding )
-        {
-            itvc->ApplyReducedSheddingEffect( effect, route );
-        }
-        else if( vaccine_mode == TyphoidVaccineMode::Dose )
-        {
-            itvc->ApplyReducedDoseEffect( effect, route );
-        }
-        else if( vaccine_mode == TyphoidVaccineMode::Exposures )
-        {
-            itvc->ApplyReducedNumberExposuresEffect( effect, route );
-        }
         return distribute;
     }
 
     void TyphoidVaccine::Update( float dt )
     {
         release_assert(itvc);
+        auto _effect = effect; // this is bad and confusing. Don't do this. Talking to myself here...
+        if( changing_effect )
+        {
+            changing_effect->Update( dt );
+            _effect = changing_effect->Current();
+        }
+        switch( vaccine_mode )
+        {
+            case TyphoidVaccineMode::Shedding:
+            itvc->ApplyReducedSheddingEffect( _effect, route );
+            break;
 
+            case TyphoidVaccineMode::Dose:
+            itvc->ApplyReducedDoseEffect( _effect, route );
+            break;
+        
+            case TyphoidVaccineMode::Exposures:
+            itvc->ApplyReducedNumberExposuresEffect( _effect, route );
+            break;
+
+            default:
+            throw BadEnumInSwitchStatementException( __FILE__, __LINE__, __FUNCTION__, "vaccine_mode", vaccine_mode, TyphoidVaccineMode::pairs::lookup_key( vaccine_mode ) );
+        }
     }
 
     void TyphoidVaccine::SetContextTo(
@@ -102,9 +148,9 @@ namespace Kernel
     )
     {
         parent = context;
-        if (s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(IVaccineConsumer), (void**)&itvc) )
+        if (s_OK != parent->GetInterventionsContext()->QueryInterface(GET_IID(ITyphoidVaccineEffectsApply), (void**)&itvc) )
         {
-            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "IVaccineConsumer", "IIndividualHumanInterventionsContext" );
+            throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "ITyphoidVaccineEffectsApply", "IIndividualHumanInterventionsContext" );
         }
         //LOG_DEBUG_F( "Vaccine configured with type %d and take %f for individual %d\n", vaccine_type, vaccine_take, parent->GetSuid().data );
     } // needed for VaccineTake
