@@ -94,7 +94,7 @@
         "Population_Density_C50": 30, 
         "Population_Density_Infectivity_Correction": "CONSTANT_INFECTIVITY", 
         "Population_Scale_Type": "FIXED_SCALING", 
-        "Python_Script_Path": "NO", 
+        "Python_Script_Path": "SHARED", 
         "Rainfall_Filename": "Namawala_single_node_rainfall_daily.bin", 
         "Rainfall_Scale_Factor": 1, 
         "Relative_Humidity_Filename": "Namawala_single_node_relative_humidity_daily.bin", 
