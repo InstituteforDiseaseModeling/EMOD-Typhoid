@@ -154,6 +154,10 @@
         "x_Regional_Migration": 1, 
         "x_Sea_Migration": 1, 
         "x_Temporary_Larval_Habitat": 1,
+        "logLevel_Report": "DEBUG",
+        "logLevel_MultiRouteTransmissionGroups": "VALID",
+        "logLevel_StrainAwareTransmissionGroups": "VALID",
+        "logLevel_IndividualEnvironmental": "VALID",
         "logLevel_IndividualTyphoid": "VALID",
         "logLevel_InfectionTyphoid": "VALID",
         "logLevel_SusceptibilityTyphoid": "VALID"
