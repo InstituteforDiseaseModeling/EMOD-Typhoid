@@ -12,13 +12,16 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "Exceptions.h"
 #include "FileSystem.h"
 #include "Debug.h"
+#include "Log.h"
 
 #define DEFAULT_PYTHON_HOME "c:/Python27"
 #define PYTHON_DLL_W          L"python27.dll"
 #define PYTHON_DLL_S           "python27.dll"
 
 #define PYTHON_SCRIPT_PATH_NOT_SET ""
- 
+
+static const char* _module = "PythonSupport";
+
 namespace Kernel
 {
     std::string PythonSupport::SCRIPT_PRE_PROCESS         = "dtk_pre_process";
@@ -64,17 +67,22 @@ namespace Kernel
 
     bool PythonSupport::PythonScriptCheckExists( const std::string& script_filename )
     {
+        LOG_INFO_F( "Checking if a python script exists: %s\n", script_filename.c_str() );
         // We should check two paths: the py script path and .
         std::string path_to_script = FileSystem::Concat( std::string( "." ), std::string(script_filename)+".py" );
         if( FileSystem::FileExists( CreatePythonScriptPath( script_filename ) ) )
         {
             return true;
         }
+        LOG_INFO_F( "Found python script %s in path %s\n", script_filename.c_str(), "." );
+        
         path_to_script = FileSystem::Concat( m_PythonScriptPath, std::string(script_filename)+".py" );
         if( FileSystem::FileExists( CreatePythonScriptPath( script_filename ) ) )
         {
+            LOG_INFO_F( "But found python script %s in path %s\n", script_filename.c_str(), m_PythonScriptPath.c_str() );
             return true;
         }
+        LOG_INFO_F( "Did not find python script %s in path %s either\n", script_filename.c_str(), m_PythonScriptPath.c_str() );
         
         return false;
     }
@@ -93,6 +101,7 @@ namespace Kernel
     {
         m_IsGettingSchema = isGettingSchema;
         m_PythonScriptPath = pythonScriptPath;
+        LOG_INFO_F( "m_PythonScriptPath set to %s.\n", m_PythonScriptPath.c_str() );
 
 #ifdef ENABLE_PYTHON
         if( m_PythonScriptPath == PYTHON_SCRIPT_PATH_NOT_SET )

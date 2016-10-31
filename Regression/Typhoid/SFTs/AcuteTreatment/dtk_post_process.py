@@ -48,20 +48,20 @@ def application( report_file ):
                 lines.append( line )
             if re.search("Prepatent->Acute", line):
                 # ignore the acute case in the last 4 days
-                if timestep <= simulaiton_duration -4:
-                    # append time step and information related to individual movin gto acute to list
+                if timestep < float(simulaiton_duration) -4:
+                    # append time step and information related to individual moving to acute to list
                     line="TimeStep: "+str(timestep) + " " +line
                     lines.append(line)
                     acute_count += 1
                     # add those move to other state before treatment from exception count
                     acute_duration= get_val("acute dur=",line)
-                    if acute_duration < 5 :
+                    if float(acute_duration) < 5 :
                         exception_count += 1
 
-    with open( "lines.txt", "w" ) as report_file:
-        for line in lines:
-            report_file.write(line)
-
+#    with open( "lines.txt", "w" ) as report_file:
+#        for line in lines:
+#            report_file.write(line)
+#        report_file.write(str(exception_count))
 
     success = True
 
@@ -74,25 +74,28 @@ def application( report_file ):
             success = False
             report_file.write("Found no acute or treatment cases. acute_count={0},treatment_count={1}.\n".format(acute_count,treatment_count))
         else:
-            treatment_timestep=None
-            acute_timestep=None
+
             ind_id=-1
             expeted_treatment_delay=5 #hardcoded, an individual move to acute state at day 1 will get treatment at day 5
 
-            for i in range(len(lines)-1, -1, -1):
-                if re.search("Treatment",lines[i]):
-                    #get Id and treatmetn time step from Treatmnet line
-                    ind_id=get_val("Individual ID: ",lines[i])
-                    treatment_timestep=float(get_val("TimeStep: ", lines[i]))
-                    for j in range(i-1, -1, -1):
-                        if re.search("Prepatent->Acute",lines[j]) and re.search(ind_id, lines[j]):
-                            #get acute time step and skip the interloop
-                            acute_timestep=float(get_val("TimeStep: ", lines[j]))
+            for i in range(0, len(lines)-1):
+                treatment_timestep = None
+                acute_timestep = None
+                if re.search("Prepatent->Acute",lines[i]):
+                    #get Id and acute time step from Prepatent->Acute line
+                    ind_id=get_val("Individual=",lines[i])
+                    acute_timestep=float(get_val("TimeStep: ", lines[i]))
+                    acute_duration = get_val("acute dur=", lines[i])
+                    for j in range(i+1, len(lines)):
+                        if re.search("GetTreatment: True",lines[j]) and re.search("Individual ID: "+str(ind_id)+",", lines[j]):
+                            #get treatment time step and skip the interloop
+                            treatment_timestep=float(get_val("TimeStep: ", lines[j]))
                             break
-                    if acute_timestep==None:
-                        #make sure individual entering Acute stage before get treatment
-                        success = False
-                        report_file.write("BAD: Treatment was given to Individual {} before entering Acute stage\n".format(ind_id))
+                    if treatment_timestep==None:
+                        if float(acute_duration) >= 5 and acute_timestep <= simulaiton_duration - 5:
+                            #make sure all individual in Acute state for more than 5 days get treatment
+                            success = False
+                            report_file.write("BAD: Individual {} in acute state for at least 5 days and didn't get treatment\n".format(ind_id))
                     else:
                         actual_treatment_delay=treatment_timestep - acute_timestep +1
                         if math.fabs(actual_treatment_delay - expeted_treatment_delay)>1e-2:
@@ -100,11 +103,12 @@ def application( report_file ):
                             report_file.write("BAD: Treatment happened for individual {0} on {1}th day of acute infection, expected {2}th\n".format(ind_id, actual_treatment_delay,expeted_treatment_delay))
                             report_file.write("treatment_timestep: {0}, acute_timestep: {1}.\n".format(treatment_timestep, acute_timestep))
 
+
         rate= treatment_count/float(acute_count-exception_count) if (acute_count - exception_count) != 0 else 0
         Treatment_Probability=1
         if math.fabs(rate-Treatment_Probability)>1e-2:
             success = False
-            report_file.write("BAD: The proportion of people get treatment in Acute stage is {0},acute_count={1},treatment_count={2}, expected Treatment_Probability = {3}\n".format(rate,acute_count,treatment_count, Treatment_Probability))
+            report_file.write("BAD: The proportion of people get treatment in Acute stage is {0},acute_count={1},treatment_count={2}, expected Treatment_Probability = {3}\n".format(rate,acute_count-exception_count,treatment_count, Treatment_Probability))
         if success:
             report_file.write(sft.format_success_msg( success ) +"All Treatment happened on {0}th day of acute infection.\nThe proportion of people get treatment in Acute stage is {1}\n".format(expeted_treatment_delay,rate))
 
