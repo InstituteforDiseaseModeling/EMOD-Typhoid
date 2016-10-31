@@ -59,6 +59,7 @@ namespace Kernel
     }
 #pragma warning( pop )
 
+    // This function may have been a premature optimization: now with 2 possible paths we don't really want to do it this way.
     std::string PythonSupport::CreatePythonScriptPath( const std::string& script_filename )
     {
         std::string path_to_script = FileSystem::Concat( std::string( "." ), std::string(script_filename)+".py" );
@@ -70,14 +71,15 @@ namespace Kernel
         LOG_INFO_F( "Checking if a python script exists: %s\n", script_filename.c_str() );
         // We should check two paths: the py script path and .
         std::string path_to_script = FileSystem::Concat( std::string( "." ), std::string(script_filename)+".py" );
-        if( FileSystem::FileExists( CreatePythonScriptPath( script_filename ) ) )
+        if( FileSystem::FileExists( path_to_script ) )
         {
+            LOG_INFO_F( "Found python script %s in path %s\n", script_filename.c_str(), "." );
             return true;
         }
-        LOG_INFO_F( "Found python script %s in path %s\n", script_filename.c_str(), "." );
+        LOG_INFO_F( "Did not find python script %s in path %s\n", script_filename.c_str(), "." );
         
         path_to_script = FileSystem::Concat( m_PythonScriptPath, std::string(script_filename)+".py" );
-        if( FileSystem::FileExists( CreatePythonScriptPath( script_filename ) ) )
+        if( FileSystem::FileExists( path_to_script ) )
         {
             LOG_INFO_F( "But found python script %s in path %s\n", script_filename.c_str(), m_PythonScriptPath.c_str() );
             return true;
