@@ -92,7 +92,7 @@ def main():
 
     report = None
     regression_id = None
-    if "tests" in reglistjson:
+    if "tests" in reglistjson or "science" in reglistjson:
         p = subprocess.Popen( (params.executable_path + " -v").split(), shell=False, stdout=subprocess.PIPE )
         [pipe_stdout, pipe_stderr] = p.communicate()
         ru.version_string = re.search('[0-9]+.[0-9]+.[0-9]+.[0-9]+', pipe_stdout).group(0)
@@ -100,8 +100,12 @@ def main():
         starttime = datetime.datetime.now()
         report = regression_report.Report(params, ru.version_string)
 
+        key = "tests"
+        if "science" in reglistjson:
+            key = "science"
         print( "Running regression...\n" )
-        for simcfg in reglistjson["tests"]:
+        for simcfg in reglistjson[ key ]:
+            configjson = None
             os.chdir(ru.cache_cwd)
             sim_timestamp = str(datetime.datetime.now()).replace('-', '_' ).replace( ' ', '_' ).replace( ':', '_' ).replace( '.', '_' )
             if regression_id == None:
@@ -109,7 +113,10 @@ def main():
 
             try:
                 #print "flatten config: " + os.path.join( simcfg["path"],"param_overrides.json" )
-                configjson = ru.flattenConfig( os.path.join( simcfg["path"],"param_overrides.json" ) )
+                if os.path.exists( os.path.join( simcfg["path"],"param_overrides.json" ) ):
+                    configjson = ru.flattenConfig( os.path.join( simcfg["path"],"param_overrides.json" ) )
+                else:
+                    configjson = json.loads( open( os.path.join( simcfg["path"],"config.json" ) ).read() )
             except:
                 report.addErroringTest(simcfg["path"], "Error flattening config.", "(no simulation directory created).")
                 configjson = None
@@ -162,7 +169,7 @@ def main():
             else:
                 configjson["custom_reports_json"] = None
 
-            thread = runner.commissionFromConfigJson( sim_timestamp, configjson, simcfg["path"], report )
+            thread = runner.commissionFromConfigJson( sim_timestamp, configjson, simcfg["path"], report, (key != "science") )
             ru.reg_threads.append( thread )
         # do a schema test also
         if params.dts == True:

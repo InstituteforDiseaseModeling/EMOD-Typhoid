@@ -64,8 +64,19 @@ namespace Kernel
 
     bool PythonSupport::PythonScriptCheckExists( const std::string& script_filename )
     {
-        bool exists = FileSystem::FileExists( CreatePythonScriptPath( script_filename ) );
-        return exists;
+        // We should check two paths: the py script path and .
+        std::string path_to_script = FileSystem::Concat( std::string( "." ), std::string(script_filename)+".py" );
+        if( FileSystem::FileExists( CreatePythonScriptPath( script_filename ) ) )
+        {
+            return true;
+        }
+        path_to_script = FileSystem::Concat( m_PythonScriptPath, std::string(script_filename)+".py" );
+        if( FileSystem::FileExists( CreatePythonScriptPath( script_filename ) ) )
+        {
+            return true;
+        }
+        
+        return false;
     }
 
     void PythonSupport::PythonScriptsNotFound()

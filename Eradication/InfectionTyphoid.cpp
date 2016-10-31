@@ -151,10 +151,10 @@ namespace Kernel
             LOG_WARN_F( "doseTracking not set. This will lead to bad prepatent durations.\n" );
         }
 
-        _prepatent_duration = (int)(generateRandFromLogNormal(mu, sigma));
-        LOG_VALID_F( "Calculated prepatent duration = %d using Log-Normal draw; mu = %f, sigma = %f, doseTracking = %s.\n",
+        _prepatent_duration = generateRandFromLogNormal(mu, sigma);
+        LOG_VALID_F( "Calculated prepatent duration = %f using Log-Normal draw; mu = %f, sigma = %f, doseTracking = %s.\n",
                      _prepatent_duration, mu, sigma, doseTracking.c_str() );
-        prepatent_timer =_prepatent_duration;
+        prepatent_timer = int(_prepatent_duration);
         prepatent_timer.handle = std::bind( &InfectionTyphoid::handlePrepatentExpiry, this );
         state_to_report=PREPAT_STATE_LABEL;
 
@@ -224,9 +224,9 @@ namespace Kernel
             } else {
                 mu = mao30; sigma = sao30;
             }
-            _acute_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
-            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->Acute: acute dur=%d\n", parent->GetSuid().data, age, _acute_duration);
-            acute_timer = _acute_duration;
+            _acute_duration = generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK;
+            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->Acute: acute dur=%f\n", parent->GetSuid().data, age, _acute_duration);
+            acute_timer = int(_acute_duration);
             state_to_report=ACUTE_STATE_LABEL;
         }
         else
@@ -237,9 +237,9 @@ namespace Kernel
             } else {
                 mu = mso30; sigma = sso30;
             }
-            _subclinical_duration = int(generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK );
-            subclinical_timer = _subclinical_duration;
-            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->SubClinical: subc dur=%d\n", parent->GetSuid().data, age, _subclinical_duration );
+            _subclinical_duration = generateRandFromLogNormal( mu, sigma ) * DAYSPERWEEK;
+            LOG_DEBUG_F("Infection stage transition: Individual=%d, Age=%f, Prepatent->SubClinical: subc dur=%f\n", parent->GetSuid().data, age, _subclinical_duration );
+            subclinical_timer = int(_subclinical_duration);
             state_to_report=SUBCLINICAL_STATE_LABEL;
         }
     }
@@ -400,7 +400,7 @@ namespace Kernel
             last_state_reported=state_to_report;
             state_changed = true;
         }
-        LOG_DEBUG_F( "state_to_report for individual %d = %s\n", GetSuid().data, state_to_report.c_str() );
+        LOG_DEBUG_F( "state_to_report for individual %d = %s\n", parent->GetSuid().data, state_to_report.c_str() );
 
         if( state_to_report == SUSCEPT_STATE_LABEL && state_changed ) // && GetInfections().size() > 0 )
         {

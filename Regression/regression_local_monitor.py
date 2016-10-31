@@ -38,7 +38,10 @@ class Monitor(threading.Thread):
 
         starttime = datetime.datetime.now()
 
-        with open(os.path.join(sim_dir, "stdout.txt"), "w") as stdout, open(os.path.join(sim_dir, "stderr.txt"), "w") as stderr:
+        stdoutfile = "stdout.txt"
+        if self.compare_results_to_baseline == False:
+            stdoutfile = "test.txt"
+        with open(os.path.join(sim_dir, stdoutfile), "w") as stdout, open(os.path.join(sim_dir, "stderr.txt"), "w") as stderr:
             actual_input_dir = os.path.join( self.params.input_path, self.config_json["parameters"]["Geography"] )
             cmd = None
             # python-script-path is optional parameter.
@@ -66,6 +69,21 @@ class Monitor(threading.Thread):
                 for file in os.listdir( os.path.join( self.config_id, "output" ) ):
                     if ( file.endswith( ".json" ) or file.endswith( ".csv" ) ) and file[0] != ".":
                         self.verify( sim_dir, file, "Channels" )
+        else:
+            # print( "Scientific Feature Testing: check scientific_feature_report.txt" )
+            report_name = "scientific_feature_report.txt"
+            sfr = os.path.join( sim_dir, report_name )
+            with open( sfr ) as sfr_file:
+                sfr_data = sfr_file.read()
+                #print( sfr_data )
+                if "SUMMARY: Success=True" in sfr_data:
+                    #print( self.config_id + " passed (" + str(self.duration) + ") - " + report_name )
+                    print( self.config_id + " passed." )
+                    self.report.addPassingTest(self.config_id, self.duration)
+                else:
+                    fail_text = self.config_id + " SFT failed."
+                    print( self.config_id + " failed (" + str(self.duration) + ") - " + report_name )
+                    self.report.addFailingTest( self.config_id, fail_text, os.path.join( sim_dir, report_name ) )
         self.__class__.sems.release()
 
     def get_json_data_hash( self, data ):

@@ -6,7 +6,6 @@ import threading
 import subprocess
 import glob
 import shutil # copyfile
-import glob
 import regression_local_monitor
 import regression_hpc_monitor
 import regression_utils as ru
@@ -283,7 +282,7 @@ class MyRegressionRunner():
         py_input = None
         if "Python_Script_Path" in reply_json["parameters"]:
             psp_param = reply_json["parameters"]["Python_Script_Path"]
-            if psp_param == "LOCAL":
+            if psp_param == "LOCAL" or psp_param == ".": # or . is for new usecase when using existing config.json (SFT)
                 py_input = "."
                 for py_file in glob.glob( os.path.join( config_id, "dtk_*.py" ) ):
                     self.copy_sim_file( config_id, sim_dir, os.path.basename( py_file ) )
