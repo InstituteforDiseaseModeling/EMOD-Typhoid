@@ -157,6 +157,7 @@ namespace Kernel
         prepatent_timer = int(_prepatent_duration);
         prepatent_timer.handle = std::bind( &InfectionTyphoid::handlePrepatentExpiry, this );
         state_to_report=PREPAT_STATE_LABEL;
+        state_changed=false;
 
         //std::cout << "Initialized prepatent_timer to " << prepatent_timer << " using doseTracking value of " << doseTracking << std::endl;
     }
@@ -333,7 +334,6 @@ namespace Kernel
 
     void InfectionTyphoid::Update(float dt, ISusceptibilityContext* _immunity)
     {
-        bool state_changed = false;
 
         LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", parent->GetSuid().data, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
         prepatent_timer.Decrement( dt );
@@ -352,9 +352,9 @@ namespace Kernel
             // acute infection
             state_to_report = ACUTE_STATE_LABEL;
             acute_timer -= dt;
-            if( ( _acute_duration - acute_timer ) >= acute_treatment_day &&
-                    ( ( _acute_duration - acute_timer - dt ) < acute_treatment_day ) && 
-                    (randgen->e() < treatmentprobability)
+            if( ( int(_acute_duration) - acute_timer ) >= acute_treatment_day &&
+                ( ( int(_acute_duration) - acute_timer - dt ) < acute_treatment_day ) && 
+                ( randgen->e() < treatmentprobability )
               )
             {       //if they seek treatment and don't die, we are assuming they have a probability of becoming a carrier (chloramphenicol treatment does not prevent carriage)
                 // so they either get treatment or die?

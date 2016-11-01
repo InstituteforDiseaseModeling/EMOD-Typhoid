@@ -669,6 +669,7 @@ namespace Kernel
         {
             state_to_report = ((InfectionTyphoid*)infections.front())->GetStateToReport();
         }
+        state_changed = ((InfectionTyphoid*)infections.front())->IsStateChanged();
     }
 
     void IndividualHumanTyphoid::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
