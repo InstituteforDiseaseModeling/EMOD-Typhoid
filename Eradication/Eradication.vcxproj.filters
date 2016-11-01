@@ -645,7 +645,6 @@
     <ClCompile Include="GroupEventCoordinator.cpp" />
     <ClCompile Include="MultiInterventionEventCoordinator.cpp" />
     <ClCompile Include="MultiRouteTransmissionGroups.cpp" />
-    <ClCompile Include="Properties.cpp" />
     <ClCompile Include="PropertyReport.cpp" />
     <ClCompile Include="PropertyReportTB.cpp" />
     <ClCompile Include="SimpleTransmissionGroups.cpp" />
@@ -1041,6 +1040,17 @@
     <ClCompile Include="LarvalHabitatMultiplier.cpp">
       <Filter>Source Files\Vector</Filter>
     </ClCompile>
+    <ClCompile Include="BinnedReportTyphoid.cpp" />
+    <ClCompile Include="IndividualTyphoid.cpp" />
+    <ClCompile Include="InfectionTyphoid.cpp" />
+    <ClCompile Include="NodeTyphoid.cpp" />
+    <ClCompile Include="ReportTyphoid.cpp" />
+    <ClCompile Include="ReportTyphoidByAgeAndGender.cpp" />
+    <ClCompile Include="SimulationTyphoid.cpp" />
+    <ClCompile Include="SpatialReportTyphoid.cpp" />
+    <ClCompile Include="SusceptibilityTyphoid.cpp" />
+    <ClCompile Include="TyphoidInterventionsContainer.cpp" />
+    <ClCompile Include="..\interventions\TyphoidVaccine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VectorPopulation.h">
@@ -2313,6 +2323,10 @@
     <ClInclude Include="MalariaParameters.h">
       <Filter>Source Files\Vector\Malaria</Filter>
     </ClInclude>
+    <ClInclude Include="IndividualTyphoid.h" />
+    <ClInclude Include="InfectionTyphoid.h" />
+    <ClInclude Include="NodeTyphoid.h" />
+    <ClInclude Include="SimulationTyphoid.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Eradication.rc" />
