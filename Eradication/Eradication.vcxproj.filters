@@ -2327,7 +2327,6 @@
     <ClInclude Include="InfectionTyphoid.h" />
     <ClInclude Include="NodeTyphoid.h" />
     <ClInclude Include="SimulationTyphoid.h" />
-    <ClInclude Include="..\interventions\TyphoidVaccine.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Eradication.rc" />
