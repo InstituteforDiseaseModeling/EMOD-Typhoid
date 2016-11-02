@@ -280,8 +280,8 @@ namespace Kernel
             if (randgen->e()< p3*carrier_prob)
             {
                 chronic_timer = _chronic_duration;
-                LOG_DEBUG_F( "Individual %d age %f, sex %d, just went chronic (from acute) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
-                             GetSuid().data, age, sex, chronic_timer, p3, carrier_prob
+                LOG_DEBUG_F( "Individual %d age %f, sex %s, just went chronic (from acute) with new timer %d based on gallstone probability of %f and carrier probability of %f.\n",
+                             parent->GetSuid().data, age, ( sex==0 ? "Male" : "Female" ), chronic_timer, p3, carrier_prob
                            );
                 state_to_report = CHRONIC_STATE_LABEL;
             }
@@ -306,11 +306,13 @@ namespace Kernel
         float carrier_prob = 0;
         int agebin = int(floor(age/10));
         if (agebin>=GallstoneDataLength)
+        {
             agebin=GallstoneDataLength-1;
+        }
         if( sex == Gender::FEMALE )
         {
             p2=FemaleGallstones[agebin];
-            carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female ;
+            carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female;
         } 
         else // if (sex==0)
         {
@@ -321,8 +323,8 @@ namespace Kernel
         if (randgen->e() < p2*carrier_prob)
         {
             chronic_timer = _chronic_duration;
-            LOG_DEBUG_F( "Individual age %f, sex %d, just went chronic (from subclinical) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
-                         age, sex, chronic_timer, p2, carrier_prob
+            LOG_DEBUG_F( "Individual %d age %f, sex %s, just went chronic (from subclinical) with new timer %d based on gallstone probability of %f and carrier probability of %f.\n",
+                         parent->GetSuid().data, age, ( sex==0 ? "Male" : "Female" ), chronic_timer, p2, carrier_prob
                        );
             state_to_report = CHRONIC_STATE_LABEL;
         }
