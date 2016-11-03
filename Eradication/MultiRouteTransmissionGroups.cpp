@@ -193,7 +193,8 @@ namespace Kernel
                 if (routeNameFromMap == routeName)
                 {
                     //LOG_VALID_F("foundRoute: routeIndex=%d\n",idx);
-                    (*membershipOut)[idx] = iRoute;
+                    LOG_VALID_F( "Setting tx group membership for index %d to %d (route index): routeName (passed in) = %s, routeNameFromMap (from loop) is same.\n", idx, iRoute, routeName.c_str() );
+                    (*membershipOut)[idx] = 0; // iRoute;
                 }
             }
             idx++;
@@ -209,6 +210,7 @@ namespace Kernel
                 if ((*membershipOut).find(routeIndex) != (*membershipOut).end())
                 {
                     const string& propertyValue = entry.second;
+                    LOG_VALID_F( "Increasing tx group membership for (route) index %d by %d.\n", routeIndex, (propertyValueToIndexMap.at(propertyName).at(propertyValue) ) );
                     (*membershipOut)[routeIndex] += (propertyValueToIndexMap.at(propertyName).at(propertyValue));
                 }
             }
