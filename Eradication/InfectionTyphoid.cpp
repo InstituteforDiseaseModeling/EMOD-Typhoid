@@ -280,8 +280,8 @@ namespace Kernel
             if (randgen->e()< p3*carrier_prob)
             {
                 chronic_timer = _chronic_duration;
-                LOG_DEBUG_F( "Individual %d age %f, sex %d, just went chronic (from acute) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
-                             GetSuid().data, age, sex, chronic_timer, p3, carrier_prob
+                LOG_DEBUG_F( "Individual %d age %f, sex %s, just went chronic (from acute) with new timer %d based on gallstone probability of %f and carrier probability of %f.\n",
+                             parent->GetSuid().data, age, ( sex==0 ? "Male" : "Female" ), chronic_timer, p3, carrier_prob
                            );
                 state_to_report = CHRONIC_STATE_LABEL;
             }
@@ -302,15 +302,17 @@ namespace Kernel
 
         //LOG_INFO_F("SOMEONE FINSIHED SUB %d, %d\n", _subclinical_duration, subclinical_timer);
         subclinical_timer = UNINIT_TIMER;
-        float p2 = 0;
-        float carrier_prob = 0;
+        ProbabilityNumber p2 = 0;
+        ProbabilityNumber carrier_prob = 0;
         int agebin = int(floor(age/10));
         if (agebin>=GallstoneDataLength)
+        {
             agebin=GallstoneDataLength-1;
+        }
         if( sex == Gender::FEMALE )
         {
             p2=FemaleGallstones[agebin];
-            carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female ;
+            carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_female;
         } 
         else // if (sex==0)
         {
@@ -318,16 +320,21 @@ namespace Kernel
             carrier_prob = IndividualHumanTyphoidConfig::typhoid_carrier_probability_male;
         } 
 
-        if (randgen->e() < p2*carrier_prob)
+        ProbabilityNumber prob = float(p2)*float(carrier_prob);
+        LOG_VALID_F( "Deciding whether individual goes chronic (vs recovered) based on probability of %f.\n", float(prob) );
+        if (randgen->e() < float(prob) )
         {
             chronic_timer = _chronic_duration;
-            LOG_DEBUG_F( "Individual age %f, sex %d, just went chronic (from subclinical) with timer %f based on gallstone probability of %f and carrier probability of %f.\n",
-                         age, sex, chronic_timer, p2, carrier_prob
+            LOG_DEBUG_F( "Individual %d age %f, sex %s, just went chronic (from subclinical) with new timer %d based on gallstone probability of %f and carrier probability of %f.\n",
+                         parent->GetSuid().data, age, ( sex==0 ? "Male" : "Female" ), chronic_timer, float(p2), float(carrier_prob)
                        );
             state_to_report = CHRONIC_STATE_LABEL;
         }
         else
         {
+            LOG_VALID_F( "Individual %d age %f, sex %s, just recovered from Acute infection.\n",
+                         parent->GetSuid().data, age, ( sex==0 ? "Male" : "Female" )
+                       );
             state_to_report = SUSCEPT_STATE_LABEL;
         }
     }

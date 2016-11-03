@@ -74,6 +74,7 @@ namespace Kernel
 
     void StrainAwareTransmissionGroups::AllocateAccumulators( int routeCount, int numberOfStrains, int numberOfSubstrains )
     {
+        LOG_VALID_F( "AllocateAccumulators called with routeCount = %d.\n", routeCount );
         antigenCount = numberOfStrains;
         substrainCount = numberOfSubstrains;
 
@@ -120,6 +121,9 @@ namespace Kernel
             RouteIndex routeIndex = entry.first;
             GroupIndex groupIndex = entry.second;
             newInfectivityByAntigenRouteGroup[antigenIndex][routeIndex][groupIndex] += amount;
+            //release_assert( newInfectivityByAntigenRouteGroupSubstrain[antigenIndex].size() >= routeIndex+1 );
+            //release_assert( newInfectivityByAntigenRouteGroupSubstrain[antigenIndex][routeIndex].size() >= groupIndex+1 );
+            //release_assert( newInfectivityByAntigenRouteGroupSubstrain[antigenIndex][routeIndex][groupIndex].size() >= substrainIndex+1 );
             newInfectivityByAntigenRouteGroupSubstrain[antigenIndex][routeIndex][groupIndex][substrainIndex] += amount;
 
             if (amount > 0)
@@ -144,14 +148,6 @@ namespace Kernel
                 routeIndex  = entry.first;
                 groupIndex  = entry.second;
                 forceOfInfection = forceOfInfectionForRouteAndGroup[routeIndex][groupIndex];
-                /*if( routeIndex == 1 ) // I know 1 == ENVIRO, can we do this with an actual variable? 
-                {
-                    forceOfInfection = 0;
-                    if( enviroContagionQ.size() == int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period) ))
-                    {
-                        forceOfInfection = enviroContagionQ.back()[iAntigen];
-                    }
-                }*/
                 substrainDistributions.push_back(&sumInfectivityByAntigenRouteGroupSubstrain[iAntigen][routeIndex][groupIndex]);
 
                 if ((forceOfInfection > 0) && (candidate != NULL))
@@ -274,20 +270,15 @@ namespace Kernel
                     LOG_DEBUG_F("Contagion for [antigen:%d,route:%d] scaled by %f\n", iAntigen, iRoute, populationForRoute);
                     memcpy(forceOfInfectionForAntigenAndRoute.data(), currentAntigen.data(), groupCount * sizeof(float));
                     VectorScalarMultiplyInPlace(forceOfInfectionForAntigenAndRoute, 1.0f/populationForRoute);
-
-                    // This might be a really good place to enque the FOI
-                    if( iRoute == 1 ) // I know 1 == ENVIRO, can we do this with an actual variable?
-                    {
-                        enviroContagionQ.push( forceOfInfectionForAntigenAndRoute );
-                        /*if( enviroContagionQ.size() > int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period )))
-                        {
-                            enviroContagionQ.pop();
-                        }*/
-                    }
                 }
                 else
                 {
                     memset(forceOfInfectionForAntigenAndRoute.data(), 0, groupCount * sizeof(float));
+                }
+
+                for( auto element : forceOfInfectionForAntigenAndRoute )
+                {
+                    LOG_VALID_F( "foi for route %d (antigen=%d)= %f\n", iRoute, iAntigen, element );
                 }
             }
         }
@@ -328,43 +319,54 @@ namespace Kernel
                 auto& substrainShedding = substrainWasShed[iAntigen];
                 for(auto iSubstrain : substrainShedding)
                 {
-                        ContagionAccumulator_t newInfectivityForSubstrainByGroup;
+                    ContagionAccumulator_t newInfectivityForSubstrainByGroup;
 
-                        for (int iRoute = 0; iRoute < routeCount; iRoute++)
+                    for (int iRoute = 0; iRoute < routeCount; iRoute++)
+                    {
+                        vector<SubstrainMap_t>& newInfectivityByGroupSubstrain = newInfectivityByRouteGroupSubstrain[iRoute];
+                        int groupCount = getGroupCountForRoute(iRoute);
+                        newInfectivityForSubstrainByGroup.resize(groupCount);
+                        for (int iGroup = 0; iGroup < groupCount; iGroup++)
                         {
-                            vector<SubstrainMap_t>& newInfectivityByGroupSubstrain = newInfectivityByRouteGroupSubstrain[iRoute];
-                            int groupCount = getGroupCountForRoute(iRoute);
-                            newInfectivityForSubstrainByGroup.resize(groupCount);
-                            for (int iGroup = 0; iGroup < groupCount; iGroup++)
+                            SubstrainMap_t::iterator it = newInfectivityByGroupSubstrain[iGroup].find(iSubstrain);
+                            if(it != newInfectivityByGroupSubstrain[iGroup].end())
                             {
-                                SubstrainMap_t::iterator it = newInfectivityByGroupSubstrain[iGroup].find(iSubstrain);
-                                if(it != newInfectivityByGroupSubstrain[iGroup].end())
-                                {
-                                    newInfectivityForSubstrainByGroup[iGroup] = newInfectivityByGroupSubstrain[iGroup][iSubstrain];
-                                    newInfectivityByGroupSubstrain[iGroup].erase(it);
-                                }
-                            }
-
-                            vector<SubstrainMap_t>& sumSubstrainInfectivity = sumInfectivity[iRoute];
-
-                            const ScalingMatrix_t& scalingMatrix = scalingMatrices[iRoute];
-                            for (int iSink = 0; iSink < groupCount; iSink++)
-                            {
-                                const MatrixRow_t& contactScaling = scalingMatrix[iSink];
-                                float deposit = VectorDotProduct(newInfectivityForSubstrainByGroup, contactScaling);
-                                deposit *= infectivityCorrection;
-                                if (deposit > 0.0f)
-                                {
-                                    sumSubstrainInfectivity[iSink][iSubstrain] += deposit;
-                                    LOG_DEBUG_F( "exposureBySubstrain for substrain %d now = %f\n", iSubstrain, sumInfectivityByAntigenRouteGroupSubstrain[iAntigen][iRoute][iSink][iSubstrain] );
-                                }
+                                newInfectivityForSubstrainByGroup[iGroup] = newInfectivityByGroupSubstrain[iGroup][iSubstrain];
+                                newInfectivityByGroupSubstrain[iGroup].erase(it);
                             }
                         }
+
+                        vector<SubstrainMap_t>& sumSubstrainInfectivity = sumInfectivity[iRoute];
+
+                        const ScalingMatrix_t& scalingMatrix = scalingMatrices[iRoute];
+                        for (int iSink = 0; iSink < groupCount; iSink++)
+                        {
+                            const MatrixRow_t& contactScaling = scalingMatrix[iSink];
+                            float deposit = VectorDotProduct(newInfectivityForSubstrainByGroup, contactScaling);
+                            deposit *= infectivityCorrection;
+                            if (deposit > 0.0f)
+                            {
+                                sumSubstrainInfectivity[iSink][iSubstrain] += deposit;
+                                LOG_DEBUG_F( "exposureBySubstrain for substrain %d now = %f\n", iSubstrain, sumInfectivityByAntigenRouteGroupSubstrain[iAntigen][iRoute][iSink][iSubstrain] );
+                            }
+                        }
+                    }
                 }
 
                 // Reset for next cycle.
                 substrainShedding.clear();
                 antigenWasShed[iAntigen] = false;
+            }
+        }
+        for (int iAntigen = 0; iAntigen < antigenCount; iAntigen++)
+        {
+            for (int iRoute = 0; iRoute < routeCount; iRoute++)
+            {
+                vector<float>& forceOfInfectionForAntigenAndRoute = forceOfInfectionByAntigenRouteGroup[iAntigen][iRoute];
+                for( auto element : forceOfInfectionForAntigenAndRoute )
+                {
+                    LOG_VALID_F( "foi for route %d (antigen=%d)= %f\n", iRoute, iAntigen, element );
+                }
             }
         }
     }
@@ -384,6 +386,7 @@ namespace Kernel
 
     void StrainAwareTransmissionGroups::SubstrainPopulationImpl::ResolveInfectingStrain( StrainIdentity* strainId ) const
     {
+        LOG_VALID_F( "%s\n", __FUNCTION__ );
         float totalRawContagion = 0.0f;
         int routeCount = substrainDistributions.size();
         for (int iRoute = 0; iRoute < routeCount; iRoute++)
