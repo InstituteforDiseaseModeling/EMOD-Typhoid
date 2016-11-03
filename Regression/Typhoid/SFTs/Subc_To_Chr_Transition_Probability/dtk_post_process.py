@@ -62,7 +62,7 @@ def application( report_file ):
         else:
             for line in lines:
                 age = float(get_val(" age ", line))
-                sex = "female" if re.search("sex 1", line) else "male"
+                sex = "female" if re.search("sex Female", line) else "male"
                 if re.search("just went chronic", line):
                     # to Chronic
                     #  python 2.7 the (int / int) operator is integer division
@@ -74,6 +74,7 @@ def application( report_file ):
                     else:
                         count[1][i] += 1
                 else:
+                    #print( "individual recovered from subclinical." )
                     # to Susceptible
                     # python 2.7 the (int / int) operator is integer division
                     i = int(age) / 10
@@ -104,14 +105,13 @@ def application( report_file ):
                 #Male
                 if actual_count_male== 0:
                     success=False
-                    report_file.write("Found no male in age group {0} went to Chronic state or was recovered from SubClinical state.\n".format(age[x]))
+                    report_file.write("Found no male in age group {0} going to Chronic state or recovering from SubClinical state.\n".format(age[x]))
                 elif tolerance_male[x] > 5e-2 and math.fabs(theoretic_chr_count_male - actual_chr_count_male) > 1:
                     success = False
                     sex = "male"
                     report_file.write(
-                        "BAD: The probability of becoming a chronic carrier from SusClinical stage for individual age group {0}, sex {1} is {2}, expected {3}. The {1} Chronic cases is {4}, expected close to {5}.\n".format(
-                            age[x], sex, actual_p_male[x], theoretic_p_male[x], actual_chr_count_male,
-                            theoretic_chr_count_male))
+                        "BAD: The probability of becoming a Chronic carrier from SubClinical stage for age group {0}, sex {1}, was {2} vs expected={3}. The number of Chronic cases was {4}, expected close to {5}.\n".format(
+                            age[x], sex, actual_p_male[x], theoretic_p_male[x], actual_chr_count_male, theoretic_chr_count_male))
                 #Female
                 if actual_count_female==0:
                     success = False
@@ -119,7 +119,9 @@ def application( report_file ):
                 elif tolerance_female[x] > 5e-2 and math.fabs( theoretic_chr_count_female - actual_chr_count_female ) > 1:
                     success=False
                     sex="female"
-                    report_file.write("BAD: The probability of becoming a chronic carrier from SubClinical stage for individual age group {0}, sex {1} is {2}, expected {3}. The {1} Chronic cases is {4}, expected close to {5}.\n".format(age[x], sex, actual_p_female[x], theoretic_p_female[x], actual_chr_count_female, theoretic_chr_count_female))
+                    report_file.write(
+                        "BAD: The probability of becoming a Chronic carrier from SubClinical stage for age group {0}, sex {1}, was {2} vs expected={3}. The number of Chronic cases is {4}, expected close to {5}.\n".format(
+                            age[x], sex, actual_p_female[x], theoretic_p_female[x], actual_chr_count_female, theoretic_chr_count_female))
 
         if success:
             report_file.write( sft.format_success_msg( success ) )
