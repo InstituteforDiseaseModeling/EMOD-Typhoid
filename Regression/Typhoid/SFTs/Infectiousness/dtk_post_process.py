@@ -86,8 +86,9 @@ def application( report_file ):
             if re.search("GetTreatment: True", line):
                 line = "TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
-
-
+            if re.search("->Acute", line):
+                line = "TimeStep: " + str(timestep) + " " + line
+                lines.append(line)
 
     success = True
     treatment_list=[]
@@ -97,6 +98,10 @@ def application( report_file ):
             success = False
             report_file.write( "Found no data matching test case.\n" )
         else:
+            pre_count=0
+            acu_count=0
+            sub_count=0
+            chr_count=0
             for line in lines:
                 if re.search("GetTreatment",line):
                     #collect a list of individual Ids that get treatment
@@ -105,7 +110,20 @@ def application( report_file ):
                 elif re.search("state SUS.", line):
                     success=False
                     report_file.write("BAD: Found individual in Susceptible state has infectiousness. See details: {}.\n".format(line))
+                elif re.search("->Acute", line):
+                    indid=get_val("Individual=",line)
+                    if indid in treatment_list:
+                        # remove ind id from treatment list if an individual move to Acute state again.
+                        treatment_list.remove(indid)
                 else:
+                    if re.search("state PRE",line):
+                        pre_count += 1
+                    if re.search("state ACU",line):
+                        acu_count += 1
+                    if re.search("state SUB",line):
+                        sub_count += 1
+                    if re.search("state CHR",line):
+                        chr_count += 1
                     #validate infectiousness
                     if re.search("to route contact:", line): route = "contact"
                     if re.search("to route environmental:", line): route = "environment"
@@ -118,6 +136,19 @@ def application( report_file ):
                     if math.fabs(actual_infectiousness-expected_infectiousness)>1e2:
                         success = False
                         report_file.write( "BAD: Individual {0} depositing {1} to route {2} in state: {3}. Expected infectiousness: {4}\n".format(ind_id, actual_infectiousness,route, state, expected_infectiousness))
+            if pre_count==0:
+                success = False
+                report_file.write("Found no infectiousness data in Prepatent state.\n")
+            if acu_count==0:
+                success = False
+                report_file.write("Found no infectiousness data in Acute state.\n")
+            if sub_count==0:
+                success = False
+                report_file.write("Found no infectiousness data in SubClinical state.\n")
+            if chr_count==0:
+                success = False
+                report_file.write("Found no infectiousness data in Chronic state.\n")
+
 
             if success:
                 report_file.write( sft.format_success_msg( success ) )
