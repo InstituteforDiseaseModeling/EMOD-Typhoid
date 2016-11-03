@@ -65,7 +65,7 @@ def application( report_file ):
         else:
             for line in lines:
                 age = float(get_val(" age ", line))
-                sex = "female" if re.search("sex 1", line) else "male"
+                sex = "female" if (re.search("sex 1", line) or re.search("sex Female", line)) else "male"
                 if re.search("just went chronic", line):
                     # to Chronic
                     #  python 2.7 the (int / int) operator is integer division

@@ -64,15 +64,15 @@ def application( report_file ):
         else:
             for line in lines:
                 age = float(get_val(" age ", line))
-                sex = "female" if re.search("sex 1", line) else "male"
-                previous_infection_stage = get_char("\(from ", line)
+                sex = "female" if (re.search("sex 1", line) or re.search("sex Female", line)) else "male"
+                previous_infection_stage = get_char("from ", line)
                 if count_chronic==0:
                     success = False
                     report_file.write("Found no Chronic case in data.\n")
                 if count_recovered==0:
                     success = False
                     report_file.write("Found no Recovered case in data.\n")
-                if (not re.search("from subclinical", line)) and (not re.search("from acute", line)) :
+                if (not re.search("from subclinical", line)) and (not re.search("from acute", line)) and (not re.search("from Subclinical", line)) and (not re.search("from Acute", line)) and (not re.search("from SubClinical", line)):
                     success = False
                     if re.search("just went chronic", line):
                         report_file.write("BAD: individual age {0}, sex {1} went to Chronic state from {2} state, expected Acute state or SubClinical state.\n".format(age,sex, previous_infection_stage))
