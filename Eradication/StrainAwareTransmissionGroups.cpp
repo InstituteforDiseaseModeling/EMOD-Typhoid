@@ -74,6 +74,7 @@ namespace Kernel
 
     void StrainAwareTransmissionGroups::AllocateAccumulators( int routeCount, int numberOfStrains, int numberOfSubstrains )
     {
+        LOG_VALID_F( "AllocateAccumulators called with routeCount = %d.\n", routeCount );
         antigenCount = numberOfStrains;
         substrainCount = numberOfSubstrains;
 
@@ -120,6 +121,9 @@ namespace Kernel
             RouteIndex routeIndex = entry.first;
             GroupIndex groupIndex = entry.second;
             newInfectivityByAntigenRouteGroup[antigenIndex][routeIndex][groupIndex] += amount;
+            //release_assert( newInfectivityByAntigenRouteGroupSubstrain[antigenIndex].size() >= routeIndex+1 );
+            //release_assert( newInfectivityByAntigenRouteGroupSubstrain[antigenIndex][routeIndex].size() >= groupIndex+1 );
+            //release_assert( newInfectivityByAntigenRouteGroupSubstrain[antigenIndex][routeIndex][groupIndex].size() >= substrainIndex+1 );
             newInfectivityByAntigenRouteGroupSubstrain[antigenIndex][routeIndex][groupIndex][substrainIndex] += amount;
 
             if (amount > 0)
@@ -142,16 +146,8 @@ namespace Kernel
             for (const auto& entry : (*transmissionGroupMembership))
             {
                 routeIndex  = entry.first;
-                groupIndex  = 0; // entry.second;
+                groupIndex  = entry.second;
                 forceOfInfection = forceOfInfectionForRouteAndGroup[routeIndex][groupIndex];
-                /*if( routeIndex == 1 ) // I know 1 == ENVIRO, can we do this with an actual variable? 
-                {
-                    forceOfInfection = 0;
-                    if( enviroContagionQ.size() == int(floor(GET_CONFIGURABLE(SimulationConfig)->environmental_incubation_period) ))
-                    {
-                        forceOfInfection = enviroContagionQ.back()[iAntigen];
-                    }
-                }*/
                 substrainDistributions.push_back(&sumInfectivityByAntigenRouteGroupSubstrain[iAntigen][routeIndex][groupIndex]);
 
                 if ((forceOfInfection > 0) && (candidate != NULL))
