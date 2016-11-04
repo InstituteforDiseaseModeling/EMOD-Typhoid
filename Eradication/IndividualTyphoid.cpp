@@ -357,6 +357,7 @@ namespace Kernel
         {
             doseTracking = "High";
         }
+        LOG_VALID_F( "doseTracking set to %s based on value of %f.\n", doseTracking.c_str(), fEnvironment );
         release_assert( doseTracking != "None" );
     }
 
@@ -445,8 +446,8 @@ namespace Kernel
                     prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
                 }
                 //LOG_DEBUG_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
-                LOG_VALID_F( "Exposing inividual %d on route 'environment': prob=%f, infects=%f, immunity=%f, fExposure=%f, fEnvironment=%f.\n",
-                             GetSuid().data, prob, infects, immunity, fExposure, fEnvironment
+                LOG_VALID_F( "Exposing inividual %d age %f on route 'environment': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fExposure=%f, fEnvironment=%f.\n",
+                             GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fExposure, fEnvironment
                            );
                 if( SMART_DRAW( prob ) )
                 {
@@ -485,8 +486,8 @@ namespace Kernel
             {
                 prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
             }
-            LOG_VALID_F( "Exposing inividual %d on route 'contact': prob=%f, infects=%f, immunity=%f, fContact=%f.\n",
-                         GetSuid().data, prob, infects, immunity, fContact
+            LOG_VALID_F( "Exposing inividual %d age %f on route 'contact': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fContact=%f.\n",
+                         GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fContact
                        );
             if (prob>0.0f && randgen->e() < prob)
             {
