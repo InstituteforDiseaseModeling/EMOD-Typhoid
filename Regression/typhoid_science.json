@@ -5,6 +5,9 @@
         { "path" : "Typhoid/SFTs/PrepatentDuration" },
         { "path" : "Typhoid/SFTs/Infectiousness" },
         { "path" : "Typhoid/SFTs/Acu_To_Chr_Transition_Probability" }, 
-        { "path" : "Typhoid/SFTs/Subc_To_Chr_Transition_Probability" }
+        { "path" : "Typhoid/SFTs/Subc_To_Chr_Transition_Probability" },
+		{ "path" : "Typhoid/SFTs/Acu_Subc_To_Chr_Sus_Transition" },
+		{ "path" : "Typhoid/SFTs/Shedding_multi-route" },
+		{ "path" : "Typhoid/SFTs/Pre_to_Acu_Transition_Probability" },
     ]
 }

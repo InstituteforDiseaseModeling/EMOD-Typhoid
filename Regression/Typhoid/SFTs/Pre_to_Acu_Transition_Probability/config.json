@@ -1,5 +1,6 @@
 {
     "parameters": {
+        "Typhoid_Carrier_Probability_Female" :0.13,
         "Typhoid_Environmental_Ramp_Down_Duration": 170,
         "Typhoid_Environmental_Ramp_Up_Duration": 30,
         "Acquisition_Blocking_Immunity_Decay_Rate": 0.1, 
@@ -32,7 +33,7 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filenames": [ "Santiago_Demographics.json", "Santiago_200K_overlay.json"], 
+        "Demographics_Filenames": [ "Santiago_Demographics.json" ], 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
@@ -123,8 +124,7 @@
         "Typhoid_Subclinical_Relative_Infectiousness": 1,
         "Typhoid_Chronic_Relative_Infectiousness": 0.1,
         "Typhoid_Protection_Per_Infection": 0.95,
-		"Typhoid_Carrier_Probability_Female" :0.15,
-		"Typhoid_Carrier_Probability_Male":0.13,
+		"Typhoid_Carrier_Probability_Male":0.03,
 		"Typhoid_6month_Susceptible_Fraction": 0.1219,
 		"Typhoid_3year_Susceptible_Fraction": 0.3613,
 		"Typhoid_6year_Susceptible_Fraction": 0.3613,
@@ -134,7 +134,7 @@
         "Typhoid_Environmental_Cutoff_Days": 160, 
         "Typhoid_Environmental_Peak_Start": 360, 
         "Typhoid_Environmental_Peak_Multiplier": 0.1, 
-		"Typhoid_Symptomatic_Fraction": 0,
+		"Typhoid_Symptomatic_Fraction": 0.1,
 		"Typhoid_Exposure_1983": 0,
 		"Typhoid_Exposure_1984": 0,
 		"Typhoid_Exposure_1985": 0,
@@ -154,8 +154,8 @@
         "x_Regional_Migration": 1, 
         "x_Sea_Migration": 1, 
         "x_Temporary_Larval_Habitat": 1,
-        "__logLevel_IndividualTyphoid": "VALID",
+        "logLevel_IndividualTyphoid": "VALID",
         "logLevel_InfectionTyphoid": "VALID",
-        "__logLevel_SusceptibilityTyphoid": "VALID"
+        "logLevel_SusceptibilityTyphoid": "VALID"
     }
 }

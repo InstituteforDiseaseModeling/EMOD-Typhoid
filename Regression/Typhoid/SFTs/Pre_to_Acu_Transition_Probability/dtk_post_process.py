@@ -20,8 +20,15 @@ def get_val( key, line ):
     else:
         raise LookupError
 
+def get_char_before( key, line ):
+    regex ="(\w*\d*\w*\d*)" + key
+    match = re.search(regex, line)
+    if match != None:
+        return match.group(1)
+    else:
+        raise LookupError
 
-def get_char( key, line ):
+def get_char_after( key, line ):
     regex = key + "(\w*\d*\w*\d*)"
     match = re.search(regex, line)
     if match != None:
@@ -34,51 +41,50 @@ def application( report_file ):
     #print( "Post-processing: " + report_file )
 
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
+    tsf = cdj["Typhoid_Symptomatic_Fraction"]
     start_time=cdj["Start_Time"]
+    lines = []
     timestep=start_time
-    lines=[]
-    count_chronic=0
-    count_recovered=0
-
     with open( "test.txt" ) as logfile:
         for line in logfile:
             if re.search("Update\(\): Time:",line):
                 #calculate time step
                 timestep+=1
-            if re.search( "just went chronic", line ):
+            if re.search( "Infection stage transition", line ):
                 #append time step and all Infection stage transition to list
                 line="TimeStep: "+str(timestep)+ " " + line
                 lines.append( line )
-                count_chronic += 1
-            if re.search("just recovered", line):
-                # append time step and all Infection stage transition to list
-                line = "TimeStep: " + str(timestep) + " " + line
-                lines.append(line)
-                count_recovered += 1
 
     success = True
     with open( sft.sft_output_filename, "w" ) as report_file:
-        if len( lines ) == 0 :
+        if len( lines ) == 0:
             success = False
             report_file.write( "Found no data matching test case.\n" )
         else:
+            subcount = 0
+            acutecount = 0
             for line in lines:
-                age = float(get_val(" age ", line))
-                sex = "female" if (re.search("sex 1", line) or re.search("sex Female", line)) else "male"
-                previous_infection_stage = get_char("from ", line)
-                if count_chronic==0:
+                if (((not re.search("->SubClinical:", line))  and (not re.search("->Acute:", line))) and re.search(", Prepatent->", line)) or (re.search("->SubClinical:", line) or re.search("->Acute:", line)) and not re.search(", Prepatent->", line):
                     success = False
-                    report_file.write("Found no Chronic case in data.\n")
-                if count_recovered==0:
+                    ind_id=get_val("Individual=", line)
+                    current_infection_stage=get_char_after("->", line)
+                    previous_infection_stage=get_char_before("->", line)
+                    report_file.write("BAD: individuals {0} went to {1} state from {2} state, expected Prepatent->Acute or Prepatent->SubClinical.\n".format(ind_id,current_infection_stage, previous_infection_stage))
+                elif re.search(", Prepatent->Acute:", line):
+                    #count # of cases: from Prepatent to Acute
+                    acutecount+=1
+                elif re.search(", Prepatent->SubClinical:", line):
+                    #count # of cases: from Prepatent to Subclinical
+                    subcount += 1
+            if subcount+acutecount == 0:
+                success = False
+                report_file.write("Found no individual exits Prepatent state in log.\n")
+            else:
+                actual_tsf=acutecount/float(subcount+acutecount)
+                if math.fabs( actual_tsf - tsf)>5e-2 :
                     success = False
-                    report_file.write("Found no Recovered case in data.\n")
-                if (not re.search("from subclinical", line)) and (not re.search("from acute", line)) and (not re.search("from Subclinical", line)) and (not re.search("from Acute", line)) and (not re.search("from SubClinical", line)):
-                    success = False
-                    if re.search("just went chronic", line):
-                        report_file.write("BAD: individual age {0}, sex {1} went to Chronic state from {2} state, expected Acute state or SubClinical state.\n".format(age,sex, previous_infection_stage))
-                    else:
-                        ind_id=get_val("Individual ", line)
-                        report_file.write("BAD: individual {0} age {1}, sex {2} went to Susceptible state from {3} state, expected Acute state or SubClinical state.\n".format(ind_id, age,sex, previous_infection_stage))
+                    report_file.write("BAD: Proportion of prepatent cases that become acute vs. subclinical is {0} instead of {1}. Actual Acute case = {2} vs. Actual SubClinical case = {3}.\n".format(actual_tsf,tsf, acutecount, subcount))
+
         if success:
             report_file.write( sft.format_success_msg( success ) )
 
