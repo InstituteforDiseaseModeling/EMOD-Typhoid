@@ -38,7 +38,7 @@ def application( report_file ):
                 #append time step and all Infection stage transition to list
                 line="TimeStep: "+str(timestep)+ " " + line
                 lines.append( line )
-            if re.search("just recovered", line) and re.search("from subclinical", line):
+            if re.search("just recovered", line) and re.search("from Subclinical", line):
                 # append time step and all Infection stage transition to list
                 line = "TimeStep: " + str(timestep) + " " + line
                 lines.append(line)

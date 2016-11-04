@@ -3,6 +3,8 @@
         { "path" : "Typhoid/SFTs/AcuteAndSubClinicalDuration" },
         { "path" : "Typhoid/SFTs/AcuteTreatment" },
         { "path" : "Typhoid/SFTs/PrepatentDuration" },
-        { "path" : "Typhoid/SFTs/Infectiousness" }
+        { "path" : "Typhoid/SFTs/Infectiousness" },
+        { "path" : "Typhoid/SFTs/Acu_To_Chr_Transition_Probability" }, 
+        { "path" : "Typhoid/SFTs/Subc_To_Chr_Transition_Probability" }
     ]
 }
