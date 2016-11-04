@@ -196,7 +196,7 @@ namespace Kernel
 #else 
         _infection_count=0; // should not be necessary
         _routeOfInfection = TransmissionRoute::TRANSMISSIONROUTE_ALL;// IS THIS OK for a default? DLC
-        doseTracking = "High"; // ???
+        doseTracking = "Low";
 #endif
     }
 
