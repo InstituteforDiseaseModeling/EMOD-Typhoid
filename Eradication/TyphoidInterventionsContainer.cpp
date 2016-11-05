@@ -132,6 +132,16 @@ namespace Kernel
         return current_shedding_attenuation_environment;
     }
 
+    float TyphoidInterventionsContainer::GetContactDoseAttenuation() const
+    {
+        return current_dose_attenuation_contact;
+    }
+
+    float TyphoidInterventionsContainer::GetEnviroDoseAttenuation() const
+    {
+        return current_dose_attenuation_environment;
+    }
+
     float TyphoidInterventionsContainer::GetContactExposuresAttenuation() const
     {
         return current_exposures_attenuation_contact;
