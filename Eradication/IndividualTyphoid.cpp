@@ -196,7 +196,7 @@ namespace Kernel
 #else 
         _infection_count=0; // should not be necessary
         _routeOfInfection = TransmissionRoute::TRANSMISSIONROUTE_ALL;// IS THIS OK for a default? DLC
-        doseTracking = "High"; // ???
+        doseTracking = "Low";
 #endif
     }
 
@@ -424,7 +424,7 @@ namespace Kernel
 
         if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL) 
         {
-            float fEnvironment = cp->GetTotalContagion();
+            float fEnvironment = cp->GetTotalContagion() * ((TyphoidInterventionsContainer*)interventions)->GetEnviroDoseAttenuation();
             if (fEnvironment==0.0)
             {
                 return;
@@ -446,8 +446,8 @@ namespace Kernel
                     prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
                 }
                 //LOG_DEBUG_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
-                LOG_VALID_F( "Exposing inividual %d age %f on route 'environment': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fExposure=%f, fEnvironment=%f.\n",
-                             GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fExposure, fEnvironment
+                LOG_VALID_F( "Exposing inividual %d age %f on route 'environment': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fExposure=%f, fEnvironment=%f, iv_mult=%f.\n",
+                             GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fExposure, fEnvironment, intervention_multiplier
                            );
                 if( SMART_DRAW( prob ) )
                 {
@@ -467,7 +467,7 @@ namespace Kernel
         }
         else if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_CONTACT)
         {
-            float fContact=cp->GetTotalContagion();
+            float fContact=cp->GetTotalContagion() * ((TyphoidInterventionsContainer*)interventions)->GetContactDoseAttenuation();
             if (fContact==0)
             {
                 return;
@@ -486,8 +486,8 @@ namespace Kernel
             {
                 prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
             }
-            LOG_VALID_F( "Exposing inividual %d age %f on route 'contact': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fContact=%f.\n",
-                         GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fContact
+            LOG_VALID_F( "Exposing inividual %d age %f on route 'contact': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fContact=%f, iv_mult=%f.\n",
+                         GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fContact, intervention_multiplier
                        );
             if (prob>0.0f && randgen->e() < prob)
             {
