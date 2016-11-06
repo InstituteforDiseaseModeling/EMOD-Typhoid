@@ -32,7 +32,7 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filenames": [ "Santiago_Demographics.json", "Santiago_100K_overlay.json"], 
+        "Demographics_Filenames": [ "Santiago_Demographics.json", "Santiago_200K_overlay.json"], 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
@@ -154,8 +154,8 @@
         "x_Regional_Migration": 1, 
         "x_Sea_Migration": 1, 
         "x_Temporary_Larval_Habitat": 1,
-        "logLevel_IndividualTyphoid": "VALID",
+        "__logLevel_IndividualTyphoid": "VALID",
         "logLevel_InfectionTyphoid": "VALID",
-        "logLevel_SusceptibilityTyphoid": "VALID"
+        "__logLevel_SusceptibilityTyphoid": "VALID"
     }
 }
