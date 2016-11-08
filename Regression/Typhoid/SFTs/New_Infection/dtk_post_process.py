@@ -43,7 +43,7 @@ def application( report_file ):
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
     tsf = cdj["Typhoid_Symptomatic_Fraction"]
     start_time=cdj["Start_Time"]
-    isj=json.loads(open("output\InsetChart.json").read())["Channels"]
+    isj=json.loads(open("output/InsetChart.json").read())["Channels"]
     nibrc=isj["New Infections By Route (CONTACT)"]["Data"]
     nibre=isj["New Infections By Route (ENVIRONMENT)"]["Data"]
 
@@ -111,7 +111,7 @@ def application( report_file ):
                 new_infection_environment_output=nibre[x]
                 if new_infection_log !=  total_log:
                     success = False
-                    report_file.write("BAD: At time {0}: new prepatent case = {1}, expected {2}(new infection by route (contact) = {3}, new infection by route (environment) = {4}, new infection by Outbreak = {5}).\n".format(x+start_time + 1,new_infection_log, total_log, new_contact_log, new_enviro_log, new_outbreak_log))
+                    report_file.write("BAD: At time {0}: new prepatent case = {1}, expected {2} new infection by route (contact) = {3}, new infection by route (environment) = {4}, new infection by Outbreak = {5}).\n".format(x+start_time + 1,new_infection_log, total_log, new_contact_log, new_enviro_log, new_outbreak_log))
                 if new_contact_log != new_infection_contact_output:
                     success = False
                     report_file.write(
