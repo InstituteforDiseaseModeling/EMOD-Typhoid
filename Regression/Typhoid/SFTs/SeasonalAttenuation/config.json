@@ -1,8 +1,6 @@
 {
     "parameters": {
         "Typhoid_Carrier_Probability_Female" :0.13,
-        "Typhoid_Environmental_Ramp_Down_Duration": 170,
-        "Typhoid_Environmental_Ramp_Up_Duration": 30,
         "Acquisition_Blocking_Immunity_Decay_Rate": 0.1, 
         "Acquisition_Blocking_Immunity_Duration_Before_Decay": 60, 
         "Age_Initialization_Distribution_Type": "DISTRIBUTION_COMPLEX", 
@@ -130,10 +128,13 @@
 		"Typhoid_6year_Susceptible_Fraction": 0.3613,
 		"Typhoid_Contact_Exposure_Rate": 0.35,
 		"Typhoid_Environmental_Exposure_Rate": 0.5,
+
 		"Typhoid_Environmental_Ramp_Duration": 80,
         "Typhoid_Environmental_Cutoff_Days": 160, 
         "Typhoid_Environmental_Peak_Start": 360, 
-        "Typhoid_Environmental_Peak_Multiplier": 1.0, 
+        "Typhoid_Environmental_Ramp_Down_Duration": 170,
+        "Typhoid_Environmental_Ramp_Up_Duration": 30,
+
 		"Typhoid_Symptomatic_Fraction": 0.1,
 		"Typhoid_Exposure_1983": 0,
 		"Typhoid_Exposure_1984": 0,

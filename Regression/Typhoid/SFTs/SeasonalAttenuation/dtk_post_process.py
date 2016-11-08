@@ -41,7 +41,12 @@ def application( report_file ):
                 lines.append( line )
 
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
-    #c1 = cdj["Infectiousness_Asymptomatic_Naive_1"]
+    rud = cdj[ "Typhoid_Environmental_Ramp_Up_Duration" ] 
+    rdd = cdj[ "Typhoid_Environmental_Ramp_Down_Duration" ] 
+    erd = cdj[ "Typhoid_Environmental_Ramp_Duration" ] # e.g., 80
+    ecd = cdj[ "Typhoid_Environmental_Cutoff_Days" ] # e.g., 160
+    eps = cdj[ "Typhoid_Environmental_Peak_Start" ] # e.g., 360
+		
     success = True
     with open( sft.sft_output_filename, "w" ) as report_file:
         if len( lines ) == 0:
