@@ -49,8 +49,7 @@ class Monitor(threading.Thread):
                 cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir, "--python-script-path", self.config_json["PSP"]]
             else:
                 cmd = [self.config_json["bin_path"], "-C", "config.json", "--input-path", actual_input_dir ]
-            #print( "Calling '" + str(cmd) + "' from " + sim_dir + "\n" )
-            print( "Running '" + str(self.config_json["parameters"]["Config_Name"]) + "' in " + sim_dir + "\n" )
+            print( "Calling '" + str(cmd) + "' from " + sim_dir + "\n" )
             proc = subprocess.Popen( cmd, stdout=stdout, stderr=stderr, cwd=sim_dir )
             proc.wait()
         # JPS - do we want to append config_json["parameters"]["Geography"] to the input_path here too like we do in the HPC case?
@@ -70,20 +69,9 @@ class Monitor(threading.Thread):
                     if ( file.endswith( ".json" ) or file.endswith( ".csv" ) ) and file[0] != ".":
                         self.verify( sim_dir, file, "Channels" )
         else:
-            # print( "Scientific Feature Testing: check scientific_feature_report.txt" )
-            report_name = "scientific_feature_report.txt"
-            sfr = os.path.join( sim_dir, report_name )
-            with open( sfr ) as sfr_file:
-                sfr_data = sfr_file.read()
-                #print( sfr_data )
-                if "SUMMARY: Success=True" in sfr_data:
-                    #print( self.config_id + " passed (" + str(self.duration) + ") - " + report_name )
-                    print( self.config_id + " passed." )
-                    self.report.addPassingTest(self.config_id, self.duration)
-                else:
-                    fail_text = self.config_id + " SFT failed."
-                    print( self.config_id + " failed (" + str(self.duration) + ") - " + report_name )
-                    self.report.addFailingTest( self.config_id, fail_text, os.path.join( sim_dir, report_name ) )
+            self.science_verify( sim_dir )
+
+
         self.__class__.sems.release()
 
     def get_json_data_hash( self, data ):
@@ -288,10 +276,6 @@ class Monitor(threading.Thread):
             if os.path.exists( alt_ref_path ):
                 ref_path = alt_ref_path
 
-
-        if os.name == "nt" and report_name == "InsetChart.linux.json":
-            return True
-
         #if test_hash != ref_hash:
         if os.path.exists( test_path ) == False:
             print( "Test file \"" + test_path + "\" -- for " + self.config_id + " -- does not exist." )
@@ -310,7 +294,7 @@ class Monitor(threading.Thread):
 
         if fail_validation:
             #print( "Validation failed, add to failing tests report." )
-            self.report.addFailingTest( self.config_id, failure_txt, os.path.join( sim_dir, ( "output/" + report_name ) ) )
+            self.report.addFailingTest( self.config_id, failure_txt, os.path.join( sim_dir, ( "output/" + report_name ) ) ) 
 
             if len(failures) > 0 and not self.params.hide_graphs and report_name.startswith( "InsetChart" ):
                 #print( "Plotting charts for failure deep dive." )  
@@ -329,5 +313,24 @@ class Monitor(threading.Thread):
                     print("Problem writing time.txt file (repeat of error Jonathan was seeing on linux?)\n")
                     print(str(e))
 
+    def science_verify( self, sim_dir ):
+        #print( "Scientific Feature Testing: check scientific_feature_report.txt" )
+        report_name = "scientific_feature_report.txt"
+        sfr = os.path.join( sim_dir, report_name )
+        if os.path.exists( sfr ):
+            with open( sfr ) as sfr_file:
+                sfr_data = sfr_file.read()
+                if "SUMMARY: Success=True" in sfr_data:
+                    print( self.config_id + " passed (" + str(self.duration) + ") - " + report_name )
+                    #print( self.config_id + " passed." )
+                    self.report.addPassingTest(self.config_id, self.duration)
+                else:
+                    fail_text = self.config_id + " SFT failed."
+                    print( self.config_id + " failed (" + str(self.duration) + ") - " + report_name )
+                    print( sfr_data )
+                    self.report.addFailingTest( self.config_id, fail_text, os.path.join( sim_dir, report_name ) )
+        else:
+            print( self.config_id + " failed (" + str(self.duration) + ") - " + report_name + " not generated. This could mean an error in the dtk_post_process.py script, imported scripts, including import errors, which can include not finding a shared python module in the import path.")
+            self.report.addFailingTest( self.config_id, "No " + report_name, os.path.join( sim_dir, report_name ) )
         
 

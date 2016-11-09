@@ -94,7 +94,10 @@ class HpcMonitor(regression_local_monitor.Monitor):
         jobsubmit_options[hpc_resource_option] = hpc_resource_count
         if self.params.measure_perf:
             jobsubmit_options['/exclusive'] = ' '
-        jobsubmit_options['/stdout:'] = 'StdOut.txt'
+        if self.compare_results_to_baseline:
+            jobsubmit_options['/stdout:'] = 'StdOut.txt'
+        else:
+            jobsubmit_options['/stdout:'] = 'Test.txt'
         jobsubmit_options['/stderr:'] = 'StdErr.txt'
         jobsubmit_options['/priority:'] = 'Lowest'
         jobsubmit_params = [mpi_command.Commandline]
@@ -187,6 +190,9 @@ class HpcMonitor(regression_local_monitor.Monitor):
                                 for file in os.listdir( os.path.join( self.config_id, "output" ) ):
                                     if ( file.endswith( ".json" ) or file.endswith( ".csv" ) or file.endswith( ".kml" ) or file.endswith( ".bin" ) ) and file[0] != "." and file != "transitions.json" and "linux" not in file:
                                         self.verify( sim_dir, file, "Channels" )
+                        else:
+                            self.science_verify( sim_dir )
+
                     break
             time.sleep(5)
         self.__class__.sems.release()
