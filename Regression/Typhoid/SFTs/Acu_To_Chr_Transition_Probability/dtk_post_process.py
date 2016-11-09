@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # This SFT test the following statements:
-# All infections begin in prepatent.
-# The proportion of individuals who move to acute infections is determined by the config parameter Config:TSF. The remainder shall move to subclinical.
-# All new acute cases and subclinical cases are transited from prepatent state only.
+# All Acute infections go to Chronic or Susceptible state.
+# The proportion of individuals who move to chronic infections is determined by the config parameter Config:CPG multiply by hardcoded Gallstones table. The remainder shall move to Susceptible.
+# This test passes when the number of went to Chronic cases is within Binormal 95% confidence interval
+# for each test, there is 5% of chance that we will reject the hypothesis while it's true
 
 import re
 import json
@@ -11,7 +12,6 @@ import pdb
 import os
 import dtk_sft as sft
 
-# C version: infectiousness = exp( -1 * _infectiousness_param_1 * pow(duration - _infectiousness_param_2,2) ) / _infectiousness_param_3;
 def get_val( key, line ):
     regex = key + "(\d*\.*\d*)"
     match = re.search(regex, line)
