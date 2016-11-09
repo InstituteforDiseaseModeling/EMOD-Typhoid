@@ -429,7 +429,7 @@ namespace Kernel
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
-                float infects = 1.0f-pow(1.0f + fExposure * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha); // Dose-response for prob of infection
+                float infects = 1.0f-pow( 1.0f + fExposure * ( pow( 2.0f, (1/alpha) ) -1.0f )/N50, -alpha ); // Dose-response for prob of infection
                 float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
                 LOG_VALID_F( "Individual=%d: immunity calculated as %f from typhoid_protection_per_infection=%f and _infection_count=%d.\n",
                              GetSuid().data, immunity, IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count );
@@ -468,10 +468,7 @@ namespace Kernel
             {
                 return;
             }
-            //LOG_INFO_F("contact congation %f\n", fContact);
-            //float infects = 1-pow(1 + fContact * (pow(2,(1/alpha)-1)/N50),-alpha);
-            float infects = 1.0f-pow(1.0f + fContact * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha);
-            //LOG_INFO_F("Environ contagion %f %f\n", fContact, infects);
+            float infects = 1.0f-pow( 1.0f + fContact * ( pow( 2.0f, (1/alpha) )-1.0f )/N50,-alpha );
 
             float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);             
             LOG_VALID_F( "Individual=%d: immunity calculated as %f from typhoid_protection_per_infection=%f and _infection_count=%d.\n",
