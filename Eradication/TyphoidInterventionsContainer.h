@@ -60,6 +60,8 @@ namespace Kernel
         virtual float GetEnviroDepositAttenuation() const;
         virtual float GetContactExposuresAttenuation() const; 
         virtual float GetEnviroExposuresAttenuation() const;
+        virtual float GetContactDoseAttenuation() const; 
+        virtual float GetEnviroDoseAttenuation() const;
 
         virtual void Update(float dt); // example of intervention timestep update
 

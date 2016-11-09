@@ -11,7 +11,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 #include "TyphoidInterventionsContainer.h"
 #include "IWaningEffect.h"
-//#include "Interventions.h"
+#include "Interventions.h"
+#include "IntranodeTransmissionTypes.h"
 
 namespace Kernel
 { 

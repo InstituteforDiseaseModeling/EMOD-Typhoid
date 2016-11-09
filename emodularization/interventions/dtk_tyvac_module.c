@@ -49,7 +49,7 @@ static void initTV( bool dr = false )
         _instance.Configure( nullptr  );
         Kernel::JsonConfigurable::_dryrun = false;
     }
-    else if( configStubJson == nullptr )
+    else // if( configStubJson == nullptr )
     {
         configStubJson = Configuration::Load("tv.json");
         Kernel::JsonConfigurable::_useDefaults = true;
@@ -104,6 +104,13 @@ class StubTyphoidInterventionsContainer : //public IndividualHumanEnvironmental,
             return status;
         }
 
+        float current_shedding_attenuation_contact;
+        float current_shedding_attenuation_environment;
+        float current_dose_attenuation_contact;
+        float current_dose_attenuation_environment;
+        float current_exposures_attenuation_contact;
+        float current_exposures_attenuation_environment;
+
         // This is so we can pass a faux-man
         virtual void SetContextTo(IIndividualHumanContext *context) override { std::cout << __FUNCTION__ << std::endl; }
         virtual IIndividualHumanContext* GetParent() override {  std::cout << __FUNCTION__ << std::endl; return nullptr; }
@@ -114,7 +121,7 @@ class StubTyphoidInterventionsContainer : //public IndividualHumanEnvironmental,
         virtual bool ContainsExisting( const std::string &iv_name ) override {  std::cout << __FUNCTION__ << std::endl; return false; }
         virtual bool GiveIntervention( IDistributableIntervention * pIV ) override
         {
-            std::cout << "Intervention distributed to individual. Call py callback here?" << std::endl;
+            std::cout << "Intervention distributed to individual." << std::endl;
         }
 
         virtual void Test() 
@@ -122,20 +129,81 @@ class StubTyphoidInterventionsContainer : //public IndividualHumanEnvironmental,
             std::cout << __FUNCTION__ << std::endl;
         }
 
-        virtual void ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override
+
+        void ApplyReducedSheddingEffect( float rate, const TransmissionRoute::Enum &route )
         {
-            std::cout << __FUNCTION__ << ": rate = " << rate << ", route = " << route << std::endl;
+            if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+            {
+                //LOG_VALID_F( "%s: Set current_shedding_attenuation_environment  to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
+                current_shedding_attenuation_environment = rate;
+            }
+            else // CONTACT
+            {
+                //LOG_VALID_F( "%s: Set current_shedding_attenuation_contact to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
+                current_shedding_attenuation_contact = rate;
+            }
         }
 
-        virtual void ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override
+        void ApplyReducedDoseEffect( float rate, const TransmissionRoute::Enum &route )
         {
-            std::cout << __FUNCTION__ << ": rate = " << rate << ", route = " << route << std::endl;
+            if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+            {
+                //LOG_VALID_F( "%s: Set current_dose_attenuation_environment to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
+                current_dose_attenuation_environment = rate;
+            }
+            else // CONTACT
+            {
+                //LOG_VALID_F( "%s: Set current_dose_attenuation_contact to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
+                current_dose_attenuation_contact = rate;
+            }
         }
 
-        virtual void ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route = TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL ) override
+        void ApplyReducedNumberExposuresEffect( float rate, const TransmissionRoute::Enum &route )
         {
-            std::cout << __FUNCTION__ << ": rate = " << rate << ", route = " << route << std::endl;
+            if( route == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL )
+            {
+                current_exposures_attenuation_environment = rate;
+                //LOG_VALID_F( "%s: Set current_exposures_attenuation_environment to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
+            }
+            else // CONTACT
+            {
+                //LOG_VALID_F( "%s: Set current_exposures_attenuation_contact to %f for individual %d.\n", __FUNCTION__, rate, parent->GetSuid().data );
+                current_exposures_attenuation_contact = rate;
+            }
         }
+
+        float GetContactDepositAttenuation() const
+        {
+            //LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_contact for individual %d.\n", __FUNCTION__, current_shedding_attenuation_contact, parent->GetSuid().data );
+            return current_shedding_attenuation_contact;
+        }
+
+        float GetEnviroDepositAttenuation() const
+        {
+            //LOG_VALID_F( "%s: Returning %f for current_shedding_attenuation_environment for individual %d.\n", __FUNCTION__, current_shedding_attenuation_environment, parent->GetSuid().data );
+            return current_shedding_attenuation_environment;
+        }
+
+        float GetContactDoseAttenuation() const
+        {
+            return current_dose_attenuation_contact;
+        }
+
+        float GetEnviroDoseAttenuation() const
+        {
+            return current_dose_attenuation_environment;
+        }
+
+        float GetContactExposuresAttenuation() const
+        {
+            return current_exposures_attenuation_contact;
+        }
+
+        float GetEnviroExposuresAttenuation() const
+        {
+            return current_exposures_attenuation_environment;
+        }
+
 };
 StubTyphoidInterventionsContainer man;
 std::vector<StubTyphoidInterventionsContainer> _pop;
@@ -234,6 +302,19 @@ getSchema(PyObject* self, PyObject* args)
     return Py_BuildValue("s", schema_ostream.str().c_str() );;
 }
 
+static PyObject*
+getModifiers(PyObject* self, PyObject* args)
+{
+    float cdepa = man.GetContactDepositAttenuation();
+    float cdosa = man.GetContactDoseAttenuation();
+    float cexpa = man.GetContactExposuresAttenuation() ;
+    float edepa = man.GetEnviroDepositAttenuation();;
+    float edosa = man.GetEnviroDoseAttenuation();
+    float eexpa = man.GetEnviroExposuresAttenuation();
+
+    return Py_BuildValue("(ffffff)", cdepa, cdosa, cexpa, edepa, edosa, eexpa );
+}
+
 static PyMethodDef DtktyvacMethods[] =
 {
      {"create_batch", createBatch, METH_VARARGS, "Create a list of N tyvacs."},
@@ -242,6 +323,7 @@ static PyMethodDef DtktyvacMethods[] =
      {"distribute", distribute, METH_VARARGS, "Distribute."},
      {"update", update, METH_VARARGS, "Update."},
      {"my_set_callback", my_set_callback, METH_VARARGS, "Update."},
+     {"get_modifiers", getModifiers, METH_VARARGS, "Update."},
      {"get_schema", getSchema, METH_VARARGS, "Update."},
      {NULL, NULL, 0, NULL}
 };

@@ -75,13 +75,11 @@ namespace Kernel
 
     float IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_contact_exposure_rate = 0.0f;
-    //float IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate_seasonal_max = 0.0f;
+
     float IndividualHumanTyphoidConfig::typhoid_environmental_ramp_up_duration = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_environmental_ramp_down_duration = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_environmental_peak_start = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_environmental_cutoff_days = 0.0f;
-    //float IndividualHumanTyphoidConfig::typhoid_environmental_amplification = 0.0f;
-    //float IndividualHumanTyphoidConfig::typhoid_environmental_peak_multiplier = 0.0f;
 
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
@@ -196,7 +194,7 @@ namespace Kernel
 #else 
         _infection_count=0; // should not be necessary
         _routeOfInfection = TransmissionRoute::TRANSMISSIONROUTE_ALL;// IS THIS OK for a default? DLC
-        doseTracking = "High"; // ???
+        doseTracking = "Low";
 #endif
     }
 
@@ -247,15 +245,15 @@ namespace Kernel
         susceptibility = newsusceptibility;
     }
 
-    // I think I want to move this function to NodeTyphoid
+    // I think I want to move this function to NodeTyphoid: We don't want to perform same calculation for each individual (each timestep).
     float IndividualHumanTyphoid::getSeasonalAmplitude() const
     {
         float amplification = 0.0f;
 
+        float peak_amplification = 1.0f;
         float ramp_down_days = IndividualHumanTyphoidConfig::typhoid_environmental_ramp_down_duration;
         float ramp_up_days = IndividualHumanTyphoidConfig::typhoid_environmental_ramp_up_duration;
         float cutoff_days = IndividualHumanTyphoidConfig::typhoid_environmental_cutoff_days;
-        float peak_amplification = 1.0f;
         float peak_start_day = floor(IndividualHumanTyphoidConfig::typhoid_environmental_peak_start); 
         if (peak_start_day > DAYSPERYEAR)
         {
@@ -272,10 +270,6 @@ namespace Kernel
         float slope_up = peak_amplification / ramp_up_days;
         float slope_down = peak_amplification / ramp_down_days;
 
-        //float HarvestDayOfYear = nDayOfYear - IndividualHumanTyphoidConfig::environmental_incubation_period;
-        //if( HarvestDayOfYear < 1){
-        //    HarvestDayOfYear = DAYSPERYEAR - HarvestDayOfYear;
-        //}
         int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
         int nDayOfYear = SimDay % DAYSPERYEAR;
 #define HALF (0.5f)
@@ -334,10 +328,10 @@ namespace Kernel
             if ((nDayOfYear > peak_end_day) && (nDayOfYear <= (peak_end_day+ramp_down_days)) )
             { // end of wastewater irrigation
                 amplification= peak_amplification-(((nDayOfYear-peak_end_day)- HALF )*slope_down);
-            }
-
-        }
-        LOG_DEBUG_F("day of year %i amplification %f start %f end %f \n", nDayOfYear, amplification, peak_start_day, peak_end_day); 
+            } 
+        } 
+        
+        LOG_VALID_F("amplification calculated as %f: day of year=%d, start=%f, end=%f, ramp_up=%f, ramp_down=%f, cutoff=%f.\n", amplification, nDayOfYear, peak_start_day, peak_end_day, ramp_up_days, ramp_down_days, cutoff_days ); 
         return amplification;
     }
 
@@ -357,6 +351,7 @@ namespace Kernel
         {
             doseTracking = "High";
         }
+        LOG_VALID_F( "doseTracking set to %s based on value of %f.\n", doseTracking.c_str(), fEnvironment );
         release_assert( doseTracking != "None" );
     }
 
@@ -423,7 +418,7 @@ namespace Kernel
 
         if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL) 
         {
-            float fEnvironment = cp->GetTotalContagion();
+            float fEnvironment = cp->GetTotalContagion() * ((TyphoidInterventionsContainer*)interventions)->GetEnviroDoseAttenuation();
             if (fEnvironment==0.0)
             {
                 return;
@@ -434,8 +429,10 @@ namespace Kernel
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
-                float infects = 1.0f-pow(1.0f + fExposure * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha); // Dose-response for prob of infection
+                float infects = 1.0f-pow( 1.0f + fExposure * ( pow( 2.0f, (1/alpha) ) -1.0f )/N50, -alpha ); // Dose-response for prob of infection
                 float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
+                LOG_VALID_F( "Individual=%d: immunity calculated as %f from typhoid_protection_per_infection=%f and _infection_count=%d.\n",
+                             GetSuid().data, immunity, IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count );
                 //float prob = 1.0f- pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt);
                 int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate * dt * intervention_multiplier);
                 //int number_of_exposures = randgen->Poisson(exposure_rate * dt);
@@ -445,8 +442,8 @@ namespace Kernel
                     prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
                 }
                 //LOG_DEBUG_F("Environ contagion %f amp %f day %f\n", fEnvironment, amplification, HarvestDayOfYear);
-                LOG_VALID_F( "Exposing inividual %d on route 'environment': prob=%f, infects=%f, immunity=%f, fExposure=%f, fEnvironment=%f.\n",
-                             GetSuid().data, prob, infects, immunity, fExposure, fEnvironment
+                LOG_VALID_F( "Exposing inividual %d age %f on route 'environment': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fExposure=%f, fEnvironment=%f, iv_mult=%f.\n",
+                             GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fExposure, fEnvironment, intervention_multiplier
                            );
                 if( SMART_DRAW( prob ) )
                 {
@@ -466,17 +463,16 @@ namespace Kernel
         }
         else if (transmission_route==TransmissionRoute::TRANSMISSIONROUTE_CONTACT)
         {
-            float fContact=cp->GetTotalContagion();
+            float fContact=cp->GetTotalContagion() * ((TyphoidInterventionsContainer*)interventions)->GetContactDoseAttenuation();
             if (fContact==0)
             {
                 return;
             }
-            //LOG_INFO_F("contact congation %f\n", fContact);
-            //float infects = 1-pow(1 + fContact * (pow(2,(1/alpha)-1)/N50),-alpha);
-            float infects = 1.0f-pow(1.0f + fContact * (pow(2.0f,(1/alpha)-1.0f)/N50),-alpha);
-            //LOG_INFO_F("Environ contagion %f %f\n", fContact, infects);
+            float infects = 1.0f-pow( 1.0f + fContact * ( pow( 2.0f, (1/alpha) )-1.0f )/N50,-alpha );
 
             float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);             
+            LOG_VALID_F( "Individual=%d: immunity calculated as %f from typhoid_protection_per_infection=%f and _infection_count=%d.\n",
+                         GetSuid().data, immunity, IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count );
             //float prob = min(1.0f, 1.0f- (float) pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt));
             float intervention_multiplier = ((TyphoidInterventionsContainer*)interventions)->GetContactExposuresAttenuation();
             int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_contact_exposure_rate * dt * intervention_multiplier);
@@ -485,8 +481,8 @@ namespace Kernel
             {
                 prob = 1.0f - pow(1.0f - immunity * infects * interventions-> GetInterventionReducedAcquire(), number_of_exposures);
             }
-            LOG_VALID_F( "Exposing inividual %d on route 'contact': prob=%f, infects=%f, immunity=%f, fContact=%f.\n",
-                         GetSuid().data, prob, infects, immunity, fContact
+            LOG_VALID_F( "Exposing inividual %d age %f on route 'contact': prob=%f, infects=%f, immunity=%f, num_exposures=%d, fContact=%f, iv_mult=%f.\n",
+                         GetSuid().data, GetAge(), prob, infects, immunity, number_of_exposures, fContact, intervention_multiplier
                        );
             if (prob>0.0f && randgen->e() < prob)
             {
@@ -674,7 +670,11 @@ namespace Kernel
 
     void IndividualHumanTyphoid::AcquireNewInfection(StrainIdentity *infstrain, int incubation_period_override )
     {
-        LOG_DEBUG_F("AcquireNewInfection: route %d\n", _routeOfInfection);
+        if(IsInfected() )
+        {
+            return;
+        }
+        LOG_DEBUG_F("AcquireNewInfection: route %d, IsInfected=%d\n", _routeOfInfection, IsInfected() );
         if( infstrain )
         {
             if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL)

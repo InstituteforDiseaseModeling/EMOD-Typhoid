@@ -70,15 +70,18 @@ def application( report_file ):
             if timers_l==[] and timers_h==[] and timers_m==[]:
                 report_file.write( "Found no data matching test case.\n")
             else:
-                if timers_l!=[]:
-                    if not sft.test_lognorm(timers_l,lognormal_mu_l,lognormal_sigma_l,report_file, "Low"):
-                        success=False
-                if timers_m != []:
-                    if not sft.test_lognorm(timers_m, lognormal_mu_m, lognormal_sigma_m, report_file, "Medium"):
-                        success = False
-                if timers_h != []:
-                    if not sft.test_lognorm(timers_h, lognormal_mu_h, lognormal_sigma_h, report_file, "high"):
-                        success = False
+                if timers_l==[]:
+                    report_file.write("Found no Prepatent case in Category doseTracking = Low.\n")
+                elif not sft.test_lognorm(timers_l,lognormal_mu_l,lognormal_sigma_l,report_file, "Low"):
+                    success=False
+                if timers_m == []:
+                    report_file.write("Found no Prepatent case in Category doseTracking = Medium.\n")
+                elif not sft.test_lognorm(timers_m, lognormal_mu_m, lognormal_sigma_m, report_file, "Medium"):
+                    success = False
+                if timers_h == []:
+                    report_file.write("Found no Prepatent case in Category doseTracking = High.\n")
+                elif not sft.test_lognorm(timers_h, lognormal_mu_h, lognormal_sigma_h, report_file, "high"):
+                    success = False
 
             if not success:
                 report_file.write("Timers and logs in sorted_duration.json\n")
