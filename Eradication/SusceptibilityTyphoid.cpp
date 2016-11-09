@@ -95,7 +95,7 @@ namespace Kernel
         {
             if( randgen->e() < IndividualHumanTyphoidConfig::typhoid_6month_susceptible_fraction)
             {
-                LOG_DEBUG_F( "1-yo being made susceptible.\n" );
+                LOG_DEBUG_F( "6-month old being made susceptible.\n" );
                 mod_acquire = 1.0f;
             }
         }
