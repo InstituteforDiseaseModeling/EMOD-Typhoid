@@ -287,7 +287,7 @@ namespace Kernel
             }
             else
             {
-                LOG_VALID_F( "Individual %d age %f, sex %d, just recovered (from acute).\n", GetSuid().data, age, sex );
+                LOG_VALID_F( "Individual %d age %f, sex %d, just recovered (from acute).\n", parent->GetSuid().data, age, sex );
                 state_to_report = SUSCEPT_STATE_LABEL;
             }
         } 
@@ -332,7 +332,7 @@ namespace Kernel
         }
         else
         {
-            LOG_VALID_F( "Individual %d age %f, sex %s, just recovered from Subclinical infection.\n",
+            LOG_VALID_F( "Individual %d age %f, sex %s, just recovered (from subclinical).\n",
                          parent->GetSuid().data, age, ( sex==0 ? "Male" : "Female" )
                        );
             state_to_report = SUSCEPT_STATE_LABEL;
