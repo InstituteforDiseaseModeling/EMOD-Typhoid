@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # This SFT test the following statements:
-# All infections begin in prepatent.
-# The proportion of individuals who move to acute infections is determined by the config parameter Config:TSF. The remainder shall move to subclinical.
-# All new acute cases and subclinical cases are transited from prepatent state only.
+# All new infections from route contact are in category high
+# All new infections from outbreak are in category low
+# At each time step, the # of new infections from route contact in log matches the data in "New Infections By Route (CONTACT)" channel in InsetChart.json
+# At each time step, the # of new infections from route environment in log matches the data in "New Infections By Route (ENVIRONMENT)" channel in InsetChart.json
 
 import re
 import json
@@ -43,7 +44,7 @@ def application( report_file ):
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
     tsf = cdj["Typhoid_Symptomatic_Fraction"]
     start_time=cdj["Start_Time"]
-    isj=json.loads(open("output/InsetChart.json").read())["Channels"]
+    isj=json.loads(open("output\InsetChart.json").read())["Channels"]
     nibrc=isj["New Infections By Route (CONTACT)"]["Data"]
     nibre=isj["New Infections By Route (ENVIRONMENT)"]["Data"]
 
@@ -78,17 +79,17 @@ def application( report_file ):
                 count_new_infection+=1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
-            if re.search( "AcquireNewInfection:.*route=0", line ):
+            if re.search( "AcquireNewInfection: route 0", line ):
                 #print line
                 count_Outbreak += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
-            if re.search( "AcquireNewInfection:.*route=1", line ):
+            if re.search( "AcquireNewInfection: route 1", line ):
                 #print line
                 count_contact += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
-            if re.search( "AcquireNewInfection:.*route=2", line ):
+            if re.search( "AcquireNewInfection: route 2", line ):
                 #print line
                 count_enviro += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
@@ -111,7 +112,7 @@ def application( report_file ):
                 new_infection_environment_output=nibre[x]
                 if new_infection_log !=  total_log:
                     success = False
-                    report_file.write("BAD: At time {0}: new prepatent case = {1}, expected {2} new infection by route (contact) = {3}, new infection by route (environment) = {4}, new infection by Outbreak = {5}).\n".format(x+start_time + 1,new_infection_log, total_log, new_contact_log, new_enviro_log, new_outbreak_log))
+                    report_file.write("BAD: At time {0}: new prepatent case = {1}, expected {2}(new infection by route (contact) = {3}, new infection by route (environment) = {4}, new infection by Outbreak = {5}).\n".format(x+start_time + 1,new_infection_log, total_log, new_contact_log, new_enviro_log, new_outbreak_log))
                 if new_contact_log != new_infection_contact_output:
                     success = False
                     report_file.write(
@@ -124,12 +125,13 @@ def application( report_file ):
                             x + start_time + 1, new_enviro_log, new_infection_environment_output))
         for i in range(0, len(lines)):
             line = lines[i]
-            if re.search("AcquireNewInfection: route=0", line):
+            if re.search("AcquireNewInfection: route 0", line):
                 next_line= lines[i+1]
                 if not re.search("doseTracking = Low", next_line):
                     error_log.append(line)
                     error_log.append(next_line)
-            if re.search("AcquireNewInfection: route=1", line):
+            if re.search("AcquireNewInfection: route 1", line):
+                next_line= lines[i+1]
                 if not re.search("doseTracking = High", next_line):
                     error_log.append(line)
                     error_log.append(next_line)
