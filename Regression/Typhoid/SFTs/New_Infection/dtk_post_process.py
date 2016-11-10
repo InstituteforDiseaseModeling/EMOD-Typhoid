@@ -78,17 +78,17 @@ def application( report_file ):
                 count_new_infection+=1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
-            if re.search( "AcquireNewInfection: route 0", line ):
+            if re.search( "AcquireNewInfection:.*route=0", line ):
                 #print line
                 count_Outbreak += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
-            if re.search( "AcquireNewInfection: route 1", line ):
+            if re.search( "AcquireNewInfection:.*route=1", line ):
                 #print line
                 count_contact += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
-            if re.search( "AcquireNewInfection: route 2", line ):
+            if re.search( "AcquireNewInfection:.*route=2", line ):
                 #print line
                 count_enviro += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
@@ -124,12 +124,12 @@ def application( report_file ):
                             x + start_time + 1, new_enviro_log, new_infection_environment_output))
         for i in range(0, len(lines)):
             line = lines[i]
-            if re.search("AcquireNewInfection: route 0", line):
+            if re.search("AcquireNewInfection: route=0", line):
                 next_line= lines[i+1]
                 if not re.search("doseTracking = Low", next_line):
                     error_log.append(line)
                     error_log.append(next_line)
-            if re.search("AcquireNewInfection: route 1", line):
+            if re.search("AcquireNewInfection: route=1", line):
                 if not re.search("doseTracking = High", next_line):
                     error_log.append(line)
                     error_log.append(next_line)
