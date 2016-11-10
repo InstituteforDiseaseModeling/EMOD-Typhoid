@@ -103,6 +103,20 @@ def main():
         key = "tests"
         if "science" in reglistjson:
             key = "science"
+            if os.environ.has_key( "HOME" ):
+                homepath = os.getenv( "HOME" )
+            elif params.local_execution:
+                homepath = os.path.join( os.getenv( "HOMEDRIVE" ), os.getenv( "HOMEPATH" ) )
+            else: #cluster/HPC
+                homepath = os.path.join( params.sim_root, ".." )
+
+            flag = os.path.join( homepath, ".rt_show.sft" )
+            if os.path.exists( flag ):
+                os.remove( flag )
+            if params.hide_graphs == False:
+                #print ("Should find way to tell SFT's not to display graphs." )
+                open(flag, 'w').close()  # this seems like lame way to touch a file, but works on windows. blech.
+
         print( "Running regression...\n" )
         for simcfg in reglistjson[ key ]:
             configjson = None
@@ -117,7 +131,8 @@ def main():
                     configjson = ru.flattenConfig( os.path.join( simcfg["path"],"param_overrides.json" ) )
                 else:
                     configjson = json.loads( open( os.path.join( simcfg["path"],"config.json" ) ).read() )
-            except:
+            except Exception as ex:
+                print( str( ex ) )
                 report.addErroringTest(simcfg["path"], "Error flattening config.", "(no simulation directory created).")
                 configjson = None
 
