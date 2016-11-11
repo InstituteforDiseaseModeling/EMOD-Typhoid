@@ -24,6 +24,7 @@ namespace Kernel {
             CountdownTimer( float initValue );
             void Decrement( float dt ); 
             CountdownTimer& operator=( float val );
+            bool IsDead() const { return dead; } 
 
             std::function< void(float) > handle;
             static void serialize(IArchive& ar, CountdownTimer & ct);

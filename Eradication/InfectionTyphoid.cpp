@@ -343,8 +343,11 @@ namespace Kernel
     {
 
         LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", parent->GetSuid().data, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
-        prepatent_timer.Decrement( dt );
-        if (subclinical_timer > UNINIT_TIMER)
+        if( prepatent_timer.IsDead() == false )
+        {
+            prepatent_timer.Decrement( dt );
+        }
+        else if (subclinical_timer > UNINIT_TIMER)
         { // asymptomatic infection
             //              LOG_INFO_F("is subclinical dur %d, %d, %d\n", _subclinical_duration, subclinical_timer, dt);
             state_to_report=SUBCLINICAL_STATE_LABEL;
@@ -354,7 +357,7 @@ namespace Kernel
                 handleSubclinicalExpiry();
             }
         }
-        if (acute_timer > UNINIT_TIMER)
+        else if (acute_timer > UNINIT_TIMER)
         {
             // acute infection
             state_to_report = ACUTE_STATE_LABEL;
@@ -388,7 +391,7 @@ namespace Kernel
         //Some fraction are treated effectively, some become chronic carriers, some die, some remain infectious
 
 
-        if (chronic_timer > UNINIT_TIMER)
+        else if (chronic_timer > UNINIT_TIMER)
         {
             state_to_report=CHRONIC_STATE_LABEL;
             chronic_timer -= dt;
