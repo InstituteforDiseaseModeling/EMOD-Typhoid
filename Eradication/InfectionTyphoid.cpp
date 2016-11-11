@@ -433,7 +433,7 @@ namespace Kernel
             infectiousness = treatment_multiplier*base_infectiousness*irt;
             LOG_VALID_F( "ACUTE infectiousness calculated as %f\n", infectiousness );
         }
-        else if (prepatent_timer>0)
+        else if (!prepatent_timer.IsDead())
         {
             infectiousness = base_infectiousness*IndividualHumanTyphoidConfig::typhoid_prepatent_relative_infectiousness*irt;
             LOG_VALID_F( "PREPATENT infectiousness calculated as %f\n", infectiousness );
