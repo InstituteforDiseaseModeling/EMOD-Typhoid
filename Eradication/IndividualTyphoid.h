@@ -58,6 +58,16 @@ namespace Kernel
         //static float typhoid_environmental_amplification;
         static float typhoid_environmental_peak_multiplier;
 
+		static float typhoid_exposure_1983;
+		static float typhoid_exposure_1984;
+		static float typhoid_exposure_1985;
+		static float typhoid_exposure_1986;
+		static float typhoid_exposure_1987;
+		static float typhoid_exposure_1988;
+		static float typhoid_exposure_1989;
+		static float typhoid_exposure_1990;
+		static float typhoid_exposure_1991;
+
         virtual bool Configure( const Configuration* config );
     };
 

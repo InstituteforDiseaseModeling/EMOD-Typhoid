@@ -80,6 +80,15 @@ namespace Kernel
     float IndividualHumanTyphoidConfig::typhoid_environmental_ramp_down_duration = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_environmental_peak_start = 0.0f;
     float IndividualHumanTyphoidConfig::typhoid_environmental_cutoff_days = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1983 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1984 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1985 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1986 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1987 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1988 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1989 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1990 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1991 = 0.0f;
 
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
@@ -110,6 +119,15 @@ namespace Kernel
         initConfigTypeMap( "Typhoid_Environmental_Peak_Start", &typhoid_environmental_peak_start, "Typhoid_Environmental_Peak_Start.", 0, 500, 2);
         initConfigTypeMap( "Typhoid_6year_Susceptible_Fraction", &typhoid_6year_susceptible_fraction, "Typhoid_6year_Susceptible_Fraction.", 0, 1, 0.5);
         initConfigTypeMap( "Typhoid_Symptomatic_Fraction", &typhoid_symptomatic_fraction, "Typhoid_Symptomatic_Fraction.", 0, 1, 0.5);    
+		initConfigTypeMap("Typhoid_Exposure_1983", &typhoid_exposure_1983, "Typhoid_Exposure_1983.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1984", &typhoid_exposure_1984, "Typhoid_Exposure_1984.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1985", &typhoid_exposure_1985, "Typhoid_Exposure_1985.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1986", &typhoid_exposure_1986, "Typhoid_Exposure_1986.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1987", &typhoid_exposure_1987, "Typhoid_Exposure_1987.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1988", &typhoid_exposure_1988, "Typhoid_Exposure_1988.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1989", &typhoid_exposure_1989, "Typhoid_Exposure_1989.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1990", &typhoid_exposure_1990, "Typhoid_Exposure_1990.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1991", &typhoid_exposure_1991, "Typhoid_Exposure_1991.", 0, 1, 0.5);
 
         SusceptibilityTyphoidConfig fakeImmunity;
         fakeImmunity.Configure( config );
@@ -335,6 +353,8 @@ namespace Kernel
         return amplification;
     }
 
+
+
 #define HIGH_ENVIRO_DOSE_THRESHOLD (55000000)
 #define LOW_ENVIRO_DOSE_THRESHOLD (5050000)
     void IndividualHumanTyphoid::quantizeEnvironmentalDoseTracking( float fEnvironment )
@@ -424,12 +444,40 @@ namespace Kernel
                 return;
             }
             float amplification = getSeasonalAmplitude();
+			int SimYear = floor((int)parent->GetTime().Year());
+			float y1983 = IndividualHumanTyphoidConfig::typhoid_exposure_1983; 
+			float y1984 = IndividualHumanTyphoidConfig::typhoid_exposure_1984;
+			float y1985 = IndividualHumanTyphoidConfig::typhoid_exposure_1985; 
+			float y1986 = IndividualHumanTyphoidConfig::typhoid_exposure_1986; 
+			float y1987 = IndividualHumanTyphoidConfig::typhoid_exposure_1987; 
+			float y1988 = IndividualHumanTyphoidConfig::typhoid_exposure_1988; 
+			float y1989 = IndividualHumanTyphoidConfig::typhoid_exposure_1989; 
+			float y1990 = IndividualHumanTyphoidConfig::typhoid_exposure_1990; 
+			float y1991 = IndividualHumanTyphoidConfig::typhoid_exposure_1991;
+
+			int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
+			int nDayOfYear = SimDay % DAYSPERYEAR;
+
+			float intervention_multiplier_hack = 1;
+			if (SimYear == 1983) { intervention_multiplier_hack = y1983 + (y1984 - y1983)*(nDayOfYear/365); }
+			if (SimYear == 1984) { intervention_multiplier_hack = y1984 + (y1985 - y1984)*(nDayOfYear / 365); }
+			if (SimYear == 1985) { intervention_multiplier_hack = y1985 + (y1986 - y1985)*(nDayOfYear / 365); }
+			if (SimYear == 1986) { intervention_multiplier_hack = y1986 + (y1987 - y1986)*(nDayOfYear / 365); }
+			if (SimYear == 1987) { intervention_multiplier_hack = y1987 + (y1988 - y1987)*(nDayOfYear / 365); }
+			if (SimYear == 1988) { intervention_multiplier_hack = y1988 + (y1989 - y1988)*(nDayOfYear / 365); }
+			if (SimYear == 1989) { intervention_multiplier_hack = y1989 + (y1990 - y1989)*(nDayOfYear / 365); }
+			if (SimYear == 1990) { intervention_multiplier_hack = y1990 + (y1991 - y1990)*(nDayOfYear / 365); }
+			if (SimYear == 1991) { intervention_multiplier_hack = y1991 + (0 - y1991)*(nDayOfYear / 365); }
+			if (SimYear > 1991) { intervention_multiplier_hack = 0; }
+
+
 
             float intervention_multiplier = ((TyphoidInterventionsContainer*)interventions)->GetEnviroExposuresAttenuation();
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
-                float infects = 1.0f-pow( 1.0f + fExposure * ( pow( 2.0f, (1/alpha) ) -1.0f )/N50, -alpha ); // Dose-response for prob of infection
+				float dose = fExposure * intervention_multiplier_hack;
+                float infects = 1.0f-pow( 1.0f + dose * ( pow( 2.0f, (1/alpha) ) -1.0f )/N50, -alpha ); // Dose-response for prob of infection
                 float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
                 LOG_VALID_F( "Individual=%d: immunity calculated as %f from typhoid_protection_per_infection=%f and _infection_count=%d.\n",
                              GetSuid().data, immunity, IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count );
