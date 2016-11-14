@@ -10,6 +10,8 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 #include "stdafx.h"
 #include "TyphoidVaccine.h"
 #include "InterventionsContainer.h" 
+#include "NodeEventContext.h"
+#include "Individual.h"
 
 static const char* _module = "TyphoidVaccine";
 
@@ -56,6 +58,8 @@ namespace Kernel
             }
             delete tmp_waning;
             tmp_waning = nullptr;
+            
+            //changing_effect->SetCurrentTime( parent->GetEventContext()->GetNodeEventContext()->GetTime().time );
         }
         LOG_DEBUG_F( "Vaccine configured with type %d and effect %f.\n", vaccine_mode, effect );
         return configured;
@@ -112,6 +116,9 @@ namespace Kernel
         itvc = static_cast<ITyphoidVaccineEffectsApply*>(iface2);*/
 
         bool distribute =  BaseIntervention::Distribute( context, pCCO );
+        
+        //changing_effect->SetCurrentTime( context->GetEventContext()->GetNodeEventContext()->GetTime().time );
+        changing_effect->SetCurrentTime( ((IndividualHuman*)(context->GetParent()))->GetParent()->GetTime().time );
         return distribute;
     }
 
@@ -153,6 +160,10 @@ namespace Kernel
         {
             throw QueryInterfaceException( __FILE__, __LINE__, __FUNCTION__, "context->GetInterventionsContext()", "ITyphoidVaccineEffectsApply", "IIndividualHumanInterventionsContext" );
         }
+        release_assert( parent );
+        release_assert( parent->GetEventContext() );
+        release_assert( parent->GetEventContext()->GetNodeEventContext() );
+        changing_effect->SetCurrentTime( parent->GetEventContext()->GetNodeEventContext()->GetTime().time );
         //LOG_DEBUG_F( "Vaccine configured with type %d and take %f for individual %d\n", vaccine_type, vaccine_take, parent->GetSuid().data );
     } // needed for VaccineTake
 

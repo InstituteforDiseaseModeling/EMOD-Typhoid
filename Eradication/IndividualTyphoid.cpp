@@ -722,7 +722,7 @@ namespace Kernel
         {
             return;
         }
-        LOG_DEBUG_F("AcquireNewInfection: route %d, IsInfected=%d\n", _routeOfInfection, IsInfected() );
+        LOG_DEBUG_F("AcquireNewInfection: individual=%d, route=%d, IsInfected=%d\n", GetSuid().data, _routeOfInfection, IsInfected() );
         if( infstrain )
         {
             if (_routeOfInfection == TransmissionRoute::TRANSMISSIONROUTE_ENVIRONMENTAL)

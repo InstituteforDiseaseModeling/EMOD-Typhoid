@@ -31,6 +31,7 @@ namespace Kernel
     , m_ExpireAtDurationMapEnd(false)
     , m_TimeSinceStart(0.0)
     , m_DurationMap()
+    , m_RefTime(0)
     {
     }
 
@@ -43,6 +44,7 @@ namespace Kernel
     {
         initConfigTypeMap( "Initial_Effect",               &m_EffectCurrent,          WEE_Initial_Effect_DESC_TEXT,                0, 1, 1);
         initConfigTypeMap( "Expire_At_Durability_Map_End", &m_ExpireAtDurationMapEnd, WEM_Expire_At_Durability_Map_End_DESC_TEXT, false );
+        initConfigTypeMap( "Reference_Timer",              &m_RefTime,                "Timestamp at which linear-map should be anchored.", 0 );
 
         initConfigComplexType( "Durability_Map", &m_DurationMap, WEM_Durability_Map_End_DESC_TEXT );
 
@@ -57,6 +59,15 @@ namespace Kernel
             }
         }
         return ret;
+    }
+
+    void WaningEffectMapAbstract::SetCurrentTime(float current_time)
+    {
+        // We want to "fast-forward" the time-since-start for birth-triggered individuals so the map catches up
+        // to what it would have been if they'd been alive. In limit, if born on same day as distribution (ref-time)
+        // current_time == ref_time and time-since-start = 0; if born at t=inf, time-since-start = inf.
+        m_TimeSinceStart = current_time - m_RefTime;
+        LOG_DEBUG_F( "m_TimeSinceStart set to %f after offset of curren_time %f and m_RefTime of %f.\n", m_TimeSinceStart, current_time, m_RefTime );
     }
 
     void  WaningEffectMapAbstract::Update(float dt)

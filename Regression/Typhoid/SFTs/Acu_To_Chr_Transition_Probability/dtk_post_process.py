@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # This SFT test the following statements:
-# All infections begin in prepatent.
-# The proportion of individuals who move to acute infections is determined by the config parameter Config:TSF. The remainder shall move to subclinical.
-# All new acute cases and subclinical cases are transited from prepatent state only.
+# All Acute infections go to Chronic or Susceptible state.
+# The proportion of individuals who move to chronic infections is determined by the config parameter Config:CPG multiply by hardcoded Gallstones table. The remainder shall move to Susceptible.
+# This test passes when the number of went to Chronic cases is within Binormal 95% confidence interval
+# for each test, there is 5% of chance that we will reject the hypothesis while it's true
 
 import re
 import json
@@ -11,7 +12,6 @@ import pdb
 import os
 import dtk_sft as sft
 
-# C version: infectiousness = exp( -1 * _infectiousness_param_1 * pow(duration - _infectiousness_param_2,2) ) / _infectiousness_param_3;
 def get_val( key, line ):
     regex = key + "(\d*\.*\d*)"
     match = re.search(regex, line)
@@ -93,9 +93,7 @@ def application( report_file ):
             # calculate actual probability of becoming a Chronic carrier in two 1*9 lists
             actual_p_male=[x/float(x+y) if (x+y)!=0 else -1 for x, y in zip(count[0],count[2])]
             actual_p_female=[x/float(x+y) if (x+y)!=0 else -1 for x, y in zip(count[1],count[3])]
-            # calculate tolerance from theoretic and actual probabilities and store then in two 1*9 list
-            #tolerance_male = [math.fabs(x-y)/y if y !=0 else x for x, y in zip(actual_p_male, theoretic_p_male)]
-            #tolerance_female = [math.fabs(x-y)/y if y !=0 else x for x, y in zip(actual_p_female, theoretic_p_female)]
+
             for x in range(0,9):
                 age = ["0-9", "10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79", "80+"]
                 # calculate the total chronic cases and sample sizes for Male and Female
@@ -103,48 +101,31 @@ def application( report_file ):
                 actual_count_male = count[0][x] + count[2][x]
                 actual_chr_count_female = count[1][x]
                 actual_count_female = count[1][x] + count[3][x]
-                # calculate the mean and  standard deviation for binormal distribution
-                sd_male = math.sqrt(theoretic_p_male[x] * (1 - theoretic_p_male[x]) * actual_count_male)
-                mean_male=actual_count_male * theoretic_p_male[x]
-                sd_female = math.sqrt(theoretic_p_female[x] * (1 - theoretic_p_female[x]) * actual_count_female)
-                mean_female = actual_count_female * theoretic_p_female[x]
-                # 99.73% confidence interval
-                lower_bound_male = mean_male - 3 * sd_male
-                upper_bound_male = mean_male + 3 * sd_male
-                lower_bound_female = mean_female - 3 * sd_female
-                upper_bound_female = mean_female + 3 * sd_female
-
                 # Male
-                sex = "male"
+                category='sex: Male, age: ' + age[x]
                 if actual_count_male== 0:
                     success=False
                     report_file.write("Found no male in age group {0} went to Chronic state or was recovered from Acute state.\n".format(age[x]))
-                elif mean_male!=0 and (mean_male <= 5 or actual_count_male - mean_male <= 5):
+                elif  theoretic_p_male[x] < 5e-2 or theoretic_p_male[x] >0.95:
+                    # for cases that binormal confidence interval will not work: prob close to 0 or 1
+                    if math.fabs( actual_p_male[x] - theoretic_p_male[x])>5e-2 :
+                        success = False
+                        report_file.write("BAD: Proportion of {0} Acute cases that become Chronic is {1}, expected {2}.\n".format(category,actual_p_male[x], theoretic_p_male[x]))
+                elif not sft.test_binormal_95ci(actual_chr_count_male,actual_count_male, theoretic_p_male[x],report_file, category):
                     success = False
-                    report_file.write(
-                        "There is not enough sample size in age group {0}, sex {1}: mean = {2}, sample size - mean = {3}.\n".format(age[x], sex, mean_male, actual_count_male - mean_male ))
-                elif actual_chr_count_male < lower_bound_male or actual_chr_count_male > upper_bound_male:
-                    success = False
-                    report_file.write(
-                            "BAD: The probability of becoming a chronic carrier from Acute stage for individual age group {0}, sex {1} is {2}, expected {3}. The {1} Chronic cases is {4}, expected 99.73% confidence interval ( {5}, {6}).\n".format(
-                                age[x], sex, actual_p_male[x], theoretic_p_male[x], actual_chr_count_male,
-                                lower_bound_male, upper_bound_male))
+
                 #Female
-                sex = "female"
-                if actual_count_female==0:
+                category = 'sex: Female, age: ' + age[x]
+                if actual_count_female == 0:
                     success = False
                     report_file.write("Found no female in age group {0} went to Chronic state or was recovered from Acute state.\n".format(age[x]))
-                elif mean_female != 0 and (mean_female <= 5 or actual_count_female - mean_female <= 5):
+                elif  theoretic_p_female[x] < 5e-2 or theoretic_p_female[x] >0.95:
+                    # for cases that binormal confidence interval will not work: prob close to 0 or 1
+                    if math.fabs( actual_p_female[x] - theoretic_p_female[x])>5e-2 :
+                        success = False
+                        report_file.write("BAD: Proportion of {0} Acute cases that become Chronic is {1}, expected {2}.\n".format(category,actual_p_female[x], theoretic_p_female[x]))
+                elif not sft.test_binormal_95ci(actual_chr_count_female, actual_count_female, theoretic_p_female[x], report_file,category):
                     success = False
-                    report_file.write(
-                        "There is not enough sample size in age group {0}, sex {1}: mean = {2}, sample size - mean = {3}.\n".format(age[x], sex, mean_female, actual_count_female - mean_female ))
-                elif actual_chr_count_female < lower_bound_female or actual_chr_count_female > upper_bound_female:
-                    success = False
-                    report_file.write(
-                        "BAD: The probability of becoming a chronic carrier from Acute stage for individual age group {0}, sex {1} is {2}, expected {3}. The {1} Chronic cases is {4}, expected 99.73% confidence interval ( {5}, {6}).\n".format(
-                            age[x], sex, actual_p_female[x], theoretic_p_female[x], actual_chr_count_female,
-                            lower_bound_female, upper_bound_female))
-
         if success:
             report_file.write( sft.format_success_msg( success ) )
 
