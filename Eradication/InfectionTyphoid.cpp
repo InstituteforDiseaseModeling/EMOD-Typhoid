@@ -125,7 +125,6 @@ namespace Kernel
         chronic_timer = UNINIT_TIMER;
         subclinical_timer = UNINIT_TIMER;
         acute_timer = UNINIT_TIMER;
-        //prepatent_timer = UNINIT_TIMER;
         _subclinical_duration = _prepatent_duration = _acute_duration = 0;
         isDead = false;
         last_state_reported = SUSCEPT_STATE_LABEL;
@@ -154,7 +153,7 @@ namespace Kernel
         _prepatent_duration = generateRandFromLogNormal(mu, sigma);
         LOG_VALID_F( "Calculated prepatent duration = %f using Log-Normal draw; mu = %f, sigma = %f, doseTracking = %s.\n",
                      _prepatent_duration, mu, sigma, doseTracking.c_str() );
-        prepatent_timer = int(_prepatent_duration);
+        prepatent_timer = _prepatent_duration;
         prepatent_timer.handle = std::bind( &InfectionTyphoid::handlePrepatentExpiry, this );
         state_to_report=PREPAT_STATE_LABEL;
         state_changed=false;

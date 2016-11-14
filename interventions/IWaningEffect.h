@@ -22,6 +22,7 @@ namespace Kernel
     struct IDMAPI IWaningEffect : ISerializable
     {
         virtual void  Update(float dt) = 0;
+        virtual void  SetCurrentTime(float dt) = 0;
         virtual float Current() const  = 0;
         virtual bool  Expired() const  = 0;
     };
