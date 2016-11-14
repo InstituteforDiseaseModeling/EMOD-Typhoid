@@ -2,13 +2,13 @@
     "Events": [
         {
             "Event_Coordinator_Config": {
-                "Demographic_Coverage": 0.1,
+                "Demographic_Coverage": 1,
                 "Intervention_Config": {
                     "Outbreak_Source": "PrevalenceIncrease",
                     "class": "OutbreakIndividual"
                 },
                 "Number_Repetitions": 10,
-                "Timesteps_Between_Repetitions": 180,
+                "Timesteps_Between_Repetitions": 360,
                 "class": "StandardInterventionDistributionEventCoordinator"
             },
             "Event_Name": "Outbreak",
