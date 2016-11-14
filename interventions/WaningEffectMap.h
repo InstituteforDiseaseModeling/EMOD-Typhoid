@@ -31,6 +31,7 @@ namespace Kernel
         WaningEffectMapAbstract();
         virtual ~WaningEffectMapAbstract();
         virtual void  Update(float dt) override;
+        virtual void  SetCurrentTime(float dt) override;
         virtual float Current() const override;
         virtual bool  Expired() const override;
 
@@ -43,6 +44,7 @@ namespace Kernel
         float m_EffectCurrent;
         bool  m_ExpireAtDurationMapEnd;
         float m_TimeSinceStart;
+        int   m_RefTime;
         InterpolatedValueMap m_DurationMap;
 
         static void serialize( IArchive&, WaningEffectMapAbstract*);
