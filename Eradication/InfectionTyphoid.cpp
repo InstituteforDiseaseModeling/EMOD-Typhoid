@@ -286,7 +286,9 @@ namespace Kernel
             }
             else
             {
-                LOG_VALID_F( "Individual %d age %f, sex %d, just recovered (from acute).\n", parent->GetSuid().data, age, sex );
+                LOG_VALID_F( "Individual %d age %f, sex %s, just recovered (from acute).\n",
+                             parent->GetSuid().data, age, ( sex==0 ? "Male" : "Female" )
+                           );
                 state_to_report = SUSCEPT_STATE_LABEL;
             }
         } 
@@ -340,8 +342,8 @@ namespace Kernel
 
     void InfectionTyphoid::Update(float dt, ISusceptibilityContext* _immunity)
     {
-
-        LOG_DEBUG_F("%d INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", parent->GetSuid().data, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
+        auto age = dynamic_cast<IIndividualHuman*>(parent)->GetAge() / DAYSPERYEAR;
+        LOG_DEBUG_F("%d age %f INFECTED! prepat=%d,acute=%d,subclin=%d,chronic=%d\n", parent->GetSuid().data, age, (int) prepatent_timer, acute_timer, subclinical_timer,chronic_timer);
         if( prepatent_timer.IsDead() == false )
         {
             prepatent_timer.Decrement( dt );
@@ -361,8 +363,8 @@ namespace Kernel
             // acute infection
             state_to_report = ACUTE_STATE_LABEL;
             acute_timer -= dt;
-            if( ( int(_acute_duration) - acute_timer ) >= acute_treatment_day &&
-                ( ( int(_acute_duration) - acute_timer - dt ) < acute_treatment_day ) && 
+            int acute_day = int(_acute_duration) - int(acute_timer) + 1; // 1-based counting
+            if( acute_day == acute_treatment_day  &&
                 ( randgen->e() < treatmentprobability )
               )
             {       //if they seek treatment and don't die, we are assuming they have a probability of becoming a carrier (chloramphenicol treatment does not prevent carriage)
