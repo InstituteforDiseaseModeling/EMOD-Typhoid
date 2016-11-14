@@ -39,6 +39,7 @@ def application( report_file ):
     # get params from config.json
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
     start_time=cdj["Start_Time"]
+    simulation_duration = cdj["Simulation_Duration"]
     lines = []
     timestep=start_time
 
@@ -96,12 +97,14 @@ def application( report_file ):
                         # the state is use for next step
                         timestep = int(timestep) + 1
                     key = "Time  " + str(timestep) + " individual " + str(Ind_id)
-                    if dict_infection.has_key(key):
-                        if state != dict_infection.get(key):
-                            success = False
-                            report_file.write("BAD: At time {0} individual {1} is reported to be in state {2} and {3}\n".format(timestep,Ind_id, state, dict_infection.get(key)))
-                    else:
-                        dict_infection[key]=state
+                    if timestep !=start_time + simulation_duration:
+                        #the last time step has no shedding information
+                        if dict_infection.has_key(key):
+                            if state != dict_infection.get(key):
+                                success = False
+                                report_file.write("BAD: At time {0} individual {1} is reported to be in state {2} and {3}\n".format(timestep,Ind_id, state, dict_infection.get(key)))
+                        else:
+                            dict_infection[key]=state
                 elif re.search("state_to_report", lines[i]):
                     Ind_id=get_val("individual ",lines[i])
                     state=get_char("= ",lines[i])
@@ -109,13 +112,16 @@ def application( report_file ):
                         # skip for susceptiable state
                         continue
                     # this state is use for next time step
-                    key = "Time  "+ str(int(timestep) + 1) + " individual " + str(Ind_id)
-                    if dict_infection.has_key(key):
-                        if state != dict_infection.get(key):
-                            success = False
-                            report_file.write("BAD: At time {0} individual {1} is reported to be in state {2} and {3}\n".format(timestep,Ind_id, state, dict_infection.get(key)))
-                    else:
-                        dict_infection[key] = state
+                    timestep = int(timestep) + 1
+                    key = "Time  "+ str(timestep) + " individual " + str(Ind_id)
+                    if timestep !=start_time + simulation_duration:
+                        #the last time step has no shedding information
+                        if dict_infection.has_key(key):
+                            if state != dict_infection.get(key):
+                                success = False
+                                report_file.write("BAD: At time {0} individual {1} is reported to be in state {2} and {3}\n".format(timestep,Ind_id, state, dict_infection.get(key)))
+                        else:
+                            dict_infection[key] = state
     # with open("dict_d.txt", "w") as report_file:
     #     for key, value in dict_depositing.iteritems():
     #         report_file.write("{0}: {1}\n".format(key,value))

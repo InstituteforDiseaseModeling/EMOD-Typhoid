@@ -8,7 +8,7 @@
                     "class": "OutbreakIndividual"
                 },
                 "Number_Repetitions": 10,
-                "Timesteps_Between_Repetitions": 10,
+                "Timesteps_Between_Repetitions": 180,
                 "class": "StandardInterventionDistributionEventCoordinator"
             },
             "Event_Name": "Outbreak",
