@@ -29,7 +29,7 @@ def application( report_file ):
     #print( "Post-processing: " + report_file )
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
     start_time = cdj["Start_Time"]
-    isj = json.loads(open("output\InsetChart.json").read())["Channels"]
+    isj = json.loads(open("output/InsetChart.json").read())["Channels"]
     ccp = isj["Contact Contagion Population"]["Data"]
 
     timestep = start_time
