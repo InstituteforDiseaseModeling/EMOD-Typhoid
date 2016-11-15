@@ -44,7 +44,7 @@ def application( report_file ):
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
     tsf = cdj["Typhoid_Symptomatic_Fraction"]
     start_time=cdj["Start_Time"]
-    isj=json.loads(open("output\InsetChart.json").read())["Channels"]
+    isj=json.loads(open("output/InsetChart.json").read())["Channels"]
     nibrc=isj["New Infections By Route (CONTACT)"]["Data"]
     nibre=isj["New Infections By Route (ENVIRONMENT)"]["Data"]
 
@@ -85,16 +85,19 @@ def application( report_file ):
                 lines.append(line)
             if re.search( "AcquireNewInfection:", line ) and re.search("route=0", line):
                 #print line
+                print( "New outbreak infection." )
                 count_Outbreak += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
             if re.search( "AcquireNewInfection:", line ) and re.search("route=1", line):
                 #print line
+                print( "New contact infection." )
                 count_contact += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
             if re.search( "AcquireNewInfection:", line ) and re.search("route=2", line):
                 #print line
+                print( "New enviro infection." )
                 count_enviro += 1
                 line = "line: "+ str(num) + " TimeStep: " + str(timestep) + " " + line
                 lines.append(line)
@@ -159,6 +162,7 @@ def application( report_file ):
 
         if success:
             report_file.write( sft.format_success_msg( success ) )
+            os.remove( "test.txt" )
 
     #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 

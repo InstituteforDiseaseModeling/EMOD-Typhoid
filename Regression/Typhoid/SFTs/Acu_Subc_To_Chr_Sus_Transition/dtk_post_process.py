@@ -81,6 +81,7 @@ def application( report_file ):
                         report_file.write("BAD: individual {0} age {1}, sex {2} went to Susceptible state from {3} state, expected Acute state or SubClinical state.\n".format(ind_id, age,sex, previous_infection_stage))
         if success:
             report_file.write( sft.format_success_msg( success ) )
+            os.remove( "test.txt" )
 
     #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 

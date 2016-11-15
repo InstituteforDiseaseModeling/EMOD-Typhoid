@@ -30,7 +30,7 @@ def application( report_file ):
     cdj = json.loads( open( "config.json" ).read() )["parameters"]
     ncdr = cdj["Node_Contagion_Decay_Rate"]
     start_time = cdj["Start_Time"]
-    isj = json.loads(open("output\InsetChart.json").read())["Channels"]
+    isj = json.loads(open("output/InsetChart.json").read())["Channels"]
     ecp = isj["Environmental Contagion Population"]["Data"]
 
     timestep = start_time
@@ -102,6 +102,7 @@ def application( report_file ):
                         "BAD: At time {0}, the accumulated shedding is {1} from InsetChart.json, expected {2}.\n".format(timestep, ecp[x-1], expected_cp))
         if success:
               report_file.write(sft.format_success_msg(success))
+              os.remove( "test.txt" )
 
     #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 
