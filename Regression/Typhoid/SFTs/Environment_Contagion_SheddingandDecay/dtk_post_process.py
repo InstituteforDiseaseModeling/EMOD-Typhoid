@@ -102,6 +102,7 @@ def application( report_file ):
                         "BAD: At time {0}, the accumulated shedding is {1} from InsetChart.json, expected {2}.\n".format(timestep, ecp[x-1], expected_cp))
         if success:
               report_file.write(sft.format_success_msg(success))
+              os.remove( "test.txt" )
 
     #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 

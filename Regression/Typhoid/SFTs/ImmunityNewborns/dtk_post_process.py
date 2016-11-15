@@ -53,6 +53,7 @@ def application( report_file ):
                     
         if success:
             report_file.write( sft.format_success_msg( success ) )
+            os.remove( "test.txt" )
 
     #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 
