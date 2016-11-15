@@ -67,6 +67,7 @@ namespace Kernel
 		static float typhoid_exposure_1989;
 		static float typhoid_exposure_1990;
 		static float typhoid_exposure_1991;
+		static float typhoid_exposure_1992;
 
         virtual bool Configure( const Configuration* config );
     };

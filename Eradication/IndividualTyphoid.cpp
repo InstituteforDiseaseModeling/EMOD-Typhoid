@@ -89,6 +89,8 @@ namespace Kernel
 	float IndividualHumanTyphoidConfig::typhoid_exposure_1989 = 0.0f;
 	float IndividualHumanTyphoidConfig::typhoid_exposure_1990 = 0.0f;
 	float IndividualHumanTyphoidConfig::typhoid_exposure_1991 = 0.0f;
+	float IndividualHumanTyphoidConfig::typhoid_exposure_1992 = 0.0f;
+
 
     GET_SCHEMA_STATIC_WRAPPER_IMPL(Individual,IndividualHumanTyphoidConfig)
     BEGIN_QUERY_INTERFACE_BODY(IndividualHumanTyphoidConfig)
@@ -128,8 +130,9 @@ namespace Kernel
 		initConfigTypeMap("Typhoid_Exposure_1989", &typhoid_exposure_1989, "Typhoid_Exposure_1989.", 0, 1, 0.5);
 		initConfigTypeMap("Typhoid_Exposure_1990", &typhoid_exposure_1990, "Typhoid_Exposure_1990.", 0, 1, 0.5);
 		initConfigTypeMap("Typhoid_Exposure_1991", &typhoid_exposure_1991, "Typhoid_Exposure_1991.", 0, 1, 0.5);
+		initConfigTypeMap("Typhoid_Exposure_1992", &typhoid_exposure_1992, "Typhoid_Exposure_1992.", 0, 1, 0.5);
 
-        SusceptibilityTyphoidConfig fakeImmunity;
+		SusceptibilityTyphoidConfig fakeImmunity;
         fakeImmunity.Configure( config );
         InfectionTyphoidConfig fakeInfection;
         fakeInfection.Configure( config );
@@ -454,6 +457,8 @@ namespace Kernel
 			float y1989 = IndividualHumanTyphoidConfig::typhoid_exposure_1989; 
 			float y1990 = IndividualHumanTyphoidConfig::typhoid_exposure_1990; 
 			float y1991 = IndividualHumanTyphoidConfig::typhoid_exposure_1991;
+			float y1992 = IndividualHumanTyphoidConfig::typhoid_exposure_1992;
+
 
 			int SimDay = (int)parent->GetTime().time; // is this the date of the simulated year?
 			int nDayOfYear = SimDay % DAYSPERYEAR;
@@ -468,7 +473,7 @@ namespace Kernel
 			if (SimYear == 1989) { intervention_multiplier_hack = y1989 + (y1990 - y1989)*(nDayOfYear / 365); }
 			if (SimYear == 1990) { intervention_multiplier_hack = y1990 + (y1991 - y1990)*(nDayOfYear / 365); }
 			if (SimYear == 1991) { intervention_multiplier_hack = y1991 + (0 - y1991)*(nDayOfYear / 365); }
-			if (SimYear > 1991) { intervention_multiplier_hack = 0; }
+			if (SimYear > 1991) { intervention_multiplier_hack = y1992; }
 
 
 
@@ -476,13 +481,13 @@ namespace Kernel
             float fExposure = fEnvironment * amplification;
             if (fExposure>0)
             {
-				float dose = fExposure * intervention_multiplier_hack;
+				float dose = fExposure;
                 float infects = 1.0f-pow( 1.0f + dose * ( pow( 2.0f, (1/alpha) ) -1.0f )/N50, -alpha ); // Dose-response for prob of infection
                 float immunity= pow(1-IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count);
                 LOG_VALID_F( "Individual=%d: immunity calculated as %f from typhoid_protection_per_infection=%f and _infection_count=%d.\n",
                              GetSuid().data, immunity, IndividualHumanTyphoidConfig::typhoid_protection_per_infection, _infection_count );
                 //float prob = 1.0f- pow(1.0f-(immunity * infects * interventions->GetInterventionReducedAcquire()),dt);
-                int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate * dt * intervention_multiplier);
+                int number_of_exposures = randgen->Poisson(IndividualHumanTyphoidConfig::typhoid_environmental_exposure_rate * dt * intervention_multiplier*intervention_multiplier_hack);
                 //int number_of_exposures = randgen->Poisson(exposure_rate * dt);
                 float prob = 0;
                 if (number_of_exposures > 0)
