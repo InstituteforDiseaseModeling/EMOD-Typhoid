@@ -89,7 +89,7 @@ def application( report_file ):
                         success = False
                         report_file.write("BAD: Proportion of prepatent cases that become acute vs. subclinical is {0} instead of {1}. Actual Acute case = {2} vs. Actual SubClinical case = {3}.\n".format(actual_tsf,tsf, acutecount, subcount))
                 #use binormal 95% confidence interval
-                elif not sft.test_binormal_95ci(acutecount, subcount+acutecount, tsf ,report_file, 'PrePatent to Acute transmission'):
+                elif not sft.test_binormal_95ci(acutecount, subcount+acutecount, tsf ,report_file, 'PrePatent to Acute transition'):
                     success = False
 
 
