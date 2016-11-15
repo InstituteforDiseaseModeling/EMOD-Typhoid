@@ -2,7 +2,7 @@
     "Events": [
         {
             "Event_Coordinator_Config": {
-                "Demographic_Coverage": 0.05,
+                "Demographic_Coverage": 0.2,
                 "Intervention_Config": {
                     "Outbreak_Source": "PrevalenceIncrease",
                     "class": "OutbreakIndividual"

@@ -97,8 +97,7 @@ def application( report_file ):
                     outfile.write(json.dumps(myjson, indent=4))
             else:
                 report_file.write( sft.format_success_msg( success ) )
-
-
+                os.remove( "test.txt" )
 
     #dtk_plot_wrapper.doit( actual_infectiousness, title="Asymptomatic Naive Infectiousness over time" );
 

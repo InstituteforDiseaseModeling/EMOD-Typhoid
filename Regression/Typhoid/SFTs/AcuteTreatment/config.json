@@ -33,7 +33,7 @@
         "Death_Rate_Dependence": "NONDISEASE_MORTALITY_BY_YEAR_AND_AGE_FOR_EACH_GENDER", 
         "Default_Geography_Initial_Node_Population": 1000, 
         "Default_Geography_Torus_Size": 10, 
-        "Demographics_Filenames": [ "Santiago_Demographics.json" ], 
+        "Demographics_Filenames": [ "Santiago_Demographics.json", "Santiago_10K_overlay.json" ], 
         "Enable_Absolute_Time": "NO", 
         "Enable_Aging": 1, 
         "Enable_Birth": 1, 
@@ -134,7 +134,7 @@
         "Typhoid_Environmental_Cutoff_Days": 160, 
         "Typhoid_Environmental_Peak_Start": 360, 
         "Typhoid_Environmental_Peak_Multiplier": 0.1, 
-		"Typhoid_Symptomatic_Fraction": 0.1,
+		"Typhoid_Symptomatic_Fraction": 1,
 		"Typhoid_Exposure_1983": 0,
 		"Typhoid_Exposure_1984": 0,
 		"Typhoid_Exposure_1985": 0,
@@ -154,8 +154,8 @@
         "x_Regional_Migration": 1, 
         "x_Sea_Migration": 1, 
         "x_Temporary_Larval_Habitat": 1,
-        "logLevel_IndividualTyphoid": "VALID",
+        "__logLevel_IndividualTyphoid": "VALID",
         "logLevel_InfectionTyphoid": "VALID",
-        "logLevel_SusceptibilityTyphoid": "VALID"
+        "__logLevel_SusceptibilityTyphoid": "VALID"
     }
 }
